@@ -4,10 +4,12 @@
 
 1. Install DDEV.
 
-2. Run ddev start
+2. Run ddev config
 
-3. Run ddev composer install
+3. Run ddev start
 
-4. Run ddev import-db --file=dumpfile.sql.gz
+4. Run ddev composer install
 
-5. ddev laubch
+5. Run ddev import-db --file=dumpfile.sql.gz
+
+6. ddev laubch
