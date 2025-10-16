@@ -1,0 +1,41 @@
+<section class="cms-banner">
+	<img src="/themes/custom/motaded/images/cms-banner.png" alt="banner copy">
+
+	<div class="banner-content">
+		<h1>{{ 'Blogs'|t }}</h1>
+
+	</div>
+</section>
+
+
+<section>
+
+	<div{{attributes.addClass(classes,'CompanyEntitiesBg')}}>
+		<div class="container2">
+			<div class="compnayInner">
+				{{ title_prefix }}
+				{% if title %}
+				{{ title }}
+				{% endif %}
+				{{ title_suffix }}
+				{% if header %}
+				{{ header }}
+				{% endif %}
+			<!--	{% if exposed %}
+				<div class="view-filters">
+				
+				</div> --!>
+				{% endif %}
+				{% if rows %}
+				<div class="entitiesWrap">
+					{{ rows }}
+				</div>
+				{% elseif empty %}
+				<div class="view-empty">
+					{{ empty }}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		</div>
+</section>

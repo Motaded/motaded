@@ -1,0 +1,50 @@
+
+<div class="full-width">
+    {%	if  content.field_image[0]  %}
+    <div class="image">
+        <img src="{{ file_url(content.field_image['#items'].entity.uri.value) }}"  alt="{{content.field_image['#items'].alt}}" />
+        <div class="overlay">
+            <span class="date-style-2"><span>{{ node.createdtime|date('d') }}</span><span>{{ node.createdtime|date('M') }}</span></span>
+        </div>
+    </div>
+    {% endif %}
+    <div class="contents">
+        <span class="date-style-3 author-detail">{{comment_count}} Comments<span>|</span>{{author_name}}</span>
+        {{ content.body.0 }}
+    </div>
+    <div class="tags-social">
+        <div class="tags">
+            <h4>{{ content.field_tags_title.0 }}</h4>
+            <ul>
+                {% for key,value in content.field_tag['#items'] %}
+                <li><a href="{{ content.field_tag[key]['#url'] }}" title="{{ content.field_tag[key]['#title'] }}">{{ content.field_tag[key]['#title'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="social-icon-wrapper">
+            <h4>Share</h4>
+            {{share}}
+        </div>
+    </div>
+    <div class="next-prev">
+        <a href="{{prev_url}}" class="prev-btn" title="{{prev_label}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M103.375,53.375a50,50,0,1,1-50-50A49.992,49.992,0,0,1,103.375,53.375Zm-58.774,0,19.688-19.5a4.64,4.64,0,0,0-6.563-6.563l-22.933,23a4.634,4.634,0,0,0-.144,6.394l22.6,22.668a4.632,4.632,0,1,0,6.563-6.538Z" transform="translate(-3.375 -3.375)" fill="#000"/>
+            </svg>{{ content.field_previous_post_caption.0 }}
+        </a>
+    
+        <a href="{{next_url}}" class="next-btn" title="{{next_label}}">{{ content.field_next_post_caption.0 }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+            </svg>
+        </a>
+    </div>
+    <div class="comments">
+        <h2>{{comment_count}} Comments</h2>
+        
+            {{ content.field_comments }}
+
+        <p class="login-req"><a href="/user/login" title="Title">Login</a> or <a href="/user/register" title="Title">Register</a> to post comments.</p>
+    </div>
+</div>
+           

@@ -1,0 +1,63 @@
+uuid: 8b699132-1daf-47dd-974d-23707100c365
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.entities.body
+    - field.field.node.entities.field_media
+    - field.field.node.entities.field_partnership
+    - field.field.node.entities.field_project_phases
+    - field.field.node.entities.field_segment
+    - node.type.entities
+  module:
+    - text
+    - user
+id: node.entities.search_index
+targetEntityType: node
+bundle: entities
+mode: search_index
+content:
+  body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_media:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_partnership:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_project_phases:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_segment:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+hidden:
+  langcode: true
+  links: true

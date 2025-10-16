@@ -1,0 +1,25 @@
+uuid: 959572e3-a7c5-4230-9228-f5e5b385f7f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.our-services
+  module:
+    - system
+  theme:
+    - bootstrap5
+id: bootstrap5_ourservices
+theme: bootstrap5
+region: footer
+weight: -15
+provider: null
+plugin: 'system_menu_block:our-services'
+settings:
+  id: 'system_menu_block:our-services'
+  label: 'Our Services'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

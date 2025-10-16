@@ -1,0 +1,56 @@
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
+%}
+<div class="service-detail-card">
+<div class="icon-col">
+{% if paragraph.field_media.entity %}
+{% set media_entity = paragraph.field_media.entity %}
+{% if media_entity.field_media_image.entity %}
+<img src="{{ file_url(media_entity.field_media_image.entity.uri.value) }}"	alt="{{ media_entity.field_media_image.alt }}" />
+{% endif %}
+{% endif %}
+</div>
+<div class="details-col">
+<h6>{{ paragraph.field_title.value }}</h6>
+{{ paragraph.field_content.value|raw }}
+</div>
+</div>
+
+
+
+{# {% set i = 1 %}
+								{% for item in content.field_top_overview_section['#items'] %}
+									{% if item.entity %}
+										{% set paragraph = item.entity %}
+										{% if paragraph.field_title.value %}
+											{% if i == 2 %}
+												<div	class="service-detail-row {{ i }}">
+												{% endif %}
+												<div	class="service-detail-card">
+													<div	class="icon-col">
+														{% if paragraph.field_media.entity %}
+															{% set media_entity = paragraph.field_media.entity %}
+															{% if media_entity.field_media_image.entity %}
+																<img	src="{{ file_url(media_entity.field_media_image.entity.uri.value) }}"	alt="{{ media_entity.field_media_image.alt }}" />
+															{% endif %}
+														{% endif %}
+													</div>
+													<div	class="details-col">
+														<h6>
+															{{ paragraph.field_title.value }}
+														</h6>
+														{{ paragraph.field_content.value|raw }}
+													</div>
+												</div>
+												{% if i == 3 %}
+												</div>
+											{% endif %}
+											{% set i = i + 1 %}
+										{% endif %}
+									{% endif %}
+								{% endfor %} #}

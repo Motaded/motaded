@@ -1,0 +1,40 @@
+uuid: 7d4b9c53-518a-4fc7-b96d-691321558c15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.pricing.body
+    - field.field.node.pricing.field_pricing
+    - node.type.pricing
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.pricing.default
+targetEntityType: node
+bundle: pricing
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_pricing:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

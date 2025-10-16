@@ -1,0 +1,28 @@
+title: 联络表
+description: '<p>Basic email contact webform.</p>'
+elements: |
+  name:
+    '#title': 你的名字
+  email:
+    '#title': 您的电子邮件
+  ph_number:
+    '#title': 电话号码
+  subject:
+    '#title': 主题
+    '#test': '联系网络表格来自 [site:name]'
+  message:
+    '#title': 信息
+    '#test': 请忽略这封电子邮件。
+  actions:
+    '#submit__label': 发送消息
+settings:
+  confirmation_message: '<p>您的信息已被送出。</p>'
+handlers:
+  email_confirmation:
+    label: 电子邮件确认
+    settings:
+      body: '[webform_submission:values:message:value]'
+  email_notification:
+    label: 电子邮件通知
+    settings:
+      body: '[webform_submission:values:message:value]'

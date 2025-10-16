@@ -1,0 +1,28 @@
+uuid: e8195589-5c34-48f9-aa88-e20f03529527
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.filters
+  module:
+    - system
+    - views
+  theme:
+    - motaded_theme
+id: motaded_theme_exposedformfilterspage_1
+theme: motaded_theme
+region: content
+weight: -12
+provider: null
+plugin: 'views_exposed_filter_block:filters-page_1'
+settings:
+  id: 'views_exposed_filter_block:filters-page_1'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: Filters
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /filters

@@ -1,0 +1,24 @@
+uuid: 94bf8d2d-ba61-4829-89ce-324eeca16fd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.testimonials
+  module:
+    - views
+  theme:
+    - motaded_theme
+id: motaded_theme_views_block__testimonials_block_1
+theme: motaded_theme
+region: sidebar_first
+weight: -9
+provider: null
+plugin: 'views_block:testimonials-block_1'
+settings:
+  id: 'views_block:testimonials-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility: {  }

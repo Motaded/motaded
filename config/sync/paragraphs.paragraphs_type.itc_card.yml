@@ -1,0 +1,10 @@
+uuid: 093793f1-1cf1-47c1-a461-7e7c2163abf6
+langcode: en
+status: true
+dependencies: {  }
+id: itc_card
+label: 'ITC Card for Services'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

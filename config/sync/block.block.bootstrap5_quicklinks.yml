@@ -1,0 +1,25 @@
+uuid: 9ec69037-3bb6-4eb1-acd1-e390acccd2c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.quick-links
+  module:
+    - system
+  theme:
+    - bootstrap5
+id: bootstrap5_quicklinks
+theme: bootstrap5
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:quick-links'
+settings:
+  id: 'system_menu_block:quick-links'
+  label: 'Legal Pages'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

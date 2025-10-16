@@ -1,0 +1,35 @@
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{{ attach_library('bootstrap5/node') }}
+
+
+<div class="swiper-slide">
+	<div class="teamBox">
+		<div class="teamMember">
+			<img src="{{ file_url(node.field_media.entity.field_media_image.entity.fileuri) }}" alt="">
+			<div class="socialLinks">
+      {% for link in node.field_social %}
+      <a aria-label="linkedin" target="_blank" href="{{ link.url }}">
+					<svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4.16683 2.16667C4.16661 2.6087 3.9908 3.03253 3.67809 3.34494C3.36537 3.65734 2.94136 3.83272 2.49933 3.8325C2.0573 3.83228 1.63347 3.65647 1.32106 3.34376C1.00866 3.03104 0.833275 2.60703 0.833496 2.165C0.833717 1.72297 1.00952 1.29914 1.32224 0.986735C1.63496 0.67433 2.05897 0.498948 2.501 0.499169C2.94302 0.49939 3.36686 0.675196 3.67926 0.987913C3.99167 1.30063 4.16705 1.72464 4.16683 2.16667ZM4.21683 5.06667H0.883496V15.5H4.21683V5.06667ZM9.4835 5.06667H6.16683V15.5H9.45016V10.025C9.45016 6.975 13.4252 6.69167 13.4252 10.025V15.5H16.7168V8.89167C16.7168 3.75 10.8335 3.94167 9.45016 6.46667L9.4835 5.06667Z" fill="currentcolor"/>
+					</svg>
+				</a>
+      {% endfor %}  
+			</div>
+		</div>
+		<div class="teamDetail">
+			<h6>{{ node.field_name.value }}
+			</h6>
+			<p>{{ node.field_designation.value }}
+			</p>
+		</div>
+	</div>
+</div>

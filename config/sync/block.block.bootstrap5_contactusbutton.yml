@@ -1,0 +1,33 @@
+uuid: 3d7eeb64-c737-4e66-acbf-2afda416cb32
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:37737e85-30b7-43bd-b301-bf4aa35afee3'
+  module:
+    - block_content
+    - node
+  theme:
+    - bootstrap5
+id: bootstrap5_contactusbutton
+theme: bootstrap5
+region: content
+weight: -8
+provider: null
+plugin: 'block_content:37737e85-30b7-43bd-b301-bf4aa35afee3'
+settings:
+  id: 'block_content:37737e85-30b7-43bd-b301-bf4aa35afee3'
+  label: 'Contact Us Button'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      article: article

@@ -1,0 +1,22 @@
+uuid: 7017df9a-b167-413f-ba8a-c5e7eb1f73d7
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - motaded_theme
+_core:
+  default_config_hash: S0Y16qIQfKiOEzWlddOGk3u_BKwAruAheA8VVFfGbLc
+id: motaded_theme_help
+theme: motaded_theme
+region: content
+weight: -14
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

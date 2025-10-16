@@ -1,0 +1,45 @@
+uuid: 5ef0d645-3510-4922-9b1c-af206b079e8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_basic_paragraphs
+    - node.type.page
+    - paragraphs.paragraphs_type.business_activity
+    - paragraphs.paragraphs_type.featured_card
+  module:
+    - entity_reference_revisions
+id: node.page.field_basic_paragraphs
+field_name: field_basic_paragraphs
+entity_type: node
+bundle: page
+label: 'Basic Paragraphs'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      business_activity: business_activity
+      featured_card: featured_card
+    negate: 0
+    target_bundles_drag_drop:
+      business_activity:
+        weight: 3
+        enabled: true
+      counter:
+        weight: 7
+        enabled: false
+      featured_card:
+        weight: 4
+        enabled: true
+      itc_card:
+        weight: 9
+        enabled: false
+      objectives:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

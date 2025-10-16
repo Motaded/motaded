@@ -1,0 +1,241 @@
+<!-- Header 1 Start -->
+<header id="header-1" class="header {{active_1}} ">
+	{% if sticky == 1 %}
+	<div class="navbar-wrapper navigation-sticky sticky">
+	{% else %}
+	<div class="navbar-wrapper navigation-sticky">
+	{% endif %}
+		<div class="container">
+			<nav class="navbar navbar-expand-lg">
+				<div class="res-header">
+					{{page.header}}
+					<div class="res-header-right d-lg-none">
+                        {{page.top_header_form}}
+						<button class="navbar-toggler menu" type="button" data-bs-toggle="collapse"  onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened'))"  data-bs-target="#navbarNavDropdown-one" aria-controls="navbarNavDropdown-one" aria-expanded="false" aria-label="Toggle navigation">
+							<svg width="100" height="100" viewBox="0 0 100 100">
+								<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+								<path class="line line2" d="M 20,50 H 80" />
+								<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown-one">
+					{{page.primary_menu}}
+					<div class="header-right d-none d-lg-flex">
+						<ul class="search-btn d-none d-lg-block">
+							<li class="">
+								<a class="btn">
+									<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+										<path id="Path_38950" data-name="Path 38950" d="M121.029,111.565,98.369,88.972a52.783,52.783,0,0,0,11.263-32.656,53.316,53.316,0,1,0-53.316,53.316A52.783,52.783,0,0,0,88.972,98.369l22.593,22.659a6.692,6.692,0,1,0,9.464-9.464ZM16.329,56.316A39.987,39.987,0,1,1,56.316,96.3,39.987,39.987,0,0,1,16.329,56.316Z" transform="translate(-3 -3)" fill="#1a1725"/>
+									</svg>
+								</a>
+								<div class="dropdown-menu search-overlay">
+									{{ page.header_form }}
+								</div>
+							</li>
+						</ul>
+                        {% if button_link %}
+						<a href="{{button_link}}" class="btn btn-primary btn-style-4 btn-style-sm" title="Title">{{button_text}}
+                            {# <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+                            </svg> #}
+						</a>
+                        {% endif %}
+						{{page.top_header_form}}
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
+</header>
+<!-- Header 2 Start -->
+<header id="header-2" class="header {{active_2}}">
+	{% if sticky == 1 %}
+	<div class="navbar-wrapper navigation-sticky sticky">
+	{% else %}
+	<div class="navbar-wrapper navigation-sticky">
+	{% endif %}
+		<div class="container">
+			<nav class="navbar navbar-expand-lg">
+				<div class="res-header">
+					{{page.header}}
+					<div class="res-header-right d-lg-none">
+						{{page.top_header_form}}
+						<button class="navbar-toggler menu" type="button" data-bs-toggle="collapse"  onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened'))"  data-bs-target="#navbarNavDropdown-one" aria-controls="navbarNavDropdown-one" aria-expanded="false" aria-label="Toggle navigation">
+							<svg width="100" height="100" viewBox="0 0 100 100">
+								<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+								<path class="line line2" d="M 20,50 H 80" />
+								<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown-one">
+					{{page.primary_menu}}
+					<div class="header-right d-none d-lg-flex">
+						<ul class="search-btn d-none d-lg-block">
+							<li class="">
+								<a class="btn">
+									<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+										<path id="Path_38950" data-name="Path 38950" d="M121.029,111.565,98.369,88.972a52.783,52.783,0,0,0,11.263-32.656,53.316,53.316,0,1,0-53.316,53.316A52.783,52.783,0,0,0,88.972,98.369l22.593,22.659a6.692,6.692,0,1,0,9.464-9.464ZM16.329,56.316A39.987,39.987,0,1,1,56.316,96.3,39.987,39.987,0,0,1,16.329,56.316Z" transform="translate(-3 -3)" fill="#1a1725"/>
+									</svg>
+								</a>
+								<div class="dropdown-menu search-overlay">
+									{{ page.header_form }}
+								</div>
+							</li>
+						</ul>
+						{% if button_link %}
+						<a href="{{button_link}}" class="btn btn-primary btn-style-4 btn-style-sm" title="Title">{{button_text}}
+                            {# <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+                            </svg> #}
+						</a>
+                        {% endif %}
+						{{page.top_header_form}}
+						<button class="btn btn-primary hamburger-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+							<svg xmlns="http://www.w3.org/2000/svg" width="161" height="123" viewBox="0 0 161 123">
+								<g id="Group_39846" data-name="Group 39846" transform="translate(-1614.266 -2775.882)">
+								  <rect id="Rectangle_20" data-name="Rectangle 20" width="116" height="20" transform="translate(1614.266 2775.882)" fill="#1a1725"/>
+								  <rect id="Rectangle_21" data-name="Rectangle 21" width="161" height="19" transform="translate(1614.266 2827.882)" fill="#1a1725"/>
+								  <rect id="Rectangle_22" data-name="Rectangle 22" width="116" height="20" transform="translate(1614.266 2878.882)" fill="#1a1725"/>
+								</g>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
+</header>
+<!-- Header 3 Start -->
+<header id="header-3" class="header {{active_3}}">
+	{% if sticky == 1 %}
+	<div class="navbar-wrapper navigation-sticky sticky">
+	{% else %}
+	<div class="navbar-wrapper navigation-sticky">
+	{% endif %}
+		<div class="container">
+			<nav class="navbar navbar-expand-lg">
+				<div class="res-header">
+					{{page.header}}
+					<div class="res-header-right d-lg-none">
+						{{page.top_header_form}}
+						<button class="navbar-toggler menu" type="button" data-bs-toggle="collapse"  onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened'))"  data-bs-target="#navbarNavDropdown-one" aria-controls="navbarNavDropdown-one" aria-expanded="false" aria-label="Toggle navigation">
+							<svg width="100" height="100" viewBox="0 0 100 100">
+								<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+								<path class="line line2" d="M 20,50 H 80" />
+								<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown-one">
+					{{page.primary_menu}}
+					<div class="header-right d-none d-lg-flex">
+						<ul class="search-btn d-none d-lg-block">
+							<li class="">
+								<a class="btn">
+									<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+										<path id="Path_38950" data-name="Path 38950" d="M121.029,111.565,98.369,88.972a52.783,52.783,0,0,0,11.263-32.656,53.316,53.316,0,1,0-53.316,53.316A52.783,52.783,0,0,0,88.972,98.369l22.593,22.659a6.692,6.692,0,1,0,9.464-9.464ZM16.329,56.316A39.987,39.987,0,1,1,56.316,96.3,39.987,39.987,0,0,1,16.329,56.316Z" transform="translate(-3 -3)" fill="#1a1725"/>
+									</svg>
+								</a>
+								<div class="dropdown-menu search-overlay">
+                                    {{ page.header_form }}
+								</div>
+							</li>
+						</ul>
+						{% if button_link %}
+						<a href="{{button_link}}" class="btn btn-primary btn-style-4 btn-style-sm" title="Title">{{button_text}}
+                            {# <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+                            </svg> #}
+						</a>
+                        {% endif %}
+						{{page.top_header_form}}
+						<button class="btn btn-primary hamburger-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+							<svg xmlns="http://www.w3.org/2000/svg" width="161" height="123" viewBox="0 0 161 123">
+								<g id="Group_39846" data-name="Group 39846" transform="translate(-1614.266 -2775.882)">
+								<rect id="Rectangle_20" data-name="Rectangle 20" width="116" height="20" transform="translate(1614.266 2775.882)" fill="#1a1725"/>
+								<rect id="Rectangle_21" data-name="Rectangle 21" width="161" height="19" transform="translate(1614.266 2827.882)" fill="#1a1725"/>
+								<rect id="Rectangle_22" data-name="Rectangle 22" width="116" height="20" transform="translate(1614.266 2878.882)" fill="#1a1725"/>
+								</g>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
+</header>
+<!-- Offcanvas -->
+<div class="hamburger-content">
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+		<div class="content">
+			<div class="overlay-btn">
+				<button type="button" class="text-reset" data-bs-dismiss="offcanvas" aria-label="Close">
+					<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+						<path id="Path_218" data-name="Path 218" d="M83.883,24.169l49.641,49.639L83.883,123.6l10.286,10.286,49.639-49.79,49.79,49.79L203.883,123.6l-49.79-49.79,49.79-49.639L193.6,13.883l-49.79,49.641L94.169,13.883Z" transform="translate(-83.883 -13.883)" fill="#1a1725" fill-rule="evenodd"/>
+					</svg>
+				</button>
+			</div>
+			<div class="about-us">
+				<h3>{{about_title}}</h3>
+				<p>{{about_site}}</p>
+			</div>
+			<div class="contact-us">
+               {% if contact_info_title %}
+				<h3>{{contact_info_title}}</h3>
+                {% endif %}
+				<ul class="contact-details">
+                    {% if address %}
+					<li>
+						<span class="icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+								<path id="Icon_open-location" data-name="Icon open-location" d="M120,0,0,60,45,75l15,45Z" fill="#1a1725"/>
+							</svg>
+						</span>
+						<a  title="Address">{{address}}</a>
+					</li>
+                    {% endif %}
+                    {% if contact_number %}
+					<li>
+						<span class="icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="142.336" height="142.329" viewBox="0 0 142.336 142.329">
+								<path id="Icon_ionic-ios-call" data-name="Icon ionic-ios-call" d="M121.033,98.465c-4.592-4.592-15.621-11.5-21.057-14.09-6.311-3.03-8.623-2.968-13.09.25-3.718,2.687-6.123,5.186-10.4,4.249-4.28-.906-12.715-7.31-20.9-15.464-8.185-8.185-14.558-16.62-15.464-20.9-.906-4.311,1.593-6.686,4.249-10.4,3.218-4.467,3.312-6.779.25-13.09-2.593-5.467-9.466-16.464-14.09-21.057C25.935,3.367,24.9,4.366,22.373,5.272A46.4,46.4,0,0,0,14.907,9.24C10.314,12.3,7.752,14.864,5.94,18.706,4.16,22.549,2.1,29.7,12.595,48.385c8.466,15.09,16.777,26.524,29.117,38.833h0l.031.031.031.031h0c12.34,12.34,23.743,20.65,38.833,29.117,18.682,10.5,25.837,8.435,29.679,6.654s6.4-4.343,9.466-8.966a46.4,46.4,0,0,0,3.968-7.467C124.626,104.089,125.657,103.058,121.033,98.465Z" transform="matrix(0.978, 0.208, -0.208, 0.978, 21.494, -5.338)" fill="#1a1725"/>
+							</svg>
+						</span>
+						<a href="tel:{{contact_number}}" title="Call">{{contact_number}}</a>
+					</li>
+                    {% endif %}
+                    {% if mail_id %}
+					<li>
+						<span class="icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="152.727" height="120" viewBox="0 0 152.727 120">
+								<path id="Icon_ionic-md-mail" data-name="Icon ionic-md-mail" d="M140.431,5.625H16.8A14.588,14.588,0,0,0,2.25,20.171v90.909A14.588,14.588,0,0,0,16.8,125.625H140.431a14.588,14.588,0,0,0,14.546-14.546V20.171A14.588,14.588,0,0,0,140.431,5.625Zm-1.818,30.909-60,40-60-40V21.989l60,40,60-40Z" transform="translate(-2.25 -5.625)" fill="#1a1725"/>
+							</svg>
+						</span>
+						<a href="mailto:{{mail_id}}" title="Mail">{{mail_id}}</a>
+					</li>
+                    {% endif %}
+				</ul>
+			</div>
+			<div class="footer-3">
+				<div class="subscribe">
+					{{page.footer_third}}
+				</div>
+			</div>
+			{# {{page.footer_third}} #}
+		</div>
+	</div>
+</div>
+
+{% if loader == 1 %}
+<!-- page preloader -->
+<div id="page-loaders" class="page-loader active">
+{% else %}
+<div id="page-loaders" class="page-loader d-none">
+{% endif %}
+	<div class="loading"></div>
+</div>

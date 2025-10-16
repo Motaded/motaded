@@ -1,0 +1,10 @@
+uuid: 526fae9d-daf3-43b1-a984-3be79b81bd0b
+langcode: en
+status: true
+dependencies: {  }
+id: business_activity
+label: 'ITC Paragraph'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

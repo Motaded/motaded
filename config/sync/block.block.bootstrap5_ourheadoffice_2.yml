@@ -1,0 +1,25 @@
+uuid: 4e10dfe9-f15b-4c55-a37a-815f02a2b402
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:head_office:bf90b695-61df-446b-8d27-c2f4a0aefb0e'
+  module:
+    - block_content
+  theme:
+    - bootstrap5
+id: bootstrap5_ourheadoffice_2
+theme: bootstrap5
+region: homepage
+weight: -4
+provider: null
+plugin: 'block_content:bf90b695-61df-446b-8d27-c2f4a0aefb0e'
+settings:
+  id: 'block_content:bf90b695-61df-446b-8d27-c2f4a0aefb0e'
+  label: 'Our Head Office'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

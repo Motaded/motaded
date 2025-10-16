@@ -1,0 +1,58 @@
+title: 'احجز استشارة مجانية'
+elements: |
+  first_name:
+    '#title': 'الاسم الأول'
+    '#placeholder': 'الاسم الأول'
+  last_name:
+    '#title': 'اسم العائلة'
+    '#placeholder': 'اسم العائلة'
+  contact_number:
+    '#title': 'رقم التليفون'
+  email:
+    '#title': 'بريد إلكتروني'
+    '#placeholder': 'بريد إلكتروني'
+    '#pattern_error': 'الرجاء إدخال عنوان بريدك الإلكتروني الرسمي. إذا لم يكن لديك واحدة، <a href="/contact-us">انقر هنا</a>'
+  organization_name:
+    '#title': 'اسم الشركة'
+    '#placeholder': 'اسم الشركة'
+  company_registration_number:
+    '#title': 'رقم تسجيل الشركة'
+    '#placeholder': 'رقم تسجيل الشركة'
+  is_the_company_multinational:
+    '#title': 'هل الشركة متعددة الجنسيات؟'
+    '#required_error': 'الحقل مطلوب.'
+  do_you_have_a_commercial_register_for_one_year_or_more:
+    '#title': 'هل لديك سجل تجاري لمدة سنة أو أكثر؟'
+    '#required_error': 'الحقل مطلوب.'
+  nocommercial:
+    '#text': '<p>إذا لم يكن لديك سجل تجاري، يرجى التواصل معنا على هذا البريد الإلكتروني <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  do_you_have_financial_statements_for_the_past_year:
+    '#title': 'هل لديك بيانات مالية للعام الماضي؟'
+    '#required_error': 'الحقل مطلوب.'
+  nofinancial:
+    '#text': '<p>إذا لم يكن لديك بيان مالي، يرجى الاتصال بنا على هذا البريد الإلكتروني <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  do_you_have_an_articles_of_association:
+    '#title': 'هل لديك النظام الأساسي؟'
+    '#required_error': 'الحقل مطلوب.'
+  noarticles:
+    '#text': '<p>إذا لم يكن لديك النظام الأساسي، يرجى الاتصال بنا على هذا <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  1parent_company_s_country:
+    '#title': 'بلد الشركة الأم'
+    '#empty_option': دولة
+  commercial_activities:
+    '#title': 'الأنشطة التجارية'
+    '#placeholder': '* الأنشطة التجارية '
+    '#required_error': 'الحقل مطلوب'
+  type_your_message:
+    '#title': 'اكتب رسالتك'
+    '#placeholder': '* اكتب رسالتك'
+    '#required_error': 'حقل الرسالة مطلوب.'
+    '#pattern_error': 'يرجى إدخال ما لا يزيد عن 140 حرفًا وعدم تضمين روابط.'
+  are_you_certain_about_the_data_you_ve_entered:
+    '#title': 'هل أنت متأكد من البيانات التي أدخلتها؟'
+    '#required_error': 'الرجاء التأكد (هل أنت متأكد من البيانات التي قمت بإدخالها؟)'
+  i_confirm_that_i_have_read_and_agree_to_the_terms_and_conditions:
+    '#title': 'أؤكد أنني قرأت الشروط والأحكام ووافقت عليها.'
+    '#required_error': 'يرجى التحقق (أؤكد أنني قرأت الشروط والأحكام وأوافق عليها.)'
+settings:
+  confirmation_message: '<p>لقد تم إرسال استفسارك بنجاح</p>'

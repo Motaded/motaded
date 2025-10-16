@@ -1,0 +1,19 @@
+uuid: e39fecd3-f222-4b0b-a5f2-997f9ff995b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_content
+    - paragraphs.paragraphs_type.business_activity
+id: paragraph.business_activity.field_content
+field_name: field_content
+entity_type: paragraph
+bundle: business_activity
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

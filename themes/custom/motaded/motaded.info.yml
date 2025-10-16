@@ -1,0 +1,10 @@
+name: Motaded
+type: theme
+description: 'A custom Drupal theme.'
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+base theme: stable9
+libraries:
+  - motaded/intl_tel_input 
+  - motaded/perfect_scrollbar
+regions:
+  content: 'Content'

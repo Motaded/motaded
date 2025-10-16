@@ -1,0 +1,55 @@
+uuid: ef73ce03-c121-4ff1-8222-4a74bb1099f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_top_overview_section
+    - node.type.page
+    - paragraphs.paragraphs_type.top_information
+  module:
+    - entity_reference_revisions
+id: node.page.field_top_overview_section
+field_name: field_top_overview_section
+entity_type: node
+bundle: page
+label: 'Top Overview Section'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      top_information: top_information
+    negate: 0
+    target_bundles_drag_drop:
+      areas_of_work:
+        weight: 10
+        enabled: false
+      business_activity:
+        weight: 11
+        enabled: false
+      counter:
+        weight: 12
+        enabled: false
+      featured_card:
+        weight: 13
+        enabled: false
+      itc_card:
+        weight: 14
+        enabled: false
+      objectives:
+        weight: 15
+        enabled: false
+      steps_to_obtain:
+        weight: 16
+        enabled: false
+      top_information:
+        weight: 17
+        enabled: true
+      work_tracks:
+        weight: 18
+        enabled: false
+field_type: entity_reference_revisions

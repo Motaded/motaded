@@ -1,0 +1,24 @@
+uuid: 5478c9b2-7b8d-415c-bf3a-792127b18c8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entities
+  module:
+    - views
+  theme:
+    - motaded_theme
+id: motaded_theme_views_block__entities_block_1
+theme: motaded_theme
+region: sidebar_first
+weight: -12
+provider: null
+plugin: 'views_block:entities-block_1'
+settings:
+  id: 'views_block:entities-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility: {  }

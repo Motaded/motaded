@@ -1,0 +1,87 @@
+{% set base_url = url('<front>') %} 
+<!-- Home Banner Style 3 -->
+<section class="home-banner-3 bg-image" style="background-image: url({{ file_url(content.field_background_image['#items'].entity.uri.value) }});" >
+    <div class="container">
+        <div class="item">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-12">
+                    <div class="head">
+                        <span>{{ content.field_tag_line.0 }}</span>
+                        <h1>{{ content.field_title.0 }}</h1>
+                    </div>
+                    <div class="item-content">
+                        <p>{{ content.field_date_in_detail.0 }}</p>
+                        <p>{{ content.field_venue.0 }}</p>
+                        {%	if  content.field_button_link[0]  %}
+                        <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-4 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">{{ content.field_button_link.0['#title'] }}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-12">
+                    <div class="cs-counter">
+                        <div class="cs-date">
+                             <img src="{{base_url}}sites/default/files/blue.png" alt="icon"> 
+                            <div class="overlay">
+                                <span id="day-eve-2" >00</span>
+                                <div class="counting-title">DAYS</div>
+                            </div>
+                        </div>
+                        <div class="cs-date">
+                             <img src="{{base_url}}sites/default/files/yellow.png" alt="icon"> 
+                            <div class="overlay">
+                                <span id="hour-eve-2" >00</span>
+                                <div class="counting-title">HOURS</div>
+                            </div>
+                        </div>
+                        <div class="cs-date">
+                             <img src="{{base_url}}sites/default/files/green.png" alt="icon"> 
+                            <div class="overlay">
+                                <span id="minute-eve-2" >00</span>
+                                <div class="counting-title">MINUTES</div>
+                            </div>
+                        </div>
+                        <div class="cs-date">
+                         <img src="{{base_url}}sites/default/files/red.png" alt="icon"> 
+                            <div class="overlay">
+                                <span id="second-eve-2" >00</span>
+                                <div class="counting-title">SECONDS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% if content.field_event_on.0 %}
+<script>
+        let dayItem = document.querySelector("#day-eve-2");
+        let hourItem = document.querySelector("#hour-eve-2");
+        let minuteItem = document.querySelector("#minute-eve-2");
+        let secondItem = document.querySelector("#second-eve-2");
+
+        let countDown = () =>{
+            let futureDate = new Date("{{ paragraph.field_event_on.value|date('d M Y') }} ");
+            let currentDate = new Date();
+            let myDate = futureDate - currentDate;
+            
+            let days = Math.floor(myDate / 1000 / 60 / 60 /24);
+            let hours = Math.floor(myDate / 1000 / 60 / 60) % 24;
+            let minutes = Math.floor(myDate / 1000 / 60) % 60;
+            let seconds = Math.floor(myDate / 1000) % 60;
+
+            minutes = minutes < 0? 0 : minutes; //Check if they are lower than 0, if yes, set them to 0
+            seconds = seconds < 0? 0 : seconds;
+            days = days < 0? 0 : days;
+            hours = hours < 0? 0 : hours;
+
+            dayItem.innerHTML = days;
+            hourItem.innerHTML = hours;
+            minuteItem.innerHTML = minutes;
+            secondItem.innerHTML = seconds;
+        }
+        countDown()
+        setInterval(countDown, 1000)
+</script>
+{% endif %}

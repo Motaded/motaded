@@ -1,0 +1,364 @@
+uuid: 94129f02-9d6e-41ce-90a5-d7977051b448
+langcode: en
+status: open
+dependencies: {  }
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: book_a_free_consultation
+title: 'Book A Free Consultation'
+description: ''
+categories: {  }
+elements: |-
+  flexbox:
+    '#type': webform_flexbox
+    first_name:
+      '#type': textfield
+      '#title': 'First Name'
+      '#placeholder': 'First Name'
+      '#required': true
+    last_name:
+      '#type': textfield
+      '#title': 'Last Name'
+      '#placeholder': 'Last Name'
+      '#required': true
+  flexbox_01:
+    '#type': webform_flexbox
+    contact_number:
+      '#type': tel
+      '#title': 'Phone Number'
+      '#required': true
+      '#default_value': '+966 '
+      '#international': true
+      '#international_initial_country': SA
+      '#international_preferred_countries':
+        - SA
+    email:
+      '#type': email
+      '#title': Email
+      '#placeholder': Email
+      '#required': true
+      '#pattern': '^[a-zA-Z0-9._%+-]+@(?!.*(gmail\.com|yahoo\.com|rambler\.ru|mail\.ru|outlook\.com|hotmail\.com|aol\.com|protonmail\.com|icloud\.com|mail2world\.com|tutanota\.com|juno\.com|atmail\.com|fastmail\.com|gmxmail\.com|hushmail\.com|lycos\.com|mail\.com|yandex\.com|2mailcache\.com|3way3\.com|bk\.ru|1mailcache\.com|web\.de|bizopphand\.info|unlockrevenue\.info))([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$'
+      '#pattern_error': 'Please enter your official email address. If you don''t have one, <a href="/contact-us">click here</a>'
+  flexbox_02:
+    '#type': webform_flexbox
+    organization_name:
+      '#type': textfield
+      '#title': ' Company Name'
+      '#placeholder': ' Company Name'
+      '#required': true
+    company_registration_number:
+      '#type': textfield
+      '#title': 'Company Registration Number'
+      '#placeholder': 'Company Registration Number'
+  is_the_company_multinational:
+    '#type': radios
+    '#title': 'Is the Company Multinational? '
+    '#options': yes_no
+    '#options_display': side_by_side
+    '#required': true
+    '#required_error': 'The field is required.'
+  do_you_have_a_commercial_register_for_one_year_or_more:
+    '#type': radios
+    '#title': 'Do You Have a Commercial Register for One Year or More?'
+    '#options': yes_no
+    '#options_display': side_by_side
+    '#required': true
+    '#required_error': 'The field is required.'
+  nocommercial:
+    '#type': processed_text
+    '#states':
+      visible:
+        ':input[name="do_you_have_a_commercial_register_for_one_year_or_more"]':
+          value: 'No'
+    '#text': '<p>If you do not have a commercial registration, please contact us at this email <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+    '#format': basic_html
+  do_you_have_financial_statements_for_the_past_year:
+    '#type': radios
+    '#title': 'Do You Have Financial Statements for the Past Year?'
+    '#options': yes_no
+    '#options_display': side_by_side
+    '#required': true
+    '#required_error': 'The field is required.'
+  nofinancial:
+    '#type': processed_text
+    '#states':
+      visible:
+        ':input[name="do_you_have_financial_statements_for_the_past_year"]':
+          value: 'No'
+    '#text': '<p>If you do not have a Financial Statement, please contact us at this email <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+    '#format': basic_html
+  do_you_have_an_articles_of_association:
+    '#type': radios
+    '#title': 'Do You Have an Articles of Association?'
+    '#options': yes_no
+    '#options_display': side_by_side
+    '#required': true
+    '#required_error': 'The field is required.'
+  noarticles:
+    '#type': processed_text
+    '#states':
+      visible:
+        ':input[name="do_you_have_an_articles_of_association"]':
+          value: 'No'
+    '#text': '<p>If you do not have an Articles of Association, please contact us at this email <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+    '#format': basic_html
+  1parent_company_s_country:
+    '#type': select
+    '#title': 'Parent Company’s Country'
+    '#options': country_codes
+    '#empty_option': Country
+    '#default_value': SA
+  commercial_activities:
+    '#type': textarea
+    '#title': 'Commercial Activities'
+    '#placeholder': 'Commercial Activities *'
+    '#required': true
+    '#required_error': 'Commercial Activities field is required.'
+  type_your_message:
+    '#type': textarea
+    '#title': 'Type your message'
+    '#placeholder': 'Type your message *'
+    '#required': true
+    '#required_error': 'Message field is required.'
+    '#pattern': '^(?!.*(https?://|www\.)).{0,140}$'
+    '#pattern_error': 'Please enter no more than 140 characters and don’t include links.'
+  are_you_certain_about_the_data_you_ve_entered:
+    '#type': checkbox
+    '#title': "Are you certain about the data you've entered?"
+    '#required': true
+    '#required_error': "Please check (Are you certain about the data you've entered?)"
+  i_confirm_that_i_have_read_and_agree_to_the_terms_and_conditions:
+    '#type': checkbox
+    '#title': 'I confirm that I have read and agree to the terms and conditions.'
+    '#required': true
+    '#required_error': 'Please check (I confirm that I have read and agree to the terms and conditions.)'
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
+css: ''
+javascript: ''
+settings:
+  ajax: true
+  ajax_scroll_top: form
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: ''
+  page_confirm_path: ''
+  page_theme_name: ''
+  form_title: both
+  form_submit_once: false
+  form_open_message: ''
+  form_close_message: ''
+  form_exception_message: ''
+  form_previous_submissions: true
+  form_confidential: false
+  form_confidential_message: ''
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_prepopulate_source_entity_type: ''
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_disable_autocomplete: false
+  form_novalidate: false
+  form_disable_inline_errors: false
+  form_required: false
+  form_autofocus: false
+  form_details_toggle: false
+  form_reset: false
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
+  form_attributes: {  }
+  form_method: ''
+  form_action: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
+  submission_label: ''
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_log: false
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
+  submission_views: {  }
+  submission_views_replace: {  }
+  submission_user_columns: {  }
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  autofill_message: ''
+  autofill_excluded_elements: {  }
+  wizard_progress_bar: true
+  wizard_progress_pages: false
+  wizard_progress_percentage: false
+  wizard_progress_link: false
+  wizard_progress_states: false
+  wizard_start_label: ''
+  wizard_preview_link: false
+  wizard_confirmation: true
+  wizard_confirmation_label: ''
+  wizard_auto_forward: true
+  wizard_auto_forward_hide_next_button: false
+  wizard_keyboard: true
+  wizard_track: ''
+  wizard_prev_button_label: ''
+  wizard_next_button_label: ''
+  wizard_toggle: false
+  wizard_toggle_show_label: ''
+  wizard_toggle_hide_label: ''
+  wizard_page_type: container
+  wizard_page_title_tag: h2
+  preview: 0
+  preview_label: ''
+  preview_title: ''
+  preview_message: ''
+  preview_attributes: {  }
+  preview_excluded_elements: {  }
+  preview_exclude_empty: true
+  preview_exclude_empty_checkbox: false
+  draft: none
+  draft_multiple: false
+  draft_auto_save: false
+  draft_saved_message: ''
+  draft_loaded_message: ''
+  draft_pending_single_message: ''
+  draft_pending_multiple_message: ''
+  confirmation_type: modal
+  confirmation_url: ''
+  confirmation_title: ''
+  confirmation_message: '<p>Your query have been submitted successfully</p>'
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  confirmation_back_attributes: {  }
+  confirmation_exclude_query: false
+  confirmation_exclude_token: false
+  confirmation_update: false
+  limit_total: null
+  limit_total_interval: null
+  limit_total_message: ''
+  limit_total_unique: false
+  limit_user: null
+  limit_user_interval: null
+  limit_user_message: ''
+  limit_user_unique: false
+  entity_limit_total: null
+  entity_limit_total_interval: null
+  entity_limit_user: null
+  entity_limit_user_interval: null
+  purge: none
+  purge_days: null
+  results_disabled: false
+  results_disabled_ignore: false
+  results_customize: false
+  token_view: false
+  token_update: false
+  token_delete: false
+  serial_disabled: false
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers:
+  email:
+    id: email
+    handler_id: email
+    label: Email
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: support@motaded.com.sa
+      to_options: {  }
+      bcc_mail: mukhlid.alqahtani@motaded.com.sa
+      bcc_options: {  }
+      cc_mail: kawthar.h@motaded.com.sa
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: _default
+      body: _default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      langcode: ''
+      parameters: {  }
+      debug: false
+variants: {  }

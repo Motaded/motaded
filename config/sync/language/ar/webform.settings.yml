@@ -1,0 +1,18 @@
+settings:
+  default_submit_button_label: إضافة
+  default_reset_button_label: 'إعادة الضبط'
+  default_delete_button_label: حذف
+  default_wizard_start_label: البداية
+  default_wizard_confirmation_label: تام
+  default_preview_next_button_label: معاينة
+  default_preview_label: معاينة
+  default_confirmation_message: '[webform:title]. * تمت إضافة تقديم جديد إلى'
+  default_confirmation_back_label: 'العودة إلى النموذج'
+  default_previous_submissions_message: 'عرض التقديمات السابقة الخاصة بك <a href="#">عرض التقديمات السابقة الخاصة بك</a>. *'
+  dialog_options:
+    normal:
+      title: طبيعي
+    wide:
+      title: واسع
+element:
+  default_more_title: المزيد

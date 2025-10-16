@@ -1,0 +1,24 @@
+uuid: 60b77a6a-f738-47a7-a62a-0ba12e250441
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.pro_gro_services
+    - field.storage.block_content.field_textarea
+    - filter.format.full_html
+  module:
+    - text
+id: block_content.pro_gro_services.field_textarea
+field_name: field_textarea
+entity_type: block_content
+bundle: pro_gro_services
+label: 'Right Description section'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+field_type: text_long

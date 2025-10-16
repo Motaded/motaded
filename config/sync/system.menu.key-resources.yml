@@ -1,0 +1,8 @@
+uuid: f5d1247f-5cb4-4af2-be8d-77382a283b33
+langcode: en
+status: true
+dependencies: {  }
+id: key-resources
+label: 'Key Resources'
+description: ''
+locked: false

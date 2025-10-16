@@ -1,0 +1,26 @@
+uuid: 27426a70-4412-45d1-b7cd-7dda0a28f1bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - filter.format.plain_text
+    - node.type.pricing
+  module:
+    - text
+id: node.pricing.body
+field_name: body
+entity_type: node
+bundle: pricing
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats:
+    - plain_text
+field_type: text_with_summary

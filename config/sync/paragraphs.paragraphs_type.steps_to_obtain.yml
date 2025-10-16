@@ -1,0 +1,10 @@
+uuid: e991d4a5-0e0b-4a4d-b105-9afa4d4aa273
+langcode: en
+status: true
+dependencies: {  }
+id: steps_to_obtain
+label: 'Steps to Obtain'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -1,0 +1,49 @@
+uuid: 5ad58816-c0e3-4a52-b52f-94753a5f745a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_activity.field_content
+    - field.field.paragraph.business_activity.field_hover_image
+    - field.field.paragraph.business_activity.field_media
+    - field.field.paragraph.business_activity.field_title
+    - paragraphs.paragraphs_type.business_activity
+id: paragraph.business_activity.default
+targetEntityType: paragraph
+bundle: business_activity
+mode: default
+content:
+  field_content:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_hover_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_media:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

@@ -1,0 +1,21 @@
+uuid: b13c4184-f648-44a9-9254-15c3ebee7bab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_like_dislike
+    - node.type.page
+  module:
+    - like_dislike
+id: node.page.field_like_dislike
+field_name: field_like_dislike
+entity_type: node
+bundle: page
+label: 'Like Dislike'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: like_dislike

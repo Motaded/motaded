@@ -1,0 +1,23 @@
+
+<div class="plan-card">
+<div class="plan-title">
+    {{ paragraph.field_title.value }}
+</div>
+<div class="plan-pricing">
+    <span class="plan-price plan-currency-align" name="yearlyPrice">
+        <span class="currency-symbol">
+            SAR
+        </span>
+        {{ paragraph.field_sub_title.value }}
+    </span>
+    <br>
+        
+        </div>
+        
+            <div class="feature-list">
+            {% if paragraph.field_plan_details is not empty %} 
+            {{ paragraph.field_plan_details.value | raw }}
+        {% endif %}
+            </div>
+        </div>
+        

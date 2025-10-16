@@ -1,0 +1,19 @@
+uuid: e338d334-ae82-462c-8c49-acde071b31e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_content
+    - paragraphs.paragraphs_type.steps_to_obtain
+id: paragraph.steps_to_obtain.field_content
+field_name: field_content
+entity_type: paragraph
+bundle: steps_to_obtain
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,0 +1,58 @@
+uuid: c4447bd1-ddb3-43ab-82e8-25e1a02b6d82
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_advantages
+    - node.type.page
+    - paragraphs.paragraphs_type.advantages
+  module:
+    - entity_reference_revisions
+id: node.page.field_advantages
+field_name: field_advantages
+entity_type: node
+bundle: page
+label: Advantages
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      advantages: advantages
+    negate: 0
+    target_bundles_drag_drop:
+      advantages:
+        weight: 11
+        enabled: true
+      areas_of_work:
+        weight: 12
+        enabled: false
+      business_activity:
+        weight: 13
+        enabled: false
+      counter:
+        weight: 14
+        enabled: false
+      featured_card:
+        weight: 15
+        enabled: false
+      itc_card:
+        weight: 16
+        enabled: false
+      objectives:
+        weight: 17
+        enabled: false
+      steps_to_obtain:
+        weight: 18
+        enabled: false
+      top_information:
+        weight: 19
+        enabled: false
+      work_tracks:
+        weight: 20
+        enabled: false
+field_type: entity_reference_revisions

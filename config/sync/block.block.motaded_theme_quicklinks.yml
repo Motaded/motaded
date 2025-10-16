@@ -1,0 +1,25 @@
+uuid: 932ceb14-adc1-4ef2-96bc-25282b04e9f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.quick-links
+  module:
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_quicklinks
+theme: motaded_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:quick-links'
+settings:
+  id: 'system_menu_block:quick-links'
+  label: 'Legal Pages'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

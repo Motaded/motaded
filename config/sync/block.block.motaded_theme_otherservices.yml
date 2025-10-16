@@ -1,0 +1,25 @@
+uuid: e542aaad-9e3b-4683-94be-f1251176151b
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.other-services
+  module:
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_otherservices
+theme: motaded_theme
+region: footer
+weight: -14
+provider: null
+plugin: 'system_menu_block:other-services'
+settings:
+  id: 'system_menu_block:other-services'
+  label: 'Useful Resources'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

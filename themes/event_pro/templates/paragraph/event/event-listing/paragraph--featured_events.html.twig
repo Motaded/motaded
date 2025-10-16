@@ -1,0 +1,23 @@
+<!-- Featured Events -->
+<section class="events-3 dt-section">
+    <div class="video-style-3">
+        <div class="container">
+            <div class="home-3-title">
+                <h2>{{ content.field_title.0 }}</h2>
+                <p>{{ content.field_description.0 }}</p>
+            </div>
+            <div class="row justify-content-center">
+                {{ content.field_featured_event }}
+            </div>
+            {%	if  content.field_button_link[0]  %}
+                <div class="center-btn">
+                    <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-1 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">
+                        {{ content.field_button_link.0['#title'] }}<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                            <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+                        </svg>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

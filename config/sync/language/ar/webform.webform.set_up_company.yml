@@ -1,0 +1,55 @@
+title: 'شركة الإعداد'
+description: '<p>هذا هو نموذج تأسيس الشركة.</p>'
+elements: |
+  company_name:
+    '#title': 'اسم الشركة'
+    '#placeholder': 'اسم الشركة'
+    '#required_error': 'اسم الشركة مطلوب'
+  is_the_company_multinational:
+    '#title': 'هل الشركة متعدد الجنسيات '
+  do_you_have_a_commercial_register_for_one_year_or_more:
+    '#title': 'هل لديك سجل تجاري لمدة عام فاكثر؟'
+    '#required_error': 'الحقل مطلوب'
+  do_you_have_financial_statements_for_the_past_year:
+    '#title': 'هل لديك قوائم مالية للسنة الماضية ؟'
+    '#required_error': 'الحقل مطلوب'
+  do_you_have_an_articles_of_association:
+    '#title': 'هل لديك عقد تأسيس'
+    '#required_error': 'الحقل مطلوب'
+  company_registration_number:
+    '#title': 'رقم تسجيل الشركة'
+    '#placeholder': 'رقم تسجيل الشركة'
+  country_of_registration:
+    '#title': 'بلد التسجيل'
+    '#required_error': 'الرجاء اختيار البلد'
+  country:
+    '#title': الدولة
+    '#required_error': 'الرجاء اختيار البلد'
+  email:
+    '#title': 'البريد الإلكتروني'
+    '#placeholder': 'البريد الإلكتروني'
+    '#required_error': 'حقل البريد الإلكتروني مطلوب'
+  website:
+    '#title': 'الموقع الإلكتروني'
+    '#placeholder': 'الموقع الإلكتروني'
+    '#required_error': 'الحقل مطلوب'
+  country_code:
+    '#title': 'رمز الدولة'
+    '#required_error': 'الرجاء تحديد رمز البلد'
+  mobile_number_without_country_code:
+    '#title': 'رقم الجوال بدون رمز الدولة'
+    '#placeholder': 'رقم الهاتف المحمول'
+    '#required_error': 'حقل رقم الجوال مطلوب.'
+  commercial_activities:
+    '#title': 'الأنشطة التجارية'
+    '#required_error': 'الحقل مطلوب'
+  customer_message:
+    '#title': 'رسالة العميل'
+    '#placeholder': 'رسالة العميل'
+    '#required_error': 'الحقل مطلوب'
+  are_you_sure_about_the_entered_data:
+    '#title': 'هل أنت متأكد من البيانات المدخلة؟'
+    '#required_error': 'يرجى التأكد (هل أنت متأكد من البيانات المدخلة)'
+  i_confirm_that_i_have_read_and_agree_to_the_terms_and_conditions:
+    '#title': 'أؤكد أنني قرأت الشروط والأحكام ووافقت عليها'
+    '#required_error': 'برجاء التأكيد (أؤكد أنني قرأت الشروط والأحكام ووافقت عليها)'

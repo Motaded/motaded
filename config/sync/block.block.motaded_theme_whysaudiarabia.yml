@@ -1,0 +1,25 @@
+uuid: 3b4424ed-bdd7-4486-bb0e-d0b69513229f
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:why_saudi_arabia:90721594-b8af-407e-837c-f19986eafcd6'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_whysaudiarabia
+theme: motaded_theme
+region: sidebar_first
+weight: -16
+provider: null
+plugin: 'block_content:90721594-b8af-407e-837c-f19986eafcd6'
+settings:
+  id: 'block_content:90721594-b8af-407e-837c-f19986eafcd6'
+  label: 'Why Saudi Arabia'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -1,0 +1,29 @@
+title: "Exigences en matière d'espace de coworking"
+elements: |
+  full_name:
+    '#title': 'Nom et prénom'
+    '#placeholder': 'Nom et prénom'
+  contact_number:
+    '#title': 'Numéro de contact'
+    '#placeholder': 'Numéro de contact'
+  email_address:
+    '#title': 'Adresse email'
+    '#placeholder': 'Adresse email'
+  business_type:
+    '#title': "Type d'entreprise"
+    '#placeholder': "Type d'entreprise"
+  preferred_office_location:
+    '#title': 'Emplacement du bureau préféré'
+    '#placeholder': 'Emplacement du bureau préféré'
+  office_size_needed_number_of_employees_or_square_footage:
+    '#title': "Taille du bureau nécessaire (nombre d'employés ou superficie en pieds carrés)"
+    '#placeholder': "Nombre d'employés ou superficie"
+  budget_range:
+    '#title': 'Gamme budgétaire'
+    '#placeholder': 'Gamme budgétaire'
+  lease_duration_short_term_long_term:
+    '#title': 'Durée du bail (court terme, long terme)'
+    '#placeholder': 'Durée du bail (court terme, long terme)'
+  desired_move_in_date:
+    '#title': "Date d'emménagement souhaitée"
+    '#placeholder': "Date d'emménagement souhaitée"

@@ -1,0 +1,26 @@
+uuid: c6143748-ee47-4e25-966c-f4e711cfa704
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.head_office
+    - field.storage.block_content.field_email
+    - filter.format.full_html
+  module:
+    - text
+id: block_content.head_office.field_email
+field_name: field_email
+entity_type: block_content
+bundle: head_office
+label: Email
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats:
+    - full_html
+field_type: text_with_summary

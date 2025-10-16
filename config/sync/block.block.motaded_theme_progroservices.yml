@@ -1,0 +1,25 @@
+uuid: 1acdd28d-9ce3-4bbb-9535-3e54c167550f
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:pro_gro_services:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_progroservices
+theme: motaded_theme
+region: sidebar_first
+weight: -11
+provider: null
+plugin: 'block_content:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+settings:
+  id: 'block_content:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+  label: 'PRO & GRO Services'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

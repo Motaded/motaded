@@ -1,0 +1,17 @@
+{% if not is_inline %}
+  {% include "field.html.twig" %}
+{% else %}
+{%
+  set classes = [
+    'field',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
+  ]
+%}
+<h1>
+  {%- for item in items -%}
+    {{ item.content }}
+  {%- endfor -%}
+</h1>
+{% endif %}

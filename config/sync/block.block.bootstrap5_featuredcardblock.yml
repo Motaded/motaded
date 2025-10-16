@@ -1,0 +1,30 @@
+uuid: 2370d3ad-e6fd-46a8-9c9f-658d39b0fa75
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:featured_card:fea33b0b-5390-4b46-bd53-7dc3d40af0b8'
+  module:
+    - block_content
+    - system
+  theme:
+    - bootstrap5
+id: bootstrap5_featuredcardblock
+theme: bootstrap5
+region: homepage
+weight: -17
+provider: null
+plugin: 'block_content:fea33b0b-5390-4b46-bd53-7dc3d40af0b8'
+settings:
+  id: 'block_content:fea33b0b-5390-4b46-bd53-7dc3d40af0b8'
+  label: 'Featured Card Block'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

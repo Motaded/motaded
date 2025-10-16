@@ -1,0 +1,25 @@
+uuid: 2d4cd2f1-7522-41c3-a9cb-d74ea7d89562
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.other-services
+  module:
+    - system
+  theme:
+    - bootstrap5
+id: bootstrap5_otherservices
+theme: bootstrap5
+region: footer
+weight: -14
+provider: null
+plugin: 'system_menu_block:other-services'
+settings:
+  id: 'system_menu_block:other-services'
+  label: 'Useful Resources'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: false
+visibility: {  }

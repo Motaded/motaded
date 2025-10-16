@@ -1,0 +1,9 @@
+display:
+  default:
+    display_options:
+      title: 认识团队
+      header:
+        area:
+          content:
+            value: '<p>认识团队</p>'
+            format: full_html

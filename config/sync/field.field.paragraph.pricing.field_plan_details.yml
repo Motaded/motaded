@@ -1,0 +1,24 @@
+uuid: 9e52d200-c73a-479b-808c-4ab34573f14c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_plan_details
+    - filter.format.full_html
+    - paragraphs.paragraphs_type.pricing
+  module:
+    - text
+id: paragraph.pricing.field_plan_details
+field_name: field_plan_details
+entity_type: paragraph
+bundle: pricing
+label: 'Plan details'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+field_type: text_long

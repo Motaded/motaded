@@ -1,0 +1,9 @@
+display:
+  default:
+    display_options:
+      title: "Rencontrez l'équipe"
+      header:
+        area:
+          content:
+            value: "<p>Rencontrez l'équipe</p>"
+            format: full_html

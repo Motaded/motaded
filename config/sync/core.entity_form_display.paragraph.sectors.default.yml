@@ -1,0 +1,48 @@
+uuid: 2e9de3d4-ef5d-454c-bf0f-c104b54e5f92
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.sectors.field_link
+    - field.field.paragraph.sectors.field_media
+    - field.field.paragraph.sectors.field_title
+    - paragraphs.paragraphs_type.sectors
+  module:
+    - link
+    - media_library
+id: paragraph.sectors.default
+targetEntityType: paragraph
+bundle: sectors
+mode: default
+content:
+  field_link:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 0
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

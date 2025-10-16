@@ -1,0 +1,40 @@
+uuid: d2ed72c0-d470-410b-812a-9c7930e2ecb7
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+    - motaded_custom
+    - node
+  theme:
+    - motaded_theme
+id: motaded_theme_bannerblock
+theme: motaded_theme
+region: content
+weight: -17
+provider: null
+plugin: banner_block
+settings:
+  id: banner_block
+  label: 'Banner Block'
+  label_display: '0'
+  provider: motaded_custom
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      page: page
+  language:
+    id: language
+    negate: false
+    context_mapping:
+      language: '@language.current_language_context:language_interface'
+    langcodes:
+      en: en
+      ar: ar
+      fr: fr
+      es: es
+      zh-hans: zh-hans

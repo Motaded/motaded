@@ -1,0 +1,19 @@
+uuid: dab4dcd8-a4c0-46a4-9238-a71fa86f62a1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.business_activity
+    - field.storage.block_content.field_sub_title
+id: block_content.business_activity.field_sub_title
+field_name: field_sub_title
+entity_type: block_content
+bundle: business_activity
+label: 'Sub title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

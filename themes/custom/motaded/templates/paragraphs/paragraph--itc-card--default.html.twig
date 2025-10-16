@@ -1,0 +1,24 @@
+  <div class="icon-card card-white">
+                            {% if paragraph.field_media.entity is not empty %}
+                            {% set image_url = file_url(paragraph.field_media.entity.field_media_image.entity.uri.value) %}
+                            <div class="icon">
+                                <img src="{{ image_url }}" alt="{{ paragraph.field_media.alt }}">
+                            </div>
+                        {% endif %}
+                            {% if paragraph.field_title is not empty %}
+                            <h4>{{ paragraph.field_title.value }}</h4>
+                        {% endif %}
+                           {% if paragraph.field_content is not empty %}
+                            <p>{{ paragraph.field_content.value }}</p>
+                        {% endif %}
+                   
+                          </div>
+               
+                    
+                        
+                        
+                       
+                        
+                       
+            
+   

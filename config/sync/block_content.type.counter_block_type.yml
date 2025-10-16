@@ -1,0 +1,8 @@
+uuid: 935cce6a-8985-48f0-9773-b904d9dd0adf
+langcode: en
+status: true
+dependencies: {  }
+id: counter_block_type
+label: 'Counter Block Type'
+revision: false
+description: null

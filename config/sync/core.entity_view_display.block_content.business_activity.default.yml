@@ -1,0 +1,66 @@
+uuid: ca6a2354-10da-4b8d-bfb0-f286ea931fc2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.business_activity
+    - field.field.block_content.business_activity.body
+    - field.field.block_content.business_activity.field_business_activity
+    - field.field.block_content.business_activity.field_link
+    - field.field.block_content.business_activity.field_sub_title
+    - field.field.block_content.business_activity.field_title
+  module:
+    - entity_reference_revisions
+    - link
+    - text
+id: block_content.business_activity.default
+targetEntityType: block_content
+bundle: business_activity
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_business_activity:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_sub_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true

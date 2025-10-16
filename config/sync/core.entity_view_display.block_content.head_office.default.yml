@@ -1,0 +1,47 @@
+uuid: 3e18e765-b9de-4c8d-9222-f6cd4d0d522a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.head_office
+    - field.field.block_content.head_office.body
+    - field.field.block_content.head_office.field_email
+    - field.field.block_content.head_office.field_head_office_second
+    - field.field.block_content.head_office.field_textarea
+  module:
+    - text
+id: block_content.head_office.default
+targetEntityType: block_content
+bundle: head_office
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_email:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_head_office_second:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_textarea:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

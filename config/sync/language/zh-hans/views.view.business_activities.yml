@@ -1,0 +1,9 @@
+display:
+  default:
+    display_options:
+      title: 沙特阿拉伯的商业活动
+      header:
+        area:
+          content:
+            value: '<div class="titleHead">沙特阿拉伯的商业活动</div><p>无论您是寻求扩张的企业家还是探索机会的新投资者，决定正确的商业活动都是关键。您的选择将决定您需要哪些许可证以及您将遵循的法规。以下是您可能会考虑的一些最常见的业务活动：</p>'
+            format: full_html

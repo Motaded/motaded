@@ -1,0 +1,8 @@
+uuid: 75879c50-1bf3-4e92-bddf-5b9a9d96cc12
+langcode: en
+status: true
+dependencies: {  }
+id: quick-links
+label: 'Legal Pages'
+description: ''
+locked: false

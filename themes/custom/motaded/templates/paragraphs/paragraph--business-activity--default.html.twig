@@ -1,0 +1,24 @@
+<section id="{{ paragraph.field_title.value|clean_id }}" class="service-content-section small-circle-graphics">
+    <div class="section-content">
+        <div class="image-with-content-section">
+            
+            {# Image box #}
+            {% if paragraph.field_media.entity is not empty %}
+                {% set image_url = file_url(paragraph.field_media.entity.field_media_image.entity.uri.value) %}
+                <div class="image-box">
+                    <img src="{{ image_url }}" alt="{{ paragraph.field_media.alt }}">
+                </div>
+            {% endif %}
+            
+            {# Content box #}
+            <div class="content-box">
+                {% if paragraph.field_title is not empty %}
+                    <h2 class="service-section-title">{{ paragraph.field_title.value }}</h2>
+                {% endif %}
+                {% if paragraph.field_content is not empty %}
+                    <p>{{ paragraph.field_content.value }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

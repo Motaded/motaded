@@ -1,0 +1,67 @@
+uuid: aac78e1f-434e-4249-9aea-a91bc134d381
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sectors
+    - field.storage.block_content.field_sectors
+    - paragraphs.paragraphs_type.sectors
+  module:
+    - entity_reference_revisions
+id: block_content.sectors.field_sectors
+field_name: field_sectors
+entity_type: block_content
+bundle: sectors
+label: Sectors
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      sectors: sectors
+    negate: 0
+    target_bundles_drag_drop:
+      advantages:
+        weight: 14
+        enabled: false
+      areas_of_work:
+        weight: 15
+        enabled: false
+      business_activity:
+        weight: 16
+        enabled: false
+      counter:
+        weight: 17
+        enabled: false
+      featured_card:
+        weight: 18
+        enabled: false
+      itc_card:
+        weight: 19
+        enabled: false
+      objectives:
+        weight: 20
+        enabled: false
+      pricing:
+        weight: 21
+        enabled: false
+      requirements:
+        weight: 22
+        enabled: false
+      sectors:
+        weight: 23
+        enabled: true
+      steps_to_obtain:
+        weight: 24
+        enabled: false
+      top_information:
+        weight: 25
+        enabled: false
+      work_tracks:
+        weight: 26
+        enabled: false
+field_type: entity_reference_revisions

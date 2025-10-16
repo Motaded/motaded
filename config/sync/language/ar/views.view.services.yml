@@ -1,0 +1,7 @@
+display:
+  page_2:
+    display_options:
+      title: مدونات
+      header:
+        area_text_custom:
+          content: "<img src=\"/themes/custom/motaded/images/cms-banner.png\" alt=\"banner copy\">\r\n<div class=\"banner-content\">\r\n<h1>مدونات</h1>\r\n</div>"

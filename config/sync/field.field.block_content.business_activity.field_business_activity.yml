@@ -1,0 +1,37 @@
+uuid: 18c71f33-6ea1-4642-bdb6-e9020c087395
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.business_activity
+    - field.storage.block_content.field_business_activity
+    - paragraphs.paragraphs_type.business_activity
+  module:
+    - entity_reference_revisions
+id: block_content.business_activity.field_business_activity
+field_name: field_business_activity
+entity_type: block_content
+bundle: business_activity
+label: 'Business activity'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      business_activity: business_activity
+    negate: 0
+    target_bundles_drag_drop:
+      business_activity:
+        weight: 3
+        enabled: true
+      counter:
+        weight: 5
+        enabled: false
+      featured_card:
+        weight: 4
+        enabled: false
+field_type: entity_reference_revisions

@@ -1,0 +1,50 @@
+title: 'Visas temporaires'
+elements: |
+  applicant_name:
+    '#title': 'Nom du demandeur'
+    '#placeholder': 'Nom du demandeur'
+  applicant_nationality:
+    '#title': 'Nationalité du demandeur'
+    '#placeholder': 'Nationalité du demandeur'
+  purpose_of_visit:
+    '#title': 'But de la visite'
+    '#placeholder': 'But de la visite'
+  do_you_have_a_job_offer:
+    '#title': "Avez-vous une offre d'emploi"
+  university_degree:
+    '#title': 'Diplôme universitaire'
+    '#placeholder': 'Diplôme universitaire'
+  major:
+    '#title': Majeure
+    '#placeholder': Majeure
+  gender:
+    '#title': Genre
+  age:
+    '#title': Âge
+    '#placeholder': Âge
+  do_you_have_a_residence_in_saudi_arabia:
+    '#title': 'Avez-vous une résidence en Arabie Saoudite'
+  experience:
+    '#title': Expérience
+  destination_of_arrival_select_saudi_embassy:
+    '#title': "Destination d'arrivée (sélectionner l'ambassade saoudienne)"
+  city_to_reside_in_saudi_arabia:
+    '#title': 'Ville de résidence en Arabie Saoudite'
+    '#placeholder': 'Ville de résidence en Arabie Saoudite'
+  do_you_have_relatives_in_saudi_arabia:
+    '#title': 'Avez-vous des parents en Arabie Saoudite'
+  mention_relatives_in_saudi_arabia:
+    '#title': 'Mentionner des proches en Arabie Saoudite'
+    '#placeholder': 'Mentionner des proches en Arabie Saoudite'
+  do_you_have_friends_in_saudi_arabia:
+    '#title': 'Avez-vous des amis en Arabie Saoudite'
+  mention_friends_in_saudi_arabia:
+    '#title': 'Mentionner des amis en Arabie Saoudite'
+    '#placeholder': 'Mentionner des amis en Arabie Saoudite'
+  choose_package:
+    '#title': 'Choisir le forfait'
+    '#options':
+      Package1: Paquet1
+      Package2: Forfait2
+      Package3: 'Forfait 3'
+      Package4: 'Forfait 4'

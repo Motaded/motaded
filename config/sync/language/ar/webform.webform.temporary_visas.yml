@@ -1,0 +1,61 @@
+title: 'تأشيرات مؤقتة'
+description: '<p>هذا هو نموذج التأشيرات المؤقتة</p>'
+elements: |
+  applicant_name:
+    '#title': 'اسم مقدم الطلب'
+    '#placeholder': 'اسم مقدم الطلب'
+  applicant_nationality:
+    '#title': 'جنسية مقدم الطلب'
+    '#placeholder': 'جنسية مقدم الطلب'
+  purpose_of_visit:
+    '#title': 'الغرض من الزيارة'
+    '#placeholder': 'الغرض من الزيارة'
+  do_you_have_a_job_offer:
+    '#title': 'هل يوجد لديك عرض وظيفي'
+  university_degree:
+    '#title': 'الشهادة الجامعية'
+    '#placeholder': 'الشهادة الجامعية'
+  major:
+    '#title': التخصص
+    '#placeholder': التخصص
+  religion:
+    '#title': الديانة
+    '#placeholder': الديانة
+  gender:
+    '#title': الجنس
+  age:
+    '#title': العمر
+    '#placeholder': العمر
+  do_you_have_a_residence_in_saudi_arabia:
+    '#title': 'هل لديك سكن في السعودية'
+  experience:
+    '#title': الخبرة
+  destination_of_arrival_select_saudi_embassy:
+    '#title': 'جهة القدوم ( اختيار السفارة السعودية)'
+    '#options':
+      saudi_embassy_riyadh|Riyadh: saudi_embassy_riyadh|الرياض
+      saudi_embassy_jeddah|Jeddah: saudi_embassy_jeddah|جدة
+      saudi_embassy_dammam|Dammam: saudi_embassy_dammam|الدمام
+  profession:
+    '#title': المهنة
+    '#placeholder': المهنة
+  city_to_reside_in_saudi_arabia:
+    '#title': 'مدينة الإقامة في المملكة العربية السعودية'
+    '#placeholder': 'مدينة الإقامة في المملكة العربية السعودية'
+  do_you_have_relatives_in_saudi_arabia:
+    '#title': 'هل لديك أقارب في السعودية؟'
+  mention_relatives_in_saudi_arabia:
+    '#title': 'ذكر الأقارب في المملكة العربية السعودية'
+    '#placeholder': 'ذكر الأقارب في المملكة العربية السعودية'
+  do_you_have_friends_in_saudi_arabia:
+    '#title': 'هل لديك أصدقاء في السعودية؟'
+  mention_friends_in_saudi_arabia:
+    '#title': 'منشن الأصدقاء في السعودية'
+    '#placeholder': 'منشن الأصدقاء في السعودية'
+  choose_package:
+    '#title': 'اختر الحزمة'
+    '#options':
+      Package1: الحزمة1
+      Package2: الحزمة2
+      Package3: الحزمة3
+      Package4: الحزمة4

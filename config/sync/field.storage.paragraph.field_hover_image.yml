@@ -1,0 +1,20 @@
+uuid: 3edb0d64-dd7d-4b90-9d28-3e95d360cd6d
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - paragraphs
+id: paragraph.field_hover_image
+field_name: field_hover_image
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

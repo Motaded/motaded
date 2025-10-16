@@ -1,0 +1,29 @@
+title: Contact
+description: '<p>Basic email contact webform.</p>'
+elements: |
+  email:
+    '#title': 'Votre e-mail'
+  ph_number:
+    '#title': 'Numéro de téléphone'
+  subject:
+    '#title': Sujette
+    '#test': 'contacter le formulaire Web à partir de[site:name]'
+  message:
+    '#test': 'Veuillez ignorer cet e-mail.'
+  actions:
+    '#submit__label': 'Envoyer un message'
+settings:
+  confirmation_message: '<p>Votre message a été envoyé.</p>'
+handlers:
+  email_confirmation:
+    label: 'Courriel de confirmation'
+    settings:
+      from_name: _default
+      subject: '[webform_submission:values:subject:raw]'
+      body: '[webform_submission:values:message:value]'
+  email_notification:
+    label: 'Notification par courriel'
+    settings:
+      from_name: '[webform_submission:values:name:raw]'
+      subject: '[webform_submission:values:subject:raw]'
+      body: '[webform_submission:values:message:value]'

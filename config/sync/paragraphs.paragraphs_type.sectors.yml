@@ -1,0 +1,10 @@
+uuid: f3bad20e-6aad-4ef0-b5bf-18b874c9beb7
+langcode: en
+status: true
+dependencies: {  }
+id: sectors
+label: Sectors
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

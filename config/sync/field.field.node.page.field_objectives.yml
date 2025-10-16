@@ -1,0 +1,43 @@
+uuid: 429ffd8c-99ec-4d15-b3c3-81a84769f8a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_objectives
+    - node.type.page
+    - paragraphs.paragraphs_type.objectives
+  module:
+    - entity_reference_revisions
+id: node.page.field_objectives
+field_name: field_objectives
+entity_type: node
+bundle: page
+label: Objectives
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      objectives: objectives
+    negate: 0
+    target_bundles_drag_drop:
+      business_activity:
+        weight: 6
+        enabled: false
+      counter:
+        weight: 7
+        enabled: false
+      featured_card:
+        weight: 8
+        enabled: false
+      itc_card:
+        weight: 9
+        enabled: false
+      objectives:
+        weight: 10
+        enabled: true
+field_type: entity_reference_revisions

@@ -1,0 +1,16 @@
+uuid: 327fc65b-4183-4aef-8d34-50501af7e35e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sectors
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: block_content.sectors
+target_entity_type_id: block_content
+target_bundle: sectors
+default_langcode: site_default
+language_alterable: true

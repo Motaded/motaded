@@ -1,0 +1,22 @@
+uuid: 633ac903-fda7-41d3-b375-bbc92a1c98d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.counter
+id: paragraph.counter.status
+field_name: status
+entity_type: paragraph
+bundle: counter
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

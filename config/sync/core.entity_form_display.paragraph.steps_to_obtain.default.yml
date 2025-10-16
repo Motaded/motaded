@@ -1,0 +1,42 @@
+uuid: a08c29e7-faa9-44d9-9fb3-5244bcf57b85
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.steps_to_obtain.field_content
+    - field.field.paragraph.steps_to_obtain.field_media
+    - field.field.paragraph.steps_to_obtain.field_title
+    - paragraphs.paragraphs_type.steps_to_obtain
+  module:
+    - media_library
+id: paragraph.steps_to_obtain.default
+targetEntityType: paragraph
+bundle: steps_to_obtain
+mode: default
+content:
+  field_content:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 0
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,73 @@
+uuid: d24c0e18-c488-4d1f-97a3-6d0479dd0a95
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.pro_gro_services
+    - field.field.block_content.pro_gro_services.body
+    - field.field.block_content.pro_gro_services.field_link
+    - field.field.block_content.pro_gro_services.field_textarea
+    - field.field.block_content.pro_gro_services.field_title
+  module:
+    - link
+    - text
+id: block_content.pro_gro_services.default
+targetEntityType: block_content
+bundle: pro_gro_services
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 2
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_textarea:
+    type: text_textarea
+    weight: 26
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 5
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  translation:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

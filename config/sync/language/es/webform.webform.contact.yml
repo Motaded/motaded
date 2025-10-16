@@ -1,0 +1,28 @@
+title: Contacto
+description: '<p>Basic email contact webform.</p>'
+elements: |
+  name:
+    '#title': 'Su nombre'
+  email:
+    '#title': 'Tu correo electrónico'
+  ph_number:
+    '#title': 'Número de teléfono'
+  subject:
+    '#title': Sujeta
+    '#test': 'formulario web de contacto desde [site:name]'
+  message:
+    '#title': Mensaje
+    '#test': 'Por favor ignore este correo electrónico.'
+  actions:
+    '#submit__label': 'enviar mensaje'
+settings:
+  confirmation_message: '<p>Su mensaje ha sido enviado.</p>'
+handlers:
+  email_confirmation:
+    label: 'Confirmación por correo electrónico'
+    settings:
+      body: '[webform_submission:values:message:value]'
+  email_notification:
+    label: 'Aviso por correo electrónico'
+    settings:
+      body: '[webform_submission:values:message:value]'

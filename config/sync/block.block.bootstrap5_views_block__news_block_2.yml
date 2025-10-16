@@ -1,0 +1,33 @@
+uuid: 2488c0b9-b487-4de4-91b7-f9dde54f24fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.news
+  module:
+    - node
+    - views
+  theme:
+    - bootstrap5
+id: bootstrap5_views_block__news_block_2
+theme: bootstrap5
+region: content
+weight: -9
+provider: null
+plugin: 'views_block:news-block_2'
+settings:
+  id: 'views_block:news-block_2'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: null
+  context_mapping: {  }
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      article: article

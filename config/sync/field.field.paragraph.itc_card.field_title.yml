@@ -1,0 +1,19 @@
+uuid: 10a85864-0b3a-47fe-8b50-e35762db8ace
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.itc_card
+id: paragraph.itc_card.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: itc_card
+label: Title
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

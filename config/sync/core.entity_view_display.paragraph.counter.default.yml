@@ -1,0 +1,29 @@
+uuid: 057201ee-6036-48dc-8772-0523f4675a08
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.counter.field_content
+    - field.field.paragraph.counter.field_title
+    - paragraphs.paragraphs_type.counter
+id: paragraph.counter.default
+targetEntityType: paragraph
+bundle: counter
+mode: default
+content:
+  field_content:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

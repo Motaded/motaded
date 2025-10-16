@@ -1,0 +1,14 @@
+label: 'Centro de medios'
+display:
+  default:
+    display_options:
+      title: 'Centro de medios'
+      header:
+        area:
+          content:
+            value: '<div class="titleHead">Centro de medios</div><p>Bienvenido al Centro de medios de Motaded, su recurso integral para obtener las últimas noticias, actualizaciones e información sobre oportunidades comerciales y la licencia de sede regional (RHQ) en Arabia Saudita. Aquí encontrará toda la información que necesita para mantenerse informado sobre nuestras iniciativas, eventos y el panorama empresarial en Arabia Saudita y la región MENA en general.</p>'
+            format: full_html
+  block_1:
+    display_title: 'Centro de medios'
+  page_1:
+    display_title: 'Centro de medios'

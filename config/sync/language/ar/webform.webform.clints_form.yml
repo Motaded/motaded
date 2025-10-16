@@ -1,0 +1,118 @@
+title: 'نموذج كلينتس'
+description: '<p>هذا هو شكل كلينت</p>'
+elements: |
+  are_all_your_shareholders_of_gcc_nationality:
+    '#title': 'هل جميع المساهمين لديكم من جنسيات خليجية؟'
+  do_you_have_an_advance_license_number:
+    '#title': 'هل لديك رقم ترخيص مسبق؟'
+  license_type:
+    '#title': 'نوع الترخيص'
+    '#options':
+      'Services Investment License': 'رخصة استثمار الخدمات'
+      'Regional Headquarter License': 'رخصة المقر الإقليمي'
+      'Mining Investment License': 'رخصة الاستثمار التعديني'
+      'Industrial Investment License': 'رخصة الاستثمار الصناعي'
+      'Scientific-Technical Investment License': 'رخصة الاستثمار العلمي الفني'
+      'Temporary License for Contracts': 'الترخيص المؤقت للعقود'
+      'Trading Investment License': 'رخصة التداول والاستثمار'
+      'Agricultural Investment License': 'رخصة الاستثمار الزراعي'
+      'Economic and Technical Liaison Office': 'مكتب الاتصال الاقتصادي والفني'
+      'Real Estate Investment License': 'رخصة الاستثمار العقاري'
+      'Professional Investment License': 'رخصة الاستثمار المهني'
+  license_information:
+    '#text': '<p>معلومات الترخيص</p>'
+  are_you_an_entrepreneur_a_letter_of_incubation_for_the_project_i:
+    '#title': 'هل أنت رجل أعمال؟ يشترط وجود خطاب احتضان للمشروع صادر من جهة معتمدة من وزارة الاستثمار (حاضنة أعمال، الجامعة السعودية أو صندوق رأس المال الاستثماري)'
+  do_you_have_an_approved_request_from_anti_commercial_concealment:
+    '#title': 'هل لديك طلب معتمد من منصة قانون مكافحة التستر التجاري؟'
+  license_duration:
+    '#text': '<p>مدة الترخيص</p>'
+  numer_of_year:
+    '#title': 'عدد السنوات'
+  basic_information:
+    '#text': '<p>المعلومات الأساسية</p>'
+  entity_name_in_english:
+    '#title': 'اسم الكيان باللغة الإنجليزية'
+    '#placeholder': 'اسم الكيان باللغة الإنجليزية'
+  entity_name_in_arabic:
+    '#title': 'اسم الكيان باللغة العربية'
+    '#placeholder': 'اسم الكيان باللغة العربية'
+  foreign_entity_branch:
+    '#title': 'فرع الكيان الأجنبي'
+    '#placeholder': 'فرع الكيان الأجنبي'
+  llc_branch:
+    '#title': 'فرع شركة ذات مسؤولية محدودة'
+    '#placeholder': 'فرع شركة ذات مسؤولية محدودة'
+  llc:
+    '#title': 'ذ م م'
+    '#placeholder': 'ذ م م'
+  indvisuail_llc:
+    '#title': 'إندفيسوايل ذ.م.م'
+    '#placeholder': 'إندفيسوايل ذ.م.م'
+  branch_of_a_closed_foreign_joint_stock_company:
+    '#title': 'فرع شركة مساهمة أجنبية مقفلة'
+    '#placeholder': 'فرع شركة مساهمة أجنبية مقفلة'
+  branch_of_a_public_foreign_joint_stock_company:
+    '#title': 'فرع شركة مساهمة أجنبية عامة'
+    '#placeholder': 'فرع شركة مساهمة أجنبية عامة'
+  multinational_company:
+    '#title': 'شركة متعددة الجنسيات'
+  capital:
+    '#title': عاصمة
+  email:
+    '#title': 'بريد إلكتروني'
+    '#placeholder': 'بريد إلكتروني'
+  mobile:
+    '#title': متحرك
+  country_code:
+    '#title': 'رمز البلد'
+  country:
+    '#title': دولة
+  website:
+    '#title': 'موقع إلكتروني'
+  region:
+    '#title': منطقة
+    '#placeholder': منطقة
+  city:
+    '#title': مدينة
+  address:
+    '#title': عنوان
+    '#placeholder': عنوان
+  po_box:
+    '#title': 'صندوق البريد'
+    '#placeholder': 'صندوق البريد'
+  post_code:
+    '#title': 'شفرة البريد'
+    '#placeholder': 'شفرة البريد'
+  business_activities:
+    '#title': 'الأنشطة التجارية'
+    '#placeholder': 'الأنشطة التجارية'
+  expected_investment_over_the_next_year:
+    '#title': 'الاستثمار المتوقع خلال العام المقبل'
+    '#placeholder': 'الاستثمار المتوقع خلال العام المقبل'
+  saudi_id:
+    '#title': 'الهوية السعودية'
+    '#placeholder': 'الهوية السعودية'
+  residence_id:
+    '#title': 'معرف الإقامة'
+    '#placeholder': 'معرف الإقامة'
+  gulf_id:
+    '#title': 'معرف الخليج'
+    '#placeholder': 'معرف الخليج'
+  passport_id:
+    '#title': 'معرف جواز السفر'
+  identity_number:
+    '#title': 'رقم الهوية'
+    '#placeholder': 'رقم الهوية'
+  date_of_birth:
+    '#title': 'تاريخ الميلاد'
+    '#placeholder': 'تاريخ الميلاد'
+  date_of_issue_of_id:
+    '#title': 'تاريخ إصدار الهوية'
+    '#placeholder': 'تاريخ إصدار الهوية'
+  date_of_expiry_of_id:
+    '#title': 'تاريخ انتهاء الهوية'
+    '#placeholder': 'تاريخ انتهاء الهوية'
+  nationality_of_identity:
+    '#title': 'جنسية الهوية'
+    '#placeholder': 'جنسية الهوية'

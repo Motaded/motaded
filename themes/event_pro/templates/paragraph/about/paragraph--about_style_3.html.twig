@@ -1,0 +1,46 @@
+<!-- About Style 3 -->
+{%	if  content.field_style_variant.0['#markup'] == "Variant 1" %}
+<section class="about-us-3 dt-section">
+    <div class="container">
+        <div class="about-top">
+            <div class="row">
+                <div class="col-lg-6  col-12">
+                    <div class="content">
+                        <h2>{{ content.field_title.0 }}</h2>
+                        {{ content.field_about_description.0 }}
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="image">
+                        <img src="{{ file_url(content.field_image['#items'].entity.uri.value) }}"  alt="{{content.field_image['#items'].alt}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="about-us-page-2 dt-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6  col-12">
+                <div class="image">
+                    <img src="{{ file_url(content.field_image['#items'].entity.uri.value) }}"  alt="{{content.field_image['#items'].alt}}" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="content">
+                    <div class="home-2-title">
+                        <span>{{ content.field_tag_line.0 }}</span>
+                        <h2>{{ content.field_title.0 }}</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+                            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    {{ content.field_about_description.0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

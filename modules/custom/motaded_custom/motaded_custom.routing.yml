@@ -1,0 +1,8 @@
+motaded_custom.featuredcard_page:
+  path: '/featured-card-page'
+  defaults:
+    _controller: '\Drupal\motaded_custom\Controller\FeaturedCardController::featuredCardPage'
+    _title: 'Featured Card Page'
+  requirements:
+    _permission: 'access content'
+

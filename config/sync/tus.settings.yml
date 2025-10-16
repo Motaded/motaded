@@ -1,0 +1,4 @@
+_core:
+  default_config_hash: CJANlb2UwLbF3xyPCkEB1qsAqvxIbOycx8Vt-OxbJ5Q
+cache_dir: 'private://tus'
+max_upload_size: 1024

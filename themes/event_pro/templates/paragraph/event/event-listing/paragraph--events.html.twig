@@ -1,0 +1,16 @@
+<!-- Event-->
+<section class="upcoming-event-3 dt-section bg-blue">
+    <div class="container">
+        <div class="home-3-title">
+            <h2>{{ content.field_title.0 }}</h2>
+            <p>{{ content.field_description.0 }}</p>
+        </div>
+        {{ content.field_events }}
+        {%	if  content.field_button_link[0]  %}
+        <div class="center-btn">
+            <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-4 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">{{ content.field_button_link.0['#title'] }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,25 @@
+uuid: 97b110ae-235c-4f02-ae15-a57be67010f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_card
+    - field.field.block_content.featured_card.field_featured_card
+  module:
+    - entity_reference_revisions
+id: block_content.featured_card.default
+targetEntityType: block_content
+bundle: featured_card
+mode: default
+content:
+  field_featured_card:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

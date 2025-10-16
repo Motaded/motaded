@@ -1,0 +1,44 @@
+<section class="book-ticket-form dt-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-12 col-12">
+                <form {{ attributes.addClass("form-style-2") }}>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                             {{ element.elements.first_name }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ element.elements.second_name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                           {{ element.elements.contact_number }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ element.elements.email }}
+                        </div>
+                    </div>
+                    <div class="row gy-5">
+                        <div id="ticket-price" class="form-group col-md-6">
+                            {{ element.elements.ticket_type }}
+                        </div>
+                        <div id="ticket-count" class="form-group col-md-6">
+                             {{ element.elements.count }}
+                        </div>
+                    </div>
+                    <div class="total-price">
+                        <span>Total Price</span>
+                        <span id="ticket-value"></span>
+                    </div>
+                    {{ element.elements.actions }}
+                    <div>
+                        {{ element.form_token }}
+                        {{ element.form_build_id }}
+                        {{ element.form_id }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

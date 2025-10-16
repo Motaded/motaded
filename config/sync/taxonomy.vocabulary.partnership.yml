@@ -1,0 +1,9 @@
+uuid: 1516053c-589d-4c99-b98e-5042fbeeb088
+langcode: en
+status: true
+dependencies: {  }
+name: Partnership
+vid: partnership
+description: null
+weight: 0
+new_revision: false

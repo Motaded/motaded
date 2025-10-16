@@ -1,0 +1,8 @@
+uuid: 4eb555d2-3fb5-4b5a-accb-49ab67d4ccad
+langcode: en
+status: true
+dependencies: {  }
+id: sectors
+label: Sectors
+revision: false
+description: null

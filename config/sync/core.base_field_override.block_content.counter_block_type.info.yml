@@ -1,0 +1,18 @@
+uuid: bebe16ee-4bd3-4216-98b7-52fd4225e037
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.counter_block_type
+id: block_content.counter_block_type.info
+field_name: info
+entity_type: block_content
+bundle: counter_block_type
+label: 'Block description'
+description: 'A brief description of your block.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

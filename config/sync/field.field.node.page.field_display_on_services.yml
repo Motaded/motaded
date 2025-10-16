@@ -1,0 +1,21 @@
+uuid: ff2dd525-a5f8-4835-8d4a-0557da26aa47
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_display_on_services
+    - node.type.page
+id: node.page.field_display_on_services
+field_name: field_display_on_services
+entity_type: node
+bundle: page
+label: 'Display on services'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

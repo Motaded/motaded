@@ -1,0 +1,10 @@
+uuid: 3d533389-79f3-4b7a-903d-e98558b170c1
+langcode: en
+status: true
+dependencies: {  }
+id: work_tracks
+label: 'Work Tracks'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

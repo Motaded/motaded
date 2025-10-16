@@ -1,0 +1,52 @@
+uuid: 424bbee7-6424-4bfd-afcc-a40f6817892b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_steps_to_obtain
+    - node.type.page
+    - paragraphs.paragraphs_type.steps_to_obtain
+  module:
+    - entity_reference_revisions
+id: node.page.field_steps_to_obtain
+field_name: field_steps_to_obtain
+entity_type: node
+bundle: page
+label: 'Steps to Obtain'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      steps_to_obtain: steps_to_obtain
+    negate: 0
+    target_bundles_drag_drop:
+      areas_of_work:
+        weight: 9
+        enabled: false
+      business_activity:
+        weight: 10
+        enabled: false
+      counter:
+        weight: 11
+        enabled: false
+      featured_card:
+        weight: 12
+        enabled: false
+      itc_card:
+        weight: 13
+        enabled: false
+      objectives:
+        weight: 14
+        enabled: false
+      steps_to_obtain:
+        weight: 15
+        enabled: true
+      work_tracks:
+        weight: 16
+        enabled: false
+field_type: entity_reference_revisions

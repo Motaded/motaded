@@ -1,0 +1,30 @@
+title: 'متطلبات خدمات الترجمة'
+description: '<p>هذه هي متطلبات خدمات الترجمة</p>'
+elements: |
+  full_name:
+    '#title': 'الاسم الكامل'
+    '#placeholder': 'الاسم الكامل'
+  contact_number:
+    '#title': 'رقم الاتصال'
+    '#placeholder': 'رقم الاتصال'
+  email:
+    '#title': 'بريد إلكتروني'
+    '#placeholder': 'بريد إلكتروني'
+  document_type_for_translation:
+    '#title': 'نوع الوثيقة للترجمة'
+    '#options':
+      Legal: قانوني
+      Medical: طبي
+      Business: عمل
+      Educational: التعليمية
+  source_language:
+    '#title': 'لغة المصدر'
+    '#placeholder': 'لغة المصدر'
+  target_language:
+    '#title': 'اللغة المستهدفة'
+    '#placeholder': 'اللغة المستهدفة'
+  number_of_pages:
+    '#title': 'عدد الصفحات'
+    '#placeholder': 'عدد الصفحات'
+  do_you_require_notarization_or_legalization_of_the_translated_do:
+    '#title': 'هل تحتاج إلى توثيق أو تصديق الوثيقة المترجمة؟'

@@ -1,0 +1,55 @@
+uuid: 9a72995f-2b24-4a16-bfbf-8adfaeaafb30
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_activity.field_content
+    - field.field.paragraph.business_activity.field_hover_image
+    - field.field.paragraph.business_activity.field_media
+    - field.field.paragraph.business_activity.field_title
+    - paragraphs.paragraphs_type.business_activity
+  module:
+    - media_library
+id: paragraph.business_activity.default
+targetEntityType: paragraph
+bundle: business_activity
+mode: default
+content:
+  field_content:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hover_image:
+    type: media_library_widget
+    weight: 11
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 0
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,24 @@
+uuid: 9e73a12f-4a52-46db-b741-160ff211a45a
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.business_activities
+  module:
+    - views
+  theme:
+    - bootstrap5
+id: bootstrap5_views_block__business_activities_block_1
+theme: bootstrap5
+region: homepage
+weight: -10
+provider: null
+plugin: 'views_block:business_activities-block_1'
+settings:
+  id: 'views_block:business_activities-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility: {  }

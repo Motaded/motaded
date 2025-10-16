@@ -1,0 +1,24 @@
+uuid: 1ad59320-64a6-49f0-96ba-bdeae28f895f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sectors
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.sectors.body
+field_name: body
+entity_type: block_content
+bundle: sectors
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

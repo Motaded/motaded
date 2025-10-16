@@ -1,0 +1,32 @@
+<!-- Contents -->
+
+    <div class="media-list">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="content">
+                    <p><span>{{ content.field_info_title.0 }}:</span> {{ content.field_info.0 }}</p>
+                    <h3>{{ content.field_title.0 }}</h3>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="video-style-2">
+                    <div class="item">
+                        <div class="image">
+                            <img src="{{ file_url(content.field_image['#items'].entity.uri.value) }}"  alt="{{content.field_image['#items'].alt}}" />
+                            <div class="overlay">
+                                <a data-fancybox="video-gallery" data-src="{{ content.field_video_link.0['#url'] }}" title="Video">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="130" height="130" viewBox="0 0 130 130">
+                                        <g id="Group_39844" data-name="Group 39844" transform="translate(-2053.715 -2624.715)">
+                                            <rect id="Rectangle_45" data-name="Rectangle 45" width="130" height="130" rx="65" transform="translate(2053.715 2624.715)"/>
+                                            <path id="Icon_ionic-ios-play" data-name="Icon ionic-ios-play" d="M9,7.79V45.841a.98.98,0,0,0,1.467.9L40.63,27.719a1.078,1.078,0,0,0,0-1.793L10.467,6.9A.971.971,0,0,0,9,7.79Z" transform="translate(2093.66 2662.526)" fill="#fff"/>
+                                        </g>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,23 @@
+<!-- Home Banner Slide -->
+<div class="item">
+    <div class="row align-items-center">
+        <div class="col-lg-6 col-md-12 col-12">
+            <div class="content">
+                <span>{{ paragraph.field_date.value|date('M d, Y') }}<span>|</span>{{ content.field_venue.0 }}</span>
+                <h2>{{ content.field_title.0 }}</h2>
+                <p>{{ content.field_description.0 }}</p>
+                {%	if  content.field_button_link[0]  %}
+                <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-4 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">
+                    {{ content.field_button_link.0['#title'] }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 d-none d-lg-block">
+            <div class="image">
+                <img src="{{ file_url(content.field_image['#items'].entity.uri.value) }}"  alt="{{content.field_image['#items'].alt}}" />
+            </div>
+        </div>
+    </div>
+</div>
+       

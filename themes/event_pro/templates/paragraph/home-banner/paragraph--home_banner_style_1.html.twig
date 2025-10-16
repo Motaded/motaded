@@ -1,0 +1,110 @@
+{% set base_url = url('<front>') %} 
+<!-- Home Banner Style 2 -->
+ <section class="home-banner-2 bg-image" style="background-image: url({{ file_url(content.field_background_image['#items'].entity.uri.value) }});" >
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-12 col-12">
+                <div class="item">
+                    <div class="item-content">
+                        <span>{{ content.field_tag_line.0 }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+                            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+                        </svg>
+                        <h1>{{ content.field_title.0 }}</h1>
+                        <div class="cs-counter">
+                            <div class="cs-date">
+                                 <img src="{{base_url}}sites/default/files/blue.png" alt="icon"> 
+                                <div class="overlay">
+                                    <span id="day-eve-1" >00</span>
+                                    <div class="counting-title" >DAYS</div>
+                                </div>
+                            </div>
+                            <div class="cs-date">
+                                <img src="{{base_url}}sites/default/files/yellow.png" alt="icon">
+                                <div class="overlay">
+                                    <span id="hour-eve-1" >00</span>
+                                    <div class="counting-title">HOURS</div>
+                                </div>
+                            </div>
+                            <div class="cs-date">
+                                <img src="{{base_url}}sites/default/files/green.png" alt="icon">
+                                <div class="overlay">
+                                    <span id="minute-eve-1" >00</span>
+                                    <div class="counting-title">MINS</div>
+                                </div>
+                            </div>
+                            <div class="cs-date">
+                                <img src="{{base_url}}sites/default/files/red.png" alt="icon">
+                                <div class="overlay">
+                                    <span id="second-eve-1" >00</span>
+                                    <div class="counting-title">SECS</div>
+                                </div>
+                            </div>
+                        </div>
+                        {%	if  content.field_button_link[0]  %}
+                        <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-4 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">{{ content.field_button_link.0['#title'] }}
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="contact-details">
+                        <div class="detail">
+                            <h5>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="96.667" height="120" viewBox="0 0 96.667 120">
+                                    <path id="Path_10" data-name="Path 10" d="M52.333,2A48.167,48.167,0,0,0,4,50c0,32.4,42.594,69,44.406,70.56a6.074,6.074,0,0,0,7.854,0C58.375,119,100.667,82.4,100.667,50A48.167,48.167,0,0,0,52.333,2Zm0,105.9c-12.869-12-36.25-37.86-36.25-57.9a36.251,36.251,0,0,1,72.5,0C88.583,70.04,65.2,95.96,52.333,107.9Zm0-81.9A24,24,0,1,0,76.5,50,24.084,24.084,0,0,0,52.333,26Zm0,36A12,12,0,1,1,64.417,50,12.042,12.042,0,0,1,52.333,62Z" transform="translate(-4 -2)" fill="#1a1725"/>
+                                </svg>{{ content.field_venue_title.0 }}
+                            </h5>
+                            <p><a title="venue">{{ content.field_venue.0 }}</a></p>
+                        </div>
+                        <div class="detail">
+                            <h5>
+                            <svg id="calender" xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                <path id="Path_38846" data-name="Path 38846" d="M189.114,33.4h-15.52V29.99a5.682,5.682,0,1,0-11.356,0V33.4H125.519V29.99a5.682,5.682,0,1,0-11.356,0V33.4H98.768C90.693,33.4,84,40.231,84,48.764v79.956c0,8.4,6.562,15.361,14.763,15.361h90.473c8.076,0,14.763-6.827,14.763-15.361V48.764c-.126-8.533-6.688-15.361-14.889-15.361ZM98.767,45.219h15.52v3.414a5.682,5.682,0,1,0,11.356,0V45.22h36.719v3.413a5.682,5.682,0,1,0,11.356,0V45.22h15.52a3.464,3.464,0,0,1,3.407,3.545V64.388H95.36V48.764a3.464,3.464,0,0,1,3.407-3.545Zm90.347,87.046H98.767a3.464,3.464,0,0,1-3.407-3.545V76.072h97.287V128.72a3.655,3.655,0,0,1-3.533,3.545Z" transform="translate(-84.005 -24.082)" fill="#1a1725"/>
+                            </svg>{{ content.field_date_title.0 }}
+                            </h5>
+                            <p>{{ content.field_date_in_detail.0 }}</p>
+                        </div>
+                        <div class="detail">
+                            <h5>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="152.727" height="120" viewBox="0 0 152.727 120">
+                                    <path id="Icon_ionic-md-mail" data-name="Icon ionic-md-mail" d="M140.431,5.625H16.8A14.588,14.588,0,0,0,2.25,20.171v90.909A14.588,14.588,0,0,0,16.8,125.625H140.431a14.588,14.588,0,0,0,14.546-14.546V20.171A14.588,14.588,0,0,0,140.431,5.625Zm-1.818,30.909-60,40-60-40V21.989l60,40,60-40Z" transform="translate(-2.25 -5.625)" fill="#1a1725"/>
+                                </svg>{{ content.field_mail_title.0 }}
+                            </h5>
+                            <p><a href="mailto:{{ content.field_mail_id.0 }}" title="Title">{{ content.field_mail_id.0 }}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% if content.field_event_on.0 %}
+<script>
+        let dayItem = document.querySelector("#day-eve-1");
+        let hourItem = document.querySelector("#hour-eve-1");
+        let minuteItem = document.querySelector("#minute-eve-1");
+        let secondItem = document.querySelector("#second-eve-1");
+
+        let countDown = () =>{
+            let futureDate = new Date("{{ paragraph.field_event_on.value|date('d M Y') }} ");
+            let currentDate = new Date();
+            let myDate = futureDate - currentDate;
+
+            let days = Math.floor(myDate / 1000 / 60 / 60 /24);
+            let hours = Math.floor(myDate / 1000 / 60 / 60) % 24;
+            let minutes = Math.floor(myDate / 1000 / 60) % 60;
+            let seconds = Math.floor(myDate / 1000) % 60;
+
+            minutes = minutes < 0? 0 : minutes; //Check if they are lower than 0, if yes, set them to 0
+            seconds = seconds < 0? 0 : seconds;
+            days = days < 0? 0 : days;
+            hours = hours < 0? 0 : hours;
+
+            dayItem.innerHTML = days;
+            hourItem.innerHTML = hours;
+            minuteItem.innerHTML = minutes;
+            secondItem.innerHTML = seconds;
+        }
+        countDown()
+        setInterval(countDown, 1000)
+</script>
+{% endif %}

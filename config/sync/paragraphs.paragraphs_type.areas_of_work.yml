@@ -1,0 +1,10 @@
+uuid: ca72b3b4-09b5-4604-9599-ab75fd5b2409
+langcode: en
+status: true
+dependencies: {  }
+id: areas_of_work
+label: 'Areas of Work'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

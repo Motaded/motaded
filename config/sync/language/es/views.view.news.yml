@@ -1,0 +1,8 @@
+label: 'Nuestras noticias'
+display:
+  default:
+    display_options:
+      title: 'Nuestras noticias'
+      fields:
+        view_node:
+          text: 'Leer más'

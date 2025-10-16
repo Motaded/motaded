@@ -1,0 +1,46 @@
+<div class="event-list">
+    <div class="event-style-3">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-12">
+                <div class="part-1">
+                    <div class="event-image">
+                        {{ fields.field_image.content }} 
+                    </div>
+                    <span></span>
+                    <div class="title">
+                        <h3><a href="{{ fields.view_node.content }}" title="{{ fields.title.content }}">{{ fields.title.content }} </a></h3>
+                        <p>{{ fields.field_start_date.content }} {% if fields.field_end_date.content %} to {{ fields.field_end_date.content }} {% endif %} </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-12">
+                <div class="part-2">
+                    <ul>
+                        <li>
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                    <path id="Icon_material-access-time" data-name="Icon material-access-time" d="M62.94,3A60,60,0,1,0,123,63,59.971,59.971,0,0,0,62.94,3ZM63,111a48,48,0,1,1,48-48A47.987,47.987,0,0,1,63,111Zm3-78H57V69L88.5,87.9,93,80.52,66,64.5Z" transform="translate(-3 -3)" fill="#1a1725"/>
+                                </svg>
+                            </div>
+                            {{ fields.field_timing_.content }} 
+                        </li>
+                        <li>
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="96.667" height="120" viewBox="0 0 96.667 120">
+                                    <path id="Path_10" data-name="Path 10" d="M52.333,2A48.167,48.167,0,0,0,4,50c0,32.4,42.594,69,44.406,70.56a6.074,6.074,0,0,0,7.854,0C58.375,119,100.667,82.4,100.667,50A48.167,48.167,0,0,0,52.333,2Zm0,105.9c-12.869-12-36.25-37.86-36.25-57.9a36.251,36.251,0,0,1,72.5,0C88.583,70.04,65.2,95.96,52.333,107.9Zm0-81.9A24,24,0,1,0,76.5,50,24.084,24.084,0,0,0,52.333,26Zm0,36A12,12,0,1,1,64.417,50,12.042,12.042,0,0,1,52.333,62Z" transform="translate(-4 -2)" fill="#1a1725"/>
+                                </svg>
+                            </div>
+                            {{ fields.field_venue.content }} 
+                        </li>
+                    </ul>
+                     {% if fields.field_button_link.content %}
+                        <a href="{{ fields.field_button_link[0]['#url'] }}" class="btn btn-primary btn-style-1 btn-style-sm" title="{{ fields.field_button_link_1.content }}">{{ fields.field_button_link_1.content }}<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                                <path id="Icon_ionic-ios-arrow-dropright-circle" data-name="Icon ionic-ios-arrow-dropright-circle" d="M3.375,63.375a60,60,0,1,0,60-60A59.991,59.991,0,0,0,3.375,63.375Zm70.529,0L50.279,39.981a5.568,5.568,0,1,1,7.875-7.875L85.673,59.712a5.561,5.561,0,0,1,.173,7.673l-27.115,27.2a5.558,5.558,0,1,1-7.875-7.846Z" transform="translate(-3.375 -3.375)" fill="#1a1725"/>
+                            </svg>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

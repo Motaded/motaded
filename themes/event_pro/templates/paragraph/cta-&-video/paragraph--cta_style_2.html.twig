@@ -1,0 +1,13 @@
+<!-- CTA Style 2 -->
+<section class="cta-2 dt-section bg-image" style="background-image: url({{ file_url(content.field_background_image['#items'].entity.uri.value) }});" >
+    <div class="container">
+        <div class="item">
+            <span>{{ content.field_tag_line.0 }}</span>
+            <h2>{{ content.field_title.0 }}</h2>
+            {%	if  content.field_button_link[0]  %}
+                <a href="{{ content.field_button_link.0['#url'] }}" class="btn btn-primary btn-style-4 btn-style-sm" title="{{ content.field_button_link.0['#title'] }}">{{ content.field_button_link.0['#title'] }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>

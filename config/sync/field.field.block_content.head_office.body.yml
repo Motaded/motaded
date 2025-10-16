@@ -1,0 +1,24 @@
+uuid: 9d79b5ef-66fe-45a0-b1dd-70ae48c5ee9e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.head_office
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.head_office.body
+field_name: body
+entity_type: block_content
+bundle: head_office
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

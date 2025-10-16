@@ -1,0 +1,8 @@
+label: 我们的新闻
+display:
+  default:
+    display_options:
+      title: 我们的新闻
+      fields:
+        view_node:
+          text: 阅读更多

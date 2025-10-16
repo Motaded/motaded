@@ -1,0 +1,10 @@
+uuid: 3de44465-7836-41b3-a23e-316e234dd9b2
+langcode: en
+status: true
+dependencies: {  }
+id: requirements
+label: Requirements
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

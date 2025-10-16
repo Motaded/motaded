@@ -1,0 +1,24 @@
+uuid: d8d4f7b1-3969-4a95-9263-025ac949ae36
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.head_office
+    - field.storage.block_content.field_textarea
+    - filter.format.full_html
+  module:
+    - text
+id: block_content.head_office.field_textarea
+field_name: field_textarea
+entity_type: block_content
+bundle: head_office
+label: 'Head Office'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+field_type: text_long

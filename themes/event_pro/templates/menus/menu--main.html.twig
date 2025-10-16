@@ -1,0 +1,137 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ *
+ * @ingroup themeable
+ */
+#}
+ 
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see http://twig.sensiolabs.org/doc/tags/macro.html
+#}
+{{ menus.menu_links(items, attributes, 0) }}
+
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+    {% if menu_level == 0 %}
+      <ul class="navbar-nav ms-auto">
+          {% if items %}
+            {% for item in items %}
+              {% set active = item.in_active_trail ? 'active': '' %}
+              {% if item.below %}
+                {% if item.url.getOption('attributes')['link-type'] in 'mega_menu' %}
+                <li class="nav-item dropdown mega-menu">
+                {% else %}
+                <li class="nav-item dropdown">
+                {% endif %}
+                  <a class="nav-link {{active}}" href="{{ item.url }}"  data-bs-toggle="dropdown" title="{{ item.title }}">
+                   {{ item.title }}
+                   <span class="arrow d-lg-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16.8" height="28" viewBox="0 0 16.8 28">
+                        <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M22.986,20.19,11.867,9.6a1.927,1.927,0,0,1,0-2.826,2.184,2.184,0,0,1,2.974,0l12.6,11.995a1.93,1.93,0,0,1,.061,2.759L14.85,33.61a2.187,2.187,0,0,1-2.974,0,1.927,1.927,0,0,1,0-2.826Z" transform="translate(-11.251 -6.194)"/>
+                      </svg>
+								   </span>
+                  </a>
+                
+                  <ul class="dropdown-wrapper dropdown-menu rounded-0 primary-color">
+                    {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+                  </ul>
+                </li>
+              {% else %}
+                <li class="nav-item dropdown ">
+                  <a class="nav-link {{active}}" href="{{ item.url }}"  title="{{ item.title }}">
+                   {{ item.title }}
+                   <span class="arrow d-lg-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16.8" height="28" viewBox="0 0 16.8 28">
+                        <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M22.986,20.19,11.867,9.6a1.927,1.927,0,0,1,0-2.826,2.184,2.184,0,0,1,2.974,0l12.6,11.995a1.93,1.93,0,0,1,.061,2.759L14.85,33.61a2.187,2.187,0,0,1-2.974,0,1.927,1.927,0,0,1,0-2.826Z" transform="translate(-11.251 -6.194)"/>
+                      </svg>
+								   </span>
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+    {% elseif menu_level == 1 %}
+      {% if items %}
+          {% for item in items %}
+            {% if item.below %}
+              {% if item.url.getOption('attributes')['link-type'] in 'mega_menu_1' %}
+              <li>
+                <h5>{{ item.title }}</h5>
+                  <ul>
+                    {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+                  </ul>
+              {% else %}
+              <li class="dropdown-item dropdown-submenu">
+              <a href="{{ item.url }}" class="drop-toggle" title="{{ item.title }}">{{ item.title }}
+                <span class="arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16.8" height="28" viewBox="0 0 16.8 28">
+                    <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M22.986,20.19,11.867,9.6a1.927,1.927,0,0,1,0-2.826,2.184,2.184,0,0,1,2.974,0l12.6,11.995a1.93,1.93,0,0,1,.061,2.759L14.85,33.61a2.187,2.187,0,0,1-2.974,0,1.927,1.927,0,0,1,0-2.826Z" transform="translate(-11.251 -6.194)"/>
+                  </svg>
+                </span>
+              </a>
+                <ul class="dropdown-menu collapse">
+                  {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+                </ul>
+              </li>
+              {% endif %}
+            {% else %}
+            <li class="dropdown-item">
+              <a href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
+            </li>
+            {% endif %}
+          {% endfor %}
+      {% endif %}
+    {% elseif menu_level == 2 %}
+        {% if items %}
+          {% for item in items %}
+            {% if item.below %}
+            <li class="dropdown-item dropdown-submenu">
+              <a href="{{ item.url }}" class="drop-toggle" title="{{ item.title }}">{{ item.title }}
+                <span class="arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16.8" height="28" viewBox="0 0 16.8 28">
+                    <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M22.986,20.19,11.867,9.6a1.927,1.927,0,0,1,0-2.826,2.184,2.184,0,0,1,2.974,0l12.6,11.995a1.93,1.93,0,0,1,.061,2.759L14.85,33.61a2.187,2.187,0,0,1-2.974,0,1.927,1.927,0,0,1,0-2.826Z" transform="translate(-11.251 -6.194)"/>
+                  </svg>
+                </span>
+              </a>
+              <ul class="dropdown-menu">
+                {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+              </ul>
+            </li>
+            {% else %}
+              <li class="dropdown-item">
+                <a href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+    {% elseif menu_level == 3 %}
+        {% if items %}
+          {% for item in items %}
+            <li class="dropdown-item">
+              <a href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,32 @@
+title: 'Requisitos de los servicios de traducción'
+description: '<p>Estos son los requisitos de los servicios de traducción.</p>'
+elements: |
+  full_name:
+    '#title': 'Nombre completo'
+    '#placeholder': 'Nombre completo'
+  contact_number:
+    '#title': 'Número de contacto'
+    '#placeholder': 'Número de contacto'
+  email:
+    '#title': 'Correo electrónico'
+    '#placeholder': 'Correo electrónico'
+  document_type_for_translation:
+    '#title': 'Tipo de documento para traducción'
+    '#options':
+      Medical: Médica
+      Business: Negocio
+      Educational: Educativa
+  source_language:
+    '#title': 'Idioma de origen'
+    '#placeholder': 'Idioma de origen'
+  target_language:
+    '#title': 'Lengua de llegada'
+    '#placeholder': 'Lengua de llegada'
+  number_of_pages:
+    '#title': 'Número de páginas'
+    '#placeholder': 'Número de páginas'
+  do_you_require_notarization_or_legalization_of_the_translated_do:
+    '#title': '¿Requiere notarización o legalización del documento traducido?'
+handlers:
+  email:
+    label: 'Correo electrónico'

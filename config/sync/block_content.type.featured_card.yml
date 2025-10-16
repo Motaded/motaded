@@ -1,0 +1,8 @@
+uuid: 72dadf22-b735-472f-aa7f-90714e16e534
+langcode: en
+status: true
+dependencies: {  }
+id: featured_card
+label: 'Featured Card'
+revision: false
+description: '<img width="300px" src="/themes/custom/motaded/images/fc.png">'

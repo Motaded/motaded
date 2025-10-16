@@ -1,0 +1,8 @@
+uuid: fa57bef4-750c-4c7f-ae32-bd5f8b6e681e
+langcode: en
+status: true
+dependencies: {  }
+id: business_activity
+label: 'ITC Block'
+revision: false
+description: '<img width="300px" src="/themes/custom/motaded/images/itc.png">'

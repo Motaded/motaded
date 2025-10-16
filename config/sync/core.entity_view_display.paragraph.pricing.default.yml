@@ -1,0 +1,40 @@
+uuid: 9a55c08b-6ea7-4a06-9cd3-2befab87648e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.pricing.field_plan_details
+    - field.field.paragraph.pricing.field_sub_title
+    - field.field.paragraph.pricing.field_title
+    - paragraphs.paragraphs_type.pricing
+  module:
+    - text
+id: paragraph.pricing.default
+targetEntityType: paragraph
+bundle: pricing
+mode: default
+content:
+  field_plan_details:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_sub_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

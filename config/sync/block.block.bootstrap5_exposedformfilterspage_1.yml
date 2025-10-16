@@ -1,0 +1,28 @@
+uuid: 7da3c2fa-d124-467f-8caa-e99b3f97d501
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.filters
+  module:
+    - system
+    - views
+  theme:
+    - bootstrap5
+id: bootstrap5_exposedformfilterspage_1
+theme: bootstrap5
+region: content
+weight: -12
+provider: null
+plugin: 'views_exposed_filter_block:filters-page_1'
+settings:
+  id: 'views_exposed_filter_block:filters-page_1'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: Filters
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /filters

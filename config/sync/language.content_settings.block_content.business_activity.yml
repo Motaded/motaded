@@ -1,0 +1,18 @@
+uuid: fd6fc53a-5320-49e3-8a31-d4df7f08e2f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.business_activity
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: block_content.business_activity
+target_entity_type_id: block_content
+target_bundle: business_activity
+default_langcode: site_default
+language_alterable: true

@@ -1,0 +1,17 @@
+uuid: e23e5e83-ff0a-4331-85c5-1095f3390444
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Entities
+type: entities
+description: 'Displayed on home page as Company Entities'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: false

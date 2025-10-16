@@ -1,0 +1,7 @@
+uuid: 23441837-bb0d-4585-b937-473f26ddb18b
+langcode: en
+status: false
+dependencies: {  }
+formId: node_business_activities_form
+captchaType: default
+label: node_business_activities_form

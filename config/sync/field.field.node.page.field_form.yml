@@ -1,0 +1,25 @@
+uuid: 4a16fce5-e6f9-4663-8bde-70ae6053b5a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_form
+    - node.type.page
+  module:
+    - webform
+id: node.page.field_form
+field_name: field_form
+entity_type: node
+bundle: page
+label: 'Enquire Now'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: webform

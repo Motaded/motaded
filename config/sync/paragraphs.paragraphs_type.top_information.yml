@@ -1,0 +1,10 @@
+uuid: 1928db6a-f2cd-4ddd-bb0c-3afbd0bc717d
+langcode: en
+status: true
+dependencies: {  }
+id: top_information
+label: 'Top Information'
+icon_uuid: null
+icon_default: null
+description: 'Display Basic pages overview top information'
+behavior_plugins: {  }

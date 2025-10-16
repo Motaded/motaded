@@ -1,0 +1,8 @@
+uuid: f824413e-46d1-4d6d-9d42-f87a26068c6e
+langcode: en
+status: true
+dependencies: {  }
+id: why_saudi_arabia
+label: 'Why Saudi Arabia'
+revision: false
+description: '<img width="300px" src="/themes/custom/motaded/images/wsa.png">'

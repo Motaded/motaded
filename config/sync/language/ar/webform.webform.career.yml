@@ -1,0 +1,26 @@
+title: اتصل
+description: '<p>Basic email contact webform.</p>'
+elements: |
+  name:
+    '#title': اسمك
+  email:
+    '#title': 'البريد الإلكتروني الخاص بك'
+  phone_number:
+    '#title': 'رقم التليفون'
+    '#phone__title': هاتف
+  subject:
+    '#title': موضوع
+    '#test': 'اختبار نموذج ويب الاتصال من [site:name]'
+  what_is_the_job_title:
+    '#title': 'ما هو المسمى الوظيفي؟'
+  experience:
+    '#title': 'كم سنة من الخبرة لديك؟'
+  upload_resume:
+    '#title': 'تحميل السيرة الذاتية'
+  message:
+    '#title': رسالة
+    '#test': 'يرجى تجاهل هذا البريد الإلكتروني.'
+  actions:
+    '#submit__label': 'أرسل رسالة'
+settings:
+  confirmation_message: '<p>أُرسلت رسالتك.</p>'

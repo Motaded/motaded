@@ -1,0 +1,24 @@
+uuid: d731133d-9fca-4b40-b7f3-a6e989762b84
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.why_saudi_arabia
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.why_saudi_arabia.body
+field_name: body
+entity_type: block_content
+bundle: why_saudi_arabia
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

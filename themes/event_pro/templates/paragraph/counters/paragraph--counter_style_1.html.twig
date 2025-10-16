@@ -1,0 +1,25 @@
+<!-- Counter Style 1 -->
+{% set paragraph_parent = paragraph.getParentEntity() %}
+{% set variant = paragraph_parent.field_with_video_section.value %}
+
+{% if '1' in variant %}
+<div class="col-lg-6 col-md-6 col-12">
+    <div class="item">
+        <div class="value"><span data-purecounter-start="0" data-purecounter-end="{{ content.field_count.0 }}" class="purecounter"></span><span>{{ content.field_value.0 }}</span></div>
+        <h4>{{ content.field_title.0 }}</h4>
+        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+        </svg>
+    </div>
+</div>
+{% else %}
+<div class="gy-4 col-lg-3 col-md-6 col-12">
+    <div class="item">
+        <div class="value"><span data-purecounter-start="0" data-purecounter-end="{{ content.field_count.0 }}" class="purecounter"></span><span>{{ content.field_value.0 }}</span></div>
+        <h4>{{ content.field_title.0 }}</h4>
+        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+        </svg>
+    </div>
+</div>
+{% endif %}

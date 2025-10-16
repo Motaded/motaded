@@ -1,0 +1,30 @@
+title: 'متطلبات مساحة العمل المشترك'
+description: '<p>هذه هي متطلبات مساحة العمل المشترك</p>'
+elements: |
+  full_name:
+    '#title': 'الاسم الكامل'
+    '#placeholder': 'الاسم الكامل'
+  contact_number:
+    '#title': 'رقم الاتصال'
+    '#placeholder': 'رقم الاتصال'
+  email_address:
+    '#title': 'عنوان البريد الإلكتروني'
+    '#placeholder': 'عنوان البريد الإلكتروني'
+  business_type:
+    '#title': 'نوع العمل'
+    '#placeholder': 'نوع العمل'
+  preferred_office_location:
+    '#title': 'موقع المكتب المفضل'
+    '#placeholder': 'موقع المكتب المفضل'
+  office_size_needed_number_of_employees_or_square_footage:
+    '#title': 'حجم المكتب المطلوب (عدد الموظفين أو المساحة المربعة)'
+    '#placeholder': 'عدد الموظفين أو المساحة المربعة'
+  budget_range:
+    '#title': 'نطاق الميزانية'
+    '#placeholder': 'نطاق الميزانية'
+  lease_duration_short_term_long_term:
+    '#title': 'مدة الإيجار (قصيرة الأجل، طويلة الأجل)'
+    '#placeholder': 'مدة الإيجار (قصيرة الأجل، طويلة الأجل)'
+  desired_move_in_date:
+    '#title': 'تاريخ الانتقال المطلوب'
+    '#placeholder': 'تاريخ الانتقال المطلوب'

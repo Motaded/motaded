@@ -1,0 +1,60 @@
+title: 'Reserve una consulta gratuita'
+elements: |
+  first_name:
+    '#title': 'Nombre de pila'
+    '#placeholder': 'Nombre de pila'
+  last_name:
+    '#title': Apellido
+    '#placeholder': Apellido
+  contact_number:
+    '#title': 'Número de teléfono'
+  email:
+    '#title': 'Correo electrónico'
+    '#placeholder': 'Correo electrónico'
+    '#pattern_error': 'Por favor ingrese su dirección de correo electrónico oficial. Si no tienes uno, <a href="/contact-us">haz clic aquí</a>'
+  organization_name:
+    '#title': 'nombre de empresa'
+    '#placeholder': 'nombre de empresa'
+  company_registration_number:
+    '#title': 'Número de registro de la empresa'
+    '#placeholder': 'Número de registro de la empresa'
+  is_the_company_multinational:
+    '#title': '¿Es la empresa multinacional?'
+  do_you_have_a_commercial_register_for_one_year_or_more:
+    '#title': '¿Tiene Registro Comercial por un año o más?'
+    '#required_error': 'El campo es obligatorio.'
+  nocommercial:
+    '#text': '<p>Si no tiene un registro comercial, por favor contáctenos a este correo electrónico <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  do_you_have_financial_statements_for_the_past_year:
+    '#title': '¿Tiene estados financieros del año pasado?'
+    '#required_error': 'El campo es obligatorio.'
+  nofinancial:
+    '#text': '<p>Si no tiene un Estado Financiero, por favor contáctenos a este correo electrónico <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  do_you_have_an_articles_of_association:
+    '#title': '¿Tiene estatutos sociales?'
+    '#required_error': 'El campo es obligatorio.'
+  noarticles:
+    '#text': '<p>Si no tiene un estatuto social, contáctenos a este correo electrónico <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a></p>'
+  1parent_company_s_country:
+    '#title': 'País de la empresa matriz'
+    '#empty_option': País
+  commercial_activities:
+    '#title': 'Actividades Comerciales'
+    '#placeholder': 'Actividades Comerciales *'
+    '#required_error': 'El campo Actividades Comerciales es obligatorio.'
+  type_your_message:
+    '#title': 'Escribe tu mensaje'
+    '#placeholder': 'Escribe tu mensaje *'
+    '#required_error': 'El campo de mensaje es obligatorio.'
+    '#pattern_error': 'Por favor, ingresa como máximo 140 caracteres y no incluyas enlaces.'
+  are_you_certain_about_the_data_you_ve_entered:
+    '#title': '¿Está seguro de los datos que ha introducido?'
+    '#required_error': 'Por favor verifique (¿Está seguro de los datos que ingresó?)'
+  i_confirm_that_i_have_read_and_agree_to_the_terms_and_conditions:
+    '#title': 'Confirmo que he leído y acepto los términos y condiciones.'
+    '#required_error': 'Por favor verifique (confirmo que he leído y acepto los términos y condiciones).'
+settings:
+  confirmation_message: '<p>Su consulta ha sido enviada exitosamente</p>'
+handlers:
+  email:
+    label: 'Correo electrónico'

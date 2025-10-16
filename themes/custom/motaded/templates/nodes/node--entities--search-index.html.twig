@@ -1,0 +1,50 @@
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{{ attach_library('bootstrap5/node') }}
+<article{{ attributes.addClass(classes) }}>
+
+  {% if display_submitted %}
+    <footer class="node__meta">
+      {{ author_picture }}
+      <div{{ author_attributes.addClass('node__submitted') }}>
+        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {{ metadata }}
+      </div>
+    </footer>
+  {% endif %}
+
+ 
+
+  <div{{ content_attributes.addClass('node__content') }}>
+    {# Display the media field, assuming it's called 'field_media' #}
+    {% if content.field_media %}
+      <div class="media-content">
+        {{ content.field_media }}
+      </div>
+    {% endif %}
+    {{ title_prefix }}
+    {% if label and not page %}
+      <h5{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h5>
+    {% endif %}
+    {{ title_suffix }}
+    {# Display the summary field, assuming it's called 'field_summary' #}
+    {% if content.body %}
+      <div class="summary-content">
+        {{ content.body }}
+      </div>
+    {% endif %}
+  </div>
+  
+<a href="#" rel="tag" title="Professional Company" hreflang="en">{{ 'Read more'|t({}, {'context': 'block_template'}) }}</a>
+</article>
+

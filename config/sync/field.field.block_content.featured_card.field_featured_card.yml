@@ -1,0 +1,37 @@
+uuid: 5f8d776c-760d-4a68-8b42-0199630615b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.featured_card
+    - field.storage.block_content.field_featured_card
+    - paragraphs.paragraphs_type.featured_card
+  module:
+    - entity_reference_revisions
+id: block_content.featured_card.field_featured_card
+field_name: field_featured_card
+entity_type: block_content
+bundle: featured_card
+label: 'Featured Card'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      featured_card: featured_card
+    negate: 0
+    target_bundles_drag_drop:
+      business_activity:
+        weight: 4
+        enabled: false
+      counter:
+        weight: 5
+        enabled: false
+      featured_card:
+        weight: 2
+        enabled: true
+field_type: entity_reference_revisions

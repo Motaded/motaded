@@ -1,0 +1,27 @@
+<!-- Blog Sidebar -->
+ <div class="sidebar">
+ {% if content.field_title[0] %}
+    {%	if  content.field_style_variant.0['#markup'] == "Variant 1" %}
+    <div class="subpage-title">
+        <h3>{{ content.field_title.0 }}</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+        </svg>
+    </div>
+    {% else %}
+    <div class="subpage-title variant-2">
+        <h3>{{ content.field_title.0 }}</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" width="34.707" height="4.813" viewBox="0 0 34.707 4.813">
+            <path id="Path_18" data-name="Path 18" d="M-16839.219-21445.086l3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4,3.4-3.4,3.4,3.4" transform="translate(16839.572 21449.191)" fill="none" stroke="#fd4c66" stroke-width="1"/>
+        </svg>
+    </div>
+    {% endif %}
+{% endif %}
+    {%	if  content.field_style_variant.0['#markup'] == "Variant 1" %}
+    {{ content.field_blog_sidebar }}
+    {% else %}
+    <div class="categories"> 
+        {{ content.field_blog_sidebar }}
+    </div>
+    {% endif %}
+</div>

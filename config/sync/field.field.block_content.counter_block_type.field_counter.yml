@@ -1,0 +1,37 @@
+uuid: e83f7529-fddc-4bc8-b439-7c541afba63c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.counter_block_type
+    - field.storage.block_content.field_counter
+    - paragraphs.paragraphs_type.counter
+  module:
+    - entity_reference_revisions
+id: block_content.counter_block_type.field_counter
+field_name: field_counter
+entity_type: block_content
+bundle: counter_block_type
+label: Counter
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      counter: counter
+    negate: 0
+    target_bundles_drag_drop:
+      business_activity:
+        weight: 4
+        enabled: false
+      counter:
+        weight: 5
+        enabled: true
+      featured_card:
+        weight: 6
+        enabled: false
+field_type: entity_reference_revisions

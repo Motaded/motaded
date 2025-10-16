@@ -1,0 +1,42 @@
+uuid: 1069933c-e081-4036-9548-3e95f6ad2cad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.top_information.field_content
+    - field.field.paragraph.top_information.field_media
+    - field.field.paragraph.top_information.field_title
+    - paragraphs.paragraphs_type.top_information
+  module:
+    - media_library
+id: paragraph.top_information.default
+targetEntityType: paragraph
+bundle: top_information
+mode: default
+content:
+  field_content:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 0
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,49 @@
+uuid: 8db9359f-11b4-436b-bdc1-365f1326ece6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_areas_of_work
+    - node.type.page
+    - paragraphs.paragraphs_type.areas_of_work
+  module:
+    - entity_reference_revisions
+id: node.page.field_areas_of_work
+field_name: field_areas_of_work
+entity_type: node
+bundle: page
+label: 'Areas of Work'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      areas_of_work: areas_of_work
+    negate: 0
+    target_bundles_drag_drop:
+      areas_of_work:
+        weight: 8
+        enabled: true
+      business_activity:
+        weight: 9
+        enabled: false
+      counter:
+        weight: 10
+        enabled: false
+      featured_card:
+        weight: 11
+        enabled: false
+      itc_card:
+        weight: 12
+        enabled: false
+      objectives:
+        weight: 13
+        enabled: false
+      work_tracks:
+        weight: 14
+        enabled: false
+field_type: entity_reference_revisions

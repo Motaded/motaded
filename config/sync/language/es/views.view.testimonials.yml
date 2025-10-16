@@ -1,0 +1,12 @@
+label: Testimonios
+display:
+  default:
+    display_options:
+      title: Testimonios
+      header:
+        area:
+          content:
+            value: '<p>Testimonios</p>'
+            format: basic_html
+  block_1:
+    display_title: Testimonios

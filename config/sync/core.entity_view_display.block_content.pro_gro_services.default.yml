@@ -1,0 +1,54 @@
+uuid: 2d6c52c4-5af6-4a13-b84b-e27b32aa531f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.pro_gro_services
+    - field.field.block_content.pro_gro_services.body
+    - field.field.block_content.pro_gro_services.field_link
+    - field.field.block_content.pro_gro_services.field_textarea
+    - field.field.block_content.pro_gro_services.field_title
+  module:
+    - link
+    - text
+id: block_content.pro_gro_services.default
+targetEntityType: block_content
+bundle: pro_gro_services
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_textarea:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true

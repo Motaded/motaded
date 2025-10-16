@@ -1,0 +1,20 @@
+display:
+  default:
+    display_options:
+      exposed_form:
+        options:
+          submit_button: يتقدم
+      filters:
+        title:
+          expose:
+            label: 'بحث عن'
+            placeholder: 'ما الذي تبحث عنه ؟'
+        field_project_phases_target_id:
+          expose:
+            label: 'مراحل المشروع'
+        field_partnership_target_id:
+          expose:
+            label: شراكة
+        field_segment_target_id:
+          expose:
+            label: شريحة

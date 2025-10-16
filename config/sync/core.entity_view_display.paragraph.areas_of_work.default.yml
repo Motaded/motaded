@@ -1,0 +1,30 @@
+uuid: 6eb4fead-5f7b-4ab6-b760-3ca75945b3a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.areas_of_work.field_content
+    - field.field.paragraph.areas_of_work.field_media
+    - paragraphs.paragraphs_type.areas_of_work
+id: paragraph.areas_of_work.default
+targetEntityType: paragraph
+bundle: areas_of_work
+mode: default
+content:
+  field_content:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_media:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

@@ -1,0 +1,64 @@
+uuid: dbb806f3-217e-4657-88fe-be37d5c0c447
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pricing
+    - node.type.pricing
+    - paragraphs.paragraphs_type.pricing
+  module:
+    - entity_reference_revisions
+id: node.pricing.field_pricing
+field_name: field_pricing
+entity_type: node
+bundle: pricing
+label: Pricing
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      pricing: pricing
+    negate: 0
+    target_bundles_drag_drop:
+      advantages:
+        weight: 13
+        enabled: false
+      areas_of_work:
+        weight: 14
+        enabled: false
+      business_activity:
+        weight: 15
+        enabled: false
+      counter:
+        weight: 16
+        enabled: false
+      featured_card:
+        weight: 17
+        enabled: false
+      itc_card:
+        weight: 18
+        enabled: false
+      objectives:
+        weight: 19
+        enabled: false
+      pricing:
+        weight: 20
+        enabled: true
+      requirements:
+        weight: 21
+        enabled: false
+      steps_to_obtain:
+        weight: 22
+        enabled: false
+      top_information:
+        weight: 23
+        enabled: false
+      work_tracks:
+        weight: 24
+        enabled: false
+field_type: entity_reference_revisions

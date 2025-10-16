@@ -1,0 +1,30 @@
+uuid: d6f1d2d8-a6f0-4810-b41a-b9e708c97891
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:sectors:140ddc18-71d1-48c4-97fe-7c9b66c37b3a'
+  module:
+    - block_content
+    - system
+  theme:
+    - bootstrap5
+id: bootstrap5_investmentopportunities_2
+theme: bootstrap5
+region: content
+weight: -10
+provider: null
+plugin: 'block_content:140ddc18-71d1-48c4-97fe-7c9b66c37b3a'
+settings:
+  id: 'block_content:140ddc18-71d1-48c4-97fe-7c9b66c37b3a'
+  label: 'Investment Opportunities'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /investment-opportunities

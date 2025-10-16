@@ -1,0 +1,9 @@
+display:
+  default:
+    display_options:
+      title: 'Conoce al equipo'
+      header:
+        area:
+          content:
+            value: '<p>Conoce al equipo</p>'
+            format: full_html

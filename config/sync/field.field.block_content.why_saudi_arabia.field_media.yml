@@ -1,0 +1,29 @@
+uuid: 3d8bbfb8-e951-4f8e-86f3-dc1fb5e2830b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.why_saudi_arabia
+    - field.storage.block_content.field_media
+    - media.type.image
+id: block_content.why_saudi_arabia.field_media
+field_name: field_media
+entity_type: block_content
+bundle: why_saudi_arabia
+label: Media
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

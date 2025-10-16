@@ -1,0 +1,24 @@
+name: Motaded theme
+type: theme
+description: ''
+core_version_requirement: ^11
+'base theme': stable9
+version: 1.0.0
+libraries:
+  - motaded_theme/base
+  - motaded_theme/messages
+  - core/normalize
+libraries-extend:
+  user/drupal.user:
+    - motaded_theme/user
+  core/drupal.dropbutton:
+    - motaded_theme/dropbutton
+  core/drupal.dialog:
+    - motaded_theme/dialog
+  file/drupal.file:
+    - motaded_theme/file
+  core/drupal.progress:
+    - motaded_theme/progress
+  core/drupal.tablesort:
+    - motaded_theme/drupal.tablesort
+generator: 'starterkit_theme:11.2.5'

@@ -1,0 +1,25 @@
+uuid: 55a2a7c4-1231-40f7-b039-8939df7604e8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:pro_gro_services:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+  module:
+    - block_content
+  theme:
+    - bootstrap5
+id: bootstrap5_progroservices
+theme: bootstrap5
+region: homepage
+weight: -11
+provider: null
+plugin: 'block_content:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+settings:
+  id: 'block_content:5acbc918-56c4-44a6-9f9c-3c591f0290c9'
+  label: 'PRO & GRO Services'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

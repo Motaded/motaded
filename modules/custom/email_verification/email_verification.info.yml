@@ -1,0 +1,6 @@
+name: 'Email Verification for Webform'
+type: module
+description: 'Adds email verification functionality to webform submissions.'
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:webform

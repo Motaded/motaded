@@ -1,0 +1,9 @@
+featured_card_page:
+  css:
+    theme:
+      css/featured_card_page.css: {}
+  js:
+    js/featured_card_page.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery

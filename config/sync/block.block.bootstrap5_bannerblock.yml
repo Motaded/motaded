@@ -1,0 +1,40 @@
+uuid: b110642c-23ab-48ca-93c1-a2246b67f450
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+    - motaded_custom
+    - node
+  theme:
+    - bootstrap5
+id: bootstrap5_bannerblock
+theme: bootstrap5
+region: content
+weight: -17
+provider: null
+plugin: banner_block
+settings:
+  id: banner_block
+  label: 'Banner Block'
+  label_display: '0'
+  provider: motaded_custom
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      page: page
+  language:
+    id: language
+    negate: false
+    context_mapping:
+      language: '@language.current_language_context:language_interface'
+    langcodes:
+      en: en
+      ar: ar
+      fr: fr
+      es: es
+      zh-hans: zh-hans
