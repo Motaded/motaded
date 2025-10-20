@@ -1,6 +1,6 @@
 uuid: ce399dd8-4c10-4bf7-98e8-eb5c62dfca13
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:business_activity:471652ac-99b0-4136-8e6c-b4e3addfd0a2'

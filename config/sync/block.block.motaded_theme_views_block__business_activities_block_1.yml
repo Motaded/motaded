@@ -1,6 +1,6 @@
 uuid: efed361b-6477-4930-9876-f3bbf4b827d0
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.business_activities

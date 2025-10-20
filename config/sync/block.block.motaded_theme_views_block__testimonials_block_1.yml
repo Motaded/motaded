@@ -1,6 +1,6 @@
 uuid: 94bf8d2d-ba61-4829-89ce-324eeca16fd9
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.testimonials
@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_views_block__testimonials_block_1
 theme: motaded_theme
 region: sidebar_first
-weight: -9
+weight: -8
 provider: null
 plugin: 'views_block:testimonials-block_1'
 settings:

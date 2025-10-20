@@ -1,6 +1,6 @@
 uuid: edd78460-89d0-4d19-aa2e-00e80bc1a017
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.news
@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_views_block__news_block_1
 theme: motaded_theme
 region: sidebar_first
-weight: -6
+weight: -3
 provider: null
 plugin: 'views_block:news-block_1'
 settings:

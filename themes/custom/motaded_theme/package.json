@@ -1,14 +1,19 @@
 {
-  "type": "module",
+  "name": "motaded_theme",
+  "version": "1.0.0",
+  "description": "motaded_theme theme, generated from starterkit_theme.",
+  "main": "postcss.config.js",
+  "scripts": {
+    "build:css": "postcss css/main.css -o dist/main.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.14",
-    "daisyui": "^5.3.2",
+    "daisyui": "^5.3.7",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4.1.14"
-  },
-  "scripts": {
-    "build": "postcss ./css/main.css -o ./dist/main.css",
-    "watch": "postcss ./css/main.css -o ./dist/main.css --watch"
   }
 }

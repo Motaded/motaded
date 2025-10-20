@@ -1,6 +1,6 @@
 uuid: f2964876-6434-45c3-835b-223557549c97
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:featured_card:fea33b0b-5390-4b46-bd53-7dc3d40af0b8'

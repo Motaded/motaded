@@ -1,6 +1,6 @@
 uuid: a41ce3c1-148d-4695-aa81-98e05a619ddb
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.media_center
@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_views_block__media_center_block_1
 theme: motaded_theme
 region: sidebar_first
-weight: -7
+weight: -6
 provider: null
 plugin: 'views_block:media_center-block_1'
 settings:

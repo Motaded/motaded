@@ -1,0 +1,174 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: (optional) The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - date: (optional) Themed creation date field.
+ * - author_name: (optional) Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ *
+ * @see template_preprocess_node()
+ *
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{{ attach_library('motaded_theme/node') }}
+<article{{ attributes.addClass(classes) }}>
+
+  {{ title_prefix }}
+  {% if label and not page %}
+    <h2{{ title_attributes }}>
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+    </h2>
+  {% endif %}
+  {{ title_suffix }}
+
+  {% if display_submitted %}
+    <footer class="node__meta">
+      {{ author_picture }}
+      <div{{ author_attributes.addClass('node__submitted') }}>
+        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {{ metadata }}
+      </div>
+    </footer>
+  {% endif %}
+
+  <section class="mt-6">
+    <div class="flex flex-col gap-6 pb-8 border-b border-gray-300">
+      {{ summary }}
+    </div>
+  </section>
+
+  <!-- Content + ToC -->
+  <section class="flex items-start md:gap-8 max-md:flex-col">
+    <!-- ToC (sticky on md+, collapsible on mobile) -->
+    <div class="w-full md:w-80 md:shrink-0 md:sticky md:top-4 mt-6">
+      <!-- Mobile ToC toggle -->
+      <button
+        class="md:hidden w-full flex items-center justify-between rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-semibold"
+        @click="tocOpen=!tocOpen"
+        :aria-expanded="tocOpen"
+        aria-controls="toc-panel"
+      >
+        <span>On this page</span>
+        <img
+          src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
+          alt=""
+          width="16"
+          height="16"
+          :class="tocOpen ? 'rotate-180' : ''"
+          class="transition-transform"
+        />
+      </button>
+
+      <aside
+        id="toc-panel"
+        class="table-of-content md:block mt-3 md:mt-0 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200"
+        :class="tocOpen ? 'block' : 'hidden md:block'"
+      >
+        <header class="mb-3">
+          <p class="text-sm text-gray-600">On this page</p>
+          <h4 class="text-lg font-semibold">[Page Title]</h4>
+        </header>
+
+        <nav class="space-y-1" aria-label="Table of contents">
+          <template x-for="item in toc" :key="item.id">
+            <div>
+              <a
+                :href="`#${item.id}`"
+                @click.prevent="scrollTo(item.id)"
+                class="block rounded-md px-3 py-2 text-sm transition"
+                :class="activeId===item.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : 'hover:bg-white'"
+                x-text="item.label"
+              ></a>
+
+              <!-- Children -->
+              <template x-if="item.children?.length">
+                <ul class="mt-1 pl-3 space-y-1">
+                  <template x-for="sub in item.children" :key="sub.id">
+                    <li>
+                      <a
+                        :href="`#${sub.id}`"
+                        @click.prevent="scrollTo(sub.id)"
+                        class="block rounded-md px-3 py-1.5 text-[13px] text-gray-700 hover:bg-white"
+                        :class="activeId===sub.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : ''"
+                        x-text="sub.label"
+                      ></a>
+                    </li>
+                  </template>
+                </ul>
+              </template>
+            </div>
+          </template>
+        </nav>
+      </aside>
+    </div>
+
+    <!-- Article body -->
+    <div
+      {{ content_attributes.addClass('node__content flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0') }}
+      id="article-root"
+    >
+      {{ content }}
+    </div>
+  </section>
+
+</article>

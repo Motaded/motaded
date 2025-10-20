@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_views_block__filters_block_1
 theme: motaded_theme
 region: sidebar_first
-weight: -3
+weight: 1
 provider: null
 plugin: 'views_block:filters-block_1'
 settings:

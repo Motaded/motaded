@@ -21,12 +21,16 @@
         "drupal/backup_migrate": "^5.1",
         "drupal/better_exposed_filters": "^7.0",
         "drupal/bootstrap5": "^4.0",
+        "drupal/ckeditor5_font": "^1.1@beta",
         "drupal/ckeditor_accordion": "^2.3",
         "drupal/ckeditor_responsive_table": "^1.0",
         "drupal/core-composer-scaffold": "^11",
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",
         "drupal/core-vendor-hardening": "^10.3",
+        "drupal/devel": "^5.4",
+        "drupal/devel_debug_log": "^2.0",
+        "drupal/easy_breadcrumb": "^2.0",
         "drupal/honeypot": "^2.2",
         "drupal/like_dislike": "^2.4",
         "drupal/metatag": "^2.2",
@@ -74,6 +78,11 @@
             },
             "drupal/tus": {
                 "3448866: Drupal 11 compatability": "https://git.drupalcode.org/project/tus/-/merge_requests/12.diff"
+            },
+            "drupal/ckeditor5_font": {
+                "3429155: Drupal 11 compatibility": "https://git.drupalcode.org/project/ckeditor5_font/-/merge_requests/10.diff",
+                "3541766: JS error": "https://www.drupal.org/files/issues/2025-08-18/can-not-read-properties-undefined-3541766-3.patch",
+                "3541766: Fatal error": "https://www.drupal.org/files/issues/2024-10-23/error-after-drupal-10.1.0-3368736-60.patch"
             }
         },
         "drupal-scaffold": {
@@ -132,7 +141,7 @@
             ]
         },
         "drupal-lenient": {
-            "allowed-list": ["drupal/tus", "drupal/like_dislike"]
+            "allowed-list": ["drupal/tus", "drupal/like_dislike", "drupal/ckeditor5_font"]
         }
     }
 }
