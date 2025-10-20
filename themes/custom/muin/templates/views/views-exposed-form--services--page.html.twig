@@ -1,0 +1,167 @@
+{#
+  Custom exposed filters for the services view page display.
+  Provides a layout that mirrors reference/html-src/services-page.html.
+#}
+{% set attributes = attributes.addClass(
+  'services-filter-form',
+  'w-full'
+) %}
+{% set hidden_keys = ['form_build_id', 'form_token', 'form_id'] %}
+{% set sort_keys = ['sort_by', 'sort_order', 'sort_bef_combine'] %}
+{% set filter_items = [] %}
+{% set sort_items = [] %}
+{% set actions_element = null %}
+
+{% for key, element in form %}
+  {% if key starts with '#' %}
+    {# Skip metadata. #}
+  {% elseif key in hidden_keys %}
+    {# Hidden elements are rendered after the visible controls. #}
+  {% elseif key == 'actions' %}
+    {% set actions_element = element %}
+  {% else %}
+    {% set element_type = attribute(element, '#type')|default('') %}
+    {% set element_attributes = element['#attributes']|default({}) %}
+    {% set element_classes = element_attributes.class|default([]) %}
+    {% set title_attributes = element['#title_attributes']|default({}) %}
+    {% set title_classes = title_attributes.class|default([]) %}
+
+    {% if element_type in ['search', 'textfield'] %}
+      {% set element_classes = element_classes|merge([
+        'w-full',
+        'rounded-md',
+        'border',
+        'border-gray-300',
+        'bg-white',
+        'px-4',
+        'py-2',
+        'text-sm',
+        'focus:outline-none',
+        'focus:border-gray-900'
+      ]) %}
+      {% set title_classes = title_classes|merge(['text-sm', 'font-medium', 'text-gray-700']) %}
+    {% elseif element_type in ['select'] %}
+      {% set element_classes = element_classes|merge([
+        'w-full',
+        'rounded-md',
+        'border',
+        'border-gray-300',
+        'bg-white',
+        'px-2.5',
+        'py-2',
+        'text-sm',
+        'focus:outline-none',
+        'focus:border-gray-900'
+      ]) %}
+      {% set title_classes = title_classes|merge(['text-sm', 'font-medium', 'text-gray-700']) %}
+    {% else %}
+      {% set title_classes = title_classes|merge(['text-sm', 'font-medium', 'text-gray-700']) %}
+    {% endif %}
+
+    {% set element_attributes = element_attributes|merge({'class': element_classes}) %}
+    {% set title_attributes = title_attributes|merge({'class': title_classes}) %}
+    {% set element = element|merge({
+      '#attributes': element_attributes,
+      '#title_attributes': title_attributes,
+    }) %}
+
+    {% if key in sort_keys %}
+      {% set sort_items = sort_items|merge([{ 'key': key, 'element': element }]) %}
+    {% else %}
+      {% set filter_items = filter_items|merge([{ 'key': key, 'element': element, 'type': element_type }]) %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+<form{{ attributes }}>
+  {% if q is not empty %}
+    {{ q }}
+  {% endif %}
+
+  <details class="services-filter-panel group rounded-xl border border-gray-200 bg-white" open>
+    <summary class="lg:hidden list-none p-4 flex items-center justify-between cursor-pointer">
+      <span class="font-semibold">{{ 'Filters'|t }}</span>
+      <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+      </svg>
+    </summary>
+    <div class="space-y-5 border-t border-gray-200 p-4 lg:border-0 lg:p-0">
+      {% if filter_items %}
+        <div class="space-y-5 lg:space-y-6">
+          {% for item in filter_items %}
+            <div class="services-filter-item" data-services-filter="{{ item.key }}">
+              {% if item.type in ['checkboxes', 'radios'] %}
+                <div class="flex flex-wrap gap-2">
+                  {{ item.element }}
+                </div>
+              {% else %}
+                {{ item.element }}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if actions_element %}
+        {% set actions = actions_element %}
+        {% set actions_attributes = actions['#attributes']|default({}) %}
+        {% set actions_classes = actions_attributes.class|default([])|merge(['flex', 'flex-wrap', 'items-center', 'gap-3']) %}
+        {% set actions_attributes = actions_attributes|merge({'class': actions_classes}) %}
+
+        {% if actions.submit is defined %}
+          {% set submit = actions.submit %}
+          {% set submit_attributes = submit['#attributes']|default({}) %}
+          {% set submit_classes = submit_attributes.class|default([])|merge([
+            'inline-flex',
+            'items-center',
+            'justify-center',
+            'rounded-md',
+            'bg-primary-600',
+            'px-4',
+            'py-2',
+            'text-sm',
+            'font-semibold',
+            'text-white',
+            'shadow-sm',
+            'transition',
+            'hover:bg-primary-700',
+            'focus-visible:outline',
+            'focus-visible:outline-2',
+            'focus-visible:outline-offset-2',
+            'focus-visible:outline-primary-600'
+          ]) %}
+          {% set submit_attributes = submit_attributes|merge({'class': submit_classes}) %}
+          {% set submit = submit|merge({'#attributes': submit_attributes}) %}
+          {% set actions = actions|merge({'submit': submit}) %}
+        {% endif %}
+
+        {% set actions = actions|merge({'#attributes': actions_attributes}) %}
+        <div class="services-filter-actions flex flex-col gap-3 pt-2 sm:flex-row">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300"
+            data-services-filter-clear
+          >
+            {{ 'Clear filters'|t }}
+          </button>
+          {{ actions }}
+        </div>
+      {% endif %}
+    </div>
+  </details>
+
+  {% if sort_items %}
+    <div class="mt-4 flex flex-wrap items-center gap-2 text-sm text-gray-700">
+      <span class="text-gray-600">{{ 'Sort'|t }}</span>
+      {% for item in sort_items %}
+        <div class="min-w-[160px]">{{ item.element }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% for key in hidden_keys %}
+    {% if attribute(form, key) is defined %}
+      {{ attribute(form, key) }}
+    {% endif %}
+  {% endfor %}
+</form>

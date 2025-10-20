@@ -1,0 +1,58 @@
+{# @file Footer layout partial for the Muin theme. #} {% set promo_content =
+footer_promo|render %} {% set primary_content = footer_primary|render %} {% set
+secondary_content = footer_secondary|render %} {% set tertiary_content =
+footer_tertiary|render %} {% set quaternary_content = footer_quaternary|render
+%} {% set branding_content = footer_branding|render %} {% set social_content =
+footer_social|render %} {% set legal_content = footer_legal|render %} {% set
+default_content = footer_default|render %} {% set menu_columns = [] %} {% for
+column in [ { 'modifier': 'primary', 'content': primary_content }, { 'modifier':
+'secondary', 'content': secondary_content }, { 'modifier': 'tertiary',
+'content': tertiary_content }, { 'modifier': 'quaternary', 'content':
+quaternary_content } ] %} {% if column.content %} {% set menu_columns =
+menu_columns|merge([column]) %} {% endif %} {% endfor %} {% set action_items =
+[] %} {% if branding_content %} {% set action_items =
+action_items|merge([{'modifier': 'brand', 'content': branding_content}]) %} {%
+endif %} {% if social_content %} {% set action_items =
+action_items|merge([{'modifier': 'social', 'content': social_content}]) %} {%
+endif %} {% set has_bottom = legal_content or (action_items|length > 0) %} {%
+set has_footer = promo_content or (menu_columns|length > 0) or has_bottom or
+default_content %} {% if has_footer %}
+<footer class="site-footer" role="contentinfo">
+  {{ attach_library("muin/footer") }}
+  <div class="container-page">
+    {% if promo_content %}
+    <div class="site-footer__promo">
+      {{ promo_content }}
+    </div>
+    {% endif %} {% if menu_columns %}
+    <div class="site-footer__grid">
+      {% for menu in menu_columns %}
+      <div class="site-footer__column site-footer__column--{{ menu.modifier }}">
+        {{ menu.content }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %} {% if has_bottom %}
+    <div class="site-footer__bottom">
+      {% if legal_content %}
+      <div class="site-footer__legal">
+        {{ legal_content }}
+      </div>
+      {% endif %} {% if action_items %}
+      <div class="site-footer__actions">
+        {% for item in action_items %}
+        <div class="site-footer__{{ item.modifier }}">
+          {{ item.content }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %} {% if default_content %}
+    <div class="site-footer__additional">
+      {{ default_content }}
+    </div>
+    {% endif %}
+  </div>
+</footer>
+{% endif %}

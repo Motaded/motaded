@@ -1,0 +1,19 @@
+{#
+  Grid layout for the articles view page display.
+#}
+{% if title %}
+  <h2 class="sr-only">{{ title }}</h2>
+{% endif %}
+<div class="grid grid-cols-1 gap-5 md:grid-cols-3 mt-8">
+  {% for row in rows %}
+    {%
+      set row_classes = [
+        default_row_class ? 'views-row',
+        'h-full'
+      ]
+    %}
+    <div{{ row.attributes.addClass(row_classes) }}>
+      {{- row.content -}}
+    </div>
+  {% endfor %}
+</div>
