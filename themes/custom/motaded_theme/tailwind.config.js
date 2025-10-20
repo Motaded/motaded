@@ -6,9 +6,9 @@ export default {
   content: [
     "./components/**/*.twig",
     "./templates/**/*.html.twig",
+    "./templates/**/*.html",
     "./templates/*.html.twig",
   ],
-
   theme: {
     extend: {
       colors: {

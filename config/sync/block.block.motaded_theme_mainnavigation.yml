@@ -1,0 +1,25 @@
+uuid: 5f8b022a-0fe4-4943-a4bb-e17a926ec7fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_mainnavigation
+theme: motaded_theme
+region: menu_mobile
+weight: -18
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: null
+  expand_all_items: true
+visibility: {  }

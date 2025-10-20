@@ -1,6 +1,9 @@
 base:
   version: VERSION
   css:
+    theme:
+     dist/main.css:
+        weight: -11
     component:
       css/components/action-links.css:
         weight: -10
@@ -109,3 +112,15 @@ user:
     component:
       css/components/user.css:
         weight: -10
+
+alpine:
+  remote: https://alpinejs.dev
+  version: 3.15.0
+  license:
+    name: MIT
+    url: https://github.com/alpinejs/alpine/blob/main/LICENSE.md
+    gpl-compatible: true
+  js:
+    js/alpine.min.js: { defer: true }
+      # minified: true
+      # defer: true

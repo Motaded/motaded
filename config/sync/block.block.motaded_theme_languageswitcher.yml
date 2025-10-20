@@ -1,6 +1,6 @@
 uuid: 1825483e-4e5f-4a47-b9f9-847f2277aa87
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - language
@@ -9,7 +9,7 @@ dependencies:
 id: motaded_theme_languageswitcher
 theme: motaded_theme
 region: sidebar_first
-weight: -6
+weight: -4
 provider: null
 plugin: 'language_block:language_interface'
 settings:
