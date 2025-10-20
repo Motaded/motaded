@@ -1,6 +1,6 @@
 uuid: cbf01d2d-9a06-4d19-bce3-60531d2cba56
 langcode: en
-status: false
+status: true
 dependencies:
   theme:
     - motaded_theme
@@ -9,7 +9,7 @@ _core:
 id: motaded_theme_page_title
 theme: motaded_theme
 region: content
-weight: -7
+weight: -17
 provider: null
 plugin: page_title_block
 settings:

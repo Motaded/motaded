@@ -1,6 +1,6 @@
 uuid: 6c5fe78c-205c-41cd-ab56-56433464ffbd
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:head_office:bf90b695-61df-446b-8d27-c2f4a0aefb0e'
@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_ourheadoffice_2
 theme: motaded_theme
 region: sidebar_first
-weight: -4
+weight: -1
 provider: null
 plugin: 'block_content:bf90b695-61df-446b-8d27-c2f4a0aefb0e'
 settings:

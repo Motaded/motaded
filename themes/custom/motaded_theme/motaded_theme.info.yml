@@ -2,12 +2,13 @@ name: Motaded theme
 type: theme
 description: ''
 core_version_requirement: ^11
-'base theme': stable9
+'base theme': false
 version: 1.0.0
 libraries:
   - motaded_theme/base
   - motaded_theme/messages
-  - core/normalize
+  # - core/normalize
+  - motaded_theme/alpine
 libraries-extend:
   user/drupal.user:
     - motaded_theme/user
@@ -21,4 +22,22 @@ libraries-extend:
     - motaded_theme/progress
   core/drupal.tablesort:
     - motaded_theme/drupal.tablesort
+libraries-override:
+  # Replace an asset with another.
+  system/base:
+    css:
+      component:
+        css/components/hidden.module.css: css/hidden.css
 generator: 'starterkit_theme:11.2.5'
+
+regions:
+  top_header: 'Top bar'
+  branding: Branding
+  main_menu: 'Main menu'
+  menu_mobile: 'Mobile menu'
+  secondary_menu: "Secondary menu"
+  breadcrumb: Breadcrumbs
+  content: 'Main content'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: Footer

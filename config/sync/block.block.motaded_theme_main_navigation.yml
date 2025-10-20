@@ -12,8 +12,8 @@ _core:
   default_config_hash: Fm7sDs2U1u99MaVOZEZqa-QOJrrUiQMWJb1jMozYO48
 id: motaded_theme_main_navigation
 theme: motaded_theme
-region: sidebar_first
-weight: 0
+region: main_menu
+weight: -17
 provider: null
 plugin: 'system_menu_block:main'
 settings:

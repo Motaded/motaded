@@ -1,13 +1,11 @@
-uuid: 0d37d329-e14f-4a22-a93d-aa7a2a390242
+uuid: 04c1ac46-4daa-4513-9d18-8c31d8b8ede4
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - system
   theme:
     - motaded_theme
-_core:
-  default_config_hash: VShtwe72J2j41BJzApoNbs8l554EpngM5RTObxM7yiw
 id: motaded_theme_breadcrumbs
 theme: motaded_theme
 region: breadcrumb
@@ -19,8 +17,4 @@ settings:
   label: Breadcrumbs
   label_display: '0'
   provider: system
-visibility:
-  request_path:
-    id: request_path
-    negate: true
-    pages: "/node/*\r\n/filters/?title/*"
+visibility: {  }

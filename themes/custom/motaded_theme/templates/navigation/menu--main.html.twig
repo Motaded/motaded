@@ -1,0 +1,147 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link URL, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/3.x/tags/macro.html
+#}
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    {% if menu_level == 1 %}
+      <div
+        x-show="openMenu==='{{ attributes.menu_parent }}'"
+        x-transition.opacity
+        @click.outside="openMenu=null"
+        @keydown.escape.window="openMenu=null"
+        class="absolute right-0 top-[83px] mt-2 bg-white border w-full shadow-none z-50"
+      >
+        <div class="max-w-[1320px] mx-auto px-4">
+          <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6 py-10">
+    {% endif %}
+    {% for item in items %}
+      {%
+        set classes = [
+          menu_level == 0 ? 'menu-item h-full flex items-center' : '',
+          item.in_active_trail ? 'menu-item--active-trail',
+        ]
+      %}
+      {% set title = item.title | lower | replace({' ': '_'}) %}
+      {% if menu_level == 0 %}
+        <div{{ item.attributes.addClass(classes) }}
+        {% if item.below %}
+          @click.outside="openMenu==='{{ title }}' && (openMenu=null)"
+          @click="openMenu = '{{ title }}'"
+          @keydown.escape.window="openMenu=null"
+          data-mega
+        {% endif %}
+        >
+      {% endif %}
+        {% if item.below %}
+          {% set parent_link_classes = [
+            'flex',
+            'items-center',
+            'gap-0',
+            'px-4',
+            'py-4',
+            'w-fit',
+            'rounded-md',
+            'relative',
+            'text-sm',
+            'font-semibold',
+            'transition',
+            'h-[71px]',
+            'focus-visible:outline',
+            'focus-visible:outline-2',
+            'focus-visible:outline-gray-800',
+            'text-nowrap',
+            'hover:bg-gray-100',
+            'text-gray-900'
+          ]%}
+          <button
+            type="button"
+            class="flex items-center gap-0 px-4 py-4 w-fit rounded-md relative text-sm font-semibold transition h-[71px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800 text-nowrap hover:bg-gray-100 text-gray-900"
+            :class="openMenu==='{{ title }}' && 'bg-primary-600 text-white after:content-[\'\'] after:absolute after:bottom-0 after:w-[80%] after:h-[4px] after:left-1/2 after:-translate-x-1/2 after:bg-primary-200 after:rounded-full'"
+            aria-haspopup="true"
+            :aria-expanded="openMenu==='{{ title }}'"
+            @click="openMenu = openMenu==='{{ title }}' ? null : '{{ title }}'"
+          >
+            <span class="flex gap-2 px-1 items-center">
+              {{ item.title }}
+              <span class="w-3">
+                <img
+                  alt="chevron"
+                  width="14"
+                  height="14"
+                  class="transition-transform"
+                  :class="openMenu==='{{ title }}' ? 'rotate-180' : ''"
+                  src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
+                />
+              </span>
+            </span>
+          </button>
+          {# {{ link(item.title, item.url) }} #}
+          {{ menus.menu_links(item.below, attributes.setAttribute('menu_parent', title), menu_level + 1) }}
+        {% else %}
+          {% if menu_level == 1 %}
+            <li>
+          {% endif %}
+          {% set link_classes = [
+              'flex',
+              'items-center',
+              'gap-0',
+              'px-4',
+              'py-4',
+              'w-fit',
+              'm-0.5',
+              'rounded-md',
+              'text-md',
+              'leading-[1.2]',
+              'font-medium',
+              'transition',
+              'h-full',
+              'relative',
+              'focus-visible:outline',
+              'focus-visible:outline-2',
+              'focus-visible:outline-gray-800',
+              'hover:bg-gray-100',
+              'text-gray-900'
+            ]
+          %}
+          {% set tmp = menu_level == 0 ? '<span>'~item.title~'</span>' : '<p class="text-md font-medium leading-[1.6]">'~item.title~'</p>' %}
+          {% set link_text %}{{ tmp|raw }}{% endset %}
+          {{ link(link_text, item.url, create_attribute({'class': menu_level == 0 ? link_classes : 'hover:underline block'})) }}
+          {% if menu_level == 1 %}
+            </li>
+          {% endif %}
+        {% endif %}
+      {% if menu_level == 0 %}
+      </div>
+      {% endif %}
+    {% endfor %}
+    {% if menu_level == 1 %}
+      </div></div></ul>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
