@@ -1,0 +1,2991 @@
+<?php
+/**
+ * @file
+ * Theme hooks for Muin theme.
+ */
+
+use Drupal\Component\Render\Markup;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RenderableInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\file\FileInterface;
+use Drupal\node\NodeInterface;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function muin_preprocess_page(array &$variables): void {
+  $language = \Drupal::languageManager()->getCurrentLanguage();
+  $langcode = $language->getId();
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $date = $date_formatter->format(time(), 'custom', 'l, F j, Y', NULL, $langcode);
+
+  $settings = [
+    'date' => $date,
+    'increaseFontTip' => (string) t('Increase font size'),
+    'increaseFontLabel' => (string) t('Increase font size'),
+    'decreaseFontTip' => (string) t('Decrease font size'),
+    'decreaseFontLabel' => (string) t('Decrease font size'),
+    'invertColorsTip' => (string) t('Invert colors'),
+    'invertColorsLabel' => (string) t('Invert colors'),
+    'calendarAlt' => (string) t('Calendar icon'),
+    'langcode' => $langcode,
+  ];
+
+  $variables['topbar_settings'] = $settings;
+  $variables['#attached']['drupalSettings']['muin']['topbar'] = $settings;
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function muin_preprocess_views_view(array &$variables): void {
+  if (empty($variables['view']) || !$variables['view'] instanceof ViewExecutable) {
+    return;
+  }
+
+  $view = $variables['view'];
+  $view_id = $view->id();
+  $display = $view->current_display;
+
+  if ($view_id === 'articles' && $display === 'page') {
+    muin_preprocess_articles_view_page($variables, $view);
+    return;
+  }
+
+  if ($view_id === 'services' && $display === 'page') {
+    muin_preprocess_services_view_page($variables, $view);
+  }
+}
+
+/**
+ * Preprocesses the Articles view page display variables.
+ */
+function muin_preprocess_articles_view_page(array &$variables, ViewExecutable $view): void {
+  $renderer = \Drupal::service('renderer');
+
+  if (empty($variables['rows'])) {
+    $has_empty_behavior = FALSE;
+    if (array_key_exists('empty', $variables)) {
+      $empty_candidate = $variables['empty'];
+
+      try {
+        if ($empty_candidate instanceof RenderableInterface) {
+          $empty_candidate = $empty_candidate->toRenderable();
+        }
+
+        if ($empty_candidate instanceof MarkupInterface) {
+          $rendered = $empty_candidate->__toString();
+        }
+        elseif (is_array($empty_candidate)) {
+          $render_array = $empty_candidate;
+          $render_result = $renderer->renderPlain($render_array);
+          if ($render_result instanceof MarkupInterface) {
+            $rendered = $render_result->__toString();
+          }
+          else {
+            $rendered = (string) $render_result;
+          }
+        }
+        else {
+          $rendered = (string) $empty_candidate;
+        }
+
+        if (trim($rendered) !== '') {
+          $has_empty_behavior = TRUE;
+        }
+      }
+      catch (\Throwable $throwable) {
+        $has_empty_behavior = TRUE;
+      }
+    }
+
+    if (!$has_empty_behavior) {
+      $variables['empty'] = [
+        '#type' => 'status_messages',
+      ];
+    }
+  }
+
+  $title_markup = $view->getTitle();
+  $title = muin_renderable_to_text($title_markup, $renderer ?? NULL);
+  if ($title === '' && $view->storage) {
+    $title = muin_renderable_to_text($view->storage->label(), $renderer ?? NULL);
+  }
+
+  $default_title = (string) t('Articles');
+  if ($title === '') {
+    $title = $default_title;
+  }
+  elseif (strcasecmp($title, 'articles') === 0 || strcasecmp($title, $default_title) === 0) {
+    $title = $default_title;
+  }
+
+  $subtitle = NULL;
+  if (!empty($variables['header'])) {
+    try {
+      $subtitle_markup = $renderer->render($variables['header']);
+      if ($subtitle_markup instanceof MarkupInterface) {
+        $subtitle_string = trim($subtitle_markup->__toString());
+        if ($subtitle_string !== '') {
+          $subtitle = Markup::create($subtitle_string);
+        }
+      }
+      else {
+        $subtitle_string = trim((string) $subtitle_markup);
+        if ($subtitle_string !== '') {
+          $subtitle = Markup::create($subtitle_string);
+        }
+      }
+    }
+    catch (\Throwable $throwable) {
+      $subtitle = NULL;
+    }
+  }
+
+  $breadcrumb_items = muin_build_breadcrumb_items($title);
+  $home_label = (string) t('Home');
+  $home_url = NULL;
+  try {
+    $home_url = Url::fromRoute('<front>')->toString();
+  }
+  catch (\Throwable $throwable) {
+    $home_url = NULL;
+  }
+
+  $normalized_items = [];
+  $has_home = FALSE;
+  foreach ($breadcrumb_items as $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    $url = $item['url'] ?? NULL;
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, 'home') === 0 || strcasecmp($text, $home_label) === 0) {
+      $text = $home_label;
+      if ($url === NULL && $home_url !== NULL) {
+        $url = $home_url;
+      }
+      $has_home = TRUE;
+    }
+
+    if (strcasecmp($text, 'articles') === 0 || strcasecmp($text, $default_title) === 0) {
+      $text = $title;
+      $url = NULL;
+    }
+
+    $normalized_items[] = [
+      'text' => $text,
+      'url' => $url,
+    ];
+  }
+
+  if (!$has_home) {
+    $normalized_items = array_merge([
+      [
+        'text' => $home_label,
+        'url' => $home_url,
+      ],
+    ], $normalized_items);
+  }
+
+  if ($title !== '') {
+    $last_index = array_key_last($normalized_items);
+    if ($last_index === NULL || strcasecmp($normalized_items[$last_index]['text'], $title) !== 0) {
+      $normalized_items[] = [
+        'text' => $title,
+        'url' => NULL,
+      ];
+    }
+    else {
+      $normalized_items[$last_index]['text'] = $title;
+      $normalized_items[$last_index]['url'] = NULL;
+    }
+  }
+
+  $variables['muin_articles'] = [
+    'title' => $title,
+    'subtitle' => $subtitle,
+    'breadcrumb' => $normalized_items,
+  ];
+}
+
+/**
+ * Preprocesses the Services view page display variables.
+ */
+function muin_preprocess_services_view_page(array &$variables, ViewExecutable $view): void {
+  $renderer = \Drupal::service('renderer');
+
+  if (empty($variables['rows'])) {
+    $has_empty_behavior = FALSE;
+    if (array_key_exists('empty', $variables)) {
+      $empty_candidate = $variables['empty'];
+
+      try {
+        if ($empty_candidate instanceof RenderableInterface) {
+          $empty_candidate = $empty_candidate->toRenderable();
+        }
+
+        if ($empty_candidate instanceof MarkupInterface) {
+          $rendered = $empty_candidate->__toString();
+        }
+        elseif (is_array($empty_candidate)) {
+          $render_array = $empty_candidate;
+          $render_result = $renderer->renderPlain($render_array);
+          if ($render_result instanceof MarkupInterface) {
+            $rendered = $render_result->__toString();
+          }
+          else {
+            $rendered = (string) $render_result;
+          }
+        }
+        else {
+          $rendered = (string) $empty_candidate;
+        }
+
+        if (trim($rendered) !== '') {
+          $has_empty_behavior = TRUE;
+        }
+      }
+      catch (\Throwable $throwable) {
+        $has_empty_behavior = TRUE;
+      }
+    }
+
+    if (!$has_empty_behavior) {
+      $variables['empty'] = [
+        '#type' => 'status_messages',
+      ];
+    }
+  }
+
+  $title_markup = $view->getTitle();
+  $title = muin_renderable_to_text($title_markup, $renderer ?? NULL);
+  if ($title === '' && $view->storage) {
+    $title = muin_renderable_to_text($view->storage->label(), $renderer ?? NULL);
+  }
+
+  $default_title = (string) t('Services');
+  if ($title === '') {
+    $title = $default_title;
+  }
+  elseif (strcasecmp($title, 'services') === 0 || strcasecmp($title, $default_title) === 0) {
+    $title = $default_title;
+  }
+
+  $subtitle = NULL;
+  if (!empty($variables['header'])) {
+    try {
+      $subtitle_markup = $renderer->render($variables['header']);
+      if ($subtitle_markup instanceof MarkupInterface) {
+        $subtitle_string = trim($subtitle_markup->__toString());
+        if ($subtitle_string !== '') {
+          $subtitle = Markup::create($subtitle_string);
+        }
+      }
+      else {
+        $subtitle_string = trim((string) $subtitle_markup);
+        if ($subtitle_string !== '') {
+          $subtitle = Markup::create($subtitle_string);
+        }
+      }
+    }
+    catch (\Throwable $throwable) {
+      $subtitle = NULL;
+    }
+  }
+
+  $breadcrumb_items = muin_build_breadcrumb_items($title);
+  $home_label = (string) t('Home');
+  $home_url = NULL;
+  try {
+    $home_url = Url::fromRoute('<front>')->toString();
+  }
+  catch (\Throwable $throwable) {
+    $home_url = NULL;
+  }
+
+  $normalized_items = [];
+  $has_home = FALSE;
+  foreach ($breadcrumb_items as $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    $url = $item['url'] ?? NULL;
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, 'home') === 0 || strcasecmp($text, $home_label) === 0) {
+      $text = $home_label;
+      if ($url === NULL && $home_url !== NULL) {
+        $url = $home_url;
+      }
+      $has_home = TRUE;
+    }
+
+    if (strcasecmp($text, 'services') === 0 || strcasecmp($text, $default_title) === 0) {
+      $text = $title;
+      $url = NULL;
+    }
+
+    $normalized_items[] = [
+      'text' => $text,
+      'url' => $url,
+    ];
+  }
+
+  if (!$has_home) {
+    $normalized_items = array_merge([
+      [
+        'text' => $home_label,
+        'url' => $home_url,
+      ],
+    ], $normalized_items);
+  }
+
+  if ($title !== '') {
+    $last_index = array_key_last($normalized_items);
+    if ($last_index === NULL || strcasecmp($normalized_items[$last_index]['text'], $title) !== 0) {
+      $normalized_items[] = [
+        'text' => $title,
+        'url' => NULL,
+      ];
+    }
+    else {
+      $normalized_items[$last_index]['text'] = $title;
+      $normalized_items[$last_index]['url'] = NULL;
+    }
+  }
+
+  $total_results = NULL;
+  try {
+    if (isset($view->total_rows)) {
+      $total_results = (int) $view->total_rows;
+    }
+  }
+  catch (\Throwable $throwable) {
+    $total_results = NULL;
+  }
+
+  if ($total_results === NULL) {
+    $result = $view->result ?? NULL;
+    if (is_array($result)) {
+      $total_results = count($result);
+    }
+  }
+
+  $variables['muin_services'] = [
+    'title' => $title,
+    'subtitle' => $subtitle,
+    'breadcrumb' => $normalized_items,
+    'total_results' => $total_results,
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function muin_preprocess_node(array &$variables): void {
+  if (empty($variables['node']) || !$variables['node'] instanceof NodeInterface) {
+    return;
+  }
+
+  $view_mode = $variables['view_mode'] ?? NULL;
+  $node = $variables['node'];
+  $content = &$variables['content'];
+  if (!is_array($content)) {
+    $content = [];
+  }
+
+  if ($node->bundle() === 'service' && $view_mode === 'teaser') {
+    $service = [];
+
+    $service['icon'] = muin_extract_render_array($content, [
+      'field_service_icon',
+      'field_icon',
+      'field_icon_media',
+      'field_icon_image',
+      'field_service_logo',
+      'field_media_icon',
+    ]);
+
+    $service['tags'] = muin_extract_label_items($node, $content, [
+      'field_service_tags',
+      'field_tags',
+      'field_category',
+    ]);
+
+    $service['description'] = muin_extract_render_array($content, [
+      'field_summary',
+      'field_description',
+      'field_intro',
+      'body',
+    ]);
+    if (!isset($service['description'])) {
+      $description_text = muin_extract_text_field($node, [
+        'field_summary',
+        'field_description',
+        'field_intro',
+        'body',
+      ], $content);
+      if ($description_text !== NULL && $description_text !== '') {
+        $service['description_text'] = $description_text;
+      }
+    }
+
+    $service['primary_cta'] = muin_extract_link_field($node, $content, [
+      'field_primary_cta',
+      'field_cta_link',
+      'field_contact_cta',
+      'field_contact_link',
+      'field_primary_call_to_action',
+      'field_learn_more_link',
+    ]);
+
+    $service['secondary_cta'] = muin_extract_link_field($node, $content, [
+      'field_secondary_cta',
+      'field_secondary_call_to_action',
+      'field_start_now',
+      'field_start_now_link',
+      'field_apply_now',
+      'field_apply_now_link',
+    ]);
+
+    $service = array_filter($service, static function ($value) {
+      if (is_array($value)) {
+        if (isset($value['render'])) {
+          return !empty($value['render']);
+        }
+        return !empty(array_filter($value));
+      }
+      return $value !== NULL && $value !== '';
+    });
+
+    if (!empty($service)) {
+      $variables['muin_service_teaser'] = $service;
+    }
+
+    return;
+  }
+
+  if ($view_mode !== 'full') {
+    return;
+  }
+
+  switch ($node->bundle()) {
+    case 'page':
+      $basic = [];
+      $basic['breadcrumb'] = muin_build_basic_page_breadcrumb($variables);
+      $basic['lead'] = muin_extract_render_array($content, [
+        'field_lead',
+        'field_intro',
+        'field_summary',
+        'field_lead_text',
+        'field_subtitle',
+      ]);
+      $basic['description'] = muin_extract_render_array($content, [
+        'field_description',
+        'field_intro_long',
+        'field_summary_long',
+      ]);
+      $basic['quick_links'] = muin_extract_render_array($content, [
+        'field_quick_links',
+        'field_quick_link',
+        'field_reference_links',
+      ]);
+      $basic['sections'] = muin_extract_render_array($content, [
+        'field_sections',
+        'field_content_sections',
+        'field_components',
+      ]);
+      $basic['body'] = muin_extract_render_array($content, [
+        'body',
+      ]);
+      $basic['resources'] = muin_extract_render_array($content, [
+        'field_resources',
+        'field_related_links',
+      ]);
+      $basic['cta'] = muin_extract_render_array($content, [
+        'field_cta',
+        'field_call_to_action',
+        'field_next_steps',
+      ]);
+      $basic['back_to_top'] = muin_extract_text_field($node, [
+        'field_back_to_top_label',
+        'field_back_to_top',
+      ]);
+
+      $basic_filtered = array_filter($basic, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+
+      if (!empty($basic_filtered)) {
+        $variables['muin_basic_page'] = $basic_filtered;
+      }
+
+      if (muin_is_about_kingdom_page($node)) {
+        $variables['theme_hook_suggestions'][] = 'node__page__about_kingdom';
+        $about = muin_build_about_kingdom_page($node, $content, $variables, $basic_filtered ?? []);
+        if (!empty($about)) {
+          $variables['muin_about_kingdom_page'] = $about;
+        }
+      }
+      break;
+
+    case 'article':
+      $article = [];
+      $article['breadcrumb'] = muin_build_article_page_breadcrumb($variables);
+      $article['lead'] = muin_extract_render_array($content, [
+        'field_lead',
+        'field_intro',
+        'field_summary',
+        'field_lead_text',
+      ]);
+      $article['description'] = muin_extract_render_array($content, [
+        'field_description',
+        'field_intro_long',
+        'field_summary_long',
+      ]);
+      $article['sections'] = muin_extract_render_array($content, [
+        'field_sections',
+        'field_content_sections',
+        'field_components',
+      ]);
+      $article['body'] = muin_extract_render_array($content, [
+        'body',
+      ]);
+
+      $meta = [];
+      $meta['date'] = muin_extract_render_array($content, [
+        'field_publication_date',
+        'field_date',
+        'field_published_on',
+      ]);
+      $meta['author'] = muin_extract_render_array($content, [
+        'field_author',
+        'field_authors',
+        'uid',
+      ]);
+      $meta['tags'] = muin_extract_render_array($content, [
+        'field_category',
+        'field_categories',
+        'field_tags',
+      ]);
+      $meta = array_filter($meta, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($meta)) {
+        $article['meta'] = $meta;
+      }
+
+      $article['toc_label'] = muin_extract_text_field($node, [
+        'field_toc_label',
+        'field_on_this_page_label',
+      ]);
+      $article['toc_title'] = muin_extract_text_field($node, [
+        'field_toc_title',
+        'field_toc_heading',
+      ]);
+
+      $toc = muin_build_article_toc($node, $article['body'] ?? NULL);
+      if (!empty($toc)) {
+        $article['toc'] = $toc;
+      }
+
+      $variables['muin_article_page'] = array_filter($article, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      break;
+
+    case 'service':
+      $service = [];
+      $service['breadcrumb'] = muin_build_service_page_breadcrumb($variables);
+
+      $service['cta'] = muin_extract_link_field($node, $content, [
+        'field_primary_cta',
+        'field_cta_link',
+        'field_contact_cta',
+        'field_contact_link',
+        'field_primary_call_to_action',
+      ]);
+
+      $service['tags'] = muin_extract_label_items($node, $content, [
+        'field_service_tags',
+        'field_tags',
+        'field_category',
+      ]);
+
+      $service['description'] = muin_extract_render_array($content, [
+        'field_description',
+        'field_summary',
+        'field_intro',
+        'body',
+      ]);
+      if (!isset($service['description'])) {
+        $description_text = muin_extract_text_field($node, [
+          'field_description',
+          'field_summary',
+          'field_intro',
+          'body',
+        ], $content);
+        if ($description_text !== NULL && $description_text !== '') {
+          $service['description_text'] = $description_text;
+        }
+      }
+
+      $service['sla'] = muin_extract_link_field($node, $content, [
+        'field_sla_link',
+        'field_service_level_agreement',
+        'field_sla',
+      ]);
+
+      $service['steps_heading'] = muin_extract_text_field($node, [
+        'field_steps_heading',
+        'field_process_heading',
+        'field_how_it_works_heading',
+      ], $content);
+
+      $service_steps = muin_extract_text_items($node, $content, [
+        'field_service_steps',
+        'field_steps',
+        'field_process_steps',
+      ]);
+      if (!empty($service_steps)) {
+        $service['steps'] = $service_steps;
+      }
+      else {
+        $service_steps_render = muin_extract_render_array($content, [
+          'field_service_steps',
+          'field_steps',
+          'field_process_steps',
+        ]);
+        if ($service_steps_render !== NULL) {
+          $service['steps_render'] = $service_steps_render;
+        }
+      }
+
+      $info_blocks = [];
+
+      $audience = [];
+      $audience['title'] = muin_extract_text_field($node, [
+        'field_target_audience_title',
+        'field_audience_title',
+      ], $content);
+      $audience_body = muin_extract_render_array($content, [
+        'field_target_audience',
+        'field_service_audience',
+        'field_audience',
+      ]);
+      if ($audience_body !== NULL) {
+        $audience['body'] = $audience_body;
+      }
+      else {
+        $audience_text = muin_extract_text_field($node, [
+          'field_target_audience',
+          'field_service_audience',
+          'field_audience',
+        ], $content);
+        if ($audience_text !== NULL && $audience_text !== '') {
+          $audience['body_text'] = $audience_text;
+        }
+      }
+      $audience = array_filter($audience, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($audience)) {
+        $info_blocks['audience'] = $audience;
+      }
+
+      $duration = [];
+      $duration['title'] = muin_extract_text_field($node, [
+        'field_service_duration_title',
+        'field_duration_title',
+      ], $content);
+      $duration_body = muin_extract_render_array($content, [
+        'field_service_duration',
+        'field_duration',
+        'field_timeframe',
+      ]);
+      if ($duration_body !== NULL) {
+        $duration['body'] = $duration_body;
+      }
+      else {
+        $duration_text = muin_extract_text_field($node, [
+          'field_service_duration',
+          'field_duration',
+          'field_timeframe',
+        ], $content);
+        if ($duration_text !== NULL && $duration_text !== '') {
+          $duration['body_text'] = $duration_text;
+        }
+      }
+      $duration = array_filter($duration, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($duration)) {
+        $info_blocks['duration'] = $duration;
+      }
+
+      $channels = [];
+      $channels['title'] = muin_extract_text_field($node, [
+        'field_service_channels_title',
+        'field_channels_title',
+      ], $content);
+      $channels_body = muin_extract_render_array($content, [
+        'field_service_channels',
+        'field_channels',
+        'field_contact_channels',
+      ]);
+      if ($channels_body !== NULL) {
+        $channels['body'] = $channels_body;
+      }
+      else {
+        $channels_text = muin_extract_text_field($node, [
+          'field_service_channels',
+          'field_channels',
+          'field_contact_channels',
+        ], $content);
+        if ($channels_text !== NULL && $channels_text !== '') {
+          $channels['body_text'] = $channels_text;
+        }
+      }
+      $channels = array_filter($channels, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($channels)) {
+        $info_blocks['channels'] = $channels;
+      }
+
+      $cost = [];
+      $cost['title'] = muin_extract_text_field($node, [
+        'field_service_cost_title',
+        'field_cost_title',
+      ], $content);
+      $cost_body = muin_extract_render_array($content, [
+        'field_service_cost',
+        'field_cost',
+        'field_pricing',
+      ]);
+      if ($cost_body !== NULL) {
+        $cost['body'] = $cost_body;
+      }
+      else {
+        $cost_text = muin_extract_text_field($node, [
+          'field_service_cost',
+          'field_cost',
+          'field_pricing',
+        ], $content);
+        if ($cost_text !== NULL && $cost_text !== '') {
+          $cost['body_text'] = $cost_text;
+        }
+      }
+      $cost = array_filter($cost, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($cost)) {
+        $info_blocks['cost'] = $cost;
+      }
+
+      if (!empty($info_blocks)) {
+        $service['info'] = $info_blocks;
+      }
+
+      $payment = [];
+      $payment['title'] = muin_extract_text_field($node, [
+        'field_payment_methods_title',
+        'field_payment_title',
+      ], $content);
+      $payment_methods = muin_extract_render_array($content, [
+        'field_payment_methods',
+        'field_payment_options',
+        'field_payment_icons',
+      ]);
+      if ($payment_methods !== NULL) {
+        $payment['methods'] = $payment_methods;
+      }
+      else {
+        $payment_text = muin_extract_text_field($node, [
+          'field_payment_methods',
+          'field_payment_options',
+        ], $content);
+        if ($payment_text !== NULL && $payment_text !== '') {
+          $payment['methods_text'] = $payment_text;
+        }
+      }
+      $payment = array_filter($payment, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($payment)) {
+        $service['payment'] = $payment;
+      }
+
+      $contact = [];
+      $contact['faq_title'] = muin_extract_text_field($node, [
+        'field_faq_title',
+        'field_faq_heading',
+      ], $content);
+      $contact['faq_link'] = muin_extract_link_field($node, $content, [
+        'field_faq_link',
+        'field_faq',
+        'field_faq_url',
+      ]);
+
+      $contact['phone_title'] = muin_extract_text_field($node, [
+        'field_phone_title',
+        'field_contact_phone_title',
+      ], $content);
+      $contact['phone_link'] = muin_extract_link_field($node, $content, [
+        'field_phone_link',
+        'field_phone',
+        'field_contact_phone',
+      ]);
+
+      $contact['email_title'] = muin_extract_text_field($node, [
+        'field_email_title',
+        'field_contact_email_title',
+      ], $content);
+      $contact['email_link'] = muin_extract_link_field($node, $content, [
+        'field_email_link',
+        'field_email',
+        'field_contact_email',
+      ]);
+
+      $contact['manual'] = muin_extract_link_field($node, $content, [
+        'field_manual_link',
+        'field_manual',
+        'field_download_manual',
+        'field_manual_button',
+      ]);
+
+      $contact = array_filter($contact, static function ($value) {
+        if (is_array($value)) {
+          if (isset($value['render'])) {
+            return !empty($value['render']);
+          }
+          return !empty(array_filter($value));
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($contact)) {
+        $service['contact'] = $contact;
+      }
+
+      $mobile = [];
+      $mobile['title'] = muin_extract_text_field($node, [
+        'field_mobile_app_title',
+        'field_mobile_apps_title',
+        'field_mobile_apps_heading',
+      ], $content);
+      $mobile_items = muin_extract_render_array($content, [
+        'field_mobile_apps',
+        'field_app_links',
+        'field_application_links',
+      ]);
+      if ($mobile_items !== NULL) {
+        $mobile['items'] = $mobile_items;
+      }
+      else {
+        $mobile_text = muin_extract_text_field($node, [
+          'field_mobile_apps',
+          'field_app_links',
+          'field_application_links',
+        ], $content);
+        if ($mobile_text !== NULL && $mobile_text !== '') {
+          $mobile['items_text'] = $mobile_text;
+        }
+      }
+      $mobile = array_filter($mobile, static function ($value) {
+        if (is_array($value)) {
+          return !empty($value);
+        }
+        return $value !== NULL && $value !== '';
+      });
+      if (!empty($mobile)) {
+        $service['mobile'] = $mobile;
+      }
+
+      $filtered_service = [];
+      foreach ($service as $key => $value) {
+        if (is_array($value)) {
+          $filtered_value = [];
+          foreach ($value as $sub_key => $sub_value) {
+            if (is_array($sub_value)) {
+              $sub_filtered = array_filter($sub_value, static function ($item) {
+                if (is_array($item)) {
+                  return !empty(array_filter($item));
+                }
+                return $item !== NULL && $item !== '';
+              });
+              if (!empty($sub_filtered)) {
+                $filtered_value[$sub_key] = $sub_filtered;
+              }
+            }
+            elseif ($sub_value !== NULL && $sub_value !== '') {
+              $filtered_value[$sub_key] = $sub_value;
+            }
+          }
+          if (!empty($filtered_value)) {
+            $filtered_service[$key] = $filtered_value;
+          }
+        }
+        elseif ($value !== NULL && $value !== '') {
+          $filtered_service[$key] = $value;
+        }
+      }
+
+      if (!empty($filtered_service)) {
+        $variables['muin_service_page'] = $filtered_service;
+      }
+      break;
+  }
+}
+
+/**
+ * Builds breadcrumb items for the basic page layout.
+ */
+function muin_build_basic_page_breadcrumb(array $variables): array {
+  $renderer = \Drupal::service('renderer');
+  $label = '';
+  if (isset($variables['label'])) {
+    $label = muin_renderable_to_text($variables['label'], $renderer);
+  }
+  elseif (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $label = muin_renderable_to_text($variables['node']->label(), $renderer);
+  }
+
+  return muin_build_breadcrumb_items($label);
+}
+
+/**
+ * Builds breadcrumb items for the article layout.
+ */
+function muin_build_article_page_breadcrumb(array $variables): array {
+  $renderer = \Drupal::service('renderer');
+  $label = '';
+  if (isset($variables['label'])) {
+    $label = muin_renderable_to_text($variables['label'], $renderer);
+  }
+  elseif (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $label = muin_renderable_to_text($variables['node']->label(), $renderer);
+  }
+
+  $items = muin_build_breadcrumb_items($label);
+
+  $articles_label = (string) t('Articles');
+  $articles_url = NULL;
+  try {
+    $articles_url = Url::fromRoute('view.articles.page')->toString();
+  }
+  catch (\Throwable $throwable) {
+    $articles_url = NULL;
+  }
+
+  $has_articles = FALSE;
+  foreach ($items as $index => $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, $articles_label) === 0) {
+      $has_articles = TRUE;
+      if ($articles_url !== NULL && (empty($item['url']) || !is_string($item['url']))) {
+        $items[$index]['url'] = $articles_url;
+      }
+      break;
+    }
+  }
+
+  if (!$has_articles) {
+    $article_item = [
+      'text' => $articles_label,
+      'url' => $articles_url,
+    ];
+
+    $last_index = array_key_last($items);
+    if ($last_index === NULL) {
+      $items[] = $article_item;
+    }
+    else {
+      array_splice($items, $last_index, 0, [$article_item]);
+    }
+  }
+
+  $home_label = (string) t('Home');
+  $has_home = FALSE;
+  foreach ($items as $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, $home_label) === 0) {
+      $has_home = TRUE;
+      break;
+    }
+  }
+
+  if (!$has_home) {
+    $home_url = NULL;
+    try {
+      $home_url = Url::fromRoute('<front>')->toString();
+    }
+    catch (\Throwable $throwable) {
+      $home_url = NULL;
+    }
+
+    array_unshift($items, [
+      'text' => $home_label,
+      'url' => $home_url,
+    ]);
+  }
+
+  return $items;
+}
+
+/**
+ * Builds breadcrumb items for the service layout.
+ */
+function muin_build_service_page_breadcrumb(array $variables): array {
+  $renderer = \Drupal::service('renderer');
+  $label = '';
+  if (isset($variables['label'])) {
+    $label = muin_renderable_to_text($variables['label'], $renderer);
+  }
+  elseif (!empty($variables['node']) && $variables['node'] instanceof NodeInterface) {
+    $label = muin_renderable_to_text($variables['node']->label(), $renderer);
+  }
+
+  $items = muin_build_breadcrumb_items($label);
+
+  $services_label = (string) t('Services');
+  $services_url = NULL;
+  try {
+    $services_url = Url::fromRoute('view.services.page')->toString();
+  }
+  catch (\Throwable $throwable) {
+    try {
+      $services_url = Url::fromUri('internal:/services')->toString();
+    }
+    catch (\Throwable $throwable) {
+      $services_url = NULL;
+    }
+  }
+
+  $has_services = FALSE;
+  foreach ($items as $index => $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, $services_label) === 0) {
+      $has_services = TRUE;
+      if ($services_url !== NULL && (empty($item['url']) || !is_string($item['url']))) {
+        $items[$index]['url'] = $services_url;
+      }
+      break;
+    }
+  }
+
+  if (!$has_services) {
+    $service_item = [
+      'text' => $services_label,
+      'url' => $services_url,
+    ];
+
+    $last_index = array_key_last($items);
+    if ($last_index === NULL) {
+      $items[] = $service_item;
+    }
+    else {
+      array_splice($items, $last_index, 0, [$service_item]);
+    }
+  }
+
+  $home_label = (string) t('Home');
+  $has_home = FALSE;
+  foreach ($items as $item) {
+    $text = isset($item['text']) ? trim((string) $item['text']) : '';
+    if ($text === '') {
+      continue;
+    }
+
+    if (strcasecmp($text, $home_label) === 0) {
+      $has_home = TRUE;
+      break;
+    }
+  }
+
+  if (!$has_home) {
+    $home_url = NULL;
+    try {
+      $home_url = Url::fromRoute('<front>')->toString();
+    }
+    catch (\Throwable $throwable) {
+      $home_url = NULL;
+    }
+
+    array_unshift($items, [
+      'text' => $home_label,
+      'url' => $home_url,
+    ]);
+  }
+
+  return $items;
+}
+
+/**
+ * Builds breadcrumb items for the current route.
+ */
+function muin_build_breadcrumb_items(?string $label = NULL): array {
+  try {
+    $breadcrumb = \Drupal::service('breadcrumb')->build(\Drupal::routeMatch());
+  }
+  catch (\Throwable $throwable) {
+    if ($label === NULL || $label === '') {
+      return [];
+    }
+
+    return [
+      [
+        'text' => $label,
+        'url' => NULL,
+      ],
+    ];
+  }
+
+  $items = [];
+  $renderer = \Drupal::service('renderer');
+
+  foreach ($breadcrumb->getLinks() as $link) {
+    $text = muin_renderable_to_text($link->getText(), $renderer);
+    $url = $link->getUrl();
+    $url_string = NULL;
+    if ($url instanceof Url) {
+      $url_string = $url->toString();
+    }
+    elseif ($url) {
+      try {
+        $url_string = $url->toString();
+      }
+      catch (\Throwable $throwable) {
+        $url_string = NULL;
+      }
+    }
+
+    $items[] = [
+      'text' => $text,
+      'url' => $url_string,
+    ];
+  }
+
+  if ($label !== NULL && $label !== '') {
+    $last = end($items);
+    if (!$last || $last['text'] !== $label) {
+      $items[] = [
+        'text' => $label,
+        'url' => NULL,
+      ];
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Generates a table of contents structure for an article.
+ */
+function muin_build_article_toc(NodeInterface $node, $body_render_array = NULL): array {
+  $markup_candidates = [];
+
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    try {
+      $body_item = $node->get('body')->first();
+      if ($body_item && isset($body_item->value)) {
+        $markup_candidates[] = (string) $body_item->value;
+      }
+    }
+    catch (\Throwable $throwable) {
+      // Ignore body extraction errors.
+    }
+  }
+
+  if ($body_render_array) {
+    $candidate = $body_render_array;
+    if ($candidate instanceof RenderableInterface) {
+      $candidate = $candidate->toRenderable();
+    }
+
+    if ($candidate instanceof MarkupInterface) {
+      $markup_candidates[] = $candidate->__toString();
+    }
+    elseif (is_array($candidate)) {
+      try {
+        $renderer = \Drupal::service('renderer');
+        $rendered = $renderer->renderPlain($candidate);
+        if ($rendered instanceof MarkupInterface) {
+          $markup_candidates[] = $rendered->__toString();
+        }
+        else {
+          $markup_candidates[] = (string) $rendered;
+        }
+      }
+      catch (\Throwable $throwable) {
+        // Ignore rendering issues when generating the TOC.
+      }
+    }
+    else {
+      $markup_candidates[] = (string) $candidate;
+    }
+  }
+
+  $markup = '';
+  foreach ($markup_candidates as $candidate) {
+    $candidate = trim((string) $candidate);
+    if ($candidate !== '') {
+      $markup = $candidate;
+      break;
+    }
+  }
+
+  if ($markup === '') {
+    return [];
+  }
+
+  try {
+    $document = Html::load($markup);
+  }
+  catch (\Throwable $throwable) {
+    return [];
+  }
+
+  $xpath = new \DOMXPath($document);
+  $nodes = $xpath->query('//h2|//h3');
+  if (!$nodes || $nodes->length === 0) {
+    return [];
+  }
+
+  $used_ids = [];
+  $headings = [];
+  foreach ($nodes as $element) {
+    $text = trim($element->textContent ?? '');
+    if ($text === '') {
+      continue;
+    }
+
+    $tag = strtolower($element->nodeName ?? '');
+    $level = (int) substr($tag, 1);
+    if ($level < 2) {
+      $level = 2;
+    }
+
+    $id = (string) $element->getAttribute('id');
+    if ($id === '') {
+      $base_id = Html::getId($text);
+      if ($base_id === '') {
+        $base_id = 'section';
+      }
+
+      $suffix = 1;
+      $candidate = $base_id;
+      while (in_array($candidate, $used_ids, TRUE)) {
+        $candidate = $base_id . '-' . ++$suffix;
+      }
+      $id = $candidate;
+    }
+
+    $used_ids[] = $id;
+    $headings[] = [
+      'id' => $id,
+      'label' => Html::decodeEntities($text),
+      'level' => $level,
+    ];
+  }
+
+  if (empty($headings)) {
+    return [];
+  }
+
+  $items = [];
+  $current_index = NULL;
+  $order = 0;
+
+  foreach ($headings as $heading) {
+    $entry = [
+      'id' => $heading['id'],
+      'label' => $heading['label'],
+      'level' => $heading['level'],
+      'order' => $order++,
+    ];
+
+    if ($heading['level'] <= 2) {
+      $entry['children'] = [];
+      $items[] = $entry;
+      $current_index = array_key_last($items);
+    }
+    else {
+      if ($current_index !== NULL && isset($items[$current_index])) {
+        $items[$current_index]['children'][] = $entry;
+      }
+      else {
+        $entry['children'] = [];
+        $items[] = $entry;
+        $current_index = array_key_last($items);
+      }
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Converts a renderable or markup value into plain text.
+ */
+function muin_renderable_to_text($value, $renderer = NULL): string {
+  if ($value instanceof MarkupInterface) {
+    return trim(Html::decodeEntities(strip_tags($value->__toString())));
+  }
+
+  if ($value instanceof RenderableInterface) {
+    $value = $value->toRenderable();
+  }
+
+  if (is_array($value)) {
+    $renderer = $renderer ?? \Drupal::service('renderer');
+    $value = $renderer->renderPlain($value);
+    if ($value instanceof MarkupInterface) {
+      return trim(Html::decodeEntities(strip_tags($value->__toString())));
+    }
+  }
+
+  return trim(Html::decodeEntities(strip_tags((string) $value)));
+}
+
+/**
+ * Extracts the first existing render array for the provided field candidates.
+ */
+function muin_extract_render_array(array &$content, array $candidates): ?array {
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      $element = $content[$field_name];
+      unset($content[$field_name]);
+      return $element;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Extracts a link field as a normalized array with URL and title.
+ */
+function muin_extract_link_field(NodeInterface $node, array &$content, array $candidates): ?array {
+  $stored_render = NULL;
+
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      if ($stored_render === NULL) {
+        $stored_render = $content[$field_name];
+      }
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $node->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    if (!$item) {
+      continue;
+    }
+
+    $title = NULL;
+    if (isset($item->title) && $item->title !== '') {
+      $title = (string) $item->title;
+    }
+    elseif (isset($item->value) && $item->value !== '') {
+      $title = (string) $item->value;
+    }
+
+    $url_string = NULL;
+    $options = [];
+
+    try {
+      if (method_exists($item, 'getUrl')) {
+        $url_object = $item->getUrl();
+        if ($url_object instanceof Url) {
+          $url_string = $url_object->toString();
+          $options = $url_object->getOptions();
+        }
+        elseif ($url_object) {
+          $url_string = $url_object->toString();
+          if (method_exists($url_object, 'getOptions')) {
+            $options = $url_object->getOptions();
+          }
+        }
+      }
+    }
+    catch (\Throwable $throwable) {
+      // Ignore URL extraction issues and fallback to uri.
+    }
+
+    if ($url_string === NULL && isset($item->uri) && $item->uri !== '') {
+      try {
+        $url_object = Url::fromUri($item->uri, $item->options ?? []);
+        $url_string = $url_object->toString();
+        $options = $url_object->getOptions();
+      }
+      catch (\Throwable $throwable) {
+        $url_string = (string) $item->uri;
+        $options = is_array($item->options ?? NULL) ? $item->options : [];
+      }
+    }
+
+    if ($url_string !== NULL) {
+      if ($title === NULL || $title === '') {
+        $title = $url_string;
+      }
+
+      return [
+        'title' => $title !== NULL ? (string) $title : '',
+        'url' => $url_string,
+        'options' => $options,
+      ];
+    }
+  }
+
+  if ($stored_render !== NULL) {
+    return [
+      'render' => $stored_render,
+    ];
+  }
+
+  return NULL;
+}
+
+/**
+ * Retrieves multiple plain text values from a field.
+ */
+function muin_extract_text_items(NodeInterface $node, array &$content, array $candidates): array {
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    $items = [];
+    foreach ($node->get($field_name) as $item) {
+      $value = NULL;
+      if (isset($item->value) && $item->value !== '') {
+        $value = $item->value;
+      }
+      elseif (isset($item->title) && $item->title !== '') {
+        $value = $item->title;
+      }
+      elseif (isset($item->text) && $item->text !== '') {
+        $value = $item->text;
+      }
+
+      if ($value !== NULL) {
+        $trimmed = trim((string) $value);
+        if ($trimmed !== '') {
+          $items[] = $trimmed;
+        }
+      }
+    }
+
+    if (!empty($items)) {
+      return $items;
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Retrieves label values for taxonomy or string reference fields.
+ */
+function muin_extract_label_items(NodeInterface $node, array &$content, array $candidates): array {
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    $items = [];
+    foreach ($node->get($field_name) as $item) {
+      $label = NULL;
+      if (isset($item->entity) && $item->entity) {
+        try {
+          $label = $item->entity->label();
+        }
+        catch (\Throwable $throwable) {
+          $label = NULL;
+        }
+      }
+
+      if (($label === NULL || $label === '') && isset($item->value) && $item->value !== '') {
+        $label = $item->value;
+      }
+
+      if (($label === NULL || $label === '') && isset($item->title) && $item->title !== '') {
+        $label = $item->title;
+      }
+
+      if (($label === NULL || $label === '') && isset($item->name) && $item->name !== '') {
+        $label = $item->name;
+      }
+
+      $label = trim((string) ($label ?? ''));
+      if ($label !== '') {
+        $items[] = $label;
+      }
+    }
+
+    if (!empty($items)) {
+      return $items;
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Retrieves the first non-empty plain text value for a field on the node.
+ */
+function muin_extract_text_field(NodeInterface $node, array $candidates, ?array &$content = NULL): ?string {
+  foreach ($candidates as $field_name) {
+    if ($content !== NULL && isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $node->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    if (!$item) {
+      continue;
+    }
+
+    $value = NULL;
+    if (isset($item->value) && $item->value !== '') {
+      $value = $item->value;
+    }
+    elseif (isset($item->title) && $item->title !== '') {
+      $value = $item->title;
+    }
+    elseif (isset($item->text) && $item->text !== '') {
+      $value = $item->text;
+    }
+
+    if ($value !== NULL) {
+      $trimmed = trim((string) $value);
+      if ($trimmed !== '') {
+        return $trimmed;
+      }
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Determines if the provided node should use the About the Kingdom layout.
+ */
+function muin_is_about_kingdom_page(NodeInterface $node): bool {
+  if ($node->bundle() !== 'page') {
+    return FALSE;
+  }
+
+  $matches_identifier = static function ($value): bool {
+    if ($value === NULL) {
+      return FALSE;
+    }
+
+    if ($value instanceof TranslatableMarkup) {
+      $value = $value->render();
+    }
+
+    if (is_object($value) && !method_exists($value, '__toString')) {
+      return FALSE;
+    }
+
+    $normalized = muin_normalize_about_identifier((string) $value);
+    if ($normalized === NULL) {
+      return FALSE;
+    }
+
+    $allowed_identifiers = [
+      'about-kingdom',
+      'about-the-kingdom',
+      'why-invest-in-saudi-arabia',
+    ];
+
+    if (in_array($normalized, $allowed_identifiers, TRUE)) {
+      return TRUE;
+    }
+
+    foreach ($allowed_identifiers as $identifier) {
+      if (str_contains($normalized, $identifier)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  };
+
+  $candidate_fields = [
+    'field_page_template',
+    'field_page_layout',
+    'field_layout_variant',
+  ];
+
+  foreach ($candidate_fields as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $field = $node->get($field_name);
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    $values_to_check = [];
+
+    if (method_exists($field, 'getString')) {
+      $values_to_check[] = $field->getString();
+    }
+
+    try {
+      $item = $field->first();
+    }
+    catch (\Throwable $throwable) {
+      $item = NULL;
+    }
+
+    if ($item) {
+      foreach (['value', 'target_id', 'title'] as $property) {
+        if (isset($item->{$property})) {
+          $values_to_check[] = $item->{$property};
+        }
+      }
+
+      if (isset($item->entity) && $item->entity) {
+        try {
+          $entity = $item->entity;
+          if (method_exists($entity, 'label')) {
+            $values_to_check[] = $entity->label();
+          }
+          if (method_exists($entity, 'id')) {
+            $values_to_check[] = $entity->id();
+          }
+        }
+        catch (\Throwable $throwable) {
+          // Ignore entity inspection failures.
+        }
+      }
+    }
+
+    foreach ($values_to_check as $value) {
+      if ($matches_identifier($value)) {
+        return TRUE;
+      }
+    }
+  }
+
+  $langcode = $node->language()->getId();
+
+  try {
+    $alias_manager = \Drupal::service('path_alias.manager');
+  }
+  catch (\Throwable $throwable) {
+    $alias_manager = NULL;
+  }
+
+  if ($alias_manager) {
+    $paths = ['/node/' . $node->id()];
+    foreach (array_unique([$langcode, 'en']) as $langcode_candidate) {
+      foreach ($paths as $path) {
+        try {
+          $alias = $alias_manager->getAliasByPath($path, $langcode_candidate);
+        }
+        catch (\Throwable $throwable) {
+          $alias = NULL;
+        }
+
+        if ($matches_identifier($alias)) {
+          return TRUE;
+        }
+      }
+    }
+  }
+
+  if ($matches_identifier($node->label())) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Normalizes possible About the Kingdom identifiers.
+ */
+function muin_normalize_about_identifier($value): ?string {
+  if ($value === NULL) {
+    return NULL;
+  }
+
+  if ($value instanceof TranslatableMarkup) {
+    $value = $value->render();
+  }
+
+  if (is_object($value) && !method_exists($value, '__toString')) {
+    return NULL;
+  }
+
+  $string = strtolower(trim((string) $value));
+  if ($string === '') {
+    return NULL;
+  }
+
+  $string = str_replace(['_', '\\'], '-', $string);
+  $string = str_replace(["\t", "\n", "\r"], ' ', $string);
+  $string = preg_replace('/[^a-z0-9\-\/ ]+/', '', $string);
+  $string = preg_replace('/\s+/', '-', $string);
+  $string = preg_replace('/-+/', '-', $string);
+  $string = preg_replace('/^\/+/', '', $string);
+  $string = preg_replace('/\/+$/', '', $string);
+  $string = trim($string, '-');
+
+  return $string === '' ? NULL : $string;
+}
+
+/**
+ * Builds the About the Kingdom page data structure.
+ */
+function muin_build_about_kingdom_page(NodeInterface $node, array &$content, array $variables, array $basic = []): array {
+  $langcode = $node->language()->getId();
+  $about = muin_about_kingdom_default_content($langcode);
+
+  if (!empty($basic['breadcrumb'])) {
+    $about['breadcrumb'] = $basic['breadcrumb'];
+  }
+  else {
+    $about['breadcrumb'] = muin_build_basic_page_breadcrumb($variables);
+  }
+
+  if (!empty($basic['back_to_top'])) {
+    $about['back_to_top'] = $basic['back_to_top'];
+  }
+
+  $about['hero']['title'] = $node->label();
+
+  $hero_lead = muin_extract_markup_field($node, $content, [
+    'field_lead',
+    'field_intro',
+    'field_summary',
+    'field_lead_text',
+  ]);
+  if ($hero_lead !== NULL) {
+    $about['hero']['lead'] = $hero_lead;
+  }
+
+  $hero_description = muin_extract_markup_field($node, $content, [
+    'field_description',
+    'field_intro_long',
+    'field_summary_long',
+    'body',
+  ]);
+  if ($hero_description !== NULL) {
+    $about['hero']['description'] = $hero_description;
+  }
+
+  $primary_cta = muin_extract_link_field($node, $content, [
+    'field_primary_cta',
+    'field_cta_link',
+    'field_start_now',
+    'field_cta',
+    'field_call_to_action',
+  ]);
+  if ($primary_cta !== NULL) {
+    $about['hero']['primary_cta'] = $primary_cta;
+  }
+
+  $secondary_cta = muin_extract_link_field($node, $content, [
+    'field_secondary_cta',
+    'field_cta_secondary',
+    'field_learn_more',
+    'field_secondary_call_to_action',
+  ]);
+  if ($secondary_cta !== NULL) {
+    $about['hero']['secondary_cta'] = $secondary_cta;
+  }
+
+  $hero_image = muin_extract_image_field($node, $content, [
+    'field_hero_image',
+    'field_banner_image',
+    'field_main_image',
+    'field_image',
+    'field_featured_media',
+    'field_media_image',
+  ]);
+  if ($hero_image !== NULL) {
+    $about['hero']['image'] = $hero_image;
+  }
+
+  $hero_badges = muin_extract_paragraph_cards($node, $content, [
+    'field_hero_badges',
+    'field_key_highlights',
+    'field_value_badges',
+    'field_highlights',
+  ]);
+  if (!empty($hero_badges)) {
+    $about['hero']['badges'] = $hero_badges;
+  }
+
+  $chips = muin_extract_link_items($node, $content, [
+    'field_quick_links',
+    'field_reference_links',
+    'field_navigation_links',
+    'field_section_links',
+  ]);
+  if (!empty($chips)) {
+    $about['chips'] = $chips;
+  }
+
+  $sections = &$about['sections'];
+
+  $why_heading = muin_extract_text_field($node, [
+    'field_why_heading',
+    'field_section_why_heading',
+    'field_highlight_heading',
+  ], $content);
+  if ($why_heading !== NULL && $why_heading !== '') {
+    $sections['why_now']['heading'] = $why_heading;
+  }
+
+  $why_lead = muin_extract_markup_field($node, $content, [
+    'field_why_lead',
+    'field_section_why_lead',
+    'field_highlight_intro',
+  ]);
+  if ($why_lead !== NULL) {
+    $sections['why_now']['lead'] = $why_lead;
+  }
+
+  $why_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_why_cards',
+    'field_why_points',
+    'field_why_items',
+    'field_highlight_cards',
+  ]);
+  if (!empty($why_cards)) {
+    $sections['why_now']['cards'] = $why_cards;
+  }
+
+  $routes_heading = muin_extract_text_field($node, [
+    'field_routes_heading',
+    'field_entry_routes_heading',
+  ], $content);
+  if ($routes_heading !== NULL && $routes_heading !== '') {
+    $sections['routes']['heading'] = $routes_heading;
+  }
+
+  $routes_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_routes',
+    'field_entry_routes',
+    'field_routes_cards',
+  ]);
+  if (!empty($routes_cards)) {
+    $sections['routes']['cards'] = $routes_cards;
+  }
+
+  $incentives_heading = muin_extract_text_field($node, [
+    'field_incentives_heading',
+    'field_investor_incentives_heading',
+  ], $content);
+  if ($incentives_heading !== NULL && $incentives_heading !== '') {
+    $sections['incentives']['heading'] = $incentives_heading;
+  }
+
+  $incentives_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_incentives',
+    'field_incentive_cards',
+  ]);
+  if (!empty($incentives_cards)) {
+    $sections['incentives']['cards'] = $incentives_cards;
+  }
+
+  $sectors_heading = muin_extract_text_field($node, [
+    'field_sectors_heading',
+    'field_high_potential_heading',
+  ], $content);
+  if ($sectors_heading !== NULL && $sectors_heading !== '') {
+    $sections['sectors']['heading'] = $sectors_heading;
+  }
+
+  $sectors_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_sectors',
+    'field_sector_cards',
+  ]);
+  if (!empty($sectors_cards)) {
+    $sections['sectors']['cards'] = $sectors_cards;
+  }
+
+  $residency_heading = muin_extract_text_field($node, [
+    'field_residency_heading',
+    'field_premium_residency_heading',
+  ], $content);
+  if ($residency_heading !== NULL && $residency_heading !== '') {
+    $sections['residency']['heading'] = $residency_heading;
+  }
+
+  $residency_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_residency',
+    'field_residency_cards',
+  ]);
+  if (!empty($residency_cards)) {
+    $sections['residency']['cards'] = $residency_cards;
+  }
+
+  $residency_image = muin_extract_image_field($node, $content, [
+    'field_residency_image',
+    'field_premium_residency_image',
+  ]);
+  if ($residency_image !== NULL) {
+    $sections['residency']['image'] = $residency_image;
+  }
+
+  $residency_cta = muin_extract_link_field($node, $content, [
+    'field_residency_cta',
+    'field_premium_residency_cta',
+  ]);
+  if ($residency_cta !== NULL) {
+    $sections['residency']['cta'] = $residency_cta;
+  }
+
+  $free_heading = muin_extract_text_field($node, [
+    'field_free_zones_heading',
+    'field_free_zone_heading',
+  ], $content);
+  if ($free_heading !== NULL && $free_heading !== '') {
+    $sections['free_zones']['heading'] = $free_heading;
+  }
+
+  $free_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_free_zones',
+    'field_free_zone_cards',
+  ]);
+  if (!empty($free_cards)) {
+    $sections['free_zones']['cards'] = $free_cards;
+  }
+
+  $free_image = muin_extract_image_field($node, $content, [
+    'field_free_zone_image',
+    'field_free_zones_image',
+  ]);
+  if ($free_image !== NULL) {
+    $sections['free_zones']['image'] = $free_image;
+  }
+
+  $free_cta = muin_extract_link_field($node, $content, [
+    'field_free_zone_cta',
+    'field_free_zones_cta',
+  ]);
+  if ($free_cta !== NULL) {
+    $sections['free_zones']['cta'] = $free_cta;
+  }
+
+  $costs_heading = muin_extract_text_field($node, [
+    'field_costs_heading',
+    'field_cheatsheet_heading',
+  ], $content);
+  if ($costs_heading !== NULL && $costs_heading !== '') {
+    $sections['costs']['heading'] = $costs_heading;
+  }
+
+  $costs_cards = muin_extract_paragraph_cards($node, $content, [
+    'field_costs',
+    'field_cost_cards',
+  ]);
+  if (!empty($costs_cards)) {
+    $sections['costs']['cards'] = $costs_cards;
+  }
+
+  $costs_note = muin_extract_markup_field($node, $content, [
+    'field_costs_note',
+    'field_cheatsheet_note',
+  ]);
+  if ($costs_note !== NULL) {
+    $sections['costs']['note'] = $costs_note;
+  }
+
+  $faq_heading = muin_extract_text_field($node, [
+    'field_faq_heading',
+    'field_investor_faq_heading',
+  ], $content);
+  if ($faq_heading !== NULL && $faq_heading !== '') {
+    $sections['faq']['heading'] = $faq_heading;
+  }
+
+  $faq_items = muin_extract_about_faq($node, $content, [
+    'field_faq',
+    'field_investor_faq',
+  ]);
+  if (!empty($faq_items)) {
+    $sections['faq']['items'] = $faq_items;
+  }
+
+  $cta_heading = muin_extract_text_field($node, [
+    'field_cta_heading',
+    'field_call_to_action_heading',
+  ], $content);
+  if ($cta_heading !== NULL && $cta_heading !== '') {
+    $sections['cta']['heading'] = $cta_heading;
+  }
+
+  $cta_body = muin_extract_markup_field($node, $content, [
+    'field_cta_body',
+    'field_call_to_action_body',
+    'field_cta',
+  ]);
+  if ($cta_body !== NULL) {
+    $sections['cta']['body'] = $cta_body;
+  }
+
+  $cta_primary = muin_extract_link_field($node, $content, [
+    'field_cta_primary',
+    'field_cta_link',
+    'field_primary_cta',
+    'field_contact_cta',
+  ]);
+  if ($cta_primary !== NULL) {
+    $sections['cta']['cta'] = $cta_primary;
+  }
+
+  return $about;
+}
+
+/**
+ * Provides default structured content for the About the Kingdom layout.
+ */
+function muin_about_kingdom_default_content(string $langcode): array {
+  $t = static function (string $string, array $args = []) use ($langcode) {
+    return t($string, $args, ['langcode' => $langcode]);
+  };
+
+  return [
+    'breadcrumb' => [],
+    'back_to_top' => (string) t('Back to top', [], ['langcode' => $langcode]),
+    'hero' => [
+      'title' => (string) $t('Saudi Arabia: The Growth Hub of The Middle East'),
+      'lead' => $t('A dynamic, reform-driven market connecting Asia, Europe, and Africa. Enter with the right license, partner, and plan — and scale with confidence.'),
+      'description' => NULL,
+      'primary_cta' => [
+        'title' => (string) $t('Book a Free Consultation'),
+        'url' => '#get-started',
+        'options' => [],
+      ],
+      'secondary_cta' => [
+        'title' => (string) $t('See Why Now'),
+        'url' => '#why-now',
+        'options' => [],
+      ],
+      'image' => [
+        'theme' => 'img/riyadh-skyline.jpg',
+        'alt' => (string) $t('Riyadh skyline at dusk'),
+      ],
+      'badges' => [
+        [
+          'title' => (string) $t('Gateway Location'),
+          'body' => $t('Access 3 continents in 8 hours by air on average.'),
+        ],
+        [
+          'title' => (string) $t('Investor-friendly'),
+          'body' => $t('Clear routes to 100% foreign ownership in many sectors.'),
+        ],
+        [
+          'title' => (string) $t('Modern Infrastructure'),
+          'body' => $t('World-class ports, logistics, and digital rails.'),
+        ],
+        [
+          'title' => (string) $t('Skilled Talent'),
+          'body' => $t('Young, tech-savvy workforce to power growth.'),
+        ],
+      ],
+    ],
+    'chips' => [
+      [
+        'title' => (string) $t('Why Now'),
+        'url' => '#why-now',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Entry Routes'),
+        'url' => '#routes',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Incentives'),
+        'url' => '#incentives',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('High-Potential Sectors'),
+        'url' => '#sectors',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Premium Residency'),
+        'url' => '#residency',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Free Zones'),
+        'url' => '#free-zones',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Costs & Timelines'),
+        'url' => '#costs',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('FAQ'),
+        'url' => '#faq',
+        'options' => [],
+      ],
+      [
+        'title' => (string) $t('Get Started'),
+        'url' => '#get-started',
+        'options' => [],
+      ],
+    ],
+    'sections' => [
+      'why_now' => [
+        'id' => 'why-now',
+        'heading' => (string) $t('Why Invest in Saudi Arabia — Now'),
+        'lead' => $t('Vision 2030 has accelerated diversification and investment reform, unlocking opportunities beyond energy — technology, tourism, manufacturing, healthcare, logistics, culture, and sports.'),
+        'cards' => [
+          [
+            'title' => (string) $t('Strategic Connectivity'),
+            'body' => $t('Operate from a geographic nexus that reaches 70+ markets across MENA, Europe, and Asia.'),
+          ],
+          [
+            'title' => (string) $t('Clear Investor Pathways'),
+            'body' => $t('Available routes for 100% foreign ownership in many activities plus streamlined set-up.'),
+          ],
+          [
+            'title' => (string) $t('Scale-ready Infrastructure'),
+            'body' => $t('Smart ports, bonded logistics, and nationwide fiber + 5G support modern operations.'),
+          ],
+        ],
+      ],
+      'routes' => [
+        'id' => 'routes',
+        'background' => 'bg-white',
+        'heading' => (string) $t('Choose Your Entry Route'),
+        'cards' => [
+          [
+            'title' => (string) $t('1) LLC (Limited Liability Company)'),
+            'list' => [
+              (string) $t('Suitable for product/service companies seeking long-term footprint.'),
+              (string) $t('Allows multiple activities; clear governance & compliance.'),
+            ],
+            'cta' => [
+              'title' => (string) $t('Start LLC Setup'),
+              'url' => '/services/business-setup',
+              'options' => [],
+            ],
+          ],
+          [
+            'title' => (string) $t('2) Branch of a Foreign Company'),
+            'list' => [
+              (string) $t('Leverage parent company credentials to win local contracts.'),
+              (string) $t('Fast market entry; mirrors HQ ownership structure.'),
+            ],
+            'cta' => [
+              'title' => (string) $t('Open a Branch'),
+              'url' => '/services/business-setup',
+              'options' => [],
+            ],
+          ],
+          [
+            'title' => (string) $t('3) Free Zone Entity'),
+            'list' => [
+              (string) $t('Operate within designated zones with customs/tax efficiencies.'),
+              (string) $t('Ideal for logistics, manufacturing, tech, and cross-border trade.'),
+            ],
+            'cta' => [
+              'title' => (string) $t('Explore Free Zones'),
+              'url' => '/services/free-zones',
+              'options' => [],
+            ],
+          ],
+        ],
+      ],
+      'incentives' => [
+        'id' => 'incentives',
+        'heading' => (string) $t('Investor Incentives'),
+        'cards' => [
+          [
+            'title' => (string) $t('Ownership & Regulatory'),
+            'list' => [
+              (string) $t('100% foreign ownership available for many activities.'),
+              (string) $t('Simplified licensing & unified government e-services.'),
+              (string) $t('Clear IP protection and contract enforceability.'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Financial & Operational'),
+            'list' => [
+              (string) $t('Customs facilitation in bonded and special economic zones.'),
+              (string) $t('Access to incentives for R&D, training, and exports.'),
+              (string) $t('Competitive utilities and industrial real estate options.'),
+            ],
+          ],
+        ],
+      ],
+      'sectors' => [
+        'id' => 'sectors',
+        'background' => 'bg-white',
+        'heading' => (string) $t('High-Potential Sectors'),
+        'cards' => [
+          [
+            'title' => (string) $t('Technology & Digital'),
+            'body' => $t('Cloud, AI, cybersecurity, and digital services to serve public and private mega-programs.'),
+            'image' => [
+              'theme' => 'img/sector-tech.webp',
+              'alt' => (string) $t('Technology'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Tourism & Culture'),
+            'body' => $t('Heritage, entertainment, and hospitality supported by giga-projects and events.'),
+            'image' => [
+              'theme' => 'img/sector-tourism.webp',
+              'alt' => (string) $t('Tourism'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Advanced Manufacturing'),
+            'body' => $t('Localize production, tap industrial clusters, and export regionally.'),
+            'image' => [
+              'theme' => 'img/sector-industry.webp',
+              'alt' => (string) $t('Manufacturing'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Healthcare & Life Sciences'),
+            'body' => $t('Provider networks, med-tech, and pharma distribution opportunities.'),
+            'image' => [
+              'theme' => 'img/sector-health.webp',
+              'alt' => (string) $t('Healthcare'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Logistics & Supply Chain'),
+            'body' => $t('Bonded hubs, ports, and rail for regional distribution at speed.'),
+            'image' => [
+              'theme' => 'img/banner-free-zones.webp',
+              'alt' => (string) $t('Logistics'),
+            ],
+          ],
+          [
+            'title' => (string) $t('Energy & Renewables'),
+            'body' => $t('Solar, wind, and green hydrogen create future-proof growth lanes.'),
+            'image' => [
+              'theme' => 'img/sector-energy.webp',
+              'alt' => (string) $t('Renewables'),
+            ],
+          ],
+        ],
+      ],
+      'residency' => [
+        'id' => 'residency',
+        'heading' => (string) $t('Premium Residency for Investors'),
+        'cards' => [
+          [
+            'title' => (string) $t('Why it matters'),
+            'list' => [
+              (string) $t('Live and operate in the Kingdom without a local sponsor.'),
+              (string) $t('Greater mobility for founders, executives, and families.'),
+              (string) $t('Supports property ownership and long-term planning.'),
+            ],
+            'cta' => [
+              'title' => (string) $t('Explore Residency Options'),
+              'url' => '/articles/premium-residency',
+              'options' => [],
+            ],
+          ],
+        ],
+        'image' => [
+          'theme' => 'img/banner-premium-residency.jpg',
+          'alt' => (string) $t('Premium Residency'),
+        ],
+      ],
+      'free_zones' => [
+        'id' => 'free-zones',
+        'background' => 'bg-white',
+        'heading' => (string) $t('Free Zones & Special Economic Zones'),
+        'cards' => [
+          [
+            'title' => (string) $t('Advantages'),
+            'list' => [
+              (string) $t('Customs duty efficiencies and simplified movement of goods.'),
+              (string) $t('Tax incentives and streamlined compliance.'),
+              (string) $t('Designed for logistics, manufacturing, and tech.'),
+            ],
+            'cta' => [
+              'title' => (string) $t('Compare Free Zones'),
+              'url' => '/services/free-zones',
+              'options' => [],
+            ],
+          ],
+        ],
+        'image' => [
+          'theme' => 'img/free-zones-map.png',
+          'alt' => (string) $t('Map of free zones in Saudi Arabia'),
+        ],
+      ],
+      'costs' => [
+        'id' => 'costs',
+        'heading' => (string) $t('Setup Cheatsheet — What to Expect'),
+        'cards' => [
+          [
+            'title' => (string) $t('Licensing'),
+            'body' => $t('Choose the right activity, prepare corporate docs, and obtain investment + commercial licenses.'),
+          ],
+          [
+            'title' => (string) $t('Banking'),
+            'body' => $t('KYC package, authorized signatories, and account activation for operations.'),
+          ],
+          [
+            'title' => (string) $t('People'),
+            'body' => $t('Visas, GRO/HR setup, payroll, and compliance platforms.'),
+          ],
+        ],
+        'note' => $t('Note: Exact timelines and costs depend on activity, structure, and documentation readiness. We’ll map this during your consultation.'),
+      ],
+      'faq' => [
+        'id' => 'faq',
+        'background' => 'bg-white',
+        'heading' => (string) $t('Investor FAQ'),
+        'items' => [
+          [
+            'question' => (string) $t('Can I own 100% of my Saudi entity?'),
+            'answer' => $t('Many activities allow 100% foreign ownership. We’ll confirm based on your NAICS/Nice-class activity and advise the optimal structure.'),
+          ],
+          [
+            'question' => (string) $t('What corporate forms are most common?'),
+            'answer' => $t('LLC and Branch are the typical paths. JVs are used for strategic sectors or local partnerships. We’ll weigh pros/cons with you.'),
+          ],
+          [
+            'question' => (string) $t('How do free zones compare to mainland?'),
+            'answer' => $t('Free zones suit cross-border logistics/manufacturing and can streamline customs and tax. Mainland offers broader activity coverage and direct local market access.'),
+          ],
+          [
+            'question' => (string) $t('How does Premium Residency help executives?'),
+            'answer' => $t('It simplifies mobility and long-term presence for founders and leadership, supporting family needs and property ownership.'),
+          ],
+        ],
+      ],
+      'cta' => [
+        'id' => 'get-started',
+        'heading' => (string) $t('Ready to enter the Saudi market with confidence?'),
+        'body' => $t('Motaded handles licensing, bank setup, visas, HR/GRO, and compliance — end-to-end. Get a tailored entry plan in your first call.'),
+        'cta' => [
+          'title' => (string) $t('Book a Free Consultation'),
+          'url' => '/contact',
+          'options' => [],
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Extracts a formatted markup value from a node field.
+ */
+function muin_extract_markup_field(NodeInterface $node, array &$content, array $candidates): ?MarkupInterface {
+  $render_array = muin_extract_render_array($content, $candidates);
+  if ($render_array !== NULL) {
+    try {
+      $renderer = \Drupal::service('renderer');
+      $rendered = $renderer->render($render_array);
+      if ($rendered instanceof MarkupInterface) {
+        return $rendered;
+      }
+
+      return Markup::create((string) $rendered);
+    }
+    catch (\Throwable $throwable) {
+      // Ignore rendering issues and fallback to field inspection.
+    }
+  }
+
+  foreach ($candidates as $field_name) {
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $node->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    if (!$item) {
+      continue;
+    }
+
+    if (isset($item->processed) && $item->processed !== '') {
+      return Markup::create($item->processed);
+    }
+
+    if (isset($item->value) && $item->value !== '') {
+      return Markup::create((string) $item->value);
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Extracts multiple link items from a field.
+ */
+function muin_extract_link_items(NodeInterface $node, array &$content, array $candidates): array {
+  $items = [];
+
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    foreach ($node->get($field_name) as $item) {
+      $link = muin_normalize_link_item($item);
+      if ($link !== NULL) {
+        $items[] = $link;
+      }
+    }
+
+    if (!empty($items)) {
+      break;
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Normalizes a link item from a field or paragraph.
+ */
+function muin_normalize_link_item($item): ?array {
+  if (!$item) {
+    return NULL;
+  }
+
+  $title = NULL;
+  if (isset($item->title) && $item->title !== '') {
+    $title = (string) $item->title;
+  }
+  elseif (isset($item->value) && $item->value !== '') {
+    $title = (string) $item->value;
+  }
+
+  $url_string = NULL;
+  $options = [];
+
+  try {
+    if (method_exists($item, 'getUrl')) {
+      $url_object = $item->getUrl();
+      if ($url_object instanceof Url) {
+        $url_string = $url_object->toString();
+        $options = $url_object->getOptions();
+      }
+      elseif ($url_object) {
+        $url_string = $url_object->toString();
+        if (method_exists($url_object, 'getOptions')) {
+          $options = $url_object->getOptions();
+        }
+      }
+    }
+  }
+  catch (\Throwable $throwable) {
+    // Ignore URL extraction issues.
+  }
+
+  if ($url_string === NULL && isset($item->uri) && $item->uri !== '') {
+    try {
+      $url_object = Url::fromUri($item->uri, $item->options ?? []);
+      $url_string = $url_object->toString();
+      $options = $url_object->getOptions();
+    }
+    catch (\Throwable $throwable) {
+      $url_string = (string) $item->uri;
+      $options = is_array($item->options ?? NULL) ? $item->options : [];
+    }
+  }
+
+  if ($url_string === NULL) {
+    return NULL;
+  }
+
+  if ($title === NULL || $title === '') {
+    $title = $url_string;
+  }
+
+  return [
+    'title' => (string) $title,
+    'url' => $url_string,
+    'options' => is_array($options) ? $options : [],
+  ];
+}
+
+/**
+ * Extracts an image field value from a node.
+ */
+function muin_extract_image_field(NodeInterface $node, array &$content, array $candidates): ?array {
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $node->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    $image = muin_normalize_image_item($item);
+    if ($image !== NULL) {
+      return $image;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Normalizes an image item from a field or paragraph.
+ */
+function muin_normalize_image_item($item): ?array {
+  if (!$item) {
+    return NULL;
+  }
+
+  $file = NULL;
+  if (isset($item->entity) && $item->entity instanceof FileInterface) {
+    $file = $item->entity;
+  }
+  elseif (method_exists($item, 'entity') && $item->entity() instanceof FileInterface) {
+    $file = $item->entity();
+  }
+  elseif (method_exists($item, 'getEntity')) {
+    try {
+      $entity = $item->getEntity();
+      if ($entity instanceof FileInterface) {
+        $file = $entity;
+      }
+    }
+    catch (\Throwable $throwable) {
+      $file = NULL;
+    }
+  }
+
+  if (!$file instanceof FileInterface) {
+    return NULL;
+  }
+
+  try {
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $url = $file_url_generator->generateString($file->getFileUri());
+  }
+  catch (\Throwable $throwable) {
+    $url = NULL;
+  }
+
+  if ($url === NULL) {
+    return NULL;
+  }
+
+  $alt = NULL;
+  if (isset($item->alt) && $item->alt !== '') {
+    $alt = (string) $item->alt;
+  }
+  elseif (method_exists($item, 'getValue')) {
+    try {
+      $value = $item->getValue();
+      if (is_array($value) && !empty($value['alt'])) {
+        $alt = (string) $value['alt'];
+      }
+    }
+    catch (\Throwable $throwable) {
+      $alt = NULL;
+    }
+  }
+
+  if ($alt === NULL || $alt === '') {
+    $alt = $file->getFilename();
+  }
+
+  return [
+    'url' => $url,
+    'alt' => $alt,
+  ];
+}
+
+/**
+ * Extracts paragraph-based cards for structured sections.
+ */
+function muin_extract_paragraph_cards(NodeInterface $node, array &$content, array $candidates): array {
+  $paragraphs = muin_extract_paragraph_entities($node, $content, $candidates);
+  $items = [];
+
+  foreach ($paragraphs as $paragraph) {
+    $title = muin_paragraph_text($paragraph, [
+      'field_title',
+      'field_heading',
+      'field_label',
+      'field_question',
+    ]);
+    $body = muin_paragraph_markup($paragraph, [
+      'field_body',
+      'field_text',
+      'field_description',
+      'field_summary',
+      'field_answer',
+    ]);
+    $list = muin_paragraph_list($paragraph, [
+      'field_items',
+      'field_list',
+      'field_points',
+      'field_steps',
+      'field_bullets',
+    ]);
+    $cta = muin_paragraph_link($paragraph, [
+      'field_link',
+      'field_cta',
+      'field_call_to_action',
+      'field_primary_cta',
+      'field_button_link',
+    ]);
+    $image = muin_paragraph_image($paragraph, [
+      'field_image',
+      'field_media',
+      'field_graphic',
+      'field_photo',
+      'field_illustration',
+    ]);
+
+    $item = array_filter([
+      'title' => $title,
+      'body' => $body,
+      'list' => $list,
+      'cta' => $cta,
+      'image' => $image,
+    ], static function ($value) {
+      if (is_array($value)) {
+        return !empty($value);
+      }
+
+      if ($value instanceof MarkupInterface) {
+        return trim($value->__toString()) !== '';
+      }
+
+      return $value !== NULL && $value !== '';
+    });
+
+    if (!empty($item)) {
+      $items[] = $item;
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Extracts FAQ paragraph data.
+ */
+function muin_extract_about_faq(NodeInterface $node, array &$content, array $candidates): array {
+  $paragraphs = muin_extract_paragraph_entities($node, $content, $candidates);
+  $items = [];
+
+  foreach ($paragraphs as $paragraph) {
+    $question = muin_paragraph_text($paragraph, [
+      'field_question',
+      'field_title',
+      'field_heading',
+      'field_label',
+    ]);
+    $answer = muin_paragraph_markup($paragraph, [
+      'field_answer',
+      'field_body',
+      'field_text',
+      'field_description',
+    ]);
+
+    if ($question === NULL && $answer === NULL) {
+      continue;
+    }
+
+    $items[] = array_filter([
+      'question' => $question,
+      'answer' => $answer,
+    ], static function ($value) {
+      if ($value instanceof MarkupInterface) {
+        return trim($value->__toString()) !== '';
+      }
+      return $value !== NULL && $value !== '';
+    });
+  }
+
+  return $items;
+}
+
+/**
+ * Extracts referenced paragraph entities from a node field.
+ */
+function muin_extract_paragraph_entities(NodeInterface $node, array &$content, array $candidates): array {
+  foreach ($candidates as $field_name) {
+    if (isset($content[$field_name])) {
+      unset($content[$field_name]);
+    }
+
+    if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $entities = $node->get($field_name)->referencedEntities();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    $paragraphs = [];
+    foreach ($entities as $entity) {
+      if ($entity instanceof ParagraphInterface) {
+        $paragraphs[] = $entity;
+      }
+    }
+
+    if (!empty($paragraphs)) {
+      return $paragraphs;
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Extracts a plain text value from a paragraph.
+ */
+function muin_paragraph_text(ParagraphInterface $paragraph, array $candidates): ?string {
+  foreach ($candidates as $field_name) {
+    if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $paragraph->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    if (!$item) {
+      continue;
+    }
+
+    if (isset($item->value) && $item->value !== '') {
+      return trim((string) $item->value);
+    }
+
+    if (isset($item->title) && $item->title !== '') {
+      return trim((string) $item->title);
+    }
+
+    if (method_exists($item, 'getString')) {
+      try {
+        $value = $item->getString();
+        if ($value !== '') {
+          return trim($value);
+        }
+      }
+      catch (\Throwable $throwable) {
+        continue;
+      }
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Extracts markup content from a paragraph field.
+ */
+function muin_paragraph_markup(ParagraphInterface $paragraph, array $candidates): ?MarkupInterface {
+  foreach ($candidates as $field_name) {
+    if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $paragraph->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    if (!$item) {
+      continue;
+    }
+
+    if (isset($item->processed) && $item->processed !== '') {
+      return Markup::create($item->processed);
+    }
+
+    if (isset($item->value) && $item->value !== '') {
+      return Markup::create((string) $item->value);
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Extracts a list of text items from a paragraph field.
+ */
+function muin_paragraph_list(ParagraphInterface $paragraph, array $candidates): array {
+  foreach ($candidates as $field_name) {
+    if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    $items = [];
+    foreach ($paragraph->get($field_name) as $item) {
+      if (isset($item->value) && $item->value !== '') {
+        $items[] = trim((string) $item->value);
+      }
+    }
+
+    if (!empty($items)) {
+      return $items;
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Extracts a link from a paragraph field.
+ */
+function muin_paragraph_link(ParagraphInterface $paragraph, array $candidates): ?array {
+  foreach ($candidates as $field_name) {
+    if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $paragraph->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    $link = muin_normalize_link_item($item);
+    if ($link !== NULL) {
+      return $link;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Extracts an image from a paragraph field.
+ */
+function muin_paragraph_image(ParagraphInterface $paragraph, array $candidates): ?array {
+  foreach ($candidates as $field_name) {
+    if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    try {
+      $item = $paragraph->get($field_name)->first();
+    }
+    catch (\Throwable $throwable) {
+      continue;
+    }
+
+    $image = muin_normalize_image_item($item);
+    if ($image !== NULL) {
+      return $image;
+    }
+  }
+
+  return NULL;
+}

@@ -1,0 +1,428 @@
+{#
+  Template for the Service content type full view.
+  Mirrors the reference layout in reference/html-src/service-single.html.
+#}
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  'node--view-mode-' ~ view_mode|clean_class,
+  'service-page'
+] %}
+
+{% set service = muin_service_page|default({}) %}
+{% set breadcrumb_items = service.breadcrumb|default([]) %}
+{% set cta = service.cta ?? null %}
+{% set cta_link = cta is iterable and cta.url is defined ? cta : null %}
+{% set cta_render = cta is iterable and cta.render is defined ? cta.render : null %}
+{% set tags_items = service.tags ?? [] %}
+{% set description = service.description ?? null %}
+{% set description_text = service.description_text ?? null %}
+{% set sla = service.sla ?? null %}
+{% set sla_link = sla is iterable and sla.url is defined ? sla : null %}
+{% set sla_render = sla is iterable and sla.render is defined ? sla.render : null %}
+{% set steps_heading = service.steps_heading ?? null %}
+{% set steps = service.steps ?? [] %}
+{% set steps_render = service.steps_render ?? null %}
+{% set info = service.info ?? {} %}
+{% set payment = service.payment ?? {} %}
+{% set contact = service.contact ?? {} %}
+{% set mobile = service.mobile ?? {} %}
+{% set additional_content = content|without('links') %}
+
+<article{{ attributes.addClass(classes).setAttribute('id', 'service-top') }}>
+  <main
+    class="container-page flex relative gap-8 items-start self-stretch py-10 max-md:flex-col max-md:gap-10 max-md:px-10 max-md:py-8 max-sm:gap-8 max-sm:px-4 max-sm:py-6"
+  >
+    <section class="flex relative flex-col gap-16 items-start service-content-section max-md:w-full">
+      <header class="flex relative flex-col gap-4 items-start self-stretch">
+        <div class="flex relative gap-8 items-end self-stretch max-md:flex-col max-md:gap-4 max-md:items-start max-sm:gap-3">
+          <div class="flex relative flex-col gap-2 items-start flex-[1_0_0]">
+            {% if breadcrumb_items %}
+              <nav class="text-sm text-gray-600 pt-8" aria-label="{{ 'Breadcrumb'|t }}">
+                <ol class="flex flex-wrap items-center gap-1">
+                  {% for item in breadcrumb_items %}
+                    <li>
+                      {% if item.url and not loop.last %}
+                        <a href="{{ item.url }}" class="hover:underline">{{ item.text }}</a>
+                      {% else %}
+                        <span class="{{ loop.last ? 'text-gray-900 font-medium' : '' }}"{% if loop.last %} aria-current="page"{% endif %}>{{ item.text }}</span>
+                      {% endif %}
+                    </li>
+                    {% if not loop.last %}
+                      <li aria-hidden="true">/</li>
+                    {% endif %}
+                  {% endfor %}
+                </ol>
+              </nav>
+            {% endif %}
+
+            {{ title_prefix }}
+            <h1 class="relative self-stretch text-3xl font-bold leading-10 text-neutral-900 max-sm:text-2xl max-sm:leading-8">{{ label }}</h1>
+            {{ title_suffix }}
+          </div>
+
+          {% if cta_link %}
+            {% set cta_options = cta_link.options|default({}) %}
+            {% set cta_attributes = create_attribute(cta_options.attributes|default({})) %}
+            <a
+              href="{{ cta_link.url }}"
+              {{ cta_attributes.addClass('flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start') }}
+              {% if cta_options.target is defined %}target="{{ cta_options.target }}"{% endif %}
+              {% if cta_options.rel is defined %}rel="{{ cta_options.rel }}"{% endif %}
+            >
+              <span class="relative text-base font-medium leading-6 text-white">{{ cta_link.title }}</span>
+            </a>
+          {% elseif cta_render %}
+            <div class="max-md:self-start">{{ cta_render }}</div>
+          {% endif %}
+        </div>
+
+        {% if tags_items %}
+          {% set tag_styles = [
+            {
+              'wrapper': 'flex relative gap-1 justify-center items-center px-2 h-6 bg-sky-50 rounded border border-sky-200',
+              'label': 'relative text-xs font-medium leading-5 text-blue-800'
+            },
+            {
+              'wrapper': 'flex relative gap-1 justify-center items-center px-2 h-6 bg-emerald-50 rounded border border-emerald-200',
+              'label': 'relative text-xs font-medium leading-5 text-emerald-800'
+            },
+            {
+              'wrapper': 'flex relative gap-1 justify-center items-center px-2 h-6 bg-gray-50 rounded border border-gray-200',
+              'label': 'relative text-xs font-medium leading-5 text-gray-800'
+            }
+          ] %}
+          {% set fallback_style = tag_styles|last %}
+          <div class="flex relative gap-2 items-start max-sm:flex-wrap">
+            {% for tag in tags_items %}
+              {% set style = tag_styles[loop.index0] ?? fallback_style %}
+              <span class="{{ style.wrapper }}">
+                <span class="{{ style.label }}">{{ tag }}</span>
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if description %}
+          <div class="relative text-base leading-6 text-neutral-900 service-description-width max-md:w-full max-sm:text-sm max-sm:leading-5">
+            {{ description }}
+          </div>
+        {% elseif description_text %}
+          <p class="relative text-base leading-6 text-neutral-900 service-description-width max-md:w-full max-sm:text-sm max-sm:leading-5">
+            {{ description_text }}
+          </p>
+        {% endif %}
+
+        {% if sla_link %}
+          {% set sla_options = sla_link.options|default({}) %}
+          {% set sla_attributes = create_attribute(sla_options.attributes|default({})) %}
+          <a
+            href="{{ sla_link.url }}"
+            {{ sla_attributes.addClass('flex relative gap-2 items-center p-0 text-green-700') }}
+            {% if sla_options.target is defined %}target="{{ sla_options.target }}"{% endif %}
+            {% if sla_options.rel is defined %}rel="{{ sla_options.rel }}"{% endif %}
+          >
+            <span class="relative text-base leading-6 text-green-700">{{ sla_link.title }}</span>
+            <img
+              src="{{ base_path ~ directory }}/img/icon-link-square.svg"
+              alt="{{ 'External link'|t }}"
+              width="16"
+              height="16"
+            />
+          </a>
+        {% elseif sla_render %}
+          <div class="flex relative gap-2 items-center p-0">{{ sla_render }}</div>
+        {% endif %}
+      </header>
+
+      {% if steps_heading or steps or steps_render %}
+        <section class="flex relative flex-col gap-6 items-start self-stretch">
+          <div class="flex relative items-center self-stretch">
+            <div class="flex relative -left-4 items-center">
+              <div class="flex relative gap-1 justify-center items-center px-4 py-3 rounded">
+                {% if steps_heading %}
+                  <h2 class="relative font-bold leading-5 text-neutral-900">{{ steps_heading }}</h2>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% if steps %}
+            <ol class="flex relative flex-col gap-4 items-start self-stretch">
+              {% for item in steps %}
+                <li class="flex relative gap-2 items-center p-0">
+                  <span class="relative text-base leading-6 text-neutral-900">{{ loop.index }}-</span>
+                  <span class="relative text-base leading-6 text-neutral-900">{{ item }}</span>
+                </li>
+              {% endfor %}
+            </ol>
+          {% elseif steps_render %}
+            <div class="flex relative flex-col gap-4 items-start self-stretch">{{ steps_render }}</div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {% if additional_content %}
+        <div class="service-additional not-prose self-stretch">{{ additional_content }}</div>
+      {% endif %}
+    </section>
+
+    {% set show_info = info.audience is defined or info.duration is defined or info.channels is defined or info.cost is defined %}
+    {% set show_payment = payment.methods is defined or payment.methods_text is defined or payment.title is defined %}
+    {% set show_contact = contact.faq_link is defined or contact.faq_title is defined or contact.phone_link is defined or contact.email_link is defined or contact.manual is defined %}
+    {% set show_mobile = mobile.items is defined or mobile.items_text is defined or mobile.title is defined %}
+
+    {% if show_info or show_payment or show_contact or show_mobile %}
+      <aside class="flex relative flex-col gap-6 items-start p-10 bg-white rounded-2xl border border-gray-300 border-solid service-sidebar-width max-md:w-full max-sm:p-6">
+        {% if show_info or show_payment %}
+          <section class="flex relative flex-col gap-4 items-start self-stretch">
+            {% if info.audience is defined %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <img
+                  src="{{ base_path ~ directory }}/img/target-audience.svg"
+                  alt="{{ 'Target audience icon'|t }}"
+                  width="24"
+                  height="24"
+                />
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  {% if info.audience.title is defined %}
+                    <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ info.audience.title }}</h3>
+                  {% endif %}
+                  {% if info.audience.body is defined %}
+                    <div class="relative self-stretch text-base leading-6 text-gray-800">{{ info.audience.body }}</div>
+                  {% elseif info.audience.body_text is defined %}
+                    <p class="relative self-stretch text-base leading-6 text-gray-800">{{ info.audience.body_text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if info.duration is defined %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <img
+                  src="{{ base_path ~ directory }}/img/service-duration.svg"
+                  alt="{{ 'Service duration icon'|t }}"
+                  width="24"
+                  height="24"
+                />
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  {% if info.duration.title is defined %}
+                    <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ info.duration.title }}</h3>
+                  {% endif %}
+                  {% if info.duration.body is defined %}
+                    <div class="relative self-stretch text-base leading-6 text-gray-800">{{ info.duration.body }}</div>
+                  {% elseif info.duration.body_text is defined %}
+                    <p class="relative self-stretch text-base leading-6 text-gray-800">{{ info.duration.body_text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if info.channels is defined %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <img
+                  src="{{ base_path ~ directory }}/img/service-channels.svg"
+                  alt="{{ 'Service channels icon'|t }}"
+                  width="24"
+                  height="24"
+                />
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  {% if info.channels.title is defined %}
+                    <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ info.channels.title }}</h3>
+                  {% endif %}
+                  {% if info.channels.body is defined %}
+                    <div class="relative self-stretch text-base leading-6 text-gray-800">{{ info.channels.body }}</div>
+                  {% elseif info.channels.body_text is defined %}
+                    <p class="relative self-stretch text-base leading-6 text-gray-800">{{ info.channels.body_text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if info.cost is defined %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <div class="flex relative justify-center items-center p-0.5 w-6 h-6">
+                  <div class="relative shrink-0 service-cost-icon">
+                    <img
+                      src="{{ base_path ~ directory }}/img/service-cost.svg"
+                      alt="{{ 'Service cost icon'|t }}"
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                </div>
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  {% if info.cost.title is defined %}
+                    <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ info.cost.title }}</h3>
+                  {% endif %}
+                  {% if info.cost.body is defined %}
+                    <div class="relative self-stretch text-base leading-6 text-gray-800">{{ info.cost.body }}</div>
+                  {% elseif info.cost.body_text is defined %}
+                    <p class="relative self-stretch text-base leading-6 text-gray-800">{{ info.cost.body_text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if show_payment %}
+              <div class="flex relative gap-2.5 items-start self-stretch">
+                <div class="flex relative flex-col gap-2 items-start flex-[1_0_0]">
+                  {% if payment.title is defined %}
+                    <h3 class="relative self-stretch text-lg font-bold leading-7 text-gray-800">{{ payment.title }}</h3>
+                  {% endif %}
+                  {% if payment.methods is defined %}
+                    <div class="flex relative gap-2 items-start">{{ payment.methods }}</div>
+                  {% elseif payment.methods_text is defined %}
+                    <p class="relative text-base leading-6 text-gray-800">{{ payment.methods_text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        {% if (show_contact and (contact.faq_link is defined or contact.phone_link is defined or contact.email_link is defined or contact.manual is defined)) and (show_info or show_payment) %}
+          <div class="relative h-px bg-gray-300 service-sidebar-content max-md:w-full"></div>
+        {% endif %}
+
+        {% if show_contact %}
+          <section class="flex relative flex-col gap-4 items-start self-stretch">
+            {% if contact.faq_title is defined or contact.faq_link is defined %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  {% if contact.faq_title is defined %}
+                    <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ contact.faq_title }}</h3>
+                  {% endif %}
+                  {% if contact.faq_link is defined %}
+                    {% set faq_link = contact.faq_link %}
+                    {% if faq_link.render is defined %}
+                      <div class="flex relative gap-2 items-center p-0">{{ faq_link.render }}</div>
+                    {% else %}
+                      {% set faq_options = faq_link.options|default({}) %}
+                      {% set faq_attributes = create_attribute(faq_options.attributes|default({})) %}
+                      <a
+                        href="{{ faq_link.url }}"
+                        {{ faq_attributes.addClass('flex relative gap-2 items-center p-0 text-green-700') }}
+                        {% if faq_options.target is defined %}target="{{ faq_options.target }}"{% endif %}
+                        {% if faq_options.rel is defined %}rel="{{ faq_options.rel }}"{% endif %}
+                      >
+                        <span class="relative text-base leading-6 text-green-700">{{ faq_link.title }}</span>
+                        <img
+                          src="{{ base_path ~ directory }}/img/icon-link-square.svg"
+                          alt="{{ 'External link'|t }}"
+                          width="18"
+                          height="18"
+                        />
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if contact.phone_link is defined %}
+              {% set phone_link = contact.phone_link %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <img src="{{ base_path ~ directory }}/img/icon-phone.svg" alt="{{ 'Phone icon'|t }}" width="24" height="24" />
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ contact.phone_title|default('Phone'|t) }}</h3>
+                  {% if phone_link.render is defined %}
+                    <div class="flex relative gap-2 items-center p-0">{{ phone_link.render }}</div>
+                  {% else %}
+                    {% set phone_options = phone_link.options|default({}) %}
+                    {% set phone_attributes = create_attribute(phone_options.attributes|default({})) %}
+                    <a
+                      href="{{ phone_link.url }}"
+                      {{ phone_attributes.addClass('flex relative gap-2 items-center p-0 text-green-700') }}
+                      {% if phone_options.target is defined %}target="{{ phone_options.target }}"{% endif %}
+                      {% if phone_options.rel is defined %}rel="{{ phone_options.rel }}"{% endif %}
+                    >
+                      <span class="relative text-base leading-6 text-green-700">{{ phone_link.title }}</span>
+                      <img
+                        src="{{ base_path ~ directory }}/img/icon-link-square.svg"
+                        alt="{{ 'External link'|t }}"
+                        width="18"
+                        height="18"
+                      />
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if contact.email_link is defined %}
+              {% set email_link = contact.email_link %}
+              <div class="flex relative gap-2 items-start self-stretch">
+                <img src="{{ base_path ~ directory }}/img/icon-email.svg" alt="{{ 'Email icon'|t }}" width="24" height="24" />
+                <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+                  <h3 class="relative self-stretch text-base font-bold leading-6 text-gray-800">{{ contact.email_title|default('Email'|t) }}</h3>
+                  {% if email_link.render is defined %}
+                    <div class="flex relative gap-2 items-center p-0">{{ email_link.render }}</div>
+                  {% else %}
+                    {% set email_options = email_link.options|default({}) %}
+                    {% set email_attributes = create_attribute(email_options.attributes|default({})) %}
+                    <a
+                      href="{{ email_link.url }}"
+                      {{ email_attributes.addClass('flex relative gap-2 items-center p-0 text-green-700') }}
+                      {% if email_options.target is defined %}target="{{ email_options.target }}"{% endif %}
+                      {% if email_options.rel is defined %}rel="{{ email_options.rel }}"{% endif %}
+                    >
+                      <span class="relative text-base leading-6 text-green-700">{{ email_link.title }}</span>
+                      <img
+                        src="{{ base_path ~ directory }}/img/icon-link-square.svg"
+                        alt="{{ 'External link'|t }}"
+                        width="18"
+                        height="18"
+                      />
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if contact.manual is defined %}
+              {% set manual_link = contact.manual %}
+              {% if manual_link.render is defined %}
+                <div class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-gray-100 rounded min-h-10">{{ manual_link.render }}</div>
+              {% else %}
+                {% set manual_options = manual_link.options|default({}) %}
+                {% set manual_attributes = create_attribute(manual_options.attributes|default({})) %}
+                <a
+                  href="{{ manual_link.url }}"
+                  {{ manual_attributes.addClass('flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-gray-100 rounded min-h-10 text-neutral-900') }}
+                  {% if manual_options.target is defined %}target="{{ manual_options.target }}"{% endif %}
+                  {% if manual_options.rel is defined %}rel="{{ manual_options.rel }}"{% endif %}
+                >
+                  <span class="relative text-base font-medium leading-6 text-neutral-900">{{ manual_link.title }}</span>
+                </a>
+              {% endif %}
+            {% endif %}
+          </section>
+        {% endif %}
+
+        {% if show_mobile and (show_contact) %}
+          <div class="relative h-px bg-gray-300 service-sidebar-content max-md:w-full"></div>
+        {% endif %}
+
+        {% if show_mobile %}
+          <section class="flex relative flex-col gap-2 items-start h-32 service-sidebar-content max-md:w-full max-md:h-auto">
+            {% if mobile.title is defined %}
+              <h3 class="relative self-stretch text-lg font-bold leading-7 text-gray-800">{{ mobile.title }}</h3>
+            {% endif %}
+            <div class="flex relative flex-wrap gap-3 content-start items-start self-stretch max-sm:justify-center">
+              {% if mobile.items is defined %}
+                {{ mobile.items }}
+              {% elseif mobile.items_text is defined %}
+                <p class="text-base leading-6 text-gray-800">{{ mobile.items_text }}</p>
+              {% endif %}
+            </div>
+          </section>
+        {% endif %}
+      </aside>
+    {% endif %}
+  </main>
+
+  {% if content.links %}
+    <div class="node__links sr-only">{{ content.links }}</div>
+  {% endif %}
+</article>

@@ -1,0 +1,384 @@
+{#
+  Template for the About the Kingdom page ("page" content type) full view.
+  Inspired by reference/html-src/about-kingdom-page.html layout.
+#}
+{% set about = muin_about_kingdom_page|default({}) %}
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  'node--view-mode-' ~ view_mode|clean_class,
+  'content-about-kingdom-page'
+] %}
+{% set breadcrumb_items = about.breadcrumb|default([]) %}
+{% set hero = about.hero|default({}) %}
+{% set chips = about.chips|default([]) %}
+{% set sections = about.sections|default({}) %}
+{% set back_to_top = about.back_to_top|default('Back to top'|t) %}
+
+
+<article{{ attributes.addClass('node--about-kingdom') }}>
+  <h1>{{ label }}</h1>
+  {{ content.field_lead }}
+  {{ content.field_description }}
+  {{ content.field_primary_cta }}
+  {{ content.field_secondary_cta }}
+  {{ content.field_hero_image }}
+  {{ content.field_hero_badges }}
+  {{ content|without(
+    'field_lead',
+    'field_description',
+    'field_primary_cta',
+    'field_secondary_cta',
+    'field_hero_image',
+    'field_hero_badges'
+  ) }}
+</article>
+
+<article{{ attributes.addClass(classes).setAttribute('id', 'about-kingdom-top') }}>
+  <main id="top" class="bg-gradient-to-b from-white to-green-50">
+    {% if breadcrumb_items %}
+      <nav class="text-sm text-gray-600 max-w-[1320px] mx-auto px-4 pt-8" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="flex flex-wrap items-center gap-1">
+          {% for item in breadcrumb_items %}
+            <li>
+              {% if item.url and not loop.last %}
+                <a href="{{ item.url }}" class="hover:underline">{{ item.text }}</a>
+              {% else %}
+                <span class="{{ loop.last ? 'text-gray-900 font-medium' : '' }}"{% if loop.last %} aria-current="page"{% endif %}>{{ item.text }}</span>
+              {% endif %}
+            </li>
+            {% if not loop.last %}
+              <li aria-hidden="true">/</li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+    {% endif %}
+
+    <header class="max-w-[1320px] mx-auto px-4 mt-6">
+      <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <div class="grid md:grid-cols-2">
+          <div class="p-8 md:p-12">
+            {{ title_prefix }}
+            {% if hero.title %}
+              <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-[#0F2A1D]">{{ hero.title }}</h1>
+            {% else %}
+              <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-[#0F2A1D]">{{ label }}</h1>
+            {% endif %}
+            {{ title_suffix }}
+
+            {% if hero.lead %}
+              <div class="mt-4 text-lg text-gray-800">{{ hero.lead }}</div>
+            {% endif %}
+            {% if hero.description %}
+              <div class="mt-2 text-base text-gray-700">{{ hero.description }}</div>
+            {% endif %}
+
+            {% set primary_cta = hero.primary_cta ?? null %}
+            {% set secondary_cta = hero.secondary_cta ?? null %}
+            {% if primary_cta or secondary_cta %}
+              <div class="mt-6 flex flex-wrap gap-3">
+                {% if primary_cta %}
+                  {% set primary_options = primary_cta.options|default({}) %}
+                  {% set primary_attributes = create_attribute(primary_options.attributes|default({})) %}
+                  <a
+                    href="{{ primary_cta.url }}"
+                    {{ primary_attributes.addClass('inline-flex items-center gap-2 rounded-md bg-primary-600 text-white px-5 py-3 text-sm font-semibold hover:bg-primary-700') }}
+                    {% if primary_options.target is defined %}target="{{ primary_options.target }}"{% endif %}
+                    {% if primary_options.rel is defined %}rel="{{ primary_options.rel }}"{% endif %}
+                  >
+                    {{ primary_cta.title }}
+                  </a>
+                {% endif %}
+                {% if secondary_cta %}
+                  {% set secondary_options = secondary_cta.options|default({}) %}
+                  {% set secondary_attributes = create_attribute(secondary_options.attributes|default({})) %}
+                  <a
+                    href="{{ secondary_cta.url }}"
+                    {{ secondary_attributes.addClass('inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-3 text-sm font-semibold hover:bg-gray-50') }}
+                    {% if secondary_options.target is defined %}target="{{ secondary_options.target }}"{% endif %}
+                    {% if secondary_options.rel is defined %}rel="{{ secondary_options.rel }}"{% endif %}
+                  >
+                    {{ secondary_cta.title }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if hero.badges %}
+              <dl class="mt-8 grid grid-cols-2 gap-4 text-sm">
+                {% for badge in hero.badges %}
+                  <div class="rounded-xl border border-green-200 bg-green-50 p-4">
+                    {% if badge.title %}
+                      <dt class="font-semibold text-green-900">{{ badge.title }}</dt>
+                    {% endif %}
+                    {% if badge.body %}
+                      <dd class="mt-1 text-green-800">{{ badge.body }}</dd>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </dl>
+            {% endif %}
+          </div>
+          <div class="relative">
+            {% set hero_image = hero.image ?? {} %}
+            {% if hero_image.url is defined %}
+              <img src="{{ hero_image.url }}" alt="{{ hero_image.alt|default(hero.title)|default(label) }}" class="h-full w-full object-cover" loading="lazy" />
+            {% elseif hero_image.theme is defined %}
+              <img src="{{ base_path ~ directory ~ '/' ~ hero_image.theme }}" alt="{{ hero_image.alt|default(hero.title)|default(label) }}" class="h-full w-full object-cover" loading="lazy" />
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {% if chips %}
+      <section class="max-w-[1320px] mx-auto px-4 mt-6">
+        <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
+          {% for chip in chips %}
+            {% set chip_options = chip.options|default({}) %}
+            {% set chip_attributes = create_attribute(chip_options.attributes|default({})) %}
+            <a
+              href="{{ chip.url }}"
+              {{ chip_attributes.addClass('chip') }}
+              {% if chip_options.target is defined %}target="{{ chip_options.target }}"{% endif %}
+              {% if chip_options.rel is defined %}rel="{{ chip_options.rel }}"{% endif %}
+            >
+              {{ chip.title }}
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set why_now = sections.why_now|default({}) %}
+    {% if why_now %}
+      <section id="{{ why_now.id|default('why-now') }}" class="section">
+        <div class="wrap">
+          {% if why_now.heading %}
+            <h2 class="h2">{{ why_now.heading }}</h2>
+          {% endif %}
+          {% if why_now.lead %}
+            <div class="lead">{{ why_now.lead }}</div>
+          {% endif %}
+          {% if why_now.cards %}
+            <div class="grid md:grid-cols-3 gap-4 mt-6">
+              {% for card in why_now.cards %}
+                <div class="card--tick">
+                  {% if card.title %}<h3 class="card-title">{{ card.title }}</h3>{% endif %}
+                  {% if card.body %}
+                    <div>{{ card.body }}</div>
+                  {% elseif card.list %}
+                    <ul class="list">
+                      {% for item in card.list %}
+                        <li>{{ item }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set stories = sections.stories|default({}) %}
+    {% if stories %}
+      <section id="{{ stories.id|default('stories') }}" class="section {{ stories.background|default('bg-[#F5F9F7]') }}">
+        <div class="wrap">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div>
+              {% if stories.heading %}<h2 class="h2">{{ stories.heading }}</h2>{% endif %}
+              {% if stories.lead %}<div class="lead">{{ stories.lead }}</div>{% endif %}
+            </div>
+            {% if stories.cta %}
+              {% set stories_cta_options = stories.cta.options|default({}) %}
+              {% set stories_cta_attributes = create_attribute(stories_cta_options.attributes|default({})) %}
+              <a
+                href="{{ stories.cta.url }}"
+                {{ stories_cta_attributes.addClass('btn-secondary inline-flex items-center justify-center') }}
+                {% if stories_cta_options.target is defined %}target="{{ stories_cta_options.target }}"{% endif %}
+                {% if stories_cta_options.rel is defined %}rel="{{ stories_cta_options.rel }}"{% endif %}
+              >
+                {{ stories.cta.title }}
+              </a>
+            {% endif %}
+          </div>
+          {% if stories.items %}
+            <div class="grid md:grid-cols-3 gap-6 mt-8">
+              {% for item in stories.items %}
+                <article class="story">
+                  <div class="story__media">
+                    {% set story_image = item.image ?? {} %}
+                    {% if story_image.url is defined %}
+                      <img src="{{ story_image.url }}" alt="{{ story_image.alt|default(item.title) }}" loading="lazy" />
+                    {% elseif story_image.theme is defined %}
+                      <img src="{{ base_path ~ directory ~ '/' ~ story_image.theme }}" alt="{{ story_image.alt|default(item.title) }}" loading="lazy" />
+                    {% endif %}
+                  </div>
+                  <div class="story__body">
+                    {% if item.category %}<p class="story__category">{{ item.category }}</p>{% endif %}
+                    {% if item.title %}<h3 class="story__title">{{ item.title }}</h3>{% endif %}
+                    {% if item.body %}<p class="story__desc">{{ item.body }}</p>{% endif %}
+                    {% if item.cta %}
+                      {% set item_cta_options = item.cta.options|default({}) %}
+                      {% set item_cta_attributes = create_attribute(item_cta_options.attributes|default({})) %}
+                      <a
+                        href="{{ item.cta.url }}"
+                        {{ item_cta_attributes.addClass('story__cta') }}
+                        {% if item_cta_options.target is defined %}target="{{ item_cta_options.target }}"{% endif %}
+                        {% if item_cta_options.rel is defined %}rel="{{ item_cta_options.rel }}"{% endif %}
+                      >
+                        {{ item.cta.title }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set free_zones = sections.free_zones|default({}) %}
+    {% if free_zones %}
+      <section id="{{ free_zones.id|default('free-zones') }}" class="section {{ free_zones.background|default('bg-white') }}">
+        <div class="wrap">
+          {% if free_zones.heading %}<h2 class="h2">{{ free_zones.heading }}</h2>{% endif %}
+          <div class="grid md:grid-cols-2 gap-6 mt-4 items-start">
+            <div class="flex flex-col gap-4">
+              {% for card in free_zones.cards|default([]) %}
+                <div class="card">
+                  {% if card.title %}<h3 class="card-title">{{ card.title }}</h3>{% endif %}
+                  {% if card.list %}
+                    <ul class="list">
+                      {% for item in card.list %}
+                        <li>{{ item }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% elseif card.body %}
+                    <div>{{ card.body }}</div>
+                  {% endif %}
+                  {% if card.cta %}
+                    {% set free_cta_options = card.cta.options|default({}) %}
+                    {% set free_cta_attributes = create_attribute(free_cta_options.attributes|default({})) %}
+                    <a
+                      href="{{ card.cta.url }}"
+                      {{ free_cta_attributes.addClass('btn-secondary mt-3 inline-flex items-center justify-center') }}
+                      {% if free_cta_options.target is defined %}target="{{ free_cta_options.target }}"{% endif %}
+                      {% if free_cta_options.rel is defined %}rel="{{ free_cta_options.rel }}"{% endif %}
+                    >
+                      {{ card.cta.title }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if free_zones.cta %}
+                {% set free_zone_cta_options = free_zones.cta.options|default({}) %}
+                {% set free_zone_cta_attributes = create_attribute(free_zone_cta_options.attributes|default({})) %}
+                <a
+                  href="{{ free_zones.cta.url }}"
+                  {{ free_zone_cta_attributes.addClass('btn-secondary mt-3 inline-flex items-center justify-center') }}
+                  {% if free_zone_cta_options.target is defined %}target="{{ free_zone_cta_options.target }}"{% endif %}
+                  {% if free_zone_cta_options.rel is defined %}rel="{{ free_zone_cta_options.rel }}"{% endif %}
+                >
+                  {{ free_zones.cta.title }}
+                </a>
+              {% endif %}
+            </div>
+            {% set free_image = free_zones.image ?? {} %}
+            {% if free_image %}
+              <div class="rounded-2xl overflow-hidden border border-gray-200">
+                {% if free_image.url is defined %}
+                  <img src="{{ free_image.url }}" alt="{{ free_image.alt|default(free_zones.heading) }}" class="w-full object-cover" loading="lazy" />
+                {% elseif free_image.theme is defined %}
+                  <img src="{{ base_path ~ directory ~ '/' ~ free_image.theme }}" alt="{{ free_image.alt|default(free_zones.heading) }}" class="w-full object-cover" loading="lazy" />
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% set costs = sections.costs|default({}) %}
+    {% if costs %}
+      <section id="{{ costs.id|default('costs') }}" class="section">
+        <div class="wrap">
+          {% if costs.heading %}<h2 class="h2">{{ costs.heading }}</h2>{% endif %}
+          {% if costs.cards %}
+            <div class="grid md:grid-cols-3 gap-6 mt-4">
+              {% for card in costs.cards %}
+                <div class="cheat">
+                  {% if card.title %}<p class="cheat-label">{{ card.title }}</p>{% endif %}
+                  {% if card.body %}<p class="cheat-desc">{{ card.body }}</p>{% elseif card.list %}<p class="cheat-desc">{{ card.list|join(' ') }}</p>{% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if costs.note %}
+            <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900 text-sm">{{ costs.note }}</div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set faq = sections.faq|default({}) %}
+    {% if faq %}
+      <section id="{{ faq.id|default('faq') }}" class="section {{ faq.background|default('bg-white') }}">
+        <div class="wrap">
+          {% if faq.heading %}<h2 class="h2">{{ faq.heading }}</h2>{% endif %}
+          {% if faq.items %}
+            <div class="space-y-3 mt-4">
+              {% for item in faq.items %}
+                <details class="faq">
+                  {% if item.question %}<summary>{{ item.question }}</summary>{% endif %}
+                  {% if item.answer %}<div class="faq-a">{{ item.answer }}</div>{% endif %}
+                </details>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% set final_cta = sections.cta|default({}) %}
+    {% if final_cta %}
+      <section id="{{ final_cta.id|default('get-started') }}" class="section">
+        <div class="wrap">
+          <div class="rounded-2xl border border-green-200 bg-white p-6 md:p-10 grid md:grid-cols-3 gap-6 items-center">
+            <div class="md:col-span-2">
+              {% if final_cta.heading %}<h2 class="text-2xl md:text-3xl font-bold text-[#0F2A1D]">{{ final_cta.heading }}</h2>{% endif %}
+              {% if final_cta.body %}<p class="mt-2 text-gray-700">{{ final_cta.body }}</p>{% endif %}
+            </div>
+            <div class="flex md:justify-end">
+              {% if final_cta.cta %}
+                {% set final_cta_options = final_cta.cta.options|default({}) %}
+                {% set final_cta_attributes = create_attribute(final_cta_options.attributes|default({})) %}
+                <a
+                  href="{{ final_cta.cta.url }}"
+                  {{ final_cta_attributes.addClass('inline-flex items-center gap-2 rounded-md bg-primary-600 text-white px-5 py-3 text-sm font-semibold hover:bg-primary-700') }}
+                  {% if final_cta_options.target is defined %}target="{{ final_cta_options.target }}"{% endif %}
+                  {% if final_cta_options.rel is defined %}rel="{{ final_cta_options.rel }}"{% endif %}
+                >
+                  {{ final_cta.cta.title }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    <div class="max-w-[1320px] mx-auto px-4 pb-16">
+      <a href="#top" class="inline-flex items-center gap-2 text-sm underline underline-offset-2 text-gray-700 hover:text-gray-900">{{ back_to_top }}</a>
+    </div>
+  </main>
+
+  {% if content.links %}
+    <div class="node__links">{{ content.links }}</div>
+  {% endif %}
+</article>

@@ -1,0 +1,19 @@
+{% import '@muin/includes/header-menu.html.twig' as header_menu %}
+
+{{ attach_library('muin/header') }}
+
+{% set nav_id = attributes.id|default('main-navigation') %}
+{% set desktop_attributes = attributes.addClass('flex', 'items-center', 'justify-center', 'gap-2', 'pt-2', 'pb-2', 'h-full', 'list-none', 'm-0', 'p-0') %}
+
+<div class="muin-menu" data-menu-id="{{ nav_id }}">
+  <div class="muin-menu__desktop hidden lg:block h-full">
+    <ul{{ desktop_attributes }}>
+      {{ header_menu.desktop_items(items, nav_id ~ '-desktop', 1) }}
+    </ul>
+  </div>
+  <div class="muin-menu__mobile lg:hidden">
+    <ul class="grid grid-cols-1 gap-2 list-none m-0 p-0" role="list">
+      {{ header_menu.mobile_items(items, nav_id ~ '-mobile', 1) }}
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+name: "Muin"
+type: theme
+description: Launch your business website fast with the Muin Drupal theme.
+alt text: Screenshot of Muin, Drupal administration theme.
+core_version_requirement: ^10 || ^11
+base theme: false
+
+libraries:
+  - muin/global
+
+libraries-override:
+  system/base:
+    css:
+      component:
+        css/components/hidden.module.css: css/overrides/hidden.module.css
+
+  contextual:
+    css:
+      component:
+        contextual.module.css: css/overrides/contextual.module.css
+
+regions:
+  header: "Header"
+  primary_menu: "Primary menu"
+  hero: "Hero"
+  highlighted: "Highlighted"
+  content: "Content"
+  sidebar: "Sidebar"
+  footer_promo: "Footer promo"
+  footer_branding: "Footer branding"
+  footer_primary: "Footer primary"
+  footer_secondary: "Footer secondary"
+  footer_tertiary: "Footer tertiary"
+  footer_quaternary: "Footer quaternary"
+  footer_social: "Footer social"
+  footer_legal: "Footer legal"
+  footer: "Footer"
+# ckeditor5-stylesheets:
+#   - css/style.css
