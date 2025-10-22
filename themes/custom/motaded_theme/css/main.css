@@ -48,6 +48,11 @@ html {
   p {
     @apply text-[16px] leading-6 mb-4;
   }
+
+  h1 {
+    @apply pt-8 text-[#161616] font-bold tracking-[-0.96px] text-[48px] leading-[60px] max-sm:text-3xl max-sm:leading-9;
+  }
+
   h2 {
     @apply text-[30px] leading-[38px] font-bold mb-6;
   }
@@ -63,6 +68,32 @@ html {
 :focus-visible {
   outline: 2px solid var(--color-primary-600);
   outline-offset: 2px;
+}
+
+.views-exposed-form {
+
+}
+.view-news {
+  .form--inline {
+    display: flex;
+    flex: wrap;
+  }
+  .js-form-type-checkbox {
+    @apply rounded-full border px-3 py-1.5 text-sm transition border-gray-300 text-gray-700 hover:bg-gray-50;
+    input {
+      @apply hidden;
+    }
+  }
+  .js-form-type-checkbox:has(input:checked) {
+    @apply border-[#006B44] text-[#006B44] bg-[#006B44]/10;
+  }
+  .form-actions {
+    @apply flex my-0;
+    align-items: center;
+  }
+  input[name="reset"] {
+    @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 ml-0;
+  }
 }
 
 /* =========================
@@ -85,6 +116,10 @@ html {
 
 @source "./**/*.html";
 @source "./partials/**/*.html";
+
+.main-wrapper:has(.page-green) {
+  @apply !bg-green-50;
+}
 
 .section {
   padding: 3rem 0;
@@ -187,4 +222,8 @@ html {
 .faq-a {
   margin-top: 0.5rem;
   color: #374151;
+}
+.view-id-news .form--inline > ul {
+  display: flex;
+  flex-wrap: wrap;
 }

@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+{% set classes = [
+  'w-full',
+  'rounded-md',
+  'border',
+  'border-gray-300',
+  'bg-white',
+  'px-4',
+  'py-2',
+  'pr-10',
+  'text-sm',
+  'focus:outline-none',
+  'focus:border-gray-900',
+] %}
+
+<input{{ attributes.addClass(classes) }} />{{ children }}
+
+<img
+  src="/themes/custom/motaded_theme/img/icon-search.svg"
+  alt=""
+  width="18"
+  height="18"
+  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 opacity-70"
+/>
