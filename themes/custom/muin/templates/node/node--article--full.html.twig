@@ -1,0 +1,167 @@
+{#
+  Template for the Article content type full view.
+  Mirrors the reference layout in reference/html-src/article-single.html.
+#}
+
+{% macro toc_items(items, is_child, parent_id) %}
+  <ul class="{{ is_child ? 'mt-1 pl-3 space-y-1' : 'space-y-1' }}">
+    {% for item in items %}
+      <li>
+        <a
+          href="#{{ item.id }}"
+          class="{{ is_child ? 'block rounded-md px-3 py-1.5 article-toc-link article-toc-sublink text-gray-700 hover:bg-white transition' : 'block rounded-md px-3 py-2 text-sm transition article-toc-link hover:bg-white' }}"
+          data-heading-target="{{ item.id }}"
+          data-heading-level="{{ item.level|default(is_child ? 3 : 2) }}"
+          data-heading-order="{{ item.order|default(loop.index0) }}"
+          {% if parent_id %}data-heading-parent="{{ parent_id }}"{% endif %}
+        >
+          {{ item.label }}
+        </a>
+        {% if item.children is defined and item.children %}
+          {{ _self.toc_items(item.children, true, item.id) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% import _self as article_macros %}
+
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  'node--view-mode-' ~ view_mode|clean_class,
+  'article-page'
+] %}
+
+{% set article = muin_article_page|default({}) %}
+{% set breadcrumb_items = article.breadcrumb ?? [] %}
+{% set lead = article.lead ?? null %}
+{% set description = article.description ?? null %}
+{% set meta = article.meta ?? {} %}
+{% set toc_items = article.toc ?? [] %}
+{% set toc_label = article.toc_label|default('On this page'|t) %}
+{% set toc_title = article.toc_title|default(label) %}
+{% set sections = article.sections ?? null %}
+{% set body_content = article.body ?? null %}
+{% set additional_content = content|without('links') %}
+
+<article{{ attributes.addClass(classes).setAttribute('id', 'article-top') }}>
+  {% if toc_items %}
+    {{ attach_library('muin/article') }}
+  {% endif %}
+
+  <main class="article-spacing container-page" data-muin-article data-article-offset="96">
+    {% if breadcrumb_items %}
+      <nav class="text-sm text-gray-600 pt-8" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="flex flex-wrap items-center gap-1">
+          {% for item in breadcrumb_items %}
+            <li>
+              {% if item.url and not loop.last %}
+                <a href="{{ item.url }}" class="hover:underline">{{ item.text }}</a>
+              {% else %}
+                <span class="{{ loop.last ? 'text-gray-900 font-medium' : '' }}"{% if loop.last %} aria-current="page"{% endif %}>{{ item.text }}</span>
+              {% endif %}
+            </li>
+            {% if not loop.last %}
+              <li aria-hidden="true">/</li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+    {% endif %}
+
+    <section class="mt-6">
+      <div class="flex flex-col gap-6 pb-8 border-b border-gray-300">
+        {{ title_prefix }}
+        <h1 class="article-main-title font-bold max-sm:text-3xl max-sm:leading-9">{{ label }}</h1>
+        {{ title_suffix }}
+
+        {% if lead %}
+          <div class="article-lead leading-7 font-semibold">{{ lead }}</div>
+        {% endif %}
+
+        {% if description %}
+          <div class="article-description leading-6">{{ description }}</div>
+        {% endif %}
+
+        {% if meta %}
+          <div class="flex flex-wrap gap-4 text-sm text-gray-600 article-meta">
+            {% if meta.date is defined and meta.date %}
+              <div class="flex items-center gap-2 article-meta__item article-meta__item--date">{{ meta.date }}</div>
+            {% endif %}
+            {% if meta.author is defined and meta.author %}
+              <div class="flex items-center gap-2 article-meta__item article-meta__item--author">{{ meta.author }}</div>
+            {% endif %}
+            {% if meta.tags is defined and meta.tags %}
+              <div class="flex items-center gap-2 article-meta__item article-meta__item--tags">{{ meta.tags }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="flex items-start md:gap-8 max-md:flex-col">
+      {% if toc_items %}
+        <div class="w-full md:w-80 md:shrink-0 md:sticky md:top-4 mt-6">
+          <button
+            type="button"
+            class="md:hidden w-full flex items-center justify-between rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-semibold"
+            data-article-toc-toggle
+            aria-expanded="false"
+            aria-controls="article-toc-panel"
+          >
+            <span>{{ toc_label }}</span>
+            <img
+              src="{{ base_path ~ directory }}/img/icon-arrow-down.svg"
+              alt=""
+              width="16"
+              height="16"
+              class="transition-transform"
+              data-article-toc-icon
+            />
+          </button>
+
+          <aside
+            id="article-toc-panel"
+            class="table-of-content hidden md:block mt-3 md:mt-0 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200"
+            data-article-toc-panel
+          >
+            <header class="mb-3">
+              <p class="text-sm text-gray-600">{{ toc_label }}</p>
+              <h4 class="text-lg font-semibold">{{ toc_title }}</h4>
+            </header>
+
+            <nav class="space-y-1" aria-label="{{ 'Table of contents'|t }}">
+              {{ article_macros.toc_items(toc_items, false, null) }}
+            </nav>
+          </aside>
+        </div>
+      {% endif %}
+
+      <div class="flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0" data-article-content>
+        {% if sections %}
+          <div class="article-sections not-prose flex flex-col gap-8">
+            {{ sections }}
+          </div>
+        {% endif %}
+
+        {% if body_content %}
+          <div class="article-body-content" data-article-body>
+            {{ body_content }}
+          </div>
+        {% endif %}
+
+        {% if additional_content %}
+          <div class="article-additional not-prose">
+            {{ additional_content }}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+
+  {% if content.links %}
+    <div class="node__links sr-only">{{ content.links }}</div>
+  {% endif %}
+</article>
