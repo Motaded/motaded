@@ -50,37 +50,40 @@
   {{ include('@motaded_theme/includes/header.html.twig') }}
 </div>
 
-
-<main 
-  role="main"
-  class="my-[40px] max-w-[1320px] mx-auto px-4"
-  x-data="articlePageEN()"
-  x-init="init()"
-  @keydown.escape.window="tocOpen=false"
->
-  <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-
+{% if page.breadcrumb %}
   <div class="bread">
     {{ page.breadcrumb }}
   </div>
+{% endif %}
 
-  <div class="layout-content">
-    {{ page.content }}
-  </div>{# /.layout-content #}
+<div class="main-wrapper bg-white">
+  <main 
+    role="main"
+    class="my-[40px] max-w-[1320px] mx-auto px-4"
+    x-data="articlePageEN()"
+    x-init="init()"
+    @keydown.escape.window="tocOpen=false"
+  >
+    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
-  {% if page.sidebar_first %}
-    <aside class="layout-sidebar-first" role="complementary">
-      {{ page.sidebar_first }}
-    </aside>
-  {% endif %}
+    <div class="layout-content">
+      {{ page.content }}
+    </div>{# /.layout-content #}
 
-  {% if page.sidebar_second %}
-    <aside class="layout-sidebar-second" role="complementary">
-      {{ page.sidebar_second }}
-    </aside>
-  {% endif %}
+    {% if page.sidebar_first %}
+      <aside class="layout-sidebar-first" role="complementary">
+        {{ page.sidebar_first }}
+      </aside>
+    {% endif %}
 
-</main>
+    {% if page.sidebar_second %}
+      <aside class="layout-sidebar-second" role="complementary">
+        {{ page.sidebar_second }}
+      </aside>
+    {% endif %}
+
+  </main>
+</div>
 
 {% if page.footer %}
   <footer role="contentinfo">

@@ -1,0 +1,29 @@
+uuid: 34f99a5a-7962-47f9-b4fc-b5dde052121a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tags
+    - node.type.news
+    - taxonomy.vocabulary.tags
+id: node.news.field_tags
+field_name: field_tags
+entity_type: node
+bundle: news
+label: Tags
+description: 'Enter a comma-separated list. For example: Amsterdam, Mexico City, "Cleveland, Ohio"'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: _none
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference
