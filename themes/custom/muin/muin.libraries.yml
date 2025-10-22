@@ -1,0 +1,46 @@
+global:
+  css:
+    theme:
+      css/output.css: {}
+      css/language-switcher.css: {}
+  js:
+    js/main.js: {}
+  dependencies:
+    - muin/tailwind
+  # css:
+  #   theme:
+  #     css/fonts.css: { preprocess: false }
+
+header:
+  css:
+    theme:
+      css/header.css: {}
+  js:
+    https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js: { type: external, minified: true, attributes: { defer: true } }
+  dependencies:
+    - muin/tailwind
+
+topbar:
+  js:
+    js/topbar.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - muin/tailwind
+
+footer:
+  css:
+    theme:
+      css/footer.css: {}
+
+system-overrides:
+  css:
+    component:
+      css/system-overrides.css: {}
+
+article:
+  js:
+    js/article.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

@@ -1,0 +1,27 @@
+{#
+  @file
+  Theme override for the footer menu in the Muin theme.
+#}
+{% import _self as footer_menu %}
+
+{% macro menu_links(items, level) %}
+  {% import _self as footer_menu %}
+  {% if items %}
+    {% for item in items %}
+      {% set link_classes = ['my-1.5', 'text-white', 'hover:underline'] %}
+      {% if item.in_active_trail %}
+        {% set link_classes = link_classes|merge(['font-semibold']) %}
+      {% endif %}
+      {{ link(item.title, item.url, {'class': link_classes}) }}
+      {% if item.below %}
+        <div class="flex flex-col ml-4">
+          {{ footer_menu.menu_links(item.below, level + 1) }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% if items %}
+  {{ footer_menu.menu_links(items, 0) }}
+{% endif %}
