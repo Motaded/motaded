@@ -15,6 +15,7 @@ dependencies:
     - 'taxonomy_term:tags:1582b960-8bd9-4566-a412-7941f2252753'
     - 'taxonomy_term:tags:18541bf1-d0ce-4837-a482-ce75f71d248f'
     - 'taxonomy_term:tags:3d69f13d-542a-4c55-a587-82a26de17286'
+    - 'taxonomy_term:tags:6e64bebb-fb09-4218-8a22-20efca0d514c'
     - 'taxonomy_term:tags:8110951b-371a-42c9-b2b9-c6de1ce6e27b'
     - 'taxonomy_term:tags:8f349b4f-e9bb-4c90-bb8b-9e0c2786a455'
     - 'taxonomy_term:tags:9dfe7e67-b4dc-4588-84c9-2ea0837d69be'
@@ -1574,6 +1575,7 @@ display:
             112: 112
             94: 94
             126: 126
+            99: 99
           group: 1
           exposed: true
           expose:
@@ -1666,7 +1668,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: "<h1 class=\"text-[1.625rem] font-bold text-primary-600 leading-tight max-sm:text-2xl\">Latest News</h1>\r\n<p class=\"text-md font-medium leading-[1.6] mb-0\">Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia.</p>"
+          content: "<h1 class=\"text-[1.625rem] font-bold text-primary-600 leading-tight max-sm:text-2xl\">Latest Article</h1>\r\n<p class=\"text-md font-medium leading-[1.6] mb-0\">Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia.</p>"
           tokenize: false
       rendering_language: '***LANGUAGE_entity_translation***'
       display_extenders: {  }
