@@ -71,7 +71,8 @@
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
-<article{{ attributes.addClass(classes) }}>
+{{ attach_library('motaded_theme/toc') }}
+<article{{ attributes.addClass(classes) }} id="toc-root">
 
   {{ title_prefix }}
   {% if label and not page %}
@@ -125,8 +126,8 @@
         :class="tocOpen ? 'block' : 'hidden md:block'"
       >
         <header class="mb-3">
-          <p class="text-sm text-gray-600">On this page</p>
-          <h4 class="text-lg font-semibold">[Page Title]</h4>
+          <p class="text-sm text-gray-600">{{ "On this page"|t }}</p>
+          <h4 class="text-lg font-semibold">{{ label }}</h4>
         </header>
 
         <nav class="space-y-1" aria-label="Table of contents">

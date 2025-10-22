@@ -124,3 +124,7 @@ alpine:
     js/alpine.min.js: { defer: true }
       # minified: true
       # defer: true
+toc:
+  header: true
+  js:
+    js/toc.js: {}
