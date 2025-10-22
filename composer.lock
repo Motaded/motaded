@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2ec21ce0368fb705dd0c6333fe60432",
+    "content-hash": "ac418b373d25594ded5e672899906fb9",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -2895,6 +2895,56 @@
             "homepage": "https://www.drupal.org/project/entity_reference_revisions",
             "support": {
                 "source": "https://git.drupalcode.org/project/entity_reference_revisions"
+            }
+        },
+        {
+            "name": "drupal/formdazzle",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/formdazzle.git",
+                "reference": "4.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/formdazzle-4.0.0.zip",
+                "reference": "4.0.0",
+                "shasum": "6ba866a99aeeb7a044a7b0055b9bbade90fa4ccb"
+            },
+            "require": {
+                "drupal/core": "^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "4.0.0",
+                    "datestamp": "1723998766",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "JohnAlbin",
+                    "homepage": "https://www.drupal.org/user/32095",
+                    "email": "virtually.johnalbin@gmail.com"
+                },
+                {
+                    "name": "smustgrave",
+                    "homepage": "https://www.drupal.org/user/3252890"
+                }
+            ],
+            "description": "Provides a set of utilities that make form theming easier.",
+            "homepage": "https://drupal.org/project/formdazzle",
+            "support": {
+                "source": "https://git.drupalcode.org/project/formdazzle",
+                "issues": "https://drupal.org/project/issues/formdazzle"
             }
         },
         {

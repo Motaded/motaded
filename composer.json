@@ -31,6 +31,7 @@
         "drupal/devel": "^5.4",
         "drupal/devel_debug_log": "^2.0",
         "drupal/easy_breadcrumb": "^2.0",
+        "drupal/formdazzle": "^4.0",
         "drupal/honeypot": "^2.2",
         "drupal/like_dislike": "^2.4",
         "drupal/metatag": "^2.2",
