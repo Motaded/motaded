@@ -12,7 +12,7 @@ dependencies:
 id: motaded_theme_views_block__news_block_2
 theme: motaded_theme
 region: content
-weight: -9
+weight: -10
 provider: null
 plugin: 'views_block:news-block_2'
 settings:

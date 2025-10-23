@@ -33,6 +33,7 @@
         "drupal/easy_breadcrumb": "^2.0",
         "drupal/formdazzle": "^4.0",
         "drupal/honeypot": "^2.2",
+        "drupal/lang_dropdown": "^2.4",
         "drupal/like_dislike": "^2.4",
         "drupal/metatag": "^2.2",
         "drupal/paragraphs": "^1.19",
@@ -74,6 +75,9 @@
             "drupal/contrib-module2": "-p1"
         },
         "patches": {
+            "drupal/core": {
+                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch"
+            },
             "drupal/like_dislike": {
                 "3431667: Drupal 11 compatability": "https://git.drupalcode.org/project/like_dislike/-/merge_requests/10.diff"
             },

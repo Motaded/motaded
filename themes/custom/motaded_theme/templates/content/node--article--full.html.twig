@@ -68,6 +68,7 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'mb-12',
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
@@ -165,7 +166,7 @@
 
     <!-- Article body -->
     <div
-      {{ content_attributes.addClass('node__content flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0') }}
+      {{ content_attributes.addClass('node__content flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0 overflow-x-scroll') }}
       id="article-root"
     >
       {{ content }}
