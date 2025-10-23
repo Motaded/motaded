@@ -3316,6 +3316,9 @@
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
@@ -3358,9 +3361,15 @@
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
   }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
+  }
   .ml-1 {
     margin-left: calc(var(--spacing) * 1);
   }
+  .ml-2 {
+    margin-left: calc(var(--spacing) * 2);
+  }
   .status {
     @layer daisyui.component {
       display: inline-block;
@@ -3566,18 +3575,6 @@
       grid-template-columns: 1fr;
       grid-auto-rows: max-content;
     }
-  }
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
   }
   .prose {
     :root & {
@@ -3724,6 +3721,9 @@
   }
   .inline {
     display: inline;
+  }
+  .inline-block {
+    display: inline-block;
   }
   .inline-flex {
     display: inline-flex;
@@ -3929,6 +3929,9 @@
   .overflow-hidden {
     overflow: hidden;
   }
+  .overflow-x-scroll {
+    overflow-x: scroll;
+  }
   .overflow-y-auto {
     overflow-y: auto;
   }
@@ -4058,6 +4061,9 @@
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
   }
+  .py-12 {
+    padding-block: calc(var(--spacing) * 12);
+  }
   .pt-2 {
     padding-top: calc(var(--spacing) * 2);
   }
@@ -4100,10 +4106,6 @@
   .leading-\[1\.2\] {
     --tw-leading: 1.2;
     line-height: 1.2;
-  }
-  .leading-\[1\.5\] {
-    --tw-leading: 1.5;
-    line-height: 1.5;
   }
   .leading-\[1\.6\] {
     --tw-leading: 1.6;
@@ -4338,6 +4340,13 @@
       }
     }
   }
+  .group-hover\:text-primary-600 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        color: var(--color-primary-600);
+      }
+    }
+  }
   .group-hover\:underline {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
@@ -4447,6 +4456,14 @@
       }
     }
   }
+  .hover\:shadow-md {
+    &:hover {
+      @media (hover: hover) {
+        --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+      }
+    }
+  }
   .focus\:border-gray-900 {
     &:focus {
       border-color: var(--color-gray-900);
@@ -4496,6 +4513,16 @@
     @media (width < 40rem) {
       font-size: var(--text-2xl);
       line-height: var(--tw-leading, var(--text-2xl--line-height));
+    }
+  }
+  .sm\:my-4 {
+    @media (width >= 40rem) {
+      margin-block: calc(var(--spacing) * 4);
+    }
+  }
+  .sm\:mr-3 {
+    @media (width >= 40rem) {
+      margin-right: calc(var(--spacing) * 3);
     }
   }
   .sm\:grid-cols-3 {
@@ -4652,7 +4679,7 @@ html {
 .view-news {
   .form--inline {
     display: flex;
-    flex: wrap;
+    flex-wrap: wrap;
   }
   .js-form-type-checkbox {
     border-radius: calc(infinity * 1px);
@@ -4682,12 +4709,19 @@ html {
     color: #006B44;
   }
   .form-actions {
-    margin-block: calc(var(--spacing) * 0);
+    margin-inline-start: auto;
+    margin-bottom: calc(var(--spacing) * 0);
     display: flex;
+    @media (width >= 40rem) {
+      margin-inline-start: calc(var(--spacing) * 0);
+    }
+    @media (width >= 40rem) {
+      margin-top: calc(var(--spacing) * 0);
+    }
     align-items: center;
   }
   input[name="reset"] {
-    margin-left: calc(var(--spacing) * 0);
+    margin-inline: calc(var(--spacing) * 0);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4815,6 +4849,9 @@ html {
 .view-id-news .form--inline > ul {
   display: flex;
   flex-wrap: wrap;
+}
+.lang-dropdown-select-element {
+  width: auto !important;
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
@@ -5685,3 +5722,4 @@ html {
     }
   }
 }
+

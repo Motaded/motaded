@@ -7,9 +7,10 @@ function articlePageEN() {
   let currentSection = null;
 
   headings.forEach((el) => {
+    
   const tag = el.tagName.toLowerCase();
 
-    if (tag === 'h2') {
+    if (el.textContent.trim() && tag === 'h2') {
       sectionCount++;
       subsectionCount = 0;
 
@@ -23,7 +24,7 @@ function articlePageEN() {
 
       result.push(currentSection);
     } 
-    else if (tag === 'h3' && currentSection) {
+    else if (el.textContent.trim() && tag === 'h3' && currentSection) {
       subsectionCount++;
 
       const subId = `sub-${sectionCount}-${subsectionCount}`;
