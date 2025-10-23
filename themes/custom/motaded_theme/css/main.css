@@ -70,13 +70,10 @@ html {
   outline-offset: 2px;
 }
 
-.views-exposed-form {
-
-}
 .view-news {
   .form--inline {
     display: flex;
-    flex: wrap;
+    flex-wrap: wrap;
   }
   .js-form-type-checkbox {
     @apply rounded-full border px-3 py-1.5 text-sm transition border-gray-300 text-gray-700 hover:bg-gray-50;
@@ -88,11 +85,11 @@ html {
     @apply border-[#006B44] text-[#006B44] bg-[#006B44]/10;
   }
   .form-actions {
-    @apply flex my-0;
+    @apply flex mb-0 sm:mt-0 ms-auto sm:ms-0;
     align-items: center;
   }
   input[name="reset"] {
-    @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 ml-0;
+    @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 mx-0;
   }
 }
 
@@ -227,3 +224,7 @@ html {
   display: flex;
   flex-wrap: wrap;
 }
+.lang-dropdown-select-element {
+  width: auto !important;
+}
+

@@ -47,7 +47,6 @@
 {%
   set classes = [
     'js-form-item',
-    'form-item',
     'js-form-type-' ~ type|clean_class,
     'form-type-' ~ type|clean_class,
     'js-form-item-' ~ name|clean_class,
@@ -55,7 +54,7 @@
     title_display not in ['after', 'before'] ? 'form-no-label',
     disabled == 'disabled' ? 'form-disabled',
     errors ? 'form-item--error',
-    'relative flex-1 min-w-[240px] max-w-[365px]'
+    'relative flex-1 min-w-[240px] max-w-[365px] sm:my-4 sm:mr-3',
   ]
 %}
 {%
