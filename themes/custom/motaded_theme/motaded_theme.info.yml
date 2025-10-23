@@ -31,8 +31,6 @@ libraries-override:
 generator: 'starterkit_theme:11.2.5'
 
 regions:
-  top_header: 'Top bar'
-  branding: Branding
   main_menu: 'Main menu'
   menu_mobile: 'Mobile menu'
   secondary_menu: "Secondary menu"
