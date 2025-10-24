@@ -73,7 +73,11 @@
 %}
 {{ attach_library('motaded_theme/node') }}
 {{ attach_library('motaded_theme/toc') }}
-<article{{ attributes.addClass(classes) }} id="toc-root">
+<article{{ attributes.addClass(classes) }} 
+    id="toc-root" 
+    x-data="articlePageEN()"
+    x-init="init()"
+    @keydown.escape.window="tocOpen=false">
 
   {{ title_prefix }}
   {% if label and not page %}

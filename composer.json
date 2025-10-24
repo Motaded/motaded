@@ -12,6 +12,18 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "noli42/chosen",
+                "version": "3.0.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/noli42/chosen/releases/download/3.0.0/chosen-assets-v3.0.0.zip",
+                    "type": "zip"
+                }
+            }
         }
     ],
     "require": {
@@ -21,6 +33,7 @@
         "drupal/backup_migrate": "^5.1",
         "drupal/better_exposed_filters": "^7.0",
         "drupal/bootstrap5": "^4.0",
+        "drupal/chosen": "^5.0",
         "drupal/ckeditor5_font": "^1.1@beta",
         "drupal/ckeditor_accordion": "^2.3",
         "drupal/ckeditor_responsive_table": "^1.0",
@@ -39,14 +52,17 @@
         "drupal/paragraphs": "^1.19",
         "drupal/pathauto": "^1.14",
         "drupal/recaptcha": "^3.4",
+        "drupal/recreate_block_content": "^3.0",
         "drupal/simple_sitemap": "^4.2",
         "drupal/smtp": "^1.4",
         "drupal/svg_image": "^3.2",
+        "drupal/token_filter": "^2.2",
         "drupal/tus": "^2.1",
         "drupal/twig_tweak": "^3.4",
         "drupal/webform": "^6.3@beta",
         "drush/drush": "^13.6",
-        "mglaman/composer-drupal-lenient": "^1.0"
+        "mglaman/composer-drupal-lenient": "^1.0",
+        "noli42/chosen": "3.0.0"
     },
     "conflict": {
         "drupal/drupal": "*"
