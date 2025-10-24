@@ -60,9 +60,6 @@
   <main 
     role="main"
     class="my-[40px] max-w-[1320px] mx-auto px-4"
-    x-data="articlePageEN()"
-    x-init="init()"
-    @keydown.escape.window="tocOpen=false"
   >
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
@@ -85,9 +82,10 @@
   </main>
 </div>
 
+<div id="site-footer">
+  
+</div>
 {% if page.footer %}
-  <footer role="contentinfo">
-    {{ page.footer }}
-  </footer>
+  {{ include('@motaded_theme/includes/footer.html.twig') }}
 {% endif %}
 
