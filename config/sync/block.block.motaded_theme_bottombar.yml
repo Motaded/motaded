@@ -1,0 +1,25 @@
+uuid: c6ed78b1-a68b-4b43-bae2-cd15b00e2616
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:51cbeca9-f651-4919-a5b3-fc282e63a267'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_bottombar
+theme: motaded_theme
+region: footer_bar
+weight: 0
+provider: null
+plugin: 'block_content:51cbeca9-f651-4919-a5b3-fc282e63a267'
+settings:
+  id: 'block_content:51cbeca9-f651-4919-a5b3-fc282e63a267'
+  label: 'Bottom bar'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }
