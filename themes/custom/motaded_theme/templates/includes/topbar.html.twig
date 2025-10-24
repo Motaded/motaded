@@ -7,7 +7,7 @@
     <!-- ROW -->
     <div class="flex justify-between items-center gap-3 flex-wrap">
       <!-- LEFT: flag + label + how to verify -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 hidden">
         <img
           alt="Saudi flag"
           width="32"
@@ -35,20 +35,20 @@
           </button>
         </div>
       </div>
+      <!-- Date -->
+      <div class="flex items-center gap-2">
+        <img
+          src="/themes/custom/motaded_theme/img/icon-calender.svg"
+          alt="calendar icon"
+          class="h-5 w-5"
+        />
+        <p class="text-sm font-normal black max-sm:!text-xs leading-[1.6] mb-0">
+          {{ "now"|date("l, F j, Y") }}
+        </p>
+      </div>
 
       <!-- RIGHT: date + a11y controls + beta -->
       <div class="flex items-center gap-3 flex-wrap">
-        <!-- Date -->
-        <div class="flex items-center gap-2">
-          <img
-            src="/themes/custom/motaded_theme/img/icon-calender.svg"
-            alt="calendar icon"
-            class="h-5 w-5"
-          />
-          <p class="text-sm font-normal black max-sm:!text-xs leading-[1.6] mb-0">
-            {{ "now"|date("l, F j, Y") }}
-          </p>
-        </div>
 
         <!-- A11y: increase font -->
         <div class="tooltip" data-tip="Increase font size">

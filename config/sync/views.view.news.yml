@@ -1933,7 +1933,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: combine
-          operator: word
+          operator: allwords
           value: ''
           group: 1
           exposed: true
@@ -2047,6 +2047,7 @@ display:
       defaults:
         query: false
         title: false
+        use_ajax: false
         pager: false
         exposed_form: false
         style: false
@@ -2066,6 +2067,7 @@ display:
           admin_label: 'field_media: Media'
           plugin_id: standard
           required: false
+      use_ajax: true
       header:
         area_text_custom:
           id: area_text_custom
@@ -2645,7 +2647,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: combine
-          operator: word
+          operator: allwords
           value: ''
           group: 1
           exposed: true
@@ -2758,6 +2760,7 @@ display:
       defaults:
         query: false
         title: false
+        use_ajax: false
         pager: false
         exposed_form: false
         style: false
@@ -2777,6 +2780,7 @@ display:
           admin_label: 'field_media: Media'
           plugin_id: standard
           required: false
+      use_ajax: true
       header:
         area_text_custom:
           id: area_text_custom
