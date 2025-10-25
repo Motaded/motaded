@@ -4,6 +4,7 @@ base:
     theme:
      dist/main.css:
         weight: -11
+     css/language-switcher.css: {}
     component:
       css/components/action-links.css:
         weight: -10
@@ -47,6 +48,8 @@ base:
         weight: -10
       css/components/ui-dialog.css:
         weight: -10
+  js:
+    js/lang-switcher.js: {}
 dialog:
   version: VERSION
   css:
