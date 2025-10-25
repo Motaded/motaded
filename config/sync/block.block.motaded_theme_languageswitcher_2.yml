@@ -1,0 +1,20 @@
+uuid: 8f722980-0a98-48c8-a1e6-f905f6a93b35
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+  theme:
+    - motaded_theme
+id: motaded_theme_languageswitcher_2
+theme: motaded_theme
+region: secondary_menu
+weight: 0
+provider: null
+plugin: 'language_block:language_interface'
+settings:
+  id: 'language_block:language_interface'
+  label: 'Language switcher'
+  label_display: '0'
+  provider: language
+visibility: {  }

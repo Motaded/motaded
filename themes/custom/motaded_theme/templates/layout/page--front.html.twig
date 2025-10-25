@@ -74,10 +74,12 @@
 
   </main>
 
-  {% if page.footer %}
-    <footer role="contentinfo">
-      {{ page.footer }}
-    </footer>
-  {% endif %}
+  <div id="site-footer">
+    {% if page.footer %}
+      {{ include('@motaded_theme/includes/footer.html.twig') }}
+    {% endif %}
+  </div>
+
+
 
 {#</div>{# /.layout-container #}
