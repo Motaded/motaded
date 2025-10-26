@@ -68,7 +68,7 @@
           {% set item_attributes = item_attributes.addClass('is-active') %}
         {% endif %} #}
 
-        <li{{ item.attributes }}>
+        <li{{ item.attributes.addClass('muin-language-switcher__item') }}>
           {% if item.link is defined %}
             {{ item.link }}
           {% elseif item.text_attributes is defined %}
