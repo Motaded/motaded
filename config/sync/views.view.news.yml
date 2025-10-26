@@ -1321,7 +1321,7 @@ display:
         - 'config:field.storage.node.body'
   page_1:
     id: page_1
-    display_title: Page
+    display_title: 'Blog page'
     display_plugin: page
     position: 1
     display_options:
@@ -1829,6 +1829,20 @@ display:
                 select_all_none: false
                 select_all_none_nested: false
                 display_inline: true
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: "<div\r\n    class=\"mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center\"\r\n    role=\"status\"\r\n>\r\n    <h2 class=\"text-xl font-semibold text-gray-900 m-0\">\r\n    No articles found\r\n    </h2>\r\n    <p class=\"text-sm text-gray-600 m-0\" x-data=\"{q : '[current-page:query:search]'}\">\r\n    <span>We couldn’t find any results</span>\r\n    <template x-if=\"q\">\r\n        <span>\r\n        for\r\n        <span class=\"font-medium text-primary-700\" x-text=\"'“' + q + '”'\"></span>\r\n        </span>\r\n    </template>\r\n    <span>matching your filters.</span>\r\n    </p>\r\n    <p class=\"text-xs text-gray-500 m-0\">\r\n    Try adjusting your search or clearing the filters to discover more articles.\r\n    </p>\r\n</div>"
+            format: full_html
+          tokenize: false
       filters:
         status:
           id: status
@@ -2045,6 +2059,7 @@ display:
           replica: false
           query_tags: {  }
       defaults:
+        empty: false
         query: false
         title: false
         use_ajax: false
@@ -2068,6 +2083,7 @@ display:
           plugin_id: standard
           required: false
       use_ajax: true
+      display_description: ''
       header:
         area_text_custom:
           id: area_text_custom
@@ -2098,7 +2114,7 @@ display:
         - 'config:field.storage.node.field_tags'
   page_2:
     id: page_2
-    display_title: Page
+    display_title: 'News page'
     display_plugin: page
     position: 1
     display_options:
@@ -2543,6 +2559,20 @@ display:
                 select_all_none: false
                 select_all_none_nested: false
                 display_inline: true
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: "<div\r\n    class=\"mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center\"\r\n    role=\"status\"\r\n>\r\n    <h2 class=\"text-xl font-semibold text-gray-900 m-0\">\r\n    No articles found\r\n    </h2>\r\n    <p class=\"text-sm text-gray-600 m-0\" x-data=\"{q : '[current-page:query:search]'}\">\r\n    <span>We couldn’t find any results</span>\r\n    <template x-if=\"q\">\r\n        <span>\r\n        for\r\n        <span class=\"font-medium text-primary-700\" x-text=\"'“' + q + '”'\"></span>\r\n        </span>\r\n    </template>\r\n    <span>matching your filters.</span>\r\n    </p>\r\n    <p class=\"text-xs text-gray-500 m-0\">\r\n    Try adjusting your search or clearing the filters to discover more articles.\r\n    </p>\r\n</div>"
+            format: full_html
+          tokenize: false
       filters:
         status:
           id: status
@@ -2758,6 +2788,7 @@ display:
           replica: false
           query_tags: {  }
       defaults:
+        empty: false
         query: false
         title: false
         use_ajax: false
@@ -2781,6 +2812,7 @@ display:
           plugin_id: standard
           required: false
       use_ajax: true
+      display_description: ''
       header:
         area_text_custom:
           id: area_text_custom
