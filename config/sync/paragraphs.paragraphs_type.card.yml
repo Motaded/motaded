@@ -1,0 +1,10 @@
+uuid: 1defec70-aee1-48b8-a6f8-e4e0d06d2984
+langcode: en
+status: true
+dependencies: {  }
+id: card
+label: Card
+icon_uuid: null
+icon_default: null
+description: 'Card component containing icon, title, body, link, and card related setting. An empty field will ignore form rendring'
+behavior_plugins: {  }

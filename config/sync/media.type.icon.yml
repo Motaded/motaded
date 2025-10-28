@@ -1,0 +1,16 @@
+uuid: 2799f76a-3395-47d8-a70e-38216498d5ed
+langcode: en
+status: true
+dependencies:
+  module:
+    - svg_image_field
+id: icon
+label: Icon
+description: 'Media type for svg icons'
+source: svg
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_svg
+field_map:
+  name: name
