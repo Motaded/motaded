@@ -1,0 +1,75 @@
+uuid: c1dbdfa9-df9e-49b0-a5df-d9676bcce865
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_paragraphs
+    - node.type.landing_page
+    - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.section
+  module:
+    - entity_reference_revisions
+id: node.landing_page.field_paragraphs
+field_name: field_paragraphs
+entity_type: node
+bundle: landing_page
+label: 'Page Sections'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      section: section
+      banner: banner
+    negate: 0
+    target_bundles_drag_drop:
+      advantages:
+        weight: -31
+        enabled: false
+      areas_of_work:
+        weight: -30
+        enabled: false
+      banner:
+        weight: -27
+        enabled: true
+      business_activity:
+        weight: -29
+        enabled: false
+      counter:
+        weight: -26
+        enabled: false
+      featured_card:
+        weight: -25
+        enabled: false
+      itc_card:
+        weight: -24
+        enabled: false
+      objectives:
+        weight: -23
+        enabled: false
+      pricing:
+        weight: -22
+        enabled: false
+      requirements:
+        weight: -21
+        enabled: false
+      section:
+        weight: -28
+        enabled: true
+      sectors:
+        weight: -20
+        enabled: false
+      steps_to_obtain:
+        weight: -19
+        enabled: false
+      top_information:
+        weight: -18
+        enabled: false
+      work_tracks:
+        weight: -17
+        enabled: false
+field_type: entity_reference_revisions

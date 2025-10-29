@@ -1,0 +1,76 @@
+uuid: e5d104cc-7dca-499a-9d4c-df6c62ace4e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_paragraphs
+    - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.card
+  module:
+    - entity_reference_revisions
+id: paragraph.banner.field_paragraphs
+field_name: field_paragraphs
+entity_type: paragraph
+bundle: banner
+label: Cards
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      card: card
+    negate: 0
+    target_bundles_drag_drop:
+      advantages:
+        weight: 17
+        enabled: false
+      areas_of_work:
+        weight: 18
+        enabled: false
+      banner:
+        weight: 19
+        enabled: false
+      business_activity:
+        weight: 20
+        enabled: false
+      card:
+        weight: 21
+        enabled: true
+      counter:
+        weight: 22
+        enabled: false
+      featured_card:
+        weight: 23
+        enabled: false
+      itc_card:
+        weight: 24
+        enabled: false
+      objectives:
+        weight: 25
+        enabled: false
+      pricing:
+        weight: 26
+        enabled: false
+      requirements:
+        weight: 27
+        enabled: false
+      section:
+        weight: 28
+        enabled: false
+      sectors:
+        weight: 29
+        enabled: false
+      steps_to_obtain:
+        weight: 30
+        enabled: false
+      top_information:
+        weight: 31
+        enabled: false
+      work_tracks:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions

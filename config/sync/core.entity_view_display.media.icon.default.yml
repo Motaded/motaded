@@ -1,0 +1,37 @@
+uuid: 2bf3b09e-e0da-4a1b-9201-11f970d69412
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.icon.field_media_svg
+    - media.type.icon
+  module:
+    - svg_image_field
+id: media.icon.default
+targetEntityType: media
+bundle: icon
+mode: default
+content:
+  field_media_svg:
+    type: svg_image_field_formatter
+    label: visually_hidden
+    settings:
+      inline: false
+      apply_dimensions: true
+      width: 32
+      height: 32
+      enable_alt: true
+      enable_title: true
+      link: ''
+      force_fill: false
+      sanitize: true
+      sanitize_remote: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  thumbnail: true
+  uid: true

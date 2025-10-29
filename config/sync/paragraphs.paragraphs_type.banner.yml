@@ -1,0 +1,10 @@
+uuid: 939a18c4-8dbf-44b7-89d4-9631e14d9990
+langcode: en
+status: true
+dependencies: {  }
+id: banner
+label: Banner
+icon_uuid: null
+icon_default: null
+description: 'Use for static page hero section'
+behavior_plugins: {  }
