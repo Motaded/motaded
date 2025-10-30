@@ -45,6 +45,7 @@
         "drupal/devel_debug_log": "^2.0",
         "drupal/easy_breadcrumb": "^2.0",
         "drupal/formdazzle": "^4.0",
+        "drupal/gin": "^5.0",
         "drupal/honeypot": "^2.2",
         "drupal/lang_dropdown": "^2.4",
         "drupal/like_dislike": "^2.4",

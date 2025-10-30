@@ -1,0 +1,24 @@
+uuid: da2a63b0-d435-4737-9a15-6904397f213e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - paragraphs.paragraphs_type.steps
+  module:
+    - text
+id: paragraph.steps.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: steps
+label: 'Section title'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+field_type: text_long
