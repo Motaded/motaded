@@ -1,0 +1,10 @@
+uuid: 47073cb6-968a-4d17-abf3-047e8860dafa
+langcode: en
+status: true
+dependencies: {  }
+id: steps
+label: Steps
+icon_uuid: null
+icon_default: null
+description: 'The component is container for steps which can have multiple step cards'
+behavior_plugins: {  }

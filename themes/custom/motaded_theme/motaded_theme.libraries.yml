@@ -135,3 +135,10 @@ quick-links:
   header: true
   js:
     js/quick-links.js: {}
+steps:
+  header: true
+  js:
+    js/steps.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
