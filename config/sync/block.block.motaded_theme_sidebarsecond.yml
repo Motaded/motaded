@@ -1,24 +1,24 @@
-uuid: 688b3b0b-1846-42cb-b070-b0f7fba82cc8
+uuid: e10bc874-f906-41cb-b85d-80c0f4921f3c
 langcode: en
-status: false
+status: true
 dependencies:
   content:
-    - 'block_content:basic:37737e85-30b7-43bd-b301-bf4aa35afee3'
+    - 'block_content:basic:dda68766-7ca0-4c09-bde4-dc95c9e90f33'
   module:
     - block_content
     - node
   theme:
     - motaded_theme
-id: motaded_theme_contactusbutton
+id: motaded_theme_sidebarsecond
 theme: motaded_theme
-region: content
-weight: -12
+region: sidebar_second
+weight: 0
 provider: null
-plugin: 'block_content:37737e85-30b7-43bd-b301-bf4aa35afee3'
+plugin: 'block_content:dda68766-7ca0-4c09-bde4-dc95c9e90f33'
 settings:
-  id: 'block_content:37737e85-30b7-43bd-b301-bf4aa35afee3'
-  label: 'Contact Us Button'
-  label_display: '0'
+  id: 'block_content:dda68766-7ca0-4c09-bde4-dc95c9e90f33'
+  label: 'Sidebar Second'
+  label_display: visible
   provider: block_content
   status: true
   info: ''
@@ -30,4 +30,4 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
-      article: article
+      page: page

@@ -12,7 +12,7 @@ id: node.page.field_top_overview_section
 field_name: field_top_overview_section
 entity_type: node
 bundle: page
-label: 'Top Overview Section'
+label: 'Service snapshot'
 description: ''
 required: false
 translatable: false
@@ -25,11 +25,20 @@ settings:
       top_information: top_information
     negate: 0
     target_bundles_drag_drop:
+      advantages:
+        weight: 17
+        enabled: false
       areas_of_work:
         weight: 10
         enabled: false
+      banner:
+        weight: 19
+        enabled: false
       business_activity:
         weight: 11
+        enabled: false
+      card:
+        weight: 21
         enabled: false
       counter:
         weight: 12
@@ -42,6 +51,18 @@ settings:
         enabled: false
       objectives:
         weight: 15
+        enabled: false
+      pricing:
+        weight: 26
+        enabled: false
+      requirements:
+        weight: 27
+        enabled: false
+      section:
+        weight: 28
+        enabled: false
+      sectors:
+        weight: 29
         enabled: false
       steps_to_obtain:
         weight: 16

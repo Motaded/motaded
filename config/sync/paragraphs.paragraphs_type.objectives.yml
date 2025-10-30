@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: objectives
-label: Objectives
+label: 'Card icon top left'
 icon_uuid: null
 icon_default: null
 description: ''

@@ -1,0 +1,226 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: (optional) The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - date: (optional) Themed creation date field.
+ * - author_name: (optional) Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ *
+ * @see template_preprocess_node()
+ *
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{{ attach_library('motaded_theme/node') }}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  <div class="flex relative flex-col gap-4 items-start self-stretch">
+    <!-- Content Header -->
+    <div class="flex relative gap-8 items-end self-stretch max-md:flex-col max-md:gap-4 max-md:items-start max-sm:gap-3">
+      <!-- Title Section -->
+      <div class="flex relative flex-col gap-2 items-start flex-[1_0_0]">
+        <!-- Page Title -->
+        <h1 class="relative self-stretch text-3xl font-bold leading-10 text-neutral-900 max-sm:text-2xl max-sm:leading-8 !pt-0">
+          {{ label }}
+        </h1>
+      </div>
+      <!-- CTA Button -->
+      <a
+        class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start"
+        href="{{ content.field_free_consultation.0['#url']|render }}"
+      >
+        <span class="relative text-base font-medium leading-6 text-white"
+          >{{ content.field_free_consultation.0['#title'] }}</span
+        >
+      </a>
+    </div>
+
+    <!-- Service Tags -->
+    <div class="flex relative gap-2 items-start max-sm:flex-wrap">
+      {% set color_pairs = {
+        'sky': 'text-blue-800',
+        'emerald': 'text-emerald-800',
+        'gray': 'text-gray-800',
+      } %}
+      {% set keys = color_pairs|keys %}
+      {% for i in content.field_tags['#items']|keys %}
+        {% set random_key = random(keys) %}
+        <span class="flex relative gap-1 justify-center items-center px-2 h-6 bg-{{ random_key }}-50 rounded border border-{{ random_key }}-200">
+          <span class="relative text-xs font-medium leading-5 {{ color_pairs[random_key] }}">{{ content.field_tags[i]["#plain_text"] }}</span>
+        </span>
+      {% endfor %}
+    </div>
+  </div>
+  {{ title_suffix }}
+
+  <!-- Overview -->
+  <article class="flex flex-col gap-4 items-start self-stretch bg-white border border-gray-200 rounded-2xl p-8  mt-12">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700">
+        {{ "Overview"|t }}
+      </span>
+    </div>
+    <p class="text-base leading-6 text-neutral-900">
+      {{ summary }}
+    </p>
+  </article>
+
+  <!-- Service Snapshot -->
+  {% if content.field_top_overview_section %}
+    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+      <div class="flex items-center gap-3 self-stretch">
+        <span
+          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+        >
+          {{ content.field_top_overview_section['#title'] }}
+        </span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+      <div class="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {% for i in content.field_top_overview_section['#items']|keys %}
+          {{ content.field_top_overview_section[i] }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Objectives -->
+  {% if content.field_objectives %}
+    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+      <div class="flex items-center gap-3 self-stretch">
+        <span
+          class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+        >
+          {{ content.field_objectives['#title'] }}
+        </span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+      <div class="grid w-full gap-6 sm:grid-cols-2">
+        {% for i in content.field_objectives['#items']|keys %}
+          {{ content.field_objectives[i] }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Work Tracks -->
+  {% if content.field_work_tracks %}
+    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+      <div class="flex items-center gap-3 self-stretch">
+        <span
+          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+        >
+          {{ content.field_work_tracks['#title'] }}
+        </span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+      <div class="grid w-full gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {% for i in content.field_work_tracks['#items']|keys %}
+          {{ content.field_work_tracks[i] }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Steps to Obtain -->
+  {% if content.field_steps_to_obtain %}
+    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+      <div class="flex items-center gap-3 self-stretch">
+        <span
+          class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+        >
+          {{ content.field_steps_to_obtain['#title'] }}
+        </span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+      <div class="grid w-full gap-6 md:grid-cols-3">
+        {% for i in content.field_steps_to_obtain['#items']|keys %}
+          {{ content.field_steps_to_obtain[i] }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Areas of Work -->
+  {% if content.field_areas_of_work %}
+    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+      <div class="flex items-center gap-3 self-stretch">
+        <span
+          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+        >
+          {{ content.field_areas_of_work['#title'] }}
+        </span>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+      <div class="grid w-full gap-6 md:grid-cols-3">
+        {% for i in content.field_areas_of_work['#items']|keys %}
+          {{ content.field_areas_of_work[i] }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <div{{ content_attributes.addClass('node__content') }}>
+    {# {{ content|without('body', 'field_top_overview_section', 'field_objectives', 'field_work_tracks', 'field_steps_to_obtain') }} #}
+  </div>
+
+</article>
