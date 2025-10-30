@@ -43,6 +43,15 @@ function motaded_theme_preprocess_node(&$variables) {
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
     $variables['summary'] = ['#markup' => $variables['node']->body->summary];
   }
+
+  // Add step numbers to field_steps_to_obtain items.
+  if ($node->bundle() == 'page' && !empty($variables['content']['field_steps_to_obtain'])) {
+    foreach ($variables['content']['field_steps_to_obtain'] as $i => &$item) {
+      if (is_numeric($i)) {
+        $item['#number'] = $i;
+      }
+    }
+  }
 }
 
 /**

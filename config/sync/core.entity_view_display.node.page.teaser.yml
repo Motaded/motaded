@@ -27,6 +27,7 @@ dependencies:
     - field.field.node.page.field_phone_number
     - field.field.node.page.field_requirements
     - field.field.node.page.field_steps_to_obtain
+    - field.field.node.page.field_tags
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -47,6 +48,14 @@ content:
       trim_length: 600
     third_party_settings: {  }
     weight: 100
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 10
     region: content
   links:
     weight: 101
