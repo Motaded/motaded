@@ -1,0 +1,10 @@
+uuid: 23061285-6912-462b-88f3-80fea4eba93d
+langcode: en
+status: true
+dependencies: {  }
+id: step
+label: Step
+icon_uuid: null
+icon_default: null
+description: 'A single slide for steps container'
+behavior_plugins: {  }

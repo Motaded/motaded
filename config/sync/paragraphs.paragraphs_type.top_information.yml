@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: top_information
-label: 'Top Information'
+label: 'Card icon tiny'
 icon_uuid: null
 icon_default: null
 description: 'Display Basic pages overview top information'
