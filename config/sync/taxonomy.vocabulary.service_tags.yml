@@ -1,0 +1,9 @@
+uuid: 62de86d2-fdd7-4386-b63f-8fdd4a82042b
+langcode: en
+status: true
+dependencies: {  }
+name: 'Service tags'
+vid: service_tags
+description: null
+weight: 0
+new_revision: false

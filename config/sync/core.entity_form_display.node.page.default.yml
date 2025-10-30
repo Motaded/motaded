@@ -26,6 +26,7 @@ dependencies:
     - field.field.node.page.field_phone_number
     - field.field.node.page.field_requirements
     - field.field.node.page.field_steps_to_obtain
+    - field.field.node.page.field_tags
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -48,7 +49,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 14
+    weight: 2
     region: content
     settings:
       rows: 9
@@ -58,212 +59,11 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_advantages:
-    type: paragraphs
-    weight: 31
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_areas_of_work:
-    type: paragraphs
-    weight: 22
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_basic_paragraphs:
-    type: paragraphs
-    weight: 18
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_comments:
-    type: comment_default
-    weight: 29
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_default_page:
-    type: boolean_checkbox
-    weight: 30
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_display_on_services:
-    type: boolean_checkbox
-    weight: 26
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_document:
-    type: media_library_widget
-    weight: 13
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_download_user_guides:
-    type: media_library_widget
-    weight: 12
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_email_address:
-    type: string_textfield
-    weight: 11
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_form:
-    type: webform_entity_reference_select
-    weight: 25
-    region: content
-    settings:
-      default_data: true
-      webforms: {  }
-    third_party_settings: {  }
-  field_free_consultation:
-    type: link_default
-    weight: 15
-    region: content
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-  field_icon:
-    type: media_library_widget
-    weight: 27
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_itc_card_for_services:
-    type: paragraphs
-    weight: 19
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_keywords:
-    type: text_textarea_with_summary
-    weight: 24
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-  field_like_dislike:
-    type: like_dislike_widget
-    weight: 28
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_media:
-    type: media_library_widget
-    weight: 1
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_media_video:
-    type: media_library_widget
-    weight: 17
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
-  field_meta_tags:
-    type: metatag_firehose
-    weight: 33
-    region: content
-    settings:
-      sidebar: true
-      use_details: true
-    third_party_settings: {  }
-  field_objectives:
-    type: paragraphs
-    weight: 20
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: ''
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: duplicate
-    third_party_settings: {  }
-  field_phone_number:
-    type: string_textfield
-    weight: 10
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_requirements:
     type: paragraphs
     weight: 32
     region: content
@@ -281,9 +81,114 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-  field_steps_to_obtain:
+  field_areas_of_work:
     type: paragraphs
-    weight: 23
+    weight: 7
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: areas_of_work
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_basic_paragraphs:
+    type: paragraphs
+    weight: 8
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_comments:
+    type: comment_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_default_page:
+    type: boolean_checkbox
+    weight: 31
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_display_on_services:
+    type: boolean_checkbox
+    weight: 27
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_document:
+    type: media_library_widget
+    weight: 20
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_download_user_guides:
+    type: media_library_widget
+    weight: 19
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_email_address:
+    type: string_textfield
+    weight: 18
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_form:
+    type: webform_entity_reference_select
+    weight: 26
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
+  field_free_consultation:
+    type: link_default
+    weight: 21
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_icon:
+    type: media_library_widget
+    weight: 28
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_itc_card_for_services:
+    type: paragraphs
+    weight: 24
     region: content
     settings:
       title: Paragraph
@@ -299,9 +204,75 @@ content:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
     third_party_settings: {  }
-  field_top_overview_section:
+  field_keywords:
+    type: text_textarea_with_summary
+    weight: 25
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_like_dislike:
+    type: like_dislike_widget
+    weight: 29
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 14
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_media_video:
+    type: media_library_widget
+    weight: 23
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_meta_tags:
+    type: metatag_firehose
+    weight: 35
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
+    third_party_settings: {  }
+  field_objectives:
     type: paragraphs
-    weight: 9
+    weight: 4
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: objectives
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_phone_number:
+    type: string_textfield
+    weight: 16
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_requirements:
+    type: paragraphs
+    weight: 33
     region: content
     settings:
       title: Paragraph
@@ -315,56 +286,118 @@ content:
       default_paragraph_type: ''
       features:
         collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_steps_to_obtain:
+    type: paragraphs
+    weight: 6
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: steps_to_obtain
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_tags:
+    type: entity_reference_autocomplete
+    weight: 34
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_top_overview_section:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: top_information
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
         duplicate: duplicate
     third_party_settings: {  }
   field_work_tracks:
     type: paragraphs
-    weight: 21
+    weight: 5
     region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
-      edit_mode: open
+      edit_mode: closed
       closed_mode: summary
       autocollapse: none
       closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: work_tracks
       features:
+        add_above: '0'
         collapse_edit_all: collapse_edit_all
+        convert: '0'
         duplicate: duplicate
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 1
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 6
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  simple_sitemap:
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap_index_now:
+    weight: 36
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 16
+    weight: 22
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 7
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -378,13 +411,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
   translation:
-    weight: 5
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
