@@ -9,7 +9,7 @@ _core:
 id: motaded_theme_local_tasks
 theme: motaded_theme
 region: content
-weight: -18
+weight: -21
 provider: null
 plugin: local_tasks_block
 settings:

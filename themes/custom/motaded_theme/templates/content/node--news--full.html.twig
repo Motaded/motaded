@@ -109,13 +109,21 @@
     </div>
   </section>
 
-  <section class="py-8 prose prose-neutral max-w-none">
+  <section class="pt-8 prose prose-neutral max-w-none">
     <div class="max-w-[1320px] mx-auto">
       <div{{ content_attributes.addClass('node__content') }}>
         {{ content }}
       </div>
     </div>
+      <!-- Back to top (anchor) -->
+  <div class="mt-10">
+    <a
+      href="#top"
+      class="inline-flex items-center gap-2 text-sm underline underline-offset-2 text-gray-700 hover:text-gray-900"
+    >
+      {{ "Back to top"|t }}
+    </a>
+  </div>
   </section>
-
 
 </article>
