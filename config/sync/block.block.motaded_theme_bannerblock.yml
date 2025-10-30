@@ -1,6 +1,6 @@
 uuid: d2ed72c0-d470-410b-812a-9c7930e2ecb7
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - language
@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_bannerblock
 theme: motaded_theme
 region: content
-weight: -16
+weight: -19
 provider: null
 plugin: banner_block
 settings:

@@ -42,6 +42,16 @@
  * @see html.html.twig
  */
 #}
+{% set main_classes = [
+  "pb-[40px] max-w-[1320px] mx-auto px-4",
+  page.sidebar_second ? 'flex relative gap-8 items-start self-stretch max-md:flex-col max-md:gap-10 max-md:px-10 max-md:py-8 max-sm:gap-8 max-sm:px-4 max-sm:py-6' : 'mt-[40px]',
+  ] %}
+
+{% set content_wrapper_classes = [
+  'layout-content',
+  page.sidebar_second ? 'flex relative flex-col gap-16 items-start w-[832px] max-md:w-full' : '',
+] %}
+
 <div id="site-topbar">
   {{ include('@motaded_theme/includes/topbar.html.twig') }}
 </div>
@@ -56,14 +66,11 @@
   </div>
 {% endif %}
 
-<div class="main-wrapper bg-white">
-  <main 
-    role="main"
-    class="mt-[40px] pb-[40px] max-w-[1320px] mx-auto px-4"
-  >
-    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+<div class="main-wrapper {{ node and node.type.value[0]["target_id"] == 'page' ? 'bg-gray-50' : 'bg-white'}}">
+  <main role="main" class="{{ main_classes|join(' ') }}">
+    <a id="main-content" class="visually-hidden" tabindex="-1"></a>{# link is in html.html.twig #}
 
-    <div class="layout-content">
+    <div class="{{ content_wrapper_classes|join(' ') }}">
       {{ page.content }}
     </div>{# /.layout-content #}
 
@@ -74,13 +81,20 @@
     {% endif %}
 
     {% if page.sidebar_second %}
-      <aside class="layout-sidebar-second" role="complementary">
+      <aside class="layout-sidebar-second flex relative flex-col gap-6 items-start p-10 bg-white rounded-2xl border border-gray-300 border-solid w-[416px] max-md:w-full max-sm:p-6" role="complementary">
         {{ page.sidebar_second }}
       </aside>
     {% endif %}
 
   </main>
 </div>
+{% if page.below_content %}
+  <div class="below-content-wrapper ">
+    <div class="max-w-[1320px] mx-auto px-4">
+      {{ page.below_content }}
+    </div>
+  </div>
+{% endif %}
 
 <div id="site-footer">
   {% if page.footer %}
