@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_paragraphs
+    - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.steps
   module:
@@ -12,7 +14,7 @@ id: paragraph.section.field_paragraphs
 field_name: field_paragraphs
 entity_type: paragraph
 bundle: section
-label: Cards
+label: 'Section components'
 description: ''
 required: false
 translatable: false
@@ -22,61 +24,69 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
+      banner_sm: banner_sm
       steps: steps
+      featured_contents: featured_contents
     negate: 0
     target_bundles_drag_drop:
       advantages:
-        weight: 17
+        weight: -41
         enabled: false
       areas_of_work:
-        weight: 18
+        weight: -40
         enabled: false
       banner:
-        weight: 19
+        weight: -39
         enabled: false
+      banner_sm:
+        weight: -35
+        enabled: true
       business_activity:
-        weight: 20
+        weight: -38
         enabled: false
       card:
-        weight: 21
+        weight: -37
         enabled: false
       counter:
-        weight: 22
+        weight: -36
         enabled: false
       featured_card:
-        weight: 23
+        weight: -31
         enabled: false
+      featured_contents:
+        weight: -32
+        enabled: true
       itc_card:
-        weight: 24
+        weight: -30
         enabled: false
       objectives:
-        weight: 25
+        weight: -29
         enabled: false
       pricing:
-        weight: 26
+        weight: -28
         enabled: false
       requirements:
-        weight: 27
+        weight: -27
         enabled: false
       section:
-        weight: 28
+        weight: -26
         enabled: false
       sectors:
-        weight: 29
+        weight: -25
         enabled: false
       step:
-        weight: 32
+        weight: -33
         enabled: false
       steps:
-        weight: 33
+        weight: -34
         enabled: true
       steps_to_obtain:
-        weight: 30
+        weight: -24
         enabled: false
       top_information:
-        weight: 31
+        weight: -23
         enabled: false
       work_tracks:
-        weight: 32
+        weight: -22
         enabled: false
 field_type: entity_reference_revisions
