@@ -1,0 +1,33 @@
+uuid: fa972f0e-e24e-4a25-ad5b-7e0d6fe0d35b
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_bg_color
+field_name: field_bg_color
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: amber
+      label: Amber
+    -
+      value: green
+      label: Green
+    -
+      value: blue
+      label: Blue
+    -
+      value: purple
+      label: Purple
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,10 @@
+uuid: 281ce3aa-7b54-4fc1-bcf7-58787078c4d4
+langcode: en
+status: true
+dependencies: {  }
+id: banner_sm
+label: Banner
+icon_uuid: null
+icon_default: null
+description: 'Banner show image and contents in two columns with settings to left and right align the image.'
+behavior_plugins: {  }
