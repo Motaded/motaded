@@ -7,3 +7,8 @@ featured_card_page:
   dependencies:
     - core/drupal
     - core/jquery
+
+gin-custom:
+  css:
+    component:
+      css/gin-custom.css: {}
