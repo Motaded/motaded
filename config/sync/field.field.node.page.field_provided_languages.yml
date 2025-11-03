@@ -1,0 +1,19 @@
+uuid: fa34374f-b4e3-4bda-b2c4-2afed8e4fa33
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_provided_languages
+    - node.type.page
+id: node.page.field_provided_languages
+field_name: field_provided_languages
+entity_type: node
+bundle: page
+label: 'Provided languages'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
