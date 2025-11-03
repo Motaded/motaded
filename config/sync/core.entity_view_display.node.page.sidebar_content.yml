@@ -1,9 +1,9 @@
-uuid: 769138b6-afed-4820-89b8-8c0d8f97e4dc
+uuid: 9d107403-7ef0-42ad-b49d-0c50b8fa5008
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.sidebar_content
     - field.field.node.page.body
     - field.field.node.page.field_advantages
     - field.field.node.page.field_areas_of_work
@@ -38,44 +38,98 @@ dependencies:
     - field.field.node.page.field_work_tracks
     - node.type.page
   module:
-    - text
     - user
 _core:
-  default_config_hash: 8BgdRtLbtQ0F__o0FHSH0Mx5fvXOra9tfT1GmNKbRYw
-id: node.page.teaser
+  default_config_hash: M_Y8L5tfmhx7DR143E05YyZSpvgil6VFvqcfBWykalg
+id: node.page.sidebar_content
 targetEntityType: node
 bundle: page
-mode: teaser
+mode: sidebar_content
 content:
-  body:
-    type: text_summary_or_trimmed
-    label: hidden
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    weight: 100
-    region: content
-  field_tags:
+  field_document:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 8
     region: content
-  links:
-    weight: 101
+  field_download_user_guides:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_email_address:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_payment_options:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_phone_number:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_provided_languages:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_service_channels:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_service_cost:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_service_duration:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_target_audience:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
+  body: true
   field_advantages: true
   field_areas_of_work: true
   field_basic_paragraphs: true
   field_comments: true
   field_default_page: true
   field_display_on_services: true
-  field_document: true
-  field_download_user_guides: true
-  field_email_address: true
   field_form: true
   field_free_consultation: true
   field_icon: true
@@ -86,15 +140,10 @@ hidden:
   field_media_video: true
   field_meta_tags: true
   field_objectives: true
-  field_payment_options: true
-  field_phone_number: true
-  field_provided_languages: true
   field_requirements: true
-  field_service_channels: true
-  field_service_cost: true
-  field_service_duration: true
   field_steps_to_obtain: true
-  field_target_audience: true
+  field_tags: true
   field_top_overview_section: true
   field_work_tracks: true
   langcode: true
+  links: true

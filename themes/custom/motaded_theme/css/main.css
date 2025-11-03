@@ -231,3 +231,46 @@ html {
   @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5;
 }
 
+/* =========================
+   Styling the output of existing accordion module
+   ========================= */
+.faqs .field--name-field-keywords > h2 {
+  display: none;
+}
+.ckeditor-accordion-container {
+  dl {
+    border: none;
+  }
+  dt {
+    @apply rounded-2xl border border-gray-200 mb-6 bg-white;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    
+  }
+  dt.active {
+    @apply mb-0;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: 0;
+    .ckeditor-accordion-toggle {
+      top: calc(50% + 7px);
+    }
+  }
+  dt > a {
+    @apply !text-neutral-900 font-semibold;
+    background: none !important;
+    border: none !important;
+  }
+  .ckeditor-accordion-toggle::before,
+  .ckeditor-accordion-toggle::after {
+    /* @apply !bg-neutral-900; */
+    background: #000 !important;
+  }
+  dd {
+    @apply rounded-2xl border border-gray-200 !mb-6 text-sm leading-5 text-gray-700 bg-white;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

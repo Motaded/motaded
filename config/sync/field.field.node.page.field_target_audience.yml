@@ -1,0 +1,19 @@
+uuid: 9cb2b8fb-4b5a-4807-855d-aa46a66df46f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_target_audience
+    - node.type.page
+id: node.page.field_target_audience
+field_name: field_target_audience
+entity_type: node
+bundle: page
+label: 'Target audience'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

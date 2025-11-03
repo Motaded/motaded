@@ -1,0 +1,19 @@
+uuid: a15725d0-811a-4402-9da9-56f343e3faa2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_duration
+    - node.type.page
+id: node.page.field_service_duration
+field_name: field_service_duration
+entity_type: node
+bundle: page
+label: 'Service duration'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
