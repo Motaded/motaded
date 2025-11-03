@@ -9,6 +9,8 @@ additional_fqdns: []
 database:
     type: mariadb
     version: "10.11"
+bind_all_interfaces: true
+host_webserver_port: "8087"
 use_dns_when_possible: true
 composer_version: "2"
 web_environment: []
