@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: business_activity
-label: 'ITC Paragraph'
+label: 'Media card'
 icon_uuid: null
 icon_default: null
 description: ''

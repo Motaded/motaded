@@ -1,0 +1,11 @@
+uuid: ab4f8a39-6604-4496-8e77-73e3abfa4c37
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.sidebar_content
+label: 'Sidebar content'
+description: 'Mainly created for Basic page(Services) sidbar but can be configured and used by all content types.'
+targetEntityType: node
+cache: true
