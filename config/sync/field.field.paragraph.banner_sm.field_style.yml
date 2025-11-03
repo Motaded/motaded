@@ -1,0 +1,21 @@
+uuid: f06b658c-be9f-4e9e-8d7e-7aa9fc81128f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_style
+    - paragraphs.paragraphs_type.banner_sm
+  module:
+    - options
+id: paragraph.banner_sm.field_style
+field_name: field_style
+entity_type: paragraph
+bundle: banner_sm
+label: 'Image position'
+description: 'default is image righ'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
