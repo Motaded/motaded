@@ -13,4 +13,14 @@ function motaded_custom_theme() {
   ];
 }
 
+/**
+ * Implements hook_page_attachments()
+ */
+function motaded_custom_page_attachments(array &$attachments) {
+  // Check if we are on node edit form.
+  if (in_array(\Drupal::routeMatch()->getRouteName(), ['entity.node.edit_form', 'node.add'])) {
+    $attachments['#attached']['library'][] = 'motaded_custom/gin-custom';
+  }
+}
+
 
