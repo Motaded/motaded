@@ -1,0 +1,19 @@
+uuid: e5f1c05a-33de-46e6-a4d7-9eab3152cd2f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_payment_options
+    - node.type.page
+id: node.page.field_payment_options
+field_name: field_payment_options
+entity_type: node
+bundle: page
+label: 'Payment options'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

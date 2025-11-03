@@ -1,8 +1,12 @@
+{% if view_link %}
 <a
   href="{{ view_link }}"
   class="block group"
   aria-label="Read article"
 >
+{% else %}
+<div class="block group">
+{% endif %}
   <div
     class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm transition hover:shadow-md h-full flex flex-col"
   >
@@ -30,9 +34,13 @@
               <p class="mt-4 mb-0 text-xs text-gray-500">{{ date }}</p>
               <span class="mt-4 inline-block text-sm font-medium text-primary-600 group-hover:underline">{{ "Read More →"|t }}</span>
           </div>
-        {% else %}
+        {% elseif view_link %}
           <span class="mt-4 inline-block text-sm font-medium text-primary-600 group-hover:underline">{{ "Read More →"|t }}</span>
         {% endif %}
     </div>
   </div>
+{% if view_link %}
 </a>
+{% else %}
+</div>
+{% endif %}
