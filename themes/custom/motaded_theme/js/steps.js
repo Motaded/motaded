@@ -2,9 +2,6 @@
 // Steps JS functionality.
 // Data from drupalSettings via preprocess function in motaded_theme.theme.
 const data = drupalSettings.motaded_theme?.data;
-console.log(drupalSettings.motaded_theme.steps);
-
-
 function newsCarousel() {
 
   return {

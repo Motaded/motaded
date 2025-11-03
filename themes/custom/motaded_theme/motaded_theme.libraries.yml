@@ -142,3 +142,7 @@ steps:
   dependencies:
     - core/drupal
     - core/drupalSettings
+partner-carousel:
+  header: true
+  js:
+    js/partner-carousel.js: {}

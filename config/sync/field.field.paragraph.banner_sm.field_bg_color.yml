@@ -1,0 +1,21 @@
+uuid: 6ccf15f8-c1f9-4b2f-8f85-3bac162e60f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bg_color
+    - paragraphs.paragraphs_type.banner_sm
+  module:
+    - options
+id: paragraph.banner_sm.field_bg_color
+field_name: field_bg_color
+entity_type: paragraph
+bundle: banner_sm
+label: 'BG gradient color'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

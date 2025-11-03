@@ -1,0 +1,19 @@
+uuid: c91a83c5-d10c-408b-9747-06f5d98ed90d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.banner_sm
+id: paragraph.banner_sm.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: banner_sm
+label: Title
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
