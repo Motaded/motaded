@@ -42,9 +42,9 @@
   {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
 {% endif %}
 {% block paragraph %}
-  {{ include('motaded_theme:icon-card-tiny', {
-      desc: content.field_content.0,
-      icon_url: field_media,
-      icon_position: 'topLeft',
-    }, with_context = false) }}
+  {{ include("motaded_theme:article-card", {
+    'title': content.field_title.0,
+    'media_url': field_media,
+    'excerpt': content.field_content.0
+  }) }}
 {% endblock paragraph %}
