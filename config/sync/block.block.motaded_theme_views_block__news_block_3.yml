@@ -1,0 +1,33 @@
+uuid: 464f8cab-db9f-4895-b1c0-b21848a5ced1
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.news
+  module:
+    - node
+    - views
+  theme:
+    - motaded_theme
+id: motaded_theme_views_block__news_block_3
+theme: motaded_theme
+region: below_content
+weight: -19
+provider: null
+plugin: 'views_block:news-block_3'
+settings:
+  id: 'views_block:news-block_3'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: null
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      news: news

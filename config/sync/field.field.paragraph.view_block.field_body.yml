@@ -1,0 +1,26 @@
+uuid: 81218156-90bd-46f5-988a-c8cf2a1a8bb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.view_block
+  module:
+    - text
+id: paragraph.view_block.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: view_block
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - full_html
+field_type: text_long

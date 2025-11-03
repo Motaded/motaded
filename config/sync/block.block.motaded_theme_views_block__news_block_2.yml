@@ -11,8 +11,8 @@ dependencies:
     - motaded_theme
 id: motaded_theme_views_block__news_block_2
 theme: motaded_theme
-region: content
-weight: -10
+region: below_content
+weight: -20
 provider: null
 plugin: 'views_block:news-block_2'
 settings:

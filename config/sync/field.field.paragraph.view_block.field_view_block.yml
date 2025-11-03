@@ -1,0 +1,30 @@
+uuid: 3cdd94a4-a293-48b5-840b-ed8e90f0d5c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_view_block
+    - paragraphs.paragraphs_type.view_block
+  module:
+    - viewsreference
+id: paragraph.view_block.field_view_block
+field_name: field_view_block
+entity_type: paragraph
+bundle: view_block
+label: 'View block'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:view'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+  plugin_types:
+    block: block
+  preselect_views:
+    partners: partners
+  enabled_settings: {  }
+field_type: viewsreference
