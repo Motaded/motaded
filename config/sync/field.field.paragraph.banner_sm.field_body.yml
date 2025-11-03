@@ -1,0 +1,26 @@
+uuid: d950cb39-69a6-4f8b-98a4-bcadedb967bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.banner_sm
+  module:
+    - text
+id: paragraph.banner_sm.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: banner_sm
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - plain_text
+field_type: text_long

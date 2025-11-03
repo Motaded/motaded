@@ -1,0 +1,19 @@
+uuid: 7338b8ab-a744-40ee-9563-7cccb692dffd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_cost
+    - node.type.page
+id: node.page.field_service_cost
+field_name: field_service_cost
+entity_type: node
+bundle: page
+label: 'Service cost'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

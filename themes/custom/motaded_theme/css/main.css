@@ -75,6 +75,10 @@ html {
     display: flex;
     flex-wrap: wrap;
   }
+  .js-form-type-textfield label,
+  legend .fieldset-legend {
+    @apply font-medium text-gray-700;
+  }
   .js-form-type-checkbox {
     @apply rounded-full border px-3 py-1.5 text-sm transition border-gray-300 text-gray-700 hover:bg-gray-50;
     input {
@@ -90,6 +94,17 @@ html {
   }
   input[name="reset"] {
     @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 mx-0;
+  }
+}
+.view-display-id-page_1 {
+  .js-form-type-textfield label ~ img.absolute {
+    --tw-translate-y: 0 !important
+  }
+  .form-actions {
+    margin-left: auto;
+  }
+  .js-form-item-search {
+    margin: 0;
   }
 }
 
@@ -230,4 +245,52 @@ html {
 .region.region-footer {
   @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5;
 }
+body.path-services {
+  .ajax-progress-fullscreen {
+    display: none;
+  }
+}
 
+/* =========================
+   Styling the output of existing accordion module
+   ========================= */
+.faqs .field--name-field-keywords > h2 {
+  display: none;
+}
+.ckeditor-accordion-container {
+  dl {
+    border: none;
+  }
+  dt {
+    @apply rounded-2xl border border-gray-200 mb-6 bg-white;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    
+  }
+  dt.active {
+    @apply mb-0;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: 0;
+    .ckeditor-accordion-toggle {
+      top: calc(50% + 7px);
+    }
+  }
+  dt > a {
+    @apply !text-neutral-900 font-semibold;
+    background: none !important;
+    border: none !important;
+  }
+  .ckeditor-accordion-toggle::before,
+  .ckeditor-accordion-toggle::after {
+    /* @apply !bg-neutral-900; */
+    background: #000 !important;
+  }
+  dd {
+    @apply rounded-2xl border border-gray-200 !mb-6 text-sm leading-5 text-gray-700 bg-white;
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

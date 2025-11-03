@@ -24,10 +24,16 @@ dependencies:
     - field.field.node.page.field_media_video
     - field.field.node.page.field_meta_tags
     - field.field.node.page.field_objectives
+    - field.field.node.page.field_payment_options
     - field.field.node.page.field_phone_number
+    - field.field.node.page.field_provided_languages
     - field.field.node.page.field_requirements
+    - field.field.node.page.field_service_channels
+    - field.field.node.page.field_service_cost
+    - field.field.node.page.field_service_duration
     - field.field.node.page.field_steps_to_obtain
     - field.field.node.page.field_tags
+    - field.field.node.page.field_target_audience
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -80,9 +86,15 @@ hidden:
   field_media_video: true
   field_meta_tags: true
   field_objectives: true
+  field_payment_options: true
   field_phone_number: true
+  field_provided_languages: true
   field_requirements: true
+  field_service_channels: true
+  field_service_cost: true
+  field_service_duration: true
   field_steps_to_obtain: true
+  field_target_audience: true
   field_top_overview_section: true
   field_work_tracks: true
   langcode: true
