@@ -1,0 +1,42 @@
+uuid: 9dbe01c8-7cc3-4606-99d5-6fd2b5ee3f6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.view_block.field_body
+    - field.field.paragraph.view_block.field_title
+    - field.field.paragraph.view_block.field_view_block
+    - paragraphs.paragraphs_type.view_block
+  module:
+    - text
+    - viewsreference
+id: paragraph.view_block.default
+targetEntityType: paragraph
+bundle: view_block
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_view_block:
+    type: viewsreference_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
