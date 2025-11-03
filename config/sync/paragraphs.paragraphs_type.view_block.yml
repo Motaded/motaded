@@ -1,0 +1,10 @@
+uuid: 4525a203-659f-453d-a1ad-d2060e5e37df
+langcode: en
+status: true
+dependencies: {  }
+id: view_block
+label: 'View block'
+icon_uuid: null
+icon_default: null
+description: 'The component contains view blocks, selected in the field’s settings'
+behavior_plugins: {  }

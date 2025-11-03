@@ -62,6 +62,7 @@
         "drupal/token_filter": "^2.2",
         "drupal/tus": "^2.1",
         "drupal/twig_tweak": "^3.4",
+        "drupal/viewsreference": "^2.0@beta",
         "drupal/webform": "^6.3@beta",
         "drush/drush": "^13.6",
         "mglaman/composer-drupal-lenient": "^1.0",

@@ -30,6 +30,7 @@ display:
             previous: '‹ السابق'
             last: 'آخر »'
           expose:
+            items_per_page_label: 'العناصر لكل صفحة'
             items_per_page_options_all_label: '- الكل -'
             offset_label: الإزاحة
       exposed_form:
