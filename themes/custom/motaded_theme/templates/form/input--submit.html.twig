@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+{% set classes = "cursor-pointer flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 relative text-base font-medium leading-6 text-white" %}
+<input{{ attributes.addClass(classes) }} />{{ children }}

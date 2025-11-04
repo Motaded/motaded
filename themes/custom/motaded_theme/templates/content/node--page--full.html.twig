@@ -243,8 +243,51 @@
     </div>
   </section>
 
+  <!-- Basic paragrpahs -->
+  <section
+    id="comments-inquiries comments-inquiries-section"
+    class="max-w-[1320px] mx-auto px-4"
+    aria-labelledby="comments-heading"
+  >
+    <div
+      class="flex flex-col gap-6 items-start self-stretch p-4 bg-white shadow rounded-xl p-4 mb-12"
+    >
+      <div class="flex flex-col gap-3 w-full">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+            >
+              {{ "Community"|t }}
+            </span>
+            <h2
+              id="comments-heading"
+              class="text-xl font-semibold leading-8 text-neutral-900"
+            >
+              {{ content.field_comments['#title'] }}
+            </h2>
+          </div>
+          <a
+            href="#comment-form"
+            class="inline-flex items-center gap-2 rounded-full border border-green-700 px-4 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-700 hover:text-white"
+            aria-controls="comment-form"
+          >
+            {{ "Add comment"|t }}
+          </button>
+        </div>
+        <p class="text-sm leading-5 text-gray-700">
+          {{ dump(content.field_comments) }}
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-4 self-stretch">
+        
+      </div>
+    </div>
+  </section>
+
   <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('body', 'field_top_overview_section', 'field_objectives', 'field_work_tracks', 'field_steps_to_obtain', 'field_areas_of_work', 'field_keywords', 'field_basic_paragraphs') }}
+    {{ content|without('body', 'field_top_overview_section', 'field_objectives', 'field_work_tracks', 'field_steps_to_obtain', 'field_areas_of_work', 'field_keywords', 'field_basic_paragraphs', 'field_comments') }}
   </div>
 
 </article>
