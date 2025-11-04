@@ -92,6 +92,21 @@ html {
     @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 mx-0;
   }
 }
+.latest-news-block{
+  .attachment-after{
+    .views-element-container,.view-content{
+      /* @apply h-full; */
+    }
+  }
+}
+.paragraph--type--view-block:has(.section-bg-green) {
+  /* background-color: red; */
+  @apply bg-green-50;
+}
+.paragraph--type--view-block:has(.section-btn-green) .view-all {
+  /* background-color: red; */
+  @apply border-primary-600 text-primary-600 hover:bg-primary-50
+}
 
 /* =========================
    Custom Utilities

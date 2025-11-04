@@ -6,7 +6,10 @@ dependencies:
     - field.storage.node.field_paragraphs
     - node.type.landing_page
     - paragraphs.paragraphs_type.banner
-    - paragraphs.paragraphs_type.section
+    - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.featured_contents
+    - paragraphs.paragraphs_type.steps
+    - paragraphs.paragraphs_type.view_block
   module:
     - entity_reference_revisions
 id: node.landing_page.field_paragraphs
@@ -23,8 +26,11 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      section: section
       banner: banner
+      banner_sm: banner_sm
+      featured_contents: featured_contents
+      steps: steps
+      view_block: view_block
     negate: 0
     target_bundles_drag_drop:
       advantages:
@@ -36,8 +42,14 @@ settings:
       banner:
         weight: -27
         enabled: true
+      banner_sm:
+        weight: 25
+        enabled: true
       business_activity:
         weight: -29
+        enabled: false
+      card:
+        weight: 27
         enabled: false
       counter:
         weight: -26
@@ -45,6 +57,9 @@ settings:
       featured_card:
         weight: -25
         enabled: false
+      featured_contents:
+        weight: 30
+        enabled: true
       itc_card:
         weight: -24
         enabled: false
@@ -59,16 +74,25 @@ settings:
         enabled: false
       section:
         weight: -28
-        enabled: true
+        enabled: false
       sectors:
         weight: -20
         enabled: false
+      step:
+        weight: 37
+        enabled: false
+      steps:
+        weight: 38
+        enabled: true
       steps_to_obtain:
         weight: -19
         enabled: false
       top_information:
         weight: -18
         enabled: false
+      view_block:
+        weight: 41
+        enabled: true
       work_tracks:
         weight: -17
         enabled: false
