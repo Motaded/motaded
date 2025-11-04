@@ -14,6 +14,9 @@ settings:
     -
       value: badges
       label: Badges
+    -
+      value: simple_text_card
+      label: 'simple text card'
   allowed_values_function: ''
 module: options
 locked: false

@@ -23,6 +23,9 @@ settings:
     -
       value: purple
       label: Purple
+    -
+      value: white
+      label: white
   allowed_values_function: ''
 module: options
 locked: false

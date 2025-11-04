@@ -46,8 +46,10 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
+{% set gradientColor = content.field_bg_color['#items'].0.value ?? 'white' %}
+
 {% block paragraph %}
-  <section id="why-now" class="section bg-white">
+  <section id="why-now" class="section bg-{{ gradientColor }}">
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
     <h2 class="h2">{{ content.field_title.0  }}</h2>
@@ -68,8 +70,21 @@
             </div>
            {% endif %}
       {% endfor %}
+     {% elseif card_type == "simple_text_card" %}
+      {% for key, item in content.field_paragraphs %}
+         {% set para = item['#paragraph'] %}
+           {% if para is not empty %}
+            <div class="route">
+              <h3 class="route-title">{{ para.field_title.value }}</h3>
+                {{ para.field_body.value|raw }}
+                {% set link_item = para.field_link.0 %}
+                {% if link_item %}
+                  <a href="{{ link_item.url.toString() }}" class="btn-secondary">{{ link_item.title }}</a>
+                {% endif %}
+            </div>
+           {% endif %}
+      {% endfor %}
      {% endif %}
-     
     </div>
     {% endblock %}
   </div>

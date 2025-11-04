@@ -5126,6 +5126,18 @@
       --btn-fg: var(--color-primary-content);
     }
   }
+  .btn-secondary {
+    @layer daisyui.modifier.color {
+      --btn-color: var(--color-secondary);
+      --btn-fg: var(--color-secondary-content);
+    }
+  }
+  .btn-secondary {
+    @layer daisyui.modifier.color {
+      --btn-color: var(--color-secondary);
+      --btn-fg: var(--color-secondary-content);
+    }
+  }
   .group-hover\:scale-\[1\.02\] {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
@@ -5945,7 +5957,8 @@ html {
   padding-left: 1rem;
   color: #374151;
 }
-.route-list {
+.route-list,
+ul {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;

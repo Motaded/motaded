@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.cards.field_bg_color
     - field.field.paragraph.cards.field_body
     - field.field.paragraph.cards.field_card_type
     - field.field.paragraph.cards.field_paragraphs
@@ -17,6 +18,13 @@ targetEntityType: paragraph
 bundle: cards
 mode: default
 content:
+  field_bg_color:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
   field_body:
     type: text_default
     label: hidden

@@ -1,0 +1,21 @@
+uuid: e6016359-dc38-4b17-bea2-40ccdda57b3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bg_color
+    - paragraphs.paragraphs_type.cards
+  module:
+    - options
+id: paragraph.cards.field_bg_color
+field_name: field_bg_color
+entity_type: paragraph
+bundle: cards
+label: 'BG gradient color'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
