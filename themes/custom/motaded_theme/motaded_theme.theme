@@ -129,6 +129,26 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
     $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
   }
 }
+/**
+ * Preprocess for News View block (unformatted).
+ */
+function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$variables) {
+  foreach ($variables['rows'] as &$row) {
+    $entity = $row['content']['#row']->_entity ?? NULL;
+
+    if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
+      $media = $entity->get('field_media')->entity;
+      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+        $file = $media->get('field_media_image')->entity?->uri?->value;
+        $img_alt = $media->get('field_media_image')->entity?->alt;
+        $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
+      }
+    }
+
+    $row['image']['url'] = $img_url ?? '';
+    $row['image']['alt'] = $img_alt ?? '';
+  }
+}
 
 /**
  * Implements hook__preprocess_HOOK().

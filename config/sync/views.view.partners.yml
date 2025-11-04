@@ -4,15 +4,12 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.storage.media.field_media_image
     - field.storage.node.body
     - field.storage.node.field_media
     - node.type.partner
   module:
-    - file
     - media
     - node
-    - svg_image
     - text
     - user
 id: partners
@@ -321,132 +318,6 @@ display:
     position: 2
     display_options:
       fields:
-        field_media_image_1:
-          id: field_media_image_1
-          table: media__field_media_image
-          field: field_media_image
-          relationship: field_media
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: image_url
-          settings:
-            image_style: ''
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_media_image:
-          id: field_media_image
-          table: media__field_media_image
-          field: field_media_image
-          relationship: field_media
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: ''
-          exclude: true
-          alter:
-            alter_text: true
-            text: '<img class="p-3 max-h-16 object-contain" alt="{{ field_media_image__alt }}" src="{{ field_media_image_1 }}" width="120" height="64" loading="lazy" />'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: image_url
-          settings:
-            image_style: ''
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
         nothing:
           id: nothing
           table: views
@@ -459,7 +330,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div\r\n            class=\"min-w-[70%] sm:min-w-[40%] md:min-w-[25%] lg:min-w-[16%] snap-start\"\r\n          >\r\n            <div\r\n              class=\"border rounded-lg p-2 bg-white hover:shadow-sm transition h-full\"\r\n            >\r\n              <a href=\"#\" class=\"block\">\r\n                <div class=\"mx-auto grid place-items-center\">\r\n                  {{ field_media_image }}\r\n                </div>\r\n              </a>\r\n            </div>\r\n          </div>"
+            text: "              <a href=\"#\" class=\"block\">\r\n                <div class=\"mx-auto grid place-items-center\">\r\n                  {{ field_media_image }}\r\n                </div>\r\n              </a>"
             make_link: false
             path: ''
             absolute: false
@@ -491,7 +362,7 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
           hide_empty: false
           empty_zero: false
@@ -520,25 +391,7 @@ display:
         relationships: false
         fields: false
         header: false
-      relationships:
-        field_media:
-          id: field_media
-          table: node__field_media
-          field: field_media
-          relationship: none
-          group_type: group
-          admin_label: 'field_media: Media'
-          plugin_id: standard
-          required: true
-        field_media_image_target_id:
-          id: field_media_image_target_id
-          table: media__field_media_image
-          field: field_media_image_target_id
-          relationship: field_media
-          group_type: group
-          admin_label: 'image from field_media_image'
-          plugin_id: standard
-          required: true
+      relationships: {  }
       display_description: ''
       header: {  }
       rendering_language: '***LANGUAGE_site_default***'
@@ -549,8 +402,7 @@ display:
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
-      tags:
-        - 'config:field.storage.media.field_media_image'
+      tags: {  }
   page_1:
     id: page_1
     display_title: Partners

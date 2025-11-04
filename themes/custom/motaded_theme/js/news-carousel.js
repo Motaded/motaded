@@ -4,7 +4,7 @@ function newsCarousel(length) {
   return {
     current: 0,
     autoplayMs: 5000,
-    length: 4,
+    length: length,
     timer: null,
     // slides: [
     //   {
