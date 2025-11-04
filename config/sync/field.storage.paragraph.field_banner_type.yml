@@ -1,0 +1,27 @@
+uuid: 2b26b3ad-4515-4940-a729-96cc4f8301a0
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_banner_type
+field_name: field_banner_type
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: banner_style_1
+      label: 'banner style 1'
+    -
+      value: banner_style_2
+      label: 'banner style 2'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

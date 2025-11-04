@@ -1,0 +1,19 @@
+uuid: db8e9e23-4d3e-49d5-9ec4-de76d25028d3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_payment_options
+field_name: field_payment_options
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

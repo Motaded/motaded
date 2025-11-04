@@ -38,13 +38,23 @@
  * @ingroup themeable
  */
 #}
-{% if content.field_media|render is not empty %}
-  {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
-{% endif %}
+{%
+  set classes = [
+    'paragraph section bg-white',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
+%}
 {% block paragraph %}
-  {{ include('motaded_theme:icon-card-tiny', {
-      desc: content.field_content.0,
-      icon_url: field_media,
-      icon_position: 'topLeft',
-    }, with_context = false) }}
+  <div{{ attributes.addClass(classes) }} id="faq">
+    <div class="wrap">
+      <h2 class="h2">{{ content.field_title }}</h2>
+    <div class="space-y-3 mt-4">
+    {% block content %}
+      {{ content.field_paragraphs }}
+    {% endblock %}
+    </div>
+    </div>
+  </div>
 {% endblock paragraph %}

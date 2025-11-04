@@ -1,9 +1,9 @@
-uuid: 526fae9d-daf3-43b1-a984-3be79b81bd0b
+uuid: 6eab275c-6257-40e8-884b-0fc2935374ef
 langcode: en
 status: true
 dependencies: {  }
-id: business_activity
-label: 'Media card'
+id: accordions
+label: Accordions
 icon_uuid: null
 icon_default: null
 description: ''

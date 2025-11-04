@@ -1,0 +1,28 @@
+uuid: 27eb45d1-a705-421f-864b-e3847a5efb80
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.accordion
+  module:
+    - text
+id: paragraph.accordion.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: accordion
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long

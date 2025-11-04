@@ -129,3 +129,18 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
     $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
   }
 }
+
+/**
+ * Implements hook__preprocess_HOOK().
+ */
+function motaded_theme_preprocess_breadcrumb(&$variables) {
+  // ddl($variables);
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node) {
+    $list_crumb = [
+      'text' => t('Articles'),
+      'url' => "blog",
+    ];
+    array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+  }
+}
