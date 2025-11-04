@@ -1,19 +1,23 @@
-uuid: 715093a8-1821-4ac6-93f8-3733dd4ecc9f
+uuid: d953c6f0-fbfc-48a6-89dc-e280e0ffbfce
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_title
+    - field.storage.paragraph.field_link
     - paragraphs.paragraphs_type.view_block
-id: paragraph.view_block.field_title
-field_name: field_title
+  module:
+    - link
+id: paragraph.view_block.field_link
+field_name: field_link
 entity_type: paragraph
 bundle: view_block
-label: Title
+label: Button
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: string
+settings:
+  title: 1
+  link_type: 17
+field_type: link

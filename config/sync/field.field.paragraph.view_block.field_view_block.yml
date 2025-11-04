@@ -25,6 +25,12 @@ settings:
   plugin_types:
     block: block
   preselect_views:
+    news: news
     partners: partners
-  enabled_settings: {  }
+  enabled_settings:
+    title: title
+    limit: limit
+    offset: offset
+    argument: argument
+    header: header
 field_type: viewsreference
