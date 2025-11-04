@@ -1,0 +1,28 @@
+uuid: d500d2af-ed0a-4adb-895a-de90d9cd7955
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.cards
+  module:
+    - text
+id: paragraph.cards.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: cards
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long
