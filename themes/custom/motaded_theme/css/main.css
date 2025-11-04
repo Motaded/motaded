@@ -107,6 +107,21 @@ html {
     margin: 0;
   }
 }
+.latest-news-block{
+  .attachment-after{
+    .views-element-container,.view-content{
+      /* @apply h-full; */
+    }
+  }
+}
+.paragraph--type--view-block:has(.section-bg-green) {
+  /* background-color: red; */
+  @apply bg-green-50;
+}
+.paragraph--type--view-block:has(.section-btn-green) .view-all {
+  /* background-color: red; */
+  @apply border-primary-600 text-primary-600 hover:bg-primary-50
+}
 
 /* =========================
    Custom Utilities

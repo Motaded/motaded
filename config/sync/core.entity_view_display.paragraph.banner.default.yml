@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.banner.field_banner_type
     - field.field.paragraph.banner.field_body
     - field.field.paragraph.banner.field_links
     - field.field.paragraph.banner.field_media
@@ -12,12 +13,20 @@ dependencies:
   module:
     - entity_reference_revisions
     - link
+    - options
     - text
 id: paragraph.banner.default
 targetEntityType: paragraph
 bundle: banner
 mode: default
 content:
+  field_banner_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_body:
     type: text_default
     label: above

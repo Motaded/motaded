@@ -43,31 +43,18 @@
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished',
-    "bg-white pb-14 pt-28"
+    not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
 {% block paragraph %}
-  <section{{attributes.addClass(classes)}} aria-labelledby="{{content.field_title.0}}">
+  <div{{ attributes.addClass(classes) }}>
     {% block content %}
-      <div
-        class="max-w-[1320px] mx-auto px-4">
-        <!-- Header -->
-            <div class="flex justify-between items-start flex-wrap gap-2">
-              <div class="text-base md:w-2/3">
-                {{ content.field_body.0 }}
+        <details class="faq">
+              <summary>{{ content.field_title.0 }}</summary>
+              <div class="faq-a">
+                {{ content.field_body }}
               </div>
-              {% if content.field_link.0 is not empty %}
-                <a href="{{ content.field_link.0['#url'] }}" class="view-all inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
-                  {{ content.field_link.0['#title'] }}
-                </a>
-              {% endif %}
-            </div>
-
-
-        {{content.field_view_block.0}}
-      </div>
-
+            </details>
     {% endblock %}
-  </section>
+  </div>
 {% endblock paragraph %}

@@ -49,6 +49,7 @@
 {% block paragraph %}
   <div{{attributes.addClass(classes)}}>
     {% block content %}
+    {% if content.field_banner_type == "banner_style_1" %}
       <section
         class="relative isolate">
         <!-- Background image + overlay -->
@@ -122,7 +123,70 @@
           <div class="h-24 sm:h-28"></div>
         </div>
       </section>
+    {% else %}
 
+      <header class="max-w-[1320px] mx-auto px-4 mt-6">
+        <div
+          class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white"
+        >
+          <div class="grid md:grid-cols-2">
+            <div class="p-8 md:p-12">
+              {% if content.field_title.0 is not empty %}
+              <h1
+                class="text-3xl md:text-5xl font-extrabold leading-tight text-[#0F2A1D]"
+              >
+                  {{ content.field_title.0  }}
+              </h1>
+              {% endif %}
+              {% if content.field_body.0 is not empty %}
+              <p class="mt-4 text-lg text-gray-800">
+               {{ content.field_body.0 }}
+              </p>
+              {% endif %}
+
+              {% if content.field_links %}
+              <div class="mt-6 flex flex-wrap gap-3">
+                {% for key, item in paragraph.field_links %}
+                {% set link = content.field_links[key]['#url'] %}
+                {% set title = content.field_links[key]['#title'] %}
+                {% if loop.last %}
+                  <a
+                  href="#{{link}}"
+                  class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-3 text-sm font-semibold hover:bg-gray-50"
+                  >{{ title }}</a
+                >
+                {% else %}
+                <a
+                  href="#{{link}}"
+                  class="inline-flex items-center gap-2 rounded-md bg-primary-600 text-white px-5 py-3 text-sm font-semibold hover:bg-primary-700"
+                  >{{title}}</a
+                >
+                {% endif %}
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <!-- Value badges -->
+              <dl class="mt-8 grid grid-cols-2 gap-4 text-sm">
+                {{ content.field_paragraphs }}
+              </dl>
+            </div>
+            <div class="relative">
+              <img
+                src="{{file_url(content.field_media.0['#media'].field_media_image.entity.uri.value)}}"
+                alt="Riyadh skyline at dusk"
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+     {% endif %}
     {% endblock %}
   </div>
 {% endblock paragraph %}

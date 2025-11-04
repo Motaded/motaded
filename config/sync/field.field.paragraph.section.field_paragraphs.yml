@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_paragraphs
+    - paragraphs.paragraphs_type.accordions
     - paragraphs.paragraphs_type.banner_sm
     - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.section
@@ -29,8 +30,15 @@ settings:
       steps: steps
       featured_contents: featured_contents
       view_block: view_block
+      accordions: accordions
     negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 24
+        enabled: false
+      accordions:
+        weight: 25
+        enabled: true
       advantages:
         weight: -43
         enabled: false
