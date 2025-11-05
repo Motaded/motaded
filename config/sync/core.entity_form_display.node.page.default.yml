@@ -33,6 +33,7 @@ dependencies:
     - field.field.node.page.field_steps_to_obtain
     - field.field.node.page.field_tags
     - field.field.node.page.field_target_audience
+    - field.field.node.page.field_taxonomy
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -356,6 +357,16 @@ content:
     region: content
     settings:
       rows: 2
+      placeholder: ''
+    third_party_settings: {  }
+  field_taxonomy:
+    type: entity_reference_autocomplete
+    weight: 41
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_top_overview_section:
