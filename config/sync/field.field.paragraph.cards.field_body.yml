@@ -1,4 +1,4 @@
-uuid: f680b1d8-38ed-4d35-82cd-2f69883ab648
+uuid: d500d2af-ed0a-4adb-895a-de90d9cd7955
 langcode: en
 status: true
 dependencies:
@@ -7,13 +7,13 @@ dependencies:
     - filter.format.basic_html
     - filter.format.full_html
     - filter.format.plain_text
-    - paragraphs.paragraphs_type.card
+    - paragraphs.paragraphs_type.cards
   module:
     - text
-id: paragraph.card.field_body
+id: paragraph.cards.field_body
 field_name: field_body
 entity_type: paragraph
-bundle: card
+bundle: cards
 label: Body
 description: ''
 required: false
