@@ -106,16 +106,67 @@ function motaded_theme_preprocess_paragraph__steps(array &$variables) {
 }
 
 /**
+ * Preprocess for News View block (unformatted).
+ */
+function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variables) {
+  foreach ($variables['rows'] as &$row) {
+    $entity = $row['content']['#row']->_entity ?? NULL;
+
+    if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
+      $media = $entity->get('field_media')->entity;
+      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+        $file = $media->get('field_media_image')->entity?->uri?->value;
+        $img_alt = $media->get('field_media_image')->entity?->alt;
+        $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
+      }
+    }
+
+    // Add title, URL, and created date.
+    $row['title'] = $entity->label();
+    $row['url'] = $entity->toUrl()->toString();
+    $row['image']['url'] = $img_url ?? '';
+    $row['image']['alt'] = $img_alt ?? '';
+    $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
+  }
+}
+/**
+ * Preprocess for News View block (unformatted).
+ */
+function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$variables) {
+  foreach ($variables['rows'] as &$row) {
+    $entity = $row['content']['#row']->_entity ?? NULL;
+
+    if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
+      $media = $entity->get('field_media')->entity;
+      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+        $file = $media->get('field_media_image')->entity?->uri?->value;
+        $img_alt = $media->get('field_media_image')->entity?->alt;
+        $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
+      }
+    }
+
+    $row['image']['url'] = $img_url ?? '';
+    $row['image']['alt'] = $img_alt ?? '';
+  }
+}
+
+/**
  * Implements hook__preprocess_HOOK().
  */
 function motaded_theme_preprocess_breadcrumb(&$variables) {
-  // ddl($variables);
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node) {
-    $list_crumb = [
-      'text' => t('Articles'),
-      'url' => "blog",
-    ];
+    if ($node->bundle() == "article") {
+      $list_crumb = [
+        'text' => t('Articles'),
+        'url' => "blog",
+      ];
+    } elseif ($node->bundle() == "page") {
+      $list_crumb = [
+        'text' => t('Services'),
+        'url' => "services",
+      ];
+    }
     array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
   }
 }

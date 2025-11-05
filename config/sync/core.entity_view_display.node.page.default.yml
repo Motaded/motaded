@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.comment.default
     - field.field.node.page.body
     - field.field.node.page.field_advantages
     - field.field.node.page.field_areas_of_work
@@ -38,9 +37,7 @@ dependencies:
     - field.field.node.page.field_work_tracks
     - node.type.page
   module:
-    - comment
     - entity_reference_revisions
-    - like_dislike
     - link
     - text
     - user
@@ -66,7 +63,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 17
+    weight: 13
     region: content
   field_areas_of_work:
     type: entity_reference_revisions_entity_view
@@ -85,33 +82,6 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 7
-    region: content
-  field_comments:
-    type: comment_default
-    label: hidden
-    settings:
-      view_mode: default
-      pager_id: 0
-    third_party_settings: {  }
-    weight: 12
-    region: content
-  field_document:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 16
-    region: content
-  field_download_user_guides:
-    type: entity_reference_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 15
     region: content
   field_form:
     type: webform_entity_reference_entity_view
@@ -132,7 +102,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 14
+    weight: 12
     region: content
   field_icon:
     type: entity_reference_entity_view
@@ -159,15 +129,6 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  field_like_dislike:
-    type: like_dislike_formatter
-    label: hidden
-    settings:
-      likes_label: Like
-      dislikes_label: Dislike
-    third_party_settings: {  }
-    weight: 13
-    region: content
   field_media_video:
     type: entity_reference_entity_view
     label: hidden
@@ -193,7 +154,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 18
+    weight: 14
     region: content
   field_steps_to_obtain:
     type: entity_reference_revisions_entity_view
@@ -223,9 +184,13 @@ content:
     weight: 3
     region: content
 hidden:
+  field_comments: true
   field_default_page: true
   field_display_on_services: true
+  field_document: true
+  field_download_user_guides: true
   field_email_address: true
+  field_like_dislike: true
   field_media: true
   field_meta_tags: true
   field_payment_options: true

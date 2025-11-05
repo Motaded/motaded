@@ -11,8 +11,8 @@ id: node.page.field_comments
 field_name: field_comments
 entity_type: node
 bundle: page
-label: Comments
-description: ''
+label: 'Comments and inquiries'
+description: 'Join the discussion to share your experience with our consultation services. Your questions help other businesses learn more about the support we provide.'
 required: false
 translatable: false
 default_value:

@@ -1,0 +1,11 @@
+uuid: 26400f8c-805c-429b-81ce-31ea4c8cab25
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.comments
+label: Comments
+description: null
+targetEntityType: node
+cache: true

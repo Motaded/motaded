@@ -53,22 +53,17 @@
       <div
         class="max-w-[1320px] mx-auto px-4">
         <!-- Header -->
-        <div class="mb-8 flex items-center justify-between gap-4">
-          <div id="partners-title">
-            {% if content.field_title.0 is not empty %}
-              <h2 class="text-xl font-bold">{{content.field_title.0}}</h2>
-            {% endif %}
-            {% if content.field_body.0 is not empty %}
-              {% if content.field_body.0['#format'] == 'plain_text' %}
-                <p class="text-base md:w-2/3">
-                  {{ content.field_body.0['#text']|striptags }}
-                </p>
-              {% else %}
-                <div class="text-base md:w-2/3">{{ content.field_body.0 }}</div>
+            <div class="flex justify-between items-start flex-wrap gap-2">
+              <div class="text-base md:w-2/3">
+                {{ content.field_body.0 }}
+              </div>
+              {% if content.field_link.0 is not empty %}
+                <a href="{{ content.field_link.0['#url'] }}" class="view-all inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
+                  {{ content.field_link.0['#title'] }}
+                </a>
               {% endif %}
-            {% endif %}
-          </div>
-        </div>
+            </div>
+
 
         {{content.field_view_block.0}}
       </div>

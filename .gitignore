@@ -45,3 +45,5 @@ motaded.com.sa/
 
 # Ignore multi-site test environment.
 # simpletest
+.ddev/
+.vscode/

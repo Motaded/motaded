@@ -45,13 +45,6 @@
     {{ title }}
   {% endif %}
   {{ title_suffix }}
-  {% if header %}
-    <div class="mt-6 pb-6 pt-8">
-      <div class="flex flex-col gap-3">
-        {{ header }}
-      </div>
-    </div>
-  {% endif %}
 
   {% if attachment_before %}
     <div class="attachment attachment-before">
@@ -60,7 +53,7 @@
   {% endif %}
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-  {% if exposed %}
+    {% if exposed %}
     <aside class="lg:col-span-4 xl:col-span-3" aria-label="Filter services">
       <!-- Mobile toggle -->
       <details
@@ -98,6 +91,14 @@
     
     <!-- Results -->
     <section class="lg:col-span-8 xl:col-span-9">
+      <!-- Results meta + sort -->
+      <div class="flex items-center justify-between mt-1">
+        {% if header %}
+          <p class="text-sm text-gray-600">
+            {{ header }}
+          </p>
+        {% endif %}
+      </div>
       {% if rows %}
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
           {{ rows }}
