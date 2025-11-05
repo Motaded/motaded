@@ -16,16 +16,10 @@
   set classes = [
     title_display == 'after' ? 'option',
     title_display == 'invisible' ? 'visually-hidden',
-    'flex flex-col items-start relative w-80',
+    required ? 'js-form-required',
+    required ? 'form-required',
   ]
 %}
 {% if title is not empty or required -%}
-  <label{{ attributes.addClass(classes) }}>
-    <span class="flex relative gap-1 items-end">
-      {% if required %}
-        <span class="relative text-sm font-semibold leading-5 text-red-700">*</span>
-      {% endif %}
-      <span class="relative text-sm font-semibold leading-5 text-neutral-900">{{ title }}</span>
-    </span>
-  </label>
+  <label{{ attributes.addClass(classes) }}>{{ title }}</label>
 {%- endif %}

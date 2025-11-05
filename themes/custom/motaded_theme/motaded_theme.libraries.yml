@@ -14,8 +14,6 @@ base:
         weight: -10
       css/components/container-inline.css:
         weight: -10
-      css/components/details.css:
-        weight: -10
       css/components/exposed-filters.css:
         weight: -10
       css/components/field.css:
@@ -146,3 +144,7 @@ partner-carousel:
   header: true
   js:
     js/partner-carousel.js: {}
+news-carousel:
+  header: true
+  js:
+    js/news-carousel.js: {}

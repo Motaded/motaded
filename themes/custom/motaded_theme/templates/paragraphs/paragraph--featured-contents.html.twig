@@ -52,10 +52,12 @@
         if (i >= 0 && i < this.items.length)
           this.current = i;
 
+
       },
       prev() {
         if (this.current > 0)
           this.current --;
+
 
       },
       next() {
@@ -74,8 +76,10 @@
       if (this.deltaX> threshold)
           this.prev();
 
+
         if (this.deltaX < -threshold)
           this.next();
+
 
         this.swiping = false;
         this.deltaX = 0;
@@ -98,18 +102,15 @@
       <!-- Header -->
       <div class="max-w-[1320px] mx-auto px-4 mb-8">
         <div class="flex flex-wrap md:flex-nowrap justify-between items-start gap-3">
-          <h2 class="font-bold text-2xl">{{content.field_title.0}}</h2>
-
+          <div class="text-base md:w-2/3">
+            {{ content.field_body.0 }}
+          </div>
           {% if content.field_link is not empty %}
             <a href="{{ content.field_link.0['#url'] }}" class="ml-auto md:ml-0 inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
               {{ content.field_link.0['#title'] }}
             </a>
           {% endif %}
         </div>
-
-        <p class="text-base md:w-2/3">
-          {{ content.field_body.0 }}
-        </p>
       </div>
 
       <!-- Content -->

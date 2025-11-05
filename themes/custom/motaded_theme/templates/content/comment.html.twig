@@ -78,38 +78,22 @@
     author_id and author_id == commented_entity.getOwnerId() ? 'by-' ~ commented_entity.getEntityTypeId() ~ '-author',
   ]
 %}
-<article{{ attributes.addClass(classes) }}>
-  {#
-    Hide the "new" indicator by default, let a piece of JavaScript ask the
-    server which comments are new for the user. Rendering the final "new"
-    indicator here would break the render cache.
-  #}
-  <mark class="hidden" data-comment-timestamp="{{ new_indicator_timestamp }}"></mark>
-
-  {% if submitted %}
-    <footer class="comment__meta">
-      {{ user_picture }}
-      <p class="comment__submitted">{{ submitted }}</p>
-
-      {#
-        Indicate the semantic relationship between parent and child comments for
-        accessibility. The list is difficult to navigate in a screen reader
-        without this information.
-      #}
-      {% if parent %}
-        <p class="parent visually-hidden">{{ parent }}</p>
-      {% endif %}
-
-      {{ permalink }}
-    </footer>
-  {% endif %}
-
-  <div{{ content_attributes.addClass('content') }}>
-    {% if title %}
-      {{ title_prefix }}
-      <h3{{ title_attributes }}>{{ title }}</h3>
-      {{ title_suffix }}
-    {% endif %}
-    {{ content }}
-  </div>
+{% set body %}
+  {{ comment.comment_body.value|striptags }}
+{% endset %}
+<article class="rounded-2xl border border-gray-200 bg-white p-6">
+  <header class="flex flex-col gap-1">
+    <div
+      class="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-gray-500"
+    >
+      <span>{{ "Submitted by"|t }}</span>
+      <span class="text-neutral-900">{{ author }}</span>
+      <span aria-hidden="true">•</span>
+      <time datetime="2025-05-25T10:46:00">{{ created }}</time>
+    </div>
+    <h3 class="text-lg font-semibold leading-7 text-neutral-900">
+      {{ title }}
+    </h3>
+  </header>
+  {{ body }}
 </article>

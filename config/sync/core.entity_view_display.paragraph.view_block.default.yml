@@ -4,10 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.view_block.field_body
-    - field.field.paragraph.view_block.field_title
+    - field.field.paragraph.view_block.field_link
     - field.field.paragraph.view_block.field_view_block
     - paragraphs.paragraphs_type.view_block
   module:
+    - link
     - text
     - viewsreference
 id: paragraph.view_block.default
@@ -22,13 +23,17 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  field_title:
-    type: string
+  field_link:
+    type: link
     label: hidden
     settings:
-      link_to_entity: false
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
     third_party_settings: {  }
-    weight: 0
+    weight: 2
     region: content
   field_view_block:
     type: viewsreference_formatter
