@@ -34,6 +34,7 @@ dependencies:
     - field.field.node.page.field_steps_to_obtain
     - field.field.node.page.field_tags
     - field.field.node.page.field_target_audience
+    - field.field.node.page.field_taxonomy
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -175,6 +176,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 4
+    region: content
+  field_taxonomy:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 16
     region: content
   field_top_overview_section:
     type: entity_reference_revisions_entity_view
