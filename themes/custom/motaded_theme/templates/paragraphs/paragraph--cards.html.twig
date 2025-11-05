@@ -46,19 +46,19 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
-{% set gradientColor = content.field_bg_color['#items'].0.value ?? 'white' %}
+{% set gradientColor = content.field_bg_color['#items'].0.value ?? '' %}
 
 {% block paragraph %}
-  <section id="why-now" class="section bg-{{ gradientColor }}">
+  <section id="why-now" class="section bg-gradient-to-b from-white to-{{gradientColor}}-50">
   <div{{ attributes.addClass(classes) }}>
     {% block content %}
     <h2 class="h2">{{ content.field_title.0  }}</h2>
     <p class="lead">
       {{ content.field_body.0 }}
     </p>
-    <div class="grid md:grid-cols-3 gap-4 mt-6">
     {% set card_type = content.field_card_type['#items'].0.value ?? '' %}
      {% if card_type == "badges" %}
+      <div class="grid md:grid-cols-3 gap-4 mt-6">
        {% for key, item in content.field_paragraphs %}
          {% set para = item['#paragraph'] %}
            {% if para is not empty %}
@@ -70,11 +70,20 @@
             </div>
            {% endif %}
       {% endfor %}
+      </div>
      {% elseif card_type == "simple_text_card" %}
+     <div class="grid md:grid-cols-2 gap-6 mt-4">
       {% for key, item in content.field_paragraphs %}
          {% set para = item['#paragraph'] %}
            {% if para is not empty %}
             <div class="route">
+              {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
+              <img
+                src="{{file_url( para.field_media.entity.field_media_image.entity.fileuri)}}"
+                alt="Technology"
+                class="sector-img"
+              />
+              {% endif %}
               <h3 class="route-title">{{ para.field_title.value }}</h3>
                 {{ para.field_body.value|raw }}
                 {% set link_item = para.field_link.0 %}
@@ -84,8 +93,30 @@
             </div>
            {% endif %}
       {% endfor %}
-     {% endif %}
     </div>
+    {% elseif card_type == "image_with_text_wrapper" %}
+      <div class="grid md:grid-cols-3 gap-6 mt-6">
+      {% for key, item in content.field_paragraphs %}
+         {% set para = item['#paragraph'] %}
+           {% if para is not empty %}
+              <div class="sector">
+              {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
+              <img
+                src="{{file_url( para.field_media.entity.field_media_image.entity.fileuri)}}"
+                alt="Technology"
+                class="sector-img"
+              />
+              {% endif %}
+              <h3 class="sector-title">{{ para.field_title.value }}</h3>
+              <p class="sector-desc">
+               {{ para.field_body.value|raw }}
+              </p>
+            </div>
+          {% endif %}
+      {% endfor %}  
+      </div>
+     {% endif %}
+      {{ content.field_notes }}
     {% endblock %}
   </div>
   </section>
