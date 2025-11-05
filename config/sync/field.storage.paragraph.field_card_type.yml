@@ -1,31 +1,22 @@
-uuid: fa972f0e-e24e-4a25-ad5b-7e0d6fe0d35b
+uuid: 092433ee-1561-4125-ac2e-54900eca3701
 langcode: en
 status: true
 dependencies:
   module:
     - options
     - paragraphs
-id: paragraph.field_bg_color
-field_name: field_bg_color
+id: paragraph.field_card_type
+field_name: field_card_type
 entity_type: paragraph
 type: list_string
 settings:
   allowed_values:
     -
-      value: amber
-      label: Amber
+      value: badges
+      label: Badges
     -
-      value: green
-      label: Green
-    -
-      value: blue
-      label: Blue
-    -
-      value: purple
-      label: Purple
-    -
-      value: white
-      label: white
+      value: simple_text_card
+      label: 'simple text card'
   allowed_values_function: ''
 module: options
 locked: false
