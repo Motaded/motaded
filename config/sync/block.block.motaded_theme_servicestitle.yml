@@ -12,7 +12,7 @@ dependencies:
 id: motaded_theme_servicestitle
 theme: motaded_theme
 region: content
-weight: -19
+weight: -20
 provider: null
 plugin: 'block_content:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
 settings:

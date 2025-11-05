@@ -122,6 +122,9 @@ html {
   /* background-color: red; */
   @apply border-primary-600 text-primary-600 hover:bg-primary-50
 }
+.comment-form__title {
+  @apply hidden;
+}
 
 /* =========================
    Custom Utilities

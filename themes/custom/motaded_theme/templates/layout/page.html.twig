@@ -42,6 +42,12 @@
  * @see html.html.twig
  */
 #}
+{% set show_service_side = true %}
+{% set main_wrapper_classes = [
+  "main-wrapper",
+  ]
+%}
+
 {% set main_classes = [
   "pb-[40px] max-w-[1320px] mx-auto px-4",
   page.sidebar_second ? 'flex relative gap-8 items-start self-stretch max-md:flex-col max-md:gap-10 max-md:px-10 max-md:py-8 max-sm:gap-8 max-sm:px-4 max-sm:py-6' : 'mt-[40px]',
@@ -49,8 +55,22 @@
 
 {% set content_wrapper_classes = [
   'layout-content',
-  page.sidebar_second ? 'flex relative flex-col gap-16 items-start w-[832px] max-md:w-full' : '',
 ] %}
+
+{% if node and node.type.value[0]["target_id"] == 'page' %}
+  {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-gray-50']) %}
+  {% if node.field_display_on_services.value != "1" %}
+    {% set show_service_side = false %}
+  {% endif %}
+  
+{% else %}
+  {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-white']) %}
+{% endif %}
+
+{% if page.sidebar_second and  show_service_side %}
+  {% set content_wrapper_classes = content_wrapper_classes|merge(['flex relative flex-col gap-16 items-start w-[832px] max-md:w-full']) %}
+{% endif %}
+
 
 <div id="site-topbar">
   {{ include('@motaded_theme/includes/topbar.html.twig') }}
@@ -66,13 +86,13 @@
   </div>
 {% endif %}
 
-<div class="main-wrapper {{ node and node.type.value[0]["target_id"] == 'page' ? 'bg-gray-50' : 'bg-white'}}">
+<div class="{{ main_wrapper_classes|join(' ') }}">
   <main role="main" class="{{ main_classes|join(' ') }}">
-    <a id="main-content" class="visually-hidden" tabindex="-1"></a>{# link is in html.html.twig #}
+    <a id="main-content" class="visually-hidden" tabindex="-1"></a>
 
     <div class="{{ content_wrapper_classes|join(' ') }}">
       {{ page.content }}
-    </div>{# /.layout-content #}
+    </div>
 
     {% if page.sidebar_first %}
       <aside class="layout-sidebar-first" role="complementary">
@@ -80,7 +100,7 @@
       </aside>
     {% endif %}
 
-    {% if page.sidebar_second %}
+    {% if page.sidebar_second and show_service_side %}
       <aside class="layout-sidebar-second flex relative flex-col gap-6 items-start p-10 bg-white rounded-2xl border border-gray-300 border-solid w-[416px] max-md:w-full max-sm:p-6" role="complementary">
         {{ page.sidebar_second }}
       </aside>

@@ -12,7 +12,7 @@ dependencies:
 id: motaded_theme_investmentopportunities_2
 theme: motaded_theme
 region: content
-weight: -13
+weight: -14
 provider: null
 plugin: 'block_content:140ddc18-71d1-48c4-97fe-7c9b66c37b3a'
 settings:

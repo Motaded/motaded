@@ -4529,6 +4529,12 @@
   .bg-emerald-50 {
     background-color: var(--color-emerald-50);
   }
+  .bg-emerald-50\/40 {
+    background-color: color-mix(in srgb, oklch(97.9% 0.021 166.113) 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-emerald-50) 40%, transparent);
+    }
+  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
   }
@@ -6070,6 +6076,9 @@ html {
       background-color: var(--color-primary-50);
     }
   }
+}
+.comment-form__title {
+  display: none;
 }
 .main-wrapper:has(.page-green) {
   background-color: var(--color-green-50) !important;
