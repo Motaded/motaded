@@ -13,6 +13,12 @@ title: 'Tell us about your experience with Motaded'
 description: ''
 categories: {  }
 elements: |-
+  label:
+    '#type': label
+    '#title': 'Tell us about your experience with Motaded'
+    '#attributes':
+      class:
+        - inline-form-title
   meet_needs:
     '#type': radios
     '#title': 'Did this Motaded service meet your needs?'
@@ -48,13 +54,6 @@ elements: |-
       Male: Male
       Female: Female
       "I'd rather not say": "I'd rather not say"
-    '#states':
-      visible:
-        ':input[name="meet_needs"]':
-          checked: true
-  your_message:
-    '#type': textarea
-    '#title': 'Your message'
     '#states':
       visible:
         ':input[name="meet_needs"]':
