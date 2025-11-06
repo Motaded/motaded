@@ -1,0 +1,22 @@
+uuid: da2a1ecb-d1e8-4d60-931e-3419e585ff84
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.notes.field_body
+    - paragraphs.paragraphs_type.notes
+  module:
+    - text
+id: paragraph.notes.default
+targetEntityType: paragraph
+bundle: notes
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

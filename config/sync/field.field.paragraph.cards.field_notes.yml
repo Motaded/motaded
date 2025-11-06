@@ -1,23 +1,18 @@
-uuid: 61168bcf-294a-47a0-9e68-ebb0d545da4d
+uuid: 72048f8f-c479-471b-9316-3c0544523cbc
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_paragraphs
-    - paragraphs.paragraphs_type.accordions
-    - paragraphs.paragraphs_type.banner_sm
+    - field.storage.paragraph.field_notes
     - paragraphs.paragraphs_type.cards
-    - paragraphs.paragraphs_type.featured_contents
-    - paragraphs.paragraphs_type.section
-    - paragraphs.paragraphs_type.steps
-    - paragraphs.paragraphs_type.view_block
+    - paragraphs.paragraphs_type.notes
   module:
     - entity_reference_revisions
-id: paragraph.section.field_paragraphs
-field_name: field_paragraphs
+id: paragraph.cards.field_notes
+field_name: field_notes
 entity_type: paragraph
-bundle: section
-label: 'Section components'
+bundle: cards
+label: notes
 description: ''
 required: false
 translatable: false
@@ -27,87 +22,82 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      banner_sm: banner_sm
-      steps: steps
-      featured_contents: featured_contents
-      view_block: view_block
-      accordions: accordions
-      cards: cards
+      notes: notes
     negate: 0
     target_bundles_drag_drop:
       accordion:
-        weight: 24
+        weight: 26
         enabled: false
       accordions:
-        weight: 25
-        enabled: true
+        weight: 27
+        enabled: false
       advantages:
-        weight: -43
+        weight: 28
         enabled: false
       areas_of_work:
-        weight: -42
+        weight: 29
         enabled: false
       banner:
-        weight: -41
+        weight: 30
         enabled: false
       banner_sm:
-        weight: -37
-        enabled: true
+        weight: 31
+        enabled: false
       business_activity:
-        weight: -40
+        weight: 32
         enabled: false
       card:
-        weight: -39
+        weight: 33
         enabled: false
       cards:
-        weight: 33
-        enabled: true
+        weight: 34
+        enabled: false
       counter:
-        weight: -38
+        weight: 35
         enabled: false
       featured_card:
-        weight: -32
+        weight: 36
         enabled: false
       featured_contents:
-        weight: -34
-        enabled: true
+        weight: 37
+        enabled: false
       itc_card:
-        weight: -31
+        weight: 38
         enabled: false
       notes:
         weight: 39
-        enabled: false
+        enabled: true
       objectives:
-        weight: -30
+        weight: 40
         enabled: false
       pricing:
-        weight: -29
+        weight: 41
         enabled: false
       requirements:
-        weight: -28
+        weight: 42
         enabled: false
       section:
-        weight: -27
+        weight: 43
         enabled: false
       sectors:
-        weight: -26
+        weight: 44
         enabled: false
       step:
-        weight: -35
+        weight: 45
         enabled: false
       steps:
-        weight: -36
-        enabled: true
+        weight: 46
+        enabled: false
       steps_to_obtain:
-        weight: -25
+        weight: 47
         enabled: false
       top_information:
-        weight: -24
+        weight: 48
         enabled: false
       view_block:
-        weight: -33
-        enabled: true
+        weight: 49
+        enabled: false
       work_tracks:
-        weight: -23
+        weight: 50
         enabled: false
 field_type: entity_reference_revisions

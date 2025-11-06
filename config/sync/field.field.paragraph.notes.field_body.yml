@@ -1,0 +1,28 @@
+uuid: 78e51458-f56e-4331-9031-330dd9c42560
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.notes
+  module:
+    - text
+id: paragraph.notes.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: notes
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long
