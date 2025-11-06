@@ -6249,6 +6249,12 @@ html {
 .comment-form__title {
   display: none;
 }
+.webform-submission-form {
+  .simple-sitemap-fieldset,
+  .js-form-item-simple-sitemap-index-now {
+    display: none;
+  }
+}
 .main-wrapper:has(.page-green) {
   background-color: var(--color-green-50) !important;
 }
@@ -6432,6 +6438,9 @@ body.path-services {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
+}
+.bef-exposed-form ul {
+  list-style-type: none;
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
@@ -7432,3 +7441,5 @@ body.path-services {
     }
   }
 }
+
+

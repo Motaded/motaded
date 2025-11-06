@@ -148,6 +148,14 @@ html {
 .comment-form__title {
   @apply hidden;
 }
+.webform-submission-form {
+  .simple-sitemap-fieldset,
+  .js-form-item-simple-sitemap-index-now {
+    display: none;
+  }
+}
+
+
 
 /* =========================
    Custom Utilities
@@ -336,3 +344,8 @@ body.path-services {
     border-top-right-radius: 0;
   }
 }
+.bef-exposed-form ul {
+  list-style-type: none;
+}
+
+
