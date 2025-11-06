@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+{# <div class="flex relative items-center self-stretch p-0 h-10 bg-gray-100 rounded"> #}
+  <input{{ attributes.addClass("") }} />{{ children }}
+{# </div> #}

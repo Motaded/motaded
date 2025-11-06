@@ -161,13 +161,14 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
         'text' => t('Articles'),
         'url' => "blog",
       ];
+      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
     } elseif ($node->bundle() == "page") {
       $list_crumb = [
         'text' => t('Services'),
         'url' => "services",
       ];
+      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
     }
-    array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
   }
 }
 

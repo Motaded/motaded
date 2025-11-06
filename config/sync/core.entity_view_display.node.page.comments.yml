@@ -87,6 +87,7 @@ hidden:
   field_steps_to_obtain: true
   field_tags: true
   field_target_audience: true
+  field_taxonomy: true
   field_top_overview_section: true
   field_work_tracks: true
   langcode: true
