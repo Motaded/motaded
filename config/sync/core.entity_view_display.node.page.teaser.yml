@@ -34,6 +34,7 @@ dependencies:
     - field.field.node.page.field_steps_to_obtain
     - field.field.node.page.field_tags
     - field.field.node.page.field_target_audience
+    - field.field.node.page.field_taxonomy
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
     - node.type.page
@@ -95,6 +96,7 @@ hidden:
   field_service_duration: true
   field_steps_to_obtain: true
   field_target_audience: true
+  field_taxonomy: true
   field_top_overview_section: true
   field_work_tracks: true
   langcode: true

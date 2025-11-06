@@ -96,6 +96,29 @@ html {
     @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50 mx-0;
   }
 }
+/* Tabs exposed filter */
+.exposed-filter-tabs{
+  .bef-exposed-form .form--inline .form-item{
+    float: none;
+  }
+  .form-radios.form--inline{
+    @apply relative flex gap-2 overflow-auto py-3 after:content-[''] after:absolute after:left-1/2 after:bottom-3 after:-translate-x-1/2 after:w-full after:h-[3px] after:bg-gray-200 after:rounded-full;
+    .form-type-radio {
+      /* label{ */
+        @apply px-4 py-2 m-1 text-sm rounded-md relative transition outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800 hover:bg-gray-100 text-gray-900;
+
+      /* } */
+      &:has(input:checked) {
+        /* label{ */
+          @apply bg-primary-600 text-white after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:-translate-x-1/2 after:w-[70%] after:h-[3px] after:bg-primary-200 after:rounded-full;
+        /* } */
+      }
+      &>div{
+        display: none;
+      }
+    }
+  }
+}
 .view-services.view-display-id-page_1 {
   .js-form-type-textfield label ~ img.absolute {
     --tw-translate-y: 0 !important
@@ -204,7 +227,8 @@ html {
   padding-left: 1rem;
   color: #374151;
 }
-.route-list {
+.route-list,
+ul {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;
@@ -283,7 +307,7 @@ body.path-services {
     @apply rounded-2xl border border-gray-200 mb-6 bg-white;
     padding-top: 16px;
     padding-bottom: 16px;
-    
+
   }
   dt.active {
     @apply mb-0;
