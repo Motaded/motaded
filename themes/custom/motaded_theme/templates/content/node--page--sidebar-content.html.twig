@@ -80,142 +80,155 @@
   <!-- Service Information -->
   <section class="flex relative flex-col gap-4 items-start self-stretch">
     <!-- Target Audience -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img
-        src="/themes/custom/motaded_theme/img/target-audience.svg"
-        alt="Target Audience"
-        width="24"
-        height="24"
-      />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_target_audience['#title'] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_target_audience.0 }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Service Duration -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img
-        src="/themes/custom/motaded_theme/img/service-duration.svg"
-        alt="Service Duration"
-        width="24"
-        height="24"
-      />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_service_duration["#title"] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_service_duration.0 }}
-        </p>
-      </div>
-    </div>
-
-    <!--  Provided languages -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img
-        src="/themes/custom/motaded_theme/img/icon-lang-brand.svg"
-        alt="Provided languages"
-        width="24"
-        height="24"
-      />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_provided_languages['#title'] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_provided_languages.0 }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Service Channels -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img
-        src="/themes/custom/motaded_theme/img/service-channels.svg"
-        alt="Service Channels"
-        width="24"
-        height="24"
-      />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_service_channels['#title'] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_service_channels.0}}
-        </p>
-      </div>
-    </div>
-
-    <!-- Service Cost -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <div
-        class="flex relative justify-center items-center p-0.5 w-6 h-6"
-      >
-        <div class="relative shrink-0 h-[22px] w-[22px]">
-          <img
-            src="/themes/custom/motaded_theme/img/service-cost.svg"
-            alt="Service Cost"
-            width="22"
-            height="22"
-          />
+    {% if content.field_target_audience['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img
+          src="/themes/custom/motaded_theme/img/target-audience.svg"
+          alt="Target Audience"
+          width="24"
+          height="24"
+        />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_target_audience['#title'] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_target_audience.0 }}
+          </p>
         </div>
       </div>
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_service_cost['#title'] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_service_cost.0 }}
-        </p>
+    {% endif %}
+
+    <!-- Service Duration -->
+    {% if content.field_service_duration['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img
+          src="/themes/custom/motaded_theme/img/service-duration.svg"
+          alt="Service Duration"
+          width="24"
+          height="24"
+        />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_service_duration["#title"] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_service_duration.0 }}
+          </p>
+        </div>
       </div>
-    </div>
+    {% endif %}
+
+    <!--  Provided languages -->
+    {% if content.field_provided_languages['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img
+          src="/themes/custom/motaded_theme/img/icon-lang-brand.svg"
+          alt="Provided languages"
+          width="24"
+          height="24"
+        />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_provided_languages['#title'] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_provided_languages.0 }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+
+    <!-- Service Channels -->
+    {% if content.field_service_channels['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img
+          src="/themes/custom/motaded_theme/img/service-channels.svg"
+          alt="Service Channels"
+          width="24"
+          height="24"
+        />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_service_channels['#title'] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_service_channels.0}}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Service Cost -->
+    {% if content.field_service_cost['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <div
+          class="flex relative justify-center items-center p-0.5 w-6 h-6"
+        >
+          <div class="relative shrink-0 h-[22px] w-[22px]">
+            <img
+              src="/themes/custom/motaded_theme/img/service-cost.svg"
+              alt="Service Cost"
+              width="22"
+              height="22"
+            />
+          </div>
+        </div>
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_service_cost['#title'] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_service_cost.0 }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
 
     <!-- Payment Channels -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img
-        src="/themes/custom/motaded_theme/img/icon-checkmark-circle.svg"
-        alt="Payment options"
-        width="24"
-        height="24"
-      />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_payment_options['#title'] }}
-        </h3>
-        <p
-          class="relative self-stretch text-base leading-6 text-gray-800"
-        >
-          {{ content.field_payment_options.0 }}
-        </p>
+    {% if content.field_service_cost['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img
+          src="/themes/custom/motaded_theme/img/icon-checkmark-circle.svg"
+          alt="Payment options"
+          width="24"
+          height="24"
+        />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
+          >
+            {{ content.field_payment_options['#title'] }}
+          </h3>
+          <p
+            class="relative self-stretch text-base leading-6 text-gray-800"
+          >
+            {{ content.field_payment_options.0 }}
+          </p>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </section>
 
   <!-- Divider -->
@@ -329,11 +342,12 @@
               <a
                 href="{{ field_media }}" 
                 target="_blank" 
-                class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-gray-100 rounded min-h-10"
+                class="flex relative gap-2 items-center p-0"
               >
-                <div class="flex relative justify-center items-center">
+                <span class="relative text-base leading-6 text-green-700">{{ content.field_download_user_guides[i]['#title'] }}</span>
+                {# <div class="flex relative justify-center items-center">
                   <span class="relative text-base font-medium leading-6 text-neutral-900">{{ content.field_download_user_guides[i]['#title'] }}</span>
-                </div>
+                </div> #}
               </a>
             {% endif %}
           {% endfor %}

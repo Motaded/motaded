@@ -1,0 +1,34 @@
+uuid: dae9e313-eca6-4e69-bb8f-1be109fe477e
+langcode: en
+status: false
+dependencies:
+  config:
+    - webform.webform.general_feedback
+  module:
+    - node
+    - webform
+  theme:
+    - motaded_theme
+id: motaded_theme_webform
+theme: motaded_theme
+region: below_content
+weight: -19
+provider: null
+plugin: webform_block
+settings:
+  id: webform_block
+  label: Webform
+  label_display: visible
+  provider: webform
+  webform_id: general_feedback
+  default_data: ''
+  redirect: false
+  lazy: true
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      page: page
