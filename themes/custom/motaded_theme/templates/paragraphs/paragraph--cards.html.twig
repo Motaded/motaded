@@ -46,78 +46,110 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
-{% set gradientColor = content.field_bg_color['#items'].0.value ?? '' %}
+{# {% set gradientColor = content.field_bg_color['#items'].0.value ?? '' %} #}
 
 {% block paragraph %}
-  <section id="why-now" class="section bg-gradient-to-b from-white to-{{gradientColor}}-50">
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-    <h2 class="h2">{{ content.field_title.0  }}</h2>
-    <p class="lead">
-      {{ content.field_body.0 }}
-    </p>
-    {% set card_type = content.field_card_type['#items'].0.value ?? '' %}
-     {% if card_type == "badges" %}
-      <div class="grid md:grid-cols-3 gap-4 mt-6">
-       {% for key, item in content.field_paragraphs %}
-         {% set para = item['#paragraph'] %}
-           {% if para is not empty %}
-            <div class="card--tick">
-              <h3 class="card-title">{{ para.field_title.value }}</h3>
-              <p>
-                {{ para.field_body.value|raw }}
-              </p>
-            </div>
-           {% endif %}
-      {% endfor %}
-      </div>
-     {% elseif card_type == "simple_text_card" %}
-     <div class="grid md:grid-cols-2 gap-6 mt-4">
-      {% for key, item in content.field_paragraphs %}
-         {% set para = item['#paragraph'] %}
-           {% if para is not empty %}
-            <div class="route">
-              {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
-              <img
-                src="{{file_url( para.field_media.entity.field_media_image.entity.fileuri)}}"
-                alt="Technology"
-                class="sector-img"
-              />
+  <section  class="section">
+    <div{{ attributes.addClass(classes) }}>
+      {% block content %}
+      {% if content.field_title.0 is not empty %}
+        <h2 class="h2">{{ content.field_title.0 }}</h2>
+      {% endif %}
+        <p class="lead">{{ content.field_body.0 }}</p>
+        {% set card_type = content.field_card_type['#items'].0.value ?? '' %}
+
+        {# --- Badges layout --- #}
+        {% if card_type == 'badges' %}
+          <div class="grid md:grid-cols-3 gap-4 mt-6">
+            {% for key, item in content.field_paragraphs %}
+              {% set para = item['#paragraph'] %}
+              {% if para is not empty %}
+                <div class="card--tick">
+                  <h3 class="card-title">{{ para.field_title.value }}</h3>
+                  <p>{{ para.field_body.value|raw }}</p>
+                </div>
               {% endif %}
-              <h3 class="route-title">{{ para.field_title.value }}</h3>
-                {{ para.field_body.value|raw }}
+            {% endfor %}
+          </div>
+          {{ content.field_notes }}
+
+        {# --- Simple Text Card layout --- #}
+        {% elseif card_type == 'simple_text_card' %}
+          <div class="grid md:grid-cols-2 gap-6 mt-4">
+            {% for key, item in content.field_paragraphs %}
+              {% set para = item['#paragraph'] %}
+              {% if para is not empty %}
+                <div class="route">
+                  {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
+                    <img
+                      src="{{ file_url(para.field_media.entity.field_media_image.entity.fileuri) }}"
+                      alt="Technology"
+                      class="sector-img"
+                    />
+                  {% endif %}
+                     <h3 class="route-title">{{ para.field_title.value }}</h3>
+                     {{ para.field_body.value|raw }}
+                    {% set link_item = para.field_link.0 %}
+                    {% if link_item %}
+                      <a href="{{ link_item.url.toString() }}" class="btn-secondary">
+                        {{ link_item.title }}
+                       </a>
+                    {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {{ content.field_notes }}
+
+        {# --- Image with Text Wrapper layout --- #}
+        {% elseif card_type == 'image_with_text_wrapper' %}
+          <div class="grid md:grid-cols-3 gap-6 mt-6">
+            {% for key, item in content.field_paragraphs %}
+              {% set para = item['#paragraph'] %}
+              {% if para is not empty %}
+                <div class="sector">
+                  {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
+                    <img
+                      src="{{ file_url(para.field_media.entity.field_media_image.entity.fileuri) }}"
+                      alt="Technology"
+                      class="sector-img"
+                    />
+                  {% endif %}
+                  <h3 class="sector-title">{{ para.field_title.value }}</h3>
+                  <p class="sector-desc">{{ para.field_body.value|raw }}</p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {{ content.field_notes }}
+
+        {% elseif card_type == "cta_block" %}
+          <div class="rounded-2xl border border-green-200 bg-white p-6 md:p-10 grid md:grid-cols-3 gap-6 items-center">
+         {% for key, item in content.field_paragraphs %}
+          {% set para = item['#paragraph'] %}
+           {% if para is not empty %}
+            <div class="md:col-span-2">
+                <h2 class="text-2xl md:text-3xl mb-0 font-bold text-[#0F2A1D]">
+                  {{ para.field_title.value }}
+                </h2>
+                <p class="mt-2 mb-0 text-gray-700">
+                  {{ para.field_body.value|raw }}
+                </p>
+              </div>
+              <div class="flex md:justify-end">
                 {% set link_item = para.field_link.0 %}
                 {% if link_item %}
-                  <a href="{{ link_item.url.toString() }}" class="btn-secondary">{{ link_item.title }}</a>
-                {% endif %}
-            </div>
-           {% endif %}
-      {% endfor %}
-    </div>
-    {% elseif card_type == "image_with_text_wrapper" %}
-      <div class="grid md:grid-cols-3 gap-6 mt-6">
-      {% for key, item in content.field_paragraphs %}
-         {% set para = item['#paragraph'] %}
-           {% if para is not empty %}
-              <div class="sector">
-              {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
-              <img
-                src="{{file_url( para.field_media.entity.field_media_image.entity.fileuri)}}"
-                alt="Technology"
-                class="sector-img"
-              />
-              {% endif %}
-              <h3 class="sector-title">{{ para.field_title.value }}</h3>
-              <p class="sector-desc">
-               {{ para.field_body.value|raw }}
-              </p>
-            </div>
+                  <a href="{{ link_item.url.toString() }}" class="inline-flex items-center gap-2 rounded-md bg-primary-600 text-white px-5 py-3 text-sm font-semibold hover:bg-primary-700">
+                    {{ link_item.title }}
+                   </a>
+                 {% endif %}
+              </div>
           {% endif %}
-      {% endfor %}  
-      </div>
-     {% endif %}
-      {{ content.field_notes }}
-    {% endblock %}
-  </div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endblock %}
+    </div>
   </section>
 {% endblock paragraph %}
+
