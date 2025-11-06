@@ -1,4 +1,4 @@
-uuid: 811ebe80-89e8-4d4e-8045-abc215b9290a
+uuid: 164deafb-3394-4a2a-a03e-02f015cac772
 langcode: en
 status: true
 dependencies:
@@ -9,14 +9,14 @@ dependencies:
     - views
   theme:
     - motaded_theme
-id: motaded_theme_views_block__news_block_2
+id: motaded_theme_views_block__news_block_6
 theme: motaded_theme
 region: below_content
-weight: -22
+weight: -20
 provider: null
-plugin: 'views_block:news-block_2'
+plugin: 'views_block:news-block_6'
 settings:
-  id: 'views_block:news-block_2'
+  id: 'views_block:news-block_6'
   label: ''
   label_display: '0'
   provider: views
@@ -30,4 +30,4 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
-      article: article
+      page: page

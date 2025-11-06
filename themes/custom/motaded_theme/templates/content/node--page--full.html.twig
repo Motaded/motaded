@@ -87,9 +87,10 @@
           </h1>
         </div>
         <!-- CTA Button -->
+        {% set contact_url = url('<front>')|render ~ '/contact-us?service-id=' ~ node.id %}
         <a
           class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start"
-          href="{{ path('<front>') ~ '/contact-us?service-id=' ~ node.id }}"
+          href="{{ contact_url|replace({'//c': '/c'}) }}"
         >
           <span class="relative text-base font-medium leading-6 text-white"
             >{{ "Get Started"|t }}</span

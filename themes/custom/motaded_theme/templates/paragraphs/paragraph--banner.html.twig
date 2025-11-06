@@ -49,7 +49,8 @@
 {% block paragraph %}
   <div{{attributes.addClass(classes)}}>
     {% block content %}
-    {% if content.field_banner_type == "banner_style_1" %}
+    {% set banner_type = content.field_banner_type['#items'].0.value ?? '' %}
+    {% if banner_type == "banner_style_1" %}
       <section
         class="relative isolate">
         <!-- Background image + overlay -->
@@ -168,7 +169,18 @@
 
               <!-- Value badges -->
               <dl class="mt-8 grid grid-cols-2 gap-4 text-sm">
-                {{ content.field_paragraphs }}
+              {% for key, item in content.field_paragraphs %}
+              {% set para = item['#paragraph'] %}
+                {% if para is not empty %}
+               <div class="rounded-xl border border-green-200 bg-green-50 p-4">
+                  <dt class="font-semibold text-green-900">{{ para.field_title.value }}</dt>
+                  <dd class="mt-1 text-green-800">
+                    {{ para.field_body.value|raw }}
+                  </dd>
+                </div>
+                {% endif %}
+              {% endfor %}
+
               </dl>
             </div>
             <div class="relative">
