@@ -1621,7 +1621,7 @@ display:
         options:
           submit_button: Apply
           reset_button: true
-          reset_button_label: Reset
+          reset_button_label: 'Clear filters'
           exposed_sorts_label: Sort
           expose_sort_order: false
           sort_asc_label: A-Z

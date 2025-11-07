@@ -142,7 +142,12 @@ html {
   }
 
   .form-actions {
-    margin-left: auto;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    input.form-submit {
+      width: 100%;
+    }
   }
 
   .js-form-item-search {

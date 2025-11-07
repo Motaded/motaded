@@ -4821,6 +4821,9 @@
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
   }
+  .\!pb-0 {
+    padding-bottom: calc(var(--spacing) * 0) !important;
+  }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
   }
@@ -6254,7 +6257,12 @@ html {
     --tw-translate-y: 0 !important;
   }
   .form-actions {
-    margin-left: auto;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    input.form-submit {
+      width: 100%;
+    }
   }
   .js-form-item-search {
     margin: 0;
