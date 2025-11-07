@@ -297,6 +297,9 @@ html {
 .main-wrapper:has(.page-green) {
   @apply !bg-green-50;
 }
+.main-wrapper:has(.page-gray) {
+  @apply !bg-gray-50;
+}
 
 .section {
   padding: 3rem 0;

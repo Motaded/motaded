@@ -6400,6 +6400,9 @@ html {
 .main-wrapper:has(.page-green) {
   background-color: var(--color-green-50) !important;
 }
+.main-wrapper:has(.page-gray) {
+  background-color: var(--color-gray-50) !important;
+}
 .section {
   padding: 3rem 0;
 }
