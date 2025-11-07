@@ -1,6 +1,6 @@
 uuid: dae9e313-eca6-4e69-bb8f-1be109fe477e
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - webform.webform.general_feedback
@@ -18,7 +18,7 @@ plugin: webform_block
 settings:
   id: webform_block
   label: Webform
-  label_display: visible
+  label_display: '0'
   provider: webform
   webform_id: general_feedback
   default_data: ''

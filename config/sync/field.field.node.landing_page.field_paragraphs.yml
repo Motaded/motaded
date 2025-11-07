@@ -5,8 +5,10 @@ dependencies:
   config:
     - field.storage.node.field_paragraphs
     - node.type.landing_page
+    - paragraphs.paragraphs_type.accordions
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.steps
     - paragraphs.paragraphs_type.view_block
@@ -28,11 +30,19 @@ settings:
     target_bundles:
       banner: banner
       banner_sm: banner_sm
+      accordions: accordions
       featured_contents: featured_contents
+      cards: cards
       steps: steps
       view_block: view_block
     negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 25
+        enabled: false
+      accordions:
+        weight: 26
+        enabled: true
       advantages:
         weight: -31
         enabled: false
@@ -51,6 +61,9 @@ settings:
       card:
         weight: 27
         enabled: false
+      cards:
+        weight: 33
+        enabled: true
       counter:
         weight: -26
         enabled: false
@@ -62,6 +75,9 @@ settings:
         enabled: true
       itc_card:
         weight: -24
+        enabled: false
+      notes:
+        weight: 39
         enabled: false
       objectives:
         weight: -23

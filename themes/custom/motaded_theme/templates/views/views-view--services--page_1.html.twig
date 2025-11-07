@@ -37,6 +37,7 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'page-gray',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
@@ -133,3 +134,4 @@
     </div>
   {% endif %}
 </div>
+

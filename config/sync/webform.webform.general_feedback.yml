@@ -13,6 +13,12 @@ title: 'Tell us about your experience with Motaded'
 description: ''
 categories: {  }
 elements: |-
+  label:
+    '#type': label
+    '#title': 'Tell us about your experience with Motaded'
+    '#attributes':
+      class:
+        - inline-form-title
   meet_needs:
     '#type': radios
     '#title': 'Did this Motaded service meet your needs?'
@@ -20,6 +26,7 @@ elements: |-
   yes_reason:
     '#type': checkboxes
     '#title': 'Yes reason'
+    '#title_display': invisible
     '#options':
       'Clear guidance on licensing & permits': 'Clear guidance on licensing & permits'
       'Fast and proactive communication': 'Fast and proactive communication'
@@ -32,6 +39,7 @@ elements: |-
   no_reason:
     '#type': checkboxes
     '#title': 'No reason'
+    '#title_display': invisible
     '#options':
       'Content is inappropriate': 'Content is inappropriate'
       'Content is inaccurate': 'Content is inaccurate'
@@ -44,6 +52,7 @@ elements: |-
   about_you:
     '#type': radios
     '#title': 'About you'
+    '#title_display': before
     '#options':
       Male: Male
       Female: Female
@@ -55,6 +64,7 @@ elements: |-
   your_message:
     '#type': textarea
     '#title': 'Your message'
+    '#rows': 2
     '#states':
       visible:
         ':input[name="meet_needs"]':
