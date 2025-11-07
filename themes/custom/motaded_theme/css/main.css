@@ -155,16 +155,6 @@ html {
   }
 }
 
-.latest-news-block {
-  .attachment-after {
-
-    .views-element-container,
-    .view-content {
-      /* @apply h-full; */
-    }
-  }
-}
-
 .paragraph--type--view-block:has(.section-bg-green) {
   /* background-color: red; */
   @apply bg-green-50;
@@ -275,6 +265,26 @@ html {
     span{
     @apply text-xl font-semibold text-green-700 leading-6;
   }
+  }
+}
+.page-node-type-page .webform-submission-general-feedback-form {
+  @apply bg-white shadow rounded-xl p-4 mb-12;
+  & > fieldset,
+  .webform-type-textarea {
+    margin-left: 20px;
+    padding-bottom: 12px;
+  }
+  #edit-meet-needs--wrapper {
+    margin-left: 0;
+  }
+  #edit-no-reason--wrapper,
+  #edit-yes-reason--wrapper {
+    .form-type-checkbox {
+      margin: 0;
+    }
+  }
+  .webform-type-textarea {
+    max-width: 400px;
   }
 }
 

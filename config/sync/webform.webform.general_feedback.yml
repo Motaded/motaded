@@ -26,6 +26,7 @@ elements: |-
   yes_reason:
     '#type': checkboxes
     '#title': 'Yes reason'
+    '#title_display': invisible
     '#options':
       'Clear guidance on licensing & permits': 'Clear guidance on licensing & permits'
       'Fast and proactive communication': 'Fast and proactive communication'
@@ -38,6 +39,7 @@ elements: |-
   no_reason:
     '#type': checkboxes
     '#title': 'No reason'
+    '#title_display': invisible
     '#options':
       'Content is inappropriate': 'Content is inappropriate'
       'Content is inaccurate': 'Content is inaccurate'
@@ -50,10 +52,19 @@ elements: |-
   about_you:
     '#type': radios
     '#title': 'About you'
+    '#title_display': before
     '#options':
       Male: Male
       Female: Female
       "I'd rather not say": "I'd rather not say"
+    '#states':
+      visible:
+        ':input[name="meet_needs"]':
+          checked: true
+  your_message:
+    '#type': textarea
+    '#title': 'Your message'
+    '#rows': 2
     '#states':
       visible:
         ':input[name="meet_needs"]':

@@ -77,10 +77,12 @@
   {{ title_prefix }}
   {{ title_suffix }}
 
+  {% set divider = false %}
   <!-- Service Information -->
   <section class="flex relative flex-col gap-4 items-start self-stretch">
     <!-- Target Audience -->
     {% if content.field_target_audience['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <img
           src="/themes/custom/motaded_theme/img/target-audience.svg"
@@ -105,6 +107,7 @@
 
     <!-- Service Duration -->
     {% if content.field_service_duration['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <img
           src="/themes/custom/motaded_theme/img/service-duration.svg"
@@ -129,6 +132,7 @@
 
     <!--  Provided languages -->
     {% if content.field_provided_languages['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <img
           src="/themes/custom/motaded_theme/img/icon-lang-brand.svg"
@@ -154,6 +158,7 @@
 
     <!-- Service Channels -->
     {% if content.field_service_channels['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <img
           src="/themes/custom/motaded_theme/img/service-channels.svg"
@@ -178,6 +183,7 @@
 
     <!-- Service Cost -->
     {% if content.field_service_cost['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <div
           class="flex relative justify-center items-center p-0.5 w-6 h-6"
@@ -208,6 +214,7 @@
 
     <!-- Payment Channels -->
     {% if content.field_service_cost['#items'] is not empty %}
+      {% set divider = true %}
       <div class="flex relative gap-2 items-start self-stretch">
         <img
           src="/themes/custom/motaded_theme/img/icon-checkmark-circle.svg"
@@ -232,7 +239,9 @@
   </section>
 
   <!-- Divider -->
-  <div class="relative h-px bg-gray-300 w-[336px] max-md:w-full"></div>
+  {% if divider %}
+    <div class="relative h-px bg-gray-300 w-[336px] max-md:w-full"></div>
+  {% endif %}
 
   <!-- Contact Information -->
   <section class="flex relative flex-col gap-4 items-start self-stretch">
@@ -259,56 +268,60 @@
     </div>
 
     <!-- Phone -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img src="/themes/custom/motaded_theme/img/icon-phone.svg" alt="Phone" width="24" height="24" />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_phone_number["#title"] }}
-        </h3>
-        <a
-          href="tel:{{ content.field_phone_number.0 }}"
-          class="flex relative gap-2 items-center p-0"
-        >
-          <span class="relative text-base leading-6 text-green-700"
-            >{{ content.field_phone_number.0 }}</span
+    {% if content.field_phone_number['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img src="/themes/custom/motaded_theme/img/icon-phone.svg" alt="Phone" width="24" height="24" />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
           >
-          <img
-            src="/themes/custom/motaded_theme/img/icon-link-square.svg"
-            alt="External Link"
-            width="18"
-            height="18"
-          />
-        </a>
+            {{ content.field_phone_number["#title"] }}
+          </h3>
+          <a
+            href="tel:{{ content.field_phone_number.0 }}"
+            class="flex relative gap-2 items-center p-0"
+          >
+            <span class="relative text-base leading-6 text-green-700"
+              >{{ content.field_phone_number.0 }}</span
+            >
+            <img
+              src="/themes/custom/motaded_theme/img/icon-link-square.svg"
+              alt="External Link"
+              width="18"
+              height="18"
+            />
+          </a>
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     <!-- Email -->
-    <div class="flex relative gap-2 items-start self-stretch">
-      <img src="/themes/custom/motaded_theme/img/icon-email.svg" alt="Email" width="24" height="24" />
-      <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
-        <h3
-          class="relative self-stretch text-base font-bold leading-6 text-gray-800"
-        >
-          {{ content.field_email_address["#title"] }}
-        </h3>
-        <a
-          href="mailto:{{ content.field_email_address.0 }}"
-          class="flex relative gap-2 items-center p-0"
-        >
-          <span class="relative text-base leading-6 text-green-700"
-            >{{ content.field_email_address.0 }}</span
+    {% if content.field_email_address['#items'] is not empty %}
+      <div class="flex relative gap-2 items-start self-stretch">
+        <img src="/themes/custom/motaded_theme/img/icon-email.svg" alt="Email" width="24" height="24" />
+        <div class="flex relative flex-col gap-1 items-start flex-[1_0_0]">
+          <h3
+            class="relative self-stretch text-base font-bold leading-6 text-gray-800"
           >
-          <img
-            src="/themes/custom/motaded_theme/img/icon-link-square.svg"
-            alt="External Link"
-            width="18"
-            height="18"
-          />
-        </a>
+            {{ content.field_email_address["#title"] }}
+          </h3>
+          <a
+            href="mailto:{{ content.field_email_address.0 }}"
+            class="flex relative gap-2 items-center p-0"
+          >
+            <span class="relative text-base leading-6 text-green-700"
+              >{{ content.field_email_address.0 }}</span
+            >
+            <img
+              src="/themes/custom/motaded_theme/img/icon-link-square.svg"
+              alt="External Link"
+              width="18"
+              height="18"
+            />
+          </a>
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     <!-- Download Manual Button -->
     {% if content.field_document|render is not empty %}
