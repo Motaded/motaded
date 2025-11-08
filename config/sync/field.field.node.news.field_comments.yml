@@ -1,25 +1,23 @@
-uuid: d811b9fc-4bfe-4bd4-9d78-6697c35158df
+uuid: 519832b4-f271-44c8-8076-b16f61def393
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.comment
-    - node.type.article
+    - field.storage.node.field_comments
+    - node.type.news
   module:
     - comment
-_core:
-  default_config_hash: UqXlkKC4v2-bDfWx4zcXQrD5YIi3d5byENEmWv-G_Uc
-id: node.article.comment
-field_name: comment
+id: node.news.field_comments
+field_name: field_comments
 entity_type: node
-bundle: article
+bundle: news
 label: 'Comments and inquiries'
 description: 'Join the discussion to share your experience with our consultation services. Your questions help other businesses learn more about the support we provide.'
 required: false
-translatable: true
+translatable: false
 default_value:
   -
-    status: 0
+    status: 2
     cid: 0
     last_comment_timestamp: 0
     last_comment_name: null
@@ -27,7 +25,7 @@ default_value:
     comment_count: 0
 default_value_callback: ''
 settings:
-  default_mode: 1
+  default_mode: 0
   per_page: 50
   anonymous: 0
   form_location: true
