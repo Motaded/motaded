@@ -3,49 +3,35 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.comment.default
     - core.entity_view_mode.node.comments
     - field.field.node.news.body
+    - field.field.node.news.field_comments
     - field.field.node.news.field_media
     - field.field.node.news.field_meta
     - field.field.node.news.field_tags
     - node.type.news
   module:
-    - metatag
-    - text
+    - comment
     - user
 id: node.news.comments
 targetEntityType: node
 bundle: news
 mode: comments
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_media:
-    type: entity_reference_entity_view
+  field_comments:
+    type: comment_default
     label: hidden
     settings:
       view_mode: default
-      link: true
+      pager_id: 0
     third_party_settings: {  }
     weight: 0
     region: content
-  field_meta:
-    type: metatag_empty_formatter
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
 hidden:
+  body: true
+  field_media: true
+  field_meta: true
   field_tags: true
   langcode: true
+  links: true
