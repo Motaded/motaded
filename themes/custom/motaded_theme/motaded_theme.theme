@@ -156,20 +156,39 @@ function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$va
 function motaded_theme_preprocess_breadcrumb(&$variables) {
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node) {
+    $prefix = getLanguagePrefix();
+    $prefix = str_ends_with($prefix, "/") ? $prefix : $prefix . "/";
     if ($node->bundle() == "article") {
       $list_crumb = [
         'text' => t('Articles'),
-        'url' => "blog",
+        'url' => $prefix . "blog",
       ];
       array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
     } elseif ($node->bundle() == "page") {
       $list_crumb = [
         'text' => t('Services'),
-        'url' => "services",
+        'url' => $prefix . "services",
+      ];
+      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+    } elseif ($node->bundle() == "news") {
+      $list_crumb = [
+        'text' => t('News'),
+        'url' => $prefix . "news",
       ];
       array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
     }
   }
+}
+
+/**
+ * Helper function to get language prefix.
+ */
+function getLanguagePrefix() {
+  if($prefixes = \Drupal::config('language.negotiation')->get('url.prefixes')) {
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    return "/". $prefixes[$language];
+  }
+  return null;
 }
 
 
