@@ -3,8 +3,6 @@ import { Route, Navigate, HashRouter } from "react-router-dom";
 
 import { Changelog } from "./Components/Changelog/Changelog";
 import { ChangelogToc } from "./Components/Changelog/ChangelogToc";
-import { Colormask } from "./Components/Colormask/Colormask";
-import { ColormaskToc } from "./Components/Colormask/ColormaskToc";
 import { DatetimeAlias } from "./Components/DatetimeAlias/DatetimeAlias";
 import { DatetimeAliasToc } from "./Components/DatetimeAlias/DatetimeAliasToc";
 import { Demo } from "./Components/Demo/Demo";
@@ -64,15 +62,6 @@ export const RoutingProvider = ({ children }) => {
           </HashFragments>
         }
       />,
-      <Route
-        key={RouteNames.Documentation_Colormask}
-        path={RouteNames.Documentation_Colormask}
-        element={
-          <HashFragments>
-            <Colormask />
-          </HashFragments>
-        }
-      />,
       <Route key={RouteNames.Demo} path={RouteNames.Demo} element={<Demo />} />,
       <Route
         key={RouteNames.Changelog}
@@ -109,11 +98,6 @@ export const RoutingProvider = ({ children }) => {
         key={RouteNames.Documentation_Numeric}
         path={RouteNames.Documentation_Numeric}
         element={<NumericAliasToc />}
-      />,
-      <Route
-        key={RouteNames.Documentation_Colormask}
-        path={RouteNames.Documentation_Colormask}
-        element={<ColormaskToc />}
       />,
       <Route
         key={RouteNames.Changelog}

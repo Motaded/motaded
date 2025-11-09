@@ -33,6 +33,7 @@ if (
       const im = new Inputmask();
       im.dataAttribute = "";
       im.mask(this.input);
+      this.input.inputmask.shadowRoot = shadow; // make the shadowRoot available
     }
 
     attributeChangedCallback(attrName, oldVal, newVal) {

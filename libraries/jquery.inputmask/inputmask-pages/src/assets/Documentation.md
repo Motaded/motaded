@@ -16,19 +16,19 @@ Inputmask with jQuery as dependencylib.
 
 ```html
 <script src="jquery.js"></script>
-<script src="jquery.inputmask.js"></script>
+<script src="dist/jquery.inputmask.js"></script>
 ```
 
 Inputmask with vanilla dependencylib.
 
 ```html
-<script src="inputmask.js"></script>
+<script src="dist/inputmask.js"></script>
 ```
 
 If you like to automatically bind the inputmask to the inputs marked with the data-inputmask- ... attributes you may also want to include the inputmask.binding.js
 
 ```html
-<script src="bindings/inputmask.binding.js"></script>
+<script src="dist/bindings/inputmask.binding.js"></script>
 ```
 
 ### webpack
@@ -1093,7 +1093,7 @@ $(selector).inputmask({
 
 ### postValidation
 
-Hook to postValidate the result from isValid.  Usefull for validating the entry as a whole.  Args => buffer, pos, c, currentResult, opts, maskset, strict, fromCheckval, fromAlternate<br>Return => true|false|command object
+Hook to postValidate the result from isValid.  Usefull for validating the entry as a whole.  Args => buffer, pos, c, currentResult, opts, maskset, strict, fromCheckval<br>Return => true|false|command object
 
 ### preValidation
 
@@ -1210,17 +1210,6 @@ substitutes: {
 ```
 
 Default: {}
-
-### outputMask
-
-Define the mask to use for the output.
-
-```javascript
-$(selector).inputmask({ mask: "99-999-99", outputMask: "(99) 99999" });
-```
-Input => 1212345      mask => 12-123-45     outputMask => (12) 12345
-
-
 
 ## General
 

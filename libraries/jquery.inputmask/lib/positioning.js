@@ -63,7 +63,10 @@ function caret(input, begin, end, notranslate, isDelete) {
           end++; // set visualization for insert/overwrite mode
         }
       }
-      if (input === input.getRootNode().activeElement) {
+      if (
+        input ===
+        (input.inputmask.shadowRoot || input.ownerDocument).activeElement
+      ) {
         if ("setSelectionRange" in input) {
           input.setSelectionRange(begin, end);
         } else if (window.getSelection) {

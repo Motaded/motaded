@@ -1,5 +1,6 @@
 define([
   'jquery',
+  'require',
 
   './results',
 
@@ -8,7 +9,6 @@ define([
   './selection/placeholder',
   './selection/allowClear',
   './selection/search',
-  './selection/selectionCss',
   './selection/eventRelay',
 
   './utils',
@@ -32,16 +32,14 @@ define([
   './dropdown/minimumResultsForSearch',
   './dropdown/selectOnClose',
   './dropdown/closeOnSelect',
-  './dropdown/dropdownCss',
-  './dropdown/tagsSearchHighlight',
 
   './i18n/en'
-], function ($,
+], function ($, require,
 
              ResultsList,
 
              SingleSelection, MultipleSelection, Placeholder, AllowClear,
-             SelectionSearch, SelectionCSS, EventRelay,
+             SelectionSearch, EventRelay,
 
              Utils, Translation, DIACRITICS,
 
@@ -50,7 +48,6 @@ define([
 
              Dropdown, DropdownSearch, HidePlaceholder, InfiniteScroll,
              AttachBody, MinimumResultsForSearch, SelectOnClose, CloseOnSelect,
-             DropdownCSS, TagsSearchHighlight,
 
              EnglishTranslation) {
   function Defaults () {
@@ -100,6 +97,24 @@ define([
           Tokenizer
         );
       }
+
+      if (options.query != null) {
+        var Query = require(options.amdBase + 'compat/query');
+
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          Query
+        );
+      }
+
+      if (options.initSelection != null) {
+        var InitSelection = require(options.amdBase + 'compat/initSelection');
+
+        options.dataAdapter = Utils.Decorate(
+          options.dataAdapter,
+          InitSelection
+        );
+      }
     }
 
     if (options.resultsAdapter == null) {
@@ -123,13 +138,6 @@ define([
         options.resultsAdapter = Utils.Decorate(
           options.resultsAdapter,
           SelectOnClose
-        );
-      }
-
-      if (options.tags) {
-        options.resultsAdapter = Utils.Decorate(
-          options.resultsAdapter,
-          TagsSearchHighlight
         );
       }
     }
@@ -157,7 +165,13 @@ define([
         );
       }
 
-      if (options.dropdownCssClass != null) {
+      if (
+        options.dropdownCssClass != null ||
+        options.dropdownCss != null ||
+        options.adaptDropdownCssClass != null
+      ) {
+        var DropdownCSS = require(options.amdBase + 'compat/dropdownCss');
+
         options.dropdownAdapter = Utils.Decorate(
           options.dropdownAdapter,
           DropdownCSS
@@ -199,10 +213,16 @@ define([
         );
       }
 
-      if (options.selectionCssClass != null) {
+      if (
+        options.containerCssClass != null ||
+        options.containerCss != null ||
+        options.adaptContainerCssClass != null
+      ) {
+        var ContainerCSS = require(options.amdBase + 'compat/containerCss');
+
         options.selectionAdapter = Utils.Decorate(
           options.selectionAdapter,
-          SelectionCSS
+          ContainerCSS
         );
       }
 
@@ -251,7 +271,7 @@ define([
 
     function matcher (params, data) {
       // Always return the object if there is nothing to compare
-      if (params.term == null || params.term.trim() === '') {
+      if ($.trim(params.term) === '') {
         return data;
       }
 
@@ -295,8 +315,8 @@ define([
     }
 
     this.defaults = {
+      amdBase: './',
       amdLanguageBase: './i18n/',
-      autocomplete: 'off',
       closeOnSelect: true,
       debug: false,
       dropdownAutoWidth: false,
@@ -356,7 +376,7 @@ define([
 
     var languages;
 
-    if (!Array.isArray(language)) {
+    if (!$.isArray(language)) {
       languages = [language];
     } else {
       languages = language;
@@ -421,10 +441,7 @@ define([
   };
 
   Defaults.prototype.set = function (key, value) {
-    function upperCaseLetter(_, letter) {
-      return letter.toUpperCase();
-    }
-    var camelKey = key.replace(/-([a-z])/g, upperCaseLetter);
+    var camelKey = $.camelCase(key);
 
     var data = {};
     data[camelKey] = value;

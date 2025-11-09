@@ -1,91 +1,81 @@
 * {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
+
 body {
   margin: 20px;
+
   font-size: 14px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #555;
 }
 
-input,
-.button {
+.iti__hide {
+  display: none;
+}
+
+// example code blocks
+pre {
+  margin: 0 !important; // override prism.css
+  display: inline-block;
+}
+// override weird rule in prism.css that puts a background on '='
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  background: none;
+}
+
+// general form styling
+input, button {
   height: 35px;
   margin: 0;
   padding: 6px 12px;
   border-radius: 2px;
 
-  //* Same font style, size and color as rest of site.
+  // same font style, size and color as rest of site
   font-family: inherit;
   font-size: 100%;
   color: inherit;
+
+  &[disabled] {
+    background-color: #eee;
+  }
 }
 
-input {
-  border: 1px solid #ccc;
-  width: 220px;
+// select useful for examples
+input, select {
+  border: 1px solid #CCC;
+  width: 250px;
+}
+::-webkit-input-placeholder {
+   color: #BBB;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #BBB;
+   opacity:  1;
+}
+:-ms-input-placeholder {
+   color: #BBB;
 }
 
-input::placeholder {
-  color: #bbb;
-}
-
-//* Borrowed from bootstrap.
-.button {
-  color: #fff;
-  background-color: #428bca;
-  border: 1px solid #357ebd;
-  margin-left: 5px;
+// borrowed from bootstrap
+button {
+  color: #FFF;
+  background-color: #428BCA;
+  border: 1px solid #357EBD;
   &:hover {
-    background-color: #3276b1;
-    border-color: #285e8e;
+    background-color: #3276B1;
+    border-color: #285E8E;
     cursor: pointer;
   }
 }
 
-//* For react demo.
-.notice {
-  margin-top: 15px;
-}
-
-// dark mode
-@media (prefers-color-scheme: dark) {
-  // general site styling
-  body, input {
-    color: white;
-    background-color: #0d1117;
-  }
-  input[disabled] {
-    background-color: #3c3c3c;
-  }
-  input {
-    border-color: #5b5b5b;
-  }
-  input::placeholder {
-    color: #8d96a0;
-  }
-  // intl-tel-input styling
-  .iti {
-    --iti-border-color: #5b5b5b;
-    --iti-dialcode-color: #999999;
-    --iti-dropdown-bg: #0d1117;
-    --iti-arrow-color: #aaaaaa;
-    --iti-hover-color: #30363d;
-    --iti-path-globe-1x: url("../img/globe_light.webp");
-    --iti-path-globe-2x: url("../img/globe_light@2x.webp");
-  }
-}
-
-// validation demo
-#error-msg {
-  color: red;
-}
-#valid-msg {
-  color: #00c900;
-}
-input.error {
-  border: 1px solid #ff7c7c;
-}
-.hide {
-  display: none;
+// examples
+#result {
+  margin-bottom: 100px;
 }

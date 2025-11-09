@@ -1,7 +1,3 @@
-**/demo/**
-**/grunt/**
-**/build/**
-**/third_party/**
-**/tmp/**
-Gruntfile.js
-**/utils-compiled.js
+/grunt
+/build
+/Gruntfile.js

@@ -4,7 +4,7 @@
  Copyright (c) Robin Herbots
  Licensed under the MIT license
  */
-import { escapeRegex } from "../escapeRegex";
+import escapeRegex from "../escapeRegex";
 import Inputmask from "../inputmask";
 import { keyCode, keys } from "../keycode.js";
 import { seekNext } from "../positioning";
@@ -32,61 +32,53 @@ class DateObject {
   }
 
   initDateObject(mask, opts, inputmask) {
-    let match,
-      lastNdx = -1;
+    let match;
     getTokenizer(opts).lastIndex = 0;
     while ((match = getTokenizer(opts).exec(this.format))) {
-      if (match.index >= lastNdx) {
-        let dynMatches = /\d+$/.exec(match[0]),
-          fcode = dynMatches ? match[0][0] + "x" : match[0],
-          value;
-        if (mask !== undefined) {
-          // console.log("mask", mask);
-          if (dynMatches) {
-            const lastIndex = getTokenizer(opts).lastIndex,
-              tokenMatch = getTokenMatch.call(
-                inputmask,
-                match.index,
-                opts,
-                inputmask && inputmask.maskset
-              );
-            getTokenizer(opts).lastIndex = lastIndex;
-            value = mask.slice(0, mask.indexOf(tokenMatch.nextMatch[0]));
-          } else {
-            let targetSymbol = match[0][0],
-              ndx = match.index;
-            while (
-              inputmask &&
-              (opts.placeholder[
-                `${match.index}'${
-                  getTest.call(inputmask, ndx).match.placeholder
-                }`
-              ] || getTest.call(inputmask, ndx).match.placeholder) ===
-                targetSymbol
-            ) {
-              ndx++;
-            }
-            lastNdx = ndx;
-            const targetMatchLength = ndx - match.index;
-            value = mask.slice(
-              0,
-              targetMatchLength ||
-                (formatCode[fcode] && formatCode[fcode][4]) ||
-                fcode.length
+      let dynMatches = /\d+$/.exec(match[0]),
+        fcode = dynMatches ? match[0][0] + "x" : match[0],
+        value;
+      if (mask !== undefined) {
+        // console.log("mask", mask);
+        if (dynMatches) {
+          const lastIndex = getTokenizer(opts).lastIndex,
+            tokenMatch = getTokenMatch.call(
+              inputmask,
+              match.index,
+              opts,
+              inputmask && inputmask.maskset
             );
+          getTokenizer(opts).lastIndex = lastIndex;
+          value = mask.slice(0, mask.indexOf(tokenMatch.nextMatch[0]));
+        } else {
+          let targetSymbol = match[0][0],
+            ndx = match.index;
+          while (
+            inputmask &&
+            (opts.placeholder[getTest.call(inputmask, ndx).match.placeholder] ||
+              getTest.call(inputmask, ndx).match.placeholder) === targetSymbol
+          ) {
+            ndx++;
           }
-          mask = mask.slice(value.length);
-        }
-
-        if (Object.prototype.hasOwnProperty.call(formatCode, fcode)) {
-          this.setValue(
-            this,
-            value,
-            fcode,
-            formatCode[fcode][2],
-            formatCode[fcode][1]
+          const targetMatchLength = ndx - match.index;
+          value = mask.slice(
+            0,
+            targetMatchLength ||
+              (formatCode[fcode] && formatCode[fcode][4]) ||
+              fcode.length
           );
         }
+        mask = mask.slice(value.length);
+      }
+
+      if (Object.prototype.hasOwnProperty.call(formatCode, fcode)) {
+        this.setValue(
+          this,
+          value,
+          fcode,
+          formatCode[fcode][2],
+          formatCode[fcode][1]
+        );
       }
     }
   }
@@ -374,8 +366,8 @@ let currentYear = new Date().getFullYear(),
   formatAlias = {
     isoDate: "yyyy-mm-dd", // 2007-06-09
     isoTime: "HH:MM:ss", // 17:46:21
-    isoDateTime: "yyyy-mm-dd\\THH:MM:ss", // 2007-06-09T17:46:21
-    isoUtcDateTime: "UTC:yyyy-mm-dd\\THH:MM:ss\\Z" // 2007-06-09T22:46:21Z
+    isoDateTime: "yyyy-mm-dd'T'HH:MM:ss", // 2007-06-09T17:46:21
+    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'" // 2007-06-09T22:46:21Z
   };
 
 function setAMPM(value) {
@@ -617,68 +609,57 @@ function isDateInRange(dateParts, result, opts, maskset, fromCheckval) {
 
 // parse the given format and return a mask pattern
 // when a dateObjValue is passed a datestring in the requested format is returned
-function parse(format, dateObjValue, opts) {
+function parse(format, dateObjValue, opts, raw) {
   // parse format to regex string
   let mask = "",
     match,
     fcode,
     ndx = 0,
-    escaped = false;
-  const placeHolder = {};
+    placeHolder = {};
   getTokenizer(opts).lastIndex = 0;
   while ((match = getTokenizer(opts).exec(format))) {
-    if (match[0] === opts.escapeChar) {
-      escaped = true;
-    } else {
-      if (dateObjValue === undefined) {
-        if (!escaped && (fcode = formatcode(match))) {
-          mask += "(" + fcode[0] + ")";
-          // map placeholder to placeholder object and set placeholder mappings
-          if (opts.placeholder && opts.placeholder !== "") {
-            placeHolder[ndx] =
-              opts.placeholder[match.index % opts.placeholder.length];
-            // internal use of datetime alias
-            placeHolder[
-              `${match.index}'${
-                opts.placeholder[match.index % opts.placeholder.length]
-              }`
-            ] = match[0].charAt(0);
-          } else {
-            placeHolder[ndx] = match[0].charAt(0);
-          }
+    if (dateObjValue === undefined) {
+      if ((fcode = formatcode(match))) {
+        mask += "(" + fcode[0] + ")";
+        // map placeholder to placeholder object and set placeholder mappings
+        if (opts.placeholder && opts.placeholder !== "") {
+          placeHolder[ndx] =
+            opts.placeholder[match.index % opts.placeholder.length];
+          placeHolder[opts.placeholder[match.index % opts.placeholder.length]] =
+            match[0].charAt(0);
         } else {
-          switch (match[0]) {
-            case "[":
-              mask += "(";
-              break;
-            case "]":
-              mask += ")?";
-              break;
-            default:
-              mask += escapeRegex(match[0]);
-              placeHolder[ndx] = match[0].charAt(0);
-          }
+          placeHolder[ndx] = match[0].charAt(0);
         }
       } else {
-        if (!escaped && (fcode = formatcode(match))) {
-          if (fcode[3]) {
-            const getFn = fcode[3];
-            mask += getFn.call(dateObjValue.date);
-          } else if (fcode[2] && dateObjValue["raw" + fcode[2]] !== undefined) {
-            mask += dateObjValue["raw" + fcode[2]];
-          } else {
-            mask += match[0];
-          }
+        switch (match[0]) {
+          case "[":
+            mask += "(";
+            break;
+          case "]":
+            mask += ")?";
+            break;
+          default:
+            mask += escapeRegex(match[0]);
+            placeHolder[ndx] = match[0].charAt(0);
+        }
+      }
+    } else {
+      if ((fcode = formatcode(match))) {
+        if (raw !== true && fcode[3]) {
+          const getFn = fcode[3];
+          mask += getFn.call(dateObjValue.date);
+        } else if (fcode[2]) {
+          mask += dateObjValue["raw" + fcode[2]];
         } else {
           mask += match[0];
         }
+      } else {
+        mask += match[0];
       }
-      ndx++;
-      escaped = false;
     }
+    ndx++;
   }
   if (dateObjValue === undefined) {
-    // console.log(JSON.stringify(placeHolder));
     opts.placeholder = placeHolder;
   }
   return mask;
@@ -713,14 +694,17 @@ function importDate(dateObj, opts) {
 
 function getTokenMatch(pos, opts, maskset) {
   let inputmask = this,
+    masksetHint =
+      maskset && maskset.tests[pos]
+        ? opts.placeholder[maskset.tests[pos][0].match.placeholder] ||
+          maskset.tests[pos][0].match.placeholder
+        : "",
     calcPos = 0,
     targetMatch,
     match,
     matchLength = 0;
-
   getTokenizer(opts).lastIndex = 0;
   while ((match = getTokenizer(opts).exec(opts.inputFormat))) {
-    // console.log(`match.index ${match.index}`);
     const dynMatches = /\d+$/.exec(match[0]);
     if (dynMatches) {
       matchLength = parseInt(dynMatches[0]);
@@ -729,9 +713,8 @@ function getTokenMatch(pos, opts, maskset) {
         ndx = calcPos;
       while (
         inputmask &&
-        (opts.placeholder[
-          `${match.index}'${getTest.call(inputmask, ndx).match.placeholder}`
-        ] || getTest.call(inputmask, ndx).match.placeholder) === targetSymbol
+        (opts.placeholder[getTest.call(inputmask, ndx).match.placeholder] ||
+          getTest.call(inputmask, ndx).match.placeholder) === targetSymbol
       ) {
         ndx++;
       }
@@ -740,36 +723,11 @@ function getTokenMatch(pos, opts, maskset) {
     }
 
     calcPos += matchLength;
-    // console.log(`calcPos ${calcPos}`);
-
-    if (calcPos >= pos + 1) {
-      let masksetHint = "";
-      if (maskset && maskset.tests[pos]) {
-        const filteredPlaceholders = Object.keys(opts.placeholder).filter(
-          (value) => {
-            for (let i = match.index - 1; i < calcPos; i++) {
-              if (value === `${i}'${maskset.tests[pos][0].match.placeholder}`) {
-                return true;
-              }
-            }
-            return false;
-          }
-        );
-
-        masksetHint =
-          filteredPlaceholders.length > 0
-            ? opts.placeholder[filteredPlaceholders[0]]
-            : maskset.tests[pos][0].match.placeholder;
-      }
-      // console.log(masksetHint);
-      if (match[0].indexOf(masksetHint) !== -1) {
-        // console.log(`match ${masksetHint} ${calcPos} >= ${pos + 1}`);
-        targetMatch = match;
-        match = getTokenizer(opts).exec(opts.inputFormat);
-        break;
-      } else {
-        // console.log(`no match ${masksetHint} ${calcPos} >= ${pos + 1}`);
-      }
+    if (match[0].indexOf(masksetHint) != -1 || calcPos >= pos + 1) {
+      // console.log("gettokenmatch " + match[0] + " ~ " + (maskset ? maskset.tests[pos][0].match.placeholder : ""));
+      targetMatch = match;
+      match = getTokenizer(opts).exec(opts.inputFormat);
+      break;
     }
   }
   return {
@@ -789,17 +747,6 @@ Inputmask.extendAliases({
       formatCode.S = i18n.ordinalSuffix.join("|");
 
       opts.inputFormat = formatAlias[opts.inputFormat] || opts.inputFormat; // resolve possible formatAlias
-      if (opts.repeat) {
-        opts.repeat = parseInt(opts.repeat.toString());
-        if (opts.repeat > 0) {
-          let inputFormat = "";
-          for (let i = 0; i < opts.repeat; i++) {
-            inputFormat = inputFormat + opts.inputFormat;
-          }
-          opts.inputFormat = inputFormat;
-          opts.repeat = 0;
-        }
-      }
       opts.displayFormat =
         formatAlias[opts.displayFormat] ||
         opts.displayFormat ||
@@ -808,7 +755,6 @@ Inputmask.extendAliases({
         formatAlias[opts.outputFormat] || opts.outputFormat || opts.inputFormat; // resolve possible formatAlias
       // opts.placeholder = opts.placeholder !== "" ? opts.placeholder : opts.inputFormat.replace(/[[\]]/, "");
       opts.regex = parse(opts.inputFormat, undefined, opts);
-      // console.log("inputFormat", opts.regex);
       opts.min = analyseMask(opts.min, opts.inputFormat, opts);
       opts.max = analyseMask(opts.max, opts.inputFormat, opts);
       return null; // migrate to regex mask
@@ -992,7 +938,8 @@ Inputmask.extendAliases({
         ? parse(
             opts.outputFormat,
             analyseMask.call(inputmask, maskedValue, opts.inputFormat, opts),
-            opts
+            opts,
+            true
           )
         : unmaskedValue;
     },
@@ -1011,10 +958,6 @@ Inputmask.extendAliases({
       ) {
         return elem.toUpperCase();
       }
-
-      if (test.static && test.def === test.def.toUpperCase())
-        return elem.toUpperCase();
-
       return elem.toLowerCase();
     },
     onBeforeMask: function (initialValue, opts) {

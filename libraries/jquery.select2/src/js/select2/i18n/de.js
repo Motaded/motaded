@@ -36,12 +36,6 @@ define(function () {
     },
     removeAllItems: function () {
       return 'Entferne alle Elemente';
-    },
-    removeItem: function () {
-      return 'Element entfernen';
-    },
-    search: function() {
-      return 'Suchen';
     }
   };
 });

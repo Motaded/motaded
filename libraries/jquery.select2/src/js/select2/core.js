@@ -77,7 +77,7 @@ define([
     });
 
     // Hide the original select
-    $element[0].classList.add('select2-hidden-accessible');
+    $element.addClass('select2-hidden-accessible');
     $element.attr('aria-hidden', 'true');
 
     // Synchronize any monitored attributes
@@ -197,15 +197,42 @@ define([
     this._syncA = Utils.bind(this._syncAttributes, this);
     this._syncS = Utils.bind(this._syncSubtree, this);
 
-    this._observer = new window.MutationObserver(function (mutations) {
-      self._syncA();
-      self._syncS(mutations);
-    });
-    this._observer.observe(this.$element[0], {
-      attributes: true,
-      childList: true,
-      subtree: false
-    });
+    if (this.$element[0].attachEvent) {
+      this.$element[0].attachEvent('onpropertychange', this._syncA);
+    }
+
+    var observer = window.MutationObserver ||
+      window.WebKitMutationObserver ||
+      window.MozMutationObserver
+    ;
+
+    if (observer != null) {
+      this._observer = new observer(function (mutations) {
+        self._syncA();
+        self._syncS(null, mutations);
+      });
+      this._observer.observe(this.$element[0], {
+        attributes: true,
+        childList: true,
+        subtree: false
+      });
+    } else if (this.$element[0].addEventListener) {
+      this.$element[0].addEventListener(
+        'DOMAttrModified',
+        self._syncA,
+        false
+      );
+      this.$element[0].addEventListener(
+        'DOMNodeInserted',
+        self._syncS,
+        false
+      );
+      this.$element[0].addEventListener(
+        'DOMNodeRemoved',
+        self._syncS,
+        false
+      );
+    }
   };
 
   Select2.prototype._registerDataEvents = function () {
@@ -229,7 +256,7 @@ define([
     });
 
     this.selection.on('*', function (name, params) {
-      if (nonRelayEvents.indexOf(name) !== -1) {
+      if ($.inArray(name, nonRelayEvents) !== -1) {
         return;
       }
 
@@ -257,23 +284,23 @@ define([
     var self = this;
 
     this.on('open', function () {
-      self.$container[0].classList.add('select2-container--open');
+      self.$container.addClass('select2-container--open');
     });
 
     this.on('close', function () {
-      self.$container[0].classList.remove('select2-container--open');
+      self.$container.removeClass('select2-container--open');
     });
 
     this.on('enable', function () {
-      self.$container[0].classList.remove('select2-container--disabled');
+      self.$container.removeClass('select2-container--disabled');
     });
 
     this.on('disable', function () {
-      self.$container[0].classList.add('select2-container--disabled');
+      self.$container.addClass('select2-container--disabled');
     });
 
     this.on('blur', function () {
-      self.$container[0].classList.remove('select2-container--focus');
+      self.$container.removeClass('select2-container--focus');
     });
 
     this.on('query', function (params) {
@@ -302,11 +329,12 @@ define([
       var key = evt.which;
 
       if (self.isOpen()) {
-        if (key === KEYS.ESC || (key === KEYS.UP && evt.altKey)) {
+        if (key === KEYS.ESC || key === KEYS.TAB ||
+            (key === KEYS.UP && evt.altKey)) {
           self.close(evt);
 
           evt.preventDefault();
-        } else if (key === KEYS.ENTER || key === KEYS.TAB) {
+        } else if (key === KEYS.ENTER) {
           self.trigger('results:select', {});
 
           evt.preventDefault();
@@ -348,30 +376,49 @@ define([
     }
   };
 
-  Select2.prototype._isChangeMutation = function (mutations) {
+  Select2.prototype._isChangeMutation = function (evt, mutations) {
+    var changed = false;
     var self = this;
 
-    if (mutations.addedNodes && mutations.addedNodes.length > 0) {
+    // Ignore any mutation events raised for elements that aren't options or
+    // optgroups. This handles the case when the select element is destroyed
+    if (
+      evt && evt.target && (
+        evt.target.nodeName !== 'OPTION' && evt.target.nodeName !== 'OPTGROUP'
+      )
+    ) {
+      return;
+    }
+
+    if (!mutations) {
+      // If mutation events aren't supported, then we can only assume that the
+      // change affected the selections
+      changed = true;
+    } else if (mutations.addedNodes && mutations.addedNodes.length > 0) {
       for (var n = 0; n < mutations.addedNodes.length; n++) {
         var node = mutations.addedNodes[n];
 
         if (node.selected) {
-          return true;
+          changed = true;
         }
       }
     } else if (mutations.removedNodes && mutations.removedNodes.length > 0) {
-      return true;
-    } else if (Array.isArray(mutations)) {
-      return mutations.some(function (mutation) {
-        return self._isChangeMutation(mutation);
+      changed = true;
+    } else if ($.isArray(mutations)) {
+      $.each(mutations, function(evt, mutation) {
+        if (self._isChangeMutation(evt, mutation)) {
+          // We've found a change mutation.
+          // Let's escape from the loop and continue
+          changed = true;
+          return false;
+        }
       });
     }
-
-    return false;
+    return changed;
   };
 
-  Select2.prototype._syncSubtree = function (mutations) {
-    var changed = this._isChangeMutation(mutations);
+  Select2.prototype._syncSubtree = function (evt, mutations) {
+    var changed = this._isChangeMutation(evt, mutations);
     var self = this;
 
     // Only re-pull the data if we think there is a change
@@ -476,11 +523,11 @@ define([
   };
 
   Select2.prototype.isOpen = function () {
-    return this.$container[0].classList.contains('select2-container--open');
+    return this.$container.hasClass('select2-container--open');
   };
 
   Select2.prototype.hasFocus = function () {
-    return this.$container[0].classList.contains('select2-container--focus');
+    return this.$container.hasClass('select2-container--focus');
   };
 
   Select2.prototype.focus = function (data) {
@@ -489,7 +536,7 @@ define([
       return;
     }
 
-    this.$container[0].classList.add('select2-container--focus');
+    this.$container.addClass('select2-container--focus');
     this.trigger('focus', {});
   };
 
@@ -543,8 +590,8 @@ define([
 
     var newVal = args[0];
 
-    if (Array.isArray(newVal)) {
-      newVal = newVal.map(function (obj) {
+    if ($.isArray(newVal)) {
+      newVal = $.map(newVal, function (obj) {
         return obj.toString();
       });
     }
@@ -553,11 +600,23 @@ define([
   };
 
   Select2.prototype.destroy = function () {
-    Utils.RemoveData(this.$container[0]);
     this.$container.remove();
 
-    this._observer.disconnect();
-    this._observer = null;
+    if (this.$element[0].detachEvent) {
+      this.$element[0].detachEvent('onpropertychange', this._syncA);
+    }
+
+    if (this._observer != null) {
+      this._observer.disconnect();
+      this._observer = null;
+    } else if (this.$element[0].removeEventListener) {
+      this.$element[0]
+        .removeEventListener('DOMAttrModified', this._syncA, false);
+      this.$element[0]
+        .removeEventListener('DOMNodeInserted', this._syncS, false);
+      this.$element[0]
+        .removeEventListener('DOMNodeRemoved', this._syncS, false);
+    }
 
     this._syncA = null;
     this._syncS = null;
@@ -566,7 +625,7 @@ define([
     this.$element.attr('tabindex',
     Utils.GetData(this.$element[0], 'old-tabindex'));
 
-    this.$element[0].classList.remove('select2-hidden-accessible');
+    this.$element.removeClass('select2-hidden-accessible');
     this.$element.attr('aria-hidden', 'false');
     Utils.RemoveData(this.$element[0]);
     this.$element.removeData('select2');
@@ -594,8 +653,7 @@ define([
 
     this.$container = $container;
 
-    this.$container[0].classList
-      .add('select2-container--' + this.options.get('theme'));
+    this.$container.addClass('select2-container--' + this.options.get('theme'));
 
     Utils.StoreData($container[0], 'element', this.$element);
 

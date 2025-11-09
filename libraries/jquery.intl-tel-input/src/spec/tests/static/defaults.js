@@ -11,14 +11,14 @@ describe("defaults: change default plugin options", function() {
 		intlTeardown();
 	});
 
-	describe("setting the default option initialCountry=ru and initialising the plugin", function() {
+	describe('setting the default option initialCountry=ru and initialising the plugin', function() {
 		beforeEach(function() {
-			window.intlTelInput.defaults.initialCountry = "ru";
+			window.intlTelInputGlobals.defaults.initialCountry = "ru";
 			iti = window.intlTelInput(input[0]);
 		});
 
 		afterEach(function() {
-			window.intlTelInput.defaults.initialCountry = "";
+			window.intlTelInputGlobals.defaults.initialCountry = "";
 		});
 
 		it("displays the russian flag", function() {

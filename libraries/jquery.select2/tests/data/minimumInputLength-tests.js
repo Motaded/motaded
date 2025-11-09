@@ -1,4 +1,4 @@
-QUnit.module('Data adapters - Minimum input length');
+module('Data adapters - Minimum input length');
 
 var MinimumInputLength = require('select2/data/minimumInputLength');
 var $ = require('jquery');
@@ -15,7 +15,7 @@ StubData.prototype.query = function (params, callback) {
 
 var MinimumData = Utils.Decorate(StubData, MinimumInputLength);
 
-QUnit.test('0 never displays the notice', function (assert) {
+test('0 never displays the notice', function (assert) {
   var zeroOptions = new Options({
     minimumInputLength: 0
   });
@@ -41,7 +41,7 @@ QUnit.test('0 never displays the notice', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('< 0 never displays the notice', function (assert) {
+test('< 0 never displays the notice', function (assert) {
   var negativeOptions = new Options({
     minimumInputLength: -1
   });
@@ -67,7 +67,7 @@ QUnit.test('< 0 never displays the notice', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('triggers when input is not long enough', function (assert) {
+test('triggers when input is not long enough', function (assert) {
   var options = new Options({
     minimumInputLength: 10
   });
@@ -85,7 +85,7 @@ QUnit.test('triggers when input is not long enough', function (assert) {
   assert.ok(!data.called);
 });
 
-QUnit.test('does not trigger when equal', function (assert) {
+test('does not trigger when equal', function (assert) {
   var options = new Options({
     minimumInputLength: 10
   });
@@ -103,7 +103,7 @@ QUnit.test('does not trigger when equal', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('does not trigger when greater', function (assert) {
+test('does not trigger when greater', function (assert) {
   var options = new Options({
     minimumInputLength: 10
   });
@@ -121,7 +121,7 @@ QUnit.test('does not trigger when greater', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('works with null term', function (assert) {
+test('works with null term', function (assert) {
   var options = new Options({
     minimumInputLength: 1
   });

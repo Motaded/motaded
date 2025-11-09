@@ -1,6 +1,5 @@
 import { ie } from "./environment";
 import { EventHandlers } from "./eventhandlers";
-import Inputmask from "./inputmask.js";
 import { keys } from "./keycode.js";
 import {
   caret,
@@ -24,12 +23,12 @@ export {
   writeBuffer
 };
 
-function applyInputValue(input, value, initialEvent, strict) {
+function applyInputValue(input, value, initialEvent) {
   const inputmask = input ? input.inputmask : this,
     opts = inputmask.opts;
 
   input.inputmask.refreshValue = false;
-  if (strict !== true && typeof opts.onBeforeMask === "function")
+  if (typeof opts.onBeforeMask === "function")
     value = opts.onBeforeMask.call(inputmask, value, opts) || value;
   value = (value || "").toString().split("");
   checkVal(input, true, false, value, initialEvent);
@@ -158,17 +157,14 @@ function checkVal(input, writeOut, strict, nptvl, initiatingEvent) {
           charCodes = "";
         }
       } else {
-        result =
-          getTest.call(inputmask, ndx).match.static === true
-            ? EventHandlers.keypressEvent.call(
-                inputmask,
-                keypress,
-                true,
-                false,
-                strict,
-                lvp + 1
-              )
-            : false;
+        result = EventHandlers.keypressEvent.call(
+          inputmask,
+          keypress,
+          true,
+          false,
+          strict,
+          lvp + 1
+        );
       }
       if (result) {
         if (
@@ -247,13 +243,13 @@ function checkVal(input, writeOut, strict, nptvl, initiatingEvent) {
         }
       }
     } else {
-      // delete all free statics
-      while ((sndx = staticMatches.pop())) {
-        validPos = maskset.validPositions[sndx];
-        if (validPos && maskset.validPositions[sndx + 1] === undefined) {
-          delete maskset.validPositions[sndx];
-        }
-      }
+      // mark al statics as generated
+      // while ((sndx = staticMatches.pop())) {
+      // 	validPos = maskset.validPositions[sndx];
+      // 	if (validPos) {
+      // 		validPos.generatedInput = true;
+      // 	}
+      // }
     }
   }
   if (writeOut) {
@@ -328,11 +324,9 @@ function unmaskedvalue(input) {
       vps[pndx] &&
       vps[pndx].match &&
       (vps[pndx].match.static != true ||
-        (opts.keepStatic !== true &&
-          Array.isArray(maskset.metadata) &&
-          vps[pndx].generatedInput !== true))
+        (Array.isArray(maskset.metadata) && vps[pndx].generatedInput !== true))
     ) {
-      // only include non generated input with multiple masks (check on metadata) and without keepStatic true
+      // only include generated input with multiple masks (check on metadata)
       umValue.push(vps[pndx].input);
     }
   }
@@ -353,15 +347,6 @@ function unmaskedvalue(input) {
       opts
     );
   }
-
-  if (opts.outputMask && unmaskedValue.length > 0) {
-    return Inputmask.format(unmaskedValue, {
-      ...opts,
-      mask: opts.outputMask,
-      alias: null
-    });
-  }
-
   return unmaskedValue;
 }
 

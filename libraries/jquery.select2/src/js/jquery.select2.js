@@ -39,7 +39,7 @@ define([
         });
 
         // Check if we should be returning `this`
-        if (thisMethods.indexOf(options) > -1) {
+        if ($.inArray(options, thisMethods) > -1) {
           return this;
         }
 

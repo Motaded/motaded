@@ -1,5 +1,5 @@
 /*!
- * jquery-timepicker v1.14.1 - A jQuery timepicker plugin inspired by Google Calendar. It supports both mouse and keyboard navigation.
+ * jquery-timepicker v1.14.0 - A jQuery timepicker plugin inspired by Google Calendar. It supports both mouse and keyboard navigation.
  * Copyright (c) 2021 Jon Thornton - https://www.jonthornton.com/jquery-timepicker/
  * License: MIT
  */
@@ -168,11 +168,6 @@
   }
 
   var ONE_DAY = 86400;
-  var EVENT_DEFAULTS = {
-    bubbles: true,
-    cancelable: false,
-    detail: null
-  };
 
   var roundingFunction = function roundingFunction(seconds, settings) {
     if (seconds === null) {
@@ -242,6 +237,12 @@
     mins: "mins",
     hr: "hr",
     hrs: "hrs"
+  };
+
+  var EVENT_DEFAULTS = {
+    bubbles: true,
+    cancelable: false,
+    detail: null
   };
 
   var Timepicker = /*#__PURE__*/function () {
@@ -430,7 +431,7 @@
 
         timeString = timeString.toLowerCase().replace(/[\s\.]/g, ""); // if the last character is an "a" or "p", add the "m"
 
-        if (this.settings.lang.am === "am" && (timeString.slice(-1) == "a" || timeString.slice(-1) == "p")) {
+        if (timeString.slice(-1) == "a" || timeString.slice(-1) == "p") {
           timeString += "m";
         }
 
@@ -816,7 +817,30 @@
           return;
         }
 
-        var rangeError = this._isTimeRangeError(seconds, settings);
+        var rangeError = false; // check that the time in within bounds
+
+        if (settings.minTime !== null && settings.maxTime !== null && (seconds < settings.minTime() || seconds > settings.maxTime())) {
+          rangeError = true;
+        } // check that time isn't within disabled time ranges
+
+
+        var _iterator = _createForOfIteratorHelper(settings.disableTimeRanges),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var range = _step.value;
+
+            if (seconds >= range[0] && seconds < range[1]) {
+              rangeError = true;
+              break;
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
 
         if (settings.forceRoundTime) {
           var roundSeconds = settings.roundingFunction(seconds, settings);
@@ -837,34 +861,6 @@
         } else {
           this._setTimeValue(prettyTime, origin);
         }
-      }
-    }, {
-      key: "_isTimeRangeError",
-      value: function _isTimeRangeError(seconds, settings) {
-        // check that the time in within bounds
-        if (settings.minTime !== null && settings.maxTime !== null && (seconds < settings.minTime() || seconds > settings.maxTime())) {
-          return true;
-        } // check that time isn't within disabled time ranges
-
-
-        var _iterator = _createForOfIteratorHelper(settings.disableTimeRanges),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var range = _step.value;
-
-            if (seconds >= range[0] && seconds < range[1]) {
-              return true;
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
-        return false;
       }
     }, {
       key: "_generateNoneElement",
@@ -1147,7 +1143,7 @@
 
   function _renderSelectItem(item) {
     var el = document.createElement('option');
-    el.value = item.value || item.label;
+    el.value = item.label;
 
     if (item.duration) {
       el.appendChild(document.createTextNode(item.label + ' (' + item.duration + ')'));
@@ -1540,17 +1536,11 @@
       setTime: function setTime(value) {
         var tp = this[0].timepickerObj;
         var settings = tp.settings;
-        var seconds = tp.anytime2int(value);
-
-        if (tp._isTimeRangeError(seconds, settings)) {
-          var timeRangeErrorEvent = new CustomEvent('timeRangeError', EVENT_DEFAULTS);
-          tp.targetEl.dispatchEvent(timeRangeErrorEvent);
-        }
 
         if (settings.forceRoundTime) {
-          var prettyTime = tp._roundAndFormatTime(seconds);
+          var prettyTime = tp._roundAndFormatTime(tp.anytime2int(value));
         } else {
-          var prettyTime = tp._int2time(seconds);
+          var prettyTime = tp._int2time(tp.anytime2int(value));
         }
 
         if (value && prettyTime === null && settings.noneOption) {

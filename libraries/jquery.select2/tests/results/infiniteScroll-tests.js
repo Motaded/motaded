@@ -1,6 +1,6 @@
-QUnit.module('Results - Infinite scrolling');
+module('Results - Infinite scrolling');
 
-QUnit.test('loadingMore is triggered even without a scrollbar', function (assert) {
+test('loadingMore is triggered even without a scrollbar', function (assert) {
   assert.expect(1);
 
   var $ = require('jquery');
@@ -49,7 +49,7 @@ QUnit.test('loadingMore is triggered even without a scrollbar', function (assert
   });
 });
 
-QUnit.test('loadingMore is not triggered without scrolling', function (assert) {
+test('loadingMore is not triggered without scrolling', function (assert) {
   assert.expect(0);
 
   var $ = require('jquery');

@@ -1,38 +1,11 @@
 # Change Log
 
-## [5.0.10 - UNRELEASED]
+## [5.0.9 - UNRELEASED]
 
 ### Addition
-
-- add outputFormat option #2526
-- add FormData support for inputmask #2409
-
-### Updates
-
-- fix: Inputmask works weird under ShadowDOM #2753
-
-### Fixed
-
-- Datetime alias with incorrect submitted value (outputFormat) #2826
-- FormData values are not unmasked #2409
-- Cannot change the mask on multiple masks when the input is already filled. #2820
-- Negative limits for numeric inputs #2796
-- datetime + placeholder are not working properly #2811
-- it is not possible to use escaped characters as a separator in dates #2791
-- Datetime mask dd.mm.yyyy leading to Uncaught InternalError: too much recursion #2814
-- Autofill shows TypeError in Chrome console. #2809
-- Unmasked value stopped working in version 5.0.9 #2800
-- Alias datetime + repeat bug #2806
-- The inputmask is autocompleted to the min value when deleting the radix point #2773
-
-## [5.0.9 - 31/05/2024]
-
-### Addition
-
 - Add exports field in package.json #2690
 
 ### Updates
-
 - only apply character substitution on 'human' input - #2765
 - better handle unmatching alternations - #2277
 - datetime alias
@@ -43,8 +16,6 @@
 - Enhance resolving of the ndxInitializer to determine the alternating tests.
 
 ### Fixed
-
-- The default value is not shown completely with the "text-overflow: ellipsis" style #2828
 - Two-character time marker AM or PM doesn't work #2794
 - Input freezes after changing decimal value symbol twice #2731
 - Poor performance on decimal input mask #1505
@@ -170,9 +141,9 @@
 - enhance alternation logic
 - update datetime alias
 - datetime prefillYear option  
-   Enable/disable prefilling of the year.  
-   Although you can just over type the proposed value without deleting, many seems to see a problem with the year prediction.  
-   This options is to disable this feature.
+    Enable/disable prefilling of the year.  
+    Although you can just over type the proposed value without deleting, many seems to see a problem with the year prediction.  
+    This options is to disable this feature.
 - better handle maxLength
 
 ### Fixed
@@ -282,30 +253,30 @@ HOT FIX: jqlite dependency error
 ### Addition
 
 - add indian numbering support in numeric alias (indianns alias)
-- add roundingFN option to numeric alias. (currency, decimal, ...)
+- add roundingFN option to numeric alias.  (currency, decimal, ...)
 - input-inputmode support via inputmode option (if supported by browser)
 - add shortcuts option in numeric alias.
 - add insertModeVisual option
 
 ### Updates
 
-- **postValidation**
-  - add inputchar to arguments
-  - also validate when the result is false\*\*
+- **postValidation**  
+  - add inputchar to arguments  
+  - also validate when the result is false**  
 - **change behavior of keepStatic option**
-  - multiple masks => default true
+  - multiple masks => default true  
   - all other masks => default false
-- add more tokens for datetime format
+- add more tokens for datetime format  
 - refactor inputfallbackevent
 - **drop colormask support**
-- **drop disablePredictiveText option (was hack via colorMask)**
+- **drop disablePredictiveText option (was hack via colorMask)**  
 - ignore generated statics in revalidateMask
 - fix mask curruption when alternating and using jitmasking
-- Casing option will also allow case insensitive entry for static symbols
+- Casing option will also allow case insensitive entry for static symbols  
 - **refactor numeric alias**
 - package & bundling
 - enhance regex alternations. ex: [01][0-9]|2[0-3] => ([01][0-9]|2[0-3])
-- extend command object
+- extend command object  
   - rewritePosition
 - revert insert-mode caret as selection instead of colored caret
   - make delete/backspace behave like normal
@@ -504,7 +475,7 @@ while there are already many enhancements available.
 - Currency mask works incorrectly on Android Chrome v58 #1617
 - Can't input character at the end if it's also a placeholder on Android #1648
 - colorMask - incorrect positioning #1421
-- Object doesn't support property or method '\_valueGet' in version 3.3.7 #1645
+- Object doesn't support property or method '_valueGet' in version 3.3.7 #1645
 - Usage of numericInput in data-inputmask causes reversed value #1640
 - Numeric suffix makes radixPoint disappear on preset value #1638
 - Cannot delete after fill up all the mask Android Chrome browser Jsfiddle #1637
@@ -662,7 +633,7 @@ while there are already many enhancements available.
 - removed nojumps option
 - update phone alias implementation
   - add unit tests for phonecodes
-- replaced radixFocus option by positionCaretOnClick. Allows choice for behavior of the caret on click. (none, lvp (default), radixFocus)
+- replaced radixFocus option by positionCaretOnClick.  Allows choice for behavior of the caret on click. (none, lvp (default), radixFocus)
 - performance updates
   - getmasklength
   - use selective caching in getTests
@@ -792,7 +763,7 @@ while there are already many enhancements available.
 - Issue with reset of inputmask field #1157
 - IE11 clear not working in emulated IE9 mode #1144
 - Show placeholder as user types #1141
-- Initial value like VAA gets truncated to V-\_\_ with mask like "I{1,3}-ZZ" #1134
+- Initial value like VAA gets truncated to V-__ with mask like "I{1,3}-ZZ" #1134
 - Input mask can't be applied on other HTML5 input types #828
 - IE9 SCRIPT445: Object does not support this action #1135
 - Multiple Mask Click Focus Error #1133
@@ -834,7 +805,7 @@ while there are already many enhancements available.
 - I have a problems with mask input, I can't input Ukraine phone +380(XX)XXX-XX-XX #1050
 - you can't write ukraine number to phone field +380999999999 #1019
 - autoUnmask not work in newest release #1109
-- Definition {\_} throws an exception #1106 => update readme
+- Definition {_} throws an exception #1106 => update readme
 - Uncaught TypeError for "percentage" alias #1108
 - Wrong behavior for symbol delete in ip alias #1092
 - fix element validation for the vanilla dependencyLib #1104
@@ -859,7 +830,7 @@ while there are already many enhancements available.
 - Cannot erase input value throw mask symbols (Android 4.4, Android 4.2) #1090
 - CTRL-x / Cut issue #948
 - Double "Change" action when pressing Enter in Firefox #1070
-- upper/lower case handling in data-inputmask-\* #1079
+- upper/lower case handling in data-inputmask-* #1079
 - IE8 Null values after submit #1076
 - Each character repeats on Mobile #912
 - extra tooltip property #1071
@@ -972,7 +943,7 @@ while there are already many enhancements available.
 - Selecting and overwriting text will delete the character to the immediate right #914
 - Can't delete digits after decimal point on negative numbers #892
 - decimal : extra number after delete and typing new numbers #904
-- Dynamic masks with {\*} and zero repeats #875
+- Dynamic masks with {*} and zero repeats #875
 - Mask does not alternate back after deleting digit #905
 - never trigger 'input' event when paste after invoke inputmask #776
 - Script looping start when add '.' between decimal values #870 ('.' part)

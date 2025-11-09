@@ -1,4 +1,4 @@
-QUnit.module('Accessibility - All');
+module('Accessibility - All');
 
 var BaseSelection = require('select2/selection/base');
 var SingleSelection = require('select2/selection/single');
@@ -9,7 +9,7 @@ var $ = require('jquery');
 var Options = require('select2/options');
 var options = new Options({});
 
-QUnit.test('title is carried over from original element', function (assert) {
+test('title is carried over from original element', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new BaseSelection($select, options);
@@ -22,7 +22,7 @@ QUnit.test('title is carried over from original element', function (assert) {
   );
 });
 
-QUnit.test('aria-expanded reflects the state of the container', function (assert) {
+test('aria-expanded reflects the state of the container', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new BaseSelection($select, options);
@@ -47,7 +47,7 @@ QUnit.test('aria-expanded reflects the state of the container', function (assert
   );
 });
 
-QUnit.test('static aria attributes are present', function (assert) {
+test('static aria attributes are present', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new BaseSelection($select, options);
@@ -66,7 +66,7 @@ QUnit.test('static aria attributes are present', function (assert) {
   );
 });
 
-QUnit.test('the container should be in the tab order', function (assert) {
+test('the container should be in the tab order', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new BaseSelection($select, options);
@@ -98,7 +98,7 @@ QUnit.test('the container should be in the tab order', function (assert) {
   );
 });
 
-QUnit.test('a custom tabindex is copied', function (assert) {
+test('a custom tabindex is copied', function (assert) {
   var $select = $('#qunit-fixture .single');
   $select.attr('tabindex', '999');
 
@@ -131,7 +131,7 @@ QUnit.test('a custom tabindex is copied', function (assert) {
   );
 });
 
-QUnit.test('aria-disabled should reflected disabled state', function (assert) {
+test('aria-disabled should reflected disabled state', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new BaseSelection($select, options);
@@ -163,9 +163,9 @@ QUnit.test('aria-disabled should reflected disabled state', function (assert) {
   );
 });
 
-QUnit.module('Accessibility - Single');
+module('Accessibility - Single');
 
-QUnit.test('aria-labelledby should match the rendered container', function (assert) {
+test('aria-labelledby should match the rendered container', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selection = new SingleSelection($select, options);
@@ -183,4 +183,4 @@ QUnit.test('aria-labelledby should match the rendered container', function (asse
   );
 });
 
-QUnit.module('Accessibility - Multiple');
+module('Accessibility - Multiple');

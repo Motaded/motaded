@@ -29,7 +29,6 @@ export default {
   }, // executes before masking the pasted value to allow preprocessing of the pasted value.	args => pastedValue, opts => return processedValue
   onBeforeWrite: null, // executes before writing to the masked element. args => event, opts
   onUnMask: null, // executes after unmasking to allow postprocessing of the unmaskedvalue.	args => maskedValue, unmaskedValue, opts
-  outputMask: null, // mask to apply when unmasking
   showMaskOnFocus: true, // show the mask-placeholder when the input has focus
   showMaskOnHover: true, // show the mask-placeholder when hovering the empty input
   onKeyValidation: () => {}, // executes on every key-press with the result of isValid. Params: key, result, opts
@@ -48,7 +47,7 @@ export default {
   supportsInputType: ["text", "tel", "url", "password", "search"], // list with the supported input types
   isComplete: null, // override for isComplete - args => buffer, opts - return true || false
   preValidation: null, // hook to preValidate the input.  Usefull for validating regardless the definition.	args => buffer, pos, char, isSelection, opts, maskset, caretPos, strict => return true/false/command object
-  postValidation: null, // hook to postValidate the result from isValid.	Usefull for validating the entry as a whole.	args => buffer, pos, c, currentResult, opts, maskset, strict, fromCheckval, fromAlternate => return true/false/json
+  postValidation: null, // hook to postValidate the result from isValid.	Usefull for validating the entry as a whole.	args => buffer, pos, c, currentResult, opts, maskset, strict, fromCheckval => return true/false/json
   staticDefinitionSymbol: undefined, // specify a definitionSymbol for static content, used to make matches for alternators
   jitMasking: false, // just in time masking ~ only mask while typing, can n (number), true or false
   nullable: true, // return nothing instead of the buffertemplate when the user hasn't entered anything.

@@ -1,5 +1,11 @@
 import { DEFAULT_SETTINGS, DEFAULT_LANG } from "./defaults";
-import { ONE_DAY, EVENT_DEFAULTS } from "./constants";
+import { ONE_DAY } from "./constants";
+
+const EVENT_DEFAULTS = {
+  bubbles: true,
+  cancelable: false,
+  detail: null
+};
 
 class Timepicker {
   constructor(targetEl, options = {}) {
@@ -219,8 +225,7 @@ class Timepicker {
     timeString = timeString.toLowerCase().replace(/[\s\.]/g, "");
 
     // if the last character is an "a" or "p", add the "m"
-    if (this.settings.lang.am === "am"
-      && (timeString.slice(-1) == "a" || timeString.slice(-1) == "p")) {
+    if (timeString.slice(-1) == "a" || timeString.slice(-1) == "p") {
       timeString += "m";
     }
 
@@ -616,7 +621,23 @@ class Timepicker {
       return;
     }
 
-    var rangeError = this._isTimeRangeError(seconds, settings);
+    var rangeError = false;
+    // check that the time in within bounds
+    if (
+      settings.minTime !== null &&
+      settings.maxTime !== null &&
+      (seconds < settings.minTime() || seconds > settings.maxTime())
+    ) {
+      rangeError = true;
+    }
+
+    // check that time isn't within disabled time ranges
+    for (const range of settings.disableTimeRanges) {
+      if (seconds >= range[0] && seconds < range[1]) {
+        rangeError = true;
+        break;
+      }
+    }
 
     if (settings.forceRoundTime) {
       var roundSeconds = settings.roundingFunction(seconds, settings);
@@ -635,26 +656,6 @@ class Timepicker {
     } else {
       this._setTimeValue(prettyTime, origin);
     }
-  }
-
-  _isTimeRangeError(seconds, settings) {
-    // check that the time in within bounds
-    if (
-      settings.minTime !== null &&
-      settings.maxTime !== null &&
-      (seconds < settings.minTime() || seconds > settings.maxTime())
-    ) {
-      return true;
-    }
-
-    // check that time isn't within disabled time ranges
-    for (const range of settings.disableTimeRanges) {
-      if (seconds >= range[0] && seconds < range[1]) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   _generateNoneElement(optionValue, useSelect) {

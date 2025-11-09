@@ -13,19 +13,17 @@ describe("getSelectedCountryData: init plugin to test public method getSelectedC
   });
 
   it("gets the right default country data", function() {
-    expect(iti.getSelectedCountryData().iso2).toBeUndefined();
+    expect(iti.getSelectedCountryData().iso2).toEqual("us");
   });
 
   it("change country by number gets the right country data", function() {
     input.val("+44");
     triggerKeyOnInput(" ");
-
     expect(iti.getSelectedCountryData().iso2).toEqual("gb");
   });
 
   it("change country by selecting a flag gets the right country data", function() {
-    selectCountry("ch");
-
+    selectFlag("ch");
     expect(iti.getSelectedCountryData().iso2).toEqual("ch");
   });
 

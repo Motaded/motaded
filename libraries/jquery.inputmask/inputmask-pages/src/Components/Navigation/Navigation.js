@@ -32,11 +32,6 @@ export const Navigation = () => {
               <strong>Numeric</strong>
             </Link>
           </li>
-          <li>
-            <Link to={RouteNames.Documentation_Colormask}>
-              <strong>Colormask</strong>
-            </Link>
-          </li>
         </ul>
         {width > constants.ScreenThreshold && <hr />}
       </ul>

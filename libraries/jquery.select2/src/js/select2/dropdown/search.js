@@ -1,25 +1,22 @@
 define([
-  'jquery'
-], function ($) {
+  'jquery',
+  '../utils'
+], function ($, Utils) {
   function Search () { }
 
   Search.prototype.render = function (decorated) {
     var $rendered = decorated.call(this);
-    var searchLabel = this.options.get('translations').get('search');
 
     var $search = $(
       '<span class="select2-search select2-search--dropdown">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
-        ' autocorrect="off" autocapitalize="none"' +
+        ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
         ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
       '</span>'
     );
 
     this.$searchContainer = $search;
     this.$search = $search.find('input');
-
-    this.$search.prop('autocomplete', this.options.get('autocomplete'));
-    this.$search.attr('aria-label', searchLabel());
 
     $rendered.prepend($search);
 
@@ -64,8 +61,8 @@ define([
 
     container.on('close', function () {
       self.$search.attr('tabindex', -1);
-      self.$search[0].removeAttribute('aria-controls');
-      self.$search[0].removeAttribute('aria-activedescendant');
+      self.$search.removeAttr('aria-controls');
+      self.$search.removeAttr('aria-activedescendant');
 
       self.$search.val('');
       self.$search.trigger('blur');
@@ -82,9 +79,9 @@ define([
         var showSearch = self.showSearch(params);
 
         if (showSearch) {
-          self.$searchContainer[0].classList.remove('select2-search--hide');
+          self.$searchContainer.removeClass('select2-search--hide');
         } else {
-          self.$searchContainer[0].classList.add('select2-search--hide');
+          self.$searchContainer.addClass('select2-search--hide');
         }
       }
     });
@@ -93,7 +90,7 @@ define([
       if (params.data._resultId) {
         self.$search.attr('aria-activedescendant', params.data._resultId);
       } else {
-        self.$search[0].removeAttribute('aria-activedescendant');
+        self.$search.removeAttr('aria-activedescendant');
       }
     });
   };

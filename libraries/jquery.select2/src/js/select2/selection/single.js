@@ -13,7 +13,7 @@ define([
   SingleSelection.prototype.render = function () {
     var $selection = SingleSelection.__super__.render.call(this);
 
-    $selection[0].classList.add('select2-selection--single');
+    $selection.addClass('select2-selection--single');
 
     $selection.html(
       '<span class="select2-selection__rendered"></span>' +
@@ -37,7 +37,6 @@ define([
       .attr('role', 'textbox')
       .attr('aria-readonly', 'true');
     this.$selection.attr('aria-labelledby', id);
-    this.$selection.attr('aria-controls', id);
 
     this.$selection.on('mousedown', function (evt) {
       // Only respond to left clicks
@@ -68,7 +67,7 @@ define([
   SingleSelection.prototype.clear = function () {
     var $rendered = this.$selection.find('.select2-selection__rendered');
     $rendered.empty();
-    $rendered[0].removeAttribute('title'); // clear tooltip on empty
+    $rendered.removeAttr('title'); // clear tooltip on empty
   };
 
   SingleSelection.prototype.display = function (data, container) {
@@ -100,7 +99,7 @@ define([
     if (title) {
       $rendered.attr('title', title);
     } else {
-      $rendered[0].removeAttribute('title');
+      $rendered.removeAttr('title');
     }
   };
 

@@ -8,27 +8,20 @@ define([
   }
 
   Search.prototype.render = function (decorated) {
-    var searchLabel = this.options.get('translations').get('search');
     var $search = $(
-      '<span class="select2-search select2-search--inline">' +
-        '<textarea class="select2-search__field"'+
-        ' type="search" tabindex="-1"' +
-        ' autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" >' +
-        '</textarea>' +
-      '</span>'
+      '<li class="select2-search select2-search--inline">' +
+        '<input class="select2-search__field" type="search" tabindex="-1"' +
+        ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
+      '</li>'
     );
 
     this.$searchContainer = $search;
-    this.$search = $search.find('textarea');
-
-    this.$search.prop('autocomplete', this.options.get('autocomplete'));
-    this.$search.attr('aria-label', searchLabel());
+    this.$search = $search.find('input');
 
     var $rendered = decorated.call(this);
 
     this._transferTabIndex();
-    $rendered.append(this.$searchContainer);
 
     return $rendered;
   };
@@ -37,11 +30,8 @@ define([
     var self = this;
 
     var resultsId = container.id + '-results';
-    var selectionId = container.id + '-container';
 
     decorated.call(this, container, $container);
-
-    self.$search.attr('aria-describedby', selectionId);
 
     container.on('open', function () {
       self.$search.attr('aria-controls', resultsId);
@@ -50,9 +40,8 @@ define([
 
     container.on('close', function () {
       self.$search.val('');
-      self.resizeSearch();
-      self.$search[0].removeAttribute('aria-controls');
-      self.$search[0].removeAttribute('aria-activedescendant');
+      self.$search.removeAttr('aria-controls');
+      self.$search.removeAttr('aria-activedescendant');
       self.$search.trigger('focus');
     });
 
@@ -74,7 +63,7 @@ define([
       if (params.data._resultId) {
         self.$search.attr('aria-activedescendant', params.data._resultId);
       } else {
-        self.$search[0].removeAttribute('aria-activedescendant');
+        self.$search.removeAttr('aria-activedescendant');
       }
     });
 
@@ -96,8 +85,8 @@ define([
       var key = evt.which;
 
       if (key === KEYS.BACKSPACE && self.$search.val() === '') {
-        var $previousChoice = self.$selection
-          .find('.select2-selection__choice').last();
+        var $previousChoice = self.$searchContainer
+          .prev('.select2-selection__choice');
 
         if ($previousChoice.length > 0) {
           var item = Utils.GetData($previousChoice[0], 'data');
@@ -195,6 +184,9 @@ define([
 
     decorated.call(this, data);
 
+    this.$selection.find('.select2-selection__rendered')
+                   .append(this.$searchContainer);
+
     this.resizeSearch();
     if (searchHadFocus) {
       this.$search.trigger('focus');
@@ -227,9 +219,11 @@ define([
   Search.prototype.resizeSearch = function () {
     this.$search.css('width', '25px');
 
-    var width = '100%';
+    var width = '';
 
-    if (this.$search.attr('placeholder') === '') {
+    if (this.$search.attr('placeholder') !== '') {
+      width = this.$selection.find('.select2-selection__rendered').width();
+    } else {
       var minimumWidth = this.$search.val().length + 1;
 
       width = (minimumWidth * 0.75) + 'em';
