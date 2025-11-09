@@ -39,14 +39,10 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 3
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
     weight: 2
     region: content
 hidden:
   field_comments: true
   field_tags: true
   langcode: true
+  links: true

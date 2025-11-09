@@ -159,23 +159,29 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
     $prefix = getLanguagePrefix();
     $prefix = str_ends_with($prefix, "/") ? $prefix : $prefix . "/";
     if ($node->bundle() == "article") {
-      $list_crumb = [
-        'text' => t('Articles'),
-        'url' => $prefix . "blog",
-      ];
-      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/blog') {
+        $list_crumb = [
+          'text' => t('Articles'),
+          'url' => $prefix . "blog",
+        ];
+        array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      }
     } elseif ($node->bundle() == "page") {
-      $list_crumb = [
-        'text' => t('Services'),
-        'url' => $prefix . "services",
-      ];
-      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/services') {
+        $list_crumb = [
+          'text' => t('Services'),
+          'url' => $prefix . "services",
+        ];
+        array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      }
     } elseif ($node->bundle() == "news") {
-      $list_crumb = [
-        'text' => t('News'),
-        'url' => $prefix . "news",
-      ];
-      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/news') {
+        $list_crumb = [
+          'text' => t('News'),
+          'url' => $prefix . "news",
+        ];
+        array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      }
     }
   }
 }
