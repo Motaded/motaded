@@ -6682,6 +6682,12 @@ body.path-services {
 .bef-exposed-form ul {
   list-style-type: none;
 }
+.colored-icons .icon-card:nth-child(3n + 2) .icon-wrapper {
+  background-color: var(--color-sky-50) !important;
+}
+.colored-icons .icon-card:nth-child(3n + 3) .icon-wrapper {
+  background-color: var(--color-gray-100) !important;
+}
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
     color-scheme: light;

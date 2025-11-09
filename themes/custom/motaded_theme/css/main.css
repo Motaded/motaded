@@ -509,3 +509,14 @@ body.path-services {
 .bef-exposed-form ul {
   list-style-type: none;
 }
+
+
+/* .colored-icons .icon-card:nth-child(3n + 1) .icon-wrapper {
+  @apply !bg-emerald-50;
+} */
+.colored-icons .icon-card:nth-child(3n + 2) .icon-wrapper {
+  @apply !bg-sky-50;
+}
+.colored-icons .icon-card:nth-child(3n + 3) .icon-wrapper {
+  @apply !bg-gray-100;
+}
