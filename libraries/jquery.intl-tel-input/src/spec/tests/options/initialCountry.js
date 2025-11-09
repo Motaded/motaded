@@ -17,12 +17,16 @@ describe("initialCountry: ", function() {
     beforeEach(function() {
       input = $("<input>").wrap("div");
       iti = window.intlTelInput(input[0], {
-        initialCountry: initialCountry,
+        initialCountry: initialCountry
       });
     });
 
     it("sets the selected flag correctly", function() {
-      expect(getSelectedCountryElement()).toHaveClass(`iti__${initialCountry}`);
+      expect(getSelectedFlagElement()).toHaveClass(`iti__${initialCountry}`);
+    });
+
+    it("sets the active list item correctly", function() {
+      expect(getActiveListItem().attr("data-country-code")).toEqual(initialCountry);
     });
 
   });
@@ -36,12 +40,13 @@ describe("initialCountry: ", function() {
     beforeEach(function() {
       input = $("<input value='+1 800 123 1234'>");
       iti = window.intlTelInput(input[0], {
-        initialCountry: initialCountry,
+        initialCountry: initialCountry
       });
     });
 
-    it("sets the state correctly: selected flag", function() {
-      expect(getSelectedCountryElement()).toHaveClass(`iti__${initialCountry}`);
+    it("sets the state correctly: selected flag and active list item", function() {
+      expect(getSelectedFlagElement()).toHaveClass(`iti__${initialCountry}`);
+      expect(getActiveListItem().attr("data-country-code")).toEqual(initialCountry);
     });
 
   });

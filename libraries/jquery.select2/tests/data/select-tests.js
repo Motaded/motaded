@@ -1,11 +1,11 @@
-QUnit.module('Data adapters - Select - current');
+module('Data adapters - Select - current');
 
 var SelectData = require('select2/data/select');
 var $ = require('jquery');
 var Options = require('select2/options');
 var selectOptions = new Options({});
 
-QUnit.test('current gets default for single', function (assert) {
+test('current gets default for single', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -33,7 +33,7 @@ QUnit.test('current gets default for single', function (assert) {
   });
 });
 
-QUnit.test('current gets default for multiple', function (assert) {
+test('current gets default for multiple', function (assert) {
   var $select = $('#qunit-fixture .multiple');
 
   var data = new SelectData($select, selectOptions);
@@ -47,7 +47,7 @@ QUnit.test('current gets default for multiple', function (assert) {
   });
 });
 
-QUnit.test('current gets options with explicit value', function (assert) {
+test('current gets options with explicit value', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var $option = $('<option value="1">One</option>');
@@ -80,7 +80,7 @@ QUnit.test('current gets options with explicit value', function (assert) {
   });
 });
 
-QUnit.test('current gets options with implicit value', function (assert) {
+test('current gets options with implicit value', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -110,7 +110,7 @@ QUnit.test('current gets options with implicit value', function (assert) {
   });
 });
 
-QUnit.test('select works for single', function (assert) {
+test('select works for single', function (assert) {
   var $select = $('#qunit-fixture .single-with-placeholder');
 
   var data = new SelectData($select, selectOptions);
@@ -125,7 +125,7 @@ QUnit.test('select works for single', function (assert) {
   assert.equal($select.val(), 'One');
 });
 
-QUnit.test('multiple sets the value', function (assert) {
+test('multiple sets the value', function (assert) {
   var $select = $('#qunit-fixture .multiple');
 
   var data = new SelectData($select, selectOptions);
@@ -143,7 +143,7 @@ QUnit.test('multiple sets the value', function (assert) {
   assert.deepEqual($select.val(), ['Two']);
 });
 
-QUnit.test('multiple adds to the old value', function (assert) {
+test('multiple adds to the old value', function (assert) {
   var $select = $('#qunit-fixture .multiple');
 
   var data = new SelectData($select, selectOptions);
@@ -160,7 +160,7 @@ QUnit.test('multiple adds to the old value', function (assert) {
   assert.deepEqual($select.val(), ['One', 'Two']);
 });
 
-QUnit.test('duplicates - single - same id on select triggers change',
+test('duplicates - single - same id on select triggers change',
   function (assert) {
   var $select = $('#qunit-fixture .duplicates');
 
@@ -205,7 +205,7 @@ QUnit.test('duplicates - single - same id on select triggers change',
   );
 });
 
-QUnit.test('duplicates - single - different id on select triggers change',
+test('duplicates - single - different id on select triggers change',
   function (assert) {
   var $select = $('#qunit-fixture .duplicates');
 
@@ -250,7 +250,7 @@ QUnit.test('duplicates - single - different id on select triggers change',
   );
 });
 
-QUnit.test('duplicates - multiple - same id on select triggers change',
+test('duplicates - multiple - same id on select triggers change',
 function (assert) {
   var $select = $('#qunit-fixture .duplicates-multi');
 
@@ -295,7 +295,7 @@ function (assert) {
   );
 });
 
-QUnit.test('duplicates - multiple - different id on select triggers change',
+test('duplicates - multiple - different id on select triggers change',
 function (assert) {
   var $select = $('#qunit-fixture .duplicates-multi');
 
@@ -340,9 +340,9 @@ function (assert) {
   );
 });
 
-QUnit.module('Data adapter - Select - query');
+module('Data adapter - Select - query');
 
-QUnit.test('all options are returned with no term', function (assert) {
+test('all options are returned with no term', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -356,7 +356,7 @@ QUnit.test('all options are returned with no term', function (assert) {
   });
 });
 
-QUnit.test('the matcher checks the text', function (assert) {
+test('the matcher checks the text', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -372,7 +372,7 @@ QUnit.test('the matcher checks the text', function (assert) {
   });
 });
 
-QUnit.test('the matcher ignores case', function (assert) {
+test('the matcher ignores case', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -388,7 +388,7 @@ QUnit.test('the matcher ignores case', function (assert) {
   });
 });
 
-QUnit.test('no options may be returned with no matches', function (assert) {
+test('no options may be returned with no matches', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var data = new SelectData($select, selectOptions);
@@ -404,7 +404,7 @@ QUnit.test('no options may be returned with no matches', function (assert) {
   });
 });
 
-QUnit.test('optgroup tags are marked with children', function (assert) {
+test('optgroup tags are marked with children', function (assert) {
   var $select = $('#qunit-fixture .groups');
 
   var data = new SelectData($select, selectOptions);
@@ -417,7 +417,7 @@ QUnit.test('optgroup tags are marked with children', function (assert) {
   });
 });
 
-QUnit.test('empty optgroups are still shown when queried', function (assert) {
+test('empty optgroups are still shown when queried', function (assert) {
   var $select = $('#qunit-fixture .groups');
 
   var data = new SelectData($select, selectOptions);
@@ -445,7 +445,7 @@ QUnit.test('empty optgroups are still shown when queried', function (assert) {
   });
 });
 
-QUnit.test('multiple options with the same value are returned', function (assert) {
+test('multiple options with the same value are returned', function (assert) {
   var $select = $('#qunit-fixture .duplicates');
 
   var data = new SelectData($select, selectOptions);
@@ -474,7 +474,7 @@ QUnit.test('multiple options with the same value are returned', function (assert
   });
 });
 
-QUnit.test('data objects use the text of the option', function (assert) {
+test('data objects use the text of the option', function (assert) {
   var $select = $('#qunit-fixture .duplicates');
 
   var data = new SelectData($select, selectOptions);
@@ -487,7 +487,7 @@ QUnit.test('data objects use the text of the option', function (assert) {
   assert.equal(item.text, '&');
 });
 
-QUnit.test('select option construction accepts id=0 (zero) value', function (assert) {
+test('select option construction accepts id=0 (zero) value', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var selectOptions = [{ id: 0, text: 'Zero Value'}];
@@ -503,7 +503,7 @@ QUnit.test('select option construction accepts id=0 (zero) value', function (ass
   );
 });
 
-QUnit.test('select option construction accepts id="" (empty string) value',
+test('select option construction accepts id="" (empty string) value',
   function (assert) {
   var $select = $('#qunit-fixture .single');
 
@@ -519,7 +519,7 @@ QUnit.test('select option construction accepts id="" (empty string) value',
   );
 });
 
-QUnit.test('user-defined types are normalized properly', function (assert) {
+test('user-defined types are normalized properly', function (assert) {
   var $select = $('#qunit-fixture .user-defined'),
 
   UserDefinedType = function (id, text) {

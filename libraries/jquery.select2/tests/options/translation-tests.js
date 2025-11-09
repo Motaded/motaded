@@ -2,7 +2,7 @@ var $ = require('jquery');
 var Options = require('select2/options');
 var Defaults = require('select2/defaults');
 
-QUnit.module('Options - Translations', {
+module('Options - Translations', {
   beforeEach: function () {
     Defaults.reset();
   },
@@ -11,7 +11,7 @@ QUnit.module('Options - Translations', {
   }
 });
 
-QUnit.test('partial dictionaries are reset when default reset', function (assert) {
+test('partial dictonaries are reset when default reset', function (assert) {
   Defaults.set('language', {
     test: 'testing'
   });
@@ -24,7 +24,7 @@ QUnit.test('partial dictionaries are reset when default reset', function (assert
   );
 });
 
-QUnit.test('default language chain is English', function (assert) {
+test('default language chain is English', function (assert) {
   var $element = $('<select></select>');
 
   var options = new Options({}, $element);
@@ -35,7 +35,7 @@ QUnit.test('default language chain is English', function (assert) {
   );
 });
 
-QUnit.test(
+test(
   'default translation includes all of the required messages',
   function (assert) {
     var $element = $('<select></select>');
@@ -52,15 +52,13 @@ QUnit.test(
         'maximumSelected',
         'noResults',
         'searching',
-        'removeAllItems',
-        'removeItem',
-        'search'
+        'removeAllItems'
       ]
     );
   }
 );
 
-QUnit.test('partial dictionaries can be passed', function (assert) {
+test('partial dictionaries can be passed', function (assert) {
   var $element = $('<select></select>');
 
   var options = new Options({
@@ -86,7 +84,7 @@ QUnit.test('partial dictionaries can be passed', function (assert) {
   );
 });
 
-QUnit.test('partial dictionaries can be combined with defaults', function (assert) {
+test('partial dictionaries can be combined with defaults', function (assert) {
   var $element = $('<select></select>');
 
   Defaults.set('language', {
@@ -124,7 +122,7 @@ QUnit.test('partial dictionaries can be combined with defaults', function (asser
   );
 });
 
-QUnit.test('partial dictionaries can used in fallback chains', function (assert) {
+test('partial dictionaries can used in fallback chains', function (assert) {
   var $element = $('<select></select>');
 
   var options = new Options({
@@ -163,7 +161,7 @@ QUnit.test('partial dictionaries can used in fallback chains', function (assert)
   );
 });
 
-QUnit.test('language can be set via the options', function (assert) {
+test('language can be set via the options', function (assert) {
   var $element = $('<select></select>');
 
   var options = new Options({
@@ -176,7 +174,7 @@ QUnit.test('language can be set via the options', function (assert) {
   );
 });
 
-QUnit.test('multi-part language is broken out', function (assert) {
+test('multi-part language is broken out', function (assert) {
   var $element = $('<select></select>');
 
   var options = new Options({
@@ -189,7 +187,7 @@ QUnit.test('multi-part language is broken out', function (assert) {
   );
 });
 
-QUnit.test('default language can be set', function (assert) {
+test('default language can be set', function (assert) {
   var $element = $('<select></select>');
 
   Defaults.set('language', 'es');
@@ -202,7 +200,7 @@ QUnit.test('default language can be set', function (assert) {
   );
 });
 
-QUnit.test('lanugage set via options adds to default chain', function (assert) {
+test('lanugage set via options adds to default chain', function (assert) {
   var $element = $('<select></select>');
 
   Defaults.set('language', 'es');
@@ -217,7 +215,7 @@ QUnit.test('lanugage set via options adds to default chain', function (assert) {
   );
 });
 
-QUnit.test('default language chain can be set', function (assert) {
+test('default language chain can be set', function (assert) {
   var $element = $('<select></select>');
 
   Defaults.set('language', ['es', 'it', 'en']);
@@ -230,7 +228,7 @@ QUnit.test('default language chain can be set', function (assert) {
   );
 });
 
-QUnit.test('language can be set by lang attr', function (assert) {
+test('language can be set by lang attr', function (assert) {
   var $element = $('<select lang="es"></select>');
 
   var options = new Options({}, $element);
@@ -241,7 +239,7 @@ QUnit.test('language can be set by lang attr', function (assert) {
   );
 });
 
-QUnit.test('language can be inherited by lang attr', function (assert) {
+test('language can be inherited by lang attr', function (assert) {
   var $element = $('<div lang="es"><select></select></div>').find('select');
 
   var options = new Options({}, $element);
@@ -252,7 +250,7 @@ QUnit.test('language can be inherited by lang attr', function (assert) {
   );
 });
 
-QUnit.test('multi-part language can be inherited by lang attr', function (assert) {
+test('multi-part language can be inherited by lang attr', function (assert) {
   var $element = $('<div lang="pt-BR"><select></select></div>').find('select');
 
   var options = new Options({}, $element);
@@ -263,7 +261,7 @@ QUnit.test('multi-part language can be inherited by lang attr', function (assert
   );
 });
 
-QUnit.test('lang attr overrides default language', function (assert) {
+test('lang attr overrides default language', function (assert) {
   var $element = $('<select lang="it"></select>');
 
   Defaults.set('language', 'es');
@@ -276,7 +274,7 @@ QUnit.test('lang attr overrides default language', function (assert) {
   );
 });
 
-QUnit.test('default language overrides inherited lang attr', function (assert) {
+test('default language overrides inherited lang attr', function (assert) {
   var $element = $('<div lang="it"><select></select></div>').find('select');
 
   Defaults.set('language', 'es');

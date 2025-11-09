@@ -1,4 +1,4 @@
-QUnit.module('Dropdown - Search - Accessibility');
+module('Dropdown - Search - Accessibility');
 
 var Utils = require('select2/utils');
 
@@ -13,7 +13,7 @@ var $ = require('jquery');
 var Options = require('select2/options');
 var options = new Options({});
 
-QUnit.test('role attribute is set to searchbox', function (assert) {
+test('role attribute is set to searchbox', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -29,7 +29,7 @@ QUnit.test('role attribute is set to searchbox', function (assert) {
   );
 });
 
-QUnit.test('aria-autocomplete attribute is present', function (assert) {
+test('aria-autocomplete attribute is present', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -45,7 +45,7 @@ QUnit.test('aria-autocomplete attribute is present', function (assert) {
   );
 });
 
-QUnit.test('aria-activedescendant should not be set initiailly', function (assert) {
+test('aria-activedescendant should not be set initiailly', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -62,7 +62,7 @@ QUnit.test('aria-activedescendant should not be set initiailly', function (asser
   );
 });
 
-QUnit.test('aria-activedescendant should be set after highlight', function (assert) {
+test('aria-activedescendant should be set after highlight', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -86,7 +86,7 @@ QUnit.test('aria-activedescendant should be set after highlight', function (asse
   );
 });
 
-QUnit.test('activedescendant should remove if there is no ID', function (assert) {
+test('activedescendant should remove if there is no ID', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -108,7 +108,7 @@ QUnit.test('activedescendant should remove if there is no ID', function (assert)
   );
 });
 
-QUnit.test('aria-activedescendant should be removed when closed', function (assert) {
+test('aria-activedescendant should be removed when closed', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -128,7 +128,7 @@ QUnit.test('aria-activedescendant should be removed when closed', function (asse
   );
 });
 
-QUnit.test('aria-controls should not be set initiailly', function (assert) {
+test('aria-controls should not be set initiailly', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -145,7 +145,7 @@ QUnit.test('aria-controls should not be set initiailly', function (assert) {
   );
 });
 
-QUnit.test('aria-controls should be set when opened', function (assert) {
+test('aria-controls should be set when opened', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -164,7 +164,7 @@ QUnit.test('aria-controls should be set when opened', function (assert) {
   );
 });
 
-QUnit.test('aria-controls should be removed when closed', function (assert) {
+test('aria-controls should be removed when closed', function (assert) {
   var $select = $('#qunit-fixture .single');
 
   var dropdown = new DropdownSearch($select, options);
@@ -181,21 +181,5 @@ QUnit.test('aria-controls should be removed when closed', function (assert) {
   assert.ok(
     !$search.attr('aria-controls'),
     'There are no results for the search box to point to when it is closed'
-  );
-});
-
-QUnit.test('aria-label attribute is present', function (assert) {
-  var $select = $('#qunit-fixture .single');
-
-  var dropdown = new DropdownSearch($select, options);
-  var $dropdown = dropdown.render();
-
-  var container = new MockContainer();
-  dropdown.bind(container, $('<span></span>'));
-
-  assert.equal(
-    $dropdown.find('input').attr('aria-label'),
-    'Search',
-    'The search box has a label'
   );
 });

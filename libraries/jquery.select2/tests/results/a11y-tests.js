@@ -1,4 +1,4 @@
-QUnit.module('Results - Accessibility');
+module('Results - Accessibility');
 
 var $ = require('jquery');
 
@@ -6,7 +6,7 @@ var Options = require('select2/options');
 
 var Results = require('select2/results');
 
-QUnit.test('role of results should be a listbox', function (assert) {
+test('role of results should be a listbox', function (assert) {
   var results = new Results($('<select></select>'), new Options({}));
 
   var $results = results.render();
@@ -14,7 +14,7 @@ QUnit.test('role of results should be a listbox', function (assert) {
   assert.equal($results.attr('role'), 'listbox');
 });
 
-QUnit.test('multiple select should have aria-multiselectable', function (assert) {
+test('multiple select should have aria-multiselectable', function (assert) {
   var results = new Results($('<select></select>'), new Options({
     multiple: true
   }));

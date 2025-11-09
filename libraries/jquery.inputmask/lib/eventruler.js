@@ -5,7 +5,7 @@ import { getBufferTemplate } from "./positioning";
 
 export { EventRuler };
 
-const EventRuler = {
+var EventRuler = {
   on: function (input, eventName, eventHandler) {
     const $ = input.inputmask.dependencyLib;
 
@@ -15,10 +15,10 @@ const EventRuler = {
         arguments[0] = e;
       }
       // console.log(e.type);
-      const that = this,
+      let that = this,
+        args,
         inputmask = that.inputmask,
         opts = inputmask ? inputmask.opts : undefined;
-      let args;
       if (inputmask === undefined && this.nodeName !== "FORM") {
         // happens when cloning an object with jquery.clone
         const imOpts = $.data(that, "_inputmask_opts");

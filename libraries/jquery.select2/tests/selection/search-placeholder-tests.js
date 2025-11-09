@@ -1,4 +1,4 @@
-QUnit.module('Selection containers - Inline search - Placeholder');
+module('Selection containers - Inline search - Placeholder');
 
 var MultipleSelection = require('select2/selection/multiple');
 var InlineSearch = require('select2/selection/search');
@@ -13,7 +13,7 @@ var CustomSelection = Utils.Decorate(
   InlineSearch
 );
 
-QUnit.test('width does not extend the search box', function (assert) {
+test('width does not extend the search box', function (assert) {
     assert.expect(2);
 
     var $container = $(
@@ -33,19 +33,18 @@ QUnit.test('width does not extend the search box', function (assert) {
     selection.bind(container, $container);
 
     // Make it visible so the browser can place focus on the search
-    $container.find('div').append($selection);
+    $container.append($selection);
     $('#qunit-fixture').append($container);
 
     // Update the selection so the search is rendered
     selection.update([]);
 
-    var $search = $selection.find('textarea');
+    var $search = $selection.find('input');
 
     assert.equal(
       $search.outerWidth(),
-      93,
-      'The search should be the entire width of the container, '+
-      'minus the borders and the initial padding'
+      60,
+      'The search should not be the entire width of the container'
     );
 
     assert.equal(

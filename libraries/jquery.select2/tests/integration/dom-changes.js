@@ -1,7 +1,7 @@
 /*jshint browser: true */
-QUnit.module('DOM integration');
+module('DOM integration');
 
-QUnit.test('adding a new unselected option changes nothing', function (assert) {
+test('adding a new unselected option changes nothing', function (assert) {
   // Any browsers which support mutation observers will not trigger the event
   var expected = 4;
   if (window.MutationObserver) {
@@ -69,7 +69,7 @@ QUnit.test('adding a new unselected option changes nothing', function (assert) {
   syncDone();
 });
 
-QUnit.test('adding a new selected option changes the value', function (assert) {
+test('adding a new selected option changes the value', function (assert) {
   // handle IE 8 not being supported
   var expected = 4;
   if (!window.MutationObserver && !window.addEventListener) {
@@ -135,7 +135,7 @@ QUnit.test('adding a new selected option changes the value', function (assert) {
   syncDone();
 });
 
-QUnit.test('removing an unselected option changes nothing', function (assert) {
+test('removing an unselected option changes nothing', function (assert) {
   // Any browsers which support mutation observers will not trigger the event
   var expected = 4;
   if (!window.MutationObserver && !window.addEventListener) {
@@ -199,7 +199,7 @@ QUnit.test('removing an unselected option changes nothing', function (assert) {
   syncDone();
 });
 
-QUnit.test('removing a selected option changes the value', function (assert) {
+test('removing a selected option changes the value', function (assert) {
   // handle IE 8 not being supported
   var expected = 3;
   if (!window.MutationObserver && !window.addEventListener) {
@@ -257,7 +257,7 @@ QUnit.test('removing a selected option changes the value', function (assert) {
   syncDone();
 });
 
-QUnit.test('searching tags does not loose focus', function (assert) {
+test('searching tags does not loose focus', function (assert) {
   assert.expect(1);
 
   var asyncDone = assert.async();
@@ -279,13 +279,9 @@ QUnit.test('searching tags does not loose focus', function (assert) {
   var inputEl = select.selection.$search[0];
   inputEl.focus();
 
-  var done = false;
   select.on('selection:update', function() {
-    if (!done) {
-      assert.equal(document.activeElement, inputEl);
-      done = true;
-      asyncDone();
-    }
+    assert.equal(document.activeElement, inputEl);
+    asyncDone();
   });
 
   select.selection.trigger('query', {term: 'f'});
@@ -293,7 +289,7 @@ QUnit.test('searching tags does not loose focus', function (assert) {
 });
 
 
-QUnit.test('adding multiple options calls selection:update once', function (assert) {
+test('adding multiple options calls selection:update once', function (assert) {
   assert.expect(1);
 
   var asyncDone = assert.async();

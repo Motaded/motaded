@@ -1,6 +1,6 @@
-QUnit.module('Data adaptor - Tokenizer');
+module('Data adaptor - Tokenizer');
 
-QUnit.test('triggers the select event', function (assert) {
+test('triggers the select event', function (assert) {
   assert.expect(2);
 
   var SelectData = require('select2/data/select');
@@ -42,7 +42,7 @@ QUnit.test('triggers the select event', function (assert) {
   });
 });
 
-QUnit.test('createTag can return null', function (assert) {
+test('createTag can return null', function (assert) {
   assert.expect(3);
 
   var SelectData = require('select2/data/select');
@@ -91,7 +91,7 @@ QUnit.test('createTag can return null', function (assert) {
   });
 });
 
-QUnit.test('createTag returning null does not cut the term', function (assert) {
+test('createTag returning null does not cut the term', function (assert) {
   assert.expect(4);
 
   var SelectData = require('select2/data/select');
@@ -170,7 +170,7 @@ QUnit.test('createTag returning null does not cut the term', function (assert) {
   });
 });
 
-QUnit.test('works with multiple tokens given', function (assert) {
+test('works with multiple tokens given', function (assert) {
   assert.expect(4);
 
   var SelectData = require('select2/data/select');

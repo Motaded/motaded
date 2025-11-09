@@ -15,8 +15,7 @@ describe("excludeCountries option:", function() {
     iti = window.intlTelInput(input[0], {
       excludeCountries: [],
     });
-
-    expect(getListLength()).toEqual(totalCountries);
+    expect(getListLength()).toEqual(totalCountries + defaultPreferredCountries);
   });
 
   describe("init the plugin with excludeCountries=[us, ca]", function() {
@@ -26,26 +25,25 @@ describe("excludeCountries option:", function() {
     beforeEach(function() {
       iti = window.intlTelInput(input[0], {
         excludeCountries: excludeCountries,
+        preferredCountries: [],
       });
     });
 
     it("excludes the US and Canada", function() {
       var listItems = getListElement().find("li.country");
-
       expect(listItems.filter("[data-country-code=us]")).not.toExist();
       expect(listItems.filter("[data-country-code=ca]")).not.toExist();
       expect(getListLength()).toEqual(totalCountries - excludeCountries.length);
     });
 
-    it("defaults to the globe icon", function() {
-      expect(getSelectedCountryElement()).toHaveClass("iti__globe");
+    it("defaults to the next in the list", function() {
+      expect(getSelectedFlagElement()).toHaveClass("iti__af");
     });
 
     it("typing +1 sets the flag to Dominican Republic", function() {
       input.val("+");
       triggerKeyOnInput("1");
-
-      expect(getSelectedCountryElement()).toHaveClass("iti__do");
+      expect(getSelectedFlagElement()).toHaveClass("iti__do");
     });
 
   });

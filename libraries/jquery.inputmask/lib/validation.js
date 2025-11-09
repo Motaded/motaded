@@ -66,19 +66,15 @@ function alternate(maskPos, c, strict, fromIsValid, rAltPos, selection) {
       end = selection.begin;
     }
   }
-
   if (lAltPos === -1 && rAltPos === undefined) {
-    // do not recurse when already passed the beginning
+    // do not recurse when already paste the beginning
     lastAlt = 0;
     prevAltPos = getTest.call(inputmask, lastAlt);
     alternation = prevAltPos.alternation;
   } else {
     // find last modified alternation
     for (; lAltPos >= 0; lAltPos--) {
-      altPos =
-        lAltPos === 0
-          ? getTest.call(inputmask, 0)
-          : maskset.validPositions[lAltPos];
+      altPos = maskset.validPositions[lAltPos];
       if (altPos && altPos.alternation !== undefined) {
         if (
           lAltPos <= (maskPos || 0) &&
@@ -89,7 +85,7 @@ function alternate(maskPos, c, strict, fromIsValid, rAltPos, selection) {
           break;
         }
         lastAlt = lAltPos;
-        alternation = altPos.alternation;
+        alternation = maskset.validPositions[lastAlt].alternation;
         prevAltPos = altPos;
       }
     }
@@ -120,8 +116,6 @@ function alternate(maskPos, c, strict, fromIsValid, rAltPos, selection) {
       if (
         validPos &&
         validPos.generatedInput !== true &&
-        (decisionPos !== 0 ||
-          validPos.input !== opts.skipOptionalPartCharacter) &&
         (selection === undefined || i < begin || i >= end)
       ) {
         validInputs.push(validPos.input);
@@ -699,7 +693,7 @@ function isValid(
         // selection clears an alternated keepstatic mask ~ #2189
         result = alternate.call(inputmask, true);
       } else if (
-        result === true &&
+        result == true &&
         opts.numericInput !== true &&
         maskset.tests[maskPos] &&
         maskset.tests[maskPos].length > 1 &&
@@ -715,27 +709,25 @@ function isValid(
         pos: maskPos
       };
     }
-
-    if (
-      typeof opts.postValidation === "function" &&
-      fromIsValid !== true &&
-      validateOnly !== true
-    ) {
-      const postResult = opts.postValidation.call(
-        inputmask,
-        getBuffer.call(inputmask, true),
-        pos.begin !== undefined ? (inputmask.isRTL ? pos.end : pos.begin) : pos,
-        c,
-        result,
-        opts,
-        maskset,
-        strict,
-        fromCheckval,
-        fromAlternate
-      );
-      if (postResult !== undefined) {
-        result = postResult === true ? result : postResult;
-      }
+  }
+  if (
+    typeof opts.postValidation === "function" &&
+    fromIsValid !== true &&
+    validateOnly !== true
+  ) {
+    const postResult = opts.postValidation.call(
+      inputmask,
+      getBuffer.call(inputmask, true),
+      pos.begin !== undefined ? (inputmask.isRTL ? pos.end : pos.begin) : pos,
+      c,
+      result,
+      opts,
+      maskset,
+      strict,
+      fromCheckval
+    );
+    if (postResult !== undefined) {
+      result = postResult === true ? result : postResult;
     }
   }
 

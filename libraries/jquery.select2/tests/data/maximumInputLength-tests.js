@@ -1,4 +1,4 @@
-QUnit.module('Data adapters - Maximum input length');
+module('Data adapters - Maximum input length');
 
 var MaximumInputLength = require('select2/data/maximumInputLength');
 var $ = require('jquery');
@@ -15,7 +15,7 @@ MaximumInputStub.prototype.query = function (params, callback) {
 
 var MaximumInputData = Utils.Decorate(MaximumInputStub, MaximumInputLength);
 
-QUnit.test('0 never displays the notice', function (assert) {
+test('0 never displays the notice', function (assert) {
   var zeroOptions = new Options({
     maximumInputLength: 0
   });
@@ -41,7 +41,7 @@ QUnit.test('0 never displays the notice', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('< 0 never displays the notice', function (assert) {
+test('< 0 never displays the notice', function (assert) {
   var negativeOptions = new Options({
     maximumInputLength: -1
   });
@@ -67,7 +67,7 @@ QUnit.test('< 0 never displays the notice', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('triggers when input is too long', function (assert) {
+test('triggers when input is too long', function (assert) {
   var options = new Options({
     maximumInputLength: 1
   });
@@ -85,7 +85,7 @@ QUnit.test('triggers when input is too long', function (assert) {
   assert.ok(!data.called, 'The adapter should not be called');
 });
 
-QUnit.test('does not trigger when equal', function (assert) {
+test('does not trigger when equal', function (assert) {
   var options = new Options({
     maximumInputLength: 10
   });
@@ -103,7 +103,7 @@ QUnit.test('does not trigger when equal', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('does not trigger when less', function (assert) {
+test('does not trigger when less', function (assert) {
   var options = new Options({
     maximumInputLength: 10
   });
@@ -121,7 +121,7 @@ QUnit.test('does not trigger when less', function (assert) {
   assert.ok(data.called);
 });
 
-QUnit.test('works with null term', function (assert) {
+test('works with null term', function (assert) {
   var options = new Options({
     maximumInputLength: 1
   });

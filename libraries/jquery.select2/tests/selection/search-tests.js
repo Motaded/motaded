@@ -1,4 +1,4 @@
-QUnit.module('Selection containers - Inline search');
+module('Selection containers - Inline search');
 
 var MultipleSelection = require('select2/selection/multiple');
 var InlineSearch = require('select2/selection/search');
@@ -9,7 +9,7 @@ var Utils = require('select2/utils');
 
 var options = new Options({});
 
-QUnit.test('backspace will remove a choice', function (assert) {
+test('backspace will remove a choice', function (assert) {
   assert.expect(3);
 
   var KEYS = require('select2/keys');
@@ -38,7 +38,7 @@ QUnit.test('backspace will remove a choice', function (assert) {
     }
   ]);
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   var $choices = $selection.find('.select2-selection__choice');
 
   assert.equal($search.length, 1, 'The search was visible');
@@ -51,7 +51,7 @@ QUnit.test('backspace will remove a choice', function (assert) {
   $search.trigger(backspace);
 });
 
-QUnit.test('backspace will set the search text', function (assert) {
+test('backspace will set the search text', function (assert) {
   assert.expect(3);
 
   var KEYS = require('select2/keys');
@@ -75,7 +75,7 @@ QUnit.test('backspace will set the search text', function (assert) {
     }
   ]);
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   var $choices = $selection.find('.select2-selection__choice');
 
   assert.equal($search.length, 1, 'The search was visible');
@@ -90,7 +90,7 @@ QUnit.test('backspace will set the search text', function (assert) {
   assert.equal($search.val(), 'One', 'The search text was set');
 });
 
-QUnit.test('updating selection does not shift the focus', function (assert) {
+test('updating selection does not shift the focus', function (assert) {
   // Check for IE 8, which triggers a false negative during testing
   if (window.attachEvent && !window.addEventListener) {
     // We must expect 0 assertions or the test will fail
@@ -115,7 +115,7 @@ QUnit.test('updating selection does not shift the focus', function (assert) {
   // Make it visible so the browser can place focus on the search
   $container.append($selection);
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   $search.trigger('focus');
 
   assert.equal($search.length, 1, 'The search was not visible');
@@ -138,7 +138,7 @@ QUnit.test('updating selection does not shift the focus', function (assert) {
   );
 });
 
-QUnit.test('the focus event shifts the focus', function (assert) {
+test('the focus event shifts the focus', function (assert) {
   // Check for IE 8, which triggers a false negative during testing
   if (window.attachEvent && !window.addEventListener) {
     // We must expect 0 assertions or the test will fail
@@ -165,7 +165,7 @@ QUnit.test('the focus event shifts the focus', function (assert) {
 
   // The search should not be automatically focused
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
 
   assert.notEqual(
     document.activeElement,
@@ -190,7 +190,7 @@ QUnit.test('the focus event shifts the focus', function (assert) {
   );
 });
 
-QUnit.test('search box without text should propagate click', function (assert) {
+test('search box without text should propagate click', function (assert) {
   assert.expect(1);
 
   var $container = $('#qunit-fixture .event-container');
@@ -214,11 +214,11 @@ QUnit.test('search box without text should propagate click', function (assert) {
     assert.ok(true, 'The click event should not have been trapped');
   });
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   $search.trigger('click');
 });
 
-QUnit.test('search box with text should not propagate click', function (assert) {
+test('search box with text should not propagate click', function (assert) {
   assert.expect(0);
 
   var $container = $('#qunit-fixture .event-container');
@@ -242,12 +242,12 @@ QUnit.test('search box with text should not propagate click', function (assert) 
     assert.ok(false, 'The click event should have been trapped');
   });
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   $search.val('test');
   $search.trigger('click');
 });
 
-QUnit.test('search box with text should not close dropdown', function (assert) {
+test('search box with text should not close dropdown', function (assert) {
   assert.expect(0);
 
   var $container = $('#qunit-fixture .event-container');
@@ -271,51 +271,7 @@ QUnit.test('search box with text should not close dropdown', function (assert) {
     assert.ok(false, 'The dropdown should not have closed');
   });
 
-  var $search = $selection.find('textarea');
+  var $search = $selection.find('input');
   $search.val('test');
   $search.trigger('click');
-});
-
-QUnit.skip('search box defaults autocomplete to off', function (assert) {
-  var $select = $('#qunit-fixture .multiple');
-
-  var CustomSelection = Utils.Decorate(MultipleSelection, InlineSearch);
-  var selection = new CustomSelection($select, options);
-  var $selection = selection.render();
-
-  var container = new MockContainer();
-  selection.bind(container, $('<span></span>'));
-
-  // Update the selection so the search is rendered
-  selection.update([]);
-
-  assert.equal(
-    $selection.find('textarea').attr('autocomplete'),
-    'off',
-    'The search box has autocomplete disabled'
-  );
-});
-
-QUnit.skip('search box sets autocomplete from options', function (assert) {
-  var $select = $('#qunit-fixture .multiple');
-
-  var autocompleteOptions = new Options({
-    autocomplete: 'country-name'
-  });
-
-  var CustomSelection = Utils.Decorate(MultipleSelection, InlineSearch);
-  var selection = new CustomSelection($select, autocompleteOptions);
-  var $selection = selection.render();
-
-  var container = new MockContainer();
-  selection.bind(container, $('<span></span>'));
-
-  // Update the selection so the search is rendered
-  selection.update([]);
-
-  assert.equal(
-    $selection.find('textarea').attr('autocomplete'),
-    'country-name',
-    'The search box sets the right autocomplete attribute'
-  );
 });

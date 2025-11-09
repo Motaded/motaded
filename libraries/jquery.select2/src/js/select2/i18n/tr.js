@@ -34,12 +34,6 @@ define(function () {
     },
     removeAllItems: function () {     
       return 'Tüm öğeleri kaldır';
-    },
-    removeItem: function () {
-      return 'Bu öğeyi kaldır';
-    },
-    search: function() {
-      return 'Ara';
     }
   };
 });

@@ -1,23 +1,47 @@
 # CodeMirror
 
-[![Build Status](https://github.com/codemirror/dev/workflows/main/badge.svg)](https://github.com/codemirror/codemirror.next/actions)
+[![Build Status](https://github.com/codemirror/codemirror5/workflows/main/badge.svg)](https://github.com/codemirror/codemirror5/actions)
+[![NPM version](https://img.shields.io/npm/v/codemirror.svg)](https://www.npmjs.org/package/codemirror)
 
-This is the central repository for [CodeMirror](https://codemirror.net/). It holds the bug tracker and development scripts.
+CodeMirror is a versatile text editor implemented in JavaScript for
+the browser. It is specialized for editing code, and comes with over
+100 language modes and various addons that implement more advanced
+editing functionality. Every language comes with fully-featured code
+and syntax highlighting to help with reading and editing complex code.
 
-If you want to **use** CodeMirror, install the separate packages from npm, and ignore the contents of this repository. If you want to **develop on** CodeMirror, this repository provides scripts to install and work with the various packages.
+A rich programming API and a CSS theming system are available for
+customizing CodeMirror to fit your application, and extending it with
+new functionality.
 
-To get started, make sure you are running [node.js](https://nodejs.org/) version 16. After cloning the repository, run
+You can find more information (and the
+[manual](https://codemirror.net/5/doc/manual.html)) on the [project
+page](https://codemirror.net/5/). For questions and discussion, use the
+[discussion forum](https://discuss.codemirror.net/).
 
-    node bin/cm.js install
+See
+[CONTRIBUTING.md](https://github.com/codemirror/CodeMirror/blob/master/CONTRIBUTING.md)
+for contributing guidelines.
 
-to clone the packages that make up the system, install dependencies, and build the packages. At any time you can rebuild packages, either by running `npm run prepare` in their subdirectory, or all at once with
+The CodeMirror community aims to be welcoming to everybody. We use the
+[Contributor Covenant
+(1.1)](http://contributor-covenant.org/version/1/1/0/) as our code of
+conduct.
 
-    node bin/cm.js build
+### Installation
 
-Developing is best done by setting up
+Either get the [zip file](https://codemirror.net/5/codemirror.zip) with
+the latest version, or make sure you have [Node](https://nodejs.org/)
+installed and run:
 
-    npm run dev
+    npm install codemirror
 
-which starts a server that automatically rebuilds the packages when their code changes and exposes a dev server on port 8090 running the [demo](http://localhost:8090) and [browser tests](http://localhost:8090/test/).
+**NOTE**: This is the source repository for the library, and not the
+distribution channel. Cloning it is not the recommended way to install
+the library, and will in fact not work unless you also run the build
+step.
 
-Please see [the website](https://codemirror.net/) for more information and [docs](https://codemirror.net/docs/ref).
+### Quickstart
+
+To build the project, make sure you have Node.js installed (at least version 6)
+and then `npm install`. To run, just open `index.html` in your
+browser (you don't need to run a webserver). Run the tests with `npm test`.

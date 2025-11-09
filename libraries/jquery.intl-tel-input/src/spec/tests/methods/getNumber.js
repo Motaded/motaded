@@ -19,11 +19,11 @@ describe("getNumber: ", function() {
     });
 
     it("calling getNumber with format=INTERNATIONAL", function() {
-      expect(iti.getNumber(window.intlTelInput.utils.numberFormat.INTERNATIONAL)).toEqual("+1 702-418-1234");
+      expect(iti.getNumber(intlTelInputUtils.numberFormat.INTERNATIONAL)).toEqual("+1 702-418-1234");
     });
 
     it("calling getNumber with format=NATIONAL", function() {
-      expect(iti.getNumber(window.intlTelInput.utils.numberFormat.NATIONAL)).toEqual("(702) 418-1234");
+      expect(iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL)).toEqual("(702) 418-1234");
     });
 
   });
@@ -45,7 +45,7 @@ describe("getNumber: ", function() {
     describe("selecting American Samoa and then typing a national number", function() {
 
       beforeEach(function() {
-        selectCountry("as");
+        selectFlag("as");
         input.val("6847331234").keyup();
       });
 
@@ -58,7 +58,7 @@ describe("getNumber: ", function() {
     describe("typing a full international number for Anguilla", function() {
 
       beforeEach(function() {
-        //* Important that this test contains formatting because that caused a bug before.
+        // important that this test contains formatting because that caused a bug before
         input.val("+1 264-235-1234").keyup();
       });
 

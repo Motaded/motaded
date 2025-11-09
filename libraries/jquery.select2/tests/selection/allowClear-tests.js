@@ -1,4 +1,4 @@
-QUnit.module('Selection containers - Placeholders - Allow clear');
+module('Selection containers - Placeholders - Allow clear');
 
 var Placeholder = require('select2/selection/placeholder');
 var AllowClear = require('select2/selection/allowClear');
@@ -23,7 +23,7 @@ var allowClearOptions = new Options({
   allowClear: true
 });
 
-QUnit.test('clear is not displayed for single placeholder', function (assert) {
+test('clear is not displayed for single placeholder', function (assert) {
   var selection = new AllowClearPlaceholder(
     $('#qunit-fixture .single-with-placeholder'),
     allowClearOptions
@@ -42,7 +42,7 @@ QUnit.test('clear is not displayed for single placeholder', function (assert) {
   );
 });
 
-QUnit.test('clear is not displayed for multiple placeholder', function (assert) {
+test('clear is not displayed for multiple placeholder', function (assert) {
   var selection = new AllowClearPlaceholder(
     $('#qunit-fixture .multiple'),
     allowClearOptions
@@ -60,7 +60,7 @@ QUnit.test('clear is not displayed for multiple placeholder', function (assert) 
 });
 
 
-QUnit.test('clear is displayed for placeholder', function (assert) {
+test('clear is displayed for placeholder', function (assert) {
   var selection = new AllowClearPlaceholder(
     $('#qunit-fixture .single-with-placeholder'),
     allowClearOptions
@@ -80,7 +80,7 @@ QUnit.test('clear is displayed for placeholder', function (assert) {
   );
 });
 
-QUnit.test('clear icon should have title displayed', function (assert) {
+test('clear icon should have title displayed', function (assert) {
   var selection = new AllowClearPlaceholder(
     $('#qunit-fixture .single-with-placeholder'),
     allowClearOptions
@@ -100,7 +100,7 @@ QUnit.test('clear icon should have title displayed', function (assert) {
   );
 });
 
-QUnit.test('clicking clear will set the placeholder value', function (assert) {
+test('clicking clear will set the placeholder value', function (assert) {
   var $element = $('#qunit-fixture .single-with-placeholder');
 
   var selection = new AllowClearPlaceholder(
@@ -129,7 +129,7 @@ QUnit.test('clicking clear will set the placeholder value', function (assert) {
   );
 });
 
-QUnit.test('clicking clear will trigger the unselect event', function (assert) {
+test('clicking clear will trigger the unselect event', function (assert) {
   assert.expect(4);
 
   var $element = $('#qunit-fixture .single-with-placeholder');
@@ -178,7 +178,7 @@ QUnit.test('clicking clear will trigger the unselect event', function (assert) {
   $remove.trigger('mousedown');
 });
 
-QUnit.test('preventing the unselect event cancels the clearing', function (assert) {
+test('preventing the unselect event cancels the clearing', function (assert) {
   var $element = $('#qunit-fixture .single-with-placeholder');
 
   var selection = new AllowClearPlaceholder(
@@ -211,7 +211,7 @@ QUnit.test('preventing the unselect event cancels the clearing', function (asser
   );
 });
 
-QUnit.test('clicking clear will trigger the clear event', function (assert) {
+test('clicking clear will trigger the clear event', function (assert) {
   assert.expect(5);
 
   var $element = $('#qunit-fixture .single-with-placeholder');
@@ -239,7 +239,7 @@ QUnit.test('clicking clear will trigger the clear event', function (assert) {
     );
 
     assert.ok(
-      Array.isArray(ev.data),
+      $.isArray(ev.data),
       'The data should be an array'
     );
 
@@ -266,7 +266,7 @@ QUnit.test('clicking clear will trigger the clear event', function (assert) {
   $remove.trigger('mousedown');
 });
 
-QUnit.test('preventing the clear event cancels the clearing', function (assert) {
+test('preventing the clear event cancels the clearing', function (assert) {
   var $element = $('#qunit-fixture .single-with-placeholder');
 
   var selection = new AllowClearPlaceholder(
@@ -299,7 +299,7 @@ QUnit.test('preventing the clear event cancels the clearing', function (assert) 
   );
 });
 
-QUnit.test('clear does not work when disabled', function (assert) {
+test('clear does not work when disabled', function (assert) {
   var $element = $('#qunit-fixture .single-with-placeholder');
 
   var selection = new AllowClearPlaceholder(
@@ -330,7 +330,7 @@ QUnit.test('clear does not work when disabled', function (assert) {
   );
 });
 
-QUnit.test('clear button doesnt visually break selected options', function (assert) {
+test('clear button doesnt visually break selected options', function (assert) {
   var $element = $('<select></select>');
 
   var Selection = Utils.Decorate(

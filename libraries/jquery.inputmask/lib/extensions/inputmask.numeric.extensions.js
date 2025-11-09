@@ -4,7 +4,7 @@
  Copyright (c) Robin Herbots
  Licensed under the MIT license
  */
-import { escapeRegex } from "../escapeRegex";
+import escapeRegex from "../escapeRegex";
 import Inputmask from "../inputmask";
 import { keys } from "../keycode";
 import { seekNext } from "../positioning";
@@ -232,7 +232,7 @@ function genMask(opts) {
   return mask;
 }
 
-function handleRadixDance(pos, c, radixPos, maskset, opts) {
+function hanndleRadixDance(pos, c, radixPos, maskset, opts) {
   if (opts._radixDance && opts.numericInput && c !== opts.negationSymbol.back) {
     if (
       pos <= radixPos &&
@@ -382,7 +382,7 @@ Inputmask.extendAliases({
       if (opts.__financeInput !== false && c === opts.radixPoint) return false;
       const radixPos = buffer.indexOf(opts.radixPoint),
         initPos = pos;
-      pos = handleRadixDance(pos, c, radixPos, maskset, opts);
+      pos = hanndleRadixDance(pos, c, radixPos, maskset, opts);
       if (c === "-" || c === opts.negationSymbol.front) {
         if (opts.allowMinus !== true) return false;
         let isNegative = false,
@@ -480,9 +480,7 @@ Inputmask.extendAliases({
       currentResult,
       opts,
       maskset,
-      strict,
-      fromCheckval,
-      fromAlternate
+      strict
     ) {
       if (currentResult === false) return currentResult;
       if (strict) return true;
@@ -497,9 +495,7 @@ Inputmask.extendAliases({
         if (
           opts.min !== null &&
           unmasked < opts.min &&
-          fromAlternate !== true &&
-          (unmasked.toString().length > opts.min.toString().length || // > instead of >= because we want to allow to type a bigger number
-            buffer[0] === opts.radixPoint || // disallow radixpoint when value is smaller than min
+          (unmasked.toString().length > opts.min.toString().length ||
             unmasked < 0)
         ) {
           return false;
@@ -509,7 +505,7 @@ Inputmask.extendAliases({
           // };
         }
 
-        if (opts.max !== null && opts.max >= 0 && unmasked > opts.max) {
+        if (opts.max !== null && unmasked > opts.max) {
           return opts.SetMaxOnOverflow
             ? {
                 refreshFromBuffer: true,
@@ -694,7 +690,7 @@ Inputmask.extendAliases({
         switch (e.type) {
           case "blur":
           case "checkval":
-            if (opts.min !== null || opts.max !== null) {
+            if (opts.min !== null) {
               const unmasked = opts.onUnMask(
                 buffer.slice().reverse().join(""),
                 undefined,
@@ -707,15 +703,6 @@ Inputmask.extendAliases({
                   refreshFromBuffer: true,
                   buffer: alignDigits(
                     opts.min.toString().replace(".", opts.radixPoint).split(""),
-                    opts.digits,
-                    opts
-                  ).reverse()
-                };
-              } else if (opts.max !== null && unmasked > opts.max) {
-                return {
-                  refreshFromBuffer: true,
-                  buffer: alignDigits(
-                    opts.max.toString().replace(".", opts.radixPoint).split(""),
                     opts.digits,
                     opts
                   ).reverse()

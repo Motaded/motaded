@@ -1,4 +1,4 @@
-const sass = require('sass');
+const sass = require('node-sass');
 
 module.exports = function (grunt) {
   // Full list of files that must be included by RequireJS
@@ -11,6 +11,14 @@ module.exports = function (grunt) {
 
   fullIncludes = [
     'jquery',
+
+    'select2/compat/containerCss',
+    'select2/compat/dropdownCss',
+
+    'select2/compat/initSelection',
+    'select2/compat/inputData',
+    'select2/compat/matcher',
+    'select2/compat/query',
 
     'select2/dropdown/attachContainer',
     'select2/dropdown/stopPropagation',
@@ -143,7 +151,7 @@ module.exports = function (grunt) {
       dev: {
         options: {
           implementation: sass,
-          outputStyle: 'expanded'
+          outputStyle: 'nested'
         },
         files: {
           'dist/css/select2.css': [

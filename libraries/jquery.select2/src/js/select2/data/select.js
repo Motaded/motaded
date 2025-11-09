@@ -13,14 +13,16 @@ define([
   Utils.Extend(SelectAdapter, BaseAdapter);
 
   SelectAdapter.prototype.current = function (callback) {
+    var data = [];
     var self = this;
 
-    var data = Array.prototype.map.call(
-      this.$element[0].querySelectorAll(':checked'),
-      function (selectedElement) {
-        return self.item($(selectedElement));
-      }
-    );
+    this.$element.find(':selected').each(function () {
+      var $option = $(this);
+
+      var option = self.item($option);
+
+      data.push(option);
+    });
 
     callback(data);
   };
@@ -31,9 +33,7 @@ define([
     data.selected = true;
 
     // If data.element is a DOM node, use it instead
-    if (
-      data.element != null && data.element.tagName.toLowerCase() === 'option'
-    ) {
+    if ($(data.element).is('option')) {
       data.element.selected = true;
 
       this.$element.trigger('input').trigger('change');
@@ -51,7 +51,7 @@ define([
         for (var d = 0; d < data.length; d++) {
           var id = data[d].id;
 
-          if (val.indexOf(id) === -1) {
+          if ($.inArray(id, val) === -1) {
             val.push(id);
           }
         }
@@ -76,10 +76,7 @@ define([
 
     data.selected = false;
 
-    if (
-      data.element != null &&
-      data.element.tagName.toLowerCase() === 'option'
-    ) {
+    if ($(data.element).is('option')) {
       data.element.selected = false;
 
       this.$element.trigger('input').trigger('change');
@@ -93,7 +90,7 @@ define([
       for (var d = 0; d < currentData.length; d++) {
         var id = currentData[d].id;
 
-        if (id !== data.id && val.indexOf(id) === -1) {
+        if (id !== data.id && $.inArray(id, val) === -1) {
           val.push(id);
         }
       }
@@ -133,14 +130,11 @@ define([
     var $options = this.$element.children();
 
     $options.each(function () {
-      if (
-        this.tagName.toLowerCase() !== 'option' &&
-        this.tagName.toLowerCase() !== 'optgroup'
-      ) {
+      var $option = $(this);
+
+      if (!$option.is('option') && !$option.is('optgroup')) {
         return;
       }
-
-      var $option = $(this);
 
       var option = self.item($option);
 
@@ -157,7 +151,7 @@ define([
   };
 
   SelectAdapter.prototype.addOptions = function ($options) {
-    this.$element.append($options);
+    Utils.appendMany(this.$element, $options);
   };
 
   SelectAdapter.prototype.option = function (data) {
@@ -192,13 +186,15 @@ define([
       option.title = data.title;
     }
 
+    var $option = $(option);
+
     var normalizedData = this._normalizeItem(data);
     normalizedData.element = option;
 
     // Override the option's data with the combined data
     Utils.StoreData(option, 'data', normalizedData);
 
-    return $(option);
+    return $option;
   };
 
   SelectAdapter.prototype.item = function ($option) {
@@ -210,9 +206,7 @@ define([
       return data;
     }
 
-    var option = $option[0];
-
-    if (option.tagName.toLowerCase() === 'option') {
+    if ($option.is('option')) {
       data = {
         id: $option.val(),
         text: $option.text(),
@@ -220,7 +214,7 @@ define([
         selected: $option.prop('selected'),
         title: $option.prop('title')
       };
-    } else if (option.tagName.toLowerCase() === 'optgroup') {
+    } else if ($option.is('optgroup')) {
       data = {
         text: $option.prop('label'),
         children: [],
@@ -276,12 +270,6 @@ define([
 
     if (item._resultId == null && item.id && this.container != null) {
       item._resultId = this.generateResultId(this.container, item);
-    }
-
-    if (item.children) {
-        item.children = item.children.map(
-            SelectAdapter.prototype._normalizeItem
-        );
     }
 
     return $.extend({}, defaults, item);

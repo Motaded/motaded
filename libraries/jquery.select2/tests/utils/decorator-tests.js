@@ -1,8 +1,8 @@
-QUnit.module('Decorators');
+module('Decorators');
 
 var Utils = require('select2/utils');
 
-QUnit.test('overridden - method', function (assert) {
+test('overridden - method', function (assert) {
   function BaseClass () {}
 
   BaseClass.prototype.hello = function () {
@@ -22,7 +22,7 @@ QUnit.test('overridden - method', function (assert) {
   assert.strictEqual(inst.hello(), 'B');
 });
 
-QUnit.test('overridden - constructor', function (assert) {
+test('overridden - constructor', function (assert) {
   function BaseClass () {
     this.inherited = true;
   }
@@ -47,7 +47,7 @@ QUnit.test('overridden - constructor', function (assert) {
   assert.ok(!inst.inherited);
 });
 
-QUnit.test('not overridden - method', function (assert) {
+test('not overridden - method', function (assert) {
   function BaseClass () {}
 
   BaseClass.prototype.hello = function () {
@@ -67,7 +67,7 @@ QUnit.test('not overridden - method', function (assert) {
   assert.strictEqual(inst.hello(), 'A');
 });
 
-QUnit.test('not overridden - constructor', function (assert) {
+test('not overridden - constructor', function (assert) {
   function BaseClass () {
     this.called = true;
   }
@@ -89,7 +89,7 @@ QUnit.test('not overridden - constructor', function (assert) {
   assert.ok(inst.called);
 });
 
-QUnit.test('inherited - method', function (assert) {
+test('inherited - method', function (assert) {
   function BaseClass () {}
 
   BaseClass.prototype.hello = function () {
@@ -109,7 +109,7 @@ QUnit.test('inherited - method', function (assert) {
   assert.strictEqual(inst.hello(), 'BAC');
 });
 
-QUnit.test('inherited - constructor', function (assert) {
+test('inherited - constructor', function (assert) {
   function BaseClass () {
     this.inherited = true;
   }
@@ -136,7 +136,7 @@ QUnit.test('inherited - constructor', function (assert) {
   assert.ok(inst.inherited);
 });
 
-QUnit.test('inherited - three levels', function (assert) {
+test('inherited - three levels', function (assert) {
   function BaseClass (testArgument) {
     this.baseCalled = true;
     this.baseTestArgument = testArgument;
@@ -175,7 +175,7 @@ QUnit.test('inherited - three levels', function (assert) {
 
   var inst = new DecoratedClass('test');
 
-  assert.ok(inst.baseCalled, 'The base class constructor was called');
+  assert.ok(inst.baseCalled, 'The base class contructor was called');
   assert.ok(inst.middleCalled, 'The middle class constructor was called');
   assert.ok(inst.decoratorCalled, 'The decorator constructor was called');
 

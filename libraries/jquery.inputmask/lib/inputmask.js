@@ -317,13 +317,12 @@ function importAttributeOptions(npt, opts, userOptions, dataAttribute) {
       optionData !== undefined ? optionData : npt.getAttribute(attrOption);
     if (optionData !== null) {
       if (typeof optionData === "string") {
-        if (option.startsWith("on")) {
-          // get function definition
+        if (option.indexOf("on") === 0) {
           optionData = window[optionData];
-        } else if (optionData === "false") optionData = false;
-        else if (optionData === "true") optionData = true;
-        else if (option === "mask")
-          optionData = optionData.replace(/\\\\/g, "\\");
+        } // get function definition
+        else if (optionData === "false") {
+          optionData = false;
+        } else if (optionData === "true") optionData = true;
       }
       userOptions[option] = optionData;
     }

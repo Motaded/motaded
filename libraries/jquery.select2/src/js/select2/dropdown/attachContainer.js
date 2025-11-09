@@ -10,8 +10,8 @@ define([
     var $dropdownContainer = $container.find('.dropdown-wrapper');
     $dropdownContainer.append($dropdown);
 
-    $dropdown[0].classList.add('select2-dropdown--below');
-    $container[0].classList.add('select2-container--below');
+    $dropdown.addClass('select2-dropdown--below');
+    $container.addClass('select2-container--below');
   };
 
   return AttachContainer;

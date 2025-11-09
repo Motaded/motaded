@@ -18,7 +18,7 @@ describe("setNumber: init vanilla plugin (no utils) and call setNumber with a va
   });
 
   it("updates the flag", function() {
-    expect(getSelectedCountryElement()).toHaveClass("iti__gb");
+    expect(getSelectedFlagElement()).toHaveClass("iti__gb");
   });
 
 });
@@ -53,7 +53,7 @@ describe("setNumber: with utils", function() {
 
     beforeEach(function() {
       iti = window.intlTelInput(input[0], {
-        nationalMode: false,
+        nationalMode: false
       });
       iti.setNumber("+447733123456");
     });

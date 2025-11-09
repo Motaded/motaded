@@ -1,6 +1,6 @@
-QUnit.module('Defaults - Ajax');
+module('Defaults - Ajax');
 
-QUnit.test('options are merged recursively with default options', function (assert) {
+test('options are merged recursively with default options', function (assert) {
   var defaults = require('select2/defaults');
 
   var ajaxDelay = 250;
@@ -31,7 +31,7 @@ QUnit.test('options are merged recursively with default options', function (asse
   defaults.reset();
 });
 
-QUnit.test('more than one default option can be changed via set()', function(assert) {
+test('more than one default option can be changed via set()', function(assert) {
   var defaults = require('select2/defaults');
   var ajaxDelay = 123;
   var dataDataType = 'xml';
