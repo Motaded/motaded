@@ -1,5 +1,5 @@
-<article class="flex gap-4 rounded-2xl border border-gray-200 bg-white p-6 {{ icon_position == 'topLeft' ? 'flex-col' : '' }}">
-    <div class="flex h-12 {{ icon_position == 'topLeft' ? 'w-12' : 'w-[12px]' }} items-center justify-center rounded-full bg-emerald-50">
+<article class="icon-card flex gap-4 rounded-2xl border border-gray-200 bg-white p-6 {{ icon_position == 'topLeft' ? 'flex-col' : '' }}">
+    <div class="icon-wrapper flex h-12 {{ icon_position == 'topLeft' ? 'w-12' : 'w-[12px]' }} items-center justify-center rounded-full bg-emerald-50">
       <img
         src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
         alt="{{ title }}"
