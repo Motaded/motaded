@@ -378,8 +378,7 @@ html {
   color: #374151;
 }
 
-.route-list,
-ul {
+.route-list {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;

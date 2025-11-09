@@ -71,44 +71,44 @@
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
-
-<!-- Comments -->
-<section
-  id="comments-inquiries comments-inquiries-section"
-  class="max-w-[1320px] mx-auto"
-  aria-labelledby="comments-heading"
->
-  <div
-    class="flex flex-col gap-6 items-start self-stretch p-4 bg-white shadow rounded-xl p-4 mb-12"
+{% if content.field_comments['#field_type'] %}
+  <section
+    id="comments-inquiries comments-inquiries-section"
+    class="max-w-[1320px] mx-auto"
+    aria-labelledby="comments-heading"
   >
-    <div class="flex flex-col gap-3 w-full">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <span
-            class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+    <div
+      class="flex flex-col gap-6 items-start self-stretch p-4 bg-white shadow rounded-xl p-4 mb-12"
+    >
+      <div class="flex flex-col gap-3 w-full">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+            >
+              {{ "Community"|t }}
+            </span>
+            <h2
+              id="comments-heading"
+              class="text-xl font-semibold leading-8 text-neutral-900 mb-0"
+            >
+              {{ content.field_comments['#title'] }}
+            </h2>
+          </div>
+          <a
+            href="#comment-form"
+            class="inline-flex items-center gap-2 rounded-full border border-green-700 px-4 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-700 hover:text-white"
+            aria-controls="comment-form"
           >
-            {{ "Community"|t }}
-          </span>
-          <h2
-            id="comments-heading"
-            class="text-xl font-semibold leading-8 text-neutral-900 mb-0"
-          >
-            {{ content.field_comments['#title'] }}
-          </h2>
+            {{ "Add comment"|t }}
+          </a>
         </div>
-        <a
-          href="#comment-form"
-          class="inline-flex items-center gap-2 rounded-full border border-green-700 px-4 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-700 hover:text-white"
-          aria-controls="comment-form"
-        >
-          {{ "Add comment"|t }}
-        </a>
+        <p class="text-sm leading-5 text-gray-700">{{ node.field_comments.getFieldDefinition().getDescription() }}</p>
       </div>
-      <p class="text-sm leading-5 text-gray-700">{{ node.field_comments.getFieldDefinition().getDescription() }}</p>
-    </div>
 
-    <div class="flex flex-col gap-4 self-stretch">
-      {{ content.field_comments }}
+      <div class="flex flex-col gap-4 self-stretch">
+        {{ content.field_comments }}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+{% endif %}

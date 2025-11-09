@@ -171,7 +171,23 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        9b49440e-5716-484f-9288-dc1f6e86badf:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_form:
     type: webform_entity_reference_select
     weight: 33
@@ -271,7 +287,23 @@ content:
     settings:
       rows: 2
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        f2592daa-5fea-4879-adb8-67495821169a:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_phone_number:
     type: string_textfield
     weight: 10
@@ -279,7 +311,23 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        e8895ea5-29a7-4bcd-b5a5-887c7b24ec9d:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_provided_languages:
     type: string_textfield
     weight: 6
@@ -287,7 +335,23 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        014bc167-e427-4cfa-8d70-391085bfc3f8:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_requirements:
     type: paragraphs
     weight: 38
@@ -313,7 +377,23 @@ content:
     settings:
       rows: 2
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        c158b4ac-7b06-47f2-a97e-5dd06c3a51e1:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_service_cost:
     type: string_textfield
     weight: 8
@@ -321,7 +401,23 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        0f61967c-1034-4a75-87aa-c9b70e15c0fe:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_service_duration:
     type: string_textarea
     weight: 5
@@ -329,7 +425,23 @@ content:
     settings:
       rows: 2
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        aa150bd5-092f-499f-9d1b-32b27f425061:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_steps_to_obtain:
     type: paragraphs
     weight: 16
@@ -367,7 +479,23 @@ content:
     settings:
       rows: 2
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        3ed78cc5-b78c-4723-a155-1ee4751ee76b:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_taxonomy:
     type: entity_reference_autocomplete
     weight: 42
