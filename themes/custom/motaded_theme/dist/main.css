@@ -4111,6 +4111,9 @@
   .h-2\.5 {
     height: calc(var(--spacing) * 2.5);
   }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
+  }
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -4959,6 +4962,14 @@
   }
   .text-\[16px\] {
     font-size: 16px;
+  }
+  .\!leading-\[1\.3\] {
+    --tw-leading: 1.3 !important;
+    line-height: 1.3 !important;
+  }
+  .\!leading-\[1\.35\] {
+    --tw-leading: 1.35 !important;
+    line-height: 1.35 !important;
   }
   .leading-5 {
     --tw-leading: calc(var(--spacing) * 5);
@@ -6076,12 +6087,6 @@ html {
   scroll-behavior: smooth;
 }
 @layer base {
-  p {
-    margin-bottom: calc(var(--spacing) * 4);
-    font-size: 16px;
-    --tw-leading: calc(var(--spacing) * 6);
-    line-height: calc(var(--spacing) * 6);
-  }
   h1 {
     padding-top: calc(var(--spacing) * 8);
     font-size: 48px;
@@ -6101,6 +6106,8 @@ html {
       line-height: calc(var(--spacing) * 9);
     }
   }
+}
+.text-formatted.field {
   h2 {
     margin-bottom: calc(var(--spacing) * 6);
     font-size: 30px;
@@ -6108,6 +6115,12 @@ html {
     line-height: 38px;
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
+  }
+  p {
+    margin-bottom: calc(var(--spacing) * 4);
+    font-size: 16px;
+    --tw-leading: calc(var(--spacing) * 6);
+    line-height: calc(var(--spacing) * 6);
   }
 }
 [x-cloak] {
