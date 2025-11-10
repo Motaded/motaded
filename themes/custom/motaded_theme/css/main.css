@@ -48,16 +48,17 @@ html {
 }
 
 @layer base {
-  p {
-    @apply text-[16px] leading-6 mb-4;
-  }
-
   h1 {
     @apply pt-8 text-[#161616] font-bold tracking-[-0.96px] text-[48px] leading-[60px] max-sm:text-3xl max-sm:leading-9;
   }
+}
 
+.text-formatted.field {
   h2 {
     @apply text-[30px] leading-[38px] font-bold mb-6;
+  }
+  p {
+    @apply text-[16px] leading-6 mb-4;
   }
 }
 

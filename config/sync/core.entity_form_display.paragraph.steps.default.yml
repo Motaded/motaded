@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.steps.field_body
     - field.field.paragraph.steps.field_paragraphs
+    - field.field.paragraph.steps.field_title
     - paragraphs.paragraphs_type.steps
   module:
     - paragraphs
@@ -41,6 +42,14 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden:
   created: true

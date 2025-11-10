@@ -130,9 +130,9 @@
                   class="text-black/80 mb-4">
                   {# Example: summary or trimmed body text #}
                   {% if article.body.summary %}
-                    {{ article.body.summary }}
+                    {{ article.body.summary|striptags|truncate(120) ~ "..." }}
                   {% else %}
-                    {{ article.body.value|striptags|truncate(150) }}
+                    {{ article.body.value|striptags|truncate(120) }}
                   {% endif %}
                 </div>
                 <span class="inline-flex items-center gap-2 text-sm underline">
