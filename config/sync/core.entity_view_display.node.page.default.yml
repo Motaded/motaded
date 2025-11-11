@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.comment.default
     - field.field.node.page.body
     - field.field.node.page.field_advantages
     - field.field.node.page.field_areas_of_work
@@ -39,7 +38,6 @@ dependencies:
     - field.field.node.page.field_work_tracks
     - node.type.page
   module:
-    - comment
     - entity_reference_revisions
     - link
     - text
@@ -66,7 +64,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 14
+    weight: 13
     region: content
   field_areas_of_work:
     type: entity_reference_revisions_entity_view
@@ -86,15 +84,6 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
-  field_comments:
-    type: comment_default
-    label: hidden
-    settings:
-      view_mode: default
-      pager_id: 0
-    third_party_settings: {  }
-    weight: 8
-    region: content
   field_form:
     type: webform_entity_reference_entity_view
     label: hidden
@@ -102,7 +91,7 @@ content:
       source_entity: true
       lazy: false
     third_party_settings: {  }
-    weight: 9
+    weight: 8
     region: content
   field_free_consultation:
     type: link
@@ -114,7 +103,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 13
+    weight: 12
     region: content
   field_icon:
     type: entity_reference_entity_view
@@ -123,7 +112,7 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 11
+    weight: 10
     region: content
   field_itc_card_for_services:
     type: entity_reference_revisions_entity_view
@@ -132,7 +121,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 12
+    weight: 11
     region: content
   field_keywords:
     type: text_default
@@ -148,7 +137,7 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
-    weight: 10
+    weight: 9
     region: content
   field_objectives:
     type: entity_reference_revisions_entity_view
@@ -166,7 +155,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 15
+    weight: 14
     region: content
   field_steps_to_obtain:
     type: entity_reference_revisions_entity_view
@@ -204,6 +193,7 @@ content:
     weight: 3
     region: content
 hidden:
+  field_comments: true
   field_default_page: true
   field_display_on_services: true
   field_document: true

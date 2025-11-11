@@ -154,14 +154,21 @@ function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$va
  * Implements hook__preprocess_HOOK().
  */
 function motaded_theme_preprocess_breadcrumb(&$variables) {
-  // ddl($variables);
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node) {
-    $list_crumb = [
-      'text' => t('Articles'),
-      'url' => "blog",
-    ];
-    array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+    if ($node->bundle() == "article") {
+      $list_crumb = [
+        'text' => t('Articles'),
+        'url' => "blog",
+      ];
+      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+    } elseif ($node->bundle() == "page") {
+      $list_crumb = [
+        'text' => t('Services'),
+        'url' => "services",
+      ];
+      array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+    }
   }
 }
 

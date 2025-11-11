@@ -68,226 +68,235 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'mt-2',
   ]
 %}
+
 {{ attach_library('motaded_theme/node') }}
-<article{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  <div class="flex relative flex-col gap-4 items-start self-stretch">
-    <!-- Content Header -->
-    <div class="flex relative gap-8 items-end self-stretch max-md:flex-col max-md:gap-4 max-md:items-start max-sm:gap-3">
-      <!-- Title Section -->
-      <div class="flex relative flex-col gap-2 items-start flex-[1_0_0]">
-        <!-- Page Title -->
-        <h1 class="relative self-stretch text-3xl font-bold leading-10 text-neutral-900 max-sm:text-2xl max-sm:leading-8 !pt-0">
-          {{ label }}
-        </h1>
-      </div>
-      <!-- CTA Button -->
-      <a
-        class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start"
-        href="{{ content.field_free_consultation.0['#url']|render }}"
-      >
-        <span class="relative text-base font-medium leading-6 text-white"
-          >{{ content.field_free_consultation.0['#title'] }}</span
+{% if node.field_display_on_services.value == "1" %}
+  <article{{ attributes.addClass(classes) }}>
+    {{ title_prefix }}
+    <div class="flex relative flex-col gap-4 items-start self-stretch">
+      <!-- Content Header -->
+      <div class="flex relative gap-8 items-end self-stretch max-md:flex-col max-md:gap-4 max-md:items-start max-sm:gap-3">
+        <!-- Title Section -->
+        <div class="flex relative flex-col gap-2 items-start flex-[1_0_0]">
+          <!-- Page Title -->
+          <h1 class="relative self-stretch text-3xl font-bold leading-10 text-neutral-900 max-sm:text-2xl max-sm:leading-8 !pt-0">
+            {{ label }}
+          </h1>
+        </div>
+        <!-- CTA Button -->
+        {% set contact_url = url('<front>')|render ~ '/contact-us?service-id=' ~ node.id %}
+        <a
+          class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start"
+          href="{{ contact_url|replace({'//c': '/c'}) }}"
         >
-      </a>
-    </div>
+          <span class="relative text-base font-medium leading-6 text-white"
+            >{{ "Get Started"|t }}</span
+          >
+        </a>
+      </div>
 
-    <!-- Service Tags -->
-    <div class="flex relative gap-2 items-start max-sm:flex-wrap">
-      {% set color_pairs = {
-        'sky': 'text-blue-800',
-        'emerald': 'text-emerald-800',
-        'gray': 'text-gray-800',
-      } %}
-      {% set keys = color_pairs|keys %}
-      {% for i in content.field_tags['#items']|keys %}
-        {% set random_key = random(keys) %}
-        <span class="flex relative gap-1 justify-center items-center px-2 h-6 bg-{{ random_key }}-50 rounded border border-{{ random_key }}-200">
-          <span class="relative text-xs font-medium leading-5 {{ color_pairs[random_key] }}">{{ content.field_tags[i]["#plain_text"] }}</span>
+      <!-- Service Tags -->
+      <div class="flex relative gap-2 items-start max-sm:flex-wrap">
+        {% set color_pairs = {
+          'sky': 'text-blue-800',
+          'emerald': 'text-emerald-800',
+          'gray': 'text-gray-800',
+        } %}
+        {% set keys = color_pairs|keys %}
+        {% for i in content.field_tags['#items']|keys %}
+          {% set random_key = random(keys) %}
+          <span class="flex relative gap-1 justify-center items-center px-2 h-6 bg-{{ random_key }}-50 rounded border border-{{ random_key }}-200">
+            <span class="relative text-xs font-medium leading-5 {{ color_pairs[random_key] }}">{{ content.field_tags[i]["#plain_text"] }}</span>
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+    {{ title_suffix }}
+
+    <!-- Overview -->
+    <article class="flex flex-col gap-4 items-start self-stretch bg-white border border-gray-200 rounded-2xl p-8  mt-12">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700">
+          {{ "Overview"|t }}
         </span>
-      {% endfor %}
-    </div>
-  </div>
-  {{ title_suffix }}
+      </div>
+      <p class="text-base leading-6 text-neutral-900">
+        {{ content.body }}
+      </p>
+    </article>
 
-  <!-- Overview -->
-  <article class="flex flex-col gap-4 items-start self-stretch bg-white border border-gray-200 rounded-2xl p-8  mt-12">
-    <div class="flex items-center gap-3">
-      <span class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700">
-        {{ "Overview"|t }}
-      </span>
-    </div>
-    <p class="text-base leading-6 text-neutral-900">
-      {{ summary }}
-    </p>
-  </article>
+    <!-- Service Snapshot -->
+    {% if content.field_top_overview_section['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+          >
+            {{ content.field_top_overview_section['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {% for i in content.field_top_overview_section['#items']|keys %}
+            {{ content.field_top_overview_section[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
 
-  <!-- Service Snapshot -->
-  {% if content.field_top_overview_section %}
+    <!-- Objectives -->
+    {% if content.field_objectives['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+          >
+            {{ content.field_objectives['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 sm:grid-cols-2">
+          {% for i in content.field_objectives['#items']|keys %}
+            {{ content.field_objectives[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- Work Tracks -->
+    {% if content.field_work_tracks['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+          >
+            {{ content.field_work_tracks['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {% for i in content.field_work_tracks['#items']|keys %}
+            {{ content.field_work_tracks[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- Advantages -->
+    {% if content.field_advantages['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+          >
+            {{ content.field_advantages['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 sm:grid-cols-2">
+          {% for i in content.field_advantages['#items']|keys %}
+            {{ content.field_advantages[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- Steps to Obtain -->
+    {% if content.field_steps_to_obtain['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+          >
+            {{ content.field_steps_to_obtain['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 md:grid-cols-3">
+          {% for i in content.field_steps_to_obtain['#items']|keys %}
+            {{ content.field_steps_to_obtain[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- Areas of Work -->
+    {% if content.field_areas_of_work['#items'] is not empty %}
+      <section class="flex flex-col gap-6 items-start self-stretch mt-12">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
+          >
+            {{ content.field_areas_of_work['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="grid w-full gap-6 md:grid-cols-3">
+          {% for i in content.field_areas_of_work['#items']|keys %}
+            {{ content.field_areas_of_work[i] }}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- FAQs -->
+    {% if content.field_keywords['#items'] is not empty %}
+      <section id="faqs" class="flex flex-col gap-6 items-start self-stretch mt-12 faqs">
+        <div class="flex items-center gap-3 self-stretch">
+          <span
+            class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
+          >
+            {{ content.field_keywords['#title'] }}
+          </span>
+          <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+        <div class="flex flex-col gap-4 self-stretch">
+          {{ content.field_keywords }}
+        </div>
+      </section>
+    {% endif %}
+    
+    <!-- Basic paragrpahs -->
     <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-      <div class="flex items-center gap-3 self-stretch">
-        <span
-          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
-        >
-          {{ content.field_top_overview_section['#title'] }}
-        </span>
-        <span class="h-px flex-1 bg-gray-200"></span>
-      </div>
       <div class="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {% for i in content.field_top_overview_section['#items']|keys %}
-          {{ content.field_top_overview_section[i] }}
+          {{ content.field_basic_paragraphs[i] }}
         {% endfor %}
       </div>
     </section>
+
+    {# <div{{ content_attributes.addClass('node__content') }}>
+      {{ content|without('body', 'field_top_overview_section', 'field_objectives', 'field_work_tracks', 'field_steps_to_obtain', 'field_areas_of_work', 'field_keywords', 'field_basic_paragraphs', 'field_comments') }}
+    </div> #}
+
+  </article>
+{% else %}
+  <article{{ attributes.addClass(classes) }}>
+
+  {{ title_prefix }}
+  {% if label and not page %}
+    <h2{{ title_attributes }}>
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+    </h2>
   {% endif %}
+  {{ title_suffix }}
 
-  <!-- Objectives -->
-  {% if content.field_objectives %}
-    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-      <div class="flex items-center gap-3 self-stretch">
-        <span
-          class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
-        >
-          {{ content.field_objectives['#title'] }}
-        </span>
-        <span class="h-px flex-1 bg-gray-200"></span>
+  {% if display_submitted %}
+    <footer class="node__meta">
+      {{ author_picture }}
+      <div{{ author_attributes.addClass('node__submitted') }}>
+        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {{ metadata }}
       </div>
-      <div class="grid w-full gap-6 sm:grid-cols-2">
-        {% for i in content.field_objectives['#items']|keys %}
-          {{ content.field_objectives[i] }}
-        {% endfor %}
-      </div>
-    </section>
+    </footer>
   {% endif %}
-
-  <!-- Work Tracks -->
-  {% if content.field_work_tracks %}
-    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-      <div class="flex items-center gap-3 self-stretch">
-        <span
-          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
-        >
-          {{ content.field_work_tracks['#title'] }}
-        </span>
-        <span class="h-px flex-1 bg-gray-200"></span>
-      </div>
-      <div class="grid w-full gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {% for i in content.field_work_tracks['#items']|keys %}
-          {{ content.field_work_tracks[i] }}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
-  <!-- Steps to Obtain -->
-  {% if content.field_steps_to_obtain %}
-    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-      <div class="flex items-center gap-3 self-stretch">
-        <span
-          class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
-        >
-          {{ content.field_steps_to_obtain['#title'] }}
-        </span>
-        <span class="h-px flex-1 bg-gray-200"></span>
-      </div>
-      <div class="grid w-full gap-6 md:grid-cols-3">
-        {% for i in content.field_steps_to_obtain['#items']|keys %}
-          {{ content.field_steps_to_obtain[i] }}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
-  <!-- Areas of Work -->
-  {% if content.field_areas_of_work %}
-    <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-      <div class="flex items-center gap-3 self-stretch">
-        <span
-          class="inline-flex items-center justify-center rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-800"
-        >
-          {{ content.field_areas_of_work['#title'] }}
-        </span>
-        <span class="h-px flex-1 bg-gray-200"></span>
-      </div>
-      <div class="grid w-full gap-6 md:grid-cols-3">
-        {% for i in content.field_areas_of_work['#items']|keys %}
-          {{ content.field_areas_of_work[i] }}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
-  <!-- FAQs -->
-  <section id="faqs" class="flex flex-col gap-6 items-start self-stretch mt-12 faqs">
-    <div class="flex items-center gap-3 self-stretch">
-      <span
-        class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
-      >
-        {{ content.field_keywords['#title'] }}
-      </span>
-      <span class="h-px flex-1 bg-gray-200"></span>
-    </div>
-    <div class="flex flex-col gap-4 self-stretch">
-      {{ content.field_keywords }}
-    </div>
-  </section>
-
-  <!-- Basic paragrpahs -->
-  <section class="flex flex-col gap-6 items-start self-stretch mt-12">
-    <div class="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
-      {% for i in content.field_top_overview_section['#items']|keys %}
-        {{ content.field_basic_paragraphs[i] }}
-      {% endfor %}
-    </div>
-  </section>
-
-  <!-- Basic paragrpahs -->
-  <section
-    id="comments-inquiries comments-inquiries-section"
-    class="max-w-[1320px] mx-auto px-4"
-    aria-labelledby="comments-heading"
-  >
-    <div
-      class="flex flex-col gap-6 items-start self-stretch p-4 bg-white shadow rounded-xl p-4 mb-12"
-    >
-      <div class="flex flex-col gap-3 w-full">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <span
-              class="inline-flex items-center justify-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-green-700"
-            >
-              {{ "Community"|t }}
-            </span>
-            <h2
-              id="comments-heading"
-              class="text-xl font-semibold leading-8 text-neutral-900"
-            >
-              {{ content.field_comments['#title'] }}
-            </h2>
-          </div>
-          <a
-            href="#comment-form"
-            class="inline-flex items-center gap-2 rounded-full border border-green-700 px-4 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-700 hover:text-white"
-            aria-controls="comment-form"
-          >
-            {{ "Add comment"|t }}
-          </button>
-        </div>
-        <p class="text-sm leading-5 text-gray-700">
-          {{ dump(content.field_comments) }}
-        </p>
-      </div>
-
-      <div class="flex flex-col gap-4 self-stretch">
-        
-      </div>
-    </div>
-  </section>
 
   <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('body', 'field_top_overview_section', 'field_objectives', 'field_work_tracks', 'field_steps_to_obtain', 'field_areas_of_work', 'field_keywords', 'field_basic_paragraphs', 'field_comments') }}
+    {{ content }}
   </div>
 
 </article>
+{% endif %}
