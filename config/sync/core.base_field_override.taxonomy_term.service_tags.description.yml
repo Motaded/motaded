@@ -1,0 +1,21 @@
+uuid: 60261db0-fe41-4c9f-844a-8bf1c46e2ec8
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.service_tags
+  module:
+    - text
+id: taxonomy_term.service_tags.description
+field_name: description
+entity_type: taxonomy_term
+bundle: service_tags
+label: Description
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

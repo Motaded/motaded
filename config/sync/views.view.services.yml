@@ -836,7 +836,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "  {{ include('motaded_theme:card', {\r\n      'title': title,\r\n      'desc': body,\r\n      'icon_url': '/themes/custom/motaded_theme/img/icon-checkmark-circle.svg',\r\n      'tags': (field_tags is not empty) ? field_tags | split(',') : false,\r\n      'cta1': {'url': view_node, 'title': 'Read more'},\r\n      'cta2': {'url': '/contact-us?service-id=' ~ nid, 'title': 'Book now'},\r\n      'icon_position': 'topLeft',\r\n    }, with_context = false) }}"
+            text: "  {{ include('motaded_theme:card', {\r\n      'title': title,\r\n      'desc': body,\r\n      'icon_url': '/themes/custom/motaded_theme/img/icon-checkmark-circle.svg',\r\n      'tags': (field_tags is not empty) ? field_tags | split(',') : false,\r\n      'cta1': {'url': view_node, 'title': 'Read more'|t},\r\n      'cta2': {'url': '/contact-us?service-id=' ~ nid, 'title': 'Book now'|t },\r\n      'icon_position': 'topLeft',\r\n    }, with_context = false) }}"
             make_link: false
             path: ''
             absolute: false
