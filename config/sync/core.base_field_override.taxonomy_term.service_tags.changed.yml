@@ -1,0 +1,18 @@
+uuid: 8435ca3f-5aa3-4a37-8b19-f64673e3014b
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.service_tags
+id: taxonomy_term.service_tags.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: service_tags
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

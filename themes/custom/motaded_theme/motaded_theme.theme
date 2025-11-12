@@ -62,7 +62,7 @@ function motaded_theme_theme_suggestions_page_alter(array &$suggestions, array $
     $suggestions[] = 'page__' . $node->bundle();
   }
 }
-
+use Drupal\Core\Language\LanguageInterface;
 /**
  * Implements hook_preprocess_paragraph__steps().
  */
@@ -70,10 +70,15 @@ function motaded_theme_preprocess_paragraph__steps(array &$variables) {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $steps = [];
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
 
   // Check if field_paragraphs exists and has data.
   if ($paragraph->hasField('field_paragraphs') && !$paragraph->get('field_paragraphs')->isEmpty()) {
     foreach ($paragraph->get('field_paragraphs')->referencedEntities() as $item) {
+      // Try to get the translation if available.
+      if ($item->hasTranslation($langcode)) {
+        $item = $item->getTranslation($langcode);
+      }
       // Each $item is a sub-paragraph, e.g., a single step/card.
       $stepTitle = $item->hasField('field_sub_title') ? $item->get('field_sub_title')->value : '';
       $title = $item->hasField('field_title') ? $item->get('field_title')->value : '';
@@ -109,8 +114,13 @@ function motaded_theme_preprocess_paragraph__steps(array &$variables) {
  * Preprocess for News View block (unformatted).
  */
 function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variables) {
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
   foreach ($variables['rows'] as &$row) {
     $entity = $row['content']['#row']->_entity ?? NULL;
+    // Try to get the translation if available.
+    if ($entity->hasTranslation($langcode)) {
+      $entity = $entity->getTranslation($langcode);
+    }
 
     if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
       $media = $entity->get('field_media')->entity;

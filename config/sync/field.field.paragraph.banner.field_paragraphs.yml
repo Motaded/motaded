@@ -25,6 +25,12 @@ settings:
       card: card
     negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 27
+        enabled: false
+      accordions:
+        weight: 28
+        enabled: false
       advantages:
         weight: 17
         enabled: false
@@ -34,20 +40,32 @@ settings:
       banner:
         weight: 19
         enabled: false
+      banner_sm:
+        weight: 31
+        enabled: false
       business_activity:
         weight: 20
         enabled: false
       card:
         weight: 21
         enabled: true
+      cards:
+        weight: 34
+        enabled: false
       counter:
         weight: 22
         enabled: false
       featured_card:
         weight: 23
         enabled: false
+      featured_contents:
+        weight: 37
+        enabled: false
       itc_card:
         weight: 24
+        enabled: false
+      notes:
+        weight: 39
         enabled: false
       objectives:
         weight: 25
@@ -64,11 +82,20 @@ settings:
       sectors:
         weight: 29
         enabled: false
+      step:
+        weight: 45
+        enabled: false
+      steps:
+        weight: 46
+        enabled: false
       steps_to_obtain:
         weight: 30
         enabled: false
       top_information:
         weight: 31
+        enabled: false
+      view_block:
+        weight: 49
         enabled: false
       work_tracks:
         weight: 32

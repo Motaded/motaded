@@ -1,0 +1,20 @@
+uuid: 9e7eecae-3a60-45cb-b029-322d69de8f4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.partner
+  module:
+    - metatag
+id: node.partner.metatag
+field_name: metatag
+entity_type: node
+bundle: partner
+label: 'Metatags (Hidden field for JSON support)'
+description: 'The computed meta tags for the entity.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag_computed
