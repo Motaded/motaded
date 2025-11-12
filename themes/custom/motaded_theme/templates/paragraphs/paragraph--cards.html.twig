@@ -117,6 +117,12 @@
                   {% endif %}
                   <h3 class="sector-title">{{ para.field_title.value }}</h3>
                   <p class="sector-desc">{{ para.field_body.value|raw }}</p>
+                   {% set link_item = para.field_link.0 %}
+                    {% if link_item %}
+                      <a href="{{ link_item.url.toString() }}" class="btn-secondary">
+                        {{ link_item.title }}
+                       </a>
+                    {% endif %}
                 </div>
               {% endif %}
             {% endfor %}
