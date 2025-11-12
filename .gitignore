@@ -47,3 +47,6 @@ motaded.com.sa/
 # simpletest
 .ddev/
 .vscode/
+.DS_Store
+/.DS_Store
+*/.DS_Store
