@@ -107,7 +107,8 @@
                     <div class="col-span-1 sm:col-span-2">
                       <div class="flex flex-col gap-3 sm:gap-4">
                         <p class="text-lg font-semibold text-primary-600 leading-[1.6]">
-                          <span x-text="`{{ "Step"|t }} ${current+1} {{ "of"|t }} ${steps.length}`"></span>
+                          {# <span x-text="`{{ "Step"|t }} ${current+1} {{ "of"|t }} ${steps.length}`"></span> #}
+                          <span x-text="`{{ "Step @current of @length"|t({'@current': "${current+1}", '@length': "${steps.length}"}) }}`"></span>
                         </p>
                         <h2 class="text-[16px] font-bold" x-text="steps[current].title"></h2>
                         <div class="leading-[1.75]" x-html="steps[current].desc"></div>

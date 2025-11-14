@@ -39,8 +39,9 @@
  */
 #}
 <script>
-  function articlesCarousel() {
+  function articlesCarousel(length) {
     return {
+      length: length,
       current: 0,
       startX: 0,
       deltaX: 0,
@@ -49,7 +50,7 @@
         this.current = 0;
       },
       go(i) {
-        if (i >= 0 && i < this.items.length)
+        if (i >= 0 && i < length)
           this.current = i;
 
 
@@ -61,7 +62,7 @@
 
       },
       next() {
-        if (this.current<this.items.length - 1) this.current++;
+        if (this.current<length - 1) this.current++;
     }, // touch handlers (mobile)
     onTouchStart(e) {
       this.swiping = true;
@@ -115,7 +116,7 @@
 
       <!-- Content -->
       <div
-        class="max-w-[1320px] mx-auto px-4" x-data="articlesCarousel()" x-init="init()">
+        class="max-w-[1320px] mx-auto px-4" x-data="articlesCarousel({{ paragraph.field_contents|length }})" x-init="init()">
         <!-- Desktop / Tablet grid -->
         <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5">
           {% for key, item in paragraph.field_contents %}

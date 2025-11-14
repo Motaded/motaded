@@ -95,13 +95,13 @@
 
     <!-- Controls -->
     <div class="mt-4 flex items-center justify-between">
-      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="prev()">Prev</button>
+      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="prev()">{{ "Prev"|t }}</button>
       <div class="flex gap-2">
         {% for row in rows %}
           <button type="button" class="size-2 rounded-full" :class="current === {{ loop.index0 }} ? 'bg-primary-600' : 'bg-gray-300'" @click="go({{ loop.index0 }})"></button>
         {% endfor %}
       </div>
-      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="next()">Next</button>
+      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="next()">{{ "Next"|t }}</button>
     </div>
   </div>
 </div>

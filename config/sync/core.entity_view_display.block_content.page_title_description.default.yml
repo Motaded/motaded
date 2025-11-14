@@ -1,0 +1,32 @@
+uuid: 79b03540-fce4-432f-ab71-49c674d027f7
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.page_title_description
+    - field.field.block_content.page_title_description.body
+    - field.field.block_content.page_title_description.field_title
+  module:
+    - text
+id: block_content.page_title_description.default
+targetEntityType: block_content
+bundle: page_title_description
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true

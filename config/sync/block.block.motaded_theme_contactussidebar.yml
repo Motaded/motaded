@@ -1,0 +1,30 @@
+uuid: 21c7ac03-1a84-4398-a598-45468ec78edf
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:14b57f5c-fcdd-49ad-846a-2a099f1b2592'
+  module:
+    - block_content
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_contactussidebar
+theme: motaded_theme
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'block_content:14b57f5c-fcdd-49ad-846a-2a099f1b2592'
+settings:
+  id: 'block_content:14b57f5c-fcdd-49ad-846a-2a099f1b2592'
+  label: 'Contact us sidebar'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /contact-us

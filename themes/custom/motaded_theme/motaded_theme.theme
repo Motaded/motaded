@@ -1,5 +1,6 @@
 <?php
-
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\Entity\Node;
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  *
@@ -62,7 +63,7 @@ function motaded_theme_theme_suggestions_page_alter(array &$suggestions, array $
     $suggestions[] = 'page__' . $node->bundle();
   }
 }
-use Drupal\Core\Language\LanguageInterface;
+
 /**
  * Implements hook_preprocess_paragraph__steps().
  */
@@ -232,5 +233,34 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
       $input['field_taxonomy_target_id'] = $first;
       $form_state->setUserInput($input);
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Prefill service field in contact webform based on query parameter.
+ */
+function motaded_theme_form_alter(&$form,  Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id == "webform_submission_contact_add_form") {
+    $nid = \Drupal::request()->query->get('service-id');
+
+    if (!empty($nid) && is_numeric($nid)) {
+      $node = Node::load($nid);
+      if ($node) {
+        $url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+        $form['elements']['service']['#default_value'] = $url;
+      }
+    }
+  }
+
+
+}
+
+/**
+ *  Block suggestions for custom block bundles.
+ */
+function motaded_theme_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['content']['#block_content'])) {
+    array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());
   }
 }
