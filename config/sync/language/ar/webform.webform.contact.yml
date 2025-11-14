@@ -1,16 +1,27 @@
-title: اتصل
-description: '<p>Basic email contact webform.</p>'
+title: 'اتصل بنا'
 elements: |
   name:
     '#title': اسمك
+    '#placeholder': 'اكتب اسمك الأول'
+  last_name:
+    '#title': 'اسم العائلة'
+    '#placeholder': 'اكتب اسمك الأخير'
   email:
     '#title': 'البريد الإلكتروني الخاص بك'
-  phone_number:
+    '#placeholder': 'اكتب بريدك الإلكتروني'
+  ph_number:
     '#title': 'رقم التليفون'
-    '#phone__title': هاتف
   subject:
     '#title': موضوع
+    '#placeholder': 'اكتب الموضوع الخاص بك'
     '#test': 'اختبار نموذج ويب الاتصال من [site:name]'
+  category:
+    '#title': فئة
+    '#options':
+      suggestion: اقتراح
+      general: 'استفسار عام'
+      support: يدعم
+      complaint: شكوى
   message:
     '#title': رسالة
     '#test': 'يرجى تجاهل هذا البريد الإلكتروني.'

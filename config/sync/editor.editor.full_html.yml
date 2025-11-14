@@ -35,6 +35,7 @@ settings:
       - codeBlock
       - '|'
       - sourceEditing
+      - template
       - Accordion
   plugins:
     ckeditor5_codeBlock:
@@ -99,6 +100,10 @@ settings:
       multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags: {  }
+    ckeditor5_template_template:
+      file_path: /themes/custom/motaded_theme/templates/ckeditor5_template.json
+      custom_toolbar_text: Template
+      show_toolbar_text: 1
 image_upload:
   status: true
   scheme: public

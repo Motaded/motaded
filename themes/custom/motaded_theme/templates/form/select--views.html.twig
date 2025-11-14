@@ -10,7 +10,7 @@
  * @see template_preprocess_select()
  */
 #}
-<select{{ attributes.addClass("flex relative items-center self-stretch bg-gray-100 rounded flex-[1_0_0] px-4 py-0 text-base leading-6 text-gray-500 border-none outline-none appearance-none") }}>
+<select{{ attributes.addClass("rounded-md border border-gray-300 bg-white px-2.5 py-1.5 text-sm") }}>
   {% for option in options %}
     {% if option.type == 'optgroup' %}
       <optgroup label="{{ option.label }}">

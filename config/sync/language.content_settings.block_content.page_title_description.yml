@@ -1,0 +1,16 @@
+uuid: fa719a5c-eb61-4aa0-9ba4-a2fd69f9d536
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.page_title_description
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: block_content.page_title_description
+target_entity_type_id: block_content
+target_bundle: page_title_description
+default_langcode: site_default
+language_alterable: false

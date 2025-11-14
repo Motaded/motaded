@@ -14,34 +14,58 @@ uid: null
 template: false
 archive: false
 id: contact
-title: Contact
-description: 'Basic email contact webform.'
+title: 'Contact us'
+description: '<p>Basic email contact webform.</p>'
 categories: {  }
 elements: |-
-  name:
-    '#title': 'Your Name'
-    '#type': textfield
-    '#required': true
-    '#default_value': '[current-user:display-name]'
-  email:
-    '#title': 'Your Email'
-    '#type': email
-    '#required': true
-    '#default_value': '[current-user:mail]'
-  ph_number:
-    '#type': tel
-    '#title': 'Phone Number'
-    '#required': true
-    '#default_value': '+966'
-    '#international': true
-    '#international_initial_country': SA
-    '#international_preferred_countries':
-      - SA
-  subject:
-    '#title': Subject
-    '#type': textfield
-    '#required': true
-    '#test': 'Testing contact webform from [site:name]'
+  container:
+    '#type': container
+    '#attributes':
+      class:
+        - grid
+        - grid-cols-1
+        - 'md:grid-cols-2'
+        - gap-x-4
+    name:
+      '#type': textfield
+      '#title': 'First Name'
+      '#placeholder': 'Type your first name'
+      '#required': true
+      '#default_value': '[current-user:display-name]'
+    last_name:
+      '#type': textfield
+      '#title': 'Last Name'
+      '#placeholder': 'Type your last name'
+      '#required': true
+    email:
+      '#type': email
+      '#title': 'Type your email'
+      '#placeholder': 'Type your email'
+      '#required': true
+      '#default_value': '[current-user:mail]'
+    ph_number:
+      '#type': tel
+      '#title': 'Phone Number'
+      '#required': true
+      '#default_value': '+966'
+      '#international': true
+      '#international_initial_country': SA
+      '#international_preferred_countries':
+        - SA
+    subject:
+      '#type': textfield
+      '#title': Subject
+      '#placeholder': 'Type your subject'
+      '#test': 'Testing contact webform from [site:name]'
+    category:
+      '#type': select
+      '#title': Category
+      '#options':
+        suggestion: Suggestion
+        general: 'General Inquiry'
+        support: Support
+        complaint: Complaint
+      '#default_value': suggestion
   message:
     '#title': Message
     '#type': textarea
@@ -50,6 +74,9 @@ elements: |-
   captcha:
     '#type': captcha
     '#captcha_type': captcha/Math
+  service:
+    '#type': hidden
+    '#title': Service
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
@@ -63,7 +90,7 @@ settings:
   ajax_effect: ''
   ajax_speed: null
   page: true
-  page_submit_path: ''
+  page_submit_path: /contact-us
   page_confirm_path: ''
   page_theme_name: ''
   form_title: source_entity_webform
@@ -95,7 +122,10 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
-  form_attributes: {  }
+  form_file_limit_message: ''
+  form_attributes:
+    class:
+      - page-gray
   form_method: ''
   form_action: ''
   share: false
