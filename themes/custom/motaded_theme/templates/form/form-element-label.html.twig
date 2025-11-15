@@ -23,9 +23,9 @@
   <label{{ attributes.addClass(classes) }}>
     <span class="flex relative gap-1 items-end">
       {% if required %}
-        <span class="relative text-sm font-semibold leading-5 text-red-700">*</span>
+        <span class="relative text-sm font-medium leading-5 text-red-700">*</span>
       {% endif %}
-      <span class="relative text-sm font-semibold leading-5 text-neutral-900">{{ title }}</span>
+      <span class="relative text-sm font-medium leading-5 text-neutral-900">{{ title }}</span>
     </span>
   </label>
 {%- endif %}
