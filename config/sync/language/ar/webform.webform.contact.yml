@@ -1,4 +1,5 @@
 title: 'اتصل بنا'
+description: '<p>Basic email contact webform.</p>'
 elements: |
   name:
     '#title': اسمك
@@ -29,3 +30,10 @@ elements: |
     '#submit__label': 'أرسل رسالة'
 settings:
   confirmation_message: '<p>أُرسلت رسالتك.</p>'
+handlers:
+  email_confirmation:
+    settings:
+      body: '[webform_submission:values:message:value]'
+  email_notification:
+    settings:
+      body: '[webform_submission:values:message:value]'

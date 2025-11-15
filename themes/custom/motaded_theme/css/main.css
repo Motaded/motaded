@@ -282,21 +282,44 @@ html {
   }
 
 }
+.fieldset-legend {
+  font-weight: 500;
+}
+
+/* =========================
+   Feedback form
+   ========================= */
+.webform-element-description {
+  @apply text-xs leading-6 text-gray-700;
+}
 .webform-submission-general-feedback-form {
-  @apply md:pl-28 rtl:md:pr-28 ltr:md:pl-28;
+  /* @apply md:pl-28 rtl:md:pr-28 ltr:md:pl-28; */
+  @apply bg-white shadow rounded-xl p-4 mb-12;
   .inline-form-title {
     width: 100%;
     span{
     @apply text-xl font-semibold text-green-700 leading-6;
   }
   }
-}
-.page-node-type-page .webform-submission-general-feedback-form {
-  @apply bg-white shadow rounded-xl p-4 mb-12;
+  .fieldset-legend {
+    @apply text-sm;
+  }
+  .feedback-about {
+    .webform-element-description {
+      @apply mt-6;
+    }
+  }
   & > fieldset,
   .webform-type-textarea {
-    margin-left: 20px;
+    @apply md:pl-28 rtl:md:pr-28 ltr:md:pl-28;
     padding-bottom: 12px;
+  }
+  fieldset.meet-needs-wraper {
+    @apply md:pl-24 rtl:md:pr-24 ltr:md:pl-24;
+    legend {
+      @apply md:-ml-24 rtl:md:-mr-24 ltr:md:-ml-24;
+
+    }
   }
   #edit-meet-needs--wrapper {
     margin-left: 0;

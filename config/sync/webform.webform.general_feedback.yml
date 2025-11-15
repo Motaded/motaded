@@ -23,6 +23,9 @@ elements: |-
     '#type': radios
     '#title': 'Did this Motaded service meet your needs?'
     '#options': yes_no
+    '#attributes':
+      class:
+        - meet-needs-wraper
   yes_reason:
     '#type': checkboxes
     '#title': 'Yes reason'
@@ -52,6 +55,7 @@ elements: |-
   about_you:
     '#type': radios
     '#title': 'About you'
+    '#description': '<p>Your feedback helps Motaded enhance business setup, licensing, and operational support services in Saudi Arabia.</p>'
     '#title_display': before
     '#options':
       Male: Male
@@ -61,6 +65,9 @@ elements: |-
       visible:
         ':input[name="meet_needs"]':
           checked: true
+    '#attributes':
+      class:
+        - feedback-about
   your_message:
     '#type': textarea
     '#title': 'Your message'
@@ -71,6 +78,10 @@ elements: |-
           checked: true
   captcha:
     '#type': captcha
+  info_text:
+    '#type': processed_text
+    '#text': '<div class="flex items-center gap-1 flex-wrap text-sm md:text-base"><p class="font-medium">Learn about our commitment to quality in</p><p><a class="text-green-700 underline" href="/service-quality">Service Quality Charter</a></p><p class="font-medium">and</p><p><a class="text-green-700 underline" href="/privacy-policy">Privacy &amp; Participation</a></p></div>'
+    '#format': full_html
 css: ''
 javascript: ''
 settings:

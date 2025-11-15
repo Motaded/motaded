@@ -40,51 +40,50 @@
 #}
 <script>
   function articlesCarousel(length) {
+    console.log((document.documentElement.lang || "").toLowerCase().startsWith('ar'));
+    
     return {
       length: length,
       current: 0,
       startX: 0,
       deltaX: 0,
       swiping: false,
+      isRtl: (document.documentElement.lang || "").toLowerCase().startsWith('ar'),
       init() {
         this.current = 0;
       },
       go(i) {
-        if (i >= 0 && i < length)
-          this.current = i;
-
-
+        if (i >= 0 && i < length) this.current = i;
       },
       prev() {
-        if (this.current > 0)
-          this.current --;
-
-
+        if (this.current > 0) this.current--;
       },
       next() {
-        if (this.current<length - 1) this.current++;
-    }, // touch handlers (mobile)
-    onTouchStart(e) {
-      this.swiping = true;
-      this.startX = e.touches[0].clientX;
-      this.deltaX = 0;
-    }, onTouchMove(e) {
-      if (!this.swiping) return;
-      this.deltaX = e.touches[0].clientX - this.startX;
-    }, onTouchEnd() {
-      if (!this.swiping) return;
-      const threshold = 50; // px
-      if (this.deltaX> threshold)
-          this.prev();
-
-
-        if (this.deltaX < -threshold)
-          this.next();
-
-
+        if (this.current < length - 1) this.current++;
+      },
+      // touch handlers (mobile)
+      onTouchStart(e) {
+        this.swiping = true;
+        this.startX = e.touches[0].clientX;
+        this.deltaX = 0;
+      },
+      onTouchMove(e) {
+        if (!this.swiping) return;
+        this.deltaX = e.touches[0].clientX - this.startX;
+      },
+      onTouchEnd() {
+        if (!this.swiping) return;
+        const threshold = 50; // px
+        if (this.isRtl) {
+          if (this.deltaX > threshold) this.next();
+          if (this.deltaX < -threshold) this.prev();
+        } else {
+          if (this.deltaX > threshold) this.prev();
+          if (this.deltaX < -threshold) this.next();
+        }
         this.swiping = false;
         this.deltaX = 0;
-      }
+      },
     };
   }
 </script>
@@ -151,7 +150,7 @@
             class="relative">
             <!-- Track -->
             <div class="overflow-hidden">
-              <div class="flex transition-transform duration-500" :style="`transform: translateX(-${current * 100}%);`" @touchstart="onTouchStart($event)" @touchmove.prevent="onTouchMove($event)" @touchend="onTouchEnd()">
+              <div class="flex transition-transform duration-500" :style="isRtl ? `transform: translateX(${current * 100}%);` : `transform: translateX(-${current * 100}%);`" @touchstart="onTouchStart($event)" @touchmove.prevent="onTouchMove($event)" @touchend="onTouchEnd()">
                 {% for key, item in paragraph.field_contents %}
                   {% set article = content.field_contents[key]['#node'] %}
                   <div class="min-w-full px-1">
@@ -187,7 +186,7 @@
               </div>
 
               <button type="button" class="w-9 h-9 grid place-items-center rounded-full border hover:bg-gray-50" @click="next()" :disabled="current=={{paragraph.field_contents|length}}-1" :class="current=={{paragraph.field_contents|length}}-1 && 'opacity-40 cursor-not-allowed'" aria-label="Next">
-                <img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" class="-rotate-90" alt="" width="18" height="18" class="-scale-x-100 rtl:rotate-180"/>
+                <img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" class="-rotate-90 -scale-x-100 rtl:rotate-180" alt="" width="18" height="18" class="-scale-x-100 rtl:rotate-180"/>
               </button>
             </div>
           </div>
