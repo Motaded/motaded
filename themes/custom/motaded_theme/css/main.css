@@ -18,8 +18,8 @@ html {
   --color-primary-400: oklch(0.72 0.11 175);
   --color-primary-500: oklch(0.55 0.13 158.44);
   /* Main DGA Green */
-  --color-primary-600: oklch(0.51 0.12 159.07);
-  --color-primary-700: oklch(0.47 0.11 159.67);
+  --color-primary-600: oklab(0.54 -0.09 -0.01); /* oklch(0.51 0.12 159.07); */
+  --color-primary-700: oklab(0.41 -0.05 -0.02); /* oklch(0.47 0.11 159.67); */
   --color-primary-800: oklch(0.48 0.11 175);
   --color-primary-900: oklch(0.42 0.1 175);
 
@@ -137,7 +137,7 @@ html {
   }
 
   .form-radios.form--inline {
-    input{
+    input {
       display: none;
     }
     @apply relative flex gap-2 overflow-auto py-3 after:content-[''] after:absolute after:left-1/2 after:bottom-3 after:-translate-x-1/2 after:w-full after:h-[3px] after:bg-gray-200 after:rounded-full;
@@ -153,7 +153,7 @@ html {
         /* } */
       }
 
-      &>div {
+      & > div {
         display: none;
       }
     }
@@ -161,8 +161,8 @@ html {
 }
 
 .view-services.view-display-id-page_1 {
-  .js-form-type-textfield label~img.absolute {
-    --tw-translate-y: 0 !important
+  .js-form-type-textfield label ~ img.absolute {
+    --tw-translate-y: 0 !important;
   }
 
   .form-actions {
@@ -186,7 +186,7 @@ html {
 
 .paragraph--type--view-block:has(.section-btn-green) .view-all {
   /* background-color: red; */
-  @apply border-primary-600 text-primary-600 hover:bg-primary-50
+  @apply border-primary-600 text-primary-600 hover:bg-primary-50;
 }
 
 .comment-form__title {
@@ -194,7 +194,6 @@ html {
 }
 
 .webform-submission-form {
-
   .simple-sitemap-fieldset,
   .js-form-item-simple-sitemap-index-now {
     display: none;
@@ -204,7 +203,7 @@ html {
     @apply flex gap-4 flex-wrap;
 
     .form-type-radio {
-      >div.self-stretch {
+      > div.self-stretch {
         height: auto;
         flex: unset;
         align-self: unset;
@@ -221,14 +220,12 @@ html {
       }
     }
   }
-  .form-checkboxes{
+  .form-checkboxes {
     @apply flex flex-col gap-4;
-    .form-type-checkbox{
+    .form-type-checkbox {
       @apply flex-row flex items-center gap-3 cursor-pointer w-fit;
     }
-
   }
-
 
   /* Hide default appearance and set base styles for custom design */
   input[type="radio"] {
@@ -254,7 +251,7 @@ html {
 
   /* Style the checkmark (inner circle) using ::after */
   input[type="radio"]:checked::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -280,7 +277,6 @@ html {
       /* Change border color when checked */
     }
   }
-
 }
 .fieldset-legend {
   font-weight: 500;
@@ -297,9 +293,9 @@ html {
   @apply bg-white shadow rounded-xl p-4 mb-12;
   .inline-form-title {
     width: 100%;
-    span{
-    @apply text-xl font-semibold text-green-700 leading-6;
-  }
+    span {
+      @apply text-xl font-semibold text-green-700 leading-6;
+    }
   }
   .fieldset-legend {
     @apply text-sm;
@@ -318,7 +314,6 @@ html {
     @apply md:pl-24 rtl:md:pr-24 ltr:md:pl-24;
     legend {
       @apply md:-ml-24 rtl:md:-mr-24 ltr:md:-ml-24;
-
     }
   }
   #edit-meet-needs--wrapper {
@@ -334,9 +329,6 @@ html {
     max-width: 400px;
   }
 }
-
-
-
 
 /* =========================
    Custom Utilities
@@ -473,7 +465,7 @@ html {
   padding: 0.75rem 1rem;
 }
 
-.faq>summary {
+.faq > summary {
   cursor: pointer;
   font-weight: 600;
 }
@@ -483,7 +475,7 @@ html {
   color: #374151;
 }
 
-.view-id-news .form--inline>ul {
+.view-id-news .form--inline > ul {
   display: flex;
   flex-wrap: wrap;
 }
@@ -505,7 +497,7 @@ body.path-services {
 /* =========================
    Styling the output of existing accordion module
    ========================= */
-.faqs .field--name-field-keywords>h2 {
+.faqs .field--name-field-keywords > h2 {
   display: none;
 }
 
@@ -518,7 +510,6 @@ body.path-services {
     @apply rounded-2xl border border-gray-200 mb-6 bg-white;
     padding-top: 16px;
     padding-bottom: 16px;
-
   }
 
   dt.active {
@@ -533,7 +524,7 @@ body.path-services {
     }
   }
 
-  dt>a {
+  dt > a {
     @apply !text-neutral-900 font-semibold;
     background: none !important;
     border: none !important;
@@ -556,7 +547,6 @@ body.path-services {
 .bef-exposed-form ul {
   list-style-type: none;
 }
-
 
 /* .colored-icons .icon-card:nth-child(3n + 1) .icon-wrapper {
   @apply !bg-emerald-50;
