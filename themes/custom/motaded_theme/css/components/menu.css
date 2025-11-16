@@ -28,6 +28,15 @@ ul.menu {
 .menu-item {
   margin: 0;
   padding-top: 0.2em;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+
+.menu-item:hover {
+  background-color: var(--color-primary-600);
+}
+.menu-item:hover span {
+  color: #fff;
 }
 ul.menu a.is-active {
   color: #000;

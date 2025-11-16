@@ -21,7 +21,7 @@
       {% if has_children %}
         <button
           type="button"
-          class="flex items-center gap-0 px-4 py-4 w-fit rounded-md relative text-sm font-semibold transition h-[71px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800 text-nowrap hover:bg-gray-100 text-gray-900"
+          class="flex items-center gap-0 px-4 py-4 w-fit rounded-md relative text-sm font-semibold transition h-[71px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800 text-nowrap text-gray-900"
           @click="openMenu = openMenu === '{{ item_key }}' ? null : '{{ item_key }}'"
           aria-haspopup="true"
           :aria-expanded="openMenu === '{{ item_key }}'"
@@ -40,7 +40,7 @@
         {{ menus.desktop_panel(item.below, prefix, item_key, level + 1) }}
       {% else %}
         {% if item.url %}
-          {{ link(item.title, item.url, {'class': ['flex', 'items-center', 'gap-0', 'px-4', 'py-4', 'w-fit', 'm-0.5', 'rounded-md', 'text-sm', 'leading-[1.2]', 'font-medium', 'transition', 'h-full', 'relative', 'focus-visible:outline', 'focus-visible:outline-2', 'focus-visible:outline-gray-800', 'hover:bg-gray-100', 'text-gray-900']}) }}
+          {{ link(item.title, item.url, {'class': ['flex', 'items-center', 'gap-0', 'px-4', 'py-4', 'w-fit', 'm-0.5', 'rounded-md', 'text-sm', 'leading-[1.2]', 'font-medium', 'transition', 'h-full', 'relative', 'focus-visible:outline', 'focus-visible:outline-2', 'focus-visible:outline-gray-800',  'text-gray-900']}) }}
         {% else %}
           <span class="flex items-center gap-0 px-4 py-4 w-fit m-0.5 rounded-md text-sm leading-[1.2] font-medium text-gray-900">{{ item.title }}</span>
         {% endif %}
@@ -123,7 +123,7 @@
         </div>
       {% else %}
         {% if item.url %}
-          {{ link(item.title, item.url, {'class': ['flex', 'items-center', 'gap-0', 'px-4', 'py-3', 'w-full', 'rounded-sm', 'text-md', 'leading-[1.2]', 'font-medium', 'transition', 'hover:bg-gray-100', 'text-gray-900']}) }}
+          {{ link(item.title, item.url, {'class': ['flex', 'items-center', 'gap-0', 'px-4', 'py-3', 'w-full', 'rounded-sm', 'text-md', 'leading-[1.2]', 'font-medium', 'transition',  'text-gray-900']}) }}
         {% else %}
           <span class="flex items-center gap-0 px-4 py-3 w-full rounded-md text-sm leading-[1.2] font-medium text-gray-900">{{ item.title }}</span>
         {% endif %}
