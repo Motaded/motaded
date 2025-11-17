@@ -40,7 +40,6 @@ dependencies:
   module:
     - comment
     - conditional_fields
-    - like_dislike
     - link
     - media_library
     - metatag
@@ -90,7 +89,23 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        f297898e-85a2-4b7b-a595-d1fd00dc8ad5:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_areas_of_work:
     type: paragraphs
     weight: 18
@@ -110,7 +125,23 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        9dc1e031-a523-4e15-a18f-d45494d584b0:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_basic_paragraphs:
     type: paragraphs
     weight: 20
@@ -130,19 +161,28 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        1df89e67-49e2-47d3-a445-537992f7fdfa:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_comments:
     type: comment_default
-    weight: 37
+    weight: 35
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_default_page:
-    type: boolean_checkbox
-    weight: 38
-    region: content
-    settings:
-      display_label: true
     third_party_settings: {  }
   field_display_on_services:
     type: boolean_checkbox
@@ -157,14 +197,46 @@ content:
     region: content
     settings:
       media_types: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        30691a99-15e3-4129-8155-068d2ebd2725:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_download_user_guides:
     type: media_library_widget
     weight: 29
     region: content
     settings:
       media_types: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        408abc13-d2d8-456d-b142-360c18ba5d81:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_email_address:
     type: string_textfield
     weight: 12
@@ -196,7 +268,23 @@ content:
     settings:
       default_data: true
       webforms: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        05badd74-7945-4277-bf42-390eddf19ff6:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_free_consultation:
     type: link_default
     weight: 31
@@ -204,14 +292,23 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings: {  }
-  field_icon:
-    type: media_library_widget
-    weight: 35
-    region: content
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        658eb504-6e5c-4719-80d1-9accf62f24af:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_itc_card_for_services:
     type: paragraphs
     weight: 33
@@ -229,7 +326,23 @@ content:
       features:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        5cd76778-4aba-46e7-80ab-bc6ac6686fb0:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_keywords:
     type: text_textarea_with_summary
     weight: 19
@@ -239,13 +352,25 @@ content:
       summary_rows: 3
       placeholder: ''
       show_summary: false
-    third_party_settings: {  }
-  field_like_dislike:
-    type: like_dislike_widget
-    weight: 36
-    region: content
-    settings: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        aab71a23-9432-410a-ba2c-c02390f80d9a:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            reset: false
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_media:
     type: media_library_widget
     weight: 4
@@ -255,7 +380,7 @@ content:
     third_party_settings: {  }
   field_meta_tags:
     type: metatag_firehose
-    weight: 41
+    weight: 38
     region: content
     settings:
       sidebar: true
@@ -280,7 +405,23 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        cb1272fb-42be-453a-bfce-14975c08d467:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_payment_options:
     type: string_textarea
     weight: 10
@@ -355,7 +496,7 @@ content:
             selector: ''
   field_requirements:
     type: paragraphs
-    weight: 39
+    weight: 36
     region: content
     settings:
       title: Paragraph
@@ -370,7 +511,23 @@ content:
       features:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        793f09e9-03b4-4ed1-95e6-51793444239a:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_service_channels:
     type: string_textarea
     weight: 8
@@ -462,10 +619,26 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        5b31dcb1-9bc6-4a93-a945-6ccbcaf10d48:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_tags:
     type: entity_reference_autocomplete
-    weight: 40
+    weight: 37
     region: content
     settings:
       match_operator: CONTAINS
@@ -540,7 +713,23 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        993d1f47-c511-468c-a1fa-4d77666ddf2d:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_work_tracks:
     type: paragraphs
     weight: 16
@@ -560,7 +749,23 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        07d0db69-c8a9-4b07-9825-7d8483003cda:
+          entity_type: node
+          bundle: page
+          dependee: field_display_on_services
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
   langcode:
     type: language_select
     weight: 1
@@ -587,7 +792,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   simple_sitemap_index_now:
-    weight: 42
+    weight: 39
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -629,4 +834,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
+  field_default_page: true
+  field_icon: true
+  field_like_dislike: true
   field_media_video: true

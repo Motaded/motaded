@@ -78,6 +78,7 @@ elements: |-
           checked: true
   captcha:
     '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
   info_text:
     '#type': processed_text
     '#text': '<div class="flex items-center gap-1 flex-wrap text-sm md:text-base"><p class="font-medium">Learn about our commitment to quality in</p><p><a class="text-green-700 underline" href="/service-quality">Service Quality Charter</a></p><p class="font-medium">and</p><p><a class="text-green-700 underline" href="/privacy-policy">Privacy &amp; Participation</a></p></div>'

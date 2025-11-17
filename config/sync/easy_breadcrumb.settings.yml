@@ -43,5 +43,5 @@ segment_display_minimum: 1
 truncator_mode: false
 truncator_length: 100
 truncator_dots: true
-remove_repeated_segments_text_only: false
+remove_repeated_segments_text_only: true
 home_segment_validation_skip: false

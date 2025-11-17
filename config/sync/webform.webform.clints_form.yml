@@ -192,6 +192,9 @@ elements: |-
     '#type': textfield
     '#title': 'Nationality of identity'
     '#placeholder': 'Nationality of identity'
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
 css: ''
 javascript: ''
 settings:

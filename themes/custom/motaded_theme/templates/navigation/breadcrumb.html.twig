@@ -12,7 +12,7 @@
     <h2 id="system-breadcrumb" class="visually-hidden">{{ 'Breadcrumb'|t }}</h2>
     <ol class="flex flex-wrap items-center gap-1">
     {% for item in breadcrumb %}
-        {% if item.url %}
+        {% if item.url and not loop.last %}
           <li class="after:content-['/'] after:mx-1">
             <a href="{{ item.url }}" class="hover:underline">{{ item.text }}</a>
           </li>

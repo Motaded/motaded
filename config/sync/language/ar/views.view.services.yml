@@ -1,0 +1,38 @@
+label: خدمات
+display:
+  page_1:
+    display_options:
+      filters:
+        combine:
+          expose:
+            label: بحث
+            placeholder: 'خدمات البحث...'
+        field_tags_target_id:
+          expose:
+            label: فئات
+      exposed_form:
+        options:
+          submit_button: يتقدم
+          reset_button_label: مسح
+          exposed_sorts_label: نوع
+      sorts:
+        title:
+          expose:
+            label: عنوان
+        created:
+          expose:
+            label: 'تأليف بتاريخ'
+      pager:
+        options:
+          tags:
+            next: التالي
+            previous: السابق
+            first: أول
+            last: آخر
+      header:
+        result:
+          content: '@total نتائج'
+    display_title: خدمات
+  default:
+    display_options:
+      title: خدمات
