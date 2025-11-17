@@ -88,12 +88,12 @@
                     {% if loop.last %}
                       <a href="{{ link }}" class="inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-white/15 hover:shadow-sm hover:-translate-y-[1px] active:translate-y-0 transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80" aria-label="{{ title }}">
                         {{ title }}
-                        <img alt="" width="18" height="18" class="-rotate-90" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+                        <img alt="" width="18" height="18" class="-rotate-90 rtl:rotate-90" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
                       </a>
                     {% else %}
                       <a href="{{ link }}" class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-primary-600 shadow-sm hover:shadow-md hover:-translate-y-[1px] active:translate-y-0 transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80" aria-label="{{ title }}">
                         {{ title }}
-                        <img alt="" width="18" height="18" class="-rotate-90" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+                        <img alt="" width="18" height="18" class="-rotate-90 rtl:rotate-90" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
                       </a>
                     {% endif %}
                   {% endfor %}

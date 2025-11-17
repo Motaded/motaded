@@ -96,6 +96,9 @@ function partnersCarousel(length) {
     autoplayMs: 3500,
     _timer: null,
     _cardWidth: 0,
+    isRtl:
+      typeof document !== "undefined" &&
+      document.documentElement.getAttribute("dir") === "rtl",
 
     init() {
       // prepare snapping widths
@@ -132,17 +135,14 @@ function partnersCarousel(length) {
 
     onScroll() {
       // update dot from scroll position
-      const track = this.$refs.track;
-      if (!track) return;
-      const idx = Math.round(track.scrollLeft / (this._cardWidth * 2));
+      const pos = this._getScrollPosition();
+      const idx = Math.round(pos / (this._cardWidth * 2));
       this.currentPage = Math.min(this.pageCount - 1, Math.max(0, idx));
     },
 
     goTo(page) {
-      const track = this.$refs.track;
-      if (!track) return;
       const left = page * this._cardWidth * 2; // ~2 cards per "page"
-      track.scrollTo({ left, behavior: "smooth" });
+      this._setScrollPosition(left);
       this.currentPage = page;
     },
 
@@ -164,6 +164,26 @@ function partnersCarousel(length) {
     pause() {
       clearInterval(this._timer);
       this._timer = null;
+    },
+
+    _getScrollPosition() {
+      const track = this.$refs.track;
+      if (!track) return 0;
+      if (!this.isRtl) {
+        return track.scrollLeft;
+      }
+
+      return track.scrollWidth - track.clientWidth - track.scrollLeft;
+    },
+
+    _setScrollPosition(value) {
+      const track = this.$refs.track;
+      if (!track) return;
+      const left = this.isRtl
+        ? track.scrollWidth - track.clientWidth - value
+        : value;
+
+      track.scrollTo({ left, behavior: "smooth" });
     },
   };
 }
