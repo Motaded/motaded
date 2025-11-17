@@ -12,7 +12,7 @@ id: paragraph.steps.field_paragraphs
 field_name: field_paragraphs
 entity_type: paragraph
 bundle: steps
-label: Cards
+label: 'Step slides'
 description: ''
 required: false
 translatable: true
@@ -25,6 +25,12 @@ settings:
       step: step
     negate: 0
     target_bundles_drag_drop:
+      accordion:
+        weight: 26
+        enabled: false
+      accordions:
+        weight: 27
+        enabled: false
       advantages:
         weight: 17
         enabled: false
@@ -34,11 +40,17 @@ settings:
       banner:
         weight: 19
         enabled: false
+      banner_sm:
+        weight: 31
+        enabled: false
       business_activity:
         weight: 20
         enabled: false
       card:
         weight: 21
+        enabled: false
+      cards:
+        weight: 34
         enabled: false
       counter:
         weight: 22
@@ -46,8 +58,14 @@ settings:
       featured_card:
         weight: 23
         enabled: false
+      featured_contents:
+        weight: 37
+        enabled: false
       itc_card:
         weight: 24
+        enabled: false
+      notes:
+        weight: 39
         enabled: false
       objectives:
         weight: 25
@@ -75,6 +93,9 @@ settings:
         enabled: false
       top_information:
         weight: 31
+        enabled: false
+      view_block:
+        weight: 49
         enabled: false
       work_tracks:
         weight: 32
