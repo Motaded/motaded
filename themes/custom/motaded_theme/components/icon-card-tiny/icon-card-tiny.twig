@@ -32,7 +32,7 @@
             href="{{ cta1.url }}"
             class="px-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 hover:bg-gray-100"
           >
-            {{ cta1.title }}
+            {{ cta1.title|t }}
           </a>
         {% endif %}
         {% if cta2 %}
@@ -40,7 +40,7 @@
             href="{{ cta2.url }}"
             class="px-4 py-2 rounded-md bg-primary-600 text-white text-sm hover:bg-primary-700"
           >
-            {{ cta2.title }}
+            {{ cta2.title|t }}
           </a>
         {% endif %}
       </div>

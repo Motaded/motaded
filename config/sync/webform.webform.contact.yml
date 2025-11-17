@@ -73,7 +73,7 @@ elements: |-
     '#test': 'Please ignore this email.'
   captcha:
     '#type': captcha
-    '#captcha_type': captcha/Math
+    '#captcha_type': recaptcha/reCAPTCHA
   service:
     '#type': hidden
     '#title': Service

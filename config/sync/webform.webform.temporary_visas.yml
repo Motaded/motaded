@@ -112,6 +112,9 @@ elements: |-
       Package2: Package2
       Package3: Package3
       Package4: Package4
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
 css: ''
 javascript: ''
 settings:

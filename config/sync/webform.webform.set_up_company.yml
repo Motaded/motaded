@@ -109,6 +109,9 @@ elements: |-
     '#title': 'I confirm that I have read and agree to the terms and conditions'
     '#required': true
     '#required_error': 'Please confirm(I confirm that I have read and agree to the terms and conditions)'
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
 css: ''
 javascript: ''
 settings:

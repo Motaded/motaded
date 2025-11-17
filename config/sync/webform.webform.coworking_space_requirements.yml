@@ -52,6 +52,9 @@ elements: |-
     '#type': textfield
     '#title': 'Desired Move-in Date'
     '#placeholder': 'Desired Move-in Date'
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
 css: ''
 javascript: ''
 settings:

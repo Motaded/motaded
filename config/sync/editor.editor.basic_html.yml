@@ -46,9 +46,6 @@ settings:
     ckeditor5_sourceEditing:
       allowed_tags:
         - '<cite>'
-        - '<dl>'
-        - '<dt>'
-        - '<dd>'
         - '<a hreflang>'
         - '<blockquote cite>'
         - '<ul type>'

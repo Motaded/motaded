@@ -52,6 +52,9 @@ elements: |-
     '#type': radios
     '#title': 'Do you require notarization or legalization of the translated document?'
     '#options': yes_no
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
 css: ''
 javascript: ''
 settings:

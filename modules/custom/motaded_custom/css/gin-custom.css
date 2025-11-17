@@ -46,11 +46,11 @@
   display: none;
 } */
 
-.d-flex,.details-wrapper {
+.d-flex {
   display: flex;
   gap: 0.5rem;
 }
-.d-flex,.details-wrapper > * {
+.d-flex > * {
   min-width: 150px;
 }
 

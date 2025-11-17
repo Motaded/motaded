@@ -169,6 +169,11 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
   if ($node) {
     $prefix = getLanguagePrefix();
     $prefix = str_ends_with($prefix, "/") ? $prefix : $prefix . "/";
+    
+    if (isset($variables['breadcrumb'][1]) && in_array($variables['breadcrumb'][1]['url'], ['/node', '/ar/node'])) {
+      array_splice($variables['breadcrumb'], 1, 1);
+    }
+
     if ($node->bundle() == "article") {
       if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/blog') {
         $list_crumb = [
