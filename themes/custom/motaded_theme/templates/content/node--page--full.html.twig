@@ -87,15 +87,12 @@
           </h1>
         </div>
         <!-- CTA Button -->
-        {% set contact_url = url('<front>')|render ~ '/contact-us?service-id=' ~ node.id %}
-        <a
-          class="flex relative gap-1 justify-center items-center px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 max-md:self-start"
-          href="{{ contact_url|replace({'//c': '/c'}) }}"
-        >
-          <span class="relative text-base font-medium leading-6 text-white"
-            >{{ "Get Started"|t }}</span
-          >
-        </a>
+        {% set contact_url = url('<front>')|render ~ '/contact-us' %}
+
+        <form action="{{ contact_url|replace({'//c': '/c'}) }}" method="post">
+          <input type="hidden" name="service_id" value="{{ node.id }}">
+          <input type="submit" class="px-4 py-0 h-10 max-h-10 bg-green-700 rounded min-h-10 cursor-pointer text-base font-medium leading-6 text-white" value="{{ "Get Started"|t }}">
+        </form>
       </div>
 
       <!-- Service Tags -->
@@ -274,29 +271,5 @@
 
   </article>
 {% else %}
-  <article{{ attributes.addClass(classes) }}>
-
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
-
-  {% if display_submitted %}
-    <footer class="node__meta">
-      {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
-      </div>
-    </footer>
-  {% endif %}
-
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content }}
-  </div>
-
-</article>
+  {% include "node--news--full.html.twig" %}
 {% endif %}

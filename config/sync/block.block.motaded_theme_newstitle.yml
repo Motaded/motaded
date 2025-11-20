@@ -1,23 +1,23 @@
-uuid: 618fa27e-1beb-41cc-927f-c807a19735df
+uuid: b2618319-1cb3-4fab-84e9-2af5408b6055
 langcode: en
 status: true
 dependencies:
   content:
-    - 'block_content:basic:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
+    - 'block_content:basic:7c917db3-e457-43c6-8a33-3e139c3b5b7e'
   module:
     - block_content
     - system
   theme:
     - motaded_theme
-id: motaded_theme_servicestitle
+id: motaded_theme_newstitle
 theme: motaded_theme
 region: content
-weight: -21
+weight: -23
 provider: null
-plugin: 'block_content:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
+plugin: 'block_content:7c917db3-e457-43c6-8a33-3e139c3b5b7e'
 settings:
-  id: 'block_content:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
-  label: 'Services title'
+  id: 'block_content:7c917db3-e457-43c6-8a33-3e139c3b5b7e'
+  label: 'News title'
   label_display: '0'
   provider: block_content
   status: true
@@ -27,4 +27,4 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: /services
+    pages: /news

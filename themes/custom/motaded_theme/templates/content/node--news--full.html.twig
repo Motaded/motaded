@@ -68,7 +68,7 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'bg-white',
+    node.bundle == 'news' ? 'bg-white',
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
@@ -116,14 +116,14 @@
       </div>
     </div>
       <!-- Back to top (anchor) -->
-  <div class="mt-10">
-    <a
-      href="#top"
-      class="inline-flex items-center gap-2 text-sm underline underline-offset-2 text-gray-700 hover:text-gray-900"
-    >
-      {{ "Back to top"|t }}
-    </a>
-  </div>
+    <div class="mt-10">
+      <a
+        href="#top"
+        class="inline-flex items-center gap-2 text-sm underline underline-offset-2 text-gray-700 hover:text-gray-900"
+      >
+        {{ "Back to top"|t }}
+      </a>
+    </div>
   </section>
 
 </article>
