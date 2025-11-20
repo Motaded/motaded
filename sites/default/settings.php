@@ -919,3 +919,21 @@ $config['system.logging']['error_level'] = 'verbose';
 @ini_set('memory_limit',       '1G');
 
 
+// TODO: Remove this in production.
+if (isset($_SERVER['REQUEST_URI']) && str_starts_with($_SERVER['REQUEST_URI'], '/beta/')) {
+  $u = $_SERVER['PHP_AUTH_USER'] ?? null;
+  $p = $_SERVER['PHP_AUTH_PW']   ?? null;
+  $user = getenv('BETA_USER') ?: 'motadedBeta';
+  $pass = getenv('BETA_PASS') ?: '@dmin128';
+
+  if ($u !== $user || $p !== $pass) {
+    header('WWW-Authenticate: Basic realm="Restricted beta"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'Auth required.';
+    exit;
+  }
+
+  header('X-Robots-Tag: noindex, nofollow, noarchive');
+}
+
+
