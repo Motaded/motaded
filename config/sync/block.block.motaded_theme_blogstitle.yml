@@ -1,23 +1,23 @@
-uuid: 618fa27e-1beb-41cc-927f-c807a19735df
+uuid: 7afea37d-f537-41bb-a78f-3c081c355adb
 langcode: en
 status: true
 dependencies:
   content:
-    - 'block_content:basic:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
+    - 'block_content:basic:356a3064-c3f5-41bb-8098-78c93007a93d'
   module:
     - block_content
     - system
   theme:
     - motaded_theme
-id: motaded_theme_servicestitle
+id: motaded_theme_blogstitle
 theme: motaded_theme
 region: content
-weight: -21
+weight: -22
 provider: null
-plugin: 'block_content:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
+plugin: 'block_content:356a3064-c3f5-41bb-8098-78c93007a93d'
 settings:
-  id: 'block_content:2357ec50-cf30-4fec-9948-f2b9ec7502ec'
-  label: 'Services title'
+  id: 'block_content:356a3064-c3f5-41bb-8098-78c93007a93d'
+  label: 'Blogs title'
   label_display: '0'
   provider: block_content
   status: true
@@ -27,4 +27,4 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: /services
+    pages: /blog

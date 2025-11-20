@@ -1,6 +1,10 @@
 function quickLinks() {
   const article = document.getElementById("block-motaded-theme-content");
-  const headings = article.querySelectorAll('h2');
+  let headings = article.querySelectorAll('h2');
+  if (headings.length === 0) {
+    headings = article.querySelectorAll('h3');
+  }
+  
   const result = [];
   let sectionCount = 0;
   let currentSection = null;
@@ -9,7 +13,7 @@ function quickLinks() {
     
   const tag = el.tagName.toLowerCase();
 
-    if (el.textContent.trim() && tag === 'h2') {
+    if (el.textContent.trim()) { // && tag === 'h3') {
       sectionCount++;
 
       const sectionId = `section-${sectionCount}`;

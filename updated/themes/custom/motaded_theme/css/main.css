@@ -60,16 +60,6 @@ html {
   p {
     @apply text-[16px] leading-6 mb-4;
   }
-  h3 {
-    @apply text-[23px] font-bold mb-4;
-  }
-  ul, ol {
-    list-style: inside auto;
-    @apply mb-4;
-    li {
-      @apply mb-2;
-    }
-  }
 }
 .p-no-mb p {
   @apply !mb-0;

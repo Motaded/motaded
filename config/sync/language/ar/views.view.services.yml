@@ -22,13 +22,6 @@ display:
         created:
           expose:
             label: 'تأليف بتاريخ'
-      pager:
-        options:
-          tags:
-            next: التالي
-            previous: السابق
-            first: أول
-            last: آخر
       header:
         result:
           content: '@total نتائج'
