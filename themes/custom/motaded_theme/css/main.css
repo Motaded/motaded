@@ -575,3 +575,23 @@ body.path-services {
 .colored-icons .icon-card:nth-child(3n + 3) .icon-wrapper {
   @apply !bg-gray-100;
 }
+
+
+table {
+  @apply min-w-full border-collapse text-left text-sm text-gray-800;
+  thead {
+    @apply bg-gray-50 text-xs uppercase tracking-wide text-gray-600;
+  }
+  tbody {
+    @apply divide-y divide-gray-200;
+  }
+  th {
+    @apply px-4 py-3;
+  }
+  td {
+    @apply px-4 py-4;
+  }
+  tr {
+    @apply hover:bg-gray-50;
+  }
+}

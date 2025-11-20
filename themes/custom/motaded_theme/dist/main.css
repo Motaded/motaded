@@ -6856,6 +6856,50 @@ body.path-services {
 .colored-icons .icon-card:nth-child(3n + 3) .icon-wrapper {
   background-color: var(--color-gray-100) !important;
 }
+table {
+  min-width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--text-sm);
+  line-height: var(--tw-leading, var(--text-sm--line-height));
+  color: var(--color-gray-800);
+  thead {
+    background-color: var(--color-gray-50);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-tracking: var(--tracking-wide);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-gray-600);
+    text-transform: uppercase;
+  }
+  tbody {
+    :where(& > :not(:last-child)) {
+      --tw-divide-y-reverse: 0;
+      border-bottom-style: var(--tw-border-style);
+      border-top-style: var(--tw-border-style);
+      border-top-width: calc(1px * var(--tw-divide-y-reverse));
+      border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+    }
+    :where(& > :not(:last-child)) {
+      border-color: var(--color-gray-200);
+    }
+  }
+  th {
+    padding-inline: calc(var(--spacing) * 4);
+    padding-block: calc(var(--spacing) * 3);
+  }
+  td {
+    padding-inline: calc(var(--spacing) * 4);
+    padding-block: calc(var(--spacing) * 4);
+  }
+  tr {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-50);
+      }
+    }
+  }
+}
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
     color-scheme: light;
@@ -7773,6 +7817,11 @@ body.path-services {
   inherits: false;
   initial-value: solid;
 }
+@property --tw-divide-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
 @keyframes bounce {
   0%, 100% {
     transform: translateY(-25%);
@@ -7852,6 +7901,7 @@ body.path-services {
       --tw-ease: initial;
       --tw-content: "";
       --tw-outline-style: solid;
+      --tw-divide-y-reverse: 0;
     }
   }
 }
