@@ -64,11 +64,18 @@ html {
     @apply text-[23px] font-bold mb-4;
   }
   ul, ol {
-    list-style: inside auto;
+    list-style-position: inside;
     @apply mb-4;
     li {
       @apply mb-2;
     }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
   }
 }
 .p-no-mb p {
