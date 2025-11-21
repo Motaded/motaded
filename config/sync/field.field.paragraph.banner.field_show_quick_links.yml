@@ -1,0 +1,23 @@
+uuid: c5c9ff8e-1477-4b2d-b66d-9d269f9932c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_show_quick_links
+    - paragraphs.paragraphs_type.banner
+id: paragraph.banner.field_show_quick_links
+field_name: field_show_quick_links
+entity_type: paragraph
+bundle: banner
+label: 'Show quick links for page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

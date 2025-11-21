@@ -4183,6 +4183,9 @@
   .h-auto {
     height: auto;
   }
+  .h-fit {
+    height: fit-content;
+  }
   .h-full {
     height: 100%;
   }
@@ -6153,6 +6156,9 @@ html {
       line-height: calc(var(--spacing) * 9);
     }
   }
+  body:has(.body-bg-white) {
+    background-color: var(--color-white) !important;
+  }
 }
 .text-formatted.field {
   h2 {
@@ -6720,10 +6726,11 @@ html {
   padding-left: 1rem;
   color: #374151;
 }
-.route-list {
+.paragraph--type--cards ul, .route-list {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;
+  font-size: 1rem;
   margin: 0.5rem 0 1rem;
 }
 .btn-secondary {

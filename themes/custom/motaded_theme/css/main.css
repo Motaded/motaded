@@ -51,6 +51,9 @@ html {
   h1 {
     @apply pt-8 text-[#161616] font-bold tracking-[-0.96px] text-[48px] leading-[60px] max-sm:text-3xl max-sm:leading-9;
   }
+  body:has(.body-bg-white) {
+    @apply !bg-white;
+  }
 }
 
 .text-formatted.field {
@@ -435,10 +438,11 @@ html {
   color: #374151;
 }
 
-.route-list {
+.paragraph--type--cards ul, .route-list {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;
+  font-size: 1rem;
   margin: 0.5rem 0 1rem;
 }
 

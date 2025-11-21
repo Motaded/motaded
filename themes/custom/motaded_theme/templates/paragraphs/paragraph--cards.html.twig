@@ -74,12 +74,12 @@
           {{ content.field_notes }}
 
         {# --- Simple Text Card layout --- #}
-        {% elseif card_type == 'simple_text_card' %}
+        {% elseif card_type == 'simple_text_card' or card_type == 'simple_text_card_unequal_height'%}
           <div class="grid md:grid-cols-2 gap-6 mt-4">
             {% for key, item in content.field_paragraphs %}
               {% set para = item['#paragraph'] %}
               {% if para is not empty %}
-                <div class="route">
+                <div class="route flex flex-col {{ card_type == 'simple_text_card_unequal_height' ? 'h-fit' : '' }}">
                   {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
                     <img
                       src="{{ file_url(para.field_media.entity.field_media_image.entity.fileuri) }}"
@@ -91,7 +91,7 @@
                      {{ para.field_body.value|raw }}
                     {% set link_item = para.field_link.0 %}
                     {% if link_item %}
-                      <a href="{{ link_item.url.toString() }}" class="btn-secondary">
+                      <a href="{{ link_item.url.toString() }}" class="btn-secondary mt-auto w-fit">
                         {{ link_item.title }}
                        </a>
                     {% endif %}
