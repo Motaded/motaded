@@ -16,7 +16,10 @@ settings:
       label: Badges
     -
       value: simple_text_card
-      label: 'simple text card'
+      label: 'Simple text card - Equal height'
+    -
+      value: simple_text_card_unequal_height
+      label: 'Simple text card - Unequal height'
     -
       value: image_with_text_wrapper
       label: 'image with text wrapper'

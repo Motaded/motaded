@@ -8,6 +8,7 @@ dependencies:
     - field.field.paragraph.banner.field_links
     - field.field.paragraph.banner.field_media
     - field.field.paragraph.banner.field_paragraphs
+    - field.field.paragraph.banner.field_show_quick_links
     - field.field.paragraph.banner.field_title
     - paragraphs.paragraphs_type.banner
   module:
@@ -68,6 +69,13 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
+    third_party_settings: {  }
+  field_show_quick_links:
+    type: boolean_checkbox
+    weight: 7
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_title:
     type: string_textfield

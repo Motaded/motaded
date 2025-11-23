@@ -51,6 +51,9 @@ html {
   h1 {
     @apply pt-8 text-[#161616] font-bold tracking-[-0.96px] text-[48px] leading-[60px] max-sm:text-3xl max-sm:leading-9;
   }
+  body:has(.body-bg-white) {
+    @apply !bg-white;
+  }
 }
 
 .text-formatted.field {
@@ -65,11 +68,18 @@ html {
   }
   ul,
   ol {
-    list-style: inside auto;
+    list-style-position: inside;
     @apply mb-4;
     li {
       @apply mb-2;
     }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
   }
 }
 .p-no-mb p {
@@ -434,10 +444,11 @@ html {
   padding-right: 1rem;
 }
 
-.route-list {
+.paragraph--type--cards ul, .route-list {
   list-style: disc;
   padding-left: 1rem;
   color: #374151;
+  font-size: 1rem;
   margin: 0.5rem 0 1rem;
 }
 
@@ -573,4 +584,24 @@ body.path-services {
 }
 .colored-icons .icon-card:nth-child(3n + 3) .icon-wrapper {
   @apply !bg-gray-100;
+}
+
+
+table {
+  @apply min-w-full border-collapse text-left text-sm text-gray-800;
+  thead {
+    @apply bg-gray-50 text-xs uppercase tracking-wide text-gray-600;
+  }
+  tbody {
+    @apply divide-y divide-gray-200;
+  }
+  th {
+    @apply px-4 py-3;
+  }
+  td {
+    @apply px-4 py-4;
+  }
+  tr {
+    @apply hover:bg-gray-50;
+  }
 }
