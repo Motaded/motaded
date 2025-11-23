@@ -1,0 +1,109 @@
+uuid: 70b47aec-ca60-4ff8-80fb-dc697a78da78
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_paragraphs
+    - paragraphs.paragraphs_type.cta
+    - paragraphs.paragraphs_type.ctas
+  module:
+    - entity_reference_revisions
+id: paragraph.ctas.field_paragraphs
+field_name: field_paragraphs
+entity_type: paragraph
+bundle: ctas
+label: CTAs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      cta: cta
+    negate: 0
+    target_bundles_drag_drop:
+      accordion:
+        weight: 24
+        enabled: false
+      accordions:
+        weight: 25
+        enabled: false
+      advantages:
+        weight: 17
+        enabled: false
+      areas_of_work:
+        weight: 18
+        enabled: false
+      banner:
+        weight: 19
+        enabled: false
+      banner_sm:
+        weight: 29
+        enabled: false
+      business_activity:
+        weight: 20
+        enabled: false
+      card:
+        weight: 21
+        enabled: false
+      cards:
+        weight: 36
+        enabled: false
+      counter:
+        weight: 22
+        enabled: false
+      cta:
+        weight: 38
+        enabled: true
+      ctas:
+        weight: 39
+        enabled: false
+      featured_card:
+        weight: 23
+        enabled: false
+      featured_contents:
+        weight: 34
+        enabled: false
+      itc_card:
+        weight: 24
+        enabled: false
+      notes:
+        weight: 43
+        enabled: false
+      objectives:
+        weight: 25
+        enabled: false
+      pricing:
+        weight: 26
+        enabled: false
+      requirements:
+        weight: 27
+        enabled: false
+      section:
+        weight: 28
+        enabled: false
+      sectors:
+        weight: 29
+        enabled: false
+      step:
+        weight: 41
+        enabled: false
+      steps:
+        weight: 42
+        enabled: false
+      steps_to_obtain:
+        weight: 30
+        enabled: false
+      top_information:
+        weight: 31
+        enabled: false
+      view_block:
+        weight: 45
+        enabled: false
+      work_tracks:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions
