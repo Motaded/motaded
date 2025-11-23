@@ -22,7 +22,7 @@
             {{ page.main_menu }}
             </nav>
           </div>
-
+          {% set search_url = url('<front>')|render ~ '/search/content' %}
           <!-- Right: Search / Lang / Login / Vision -->
           <div class="flex items-center gap-2">
             <div class="flex gap-2 lg:gap-4 max-xl:text-sm">
@@ -32,7 +32,7 @@
                   type="button"
                   class="inline-flex items-center justify-center font-medium transition rounded-sm text-black text-sm size-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800"
                   aria-label="Search"
-                  href="/search"
+                  href="{{ search_url|replace({'//s': '/s'}) }}"
                 >
                   <img
                     alt="search"
@@ -84,7 +84,7 @@
               type="button"
               class="inline-flex items-center justify-center transition text-black text-sm size-10 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800"
               aria-label="Search"
-              href="/search"
+              href="{{ search_url|replace({'//s': '/s'}) }}"
             >
               <img
                 alt="search"
@@ -170,7 +170,7 @@
           <div class="mt-auto px-4 py-3 border-t border-gray-200">
             <div class="flex items-center gap-2">
               <a
-                href="/search"
+                href="{{ search_url|replace({'//s': '/s'}) }}"
                 type="button"
                 class="inline-flex items-center justify-center font-medium transition text-black text-sm px-3 py-2 rounded-md hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800"
                 aria-label="Search"

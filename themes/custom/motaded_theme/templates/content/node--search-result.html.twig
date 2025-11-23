@@ -68,113 +68,32 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'mb-12',
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
-{{ attach_library('motaded_theme/toc') }}
-<article{{ attributes.addClass(classes) }} 
-    id="toc-root" 
-    x-data="articlePageEN()"
-    x-init="init()"
-    @keydown.escape.window="tocOpen=false">
 
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
-
-  {% if display_submitted %}
-    <footer class="node__meta">
-      {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
-      </div>
-    </footer>
+<article class="flex flex-col gap-2 py-6 border-b border-gray-300">
+  <!-- tags -->
+  {% set tags = content.field_tags['#items'] %}
+  {% if tags is not empty %}
+    <div class="flex flex-wrap gap-2">
+      {% for i in tags|slice(0, 3)|keys %}
+        <span class="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-1 text-[12px] text-gray-700 bg-white">
+          <span>{{ content.field_tags[i]["#plain_text"] }}</span>
+        </span>
+      {% endfor %}
+    </div>
   {% endif %}
 
-  <section class="mt-6">
-    <div class="flex flex-col gap-6 pb-8 border-b border-gray-300">
-      {{ summary }}
-    </div>
-  </section>
+  <!-- title -->
+  <a href="{{ url }}" class="text-[16px] leading-6 font-medium text-[#006B44] underline underline-offset-2 hover:text-[#065f43]">
+    <span>{{ label }}</span>
+  </a>
 
-  <!-- Content + ToC -->
-  <section class="flex items-start md:gap-8 max-md:flex-col">
-    <!-- ToC (sticky on md+, collapsible on mobile) -->
-    <div class="w-full md:w-80 md:shrink-0 md:sticky md:top-4 mt-6">
-      <!-- Mobile ToC toggle -->
-      <button
-        class="md:hidden w-full flex items-center justify-between rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-semibold"
-        @click="tocOpen=!tocOpen"
-        :aria-expanded="tocOpen"
-        aria-controls="toc-panel"
-      >
-        <span>{{ "On this page"|t }}</span>
-        <img
-          src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
-          alt=""
-          width="16"
-          height="16"
-          :class="tocOpen ? 'rotate-180' : ''"
-          class="transition-transform"
-        />
-      </button>
+  <!-- excerpt -->
+  <p class="text-[14px] leading-5 text-gray-800">{{ content.search_api_excerpt['#excerpt'] }}</p>
 
-      <aside
-        id="toc-panel"
-        class="table-of-content md:block mt-3 md:mt-0 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200"
-        :class="tocOpen ? 'block' : 'hidden md:block'"
-      >
-        <header class="mb-3">
-          <p class="text-sm text-gray-600">{{ "On this page"|t }}</p>
-          <h4 class="text-lg font-semibold">{{ label }}</h4>
-        </header>
-
-        <nav class="space-y-1" aria-label="Table of contents">
-          <template x-for="item in toc" :key="item.id">
-            <div>
-              <a
-                :href="`#${item.id}`"
-                @click.prevent="scrollTo(item.id)"
-                class="block rounded-md px-3 py-2 text-sm transition"
-                :class="activeId===item.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : 'hover:bg-white'"
-                x-text="item.label"
-              ></a>
-
-              <!-- Children -->
-              <template x-if="item.children?.length">
-                <ul class="mt-1 pl-3 space-y-1">
-                  <template x-for="sub in item.children" :key="sub.id">
-                    <li>
-                      <a
-                        :href="`#${sub.id}`"
-                        @click.prevent="scrollTo(sub.id)"
-                        class="block rounded-md px-3 py-1.5 text-[13px] text-gray-700 hover:bg-white"
-                        :class="activeId===sub.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : ''"
-                        x-text="sub.label"
-                      ></a>
-                    </li>
-                  </template>
-                </ul>
-              </template>
-            </div>
-          </template>
-        </nav>
-      </aside>
-    </div>
-
-    <!-- Article body -->
-    <div
-      {{ content_attributes.addClass('node__content flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0 overflow-x-scroll') }}
-      id="article-root"
-    >
-      {{ content }}
-    </div>
-  </section>
-
+  <!-- date -->
+  <p class="text-[12px] leading-[18px] text-gray-500">{{ node.getCreatedTime|date('Y-m-d') }}</p>
+  {# <p class="text-[12px] leading-[18px] text-gray-500">{{ date|striptags|trim|date('Y-m-d') }}</p> #}
 </article>

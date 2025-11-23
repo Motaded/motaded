@@ -1,0 +1,90 @@
+uuid: 53d8bb49-c4e3-4e8b-8fbb-467b7e2cc232
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.page.body
+    - field.field.node.page.field_advantages
+    - field.field.node.page.field_areas_of_work
+    - field.field.node.page.field_basic_paragraphs
+    - field.field.node.page.field_comments
+    - field.field.node.page.field_default_page
+    - field.field.node.page.field_display_on_services
+    - field.field.node.page.field_document
+    - field.field.node.page.field_download_user_guides
+    - field.field.node.page.field_email_address
+    - field.field.node.page.field_form
+    - field.field.node.page.field_free_consultation
+    - field.field.node.page.field_icon
+    - field.field.node.page.field_itc_card_for_services
+    - field.field.node.page.field_keywords
+    - field.field.node.page.field_like_dislike
+    - field.field.node.page.field_media
+    - field.field.node.page.field_media_video
+    - field.field.node.page.field_meta_tags
+    - field.field.node.page.field_objectives
+    - field.field.node.page.field_payment_options
+    - field.field.node.page.field_phone_number
+    - field.field.node.page.field_provided_languages
+    - field.field.node.page.field_requirements
+    - field.field.node.page.field_service_channels
+    - field.field.node.page.field_service_cost
+    - field.field.node.page.field_service_duration
+    - field.field.node.page.field_steps_to_obtain
+    - field.field.node.page.field_tags
+    - field.field.node.page.field_target_audience
+    - field.field.node.page.field_taxonomy
+    - field.field.node.page.field_top_overview_section
+    - field.field.node.page.field_work_tracks
+    - node.type.page
+  module:
+    - user
+_core:
+  default_config_hash: gTB0Aw9yfUPvjMd_Pznb33eEqIGHqNQb5JtR3jZ18TE
+id: node.page.search_result
+targetEntityType: node
+bundle: page
+mode: search_result
+content:
+  search_api_excerpt:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  body: true
+  field_advantages: true
+  field_areas_of_work: true
+  field_basic_paragraphs: true
+  field_comments: true
+  field_default_page: true
+  field_display_on_services: true
+  field_document: true
+  field_download_user_guides: true
+  field_email_address: true
+  field_form: true
+  field_free_consultation: true
+  field_icon: true
+  field_itc_card_for_services: true
+  field_keywords: true
+  field_like_dislike: true
+  field_media: true
+  field_media_video: true
+  field_meta_tags: true
+  field_objectives: true
+  field_payment_options: true
+  field_phone_number: true
+  field_provided_languages: true
+  field_requirements: true
+  field_service_channels: true
+  field_service_cost: true
+  field_service_duration: true
+  field_steps_to_obtain: true
+  field_tags: true
+  field_target_audience: true
+  field_taxonomy: true
+  field_top_overview_section: true
+  field_work_tracks: true
+  langcode: true
+  links: true

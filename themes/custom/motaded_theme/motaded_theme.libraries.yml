@@ -129,6 +129,10 @@ toc:
   header: true
   js:
     js/toc.js: {}
+search-page:
+  header: true
+  js:
+    js/content-search.js: {}
 quick-links:
   header: true
   js:

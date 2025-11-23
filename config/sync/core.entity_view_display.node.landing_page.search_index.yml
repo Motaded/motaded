@@ -1,8 +1,9 @@
-uuid: b41d5dbc-c66f-4a7d-90b3-f2593be46dbc
+uuid: 35a760c5-f33f-4305-8a7e-9710aaa4581b
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.search_index
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
     - node.type.landing_page
@@ -10,10 +11,10 @@ dependencies:
     - entity_reference_revisions
     - metatag
     - user
-id: node.landing_page.default
+id: node.landing_page.search_index
 targetEntityType: node
 bundle: landing_page
-mode: default
+mode: search_index
 content:
   field_meta:
     type: metatag_empty_formatter

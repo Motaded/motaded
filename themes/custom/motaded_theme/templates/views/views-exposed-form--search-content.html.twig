@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Theme override for a views exposed form.
+ *
+ * Available variables:
+ * - form: A render element representing the form.
+ *
+ * @see template_preprocess_views_exposed_form()
+ */
+#}
+{{ attach_library('motaded_theme/search-page') }}
+{% if q is not empty %}
+  {#
+    This ensures that, if clean URLs are off, the 'q' is added first,
+    as a hidden form element, so that it shows up first in the POST URL.
+  #}
+{{ q }}
+{% endif %}
+<div class="clearfix global-search-form" x-data="contentSearch()">
+  
+  <!-- Header & filters -->
+  <section>
+    <div class="flex flex-wrap items-center gap-3">
+      {# <label for="q" class="sr-only">{{ "Search Motaded"|t }}</label> #}
+      {{ form.keys }}
+
+      <!-- Reset / Filters (optional) -->
+      {{ form.actions }}
+    </div>
+  </section>
+  <section class="mt-10">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-[30px] leading-[38px] font-bold text-[#161616] !pt-0">
+          {{ "Search Results"|t }}
+        </h1>
+        <p class="text-[16px] leading-6 text-gray-600" x-text="`${results}`"></p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        {{ form.field_tags }}
+      </div>
+    </div>
+  </section>
+{{ form|without('keys', 'actions', 'field_tags') }}
+</div>
