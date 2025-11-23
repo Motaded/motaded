@@ -1,0 +1,36 @@
+display:
+  default:
+    display_title: الرئيسي
+    display_options:
+      exposed_form:
+        options:
+          submit_button: بحث
+          reset_button_label: 'إعادة الضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          text_input_required: 'أدخل بعض الكلمات الرئيسية للبحث.'
+      pager:
+        options:
+          tags:
+            previous: '‹ السابقة'
+            next: 'التالية ›'
+          expose:
+            items_per_page_label: 'العناصر لكل صفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      filters:
+        search_api_fulltext:
+          expose:
+            placeholder: 'خدمات البحث، الأدلة، والموارد…'
+      header:
+        result:
+          content: 'عرض النتائج @start - @end من @total'
+      title: 'محتوى البحث'
+      empty:
+        area:
+          content:
+            value: 'لا توجد نتائج. جرّب كلمات رئيسية أخرى أو امسح الفلاتر.'
+            format: plain_text
+  page_1:
+    display_title: الصفحة

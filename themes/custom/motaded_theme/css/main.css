@@ -586,7 +586,9 @@ body.path-services {
   @apply !bg-gray-100;
 }
 
-
+/* =========================
+   General styling for tables
+   ========================= */
 table {
   @apply min-w-full border-collapse text-left text-sm text-gray-800;
   thead {
@@ -603,5 +605,41 @@ table {
   }
   tr {
     @apply hover:bg-gray-50;
+  }
+}
+
+/* =========================
+   Site search
+   ========================= */
+.view-search-content {
+ .view-header {
+  display: none;
+ }
+}
+.global-search-form {
+  .form-item-keys {
+    flex: 1;
+    margin: 0;
+    input[name="keys"] {
+      @apply py-3;
+    }
+  }
+  .form-actions {
+    margin: 0;
+    input[name="reset"] {
+      @apply inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm hover:bg-gray-50;
+    }
+  }
+  .bef-links ul {
+    @apply flex flex-wrap items-center gap-2;
+    li {
+      
+    }
+  }
+  .bef-link {
+    @apply rounded-full border px-3 py-1.5 text-sm transition border-gray-300 text-gray-700 hover:bg-gray-50;
+  }
+  .bef-link--selected {
+    @apply border-[#006B44] text-[#006B44] bg-[#006B44]/10
   }
 }

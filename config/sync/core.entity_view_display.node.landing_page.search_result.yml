@@ -1,0 +1,26 @@
+uuid: 96f9ded3-b15d-42c5-81d6-7afe6acaecfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.landing_page.field_meta
+    - field.field.node.landing_page.field_paragraphs
+    - node.type.landing_page
+  module:
+    - user
+id: node.landing_page.search_result
+targetEntityType: node
+bundle: landing_page
+mode: search_result
+content:
+  search_api_excerpt:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_meta: true
+  field_paragraphs: true
+  langcode: true
+  links: true
