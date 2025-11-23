@@ -6217,7 +6217,8 @@ html {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
-  ul, ol {
+  ul,
+  ol {
     list-style-position: inside;
     margin-bottom: calc(var(--spacing) * 4);
     li {
@@ -6759,8 +6760,13 @@ html {
 }
 .list {
   list-style: disc;
-  padding-left: 1rem;
   color: #374151;
+}
+[dir="ltr"] .list {
+  padding-left: 1rem;
+}
+[dir="rtl"] .list {
+  padding-right: 1rem;
 }
 .paragraph--type--cards ul, .route-list {
   list-style: disc;
