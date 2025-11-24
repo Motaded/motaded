@@ -188,12 +188,12 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: url_message
-  confirmation_url: '<front>'
-  confirmation_title: ''
-  confirmation_message: 'Your message has been sent.'
+  confirmation_type: page
+  confirmation_url: /contact-us/success
+  confirmation_title: 'Thanks — Motaded received your message.'
+  confirmation_message: '<p>Your request is now in our queue. A confirmation was sent to your email. Our consultants will review and get back to you with the best next step for your case.</p><div class="mt-3 text-sm text-gray-600 flex flex-wrap items-center gap-3"><span>Reference:</span> <code class="rounded bg-gray-100 px-2 py-1 text-gray-800">REQ-[current-date:html_year]-[webform_submission:sid]</code> <span class="hidden md:inline" aria-hidden="true">•</span> <span>Submitted at [current-date:custom:d M Y, H:i] (KSA)</span></div>'
   confirmation_attributes: {  }
-  confirmation_back: true
+  confirmation_back: false
   confirmation_back_label: ''
   confirmation_back_attributes: {  }
   confirmation_exclude_query: false

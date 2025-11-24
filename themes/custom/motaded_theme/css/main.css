@@ -643,3 +643,20 @@ table {
     @apply border-[#006B44] text-[#006B44] bg-[#006B44]/10
   }
 }
+.paragraph--type--ctas .field__items {
+  @apply flex flex-wrap gap-3;
+}
+.block-block-content {
+  .section {
+    padding-top: 0;
+  }
+  .wrap {
+    padding: 0;
+  }
+}
+
+.page-not-found {
+  .paragraph--type--ctas .field__items {
+    justify-content: center;
+  }
+}

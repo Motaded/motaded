@@ -1,9 +1,9 @@
-uuid: fa719a5c-eb61-4aa0-9ba4-a2fd69f9d536
+uuid: 964c93de-4708-440b-a6a9-10c71f8592a1
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.page_title_description
+    - paragraphs.paragraphs_type.cta
   module:
     - content_translation
 third_party_settings:
@@ -11,8 +11,8 @@ third_party_settings:
     enabled: true
     bundle_settings:
       untranslatable_fields_hide: '0'
-id: block_content.page_title_description
-target_entity_type_id: block_content
-target_bundle: page_title_description
+id: paragraph.cta
+target_entity_type_id: paragraph
+target_bundle: cta
 default_langcode: site_default
-language_alterable: false
+language_alterable: true

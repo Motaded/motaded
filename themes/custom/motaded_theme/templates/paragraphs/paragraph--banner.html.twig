@@ -152,13 +152,13 @@
                 {% set title = content.field_links[key]['#title'] %}
                 {% if loop.last %}
                   <a
-                  href="#{{link}}"
+                  href="{{link}}"
                   class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-5 py-3 text-sm font-semibold hover:bg-gray-50"
                   >{{ title }}</a
                 >
                 {% else %}
                 <a
-                  href="#{{link}}"
+                  href="{{link}}"
                   class="inline-flex items-center gap-2 rounded-md bg-primary-600 text-white px-5 py-3 text-sm font-semibold hover:bg-primary-700"
                   >{{title}}</a
                 >

@@ -1,0 +1,35 @@
+uuid: d35cb4fe-4d7f-4790-9978-7887da23f84e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.paragraphs
+    - field.field.block_content.paragraphs.body
+    - field.field.block_content.paragraphs.field_counter
+  module:
+    - entity_reference_revisions
+    - text
+id: block_content.paragraphs.default
+targetEntityType: block_content
+bundle: paragraphs
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_counter:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

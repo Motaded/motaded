@@ -1,0 +1,8 @@
+uuid: b4fb48f5-2a33-4e15-97ef-e7e9d138a0ea
+langcode: en
+status: true
+dependencies: {  }
+id: paragraphs
+label: Paragraphs
+revision: false
+description: 'Used to add paragraphs contents in a block.'

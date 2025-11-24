@@ -1,0 +1,30 @@
+uuid: 16f78996-bd68-4c89-9788-d42c50da67e7
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:paragraphs:36bac2e0-3009-444d-bb9b-bd2725d643bc'
+  module:
+    - block_content
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_requestprocess
+theme: motaded_theme
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:36bac2e0-3009-444d-bb9b-bd2725d643bc'
+settings:
+  id: 'block_content:36bac2e0-3009-444d-bb9b-bd2725d643bc'
+  label: 'Request process'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /contact-us/confirmation
