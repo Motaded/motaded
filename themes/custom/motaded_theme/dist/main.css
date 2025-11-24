@@ -4925,6 +4925,9 @@
   .pt-8 {
     padding-top: calc(var(--spacing) * 8);
   }
+  .pt-10 {
+    padding-top: calc(var(--spacing) * 10);
+  }
   .pt-12 {
     padding-top: calc(var(--spacing) * 12);
   }
@@ -7037,6 +7040,11 @@ table {
   }
   .wrap {
     padding: 0;
+  }
+}
+.page-not-found {
+  .paragraph--type--ctas .field__items {
+    justify-content: center;
   }
 }
 @layer base {

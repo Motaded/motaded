@@ -654,3 +654,9 @@ table {
     padding: 0;
   }
 }
+
+.page-not-found {
+  .paragraph--type--ctas .field__items {
+    justify-content: center;
+  }
+}
