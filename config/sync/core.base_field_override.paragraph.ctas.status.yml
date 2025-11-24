@@ -1,0 +1,22 @@
+uuid: e44e2874-1d5a-4007-bd44-a64e35a8b866
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.ctas
+id: paragraph.ctas.status
+field_name: status
+entity_type: paragraph
+bundle: ctas
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
