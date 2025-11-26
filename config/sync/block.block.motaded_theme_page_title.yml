@@ -32,5 +32,12 @@ visibility:
       node: '@node.node_route_context:node'
     bundles:
       article: article
+      business_activities: business_activities
+      entities: entities
+      media_center: media_center
       news: news
       page: page
+      partner: partner
+      pricing: pricing
+      team: team
+      testimonial: testimonial

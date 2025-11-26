@@ -108,7 +108,8 @@
         },
         "patches": {
             "drupal/core": {
-                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch"
+                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch",
+                "2802371: active language CSS class": "https://git.drupalcode.org/project/drupal/-/merge_requests/12862.diff"
             },
             "drupal/like_dislike": {
                 "3431667: Drupal 11 compatability": "https://git.drupalcode.org/project/like_dislike/-/merge_requests/10.diff"
