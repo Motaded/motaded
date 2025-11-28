@@ -35,6 +35,7 @@
         "drupal/bootstrap5": "^4.0",
         "drupal/chosen": "^5.0",
         "drupal/ckeditor5_font": "^1.1@beta",
+        "drupal/ckeditor5_paste_filter": "^1.1",
         "drupal/ckeditor5_template": "^1.0",
         "drupal/ckeditor_accordion": "^2.3",
         "drupal/ckeditor_responsive_table": "^1.0",
