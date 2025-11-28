@@ -1,0 +1,11 @@
+uuid: 3733a992-b7fd-4b4f-89f2-ecd3e071d8e7
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: niqxlfV3Q1gp9o4LIEn1slBOP6sbVFXyOmFugGo9-eU
+id: default
+label: Default
+code: 301
+path: /
+mode: translatable

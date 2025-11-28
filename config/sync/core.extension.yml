@@ -15,6 +15,7 @@ module:
   chosen_lib: 0
   ckeditor5: 0
   ckeditor5_font: 0
+  ckeditor5_paste_filter: 0
   ckeditor5_template: 0
   ckeditor_accordion: 0
   comment: 0
@@ -22,6 +23,7 @@ module:
   config: 0
   config_translation: 0
   contact: 0
+  content_translation_redirect: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -61,6 +63,7 @@ module:
   path_alias: 0
   recaptcha: 0
   recreate_block_content: 0
+  redirect: 0
   responsive_image: 0
   search_api: 0
   search_api_db: 0

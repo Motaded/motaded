@@ -35,10 +35,12 @@
         "drupal/bootstrap5": "^4.0",
         "drupal/chosen": "^5.0",
         "drupal/ckeditor5_font": "^1.1@beta",
+        "drupal/ckeditor5_paste_filter": "^1.1",
         "drupal/ckeditor5_template": "^1.0",
         "drupal/ckeditor_accordion": "^2.3",
         "drupal/ckeditor_responsive_table": "^1.0",
         "drupal/conditional_fields": "^4.0@alpha",
+        "drupal/content_translation_redirect": "^2.0",
         "drupal/core-composer-scaffold": "^11",
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",
@@ -57,6 +59,7 @@
         "drupal/pathauto": "^1.14",
         "drupal/recaptcha": "^3.4",
         "drupal/recreate_block_content": "^3.0",
+        "drupal/redirect": "^1.12",
         "drupal/search_api": "^1.40",
         "drupal/simple_sitemap": "^4.2",
         "drupal/smtp": "^1.4",
@@ -106,7 +109,8 @@
         },
         "patches": {
             "drupal/core": {
-                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch"
+                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch",
+                "2802371: active language CSS class": "https://git.drupalcode.org/project/drupal/-/merge_requests/12862.diff"
             },
             "drupal/like_dislike": {
                 "3431667: Drupal 11 compatability": "https://git.drupalcode.org/project/like_dislike/-/merge_requests/10.diff"
@@ -118,6 +122,9 @@
                 "3429155: Drupal 11 compatibility": "https://git.drupalcode.org/project/ckeditor5_font/-/merge_requests/10.diff",
                 "3541766: JS error": "https://www.drupal.org/files/issues/2025-08-18/can-not-read-properties-undefined-3541766-3.patch",
                 "3541766: Fatal error": "https://www.drupal.org/files/issues/2024-10-23/error-after-drupal-10.1.0-3368736-60.patch"
+            },
+            "drupal/redirect": {
+                "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff"
             }
         },
         "drupal-scaffold": {
