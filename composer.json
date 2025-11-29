@@ -55,6 +55,7 @@
         "drupal/lang_dropdown": "^2.4",
         "drupal/like_dislike": "^2.4",
         "drupal/metatag": "^2.2",
+        "drupal/node_view_redirect": "^1.2",
         "drupal/paragraphs": "^1.19",
         "drupal/pathauto": "^1.14",
         "drupal/recaptcha": "^3.4",
