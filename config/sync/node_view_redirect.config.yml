@@ -1,0 +1,36 @@
+nvr_content_type:
+  article: 0
+  business_activities: 0
+  entities: 0
+  landing_page: 0
+  media_center: 0
+  news: 0
+  page: 0
+  partner: '1'
+  pricing: 0
+  team: 0
+  testimonial: 0
+nvr_redirect:
+  article: ''
+  business_activities: ''
+  entities: ''
+  landing_page: ''
+  media_center: ''
+  news: ''
+  page: ''
+  partner: /
+  pricing: ''
+  team: ''
+  testimonial: ''
+nvr_no_exception:
+  article: 0
+  business_activities: 0
+  entities: 0
+  landing_page: 0
+  media_center: 0
+  news: 0
+  page: 0
+  partner: '1'
+  pricing: 0
+  team: 0
+  testimonial: 0
