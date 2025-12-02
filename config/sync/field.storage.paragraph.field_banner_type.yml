@@ -13,10 +13,13 @@ settings:
   allowed_values:
     -
       value: banner_style_1
-      label: 'banner style 1'
+      label: 'Banner style 1'
     -
       value: banner_style_2
-      label: 'banner style 2'
+      label: 'Banner style 2'
+    -
+      value: banner_style_3
+      label: 'Banner style 3'
   allowed_values_function: ''
 module: options
 locked: false

@@ -1,15 +1,15 @@
-uuid: fae59249-c755-4955-8e1b-ff6e33ecdd29
+uuid: aef46699-6d5b-4aa3-a6eb-143079a7586e
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.paragraph.field_sub_title
-    - paragraphs.paragraphs_type.pricing
-id: paragraph.pricing.field_sub_title
+    - paragraphs.paragraphs_type.banner
+id: paragraph.banner.field_sub_title
 field_name: field_sub_title
 entity_type: paragraph
-bundle: pricing
-label: 'Sub title'
+bundle: banner
+label: 'Sub Title'
 description: ''
 required: false
 translatable: true

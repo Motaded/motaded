@@ -21,4 +21,4 @@ visibility:
   request_path:
     id: request_path
     negate: true
-    pages: "<front>\r\n/search/content"
+    pages: "<front>\r\n/search/content\r\n/packages"

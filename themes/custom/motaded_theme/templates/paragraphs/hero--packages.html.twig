@@ -1,0 +1,41 @@
+<section class="mx-auto max-w-5xl px-4 text-center mt-16">
+    {% if content.field_sub_title.0 is not empty %}
+      <span class="inline-flex items-center rounded-full bg-primary-100 px-4 py-1 text-sm font-medium text-primary-700">
+        {{content.field_sub_title.0 }}
+      </span>
+    {% endif %}
+    {% if content.field_title.0 is not empty %}
+      <h1 class="mt-6 text-4xl font-semibold text-gray-900 pt-0 tracking-normal leading-none">
+        {{ content.field_title.0  }}
+      </h1>
+    {% endif %}
+    {% if content.field_body.0 is not empty %}
+    <p class="mt-4 text-lg text-gray-600">
+        {{ content.field_body.0|render|striptags }}
+    </p>
+    {% endif %}
+    <div class="mt-8 flex flex-wrap justify-center gap-4">
+      {% if content.field_links %}
+        {% if content.field_links[0] is not empty %}
+          <a
+          class="inline-flex items-center rounded-full bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-primary-700"
+          href="{{ content.field_links[0]['#url'] }}"
+          target="_blank"
+          rel="noopener"
+          >
+           {{ content.field_links[0]['#title'] }}
+          </a>
+        {% endif %}
+
+        {% if content.field_links[1] is not empty %}
+          <a
+          class="inline-flex items-center rounded-full border border-primary-200 px-6 py-3 text-base font-semibold text-primary-700 transition hover:border-primary-300 hover:bg-primary-50"
+          href="{{ content.field_links[1]['#url'] }}"
+          >
+           {{ content.field_links[1]['#title'] }}
+          </a>
+        {% endif %}
+
+      {% endif %}
+    </div>
+</section>

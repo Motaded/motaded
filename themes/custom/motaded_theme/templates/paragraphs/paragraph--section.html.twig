@@ -1,8 +1,8 @@
-
 {#
 /**
  * @file
- * Default theme implementation to display a paragraph.
+ * Packages
+ * Default theme implementation to display packages paragraph.
  *
  * Available variables:
  * - paragraph: Full paragraph entity.
@@ -47,29 +47,12 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
-{% set cta_style = content.field_cta_style['#items'].0.value ?? 'primary' %}
-
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {% if cta_style == "primary" %}
-        <a href="{{ content.field_link[0]['#url'] }}"
-              class="inline-flex items-center justify-center gap-2 rounded-md bg-primary-600 text-white px-4 py-2 text-sm hover:bg-primary-700"
-            >{{ content.field_link[0]['#title'] }}</a>
-      {% elseif cta_style == "secondary" %}
-        <a href="{{ content.field_link[0]['#url'] }}"
-              class="inline-flex items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm hover:bg-gray-50"
-            >{{ content.field_link[0]['#title'] }}</a>
-      {% elseif cta_style == "tertiary" %}
-        <a
-          class="inline-flex w-full items-center justify-center rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-700"
-          href="{{ content.field_link[0]['#url'] }}"
-          target="_blank"
-          rel="noopener"
-        >
-          {{ content.field_link[0]['#title'] }}
-        </a>
-      {% endif %}
-    {% endblock %}
-  </div>
+  <section id="packages" class="mx-auto mt-16 max-w-6xl px-4 mb-6">
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {% for i in content.field_paragraphs['#items']|keys %}
+        {{ content.field_paragraphs[i] }}
+      {% endfor %}
+    </div>
+  </section>
 {% endblock paragraph %}

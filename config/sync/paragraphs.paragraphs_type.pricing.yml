@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: pricing
-label: Pricing
+label: 'Pricing card'
 icon_uuid: null
 icon_default: null
 description: ''

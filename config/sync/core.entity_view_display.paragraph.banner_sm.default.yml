@@ -7,6 +7,7 @@ dependencies:
     - field.field.paragraph.banner_sm.field_body
     - field.field.paragraph.banner_sm.field_link
     - field.field.paragraph.banner_sm.field_media
+    - field.field.paragraph.banner_sm.field_show_quick_links
     - field.field.paragraph.banner_sm.field_style
     - field.field.paragraph.banner_sm.field_title
     - paragraphs.paragraphs_type.banner_sm
@@ -54,6 +55,16 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_show_quick_links:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_style:
     type: list_default
     label: above
@@ -69,4 +80,5 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-hidden: {  }
+hidden:
+  search_api_excerpt: true

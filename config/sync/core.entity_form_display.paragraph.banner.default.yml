@@ -9,6 +9,7 @@ dependencies:
     - field.field.paragraph.banner.field_media
     - field.field.paragraph.banner.field_paragraphs
     - field.field.paragraph.banner.field_show_quick_links
+    - field.field.paragraph.banner.field_sub_title
     - field.field.paragraph.banner.field_title
     - paragraphs.paragraphs_type.banner
   module:
@@ -76,6 +77,14 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_sub_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_title:
     type: string_textfield
