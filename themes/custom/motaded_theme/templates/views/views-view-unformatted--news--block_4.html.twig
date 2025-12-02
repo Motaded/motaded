@@ -1,47 +1,43 @@
-{#
-/**
- * @file
- * Theme override to display a view of unformatted rows.
- *
- * Available variables:
- * - title: The title of this group of rows. May be empty.
- * - rows: A list of the view's row items.
- *   - attributes: The row's HTML attributes.
- *   - content: The row's content.
- * - view: The view object.
- * - default_row_class: A flag indicating whether default classes should be
- *   used on rows.
- *
- * @see template_preprocess_views_view_unformatted()
- */
-#}
-{{attach_library('motaded_theme/news-carousel')}}
+{# /** * @file * Theme override to display a view of unformatted rows. * *
+Available variables: * - title: The title of this group of rows. May be empty. *
+- rows: A list of the view's row items. * - attributes: The row's HTML
+attributes. * - content: The row's content. * - view: The view object. * -
+default_row_class: A flag indicating whether default classes should be * used on
+rows. * * @see template_preprocess_views_view_unformatted() */ #}
+{{ attach_library("motaded_theme/news-carousel") }}
 <!-- Desktop / Tablet -->
-<div
-  class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-5 mt-5 w-full">
+<div class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-5 mt-5 w-full">
   <!-- Left column: compact list -->
   <div class="hidden md:grid sm:grid-cols-2 md:grid-cols-1 gap-5">
     {% for row in rows|slice(0, rows | length - 1) %}
-      <!-- Card 1 -->
-      <a href="{{ row.url }}" class="block">
-        <div class="bg-white rounded-xl p-4 h-full w-full border border-transparent hover:border-primary-600 shadow-sm transition">
-          <div class="flex justify-between gap-4 h-full">
-            <div class="flex-1">
-              <div class="flex flex-col justify-between h-full">
-                <p class="text-md font-semibold leading-[1.6]">
-                  {{ row.title }}
-                </p>
-                <p class="text-sm text-gray-600 mt-3 leading-[1.6]">
-                  {{ row.created }}
-                </p>
-              </div>
-            </div>
-            <div class="flex-shrink-0 w-[151px] h-[120px]">
-              <img alt="{{ row.image.alt }}" width="151" height="120" class="w-full h-full object-cover rounded-lg" src="{{ row.image.url }}"/>
+    <!-- Card 1 -->
+    <a href="{{ row.url }}" class="block">
+      <div
+        class="bg-white rounded-xl p-4 h-full w-full border border-transparent hover:border-primary-600 shadow-sm transition"
+      >
+        <div class="flex justify-between gap-4 h-full">
+          <div class="flex-1">
+            <div class="flex flex-col justify-between h-full">
+              <p class="text-md font-semibold leading-[1.6]">
+                {{ row.title }}
+              </p>
+              <p class="text-sm text-gray-600 mt-3 leading-[1.6]">
+                {{ row.created }}
+              </p>
             </div>
           </div>
+          <div class="flex-shrink-0 w-[151px] h-[120px]">
+            <img
+              alt="{{ row.image.alt }}"
+              width="151"
+              height="120"
+              class="w-full h-full object-cover rounded-lg"
+              src="{{ row.image.url }}"
+            />
+          </div>
         </div>
-      </a>
+      </div>
+    </a>
     {% endfor %}
   </div>
 
@@ -49,14 +45,20 @@
   {% set row = rows|last %}
   <div class="hidden md:block h-full">
     <a href="{{ row.url }}" class="block h-full">
-      <div class="bg-white rounded-xl p-4 h-full w-full border border-transparent hover:border-primary-600 shadow-sm transition">
-        <div
-          class="relative w-full h-full rounded-lg overflow-hidden">
+      <div
+        class="bg-white rounded-xl p-4 h-full w-full border border-transparent hover:border-primary-600 shadow-sm transition"
+      >
+        <div class="relative w-full h-full rounded-lg overflow-hidden">
           <!-- image -->
           <img
-          alt="{{ row.image.alt }}" class="absolute inset-0 w-full h-full object-cover" src="{{ row.image.url }}"/>
+            alt="{{ row.image.alt }}"
+            class="absolute inset-0 w-full h-full object-cover"
+            src="{{ row.image.url }}"
+          />
           <!-- gradient overlay -->
-          <div class="absolute inset-0 bg-gradient-to-t from-primary-700/90 via-primary-700/20 to-transparent"></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-primary-700/90 via-primary-700/20 to-transparent"
+          ></div>
           <!-- text -->
           <div class="absolute bottom-0 left-0 w-full px-5 py-4">
             <p class="text-lg font-medium text-white leading-[1.6]">
@@ -77,31 +79,65 @@
   <div class="relative">
     <div class="overflow-hidden rounded-xl">
       {% for key, row in rows %}
-        <a href="{{ row.url }}" class="block min-h-72" x-show="current === {{ key }}" x-transition.opacity x-cloak>
-          <div class="bg-white rounded-xl p-4 h-full border border-transparent hover:border-primary-600 shadow-sm transition">
-            <div class="flex flex-col justify-between h-full">
-              <div class="relative w-full">
-                <img alt="{{ row.image.alt }}" class="rounded-lg w-full h-[210px] object-cover" src="{{ row.image.url }}"/>
-              </div>
-              <div class="mt-5 flex flex-col justify-between flex-1">
-                <p class="text-md font-medium leading-[1.6]">{{ row.title }}</p>
-                <p class="text-sm text-gray-600 mt-3 leading-[1.6]">{{ row.created }}</p>
-              </div>
+      <a
+        href="{{ row.url }}"
+        class="block min-h-72"
+        x-show="current === {{ key }}"
+        x-transition.opacity
+        x-cloak
+      >
+        <div
+          class="bg-white rounded-xl p-4 h-full border border-transparent hover:border-primary-600 shadow-sm transition"
+        >
+          <div class="flex flex-col justify-between h-full">
+            <div class="relative w-full">
+              <img
+                alt="{{ row.image.alt }}"
+                class="rounded-lg w-full h-[210px] object-cover"
+                src="{{ row.image.url }}"
+              />
+            </div>
+            <div class="mt-5 flex flex-col justify-between flex-1">
+              <p class="text-md font-medium leading-[1.6]">{{ row.title }}</p>
+              <p class="text-sm text-gray-600 mt-3 leading-[1.6]">
+                {{ row.created }}
+              </p>
             </div>
           </div>
-        </a>
+        </div>
+      </a>
       {% endfor %}
     </div>
 
     <!-- Controls -->
     <div class="mt-4 flex items-center justify-between">
-      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="prev()">{{ "Prev"|t }}</button>
-      <div class="flex gap-2">
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50"
+        @click="prev()"
+      >
+        {{ "Prev" | t }}
+      </button>
+      <div class="flex gap-3">
         {% for row in rows %}
-          <button type="button" class="size-2 rounded-full" :class="current === {{ loop.index0 }} ? 'bg-primary-600' : 'bg-gray-300'" @click="go({{ loop.index0 }})"></button>
+        <button
+          type="button"
+          class="size-3 rounded-full"
+          aria-label="news-carousel-{{ loop.index0 }}"
+          :class="current === {{
+            loop.index0
+          }} ? 'bg-primary-600' : 'bg-gray-300'"
+          @click="go({{ loop.index0 }})"
+        ></button>
         {% endfor %}
       </div>
-      <button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="next()">{{ "Next"|t }}</button>
+      <button
+        type="button"
+        class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50"
+        @click="next()"
+      >
+        {{ "Next" | t }}
+      </button>
     </div>
   </div>
 </div>
