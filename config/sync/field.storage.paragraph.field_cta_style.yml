@@ -17,6 +17,9 @@ settings:
     -
       value: secondary
       label: Secondary
+    -
+      value: tertiary
+      label: Tertiary
   allowed_values_function: ''
 module: options
 locked: false

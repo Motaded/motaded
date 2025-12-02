@@ -10,6 +10,7 @@ dependencies:
     - paragraphs.paragraphs_type.banner_sm
     - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
+    - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.steps
     - paragraphs.paragraphs_type.view_block
   module:
@@ -28,6 +29,7 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
+      section: section
       banner: banner
       banner_sm: banner_sm
       accordions: accordions
@@ -67,6 +69,12 @@ settings:
       counter:
         weight: -26
         enabled: false
+      cta:
+        weight: 38
+        enabled: false
+      ctas:
+        weight: 39
+        enabled: false
       featured_card:
         weight: -25
         enabled: false
@@ -90,7 +98,7 @@ settings:
         enabled: false
       section:
         weight: -28
-        enabled: false
+        enabled: true
       sectors:
         weight: -20
         enabled: false

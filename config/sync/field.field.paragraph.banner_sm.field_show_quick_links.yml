@@ -1,0 +1,23 @@
+uuid: 705237e7-2d6b-4a77-9488-00297b4b1448
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_show_quick_links
+    - paragraphs.paragraphs_type.banner_sm
+id: paragraph.banner_sm.field_show_quick_links
+field_name: field_show_quick_links
+entity_type: paragraph
+bundle: banner_sm
+label: 'No image with content center'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

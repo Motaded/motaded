@@ -1,18 +1,18 @@
-uuid: 61168bcf-294a-47a0-9e68-ebb0d545da4d
+uuid: 09d80f04-fbe5-47a5-821a-005c411c2f20
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.paragraph.field_paragraphs
+    - paragraphs.paragraphs_type.cta
     - paragraphs.paragraphs_type.pricing
-    - paragraphs.paragraphs_type.section
   module:
     - entity_reference_revisions
-id: paragraph.section.field_paragraphs
+id: paragraph.pricing.field_paragraphs
 field_name: field_paragraphs
 entity_type: paragraph
-bundle: section
-label: 'Pricing cards'
+bundle: pricing
+label: CTA
 description: ''
 required: false
 translatable: false
@@ -22,7 +22,7 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      pricing: pricing
+      cta: cta
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -32,78 +32,78 @@ settings:
         weight: 25
         enabled: false
       advantages:
-        weight: -43
+        weight: 17
         enabled: false
       areas_of_work:
-        weight: -42
+        weight: 18
         enabled: false
       banner:
-        weight: -41
+        weight: 19
         enabled: false
       banner_sm:
-        weight: -37
+        weight: 29
         enabled: false
       business_activity:
-        weight: -40
+        weight: 20
         enabled: false
       card:
-        weight: -39
+        weight: 21
         enabled: false
       cards:
-        weight: 33
+        weight: 36
         enabled: false
       counter:
-        weight: -38
+        weight: 22
         enabled: false
       cta:
         weight: 38
-        enabled: false
+        enabled: true
       ctas:
         weight: 39
         enabled: false
       featured_card:
-        weight: -32
+        weight: 23
         enabled: false
       featured_contents:
-        weight: -34
+        weight: 34
         enabled: false
       itc_card:
-        weight: -31
+        weight: 24
         enabled: false
       notes:
-        weight: 39
+        weight: 43
         enabled: false
       objectives:
-        weight: -30
+        weight: 25
         enabled: false
       pricing:
-        weight: -29
-        enabled: true
+        weight: 26
+        enabled: false
       requirements:
-        weight: -28
+        weight: 27
         enabled: false
       section:
-        weight: -27
+        weight: 28
         enabled: false
       sectors:
-        weight: -26
+        weight: 29
         enabled: false
       step:
-        weight: -35
+        weight: 41
         enabled: false
       steps:
-        weight: -36
+        weight: 42
         enabled: false
       steps_to_obtain:
-        weight: -25
+        weight: 30
         enabled: false
       top_information:
-        weight: -24
+        weight: 31
         enabled: false
       view_block:
-        weight: -33
+        weight: 45
         enabled: false
       work_tracks:
-        weight: -23
+        weight: 32
         enabled: false
 field_type: entity_reference_revisions
