@@ -44,3 +44,4 @@ hidden:
   field_media: true
   field_meta: true
   langcode: true
+  search_api_excerpt: true

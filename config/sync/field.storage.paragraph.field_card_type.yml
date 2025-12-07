@@ -22,10 +22,16 @@ settings:
       label: 'Simple text card - Unequal height'
     -
       value: image_with_text_wrapper
-      label: 'image with text wrapper'
+      label: 'Image with text wrapper'
     -
       value: cta_block
       label: 'Cta Block'
+    -
+      value: gdp_contribution
+      label: 'GDP Contribution'
+    -
+      value: chips_card
+      label: 'Chips cards'
   allowed_values_function: ''
 module: options
 locked: false

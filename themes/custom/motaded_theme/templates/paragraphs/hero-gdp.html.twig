@@ -1,0 +1,36 @@
+<div class="">
+  <div class="flex items-center justify-between">
+    <div>
+      {{ content.field_body.0 }}
+    </div>
+    {% if content.field_title.0 is not empty %}
+      <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-primary-700">{{ content.field_title.0 }}</span
+    {% endif %}
+    >
+  </div>
+  <div class="mt-8 space-y-4">
+    {% for key, item in content.field_paragraphs %}
+      {% set para = item['#paragraph'] %}
+      {% if para is not empty %}
+        <div
+          class="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50/70 px-4 py-3"
+        >
+          <div>
+            <p class="text-sm font-semibold text-gray-900">
+              {{ para.field_title.value }}
+            </p>
+            <p class="text-xs text-gray-500">
+              {{ para.field_sub_title.value }}
+            </p>
+          </div>
+          <p class="text-lg font-bold text-gray-900">{{ para.field_body.value|raw }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+    
+  </div>
+  <p class="mt-6 text-xs text-gray-500">
+    {{ content.field_notes|render|striptags }}
+  </p>
+</div>
+    

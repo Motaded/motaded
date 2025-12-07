@@ -1,0 +1,19 @@
+uuid: ed9c0e9a-55ce-467a-9852-a2d5f3ed89af
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_chips
+    - paragraphs.paragraphs_type.card
+id: paragraph.card.field_chips
+field_name: field_chips
+entity_type: paragraph
+bundle: card
+label: Chips
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

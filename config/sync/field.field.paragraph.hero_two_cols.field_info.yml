@@ -1,0 +1,24 @@
+uuid: 6d786a7b-a30b-4e3f-8ab8-e96f1ee0e94f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_info
+    - filter.format.full_html
+    - paragraphs.paragraphs_type.hero_two_cols
+  module:
+    - text
+id: paragraph.hero_two_cols.field_info
+field_name: field_info
+entity_type: paragraph
+bundle: hero_two_cols
+label: Info
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+field_type: text_long
