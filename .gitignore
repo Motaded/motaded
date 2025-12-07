@@ -50,3 +50,5 @@ motaded.com.sa/
 .DS_Store
 /.DS_Store
 */.DS_Store
+.well-known/
+.well-known
