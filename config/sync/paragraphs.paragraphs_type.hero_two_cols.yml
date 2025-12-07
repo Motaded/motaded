@@ -1,0 +1,10 @@
+uuid: 517f5806-72ef-4f2e-93e3-055b4a864048
+langcode: en
+status: true
+dependencies: {  }
+id: hero_two_cols
+label: 'Hero two columns'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -1,9 +1,9 @@
-uuid: 99c164c7-03ea-440c-a2ee-5f4ec218a861
+uuid: 19ce71f3-7a4b-42d0-b7b5-90efa1de2839
 langcode: en
 status: true
 dependencies:
   config:
-    - paragraphs.paragraphs_type.notes
+    - paragraphs.paragraphs_type.hero_two_cols
   module:
     - content_translation
 third_party_settings:
@@ -11,8 +11,8 @@ third_party_settings:
     enabled: true
     bundle_settings:
       untranslatable_fields_hide: '0'
-id: paragraph.notes
+id: paragraph.hero_two_cols
 target_entity_type_id: paragraph
-target_bundle: notes
+target_bundle: hero_two_cols
 default_langcode: site_default
 language_alterable: true

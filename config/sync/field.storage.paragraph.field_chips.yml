@@ -1,0 +1,21 @@
+uuid: 1d54b215-6749-43ef-8f79-7071e6fbd95d
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_chips
+field_name: field_chips
+entity_type: paragraph
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

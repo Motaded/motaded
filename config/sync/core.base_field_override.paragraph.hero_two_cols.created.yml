@@ -1,17 +1,17 @@
-uuid: 072cf2e2-0398-4163-a8ef-b871c2bf7af1
+uuid: 470cee0e-d6c8-466e-afd9-246547b96ba1
 langcode: en
 status: true
 dependencies:
   config:
-    - paragraphs.paragraphs_type.notes
-id: paragraph.notes.created
+    - paragraphs.paragraphs_type.hero_two_cols
+id: paragraph.hero_two_cols.created
 field_name: created
 entity_type: paragraph
-bundle: notes
+bundle: hero_two_cols
 label: 'Authored on'
 description: 'The time that the Paragraph was created.'
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }

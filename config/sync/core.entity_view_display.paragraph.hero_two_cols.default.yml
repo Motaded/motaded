@@ -1,41 +1,50 @@
-uuid: 0d156373-e495-4138-a3dd-74a3f7a26aa8
+uuid: 74f3f019-d396-45c2-a3d5-3346ff71739c
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.card.field_body
-    - field.field.paragraph.card.field_chips
-    - field.field.paragraph.card.field_link
-    - field.field.paragraph.card.field_media
-    - field.field.paragraph.card.field_sub_title
-    - field.field.paragraph.card.field_title
-    - paragraphs.paragraphs_type.card
+    - field.field.paragraph.hero_two_cols.field_body
+    - field.field.paragraph.hero_two_cols.field_cards
+    - field.field.paragraph.hero_two_cols.field_info
+    - field.field.paragraph.hero_two_cols.field_links
+    - field.field.paragraph.hero_two_cols.field_sub_title
+    - field.field.paragraph.hero_two_cols.field_title
+    - paragraphs.paragraphs_type.hero_two_cols
   module:
+    - entity_reference_revisions
     - link
     - text
-id: paragraph.card.default
+id: paragraph.hero_two_cols.default
 targetEntityType: paragraph
-bundle: card
+bundle: hero_two_cols
 mode: default
 content:
   field_body:
     type: text_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 0
     region: content
-  field_chips:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_link:
-    type: link
+  field_cards:
+    type: entity_reference_revisions_entity_view
     label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_info:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_links:
+    type: link
+    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -43,16 +52,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 2
-    region: content
-  field_media:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   field_sub_title:
     type: string

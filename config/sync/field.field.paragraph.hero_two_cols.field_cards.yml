@@ -1,0 +1,117 @@
+uuid: e3fc07a9-6314-4d41-be94-25aa96a715fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cards
+    - paragraphs.paragraphs_type.cards
+    - paragraphs.paragraphs_type.hero_two_cols
+    - paragraphs.paragraphs_type.webform
+  module:
+    - entity_reference_revisions
+id: paragraph.hero_two_cols.field_cards
+field_name: field_cards
+entity_type: paragraph
+bundle: hero_two_cols
+label: Contents
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      cards: cards
+      webform: webform
+    negate: 0
+    target_bundles_drag_drop:
+      accordion:
+        weight: 29
+        enabled: false
+      accordions:
+        weight: 30
+        enabled: false
+      advantages:
+        weight: 31
+        enabled: false
+      areas_of_work:
+        weight: 32
+        enabled: false
+      banner:
+        weight: 33
+        enabled: false
+      banner_sm:
+        weight: 34
+        enabled: false
+      business_activity:
+        weight: 35
+        enabled: false
+      card:
+        weight: 36
+        enabled: false
+      cards:
+        weight: 37
+        enabled: true
+      counter:
+        weight: 38
+        enabled: false
+      cta:
+        weight: 39
+        enabled: false
+      ctas:
+        weight: 40
+        enabled: false
+      featured_card:
+        weight: 41
+        enabled: false
+      featured_contents:
+        weight: 42
+        enabled: false
+      hero_two_cols:
+        weight: 43
+        enabled: false
+      itc_card:
+        weight: 44
+        enabled: false
+      notes:
+        weight: 45
+        enabled: false
+      objectives:
+        weight: 46
+        enabled: false
+      pricing:
+        weight: 47
+        enabled: false
+      requirements:
+        weight: 48
+        enabled: false
+      section:
+        weight: 49
+        enabled: false
+      sectors:
+        weight: 50
+        enabled: false
+      step:
+        weight: 51
+        enabled: false
+      steps:
+        weight: 52
+        enabled: false
+      steps_to_obtain:
+        weight: 53
+        enabled: false
+      top_information:
+        weight: 54
+        enabled: false
+      view_block:
+        weight: 55
+        enabled: false
+      webform:
+        weight: 57
+        enabled: true
+      work_tracks:
+        weight: 56
+        enabled: false
+field_type: entity_reference_revisions
