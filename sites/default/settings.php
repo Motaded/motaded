@@ -889,9 +889,7 @@ $config['system.performance']['js']['preprocess'] = TRUE;
  * Keep this code block at the end of this file to take full effect.
  */
 #
- if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-   include $app_root . '/' . $site_path . '/settings.local.php';
- }
+
 $databases['default']['default'] = array (
   'database' => 'motadedc_drupal_db',
   'username' => 'motadedc_elie',
@@ -938,4 +936,6 @@ if (isset($_SERVER['REQUEST_URI']) && str_starts_with($_SERVER['REQUEST_URI'], '
   header('X-Robots-Tag: noindex, nofollow, noarchive');
 }
 
-
+ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+   include $app_root . '/' . $site_path . '/settings.local.php';
+ }
