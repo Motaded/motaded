@@ -17,15 +17,6 @@ display:
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
           text_input_required: 'أدخل بعض الكلمات الرئيسية للبحث.'
-      pager:
-        options:
-          tags:
-            previous: '‹ السابقة'
-            next: 'التالية ›'
-          expose:
-            items_per_page_label: 'العناصر لكل صفحة'
-            items_per_page_options_all_label: '- الكل -'
-            offset_label: الإزاحة
       title: 'محتوى البحث'
       header:
         result:

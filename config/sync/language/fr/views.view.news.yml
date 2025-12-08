@@ -5,3 +5,19 @@ display:
       fields:
         view_node:
           text: 'En savoir plus'
+  page_1:
+    display_options:
+      title: 'Derniers articles'
+      empty:
+        area:
+          content:
+            value: '<div class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center" role="status"><h2 class="text-xl font-semibold text-gray-900 m-0">No articles found</h2><p class="text-sm text-gray-600 m-0" x-data="{q : &apos;[current-page:query:search]&apos;}"><span>We couldn’t find any results</span>&nbsp;<template x-if="q"></template> <span>matching your filters.</span></p><p class="text-xs text-gray-500 m-0">Try adjusting your search or clearing the filters to discover more articles.</p></div>'
+            format: full_html
+  page_2:
+    display_options:
+      empty:
+        area:
+          content:
+            value: '<div class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center" role="status"><h2 class="text-xl font-semibold text-gray-900 m-0">No articles found</h2><p class="text-sm text-gray-600 m-0" x-data="{q : &apos;[current-page:query:search]&apos;}"><span>We couldn’t find any results</span>&nbsp;<template x-if="q"></template> <span>matching your filters.</span></p><p class="text-xs text-gray-500 m-0">Try adjusting your search or clearing the filters to discover more articles.</p></div>'
+            format: full_html
+      title: 'Dernières nouvelles'

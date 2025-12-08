@@ -102,7 +102,7 @@
                 "modules/contrib/webform/composer.libraries.json"
             ]
         },
-        "composer-exit-on-patch-failure": true,
+        "composer-exit-on-patch-failure": false,
         "patchLevel": {
             "drupal/core": "-p2",
             "drupal/contrib-module1": "-p1",
