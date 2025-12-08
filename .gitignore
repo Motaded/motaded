@@ -53,3 +53,5 @@ motaded.com.sa/
 .well-known/
 .well-known
 error_log
+composer-setup.php
+composer.phar
