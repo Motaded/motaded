@@ -1,0 +1,21 @@
+elements: |
+  company_name:
+    '#title': 'اسم الشركة'
+    '#placeholder': 'شركة مثال'
+  primary_sector:
+    '#title': 'القطاع الرئيسي'
+    '#options':
+      'Healthcare & Life Sciences': 'الصحة وعلوم الحياة'
+      'Tourism & Quality of Life': 'السياحة وجودة الحياة'
+      'Transport & Logistics': 'النقل والخدمات اللوجستية'
+      'Information & Communication Technology': 'تقنية المعلومات والاتصالات'
+      Energy: الطاقة
+      'Industrial & Manufacturing': 'الصناعة والتصنيع'
+  work_email:
+    '#title': 'البريد الإلكتروني'
+  how_can_we_help:
+    '#title': 'كيف يمكننا المساعدة؟'
+    '#placeholder': 'اذكر خطتك الزمنية ومؤشرات النجاح والدعم المطلوب'
+  actions:
+    '#submit__label': 'طلب استشارة'
+title: '                   طلب استشارة                 '

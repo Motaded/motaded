@@ -1,9 +1,0 @@
-display:
-  default:
-    display_options:
-      title: 'Actividades comerciales en Arabia Saudita'
-      header:
-        area:
-          content:
-            value: '<div class="titleHead">Actividades comerciales en Arabia Saudita</div><p>Ya sea que sea un emprendedor que busca expandirse o un nuevo inversionista que explora oportunidades, decidir cuál es la actividad comercial adecuada es clave. Su elección guiará qué licencias necesita y las regulaciones que seguirá. A continuación, presentamos un vistazo a algunas de las actividades comerciales más comunes que podría considerar:</p>'
-            format: full_html
