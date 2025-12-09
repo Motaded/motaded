@@ -1,9 +1,0 @@
-display:
-  default:
-    display_options:
-      title: 'تعرف على الفريق'
-      header:
-        area:
-          content:
-            value: '<p>تعرف على الفريق</p>'
-            format: full_html
