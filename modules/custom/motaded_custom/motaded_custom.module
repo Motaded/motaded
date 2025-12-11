@@ -47,4 +47,27 @@ function motaded_custom_block_access(Block $block, $operation, AccountInterface 
   return AccessResult::neutral();
 }
 
+/**
+ * Implements hook_entity_access().
+ */
+function motaded_custom_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  if ($entity->getEntityTypeId() == 'paragraph') {
+    if ($operation == 'view') {
+      // Get the current language.
+      $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+      // Check if the paragraph has a translation in the current language.
+      if ($entity->hasTranslation($current_language)) {
+        // Get the translation.
+        $translation = $entity->getTranslation($current_language);
+
+        // Check if the translation is not published.
+        if (!$translation->isPublished()) {
+          return \Drupal\Core\Access\AccessResult::forbidden();
+        }
+      }
+    }
+  }
+  return \Drupal\Core\Access\AccessResult::neutral();
+}
 
