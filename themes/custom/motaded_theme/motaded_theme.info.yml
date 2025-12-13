@@ -1,8 +1,8 @@
 name: Motaded theme
 type: theme
-description: ''
+description: 'Launch your business website fast with the Muin Drupal theme. Built by <a href="https://banafsijy.com" target="_blank">Banafsijy.com</a>.'
 core_version_requirement: ^11
-'base theme': false
+"base theme": false
 version: 1.0.0
 libraries:
   - motaded_theme/base
@@ -28,16 +28,16 @@ libraries-override:
     css:
       component:
         css/components/hidden.module.css: css/hidden.css
-generator: 'starterkit_theme:11.2.5'
+generator: "starterkit_theme:11.2.5"
 
 regions:
-  main_menu: 'Main menu'
-  menu_mobile: 'Mobile menu'
+  main_menu: "Main menu"
+  menu_mobile: "Mobile menu"
   secondary_menu: "Secondary menu"
   breadcrumb: Breadcrumbs
-  content: 'Main content'
-  below_content: 'Below content'
-  sidebar_first: 'Sidebar first'
-  sidebar_second: 'Sidebar second'
+  content: "Main content"
+  below_content: "Below content"
+  sidebar_first: "Sidebar first"
+  sidebar_second: "Sidebar second"
   footer: Footer
   footer_bar: Bottom bar
