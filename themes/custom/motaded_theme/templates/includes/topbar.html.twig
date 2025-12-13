@@ -1,178 +1,58 @@
 <!-- Top Verification Bar -->
-<div
-  x-data="{ open:false, scale:0 }"
-  class="bg-gray-100 py-2 w-full border-b border-blueGray-200 transition-all duration-300"
->
-  <div class="max-w-[1320px] mx-auto px-4">
-    <!-- ROW -->
-    <div class="flex justify-between items-center gap-3 flex-wrap">
-      <!-- LEFT: flag + label + how to verify -->
-      <div class="flex items-center gap-4 hidden">
-        <img
-          alt="Saudi flag"
-          width="32"
-          height="23"
-          src="https://my.gov.sa/_next/static/media/icon_saudi.b4b403e4.svg"
-        />
-        <div class="flex items-center gap-3 flex-wrap">
-          <p class="text-sm font-medium mb-0">Official Motaded website</p>
+<div x-data="{ open:false, scale:0 }" class="bg-gray-100 py-2 w-full border-b border-blueGray-200 transition-all duration-300">
+	<div
+		class="max-w-[1320px] mx-auto px-4">
+		<!-- ROW -->
+		<div
+			class="flex justify-between items-center gap-3 flex-wrap">
+			<!-- LEFT: flag + label + how to verify -->
+			<div class="flex items-center gap-4 hidden">
+				<img alt="Saudi flag" width="32" height="23" src="https://my.gov.sa/_next/static/media/icon_saudi.b4b403e4.svg"/>
+				<div class="flex items-center gap-3 flex-wrap">
+					<p class="text-sm font-medium mb-0">Official Motaded website</p>
 
-          <!-- How to verify toggle -->
-          <button
-            type="button"
-            class="inline-flex items-center gap-2 text-primary-600 hover:underline text-sm"
-            @click="open=!open"
-            :aria-expanded="open"
-            aria-controls="verify-panel"
-          >
-            How to verify
-            <img
-              src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
-              alt="toggle icon"
-              class="transition"
-              :class="open ? 'rotate-180' : ''"
-            />
-          </button>
-        </div>
-      </div>
-      <!-- Date -->
-      <div class="flex items-center gap-2">
-        <img
-          src="/themes/custom/motaded_theme/img/icon-calender.svg"
-          alt="calendar icon"
-          class="h-5 w-5"
-        />
-        <p class="text-sm font-normal black max-sm:!text-xs leading-[1.6] mb-0">
-          {{ "now"|date("l, F j, Y") }}
-        </p>
-      </div>
+					<!-- How to verify toggle -->
+					<button type="button" class="inline-flex items-center gap-2 text-primary-600 hover:underline text-sm" @click="open=!open" :aria-expanded="open" aria-controls="verify-panel">
+						How to verify
+						<img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" alt="toggle icon" class="transition" :class="open ? 'rotate-180' : ''"/>
+					</button>
+				</div>
+			</div>
+			<!-- Date -->
+			<div class="flex items-center gap-2">
+				<img src="/themes/custom/motaded_theme/img/icon-calender.svg" alt="calendar icon" class="h-5 w-5"/>
+				<p class="text-sm font-normal black max-sm:!text-xs leading-[1.6] mb-0">
+					{{ "now"|date("l, F j, Y") }}
+				</p>
+			</div>
 
-      <!-- RIGHT: date + a11y controls + beta -->
-      <div class="flex items-center gap-3 flex-wrap">
+			<!-- RIGHT: date + a11y controls + beta -->
+			<div
+				class="flex items-center gap-3 flex-wrap">
 
-        <!-- A11y: increase font -->
-        <div data-tip="Increase font size">
-          <button
-            type="button"
-            class="align-middle btn-ghost btn-xs rounded-full text-primary"
-            aria-label="Increase font size"
-            @click="scale = Math.min(scale + 1, 4); document.documentElement.style.fontSize = (100 + scale*6) + '%';"
-          >
-            <img
-              src="/themes/custom/motaded_theme/img/icon-increase.svg"
-              alt="increase font"
-              role="none"
-            />
-          </button>
-        </div>
+				<!-- A11y: increase font -->
+				<div data-tip="Increase font size">
+					<button type="button" class="align-middle btn-ghost btn-xs rounded-full text-primary" aria-label="Increase font size" @click="scale = Math.min(scale + 1, 4); document.documentElement.style.fontSize = (100 + scale*6) + '%';">
+						<img src="/themes/custom/motaded_theme/img/icon-increase.svg" alt="increase font" role="none"/>
+					</button>
+				</div>
 
-        <!-- A11y: decrease font -->
-        <div data-tip="Decrease font size">
-          <button
-            type="button"
-            class="align-middle btn-ghost btn-xs rounded-full text-primary"
-            aria-label="Decrease font size"
-            @click="scale = Math.max(scale - 1, -3); document.documentElement.style.fontSize = (100 + scale*6) + '%';"
-          >
-            <img
-              src="/themes/custom/motaded_theme/img/icon-decrease.svg"
-              alt="decrease font"
-              role="none"
-            />
-          </button>
-        </div>
+				<!-- A11y: decrease font -->
+				<div data-tip="Decrease font size">
+					<button type="button" class="align-middle btn-ghost btn-xs rounded-full text-primary" aria-label="Decrease font size" @click="scale = Math.max(scale - 1, -3); document.documentElement.style.fontSize = (100 + scale*6) + '%';">
+						<img src="/themes/custom/motaded_theme/img/icon-decrease.svg" alt="decrease font" role="none"/>
+					</button>
+				</div>
 
-        <!-- A11y: invert colors -->
-        <div data-tip="Invert colors">
-          <button
-            type="button"
-            class="align-middle btn-ghost btn-xs rounded-full text-primary"
-            aria-label="Invert colors"
-            @click="document.documentElement.classList.toggle('invert')"
-          >
-            <img src="/themes/custom/motaded_theme/img/icon-dark-mode.svg" alt="invert colors" />
-          </button>
-        </div>
-      </div>
-    </div>
+				<!-- A11y: invert colors -->
+				<div data-tip="Invert colors">
+					<button type="button" class="align-middle btn-ghost btn-xs rounded-full text-primary" aria-label="Invert colors" @click="document.documentElement.classList.toggle('invert')">
+						<img src="/themes/custom/motaded_theme/img/icon-dark-mode.svg" alt="invert colors"/>
+					</button>
+				</div>
+			</div>
+		</div>
 
-    <!-- VERIFY PANEL -->
-    <div
-      id="verify-panel"
-      x-show="open"
-      x-transition
-      x-cloak
-      class="mt-3 rounded-md border border-base-300 bg-base-100 overflow-hidden"
-    >
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-        <!-- item 1 -->
-        <div class="flex gap-3 items-start">
-          <div
-            class="flex items-center justify-center rounded-full border border-primary-600 text-primary-600 min-w-10 min-h-10"
-          >
-            <img
-              alt="link icon"
-              width="20"
-              height="20"
-              src="/themes/custom/motaded_theme/img/icon-link.svg"
-            />
-          </div>
-          <div class="space-y-2">
-            <p class="font-semibold">
-              Links to official Saudi websites end with
-              <strong class="text-primary-600">.gov.sa</strong>
-            </p>
-            <p class="text-sm mb-0">
-              All links to official government websites in the Kingdom of Saudi
-              Arabia end with <strong>.gov.sa</strong>.
-            </p>
-          </div>
-        </div>
-
-        <!-- item 2 -->
-        <div class="flex gap-3 items-start">
-          <div
-            class="flex items-center justify-center rounded-full border border-primary-600 text-primary-600 min-w-10 min-h-10"
-          >
-            <img
-              alt="lock icon"
-              width="20"
-              height="20"
-              src="/themes/custom/motaded_theme/img/icon-password.svg"
-            />
-          </div>
-          <div class="space-y-2">
-            <p class="font-semibold">
-              Government websites use the
-              <strong class="text-primary-600">HTTPS</strong> protocol for
-              security.
-            </p>
-            <p class="text-sm">
-              Secure websites in Saudi Arabia use <strong>HTTPS</strong> for
-              encryption and protection.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- DGA registration -->
-      <div class="bg-base-100 border-t border-base-300 px-3 py-2">
-        <div class="flex items-center gap-3 flex-wrap">
-          <img alt="DGA logo" width="21" height="21" src="/themes/custom/motaded_theme/img/logo-dga.svg" />
-          <p class="text-sm">
-            Registered with the Digital Government Authority under number:
-          </p>
-          <a
-            class="link link-primary text-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="#"
-          >
-            00000000000
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+	</div>
 </div>
 <!-- // Top Verification Bar -->
