@@ -152,3 +152,8 @@ news-carousel:
   header: true
   js:
     js/news-carousel.js: {}
+
+featured-contents:
+  header: true
+  js:
+    js/featured-contents.js: {}
