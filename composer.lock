@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7221604538b23cb9c64f7db43fd32877",
+    "content-hash": "aff69ed4955e1ceaf9b72e9ff6c8d1f4",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -4240,6 +4240,52 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/redirect_regex",
+            "version": "1.0.0-alpha5",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/redirect_regex.git",
+                "reference": "1.0.0-alpha5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/redirect_regex-1.0.0-alpha5.zip",
+                "reference": "1.0.0-alpha5",
+                "shasum": "108e57bd5b1395e184310b8e7df3572999d7a7df"
+            },
+            "require": {
+                "drupal/core": ">=10",
+                "drupal/redirect": "^1.12"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha5",
+                    "datestamp": "1758812050",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sang Lostrie",
+                    "homepage": "https://www.drupal.org/user/2727459",
+                    "email": "sang.lostrie@gmail.com"
+                }
+            ],
+            "description": "Provides regex-based redirects for Drupal.",
+            "homepage": "https://www.drupal.org/project/redirect_regex",
+            "support": {
+                "source": "https://git.drupalcode.org/project/redirect_regex"
             }
         },
         {
@@ -10908,6 +10954,7 @@
     "stability-flags": {
         "drupal/ckeditor5_font": 10,
         "drupal/conditional_fields": 15,
+        "drupal/redirect_regex": 15,
         "drupal/viewsreference": 10,
         "drupal/webform": 10
     },
