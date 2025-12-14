@@ -1,29 +1,39 @@
-title: Contact
-description: '<p>Basic email contact webform.</p>'
+title: Contactez-nous
 elements: |
+  name:
+    '#title': Prénom
+    '#placeholder': 'Tapez votre prénom'
+  last_name:
+    '#title': 'Nom de famille'
+    '#placeholder': 'Tapez votre nom de famille'
   email:
     '#title': 'Votre e-mail'
+    '#placeholder': 'Tapez votre email'
+    '#pattern_error': 'Veuillez saisir votre adresse courriel officielle. Si vous n''en avez pas, <a href="/fr/contact-us">cliquez ici</a>'
   ph_number:
     '#title': 'Numéro de téléphone'
   subject:
     '#title': Sujette
+    '#placeholder': 'Tapez votre sujet'
     '#test': 'contacter le formulaire Web à partir de[site:name]'
+  category:
+    '#title': Catégorie
+    '#options':
+      general: 'Enquête générale'
+      support: Soutien
+      complaint: Plainte
   message:
     '#test': 'Veuillez ignorer cet e-mail.'
   actions:
     '#submit__label': 'Envoyer un message'
 settings:
   confirmation_message: '<p>Votre message a été envoyé.</p>'
+  confirmation_title: 'Merci — Motaded a bien reçu votre message.'
 handlers:
   email_confirmation:
     label: 'Courriel de confirmation'
     settings:
-      from_name: _default
-      subject: '[webform_submission:values:subject:raw]'
       body: '[webform_submission:values:message:value]'
   email_notification:
     label: 'Notification par courriel'
-    settings:
-      from_name: '[webform_submission:values:name:raw]'
-      subject: '[webform_submission:values:subject:raw]'
-      body: '[webform_submission:values:message:value]'
+    settings: {  }
