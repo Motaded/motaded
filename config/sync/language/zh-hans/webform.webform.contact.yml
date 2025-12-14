@@ -1,15 +1,28 @@
 title: 联络表
-description: '<p>Basic email contact webform.</p>'
 elements: |
   name:
     '#title': 你的名字
+    '#placeholder': 输入您的名字
+  last_name:
+    '#title': 姓
+    '#placeholder': 输入您的姓氏
   email:
     '#title': 您的电子邮件
+    '#placeholder': 输入您的电子邮件
+    '#pattern_error': '请输入您的官方邮箱地址。如果您没有官方邮箱地址，<a href="/contact-us">click here</a>'
   ph_number:
     '#title': 电话号码
   subject:
     '#title': 主题
+    '#placeholder': 输入您的主题
     '#test': '联系网络表格来自 [site:name]'
+  category:
+    '#title': 类别
+    '#options':
+      suggestion: 建议
+      general: 一般查询
+      support: 支持
+      complaint: 抱怨
   message:
     '#title': 信息
     '#test': 请忽略这封电子邮件。
@@ -17,6 +30,7 @@ elements: |
     '#submit__label': 发送消息
 settings:
   confirmation_message: '<p>您的信息已被送出。</p>'
+  confirmation_title: '谢谢——Motaded 已收到您的消息。'
 handlers:
   email_confirmation:
     label: 电子邮件确认
@@ -24,5 +38,4 @@ handlers:
       body: '[webform_submission:values:message:value]'
   email_notification:
     label: 电子邮件通知
-    settings:
-      body: '[webform_submission:values:message:value]'
+    settings: {  }
