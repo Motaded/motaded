@@ -6674,6 +6674,7 @@ html {
     }
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     gap: calc(var(--spacing) * 2);
     overflow: auto;
     padding-block: calc(var(--spacing) * 3);
@@ -7396,7 +7397,10 @@ table {
       margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
       margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
     }
-    input[type="text"], input[type="email"], select, textarea {
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
       border-radius: var(--radius-xl);
       background-color: transparent;
       padding-block: calc(var(--spacing) * 2.5) !important;

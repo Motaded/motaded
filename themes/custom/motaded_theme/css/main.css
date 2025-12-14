@@ -173,7 +173,7 @@ html {
     input {
       display: none;
     }
-    @apply relative flex gap-2 overflow-auto py-3 after:content-[''] after:absolute after:left-1/2 after:bottom-3 after:-translate-x-1/2 after:w-full after:h-[3px] after:bg-gray-200 after:rounded-full;
+    @apply relative flex flex-wrap gap-2 overflow-auto py-3 after:content-[''] after:absolute after:left-1/2 after:bottom-3 after:-translate-x-1/2 after:w-full after:h-[3px] after:bg-gray-200 after:rounded-full;
 
     .form-type-radio {
       /* label{ */
@@ -700,9 +700,7 @@ table {
   }
 }
 
-
 .hero-two-cols {
-
 }
 .paragraph--type--webform {
   p.text-4xl {
@@ -710,8 +708,11 @@ table {
   }
   form {
     @apply mt-8 space-y-4;
-    
-    input[type="text"], input[type="email"], select, textarea {
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
       @apply bg-transparent rounded-xl !py-2.5;
     }
     input[type="text"]:focus-visible,
