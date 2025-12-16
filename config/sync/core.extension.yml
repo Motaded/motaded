@@ -47,6 +47,7 @@ module:
   like_dislike: 0
   link: 0
   locale: 0
+  mailer_transport: 0
   media: 0
   media_library: 0
   menu_link_content: 0
@@ -73,9 +74,9 @@ module:
   shortcut: 0
   simple_sitemap: 0
   simple_sitemap_engines: 0
-  smtp: 0
   svg_image: 0
   svg_image_field: 0
+  symfony_mailer: 0
   system: 0
   taxonomy: 0
   text: 0

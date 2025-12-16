@@ -1,0 +1,18 @@
+uuid: 0da4d051-b04d-477f-bd48-c1104a2f7aef
+langcode: en
+status: true
+dependencies: {  }
+id: smtp
+label: SMTP
+plugin: smtp
+configuration:
+  user: email@gmail.com
+  pass: password
+  host: smtp.gmail.com
+  port: 465
+  query:
+    verify_peer: true
+    local_domain: ''
+    restart_threshold: null
+    restart_threshold_sleep: null
+    ping_threshold: null

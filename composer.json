@@ -67,6 +67,7 @@
         "drupal/smtp": "^1.4",
         "drupal/svg_image": "^3.2",
         "drupal/svg_image_field": "^2.3",
+        "drupal/symfony_mailer": "^1.6",
         "drupal/token_filter": "^2.2",
         "drupal/tus": "^2.1",
         "drupal/twig_tweak": "^3.4",
