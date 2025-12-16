@@ -1,4 +1,9 @@
+settings:
+  confirmation_title: '谢谢——Motaded 已收到您的消息。'
+  confirmation_message: '<p>您的信息已被送出。</p>'
+  confirmation_url: /contact-us/success
 title: 联络表
+description: '<p>Basic email contact webform.</p>'
 elements: |
   name:
     '#title': 你的名字
@@ -28,9 +33,6 @@ elements: |
     '#test': 请忽略这封电子邮件。
   actions:
     '#submit__label': 发送消息
-settings:
-  confirmation_message: '<p>您的信息已被送出。</p>'
-  confirmation_title: '谢谢——Motaded 已收到您的消息。'
 handlers:
   email_confirmation:
     label: 电子邮件确认
@@ -38,4 +40,5 @@ handlers:
       body: '[webform_submission:values:message:value]'
   email_notification:
     label: 电子邮件通知
-    settings: {  }
+    settings:
+      body: '[webform_submission:values:message:value]'

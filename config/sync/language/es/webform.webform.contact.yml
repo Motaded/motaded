@@ -1,4 +1,9 @@
+settings:
+  confirmation_title: 'Gracias — Motaded recibió tu mensaje.'
+  confirmation_message: '<p>Su mensaje ha sido enviado.</p>'
+  confirmation_url: /contact-us/success
 title: Contacto
+description: '<p>Basic email contact webform.</p>'
 elements: |
   name:
     '#title': 'Su nombre'
@@ -28,9 +33,6 @@ elements: |
     '#test': 'Por favor ignore este correo electrónico.'
   actions:
     '#submit__label': 'enviar mensaje'
-settings:
-  confirmation_message: '<p>Su mensaje ha sido enviado.</p>'
-  confirmation_title: 'Gracias — Motaded recibió tu mensaje.'
 handlers:
   email_confirmation:
     label: 'Confirmación por correo electrónico'
@@ -38,4 +40,5 @@ handlers:
       body: '[webform_submission:values:message:value]'
   email_notification:
     label: 'Aviso por correo electrónico'
-    settings: {  }
+    settings:
+      body: '[webform_submission:values:message:value]'

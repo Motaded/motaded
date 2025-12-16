@@ -1,4 +1,9 @@
+settings:
+  confirmation_title: 'Merci — Motaded a bien reçu votre message.'
+  confirmation_message: '<p>Votre message a été envoyé.</p>'
+  confirmation_url: /contact-us/success
 title: Contactez-nous
+description: '<p>Basic email contact webform.</p>'
 elements: |
   name:
     '#title': Prénom
@@ -26,14 +31,16 @@ elements: |
     '#test': 'Veuillez ignorer cet e-mail.'
   actions:
     '#submit__label': 'Envoyer un message'
-settings:
-  confirmation_message: '<p>Votre message a été envoyé.</p>'
-  confirmation_title: 'Merci — Motaded a bien reçu votre message.'
 handlers:
   email_confirmation:
     label: 'Courriel de confirmation'
     settings:
+      from_name: _default
+      subject: '[webform_submission:values:subject:raw]'
       body: '[webform_submission:values:message:value]'
   email_notification:
     label: 'Notification par courriel'
-    settings: {  }
+    settings:
+      from_name: '[webform_submission:values:name:raw]'
+      subject: '[webform_submission:values:subject:raw]'
+      body: '[webform_submission:values:message:value]'
