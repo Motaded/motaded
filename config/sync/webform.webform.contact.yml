@@ -285,7 +285,7 @@ handlers:
       to_options: {  }
       bcc_mail: ''
       bcc_options: {  }
-      cc_mail: 'rowida.mahmoud@motaded.com.sa, info@motaded.com.sa, mukhlid.alqahtani@motaded.com.sa'
+      cc_mail: 'rowida.mahmoud@motaded.com.sa, info@motaded.com.sa, mukhlid.alqahtani@motaded.com.sa, noreply@motaded.com.sa'
       cc_options: {  }
       from_mail: _default
       from_options: {  }

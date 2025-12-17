@@ -1,3 +1,4 @@
+label: Redirect
 display:
   default:
     display_title: 主
@@ -56,5 +57,6 @@ display:
         language:
           expose:
             label: 原始语言
+      title: Redirect
   page_1:
     display_title: 页面

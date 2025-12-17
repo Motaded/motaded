@@ -1,3 +1,4 @@
+label: Redirect
 display:
   default:
     display_title: Máster
@@ -37,7 +38,10 @@ display:
           expose:
             label: Para
         status_code:
+          expose:
+            label: 'Status code'
           group_info:
+            label: 'Status code'
             group_items:
               1:
                 title: '300 Múltiples posibilidades'
@@ -56,5 +60,6 @@ display:
         language:
           expose:
             label: 'Lenguaje original'
+      title: Redirect
   page_1:
     display_title: Página
