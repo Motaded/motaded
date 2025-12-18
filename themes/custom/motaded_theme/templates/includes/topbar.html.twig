@@ -10,19 +10,6 @@
 		<!-- ROW -->
 		<div
 			class="flex justify-between items-center gap-3 flex-wrap">
-			<!-- LEFT: flag + label + how to verify -->
-			<div class="flex items-center gap-4 hidden">
-				<img alt="Saudi flag" width="32" height="23" src="https://my.gov.sa/_next/static/media/icon_saudi.b4b403e4.svg"/>
-				<div class="flex items-center gap-3 flex-wrap">
-					<p class="text-sm font-medium mb-0">Official Motaded website</p>
-
-					<!-- How to verify toggle -->
-					<button type="button" class="inline-flex items-center gap-2 text-primary-600 hover:underline text-sm" @click="open=!open" :aria-expanded="open" aria-controls="verify-panel">
-						How to verify
-						<img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" alt="toggle icon" class="transition" :class="open ? 'rotate-180' : ''"/>
-					</button>
-				</div>
-			</div>
 			<!-- Date -->
 			<div class="flex items-center gap-2">
 				<img src="/themes/custom/motaded_theme/img/icon-calender.svg" alt="calendar icon" class="h-5 w-5"/>
