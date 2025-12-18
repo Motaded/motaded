@@ -1,3 +1,8 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+
 <header
 	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null }" class="sticky top-0 z-[201] h-[91px] bg-white border-b border-gray-200" @keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null">
 	<!-- Desktop -->
@@ -30,18 +35,8 @@
 					</div>
 
 					<!-- Language -->
-
 					<span class="flex justify-center px-0">
-						<div
-							class="flex gap-1.5 items-center">
-							{# <div class="hidden md:block">
-														                    <img
-														                      alt="language"
-														                      width="22"
-														                      height="22"
-														                      src="/themes/custom/motaded_theme/img/icon-lang.svg"
-														                    />
-														                  </div> #}
+						<div class="flex gap-1.5 items-center">
 							{{ page.secondary_menu }}
 						</div>
 					</span>
@@ -68,14 +63,7 @@
 				</a>
 
 				<span class="flex justify-center px-0">
-					<div
-						class="flex gap-1.5 items-center">
-						{# <img
-												                  alt="language"
-												                  width="22"
-												                  height="22"
-												                  src="/themes/custom/motaded_theme/img/icon-lang.svg"
-												                /> #}
+					<div class="flex gap-1.5 items-center">
 						{{ page.secondary_menu }}
 					</div>
 				</a>
@@ -117,14 +105,7 @@
 						<img alt="search" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
 						<span class="ml-2">{{ "Search"|t }}</span>
 					</a>
-					<span
-						class="inline-flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100">
-						{# <img
-												                  alt="language"
-												                  width="18"
-												                  height="18"
-												                  src="/themes/custom/motaded_theme/img/icon-lang.svg"
-												                /> #}
+					<span class="inline-flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100">
 						{{ page.secondary_menu }}
 					</a>
 				</div>

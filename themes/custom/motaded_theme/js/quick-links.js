@@ -1,3 +1,8 @@
+/*
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+*/
+
 function quickLinks() {
   const article = document.getElementById("block-motaded-theme-content");
   let headings = article.querySelectorAll('h2');

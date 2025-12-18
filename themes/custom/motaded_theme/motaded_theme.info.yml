@@ -4,6 +4,8 @@ description: 'Launch your business website fast with the Muin Drupal theme. Buil
 core_version_requirement: ^11
 "base theme": false
 version: 1.0.0
+project_license: "Muin Theme © Banafsijy – Single Project License"
+project_owner: "Banafsijy"
 libraries:
   - motaded_theme/base
   - motaded_theme/messages
