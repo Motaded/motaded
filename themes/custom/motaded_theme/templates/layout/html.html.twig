@@ -45,30 +45,48 @@
 			<css-placeholder token="{{ placeholder_token }}">
 				<js-placeholder token="{{ placeholder_token }}">
 
-				<link rel="preload" href="/sites/default/files/2025-11/stepBg.webp" as="image" type="image/webp">
+				<link rel="preload" href="/sites/default/files/2025-11/stepBg.webp" as="image" type="image/webp" fetchpriority="high">
 
-					<!-- Google Tag Manager -->
-					 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-					new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-					j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-					'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-					})(window,document,'script','dataLayer','GTM-NBFPBC74');</script>
-					<!-- End Google Tag Manager -->
 
-					<!-- Google Tag Manager (noscript) -->
-						<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NBFPBC74" height="0" width="0" style="display:none;visibility:hidden"> </iframe>
-					</noscript>
-					<!-- End Google Tag Manager (noscript) -->
+			<!-- Google Tag Manager (delayed & optimized) -->
+<script>
+(function (w, d, l, i) {
+  w[l] = w[l] || [];
+  w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
 
-				<!--  Google analytics -->
-					 <script async src="https://www.googletagmanager.com/gtag/js?id=G-26C7XWD0MN"></script>
-					 <script>
-					    window.dataLayer = window.dataLayer || [];
-					    function gtag(){dataLayer.push(arguments);}
-					    gtag('js', new Date());
-					    gtag('config', 'G-26C7XWD0MN');
-					  </script>
-					<!--  Google analytics end -->
+  var loaded = false;
+  function loadGTM() {
+    if (loaded) return;
+    loaded = true;
+
+    var f = d.getElementsByTagName('script')[0];
+    var j = d.createElement('script');
+    var dl = l !== 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  }
+
+  ['scroll','mousemove','touchstart','keydown','click'].forEach(function (ev) {
+    w.addEventListener(ev, loadGTM, { once: true, passive: true });
+  });
+
+  setTimeout(loadGTM, 3000);
+})(window, document, 'dataLayer', 'GTM-NBFPBC74');
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+  <iframe
+    src="https://www.googletagmanager.com/ns.html?id=GTM-NBFPBC74"
+    height="0"
+    width="0"
+    style="display:none;visibility:hidden">
+  </iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+ 
 
 					 <script defer type="application/javascript" src=https://pulse.clickguard.com/s/accqf1jtljMP6/astOxT2EN0qJL></script>
 					 <script defer type="application/javascript" src=https://pulse.clickguard.com/sc></script>
