@@ -15,12 +15,4 @@ disable_language_hreflang: false
 hide_branding: false
 excluded_languages: {  }
 enabled_entity_types:
-  - comment
   - node
-  - block_content
-  - menu_link_content
-  - media
-  - shortcut
-  - taxonomy_term
-  - user
-  - webform_submission

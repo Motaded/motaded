@@ -3,3 +3,18 @@ links:
     path: /
     priority: '1.0'
     changefreq: daily
+  -
+    path: /blog
+    priority: '0.5'
+    changefreq: ''
+  -
+    path: /news
+    priority: '0.5'
+    changefreq: ''
+  -
+    path: /services
+    priority: '0.5'
+    changefreq: ''
+  -
+    path: /saudi-partners
+    priority: '0.5'
