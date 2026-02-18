@@ -1,0 +1,5 @@
+services:
+  Drupal\motaded_custom\Hook\MetatagSanitizeHooks:
+    autowire: true
+  Drupal\motaded_custom\Hook\PageTitleHooks:
+    autowire: true

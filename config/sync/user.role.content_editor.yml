@@ -3,13 +3,27 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.basic
+    - block_content.type.business_activity
+    - block_content.type.counter_block_type
+    - block_content.type.featured_card
+    - block_content.type.head_office
+    - block_content.type.page_title_description
+    - block_content.type.paragraphs
+    - block_content.type.pro_gro_services
+    - block_content.type.sectors
+    - block_content.type.why_saudi_arabia
     - media.type.image
     - node.type.article
     - node.type.page
     - taxonomy.vocabulary.tags
   module:
+    - block_content
     - comment
+    - conditional_fields
+    - content_translation
     - contextual
+    - field_ui
     - file
     - image
     - media
@@ -26,29 +40,96 @@ weight: 2
 is_admin: false
 permissions:
   - 'access administration pages'
+  - 'access block library'
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
   - 'access toolbar'
+  - 'administer block content'
+  - 'administer display modes'
   - 'administer image styles'
   - 'administer url aliases'
   - 'create article content'
+  - 'create basic block content'
+  - 'create business_activity block content'
+  - 'create counter_block_type block content'
+  - 'create featured_card block content'
+  - 'create head_office block content'
   - 'create image media'
   - 'create page content'
+  - 'create page_title_description block content'
+  - 'create paragraphs block content'
+  - 'create pro_gro_services block content'
+  - 'create sectors block content'
   - 'create terms in tags'
   - 'create url aliases'
+  - 'create why_saudi_arabia block content'
+  - 'delete any basic block content'
+  - 'delete any basic block content revisions'
+  - 'delete any business_activity block content'
+  - 'delete any business_activity block content revisions'
+  - 'delete any counter_block_type block content'
+  - 'delete any counter_block_type block content revisions'
+  - 'delete any featured_card block content'
+  - 'delete any featured_card block content revisions'
+  - 'delete any head_office block content'
+  - 'delete any head_office block content revisions'
+  - 'delete any page_title_description block content'
+  - 'delete any page_title_description block content revisions'
+  - 'delete any paragraphs block content'
+  - 'delete any paragraphs block content revisions'
+  - 'delete any pro_gro_services block content'
+  - 'delete any pro_gro_services block content revisions'
+  - 'delete any sectors block content'
+  - 'delete any sectors block content revisions'
+  - 'delete any why_saudi_arabia block content'
+  - 'delete any why_saudi_arabia block content revisions'
   - 'delete article revisions'
   - 'delete own article content'
   - 'delete own files'
   - 'delete own image media'
   - 'delete own page content'
   - 'delete page revisions'
+  - 'edit any article content'
+  - 'edit any basic block content'
+  - 'edit any business_activity block content'
+  - 'edit any counter_block_type block content'
+  - 'edit any featured_card block content'
+  - 'edit any head_office block content'
+  - 'edit any page_title_description block content'
+  - 'edit any paragraphs block content'
+  - 'edit any pro_gro_services block content'
+  - 'edit any sectors block content'
+  - 'edit any why_saudi_arabia block content'
+  - 'edit conditional fields'
   - 'edit own article content'
   - 'edit own comments'
   - 'edit own image media'
   - 'edit own page content'
   - 'edit terms in tags'
   - 'revert all revisions'
+  - 'revert any basic block content revisions'
+  - 'revert any business_activity block content revisions'
+  - 'revert any counter_block_type block content revisions'
+  - 'revert any featured_card block content revisions'
+  - 'revert any head_office block content revisions'
+  - 'revert any page_title_description block content revisions'
+  - 'revert any paragraphs block content revisions'
+  - 'revert any pro_gro_services block content revisions'
+  - 'revert any sectors block content revisions'
+  - 'revert any why_saudi_arabia block content revisions'
+  - 'translate editable entities'
+  - 'update content translations'
   - 'view all revisions'
+  - 'view any basic block content history'
+  - 'view any business_activity block content history'
+  - 'view any counter_block_type block content history'
+  - 'view any featured_card block content history'
+  - 'view any head_office block content history'
+  - 'view any page_title_description block content history'
+  - 'view any paragraphs block content history'
+  - 'view any pro_gro_services block content history'
+  - 'view any sectors block content history'
+  - 'view any why_saudi_arabia block content history'
   - 'view own unpublished content'
   - 'view the administration theme'

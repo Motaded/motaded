@@ -56,3 +56,5 @@ error_log
 composer-setup.php
 composer.phar
 .htaccess
+
+.history/

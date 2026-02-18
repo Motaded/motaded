@@ -405,7 +405,7 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: date
-          order: ASC
+          order: DESC
           expose:
             label: ''
             field_identifier: ''
@@ -4199,7 +4199,13 @@ display:
       rendering_language: '***LANGUAGE_entity_translation***'
       display_extenders:
         metatag_display_extender:
-          metatags: {  }
+          metatags:
+            hreflang_xdefault: '[site:base-url]/blog'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/blog'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/blog'
+            'hreflang_per_language:hreflang_fr': '[site:base-url]/fr/blog'
+            'hreflang_per_language:hreflang_es': '[site:base-url]/es/blog'
+            'hreflang_per_language:hreflang_zh-hans': '[site:base-url]/zh-hans/blog'
           tokenize: false
       path: blog
     cache_metadata:
@@ -4912,7 +4918,16 @@ display:
       display_description: ''
       header: {  }
       rendering_language: '***LANGUAGE_entity_translation***'
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            hreflang_xdefault: '[site:base-url]/news'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/news'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/news'
+            'hreflang_per_language:hreflang_fr': '[site:base-url]/fr/news'
+            'hreflang_per_language:hreflang_es': '[site:base-url]/es/news'
+            'hreflang_per_language:hreflang_zh-hans': '[site:base-url]/zh-hans/news'
+          tokenize: false
       path: news
     cache_metadata:
       max-age: -1

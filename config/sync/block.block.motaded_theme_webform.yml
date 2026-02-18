@@ -1,6 +1,6 @@
 uuid: dae9e313-eca6-4e69-bb8f-1be109fe477e
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - webform.webform.general_feedback
