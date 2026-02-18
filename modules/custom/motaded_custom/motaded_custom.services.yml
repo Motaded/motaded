@@ -5,3 +5,5 @@ services:
     autowire: true
   Drupal\motaded_custom\Hook\WebformMetatagHooks:
     autowire: true
+  Drupal\motaded_custom\Hook\ViewsMetatagHooks:
+    autowire: true
