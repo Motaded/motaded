@@ -5,12 +5,12 @@ dependencies: {  }
 id: webform.contact
 label: 'Webform: Contact us'
 tags:
-  description: 'Get in touch with Motaded for expert business setup, investment licensing, and corporate services in Saudi Arabia.'
+  description: 'Share your business goals and we''ll connect you with the right Motaded specialist to provide tailored support.'
   'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/contact-us'
   'hreflang_per_language:hreflang_en': '[site:base-url]/contact-us'
   'hreflang_per_language:hreflang_es': '[site:base-url]/es/contact-us'
   'hreflang_per_language:hreflang_fr': '[site:base-url]/fr/contact-us'
   'hreflang_per_language:hreflang_zh-hans': '[site:base-url]/zh-hans/contact-us'
   hreflang_xdefault: '[site:base-url]/contact-us'
-  title: '[current-page:title] | [site:name]'
+  title: 'Contact Us | Motaded'
   canonical_url: '[current-page:url]'

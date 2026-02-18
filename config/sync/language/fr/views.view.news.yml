@@ -8,6 +8,10 @@ display:
   page_1:
     display_options:
       title: 'Derniers articles'
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 'Derniers articles. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite.'
       empty:
         area:
           content:
@@ -15,6 +19,10 @@ display:
             format: full_html
   page_2:
     display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 'Dernières actualités. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite.'
       empty:
         area:
           content:

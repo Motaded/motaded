@@ -25,6 +25,11 @@ display:
       header:
         result:
           content: '@total نتائج'
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'الخدمات | معتد'
+            description: 'اكتشف بصمة رقمية في كل خدمة. حلول أعمال شاملة صُممت لدعم المستثمرين ورواد الأعمال والشركات الراغبة في دخول السوق السعودي.'
     display_title: خدمات
   default:
     display_options:

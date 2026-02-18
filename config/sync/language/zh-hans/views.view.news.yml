@@ -9,6 +9,10 @@ display:
   page_1:
     display_options:
       title: 最新文章
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 最新文章。为在沙特阿拉伯发展的投资者、创业者和企业提供洞察与深度解析。
       empty:
         area:
           content:
@@ -17,6 +21,10 @@ display:
   page_2:
     display_options:
       title: 最新消息
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 最新消息。为在沙特阿拉伯发展的投资者、创业者和企业提供洞察与深度解析。
       empty:
         area:
           content:

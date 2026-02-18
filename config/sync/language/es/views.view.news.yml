@@ -9,6 +9,10 @@ display:
   page_1:
     display_options:
       title: 'Últimos artículos'
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 'Últimos artículos. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita.'
       empty:
         area:
           content:
@@ -16,6 +20,10 @@ display:
             format: full_html
   page_2:
     display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            description: 'Últimas noticias. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita.'
       empty:
         area:
           content:
