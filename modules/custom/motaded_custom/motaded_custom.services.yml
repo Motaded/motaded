@@ -3,3 +3,5 @@ services:
     autowire: true
   Drupal\motaded_custom\Hook\PageTitleHooks:
     autowire: true
+  Drupal\motaded_custom\Hook\WebformMetatagHooks:
+    autowire: true
