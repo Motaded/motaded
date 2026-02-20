@@ -15,3 +15,9 @@ display:
             label: Buscar
   page_1:
     display_title: Página
+    display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'Búsqueda de contenido | Motaded'
+            description: 'Busque en los análisis, guías y servicios de Motaded para encontrar rápidamente información relevante para sus necesidades empresariales en Arabia Saudita.'

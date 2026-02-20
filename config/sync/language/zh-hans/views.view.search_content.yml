@@ -15,3 +15,9 @@ display:
             label: 搜索
   page_1:
     display_title: 页面
+    display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: '内容搜索 | Motaded'
+            description: '在 Motaded 的洞察、指南和服务中进行搜索，快速找到与您在沙特阿拉伯业务需求相关的信息。'
