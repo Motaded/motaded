@@ -309,6 +309,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
+            title: 'Search Content | Motaded'
+            description: 'Search Motaded insights, guides, and services to quickly find relevant information for your business needs in Saudi Arabia.'
             robots: nofollow
           tokenize: false
       path: search/content

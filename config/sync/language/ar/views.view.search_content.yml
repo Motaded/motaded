@@ -4,6 +4,7 @@ display:
       filters:
         search_api_fulltext:
           expose:
+            label: بحث
             placeholder: 'خدمات البحث، الأدلة، والموارد…'
       empty:
         area:
@@ -12,6 +13,7 @@ display:
             format: plain_text
       exposed_form:
         options:
+          submit_button: بحث
           reset_button_label: 'إعادة الضبط'
           exposed_sorts_label: 'الترتيب حسب'
           sort_asc_label: تصاعدي
@@ -24,3 +26,9 @@ display:
     display_title: الرئيسي
   page_1:
     display_title: الصفحة
+    display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'البحث في المحتوى | معتد'
+            description: 'ابحث في رؤى معتد وأدلته وخدماته للوصول سريعًا إلى المعلومات المناسبة لاحتياجات أعمالك في السعودية.'
