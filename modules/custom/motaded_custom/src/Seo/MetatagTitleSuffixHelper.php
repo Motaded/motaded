@@ -125,25 +125,14 @@ class MetatagTitleSuffixHelper {
       $base = 'Page';
     }
 
-    // Avoid duplicate H1/title by enriching pure heading-like titles.
-    $h1 = trim((string) ($node->label() ?? ''));
-    if ($h1 !== '' && mb_strtolower($base) === mb_strtolower($h1)) {
-      $qualifier = $this->getAliasQualifier($node, $langcode);
-      if ($qualifier !== '') {
-        $base .= ' - ' . $qualifier;
-      }
+    // Remove previously auto-appended alias qualifier if present.
+    $alias_qualifier = $this->getAliasQualifier($node, $langcode);
+    if ($alias_qualifier !== '') {
+      $base = $this->removeTrailingQualifier($base, $alias_qualifier);
     }
 
     $base = $this->fitBaseLength($base);
     $title = $base . self::SUFFIX;
-
-    if (mb_strlen($title) < self::MIN_FINAL_LENGTH) {
-      $qualifier = $this->getAliasQualifier($node, $langcode);
-      if ($qualifier !== '' && !str_contains(mb_strtolower($base), mb_strtolower($qualifier))) {
-        $base = $this->fitBaseLength($base . ' - ' . $qualifier);
-        $title = $base . self::SUFFIX;
-      }
-    }
 
     $title = $this->ensureUniqueTitle($node, $langcode, $title, $titleIndex);
     return $title;
@@ -241,6 +230,17 @@ class MetatagTitleSuffixHelper {
     string $title,
     ?array &$titleIndex = NULL,
   ): string {
+    $base_title = mb_strtolower(trim($this->removeSuffix($title)));
+    if (in_array($base_title, ['home'], TRUE)) {
+      $this->registerTitle($title, $langcode, (int) $node->id(), $titleIndex);
+      return $title;
+    }
+
+    if ($this->isFrontPageNode($node, $langcode)) {
+      $this->registerTitle($title, $langcode, (int) $node->id(), $titleIndex);
+      return $title;
+    }
+
     if (!$this->titleExistsInLanguage($title, $langcode, (int) $node->id(), $titleIndex)) {
       $this->registerTitle($title, $langcode, (int) $node->id(), $titleIndex);
       return $title;
@@ -320,6 +320,8 @@ class MetatagTitleSuffixHelper {
 
     // Remove clickbait punctuation tails and duplicate separators.
     $title = preg_replace('/\s*[\|\-–—]\s*$/u', '', $title) ?? $title;
+    // Clean technical suffixes that should not appear in SEO titles.
+    $title = preg_replace('/\s*-\s*(front|home|index)\s*$/iu', '', $title) ?? $title;
     $title = trim($title);
     return $title;
   }
@@ -375,6 +377,11 @@ class MetatagTitleSuffixHelper {
       return '';
     }
 
+    // Avoid generic or technical qualifiers in titles.
+    if (in_array(mb_strtolower($segment), ['front', 'home', 'index'], TRUE)) {
+      return '';
+    }
+
     // Keep qualifier concise to reduce risk of too-long titles.
     if (mb_strlen($segment) > 28) {
       $segment = trim(mb_substr($segment, 0, 28));
@@ -383,6 +390,51 @@ class MetatagTitleSuffixHelper {
     }
 
     return $segment;
+  }
+
+  /**
+   * Determines if node resolves to a front-page style alias.
+   */
+  protected function isFrontPageNode(NodeInterface $node, string $langcode): bool {
+    $alias = $this->aliasManager->getAliasByPath('/node/' . $node->id(), $langcode);
+    $alias = trim($alias);
+    if ($alias === '/' || $alias === '/front') {
+      return TRUE;
+    }
+
+    $front_path = (string) $this->configFactory->get('system.site')->get('page.front');
+    if ($front_path === '/node/' . $node->id()) {
+      return TRUE;
+    }
+
+    if ($front_path !== '' && $alias === $front_path) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Removes a specific trailing qualifier from a title base.
+   *
+   * @param string $base
+   *   The title base without suffix.
+   * @param string $qualifier
+   *   The qualifier to remove when trailing.
+   *
+   * @return string
+   *   Cleaned base title.
+   */
+  protected function removeTrailingQualifier(string $base, string $qualifier): string {
+    $base = trim($base);
+    $qualifier = trim($qualifier);
+    if ($base === '' || $qualifier === '') {
+      return $base;
+    }
+
+    $pattern = '/\s*-\s*' . preg_quote($qualifier, '/') . '\s*$/iu';
+    $cleaned = preg_replace($pattern, '', $base);
+    return trim($cleaned ?? $base);
   }
 
   /**
