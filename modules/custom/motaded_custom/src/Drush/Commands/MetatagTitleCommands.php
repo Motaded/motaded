@@ -147,7 +147,7 @@ final class MetatagTitleCommands extends DrushCommands {
       return [$node->language()->getId()];
     }
 
-    return array_keys($node->getTranslationLanguages(FALSE));
+    return array_keys($node->getTranslationLanguages());
   }
 
 }
