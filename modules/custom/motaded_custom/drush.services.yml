@@ -1,0 +1,9 @@
+services:
+  motaded_custom.drush.metatag_title_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MetatagTitleCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@path_alias.manager'
+      - '@Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper'
+    tags:
+      - { name: drush.command }
