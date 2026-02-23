@@ -187,7 +187,7 @@ class MetatagTitleSuffixHelper {
 
         $field_definition = $node->getFieldDefinition($metatag_field);
         $langcodes = ($field_definition !== NULL && $field_definition->isTranslatable())
-          ? array_keys($node->getTranslationLanguages(FALSE))
+          ? array_keys($node->getTranslationLanguages())
           : [$node->language()->getId()];
 
         foreach ($langcodes as $langcode) {
