@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.pricing.body
+    - field.field.node.pricing.field_meta
     - field.field.node.pricing.field_pricing
     - node.type.pricing
   module:
@@ -29,5 +30,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_meta: true
   field_pricing: true
   langcode: true
+  search_api_excerpt: true

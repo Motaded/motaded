@@ -7,13 +7,11 @@ namespace Drupal\motaded_custom\Drush\Commands;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper;
 use Drupal\node\NodeInterface;
-use Drupal\path_alias\AliasManagerInterface;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
-use RuntimeException;
 
 /**
- * Drush commands for metatag title maintenance.
+ * Drush commands for metatag title normalization.
  */
 final class MetatagTitleCommands extends DrushCommands {
 
@@ -22,32 +20,26 @@ final class MetatagTitleCommands extends DrushCommands {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
-   *   The alias manager.
    * @param \Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper $titleSuffixHelper
    *   The title suffix helper.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly AliasManagerInterface $aliasManager,
     protected readonly MetatagTitleSuffixHelper $titleSuffixHelper,
   ) {}
 
   /**
-   * Ensures [site:name] suffix exists in node metatag title.
+   * Normalizes node metatag titles for SEO consistency.
    *
    * @param array $options
    *   Command options.
    */
   #[CLI\Command(name: 'motaded:metatag-title-suffix', aliases: ['mmts'])]
   #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving nodes.')]
-  #[CLI\Option(name: 'report', description: 'Optional CSV report path.')]
   #[CLI\Option(name: 'batch-size', description: 'Nodes per batch (default: 100).')]
-  #[CLI\Usage(name: 'drush motaded:metatag-title-suffix --dry-run', description: 'Preview title suffix updates.')]
-  #[CLI\Usage(name: 'drush motaded:metatag-title-suffix --report=../tmp/report.csv', description: 'Apply updates and write CSV report.')]
-  public function enforceSuffix(array $options = ['dry-run' => FALSE, 'report' => NULL, 'batch-size' => 100]): void {
+  #[CLI\Usage(name: 'drush motaded:metatag-title-suffix --dry-run', description: 'Preview SEO title normalization updates.')]
+  public function enforceSuffix(array $options = ['dry-run' => FALSE, 'batch-size' => 100]): void {
     $dry_run = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
-    $report_path = isset($options['report']) && $options['report'] !== '' ? (string) $options['report'] : NULL;
     $batch_size = max(1, (int) ($options['batch-size'] ?? 100));
 
     $storage = $this->entityTypeManager->getStorage('node');
@@ -55,106 +47,75 @@ final class MetatagTitleCommands extends DrushCommands {
     $changed_titles = 0;
     $processed = 0;
     $last_nid = 0;
-    $report_handle = NULL;
-    $resolved_report_path = NULL;
+    $title_index = $this->titleSuffixHelper->buildTitleIndex();
+    while (TRUE) {
+      $nids = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('nid', $last_nid, '>')
+        ->sort('nid', 'ASC')
+        ->range(0, $batch_size)
+        ->execute();
 
-    if ($report_path !== NULL) {
-      $resolved_report_path = $this->prepareReportPath($report_path);
-      $report_handle = fopen($resolved_report_path, 'wb');
-      if ($report_handle === FALSE) {
-        throw new RuntimeException(sprintf('Unable to open report file for writing: %s', $resolved_report_path));
+      if (empty($nids)) {
+        break;
       }
-      if (fputcsv($report_handle, ['nid', 'langcode', 'bundle', 'path', 'old_title', 'new_title']) === FALSE) {
-        throw new RuntimeException(sprintf('Unable to write report header: %s', $resolved_report_path));
-      }
-    }
-    try {
-      while (TRUE) {
-        $nids = $storage->getQuery()
-          ->accessCheck(FALSE)
-          ->condition('nid', $last_nid, '>')
-          ->condition('field_meta_tags', NULL, 'IS NOT NULL')
-          ->sort('nid', 'ASC')
-          ->range(0, $batch_size)
-          ->execute();
 
-        if (empty($nids)) {
-          break;
+      $last_nid = (int) max($nids);
+      $processed += count($nids);
+      $nodes = $storage->loadMultiple($nids);
+      foreach ($nodes as $node) {
+        if (!$node instanceof NodeInterface) {
+          continue;
         }
-
-        $last_nid = (int) max($nids);
-        $processed += count($nids);
-        $nodes = $storage->loadMultiple($nids);
-        foreach ($nodes as $node) {
-          if (!$node instanceof NodeInterface) {
+        $metatag_field = $this->titleSuffixHelper->getMetatagFieldName($node);
+        if ($metatag_field === NULL) {
+          continue;
+        }
+        $node_changed = FALSE;
+        foreach ($this->getTargetLangcodes($node, $metatag_field) as $langcode) {
+          if (!$node->hasTranslation($langcode)) {
             continue;
           }
-          $node_changed = FALSE;
-          foreach ($this->getTargetLangcodes($node) as $langcode) {
-            $translation = $node->getTranslation($langcode);
-            $field = $translation->get('field_meta_tags');
-            if ($field->isEmpty()) {
-              continue;
-            }
-
+          $translation = $node->getTranslation($langcode);
+          if (!$translation->hasField($metatag_field)) {
+            continue;
+          }
+          $field = $translation->get($metatag_field);
+          $data = [];
+          if (!$field->isEmpty()) {
             $value = (string) $field->value;
-            if ($value === '') {
-              continue;
-            }
-
-            $data = json_decode($value, TRUE);
-            if (!is_array($data) || empty($data['title'])) {
-              continue;
-            }
-
-            $old_title = trim((string) $data['title']);
-            $new_title = $this->titleSuffixHelper->appendSiteNameSuffix($old_title);
-            if ($new_title === $old_title) {
-              continue;
-            }
-
-            $data['title'] = $new_title;
-            $translation->set('field_meta_tags', json_encode($data, JSON_UNESCAPED_UNICODE));
-            $node_changed = TRUE;
-            ++$changed_titles;
-
-            if ($report_handle !== NULL) {
-              $row = [
-                'nid' => (string) $node->id(),
-                'langcode' => $langcode,
-                'bundle' => $node->bundle(),
-                'path' => $this->aliasManager->getAliasByPath('/node/' . $node->id(), $langcode),
-                'old_title' => $old_title,
-                'new_title' => $new_title,
-              ];
-              if (fputcsv($report_handle, $row) === FALSE) {
-                throw new RuntimeException(sprintf('Unable to write report row: %s', $resolved_report_path));
+            if ($value !== '') {
+              $decoded = json_decode($value, TRUE);
+              if (is_array($decoded)) {
+                $data = $decoded;
               }
             }
           }
 
-          if ($node_changed) {
-            ++$changed_nodes;
-            if (!$dry_run) {
-              $node->save();
-            }
+          $old_title = trim((string) ($data['title'] ?? ''));
+          $new_title = $this->titleSuffixHelper->optimizeNodeTitle($node, $langcode, $old_title, $title_index);
+          if ($new_title === $old_title) {
+            continue;
+          }
+
+          $data['title'] = $new_title;
+          $translation->set($metatag_field, json_encode($data, JSON_UNESCAPED_UNICODE));
+          $node_changed = TRUE;
+          ++$changed_titles;
+        }
+
+        if ($node_changed) {
+          ++$changed_nodes;
+          if (!$dry_run) {
+            $node->save();
           }
         }
       }
     }
-    finally {
-      if ($report_handle !== NULL) {
-        fclose($report_handle);
-      }
-    }
 
     if ($processed === 0) {
-      $this->logger()->notice('No nodes with field_meta_tags found.');
+      $this->logger()->notice('No nodes with metatag fields found.');
       return;
-    }
-
-    if ($resolved_report_path !== NULL) {
-      $this->logger()->notice(sprintf('Report written: %s', $resolved_report_path));
     }
 
     $mode = $dry_run ? 'Dry-run' : 'Applied';
@@ -170,43 +131,23 @@ final class MetatagTitleCommands extends DrushCommands {
   /**
    * Gets target langcodes for metatag updates.
    *
-   * If field_meta_tags is not translatable, only default translation is updated.
+   * If metatag field is not translatable, only default translation is updated.
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node.
+   * @param string $metatagField
+   *   The metatag field machine name.
    *
    * @return string[]
    *   Langcodes to process.
    */
-  protected function getTargetLangcodes(NodeInterface $node): array {
-    $field_definition = $node->getFieldDefinition('field_meta_tags');
+  protected function getTargetLangcodes(NodeInterface $node, string $metatagField): array {
+    $field_definition = $node->getFieldDefinition($metatagField);
     if ($field_definition === NULL || !$field_definition->isTranslatable()) {
       return [$node->language()->getId()];
     }
 
     return array_keys($node->getTranslationLanguages(FALSE));
-  }
-
-  /**
-   * Resolves and prepares report path.
-   *
-   * @param string $reportPath
-   *   Output path (absolute or relative to Drupal root).
-   *
-   * @return string
-   *   Resolved absolute path.
-   */
-  protected function prepareReportPath(string $reportPath): string {
-    if (!str_starts_with($reportPath, '/')) {
-      $reportPath = DRUPAL_ROOT . '/' . ltrim($reportPath, '/');
-    }
-
-    $dir = dirname($reportPath);
-    if (!is_dir($dir) && !mkdir($dir, 0775, TRUE) && !is_dir($dir)) {
-      throw new RuntimeException(sprintf('Unable to create report directory: %s', $dir));
-    }
-
-    return $reportPath;
   }
 
 }
