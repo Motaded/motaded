@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.pricing.body
+    - field.field.node.pricing.field_meta
     - field.field.node.pricing.field_pricing
     - node.type.pricing
   module:
     - entity_reference_revisions
+    - metatag
     - text
     - user
 id: node.pricing.default
@@ -21,6 +23,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_meta:
+    type: metatag_empty_formatter
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_pricing:
     type: entity_reference_revisions_entity_view
@@ -38,3 +47,4 @@ content:
     region: content
 hidden:
   langcode: true
+  search_api_excerpt: true
