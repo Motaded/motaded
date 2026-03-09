@@ -1,0 +1,69 @@
+uuid: c3dccd24-313d-4a82-b931-a724a472d300
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_cta
+    - field.field.block_content.global_cta.field_email_link
+    - field.field.block_content.global_cta.field_phone
+    - field.field.block_content.global_cta.field_show_title_on_button
+    - field.field.block_content.global_cta.field_whatsapp
+  module:
+    - link
+id: block_content.global_cta.default
+targetEntityType: block_content
+bundle: global_cta
+mode: default
+content:
+  field_email_link:
+    type: link_default
+    weight: 27
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_phone:
+    type: link_default
+    weight: 28
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_show_title_on_button:
+    type: boolean_checkbox
+    weight: 29
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_whatsapp:
+    type: link_default
+    weight: 26
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

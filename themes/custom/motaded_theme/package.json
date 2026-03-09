@@ -1,10 +1,14 @@
 {
   "name": "motaded_theme",
+  "type": "module",
   "version": "1.0.0",
   "description": "motaded_theme theme, generated from starterkit_theme.",
   "main": "postcss.config.js",
   "scripts": {
-    "build:css": "postcss css/main.css -o dist/main.css"
+    "build:css": "postcss css/main.css -o dist/main.css",
+    "build:css:prod": "NODE_ENV=production postcss css/main.css -o dist/main.css",
+    "watch:css": "postcss css/main.css -o dist/main.css --watch",
+    "build": "npm run build:css:prod"
   },
   "keywords": [],
   "author": "",

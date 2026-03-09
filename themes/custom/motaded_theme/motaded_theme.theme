@@ -12,6 +12,14 @@ function motaded_theme_preprocess_block(array &$variables) {
   if (!empty($variables['elements']['#id']) && $variables['elements']['#id'] == 'motaded_theme_mainnavigation') {
     $variables['content']['#attributes']['data-block-id'] = $variables['elements']['#id'];
   }
+  // Global CTA: pass show_title_on_button for icon-only mode.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    $block_content = $variables['elements']['content']['#block_content'];
+    if ($block_content->bundle() === 'global_cta' && $block_content->hasField('field_show_title_on_button')) {
+      $variables['show_title_on_button'] = !$block_content->get('field_show_title_on_button')->isEmpty()
+        && (bool) $block_content->get('field_show_title_on_button')->value;
+    }
+  }
 }
 
 function motaded_theme_theme_suggestions_menu_alter(array &$suggestions, array $variables) {

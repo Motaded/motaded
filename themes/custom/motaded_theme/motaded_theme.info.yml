@@ -35,6 +35,8 @@ generator: "starterkit_theme:11.2.5"
 regions:
   main_menu: "Main menu"
   menu_mobile: "Mobile menu"
+  drawer_cta: "Drawer CTA (below menu)"
+  header_cta: "Header CTA"
   secondary_menu: "Secondary menu"
   breadcrumb: Breadcrumbs
   content: "Main content"

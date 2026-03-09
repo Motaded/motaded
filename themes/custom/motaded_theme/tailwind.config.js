@@ -10,9 +10,11 @@ import daisyui from "daisyui";
 export default {
   content: [
     "./components/**/*.twig",
+    "./components/**/*.css",
     "./templates/**/*.html.twig",
     "./templates/**/*.html",
     "./templates/*.html.twig",
+    "./js/**/*.js",
   ],
   theme: {
     extend: {

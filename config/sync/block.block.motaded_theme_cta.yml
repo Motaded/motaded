@@ -1,0 +1,37 @@
+uuid: 0e1642b6-e8c8-4048-9b8a-040d6e808dcf
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:global_cta:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+  module:
+    - block_content
+    - language
+  theme:
+    - motaded_theme
+id: motaded_theme_cta
+theme: motaded_theme
+region: header_cta
+weight: -15
+provider: null
+plugin: 'block_content:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+settings:
+  id: 'block_content:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+  label: CTA
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  language:
+    id: language
+    negate: false
+    context_mapping:
+      language: '@language.current_language_context:language_interface'
+    langcodes:
+      en: en
+      ar: ar
+      fr: fr
+      es: es
+      zh-hans: zh-hans
