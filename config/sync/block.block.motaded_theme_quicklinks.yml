@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_quicklinks
 theme: motaded_theme
 region: footer
-weight: 0
+weight: -14
 provider: null
 plugin: 'system_menu_block:quick-links'
 settings:

@@ -1,0 +1,8 @@
+motaded_theme.settings:
+  type: config_object
+  label: 'Motaded theme settings'
+  mapping:
+    footer_about_text:
+      type: text
+      label: 'Footer about text'
+      nullable: true
