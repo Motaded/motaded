@@ -1,0 +1,34 @@
+uuid: e56585ab-7048-485a-9dbc-9c3a5e6a192c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:global_cta:5fda8ea3-a339-4ed8-b48e-825fff679286'
+  module:
+    - block_content
+    - node
+  theme:
+    - motaded_theme
+id: motaded_theme_ctaservicesblog
+theme: motaded_theme
+region: article_toc_cta
+weight: 0
+provider: null
+plugin: 'block_content:5fda8ea3-a339-4ed8-b48e-825fff679286'
+settings:
+  id: 'block_content:5fda8ea3-a339-4ed8-b48e-825fff679286'
+  label: 'CTA services/blog'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      article: article
+      news: news

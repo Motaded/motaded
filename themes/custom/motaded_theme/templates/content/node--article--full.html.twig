@@ -171,6 +171,10 @@
           </template>
         </nav>
       </aside>
+
+      <div class="mt-4" :class="tocOpen ? 'block' : 'hidden md:block'">
+        {{ drupal_region('article_toc_cta') }}
+      </div>
     </div>
 
     <!-- Article body -->

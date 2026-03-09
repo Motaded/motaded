@@ -633,6 +633,14 @@ html[lang="es"] #site-header .menu-item ul a p {
   @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5;
 }
 
+/* Footer bar: links (Privacy, Legal, Sitemap) white */
+.region-footer-bar a {
+  color: #fff !important;
+}
+.region-footer-bar a:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Footer bar: social links in row, square buttons with borders */
 .region-footer-bar .social-link-field {
   display: flex;

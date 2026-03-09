@@ -33,8 +33,10 @@ settings:
   confirmation_url: /contact-us/success
 handlers:
   email_confirmation:
+    label: 'تأكيد البريد الإلكتروني'
     settings:
       body: '[webform_submission:values:message:value]'
   email_notification:
+    label: 'إشعارات البريد'
     settings:
       body: '[webform_submission:values:message:value]'

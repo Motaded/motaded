@@ -1,3 +1,4 @@
+label: Watchdog
 description: 'آخر رسائل السجل'
 display:
   default:
@@ -15,6 +16,8 @@ display:
           label: التاريخ
         message:
           label: الرسالة
+          alter:
+            alt: '{{ message }}'
         name:
           label: المستخدم
           separator: ', '
@@ -22,6 +25,9 @@ display:
           label: عمليات
       pager:
         options:
+          tags:
+            next: ››
+            previous: ‹‹
           expose:
             items_per_page_label: 'العناصر لكل صفحة'
             items_per_page_options_all_label: '- الكل -'

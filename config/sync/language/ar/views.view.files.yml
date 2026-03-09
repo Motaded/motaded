@@ -5,6 +5,8 @@ display:
     display_options:
       title: الملفات
       fields:
+        fid:
+          label: Fid
         filename:
           label: الاسم
           separator: ', '
@@ -14,6 +16,11 @@ display:
           label: الحجم
         status:
           label: الحالة
+          settings:
+            format_custom_false: مؤقت
+            format_custom_true: دائم
+        created:
+          label: 'تاريخ التحميل'
         count:
           label: 'مستخدمة في'
           format_plural_string: !!binary MSBwbGFjZQNAY291bnQgcGxhY2Vz
@@ -35,6 +42,9 @@ display:
           exposed_sorts_label: 'الترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
+      empty:
+        area_text_custom:
+          content: 'لا تتوفر ملفّات.'
       filters:
         filename:
           expose:
@@ -50,7 +60,9 @@ display:
       menu:
         title: الملفات
   page_2:
+    display_title: 'استخدام الملف'
     display_options:
+      title: 'استخدام الملف'
       fields:
         entity_label:
           label: الكيان
@@ -71,3 +83,4 @@ display:
         fid:
           exception:
             title: الكل
+          title: 'معلومات استخدام الملف لـ {{ arguments.fid }}'

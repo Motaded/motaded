@@ -1,3 +1,4 @@
+label: 'الصفحة الرئيسية'
 display:
   default:
     display_title: الافتراضي
@@ -7,6 +8,7 @@ display:
           tags:
             next: 'التالي ›'
             previous: '‹ السابق'
+            first: '« الأولى'
             last: 'آخر »'
           expose:
             items_per_page_label: 'العناصر لكل صفحة'

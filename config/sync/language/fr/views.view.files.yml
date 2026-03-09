@@ -28,6 +28,7 @@ display:
           label: 'Utilisé dans'
           alter:
             path: 'admin/content/files/usage/{{ fid }}'
+          format_plural_string: !!binary QGNvdW50IGxpZXUDQGNvdW50IGxpZXV4
         operations:
           label: Actions
       pager:

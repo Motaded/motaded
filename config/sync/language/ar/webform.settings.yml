@@ -16,3 +16,4 @@ settings:
       title: واسع
 element:
   default_more_title: المزيد
+  default_section_title_tag: h2

@@ -12,6 +12,9 @@ display:
       pager:
         options:
           tags:
+            previous: ‹‹
+            next: ››
+            first: '« الأولى'
             last: 'آخر »'
           expose:
             items_per_page_label: 'العناصر لكل صفحة'
@@ -32,6 +35,9 @@ display:
         view_webform_submission:
           label: عمليات
           text: عرض
+      header:
+        result:
+          content: 'عرض @start - @end من @total'
       arguments:
         in_draft:
           exception:

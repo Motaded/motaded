@@ -34,6 +34,7 @@ display:
           tags:
             next: 'التالي ›'
             previous: '‹ السابق'
+            first: '« الأولى'
             last: 'آخر »'
           expose:
             items_per_page_label: 'العناصر لكل صفحة'
@@ -46,6 +47,9 @@ display:
           exposed_sorts_label: 'الترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
+      empty:
+        area_text_custom:
+          content: 'لا توجد وسائط متاحة.'
       filters:
         bundle:
           expose:
@@ -54,6 +58,7 @@ display:
           expose:
             label: صحيح
           group_info:
+            label: 'حالة النشر'
             group_items:
               1:
                 title: منشور

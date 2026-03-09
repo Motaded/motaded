@@ -7209,6 +7209,12 @@ html[lang="es"] #site-header .menu-item ul a p {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+.region-footer-bar a {
+  color: #fff !important;
+}
+.region-footer-bar a:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
 .region-footer-bar .social-link-field {
   display: flex;
   flex-direction: row;
