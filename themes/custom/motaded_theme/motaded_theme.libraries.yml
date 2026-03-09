@@ -146,8 +146,15 @@ steps:
     - core/drupalSettings
 partner-carousel:
   header: true
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css: { type: external, minified: true }
   js:
+    https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js: { type: external, minified: true }
     js/partner-carousel.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 news-carousel:
   header: true
   js:

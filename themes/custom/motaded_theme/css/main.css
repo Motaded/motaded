@@ -653,6 +653,29 @@ html[lang="es"] #site-header .menu-item ul a p {
   }
 }
 
+/* Partners Swiper pagination */
+.partners-swiper {
+  padding-bottom: 3rem;
+}
+.partners-swiper .swiper-pagination {
+  position: relative !important;
+  bottom: auto !important;
+  margin-top: 1.5rem !important;
+}
+.partners-swiper .swiper-pagination-bullet {
+  width: 0.75rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background-color: var(--color-gray-300);
+  opacity: 1;
+  transition: width 0.2s, background-color 0.2s;
+}
+.partners-swiper .swiper-pagination-bullet-active {
+  width: 1.5rem;
+  height: 0.625rem;
+  background-color: var(--color-gray-900);
+}
+
 body.path-services {
   .ajax-progress-fullscreen {
     display: none;
