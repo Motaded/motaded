@@ -1,0 +1,20 @@
+{#
+  Footer bar region: Bottom bar (left) + Social links (right).
+#}
+{%
+  set classes = [
+    'region',
+    'region-' ~ region|clean_class,
+    'w-full',
+    'flex',
+    'flex-wrap',
+    'justify-between',
+    'items-center',
+    'gap-5',
+  ]
+%}
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ content }}
+  </div>
+{% endif %}

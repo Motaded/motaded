@@ -1,0 +1,27 @@
+uuid: 9e60019b-d194-4e85-b722-c2865e45ffd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.social_block
+    - field.field.block_content.social_block.field_link_social
+  module:
+    - social_link_field
+id: block_content.social_block.default
+targetEntityType: block_content
+bundle: social_block
+mode: default
+content:
+  field_link_social:
+    type: font_awesome
+    label: hidden
+    settings:
+      icon_type: common
+      orientation: vertical
+      new_tab: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

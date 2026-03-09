@@ -1,0 +1,16 @@
+uuid: 831f5d91-375a-4f27-a0c4-32c551842e53
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.social_block
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: block_content.social_block
+target_entity_type_id: block_content
+target_bundle: social_block
+default_langcode: site_default
+language_alterable: false
