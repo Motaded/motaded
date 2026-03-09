@@ -7,9 +7,12 @@ dependencies:
     - field.field.block_content.global_cta.field_email_link
     - field.field.block_content.global_cta.field_phone
     - field.field.block_content.global_cta.field_show_title_on_button
+    - field.field.block_content.global_cta.field_subtitle
+    - field.field.block_content.global_cta.field_text
     - field.field.block_content.global_cta.field_whatsapp
   module:
     - link
+    - text
 id: block_content.global_cta.default
 targetEntityType: block_content
 bundle: global_cta
@@ -37,6 +40,22 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_subtitle:
+    type: string_textfield
+    weight: 31
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_text:
+    type: text_textfield
+    weight: 30
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_whatsapp:
     type: link_default

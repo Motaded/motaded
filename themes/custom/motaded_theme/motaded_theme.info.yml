@@ -43,5 +43,6 @@ regions:
   below_content: "Below content"
   sidebar_first: "Sidebar first"
   sidebar_second: "Sidebar second"
+  pre_footer: "Pre-Footer Section"
   footer: Footer
   footer_bar: Bottom bar

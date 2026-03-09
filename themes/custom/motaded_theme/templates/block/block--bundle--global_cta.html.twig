@@ -19,6 +19,19 @@
   {% endif %}
   {{ title_suffix }}
   {% block content %}
+    {% if cta_subtitle is defined and cta_subtitle is not empty %}
+      <span class="block-cta__badge inline-flex items-center rounded-full bg-primary-100 px-4 py-1.5 text-sm font-medium text-primary-700">{{ cta_subtitle }}</span>
+    {% endif %}
+    {% if cta_heading_line1 is defined and cta_heading_line1 is not empty %}
+      <div class="block-cta__heading">
+        <span class="block-cta__heading-line1">{{ cta_heading_line1 }}</span>
+        {% if cta_heading_line2 is defined and cta_heading_line2 is not empty %}
+          <span class="block-cta__heading-line2">{{ cta_heading_line2 }}</span>
+        {% endif %}
+      </div>
+    {% elseif cta_heading is defined and cta_heading is not empty %}
+      <p class="block-cta__heading block-cta__heading-single">{{ cta_heading }}</p>
+    {% endif %}
     <div class="block-cta__buttons flex flex-wrap items-center gap-2">
       {% if content.field_whatsapp.0 is not empty %}
         {% set wa = content.field_whatsapp.0 %}

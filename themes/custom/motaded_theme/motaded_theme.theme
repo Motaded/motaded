@@ -12,12 +12,27 @@ function motaded_theme_preprocess_block(array &$variables) {
   if (!empty($variables['elements']['#id']) && $variables['elements']['#id'] == 'motaded_theme_mainnavigation') {
     $variables['content']['#attributes']['data-block-id'] = $variables['elements']['#id'];
   }
-  // Global CTA: pass show_title_on_button for icon-only mode.
+  // Global CTA: pass show_title_on_button, cta_heading, cta_subtitle (badge).
   if (isset($variables['elements']['content']['#block_content'])) {
     $block_content = $variables['elements']['content']['#block_content'];
-    if ($block_content->bundle() === 'global_cta' && $block_content->hasField('field_show_title_on_button')) {
-      $variables['show_title_on_button'] = !$block_content->get('field_show_title_on_button')->isEmpty()
-        && (bool) $block_content->get('field_show_title_on_button')->value;
+    if ($block_content->bundle() === 'global_cta') {
+      if ($block_content->hasField('field_show_title_on_button')) {
+        $variables['show_title_on_button'] = !$block_content->get('field_show_title_on_button')->isEmpty()
+          && (bool) $block_content->get('field_show_title_on_button')->value;
+      }
+      if ($block_content->hasField('field_text') && !$block_content->get('field_text')->isEmpty()) {
+        $heading = trim($block_content->get('field_text')->value);
+        $variables['cta_heading'] = $heading;
+        // Split at first "?" for intentional two-line display (e.g. "Ready to start?" / "Contact us today").
+        if (strpos($heading, '?') !== false) {
+          $parts = explode('?', $heading, 2);
+          $variables['cta_heading_line1'] = trim($parts[0]) . '?';
+          $variables['cta_heading_line2'] = trim($parts[1] ?? '');
+        }
+      }
+      if ($block_content->hasField('field_subtitle') && !$block_content->get('field_subtitle')->isEmpty()) {
+        $variables['cta_subtitle'] = trim($block_content->get('field_subtitle')->value);
+      }
     }
   }
 }

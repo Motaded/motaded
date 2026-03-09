@@ -85,6 +85,7 @@
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --animate-bounce: bounce 1s infinite;
+    --blur-sm: 8px;
     --blur-3xl: 64px;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -3102,6 +3103,9 @@
   .top-1\/2 {
     top: calc(1/2 * 100%);
   }
+  .top-1\/3 {
+    top: calc(1/3 * 100%);
+  }
   .top-6 {
     top: calc(var(--spacing) * 6);
   }
@@ -4201,6 +4205,9 @@
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
+  .h-72 {
+    height: calc(var(--spacing) * 72);
+  }
   .h-\[2px\] {
     height: 2px;
   }
@@ -4296,6 +4303,9 @@
   }
   .w-48 {
     width: calc(var(--spacing) * 48);
+  }
+  .w-72 {
+    width: calc(var(--spacing) * 72);
   }
   .w-80 {
     width: calc(var(--spacing) * 80);
@@ -4418,6 +4428,10 @@
   }
   .translate-x-0 {
     --tw-translate-x: calc(var(--spacing) * 0);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .translate-x-1\/2 {
+    --tw-translate-x: calc(1/2 * 100%);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .-translate-y-1\/2 {
@@ -4752,6 +4766,12 @@
       border-color: color-mix(in oklab, var(--color-white) 60%, transparent);
     }
   }
+  .border-white\/70 {
+    border-color: color-mix(in srgb, #fff 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-white) 70%, transparent);
+    }
+  }
   .bg-amber-50 {
     background-color: var(--color-amber-50);
   }
@@ -4809,6 +4829,9 @@
   .bg-primary-100 {
     background-color: var(--color-primary-100);
   }
+  .bg-primary-200 {
+    background-color: var(--color-primary-200);
+  }
   .bg-primary-600 {
     background-color: var(--color-primary-600);
   }
@@ -4837,6 +4860,12 @@
     background-color: color-mix(in srgb, #fff 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-white) 30%, transparent);
+    }
+  }
+  .bg-white\/75 {
+    background-color: color-mix(in srgb, #fff 75%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-white) 75%, transparent);
     }
   }
   .bg-white\/80 {
@@ -5392,6 +5421,9 @@
   .opacity-50 {
     opacity: 50%;
   }
+  .opacity-60 {
+    opacity: 60%;
+  }
   .opacity-70 {
     opacity: 70%;
   }
@@ -5504,6 +5536,11 @@
   }
   .backdrop-blur {
     --tw-backdrop-blur: blur(8px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .backdrop-blur-sm {
+    --tw-backdrop-blur: blur(var(--blur-sm));
     -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
     backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
   }
@@ -6334,9 +6371,24 @@
       padding: calc(var(--spacing) * 10);
     }
   }
+  .lg\:px-12 {
+    @media (width >= 64rem) {
+      padding-inline: calc(var(--spacing) * 12);
+    }
+  }
+  .lg\:py-14 {
+    @media (width >= 64rem) {
+      padding-block: calc(var(--spacing) * 14);
+    }
+  }
   .lg\:py-20 {
     @media (width >= 64rem) {
       padding-block: calc(var(--spacing) * 20);
+    }
+  }
+  .lg\:py-24 {
+    @media (width >= 64rem) {
+      padding-block: calc(var(--spacing) * 24);
     }
   }
   .lg\:pt-28 {
@@ -7566,6 +7618,81 @@ table {
 }
 #block-motaded-theme-cta-2 {
   padding-left: 16px;
+}
+.block-cta__heading {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-primary-800);
+  line-height: 1.35;
+}
+.block-cta__badge {
+  display: inline-flex;
+}
+#site-header .block-cta__badge,
+[aria-label="Mobile menu"] .block-cta__badge {
+  display: none;
+}
+.pre-footer-band {
+  border-top: 1px solid oklch(0.92 0.02 175);
+}
+.pre-footer-band .block-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.pre-footer-band .block-cta__heading {
+  display: block;
+  margin: 0 0 0.5rem 0;
+}
+.pre-footer-band .block-cta__heading-line1 {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.3;
+}
+.pre-footer-band .block-cta__heading-line2 {
+  display: block;
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+.pre-footer-band .block-cta__heading-single {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+.pre-footer-band .block-cta__buttons {
+  justify-content: center;
+  gap: 0.75rem;
+}
+.pre-footer-band .block-cta__btn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s;
+}
+.pre-footer-band .block-cta__btn:hover {
+  transform: translateY(-1px);
+}
+.pre-footer-band .block-cta__icon {
+  width: 20px;
+  height: 20px;
+}
+.pre-footer-band .block-cta--icon-only .block-cta__btn {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.625rem;
+  border-radius: 9999px;
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
