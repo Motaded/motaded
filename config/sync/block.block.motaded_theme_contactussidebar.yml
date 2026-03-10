@@ -12,7 +12,7 @@ dependencies:
 id: motaded_theme_contactussidebar
 theme: motaded_theme
 region: sidebar_second
-weight: 0
+weight: -18
 provider: null
 plugin: 'block_content:14b57f5c-fcdd-49ad-846a-2a099f1b2592'
 settings:

@@ -10,12 +10,24 @@
 
 .pager__items {
   clear: both;
-  text-align: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
+
 .pager__item {
-  display: inline;
-  padding: 0.5em;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
 }
-.pager__item.is-active {
-  font-weight: bold;
+
+.pager__item.is-active .pager__link {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Focus states for accessibility */
+.pager__link:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
 }
