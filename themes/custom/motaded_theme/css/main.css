@@ -633,6 +633,37 @@ html[lang="es"] #site-header .menu-item ul a p {
   @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5;
 }
 
+/* Footer about block (logo + text) */
+#block-motaded-theme-footerabouttext {
+  margin-top: 1rem;
+}
+#block-motaded-theme-footerabouttext img,
+.footer-about img {
+  display: block !important;
+  margin-bottom: 1.25rem !important;
+  width: 200px !important;
+  height: auto !important;
+}
+#block-motaded-theme-footerabouttext p,
+#block-motaded-theme-footerabouttext .field--name-body p,
+.footer-about p,
+.footer-about .field--name-body p {
+  font-size: 1rem !important;
+  line-height: 1.625 !important;
+  color: #fff !important;
+  margin: 0 0 1rem !important;
+}
+#block-motaded-theme-footerabouttext p:last-child,
+#block-motaded-theme-footerabouttext .field--name-body p:last-child,
+.footer-about p:last-child,
+.footer-about .field--name-body p:last-child {
+  margin-bottom: 0 !important;
+}
+.footer-about .block,
+#block-motaded-theme-footerabouttext.block {
+  margin-bottom: 0 !important;
+}
+
 /* Footer bar: links (Privacy, Legal, Sitemap) white */
 .region-footer-bar a {
   color: #fff !important;

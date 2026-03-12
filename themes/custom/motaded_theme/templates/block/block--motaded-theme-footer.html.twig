@@ -24,11 +24,12 @@
       </a>
     </div>
 
-    {# About text — editable at Appearance → Motaded theme → Settings #}
-    {% if footer_about_text %}
-      <p class="text-sm text-white/90 leading-relaxed mb-4 max-w-xs">
-        {{ footer_about_text|t }}
-      </p>
+    {# About text — place a block in "Footer about text" region (Structure → Block layout) #}
+    {% set footer_about = drupal_region('footer_about') %}
+    {% if footer_about|striptags|trim %}
+      <div class="footer-about mb-4 max-w-xs">
+        {{ footer_about }}
+      </div>
     {% endif %}
 
     {# CTA block (motaded_theme_cta_3) — place in Footer region #}

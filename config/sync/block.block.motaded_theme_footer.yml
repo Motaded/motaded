@@ -1,6 +1,6 @@
 uuid: 40327d38-3d36-4788-a8e9-5608a22ecfe4
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.footer
@@ -13,7 +13,7 @@ _core:
 id: motaded_theme_footer
 theme: motaded_theme
 region: footer
-weight: -17
+weight: -14
 provider: null
 plugin: 'system_menu_block:footer'
 settings:
