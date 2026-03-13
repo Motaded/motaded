@@ -1,0 +1,22 @@
+uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+langcode: en
+status: true
+dependencies: {  }
+id: node__article
+label: 'Content: Article'
+tags:
+  description: '[node:summary]'
+  schema_article_about: '[node:field_tags]'
+  schema_article_author: 'a:2:{s:5:"@type";s:6:"Person";s:4:"name";s:18:"[node:author:name]";}'
+  schema_article_date_modified: '[node:changed:format:c]'
+  schema_article_date_published: '[node:created:format:c]'
+  schema_article_description: '[node:summary]'
+  schema_article_headline: '[node:title]'
+  schema_article_id: '[node:url:absolute]#article'
+  schema_article_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:54:"[node:field_media:entity:field_media_image:entity:url]";s:5:"width";s:49:"[node:field_media:entity:field_media_image:width]";s:6:"height";s:50:"[node:field_media:entity:field_media_image:height]";}'
+  schema_article_is_accessible_for_free: 'True'
+  schema_article_main_entity_of_page: '[node:url:absolute]'
+  schema_article_name: '[node:title]'
+  schema_article_publisher: 'a:4:{s:5:"@type";s:12:"Organization";s:4:"name";s:11:"[site:name]";s:3:"url";s:10:"[site:url]";s:4:"logo";a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:59:"https://motaded.com.sa/themes/custom/motaded_theme/logo.svg";s:5:"width";s:3:"130";s:6:"height";s:3:"130";}}'
+  schema_article_type: Article
+  title: '[node:title] | [site:name]'

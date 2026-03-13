@@ -1032,6 +1032,10 @@ table {
   padding-left: 16px;
 }
 
+#block-motaded-theme-ctaservicesblog-2 .block-cta__buttons {
+  margin-bottom: 1rem;
+}
+
 /* Block CTA heading — base style */
 .block-cta__heading {
   margin: 0 0 1rem 0;

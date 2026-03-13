@@ -63,6 +63,7 @@
         "drupal/recreate_block_content": "^3.0",
         "drupal/redirect": "^1.12",
         "drupal/redirect_regex": "^1.0@alpha",
+        "drupal/schema_metatag": "^3.0",
         "drupal/search_api": "^1.40",
         "drupal/simple_sitemap": "^4.2",
         "drupal/smtp": "^1.4",

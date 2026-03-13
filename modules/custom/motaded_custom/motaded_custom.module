@@ -1,4 +1,5 @@
 <?php
+
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
@@ -18,6 +19,19 @@ function motaded_custom_theme() {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ *
+ * Ensure our page_attachments_alter runs last (after schema_metatag).
+ */
+function motaded_custom_module_implements_alter(array &$implementations, $hook) {
+  if ($hook === 'page_attachments_alter' && isset($implementations['motaded_custom'])) {
+    $group = $implementations['motaded_custom'];
+    unset($implementations['motaded_custom']);
+    $implementations['motaded_custom'] = $group;
+  }
+}
+
+/**
  * Implements hook_page_attachments()
  */
 function motaded_custom_page_attachments(array &$attachments) {
@@ -25,6 +39,186 @@ function motaded_custom_page_attachments(array &$attachments) {
   if (in_array(\Drupal::routeMatch()->getRouteName(), ['entity.node.edit_form', 'node.add'])) {
     $attachments['#attached']['library'][] = 'motaded_custom/gin-custom';
   }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * - Ensures FAQ Answer text is always a string (schema_metatag may explode on comma).
+ * - Adds BreadcrumbList schema site-wide (except admin).
+ * Runs after schema_metatag to fix/extend the final JSON-LD output.
+ */
+function motaded_custom_page_attachments_alter(array &$attachments) {
+  // Skip admin pages.
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
+
+  $breadcrumb_list = _motaded_custom_build_breadcrumb_list_schema();
+  $html_head = &$attachments['#attached']['html_head'] ?? NULL;
+
+  // Ensure html_head exists for BreadcrumbList when no schema yet.
+  if ($html_head === NULL) {
+    $attachments['#attached']['html_head'] = [];
+    $html_head = &$attachments['#attached']['html_head'];
+  }
+
+  $breadcrumb_added = FALSE;
+  foreach ($html_head as $id => &$attachment) {
+    $element = is_array($attachment) && isset($attachment[0]) ? $attachment[0] : $attachment;
+    $value = $element['#value'] ?? NULL;
+    if (empty($value) || !is_string($value)) {
+      continue;
+    }
+    $data = json_decode($value, TRUE);
+    if (!$data || empty($data['@graph'])) {
+      continue;
+    }
+    $changed = FALSE;
+
+    // Fix FAQ Answer text (array -> string).
+    foreach ($data['@graph'] as &$item) {
+      if (($item['@type'] ?? '') === 'FAQPage' && !empty($item['mainEntity'])) {
+        foreach ($item['mainEntity'] as &$question) {
+          if (!empty($question['acceptedAnswer']['text']) && is_array($question['acceptedAnswer']['text'])) {
+            $question['acceptedAnswer']['text'] = implode(', ', $question['acceptedAnswer']['text']);
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+
+    // Add BreadcrumbList to existing @graph.
+    if (!empty($breadcrumb_list)) {
+      $data['@graph'][] = $breadcrumb_list;
+      $breadcrumb_added = TRUE;
+      $changed = TRUE;
+    }
+
+    if ($changed) {
+      $encoded = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+      if (isset($attachment[0])) {
+        $attachment[0]['#value'] = $encoded;
+      }
+      else {
+        $attachment['#value'] = $encoded;
+      }
+    }
+  }
+
+  // If no @graph script exists (e.g. taxonomy, search), add standalone BreadcrumbList.
+  if (!empty($breadcrumb_list) && !$breadcrumb_added) {
+    $data = [
+      '@context' => 'https://schema.org',
+      '@graph' => [$breadcrumb_list],
+    ];
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#value' => json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+        '#attributes' => ['type' => 'application/ld+json'],
+      ],
+      'motaded_custom_breadcrumb_list',
+    ];
+  }
+}
+
+/**
+ * Builds BreadcrumbList schema from Drupal breadcrumb.
+ *
+ * @return array|null
+ *   BreadcrumbList structure for @graph, or NULL if empty.
+ */
+function _motaded_custom_build_breadcrumb_list_schema() {
+  try {
+    $breadcrumb = \Drupal::service('breadcrumb')->build(\Drupal::routeMatch());
+    $links = $breadcrumb->getLinks();
+  }
+  catch (\Throwable $e) {
+    return NULL;
+  }
+  if (empty($links)) {
+    return NULL;
+  }
+  $item_list = [];
+  $position = 1;
+  foreach ($links as $link) {
+    $url = $link->getUrl();
+    $url->setAbsolute(TRUE);
+    $url_string = $url->toString();
+    $text = $link->getText();
+    if (is_object($text) && method_exists($text, '__toString')) {
+      $text = (string) $text;
+    }
+    $item_list[] = [
+      '@type' => 'ListItem',
+      'position' => $position,
+      'name' => $text,
+      'item' => $url_string,
+    ];
+    $position++;
+  }
+  if (empty($item_list)) {
+    return NULL;
+  }
+  return [
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => $item_list,
+  ];
+}
+
+/**
+ * Extracts FAQ items (Question/Answer) from field_keywords (CKEditor accordion).
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node to extract from.
+ *
+ * @return array
+ *   Array of Question schema items for FAQPage mainEntity.
+ */
+function _motaded_custom_extract_faq_from_node(NodeInterface $node) {
+  if (!$node->hasField('field_keywords') || $node->get('field_keywords')->isEmpty()) {
+    return [];
+  }
+  return _motaded_custom_extract_faq_from_ckeditor_accordion($node->get('field_keywords')->value);
+}
+
+/**
+ * Extracts FAQ from CKEditor accordion HTML (dl.dt.dd structure).
+ *
+ * @param string $html
+ *   HTML containing <dl class="ckeditor-accordion"><dt>Q</dt><dd>A</dd></dl>.
+ *
+ * @return array
+ *   Array of Question schema items.
+ */
+function _motaded_custom_extract_faq_from_ckeditor_accordion($html) {
+  $items = [];
+  if (empty($html) || (strpos($html, 'ckeditor-accordion') === FALSE && strpos($html, '<dt>') === FALSE)) {
+    return $items;
+  }
+  $dom = new \DOMDocument();
+  @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+  $dts = $dom->getElementsByTagName('dt');
+  foreach ($dts as $dt) {
+    $question = trim(strip_tags($dt->textContent ?? ''));
+    $answer = '';
+    if ($dt instanceof \DOMElement && $dt->nextElementSibling !== NULL && $dt->nextElementSibling->nodeName === 'dd') {
+      $answer = trim(strip_tags($dt->nextElementSibling->textContent ?? ''));
+    }
+    if ($question !== '' && $answer !== '') {
+      $items[] = [
+        '@type' => 'Question',
+        'name' => $question,
+        'acceptedAnswer' => [
+          '@type' => 'Answer',
+          'text' => $answer,
+        ],
+      ];
+    }
+  }
+  return $items;
 }
 
 /**
@@ -71,3 +265,25 @@ function motaded_custom_entity_access(\Drupal\Core\Entity\EntityInterface $entit
   return \Drupal\Core\Access\AccessResult::neutral();
 }
 
+/**
+ * Implements hook_metatags_alter().
+ *
+ * Inject FAQ schema (from accordions) for page nodes via schema_qa_page.
+ */
+function motaded_custom_metatags_alter(array &$metatags, array &$context) {
+  $entity = $context['entity'] ?? NULL;
+  if (!$entity || !$entity instanceof NodeInterface) {
+    return;
+  }
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'page') {
+    return;
+  }
+
+  $faq = _motaded_custom_extract_faq_from_node($entity);
+  if (!empty($faq)) {
+    $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+  }
+  else {
+    unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+  }
+}

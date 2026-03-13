@@ -1,17 +1,27 @@
 _core:
   default_config_hash: DrYt8PcXA0xB3C3L1SvtefnkO5SwUonhY3n4Ld8yun4
 entity_type_groups:
+  front:
+    '':
+      basic: basic
+      schema_organization: schema_organization
+      schema_place: schema_place
   node:
     article:
       basic: basic
-    business_activities:
-      basic: basic
+      schema_article: schema_article
     entities:
       basic: basic
-    media_center:
+    news:
       basic: basic
+      schema_article: schema_article
+    landing_page:
+      basic: basic
+      schema_web_page: schema_web_page
     page:
       basic: basic
+      schema_qa_page: schema_qa_page
+      schema_service: schema_service
     pricing:
       basic: basic
   taxonomy_term:
@@ -26,3 +36,4 @@ tag_trim_maxlength:
   metatag_maxlength_abstract: null
 tag_scroll_max_height: ''
 tag_trim_end: '|.,-:;/+&([{"'''
+trim_suffix: ''
