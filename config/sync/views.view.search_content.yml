@@ -80,6 +80,8 @@ display:
                   hide_label: false
                   field_classes: ''
                   sort_options_unsupported: ''
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
               field_tags:
                 plugin_id: bef
                 advanced:
