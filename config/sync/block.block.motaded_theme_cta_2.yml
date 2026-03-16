@@ -1,0 +1,23 @@
+uuid: 05efe230-a807-4bb2-a085-4c2569403be2
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:global_cta:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_cta_2
+theme: motaded_theme
+region: menu_mobile
+weight: 0
+provider: null
+plugin: 'block_content:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+settings:
+  id: 'block_content:95b4b27c-9222-4552-b3f1-83ae0e3af100'
+  label: CTA
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

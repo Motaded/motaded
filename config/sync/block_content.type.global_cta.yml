@@ -1,0 +1,8 @@
+uuid: b1592d95-2046-4692-953d-afdea0251e7c
+langcode: en
+status: true
+dependencies: {  }
+id: global_cta
+label: 'Global CTA'
+revision: false
+description: null

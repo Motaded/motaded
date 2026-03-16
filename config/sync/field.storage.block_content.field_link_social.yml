@@ -1,0 +1,19 @@
+uuid: fac80844-f37a-4ff9-83e2-4c9227ceae92
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - social_link_field
+id: block_content.field_link_social
+field_name: field_link_social
+entity_type: block_content
+type: social_links
+settings: {  }
+module: social_link_field
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

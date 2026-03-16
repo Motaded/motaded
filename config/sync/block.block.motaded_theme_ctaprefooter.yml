@@ -1,0 +1,23 @@
+uuid: c52d2d02-cdf7-44fc-a636-3fafbe1c987e
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:global_cta:9276a1b7-799d-4984-b7b5-5b14cc2102c1'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_ctaprefooter
+theme: motaded_theme
+region: pre_footer
+weight: 0
+provider: null
+plugin: 'block_content:9276a1b7-799d-4984-b7b5-5b14cc2102c1'
+settings:
+  id: 'block_content:9276a1b7-799d-4984-b7b5-5b14cc2102c1'
+  label: 'CTA pre footer'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

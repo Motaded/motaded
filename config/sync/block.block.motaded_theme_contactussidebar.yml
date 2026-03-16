@@ -12,7 +12,7 @@ dependencies:
 id: motaded_theme_contactussidebar
 theme: motaded_theme
 region: sidebar_second
-weight: 0
+weight: -18
 provider: null
 plugin: 'block_content:14b57f5c-fcdd-49ad-846a-2a099f1b2592'
 settings:
@@ -20,8 +20,6 @@ settings:
   label: 'Contact us sidebar'
   label_display: '0'
   provider: block_content
-  status: true
-  info: ''
   view_mode: full
 visibility:
   request_path:

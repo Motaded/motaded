@@ -1,0 +1,23 @@
+uuid: 02a3e53b-33e0-43a6-869b-6466f9754081
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_cta
+    - field.storage.block_content.field_whatsapp
+  module:
+    - link
+id: block_content.global_cta.field_whatsapp
+field_name: field_whatsapp
+entity_type: block_content
+bundle: global_cta
+label: WhatsApp
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

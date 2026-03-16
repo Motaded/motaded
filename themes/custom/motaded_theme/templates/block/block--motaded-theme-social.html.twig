@@ -1,0 +1,23 @@
+{#
+  Footer bar: Vision 2030 logo + Social links.
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+<div{{ attributes.addClass(classes).addClass('flex flex-col items-end') }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  <a href="{{ path('<front>') }}" aria-label="Vision 2030" class="block mb-3">
+    <img src="/themes/custom/motaded_theme/img/logo-vision-2030.svg" alt="Vision 2030" width="96" height="57" loading="lazy"/>
+  </a>
+  {% block content %}
+    {{ content }}
+  {% endblock %}
+</div>

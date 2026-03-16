@@ -50,6 +50,9 @@ display:
         subject:
           expose:
             label: الموضوع
+        combine:
+          expose:
+            label: 'اسم المؤلف'
         langcode:
           expose:
             label: اللغة
@@ -89,6 +92,9 @@ display:
         subject:
           expose:
             label: الموضوع
+        combine:
+          expose:
+            label: 'اسم المؤلف'
         langcode:
           expose:
             label: اللغة

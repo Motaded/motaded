@@ -9,7 +9,7 @@ dependencies:
 id: motaded_theme_languagedropdownswitcher
 theme: motaded_theme
 region: secondary_menu
-weight: 0
+weight: -14
 provider: null
 plugin: 'language_dropdown_block:language_interface'
 settings:
@@ -17,7 +17,7 @@ settings:
   label: 'Language dropdown switcher'
   label_display: '0'
   provider: lang_dropdown
-  showall: true
+  showall: false
   hide_only_one: true
   tohome: false
   width: 165

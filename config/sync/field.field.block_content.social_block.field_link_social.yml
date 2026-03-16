@@ -1,0 +1,43 @@
+uuid: 995efc91-52d2-4da5-ac43-165d61053081
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.social_block
+    - field.storage.block_content.field_link_social
+  module:
+    - social_link_field
+id: block_content.social_block.field_link_social
+field_name: field_link_social
+entity_type: block_content
+bundle: social_block
+label: Link
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  platforms:
+    tiktok: tiktok
+    youtube: youtube
+    twitter: twitter
+    instagram: instagram
+    facebook: facebook
+    linkedin: linkedin
+    drupalpage: 0
+    flickr: 0
+    drupal: 0
+    github: 0
+    email: 0
+    spotifyartist: 0
+    homepage: 0
+    googleplus: 0
+    spotifyalbum: 0
+    facebookevent: 0
+    vimeo: 0
+    behance: 0
+    bitbucket: 0
+    spotifyplaylist: 0
+    pinterest: 0
+field_type: social_links

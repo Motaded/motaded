@@ -1,3 +1,4 @@
+label: 'مكتبة الوسائط'
 display:
   default:
     display_title: الافتراضي
@@ -8,6 +9,9 @@ display:
           action_title: إجراء
       pager:
         options:
+          tags:
+            next: ››
+            previous: ‹‹
           expose:
             items_per_page_label: 'العناصر لكل صفحة'
             items_per_page_options_all_label: '- الكل -'
@@ -19,8 +23,23 @@ display:
           exposed_sorts_label: 'الترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
+      empty:
+        area_text_custom:
+          content: 'لا توجد وسائط متاحة.'
+      sorts:
+        created:
+          expose:
+            label: 'الأحدث أولاً'
+        name:
+          expose:
+            label: 'الاسم (أ-ي)'
+        name_1:
+          expose:
+            label: 'الاسم (ي-أ)'
       filters:
         status:
+          expose:
+            label: 'حالة النشر'
           group_info:
             label: منشور
             group_items:
@@ -43,8 +62,14 @@ display:
         name:
           separator: ', '
         edit_media:
+          alter:
+            text: 'تحرير {{ name }}'
+            alt: 'تحرير {{ name }}'
           text: تحرير
         delete_media:
+          alter:
+            text: 'حذف {{ اسم }}'
+            alt: 'حذف {{ اسم }}'
           text: حذف
   widget:
     display_title: ودجة

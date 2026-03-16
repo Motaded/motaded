@@ -35,11 +35,16 @@ generator: "starterkit_theme:11.2.5"
 regions:
   main_menu: "Main menu"
   menu_mobile: "Mobile menu"
+  drawer_cta: "Drawer CTA (below menu)"
+  header_cta: "Header CTA"
   secondary_menu: "Secondary menu"
   breadcrumb: Breadcrumbs
   content: "Main content"
   below_content: "Below content"
   sidebar_first: "Sidebar first"
   sidebar_second: "Sidebar second"
+  article_toc_cta: "Article sidebar CTA (below ToC)"
+  pre_footer: "Pre-Footer Section"
   footer: Footer
+  footer_about: "Footer about text (first column)"
   footer_bar: Bottom bar

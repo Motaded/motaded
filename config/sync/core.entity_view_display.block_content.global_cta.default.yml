@@ -1,0 +1,84 @@
+uuid: 399a2f3c-5abf-4a31-a641-cf1ed87c5053
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_cta
+    - field.field.block_content.global_cta.field_email_link
+    - field.field.block_content.global_cta.field_phone
+    - field.field.block_content.global_cta.field_show_title_on_button
+    - field.field.block_content.global_cta.field_subtitle
+    - field.field.block_content.global_cta.field_text
+    - field.field.block_content.global_cta.field_whatsapp
+  module:
+    - link
+    - text
+id: block_content.global_cta.default
+targetEntityType: block_content
+bundle: global_cta
+mode: default
+content:
+  field_email_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_phone:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_show_title_on_button:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_subtitle:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_text:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_whatsapp:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

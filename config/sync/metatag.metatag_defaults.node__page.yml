@@ -1,0 +1,17 @@
+uuid: c3d4e5f6-a7b8-9012-cdef-123456789012
+langcode: en
+status: true
+dependencies: {  }
+id: node__page
+label: 'Content: Page'
+tags:
+  description: '[node:summary]'
+  schema_qa_page_type: FAQPage
+  schema_service_brand: 'a:6:{s:5:"@type";s:5:"Brand";s:3:"@id";s:10:"[site:url]";s:4:"name";s:11:"[site:name]";s:11:"description";s:13:"[site:slogan]";s:3:"url";s:10:"[site:url]";s:4:"logo";a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:59:"https://motaded.com.sa/themes/custom/motaded_theme/logo.svg";s:5:"width";s:3:"130";s:6:"height";s:3:"130";}}'
+  schema_service_description: '[node:summary]'
+  schema_service_id: '[node:url:absolute]'
+  schema_service_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:54:"[node:field_media:entity:field_media_image:entity:url]";s:5:"width";s:49:"[node:field_media:entity:field_media_image:width]";s:6:"height";s:50:"[node:field_media:entity:field_media_image:height]";}'
+  schema_service_name: '[node:title]'
+  schema_service_offers: 'a:5:{s:5:"@type";s:5:"Offer";s:5:"price";s:25:"[node:field_service_cost]";s:13:"priceCurrency";s:3:"SAR";s:3:"url";s:19:"[node:url:absolute]";s:12:"availability";s:26:"https://schema.org/InStock";}'
+  schema_service_type: Service
+  title: '[node:title] | [site:name]'

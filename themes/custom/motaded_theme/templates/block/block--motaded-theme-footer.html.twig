@@ -1,0 +1,47 @@
+{#
+  First footer column: Logo + About text + Quick Links menu.
+#}
+{%
+  set classes = [
+    'block',
+    'block-menu',
+    'navigation',
+    'menu--footer',
+  ]
+%}
+{% set heading_id = attributes.id ~ '-menu'|clean_id %}
+<div class="hidden md:block text-white">
+  <nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }}>
+    {{ title_prefix }}
+
+    {# Logos: Vision 2030 + Motaded #}
+    <div class="flex flex-wrap gap-4 items-center mb-4">
+      <a href="{{ front_page }}" aria-label="Vision 2030">
+        <img src="/themes/custom/motaded_theme/img/logo-vision-2030.svg" alt="Vision 2030" width="64" height="38" loading="lazy"/>
+      </a>
+      <a href="{{ front_page }}" aria-label="Motaded">
+        <img src="/themes/custom/motaded_theme/img/motaded-logo-white.svg" alt="Motaded Logo" width="134" height="17" loading="lazy"/>
+      </a>
+    </div>
+
+    {# About text — place a block in "Footer about text" region (Structure → Block layout) #}
+    {% set footer_about = drupal_region('footer_about') %}
+    {% if footer_about|striptags|trim %}
+      <div class="footer-about mb-4 max-w-xs">
+        {{ footer_about }}
+      </div>
+    {% endif %}
+
+    {# CTA block (motaded_theme_cta_3) — place in Footer region #}
+    {% if footer_cta_block %}
+      <div class="mb-4">{{ footer_cta_block }}</div>
+    {% endif %}
+
+    <p class="text-md font-semibold block mb-3 leading-[1.6]">
+      {{ configuration.label }}
+    </p>
+    {{ title_suffix }}
+    <div class="w-full bg-white/30 my-3 h-px"></div>
+    {{ content }}
+  </nav>
+</div>

@@ -1,0 +1,23 @@
+uuid: 0949a5ae-ea03-41e2-9eb7-023843b5fc87
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:social_block:4cd9178f-07e5-4237-8d56-21f05c6caf9c'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_social
+theme: motaded_theme
+region: footer_bar
+weight: 0
+provider: null
+plugin: 'block_content:4cd9178f-07e5-4237-8d56-21f05c6caf9c'
+settings:
+  id: 'block_content:4cd9178f-07e5-4237-8d56-21f05c6caf9c'
+  label: Social
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

@@ -1,0 +1,15 @@
+{#
+  Footer region — exclude motaded_theme_cta_3 from grid; it's rendered inside footer block (under about text).
+#}
+{%
+  set classes = [
+    'region',
+    'region-' ~ region|clean_class,
+    'w-full',
+  ]
+%}
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+    {{ content }}
+  </div>
+{% endif %}

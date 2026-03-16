@@ -11,7 +11,7 @@ dependencies:
 id: motaded_theme_otherservices
 theme: motaded_theme
 region: footer
-weight: -14
+weight: -17
 provider: null
 plugin: 'system_menu_block:other-services'
 settings:

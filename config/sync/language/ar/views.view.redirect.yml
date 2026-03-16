@@ -36,5 +36,8 @@ display:
         redirect_redirect__uri:
           expose:
             label: إلى
+        language:
+          expose:
+            label: 'اللغة الأصلية'
   page_1:
     display_title: الصفحة

@@ -3,5 +3,7 @@ type: module
 description: 'functional and page mailpulation with this mmodule'
 package: Custom
 core_version_requirement: ^9 || ^10 || ^11
+weight: 10
 dependencies:
   - drupal:system
+  - schema_metatag:schema_metatag

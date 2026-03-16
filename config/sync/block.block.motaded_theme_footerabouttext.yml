@@ -1,0 +1,23 @@
+uuid: ba3fe2e0-7f71-4bac-90c3-4f914f5b4dd8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:0271e4bf-48a9-4916-85d8-fe69b686ba8e'
+  module:
+    - block_content
+  theme:
+    - motaded_theme
+id: motaded_theme_footerabouttext
+theme: motaded_theme
+region: footer
+weight: -19
+provider: null
+plugin: 'block_content:0271e4bf-48a9-4916-85d8-fe69b686ba8e'
+settings:
+  id: 'block_content:0271e4bf-48a9-4916-85d8-fe69b686ba8e'
+  label: 'Footer about text'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }
