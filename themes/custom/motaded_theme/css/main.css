@@ -706,8 +706,25 @@ html[lang="es"] #site-header .menu-item ul a p {
 }
 
 @media (max-width: 768px) {
+  .region-footer-bar {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 1rem !important;
+  }
+
+  .region-footer-bar .field--name-body {
+    margin-top: 0.25rem !important; /* mt-1 instead of mt-16 */
+  }
+
+  /* Social + logo first, text content (field--name-body) last */
   .region-footer-bar #block-motaded-theme-social {
+    order: -1;
     margin-bottom: 1.5rem;
+    align-items: flex-start !important; /* Logo left-aligned on mobile */
+  }
+
+  .region-footer-bar #block-motaded-theme-bottombar {
+    order: 1;
   }
 }
 

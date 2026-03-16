@@ -2,7 +2,10 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
@@ -244,7 +247,7 @@ function motaded_custom_block_access(Block $block, $operation, AccountInterface 
 /**
  * Implements hook_entity_access().
  */
-function motaded_custom_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function motaded_custom_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   if ($entity->getEntityTypeId() == 'paragraph') {
     if ($operation == 'view') {
       // Get the current language.
@@ -257,12 +260,148 @@ function motaded_custom_entity_access(\Drupal\Core\Entity\EntityInterface $entit
 
         // Check if the translation is not published.
         if (!$translation->isPublished()) {
-          return \Drupal\Core\Access\AccessResult::forbidden();
+          return AccessResult::forbidden();
         }
       }
     }
   }
-  return \Drupal\Core\Access\AccessResult::neutral();
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ *
+ * Replaces menu links to nodes that lack translation in the current language
+ * with the default-language URL. Prevents crawlers (e.g. Screaming Frog) from
+ * seeing /lang/node/ID internal paths for untranslated content.
+ */
+function motaded_custom_preprocess_menu(array &$variables): void {
+  if (empty($variables['items'])) {
+    return;
+  }
+  try {
+    _motaded_custom_menu_items_fallback_to_default_language($variables['items']);
+  }
+  catch (\Throwable $e) {
+    // On any error, skip modification to avoid breaking the menu display.
+    \Drupal::logger('motaded_custom')->warning('Menu URL fallback failed: @message', [
+      '@message' => $e->getMessage(),
+    ]);
+  }
+}
+
+/**
+ * Recursively replaces node URLs with default-language alias when no translation.
+ *
+ * @param array $items
+ *   Menu items (reference); each has 'url', 'below' keys.
+ */
+function _motaded_custom_menu_items_fallback_to_default_language(array &$items): void {
+  $current_langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+  if ($current_langcode === $default_langcode) {
+    return;
+  }
+
+  foreach ($items as $key => $item) {
+    if (!empty($item['below'])) {
+      _motaded_custom_menu_items_fallback_to_default_language($items[$key]['below']);
+    }
+
+    if (empty($item['url']) || !($item['url'] instanceof Url)) {
+      continue;
+    }
+
+    $url = $item['url'];
+    $route_name = $url->getRouteName();
+    if ($route_name === NULL || $route_name !== 'entity.node.canonical') {
+      continue;
+    }
+
+    $params = $url->getRouteParameters();
+    $node_param = $params['node'] ?? NULL;
+    if ($node_param === NULL) {
+      continue;
+    }
+
+    $node = $node_param instanceof NodeInterface
+      ? $node_param
+      : \Drupal::entityTypeManager()->getStorage('node')->load($node_param);
+    if (!$node instanceof NodeInterface) {
+      continue;
+    }
+
+    if ($node->hasTranslation($current_langcode)) {
+      continue;
+    }
+
+    if (!$node->hasTranslation($default_langcode)) {
+      continue;
+    }
+
+    $fallback_url = $node->getTranslation($default_langcode)->toUrl();
+    $fallback_url->setOption('language', \Drupal::languageManager()->getLanguage($default_langcode));
+    $items[$key]['url'] = $fallback_url;
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__language_block().
+ *
+ * Filters the language switcher to show only languages that have a translation
+ * for the current entity (node, taxonomy term, etc.). On entity pages without
+ * translation, the language is hidden instead of linking to homepage.
+ */
+function motaded_custom_preprocess_links__language_block(array &$variables): void {
+  $allowed_langcodes = _motaded_custom_get_accessible_translation_langcodes();
+  if ($allowed_langcodes === NULL) {
+    // No translatable entity on the page — show all languages.
+    return;
+  }
+
+  foreach (array_keys($variables['links']) as $langcode) {
+    if (!in_array($langcode, $allowed_langcodes, TRUE)) {
+      unset($variables['links'][$langcode]);
+    }
+  }
+}
+
+/**
+ * Returns langcodes that have an accessible translation for current route entity.
+ *
+ * @return array<string>|null
+ *   Array of langcodes, or NULL if no translatable entity (show all languages).
+ */
+function _motaded_custom_get_accessible_translation_langcodes(): ?array {
+  $route_match = \Drupal::routeMatch();
+  $allowed = NULL;
+
+  foreach ($route_match->getParameters() as $param) {
+    if (!$param instanceof TranslatableInterface) {
+      continue;
+    }
+    /** @var \Drupal\Core\Entity\TranslatableInterface $entity */
+    $entity = $param;
+    $translations = array_filter(
+      array_keys($entity->getTranslationLanguages()),
+      function ($langcode) use ($entity) {
+        if (!$entity->hasTranslation($langcode)) {
+          return FALSE;
+        }
+        $translation = $entity->getTranslation($langcode);
+        return method_exists($translation, 'access') && $translation->access('view');
+      }
+    );
+    if ($allowed === NULL) {
+      $allowed = array_values($translations);
+    }
+    else {
+      $allowed = array_values(array_intersect($allowed, $translations));
+    }
+  }
+
+  return $allowed;
 }
 
 /**
