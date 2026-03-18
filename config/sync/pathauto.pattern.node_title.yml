@@ -10,22 +10,32 @@ label: 'Node title'
 type: 'canonical_entities:node'
 pattern: '/[node:title]'
 selection_criteria:
-  ee66f492-e1c1-425b-a448-15bb1a88a60a:
+  f14295d1-ea08-4224-af68-01457060d9f4:
     id: 'entity_bundle:node'
     negate: false
-    uuid: ee66f492-e1c1-425b-a448-15bb1a88a60a
+    uuid: f14295d1-ea08-4224-af68-01457060d9f4
     context_mapping:
       node: node
     bundles:
+      article: article
+      entities: entities
+      landing_page: landing_page
+      news: news
       page: page
-  7c27209f-f6d6-412c-b824-4439877b729f:
+      partner: partner
+      pricing: pricing
+  b5fa4221-0a9e-49fe-8a5e-c4d4571e1418:
     id: language
     negate: false
-    uuid: 7c27209f-f6d6-412c-b824-4439877b729f
+    uuid: b5fa4221-0a9e-49fe-8a5e-c4d4571e1418
     context_mapping:
       language: 'node:langcode:language'
     langcodes:
       en: en
+      ar: ar
+      fr: fr
+      es: es
+      zh-hans: zh-hans
 selection_logic: and
 weight: -10
 relationships:
