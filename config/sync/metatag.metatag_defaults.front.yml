@@ -7,6 +7,7 @@ _core:
 id: front
 label: 'Front page'
 tags:
+  canonical_url: '[site:url]'
   description: 'Comprehensive Business Setup Solutions, Market Entry Strategies, Licenses and Permits, Support for Foreign Investors, PRO and GRO Services, Operational Support'
   keywords: 'Comprehensive Business Setup Solutions, Market Entry Strategies, Licenses and Permits, Support for Foreign Investors, PRO and GRO Services, Operational Support'
   schema_organization_address: 'a:6:{s:5:"@type";s:13:"PostalAddress";s:13:"streetAddress";s:81:"Journalists Association Building, Second Floor, King Fahd Road, Building No. 6101";s:15:"addressLocality";s:6:"Riyadh";s:13:"addressRegion";s:15:"Riyadh Province";s:10:"postalCode";s:5:"13321";s:14:"addressCountry";s:2:"SA";}'
