@@ -126,18 +126,18 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
     ];
   }
 
-  // Append current query string to hreflang links (fixes "no self-referencing hreflang"
-  // on paginated view pages like /fr/blog?page=0).
-  _motaded_custom_fix_hreflang_query_string($html_head);
+  // Append current query string to canonical and hreflang links when URL has params
+  // (e.g. /fr/blog?page=0, /ar/contact-us?package=basic&plan=annual).
+  _motaded_custom_fix_canonical_and_hreflang_query_string($html_head);
 }
 
 /**
- * Appends the current request's query string to all hreflang alternate links.
+ * Appends the current request's query string to canonical and hreflang links.
  *
- * When a page has query params (e.g. ?page=0 for pagination), each hreflang href
- * must include them so the self-referencing link matches the current URL.
+ * When a page has query params (e.g. ?page=0, ?package=basic&plan=annual), both
+ * canonical and each hreflang href must include them for correct SEO signals.
  */
-function _motaded_custom_fix_hreflang_query_string(array &$html_head): void {
+function _motaded_custom_fix_canonical_and_hreflang_query_string(array &$html_head): void {
   $query_string = \Drupal::request()->getQueryString();
   if ($query_string === NULL || $query_string === '') {
     return;
@@ -150,21 +150,22 @@ function _motaded_custom_fix_hreflang_query_string(array &$html_head): void {
       continue;
     }
     $attrs = $element['#attributes'] ?? [];
-    if (($attrs['rel'] ?? '') !== 'alternate' || empty($attrs['hreflang'])) {
+    $rel = $attrs['rel'] ?? '';
+    $is_canonical = $rel === 'canonical';
+    $is_hreflang = $rel === 'alternate' && !empty($attrs['hreflang']);
+    if (!$is_canonical && !$is_hreflang) {
       continue;
     }
     $href = $attrs['href'] ?? '';
     if ($href === '') {
       continue;
     }
-    // Replace existing query or append.
     if (str_contains($href, '?')) {
       $href = strstr($href, '?', TRUE) . $suffix;
     }
     else {
       $href .= $suffix;
     }
-    $element['#attributes']['href'] = $href;
     if (isset($attachment[0])) {
       $attachment[0]['#attributes']['href'] = $href;
     }
