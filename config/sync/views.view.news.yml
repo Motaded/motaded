@@ -4218,7 +4218,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            description: 'Latest Articles. Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia.'
+            title: 'Latest Articles | Motaded | Page - [view:current-page]'
+            description: 'Latest Articles. Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia. Page - [view:current-page]'
             hreflang_xdefault: '[site:base-url]/blog'
             'hreflang_per_language:hreflang_en': '[site:base-url]/blog'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/blog'
@@ -4959,7 +4960,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            description: 'Latest News. Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia.'
+            title: 'Latest News | Motaded | Page - [view:current-page]'
+            description: 'Latest News. Insights and deep-dives for investors, entrepreneurs, and companies building in Saudi Arabia. Page - [view:current-page]'
             hreflang_xdefault: '[site:base-url]/news'
             'hreflang_per_language:hreflang_en': '[site:base-url]/news'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/news'

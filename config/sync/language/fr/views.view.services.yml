@@ -7,4 +7,5 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            description: "Une empreinte digitale dans chaque service. Des solutions d'affaires complètes conçues pour accompagner les investisseurs, les entrepreneurs et les entreprises entrant sur le marché saoudien."
+            title: 'Services | Motaded | Page - [view:current-page]'
+            description: "Une empreinte digitale dans chaque service. Des solutions d'affaires complètes conçues pour accompagner les investisseurs, les entrepreneurs et les entreprises entrant sur le marché saoudien. Page - [view:current-page]"

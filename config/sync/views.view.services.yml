@@ -12,6 +12,9 @@ dependencies:
     - taxonomy.vocabulary.service_tags
     - taxonomy.vocabulary.taxonomy
   content:
+    - 'taxonomy_term:service_tags:1a969291-407e-4ab1-9327-b19644756dac'
+    - 'taxonomy_term:service_tags:99e288cb-4711-48a0-8f71-21a88a410e0c'
+    - 'taxonomy_term:service_tags:b86fc366-5456-4556-82b0-5fede74ab2a4'
     - 'taxonomy_term:taxonomy:436c1b11-58d3-4f04-b2d8-580a7191e769'
     - 'taxonomy_term:taxonomy:bf0f824d-7853-4366-9f1d-903cf72bc288'
     - 'taxonomy_term:taxonomy:fa8d6750-927d-4287-a754-80ec1ae70774'
@@ -1700,7 +1703,7 @@ display:
               autosubmit: true
               auto_submit_sort_only: false
               autosubmit_breakpoint: ''
-              autosubmit_exclude_textfield: true
+              autosubmit_exclude_textfield: false
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
               autosubmit_hide: true
@@ -1714,6 +1717,7 @@ display:
               advanced:
                 combine: false
                 combine_rewrite: ''
+                combine_param: sort_bef_combine
                 reset: false
                 reset_label: ''
                 collapsible: false
@@ -1723,8 +1727,6 @@ display:
               combine:
                 plugin_id: default
                 advanced:
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
@@ -1732,6 +1734,7 @@ display:
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
+                  sort_options_unsupported: ''
               field_tags_target_id:
                 plugin_id: bef
                 advanced:
@@ -1746,6 +1749,27 @@ display:
                   open_by_default: false
                   is_secondary: false
                   hide_label: false
+                  field_classes: ''
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
+                soft_limit: 0
+                soft_limit_label_less: 'Show less'
+                soft_limit_label_more: 'Show more'
+              field_taxonomy_target_id:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: ''
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: true
                   field_classes: ''
                 select_all_none: false
                 select_all_none_nested: false
@@ -1937,7 +1961,10 @@ display:
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value: {  }
+          value:
+            142: 142
+            143: 143
+            151: 151
           group: 1
           exposed: true
           expose:
@@ -1949,6 +1976,51 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: field_tags_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: service_tags
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_taxonomy_target_id:
+          id: field_taxonomy_target_id
+          table: node__field_taxonomy
+          field: field_taxonomy_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_taxonomy_target_id_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: field_taxonomy_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_taxonomy_target_id
             required: false
             remember: false
             multiple: true
@@ -1968,7 +2040,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          vid: service_tags
+          vid: taxonomy
           type: select
           hierarchy: false
           limit: true
@@ -2019,8 +2091,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Services | Motaded'
-            description: 'A Digital Mark in Every Service. Comprehensive business solutions designed to support investors, entrepreneurs, and companies entering the Saudi market.'
+            title: 'Services | Motaded | Page - [view:current-page] '
+            description: 'A Digital Mark in Every Service. Comprehensive business solutions designed to support investors, entrepreneurs, and companies entering the Saudi market. Page - [view:current-page] '
             hreflang_xdefault: '[site:base-url]/services'
             'hreflang_per_language:hreflang_en': '[site:base-url]/services'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/services'
