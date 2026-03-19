@@ -5,7 +5,49 @@
 
 function articlePageEN() {
   const article = document.getElementById("toc-root");
-  const headings = article.querySelectorAll('h2, h3');
+  const isLikelyTocParagraphHeading = (text) => {
+    const normalized = (text || "").replace(/\s+/g, " ").trim();
+    if (!normalized) return false;
+    if (normalized.length > 140) return false;
+    if (/[:؛：]\s*$/.test(normalized)) return false;
+    if (/^(read|learn)\s+more\s+about\b/i.test(normalized)) return false;
+    if (/^(these|this)\b/i.test(normalized)) return false;
+    return true;
+  };
+  const contentRoot = article?.querySelector("#article-root");
+  const contentHeadings = contentRoot
+    ? Array.from(contentRoot.querySelectorAll("h2, h3"))
+    : [];
+  const strongParagraphHeadings = contentRoot
+    ? Array.from(contentRoot.querySelectorAll("p > strong:first-child"))
+    : [];
+  const headings = [...contentHeadings];
+
+  strongParagraphHeadings.forEach((strongEl) => {
+    const parentParagraph = strongEl.parentElement;
+    if (!parentParagraph) return;
+
+    const strongText = strongEl.textContent?.trim() || "";
+    const paragraphText = parentParagraph.textContent?.trim() || "";
+
+    // Only treat as heading-like blocks when the paragraph is effectively a title.
+    if (!strongText || paragraphText !== strongText) return;
+    if (!isLikelyTocParagraphHeading(paragraphText)) return;
+    headings.push(parentParagraph);
+  });
+
+  headings.sort((a, b) => {
+    if (a === b) return 0;
+    const pos = a.compareDocumentPosition(b);
+    return pos & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+  });
+  const hasStructuralH2 = headings.some(
+    (el) => el.tagName.toLowerCase() === "h2"
+  );
+  const hasStructuralH3 = headings.some(
+    (el) => el.tagName.toLowerCase() === "h3"
+  );
+  const useH3AsPrimary = !hasStructuralH2 && hasStructuralH3;
   const result = [];
   let sectionCount = 0;
   let subsectionCount = 0;
@@ -15,7 +57,14 @@ function articlePageEN() {
     
   const tag = el.tagName.toLowerCase();
 
-    if (el.textContent.trim() && tag === 'h2') {
+    const isSectionHeading =
+      tag === "h2" ||
+      (useH3AsPrimary && tag === "h3") ||
+      (!useH3AsPrimary && tag === "p");
+    const isSubsectionHeading =
+      (hasStructuralH2 && tag === "h3") || (useH3AsPrimary && tag === "p");
+
+    if (el.textContent.trim() && isSectionHeading) {
       sectionCount++;
       subsectionCount = 0;
 
@@ -29,7 +78,7 @@ function articlePageEN() {
 
       result.push(currentSection);
     } 
-    else if (el.textContent.trim() && tag === 'h3' && currentSection) {
+    else if (el.textContent.trim() && isSubsectionHeading && currentSection) {
       subsectionCount++;
 
       const subId = `sub-${sectionCount}-${subsectionCount}`;
