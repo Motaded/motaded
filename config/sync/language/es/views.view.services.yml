@@ -8,5 +8,5 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Servicios | Motaded'
-            description: 'Una huella digital en cada servicio. Soluciones empresariales integrales diseñadas para apoyar a inversionistas, emprendedores y empresas que ingresan al mercado saudí.'
+            title: 'Servicios | Motaded | Página - [view:current-page]'
+            description: 'Una huella digital en cada servicio. Soluciones empresariales integrales diseñadas para apoyar a inversionistas, emprendedores y empresas que ingresan al mercado saudí. Página - [view:current-page]'
