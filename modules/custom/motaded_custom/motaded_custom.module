@@ -125,6 +125,53 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
       'motaded_custom_breadcrumb_list',
     ];
   }
+
+  // Append current query string to hreflang links (fixes "no self-referencing hreflang"
+  // on paginated view pages like /fr/blog?page=0).
+  _motaded_custom_fix_hreflang_query_string($html_head);
+}
+
+/**
+ * Appends the current request's query string to all hreflang alternate links.
+ *
+ * When a page has query params (e.g. ?page=0 for pagination), each hreflang href
+ * must include them so the self-referencing link matches the current URL.
+ */
+function _motaded_custom_fix_hreflang_query_string(array &$html_head): void {
+  $query_string = \Drupal::request()->getQueryString();
+  if ($query_string === NULL || $query_string === '') {
+    return;
+  }
+  $suffix = '?' . $query_string;
+
+  foreach ($html_head as $id => &$attachment) {
+    $element = is_array($attachment) && isset($attachment[0]) ? $attachment[0] : $attachment;
+    if (!is_array($element) || ($element['#tag'] ?? '') !== 'link') {
+      continue;
+    }
+    $attrs = $element['#attributes'] ?? [];
+    if (($attrs['rel'] ?? '') !== 'alternate' || empty($attrs['hreflang'])) {
+      continue;
+    }
+    $href = $attrs['href'] ?? '';
+    if ($href === '') {
+      continue;
+    }
+    // Replace existing query or append.
+    if (str_contains($href, '?')) {
+      $href = strstr($href, '?', TRUE) . $suffix;
+    }
+    else {
+      $href .= $suffix;
+    }
+    $element['#attributes']['href'] = $href;
+    if (isset($attachment[0])) {
+      $attachment[0]['#attributes']['href'] = $href;
+    }
+    else {
+      $attachment['#attributes']['href'] = $href;
+    }
+  }
 }
 
 /**
