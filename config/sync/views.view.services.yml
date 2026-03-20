@@ -2091,8 +2091,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Services | Motaded | Page - [view:current-page] '
-            description: 'A Digital Mark in Every Service. Comprehensive business solutions designed to support investors, entrepreneurs, and companies entering the Saudi market. Page - [view:current-page] '
+            title: 'Services | Motaded'
+            description: 'A Digital Mark in Every Service. Comprehensive business solutions designed to support investors, entrepreneurs, and companies entering the Saudi market.'
             hreflang_xdefault: '[site:base-url]/services'
             'hreflang_per_language:hreflang_en': '[site:base-url]/services'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/services'

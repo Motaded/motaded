@@ -12,8 +12,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Últimos artículos | Motaded | Página - [view:current-page]'
-            description: 'Últimos artículos. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita. Página - [view:current-page]'
+            title: 'Últimos artículos | Motaded'
+            description: 'Últimos artículos. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita.'
       empty:
         area:
           content:
@@ -24,8 +24,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Últimas noticias | Motaded | Página - [view:current-page]'
-            description: 'Últimas noticias. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita. Página - [view:current-page]'
+            title: 'Últimas noticias | Motaded'
+            description: 'Últimas noticias. Análisis y perspectivas en profundidad para inversionistas, emprendedores y empresas que construyen en Arabia Saudita.'
       empty:
         area:
           content:

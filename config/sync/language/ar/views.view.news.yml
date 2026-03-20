@@ -15,8 +15,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'أحدث المقالات | معتد | الصفحة - [view:current-page]'
-            description: 'أحدث المقالات. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية. الصفحة - [view:current-page]'
+            title: 'أحدث المقالات | معتد'
+            description: 'أحدث المقالات. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
       exposed_form:
         options:
           submit_button: تطبق
@@ -38,8 +38,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'أحدث الأخبار | معتد | الصفحة - [view:current-page]'
-            description: 'آخر الأخبار. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية. الصفحة - [view:current-page]'
+            title: 'أحدث الأخبار | معتد'
+            description: 'آخر الأخبار. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
       exposed_form:
         options:
           reset_button_label: صاف

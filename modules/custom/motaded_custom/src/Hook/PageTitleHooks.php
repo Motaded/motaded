@@ -9,14 +9,24 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Appends page number to the title tag on paginated pages.
+ * Appends page number to the metatag title on paginated pages.
  *
- * Prevents duplicate title tags across paginated views (blog, news, etc.)
- * by appending "| Page N" to the title starting from the second page.
+ * For view routes (blog, news, services), pagination is handled by
+ * ViewsMetatagHooks::appendPaginationSuffix via metatags_alter.
+ * This hook handles other paginated routes (e.g. search, taxonomy).
  */
 class PageTitleHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * View routes handled by ViewsMetatagHooks - skip to avoid double suffix.
+   */
+  private const VIEW_PAGINATION_ROUTES = [
+    'view.news.page_1',
+    'view.news.page_2',
+    'view.services.page_1',
+  ];
 
   /**
    * Constructs a PageTitleHooks object.
@@ -31,14 +41,17 @@ class PageTitleHooks {
   /**
    * Appends page number to the metatag title on paginated pages.
    *
-   * Only modifies the title when the page query parameter is > 0,
-   * so the first page keeps its original title unchanged.
+   * Skips view routes (handled by ViewsMetatagHooks).
    *
    * @param array $metatag_attachments
    *   The metatag attachments array.
    */
   #[Hook('metatags_attachments_alter')]
   public function appendPageNumber(array &$metatag_attachments): void {
+    if (in_array(\Drupal::routeMatch()->getRouteName(), self::VIEW_PAGINATION_ROUTES, TRUE)) {
+      return;
+    }
+
     $request = $this->requestStack->getCurrentRequest();
     if ($request === NULL) {
       return;
@@ -53,12 +66,13 @@ class PageTitleHooks {
       return;
     }
 
+    $page_display = $page + 1;
+    $suffix = ' | ' . $this->t('Page @number', ['@number' => $page_display]);
+
     foreach ($metatag_attachments['#attached']['html_head'] as &$item) {
       if (!empty($item[1]) && $item[1] === 'title') {
         if (!empty($item[0]['#attributes']['content'])) {
-          $item[0]['#attributes']['content'] .= ' | ' . $this->t('Page @number', [
-            '@number' => $page,
-          ]);
+          $item[0]['#attributes']['content'] .= $suffix;
         }
         break;
       }

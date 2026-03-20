@@ -49,9 +49,13 @@ function fix_missing_alt(string $html): string {
   $dom = new \DOMDocument();
   $dom->encoding = 'UTF-8';
   libxml_use_internal_errors(TRUE);
+  $options = 0;
+  if (defined('LIBXML_HTML_NOIMPLICIT') && defined('LIBXML_HTML_NODEFDTD')) {
+    $options = LIBXML_HTML_NOIMPLICIT | LIBXML_HTML_NODEFDTD;
+  }
   @$dom->loadHTML(
     '<?xml encoding="UTF-8"><html><body><div>' . $html . '</div></body></html>',
-    LIBXML_HTML_NOIMPLICIT | LIBXML_HTML_NODEFDTD
+    $options
   );
   libxml_clear_errors();
 
