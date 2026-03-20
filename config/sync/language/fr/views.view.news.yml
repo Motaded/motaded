@@ -11,8 +11,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Derniers articles | Motaded | Page - [view:current-page]'
-            description: 'Derniers articles. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite. Page - [view:current-page]'
+            title: 'Derniers articles | Motaded'
+            description: 'Derniers articles. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite.'
       empty:
         area:
           content:
@@ -23,8 +23,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Dernières nouvelles | Motaded | Page - [view:current-page]'
-            description: 'Dernières actualités. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite. Page - [view:current-page]'
+            title: 'Dernières nouvelles | Motaded'
+            description: 'Dernières actualités. Analyses et regards approfondis pour les investisseurs, les entrepreneurs et les entreprises qui se développent en Arabie saoudite.'
       empty:
         area:
           content:

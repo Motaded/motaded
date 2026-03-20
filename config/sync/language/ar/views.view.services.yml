@@ -28,8 +28,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'الخدمات | معتد | الصفحة - [view:current-page]'
-            description: 'اكتشف بصمة رقمية في كل خدمة. حلول أعمال شاملة صُممت لدعم المستثمرين ورواد الأعمال والشركات الراغبة في دخول السوق السعودي. الصفحة - [view:current-page]'
+            title: 'الخدمات | معتد'
+            description: 'اكتشف بصمة رقمية في كل خدمة. حلول أعمال شاملة صُممت لدعم المستثمرين ورواد الأعمال والشركات الراغبة في دخول السوق السعودي.'
     display_title: خدمات
   default:
     display_options:
