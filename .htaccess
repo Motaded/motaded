@@ -176,7 +176,7 @@ AddType image/webp .webp
 # Enable gzip compression for JS, CSS, HTML (requires mod_deflate).
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
-  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE text/javascript application/javascript application/x-javascript application/ecmascript text/ecmascript
   AddOutputFilterByType DEFLATE application/json application/xml
   AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>

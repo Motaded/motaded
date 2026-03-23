@@ -20,3 +20,6 @@ services:
       - '@entity_type.manager'
     tags:
       - { name: event_subscriber }
+  Drupal\motaded_custom\EventSubscriber\ImageAltFallbackSubscriber:
+    tags:
+      - { name: event_subscriber }
