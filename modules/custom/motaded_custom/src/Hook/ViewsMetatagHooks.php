@@ -70,9 +70,12 @@ class ViewsMetatagHooks {
     if ($request === NULL) {
       return;
     }
+    if (!$request->query->has('page')) {
+      return;
+    }
 
     $page = $request->query->getInt('page', 0);
-    if ($page <= 0) {
+    if ($page < 0) {
       return;
     }
 
@@ -116,9 +119,10 @@ class ViewsMetatagHooks {
       return;
     }
 
-    $localized_canonical = $request->getSchemeAndHttpHost() . $path;
+      $localized_canonical = $request->getSchemeAndHttpHost() . $path;
     $query_string = $request->getQueryString();
-    if ($query_string !== null && $query_string !== '') {
+    $include_query = $query_string !== null && $query_string !== '';
+    if ($include_query) {
       $localized_canonical .= '?' . $query_string;
     }
     foreach ($metatag_attachments['#attached']['html_head'] as &$item) {
@@ -134,8 +138,6 @@ class ViewsMetatagHooks {
       $current_path = (string) parse_url($current_href, PHP_URL_PATH);
       $has_language_prefix = $current_path === '/' . $prefix || str_starts_with($current_path, '/' . $prefix . '/');
 
-      // Fix: set canonical to full current URL (path + query) so paginated pages
-      // like /fr/blog?page=0 have self-consistent canonical and hreflang.
       if (!$has_language_prefix || $query_string !== null) {
         $item[0]['#attributes']['href'] = $localized_canonical;
       }
