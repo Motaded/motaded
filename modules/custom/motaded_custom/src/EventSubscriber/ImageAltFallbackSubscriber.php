@@ -41,57 +41,58 @@ final class ImageAltFallbackSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $dom = new \DOMDocument();
-    libxml_use_internal_errors(TRUE);
-    $loaded = $dom->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_clear_errors();
-    if (!$loaded) {
-      return;
-    }
+    $page_title = $this->extractPageTitleFromHtml($content);
 
-    $xpath = new \DOMXPath($dom);
-    $page_title = $this->extractPageTitle($xpath);
-    $changed = FALSE;
+    $updated = preg_replace_callback(
+      '/<img\b[^>]*>/iu',
+      function (array $matches) use ($page_title): string {
+        $img_tag = $matches[0];
 
-    /** @var \DOMElement $img */
-    foreach ($dom->getElementsByTagName('img') as $img) {
-      $src = trim((string) $img->getAttribute('src'));
-      if ($src === '' || strpos($src, '/sites/default/files/inline-images/') === FALSE) {
-        continue;
-      }
+        // Skip if alt already exists (even empty).
+        if (preg_match('/\balt\s*=/iu', $img_tag) === 1) {
+          return $img_tag;
+        }
 
-      $alt = trim((string) $img->getAttribute('alt'));
-      if ($alt !== '') {
-        continue;
-      }
+        // Apply only to inline uploaded images.
+        if (preg_match('/\bsrc\s*=\s*(["\'])(.*?)\1/iu', $img_tag, $src_match) !== 1) {
+          return $img_tag;
+        }
+        $src = trim($src_match[2]);
+        if ($src === '' || strpos($src, '/sites/default/files/inline-images/') === FALSE) {
+          return $img_tag;
+        }
 
-      $filename_label = $this->filenameToLabel($src);
-      $generated_alt = $this->buildAlt($page_title, $filename_label);
-      if ($generated_alt === '') {
-        continue;
-      }
+        $filename_label = $this->filenameToLabel($src);
+        $generated_alt = $this->buildAlt($page_title, $filename_label);
+        if ($generated_alt === '') {
+          return $img_tag;
+        }
 
-      $img->setAttribute('alt', $generated_alt);
-      $changed = TRUE;
-    }
+        $escaped_alt = htmlspecialchars($generated_alt, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return preg_replace('/\s*\/?>$/u', ' alt="' . $escaped_alt . '"$0', $img_tag, 1) ?? $img_tag;
+      },
+      $content
+    );
 
-    if ($changed) {
-      $response->setContent($dom->saveHTML());
+    if (is_string($updated) && $updated !== $content) {
+      $response->setContent($updated);
     }
   }
 
   /**
-   * Extracts normalized page title from HTML.
+   * Extracts normalized page title from full HTML.
    */
-  private function extractPageTitle(\DOMXPath $xpath): string {
-    $meta = $xpath->query("//meta[@property='og:title']/@content");
-    if ($meta !== FALSE && $meta->length > 0) {
-      return $this->normalizeTitle((string) $meta->item(0)->nodeValue);
+  private function extractPageTitleFromHtml(string $html): string {
+    if (preg_match('/<meta[^>]+property=(["\'])og:title\1[^>]+content=(["\'])(.*?)\2[^>]*>/iu', $html, $m) === 1) {
+      return $this->normalizeTitle($m[3]);
     }
 
-    $title = $xpath->query('//title');
-    if ($title !== FALSE && $title->length > 0) {
-      return $this->normalizeTitle((string) $title->item(0)->textContent);
+    if (preg_match('/<meta[^>]+content=(["\'])(.*?)\1[^>]+property=(["\'])og:title\3[^>]*>/iu', $html, $m) === 1) {
+      return $this->normalizeTitle($m[2]);
+    }
+
+    if (preg_match('/<title[^>]*>(.*?)<\/title>/isu', $html, $m) === 1) {
+      return $this->normalizeTitle(strip_tags($m[1]));
     }
 
     return '';
