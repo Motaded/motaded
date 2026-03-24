@@ -11,8 +11,6 @@ use Drupal\bootstrap5\SubthemeFormManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
@@ -121,19 +119,6 @@ function bootstrap5_preprocess_page(&$variables)
     'twitter_url' => theme_get_setting('twitter_url'),
     'linkedin_url' => theme_get_setting('linkedin_url'),
   ];
-
-  if (isset($variables['node']) && $variables['node']->getType() === 'testimonial') {
-    // Disable page caching for this request.
-    \Drupal::service('page_cache_kill_switch')->trigger();
-
-    // Generate the URL for the front page.
-    $url = Url::fromRoute('<front>')->toString();
-
-    // Redirect to the homepage.
-    $response = new RedirectResponse($url);
-    $response->send();
-    exit();
-  }
 
 }
 
