@@ -49,6 +49,7 @@
         "drupal/devel": "^5.4",
         "drupal/devel_debug_log": "^2.0",
         "drupal/easy_breadcrumb": "^2.0",
+        "drupal/entity_export_csv": "^2.1",
         "drupal/field_group": "^4.0",
         "drupal/formdazzle": "^4.0",
         "drupal/gin": "^5.0",
@@ -130,6 +131,9 @@
                 "3429155: Drupal 11 compatibility": "https://git.drupalcode.org/project/ckeditor5_font/-/merge_requests/10.diff",
                 "3541766: JS error": "https://www.drupal.org/files/issues/2025-08-18/can-not-read-properties-undefined-3541766-3.patch",
                 "3541766: Fatal error": "https://www.drupal.org/files/issues/2024-10-23/error-after-drupal-10.1.0-3368736-60.patch"
+            },
+            "drupal/content_export_csv": {
+                "Avoid undefined langcode key warning in export": "patches/content_export_csv-undefined-array-key-langcode.patch"
             },
             "drupal/redirect": {
                 "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff"
