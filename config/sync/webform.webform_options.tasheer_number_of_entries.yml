@@ -1,0 +1,14 @@
+uuid: a1a1a1a1-1111-4111-8111-111111111103
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - webform
+id: tasheer_number_of_entries
+label: 'Tasheer — Number of Entries'
+category: 'Tasheer'
+likert: false
+options: |
+  2: Multiple
+  1: Single

@@ -6,3 +6,11 @@ motaded_custom.featuredcard_page:
   requirements:
     _permission: 'access content'
 
+motaded_custom.tasheer_visa_settings:
+  path: '/admin/config/services/tasheer-visa-conditions'
+  defaults:
+    _form: '\Drupal\motaded_custom\Form\TasheerVisaSettingsForm'
+    _title: 'Tasheer visa conditions'
+  requirements:
+    _permission: 'administer site configuration'
+

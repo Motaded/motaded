@@ -1,0 +1,34 @@
+uuid: a1a1a1a1-1111-4111-8111-111111111102
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - webform
+id: tasheer_visa_type
+label: 'Tasheer — Visa Type'
+category: 'Tasheer'
+likert: false
+options: |
+  2: 'Business Visit'
+  10: 'Diplomatic And Special Visa'
+  12: 'Educational Government'
+  13: 'Educational Private'
+  5: 'Educational Visa - (long-term)'
+  11: 'Educational Visa - (short-term)'
+  14: 'Escort Visa'
+  3: 'Event Visa'
+  1: 'Extend Return'
+  8: 'Family Visit'
+  15: 'Government Visit'
+  18: 'Medical Government'
+  19: 'Medical Private'
+  21: 'Mission And Organization Visit'
+  6: 'Personal Visit'
+  22: 'Premium Residency'
+  23: Resident
+  26: 'Temporary Work'
+  27: Tourism
+  28: Transit
+  20: 'Transport Of Goods'
+  4: Work
