@@ -1,0 +1,13 @@
+webform_id: tasheer_visa_appointment
+json_path: tasheer-analysis/drupal-webform-data.json
+options:
+  nationality: tasheer_nationality
+  visa_type: tasheer_visa_type
+  number_of_entries: tasheer_number_of_entries
+  visa_validity: tasheer_visa_validity
+conditions:
+  visa_type_by_nationality: {  }
+  entries_by_nat_visa_type: {  }
+  validity_by_nat_visa_type_entry: {  }
+messages:
+  no_options: 'No options available'

@@ -1,0 +1,253 @@
+uuid: a1a1a1a1-1111-4111-8111-111111111101
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - webform
+id: tasheer_nationality
+label: 'Tasheer — Select Nationality'
+category: 'Tasheer'
+likert: false
+options: |
+  16050: Afghanistan
+  16051: Albania
+  16052: Algeria
+  16053: 'American Samoa'
+  16054: Andorra
+  16055: Angola
+  16056: Anguilla
+  16057: Antarctic
+  16058: Antigua
+  16059: Argentina
+  16060: Armenia
+  16061: Aruba
+  16062: Australia
+  16063: Austria
+  16064: Azerbaijan
+  16065: Bahamas
+  18050: Bahrain
+  16066: Bangladesh
+  16067: Barbados
+  16068: Belarus
+  16069: Belgium
+  16070: Belize
+  16071: Benin
+  16072: Bermuda
+  16073: Bhutan
+  16074: Bolivia
+  16075: Bosnia
+  16076: Botswana
+  16077: 'Bouvet Island'
+  16078: Brazil
+  16079: 'British Indian Ocean Territory'
+  16080: Brunei
+  16081: Bulgaria
+  16082: 'Burkina Faso'
+  16083: Burundi
+  16084: Cambodia
+  16085: Cameroon
+  16086: Canada
+  16087: 'Cape Verde'
+  16088: 'Cayman Island'
+  16089: 'Central African Republic'
+  16090: Chad
+  16091: Chile
+  16092: China
+  16093: 'Christmas Island'
+  16094: 'Cocos Island'
+  16095: Colombia
+  16096: Comoros
+  16097: Congo
+  16098: 'Cook Island'
+  16099: 'Costa Rica'
+  16100: 'Cote Divoire'
+  16101: Croatia
+  16102: Cuba
+  16103: Cyprus
+  16104: 'Czech Republic'
+  16105: Denmark
+  16106: Djibouti
+  16107: Dominica
+  16108: 'Dominican Republic'
+  16109: 'East Timor'
+  16110: Ecuador
+  16111: Egypt
+  16112: 'El Salvador'
+  16113: 'Equatorial Guinea'
+  16114: Eritrea
+  16115: Estonia
+  16116: Ethiopia
+  16117: 'Falkland Islands'
+  16118: 'Faroe Islands'
+  16119: Fiji
+  16120: Finland
+  16121: France
+  16122: 'France Metropolitan'
+  16123: 'French Guiana'
+  16124: 'French Polynesia'
+  16125: 'French Southern and Antarctic'
+  16126: Gabon
+  16127: Gambia
+  16128: Georgia
+  16129: Germany
+  16130: Ghana
+  16131: Gibraltar
+  16132: Greece
+  16133: Greenland
+  16134: Grenada
+  16135: Guadeloupe
+  16136: Guam
+  16137: Guatemala
+  16138: Guinea
+  16139: 'Guinea Bissau'
+  16140: Guyana
+  16141: Haiti
+  16142: 'Heard Island and McDonald Island'
+  16143: Honduras
+  17050: 'Hong Kong'
+  16144: Hungary
+  16145: Iceland
+  16146: India
+  16147: Indonesia
+  16148: Iran
+  16149: Iraq
+  16150: Ireland
+  16151: Italy
+  16152: Jamaica
+  16153: Japan
+  16154: Jordan
+  16155: Kazakhstan
+  16156: Kenya
+  16157: Kiribati
+  16159: 'Korea, North'
+  16158: 'Korea, South'
+  16160: Kosovo
+  16161: Kyrgyzstan
+  16162: Laos
+  16163: Latvia
+  16164: Lebanon
+  16165: Lesotho
+  16166: Liberia
+  16167: Libya
+  16168: Liechtenstein
+  16169: Lithuania
+  16170: Luxembourg
+  16171: Macau
+  16172: 'Macedonia, The Former Yugoslav Republic of'
+  16173: Madagascar
+  16174: Malawi
+  16175: Malaysia
+  16176: Maldives
+  16177: Mali
+  16178: Malta
+  16179: 'Marshall Island'
+  16180: Martinique
+  16181: Mauritania
+  16182: Mauritius
+  16183: Mayotte
+  16184: Mexico
+  16185: 'Micronesia, Federated Stat'
+  16186: Monaco
+  16187: Mongolia
+  16188: Montenegro
+  16189: Montserrat
+  16190: Morocco
+  16191: Mozambique
+  16192: Myanmar
+  16193: Namibia
+  16194: Nauru
+  16195: Nepal
+  16196: Netherlands
+  16197: 'Netherlands Antilles'
+  16198: 'New Caledonia'
+  16199: 'New Zealand'
+  16200: Nicaragua
+  16201: Niger
+  16202: Nigeria
+  16203: Niue
+  16204: 'Non Bahraini'
+  16205: 'Non Emirati'
+  16206: 'Non Kuwaiti'
+  16207: 'Non Omani'
+  16208: 'Non Qatari'
+  16209: 'Norfolk Island'
+  16210: 'Northern Mariana Islands'
+  16211: Norway
+  16212: Pakistan
+  16213: Palau
+  16214: 'Palestinian Territory Occupied'
+  16215: Panama
+  16216: 'Papua New Guinea'
+  16217: Paraguay
+  16218: Peru
+  16219: Philippines
+  16220: 'Pitcairn Islands'
+  16221: Poland
+  16222: Portugal
+  16223: 'Puerto Rico'
+  16224: 'Republic of Moldova'
+  16225: Reunion
+  16226: Romania
+  16227: 'Russian Federation'
+  16228: Rwanda
+  16229: 'Saint Kitts and Nevis'
+  16230: 'Saint Lucia'
+  16231: 'Saint Pierre and Miquelon'
+  16232: 'Saint Vincent and the Grenadines'
+  16233: Samoa
+  16234: 'San Marino'
+  16235: 'Sao Tome And Principe'
+  16236: Senegal
+  16237: Serbia
+  16238: 'Serbia and Montenegro'
+  16239: Seychelles
+  16240: 'Sierra Leone'
+  16241: Singapore
+  16242: 'Slovak Republic'
+  16243: Slovenia
+  16244: 'Solomon Islands'
+  16245: Somalia
+  16246: 'South Africa'
+  16247: 'South Georgia and The South'
+  16248: Spain
+  16249: 'Sri Lanka'
+  16250: 'St Helena'
+  16251: Sudan
+  16252: Suriname
+  16253: Svalbard
+  16254: Swaziland
+  16255: Sweden
+  16256: Switzerland
+  16257: Syria
+  16258: Taiwan
+  16259: Tajikistan
+  16275: Tanzania
+  16260: Thailand
+  16261: Togo
+  16262: Tokelau
+  16263: Tonga
+  16264: 'Trinidad and Tobago'
+  16265: Tunisia
+  16266: Turkey
+  16267: Turkmenistan
+  16268: 'Turks and Caicos Islands'
+  16269: Tuvalu
+  16270: Uganda
+  16271: Ukraine
+  16272: 'United Kingdom'
+  16273: 'United States'
+  16276: Uruguay
+  16277: Uzbekistan
+  16278: Vanuatu
+  16279: 'Vatican City State'
+  16280: Venezuela
+  16281: Vietnam
+  16282: 'Virgin Islands'
+  16283: 'Virgin Islands US'
+  16284: 'Wallis and Futuna'
+  16285: Yemen
+  16286: Yugoslavia
+  16287: Zaire
+  16288: Zambia
+  16289: Zimbabwe

@@ -1,0 +1,6 @@
+motaded_custom.tasheer_visa_settings:
+  title: 'Tasheer visa conditions'
+  description: 'Configure dependent-select conditions for Tasheer webform.'
+  route_name: motaded_custom.tasheer_visa_settings
+  parent: system.admin_config_development
+  weight: 50

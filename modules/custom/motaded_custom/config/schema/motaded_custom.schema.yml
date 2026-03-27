@@ -1,0 +1,46 @@
+motaded_custom.tasheer_visa:
+  type: config_object
+  label: 'Tasheer visa conditions'
+  mapping:
+    webform_id:
+      type: string
+      label: 'Webform machine name'
+    json_path:
+      type: string
+      label: 'JSON fallback path'
+    options:
+      type: mapping
+      label: 'Webform options IDs'
+      mapping:
+        nationality:
+          type: string
+          label: 'Nationality options ID'
+        visa_type:
+          type: string
+          label: 'Visa type options ID'
+        number_of_entries:
+          type: string
+          label: 'Number of entries options ID'
+        visa_validity:
+          type: string
+          label: 'Visa validity options ID'
+    conditions:
+      type: mapping
+      label: 'Conditions maps'
+      mapping:
+        visa_type_by_nationality:
+          type: ignore
+          label: 'Visa type by nationality'
+        entries_by_nat_visa_type:
+          type: ignore
+          label: 'Entries by nationality and visa type'
+        validity_by_nat_visa_type_entry:
+          type: ignore
+          label: 'Validity by nationality, visa type and entries'
+    messages:
+      type: mapping
+      label: 'Messages'
+      mapping:
+        no_options:
+          type: string
+          label: 'No options available message'

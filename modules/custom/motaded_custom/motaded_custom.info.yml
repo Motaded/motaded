@@ -8,4 +8,5 @@ dependencies:
   - drupal:node
   - drupal:path_alias
   - drupal:system
+  - drupal:webform
   - schema_metatag:schema_metatag
