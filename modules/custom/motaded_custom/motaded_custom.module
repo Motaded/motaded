@@ -176,7 +176,13 @@ function _motaded_custom_ensure_x_default_hreflang(array &$html_head): void {
   if ($english_href === '') {
     $request = \Drupal::request();
     $internal_path = \Drupal::service('path.current')->getPath();
-    $english_alias = \Drupal::service('path_alias.manager')->getAliasByPath($internal_path, 'en');
+    // Front page may resolve as /front internally; keep canonical homepage URL.
+    if ($internal_path === '/front') {
+      $english_alias = '/';
+    }
+    else {
+      $english_alias = \Drupal::service('path_alias.manager')->getAliasByPath($internal_path, 'en');
+    }
     $english_href = $request->getSchemeAndHttpHost() . $english_alias;
   }
 
@@ -185,6 +191,7 @@ function _motaded_custom_ensure_x_default_hreflang(array &$html_head): void {
     $request = \Drupal::request();
     $href = $request->getSchemeAndHttpHost() . $request->getPathInfo();
   }
+  $href = _motaded_custom_normalize_front_href($href);
   if ($href === '') {
     return;
   }
@@ -211,6 +218,39 @@ function _motaded_custom_ensure_x_default_hreflang(array &$html_head): void {
     ],
     'motaded_custom_hreflang_x_default',
   ];
+}
+
+/**
+ * Normalizes front-page alias in absolute URLs from /front to /.
+ */
+function _motaded_custom_normalize_front_href(string $href): string {
+  if ($href === '' || !str_contains($href, '/front')) {
+    return $href;
+  }
+
+  $parts = parse_url($href);
+  if ($parts === FALSE || empty($parts['scheme']) || empty($parts['host'])) {
+    return $href;
+  }
+
+  $path = $parts['path'] ?? '';
+  if ($path !== '/front') {
+    return $href;
+  }
+
+  $normalized = $parts['scheme'] . '://' . $parts['host'];
+  if (isset($parts['port'])) {
+    $normalized .= ':' . $parts['port'];
+  }
+  $normalized .= '/';
+  if (!empty($parts['query'])) {
+    $normalized .= '?' . $parts['query'];
+  }
+  if (!empty($parts['fragment'])) {
+    $normalized .= '#' . $parts['fragment'];
+  }
+
+  return $normalized;
 }
 
 /**
