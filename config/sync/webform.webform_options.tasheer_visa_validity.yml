@@ -7,7 +7,7 @@ dependencies:
       - webform
 id: tasheer_visa_validity
 label: 'Tasheer — Visa Validity'
-category: 'Tasheer'
+category: Tasheer
 likert: false
 options: |
   4: '365 Days'

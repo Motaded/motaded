@@ -23,6 +23,7 @@ module:
   config: 0
   config_translation: 0
   contact: 0
+  content_export_csv: 0
   content_translation_redirect: 0
   contextual: 0
   datetime: 0
@@ -30,6 +31,7 @@ module:
   dynamic_page_cache: 0
   easy_breadcrumb: 0
   editor: 0
+  entity_export_csv: 0
   entity_reference_revisions: 0
   field: 0
   field_group: 0
@@ -70,6 +72,7 @@ module:
   redirect_404: 0
   redirect_regex: 0
   responsive_image: 0
+  robotstxt: 0
   schema_article: 0
   schema_metatag: 0
   schema_organization: 0

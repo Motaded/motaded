@@ -7,7 +7,7 @@ dependencies:
       - webform
 id: tasheer_visa_type
 label: 'Tasheer — Visa Type'
-category: 'Tasheer'
+category: Tasheer
 likert: false
 options: |
   2: 'Business Visit'

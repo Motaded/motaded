@@ -1,0 +1,20 @@
+diff --git a/src/ContentExport.php b/src/ContentExport.php
+index a61ff63..b8db219 100644
+--- a/src/ContentExport.php
++++ b/src/ContentExport.php
+@@ -265,8 +265,15 @@ class ContentExport {
+   public function getData(EntityInterface $node, string $nodeField, string $option) {
+     $result = '';
+     $values = $node->get($nodeField)->getValue();
+     foreach ($values as $value) {
++      // Some field item arrays do not contain the requested key (e.g. langcode).
++      if (!array_key_exists($option, $value) || $value[$option] === NULL) {
++        continue;
++      }
+       $result .= $value[$option] . '|';
+     }
++    if ($result === '') {
++      return '';
++    }
+     return substr_replace($result, "", -1);
+   }

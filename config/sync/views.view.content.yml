@@ -642,6 +642,20 @@ display:
           plugin_id: standard
           required: true
       show_admin_links: false
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: 'Results: [view:total-rows] '
+            format: plain_text
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: 0
