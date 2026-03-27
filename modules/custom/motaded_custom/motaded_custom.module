@@ -130,7 +130,87 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
 
   // Append current query string to canonical and hreflang links when URL has params
   // (e.g. /fr/blog?page=0, /ar/contact-us?package=basic&plan=annual).
+  _motaded_custom_ensure_x_default_hreflang($html_head);
   _motaded_custom_fix_canonical_and_hreflang_query_string($html_head);
+}
+
+/**
+ * Ensures x-default hreflang exists and points to English alternate URL.
+ */
+function _motaded_custom_ensure_x_default_hreflang(array &$html_head): void {
+  $x_default_attachment_index = NULL;
+  $english_href = '';
+  $fallback_href = '';
+  $canonical_href = '';
+
+  foreach ($html_head as $id => $attachment) {
+    $element = is_array($attachment) && isset($attachment[0]) ? $attachment[0] : $attachment;
+    if (!is_array($element) || ($element['#tag'] ?? '') !== 'link') {
+      continue;
+    }
+
+    $attrs = $element['#attributes'] ?? [];
+    $rel = strtolower((string) ($attrs['rel'] ?? ''));
+    $hreflang = strtolower((string) ($attrs['hreflang'] ?? ''));
+    $href = (string) ($attrs['href'] ?? '');
+    if ($rel !== 'alternate' || $hreflang === '' || $href === '') {
+      if ($rel === 'canonical' && $href !== '') {
+        $canonical_href = $href;
+      }
+      continue;
+    }
+
+    if ($hreflang === 'x-default') {
+      $x_default_attachment_index = $id;
+      continue;
+    }
+
+    if ($fallback_href === '') {
+      $fallback_href = $href;
+    }
+    if ($english_href === '' && in_array($hreflang, ['en', 'en-us', 'en-gb'], TRUE)) {
+      $english_href = $href;
+    }
+  }
+
+  if ($english_href === '') {
+    $request = \Drupal::request();
+    $internal_path = \Drupal::service('path.current')->getPath();
+    $english_alias = \Drupal::service('path_alias.manager')->getAliasByPath($internal_path, 'en');
+    $english_href = $request->getSchemeAndHttpHost() . $english_alias;
+  }
+
+  $href = $english_href !== '' ? $english_href : ($fallback_href !== '' ? $fallback_href : $canonical_href);
+  if ($href === '') {
+    $request = \Drupal::request();
+    $href = $request->getSchemeAndHttpHost() . $request->getPathInfo();
+  }
+  if ($href === '') {
+    return;
+  }
+
+  if ($x_default_attachment_index !== NULL) {
+    if (isset($html_head[$x_default_attachment_index][0]['#attributes'])) {
+      $html_head[$x_default_attachment_index][0]['#attributes']['href'] = $href;
+    }
+    elseif (isset($html_head[$x_default_attachment_index]['#attributes'])) {
+      $html_head[$x_default_attachment_index]['#attributes']['href'] = $href;
+    }
+    return;
+  }
+
+  $html_head[] = [
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'alternate',
+        'hreflang' => 'x-default',
+        'href' => $href,
+      ],
+    ],
+    'motaded_custom_hreflang_x_default',
+  ];
 }
 
 /**
@@ -728,4 +808,80 @@ function motaded_custom_tasheer_get_conditions($settings): array {
   $out['entries_by_nat_visa_type'] = (array) ($data['conditions']['entriesByNatVisaType'] ?? []);
   $out['validity_by_nat_visa_type_entry'] = (array) ($data['conditions']['validityByNatVisaTypeEntry'] ?? []);
   return $out;
+}
+
+/**
+ * Implements hook_link_alter().
+ *
+ * Adds rel="nofollow" to social network outbound links site-wide.
+ */
+function motaded_custom_link_alter(array &$variables): void {
+  if (empty($variables['url']) || !$variables['url'] instanceof Url) {
+    return;
+  }
+
+  $url = $variables['url'];
+  if (!$url->isExternal()) {
+    return;
+  }
+
+  $uri = (string) $url->getUri();
+  if (!preg_match('#^https?://#i', $uri)) {
+    return;
+  }
+
+  $host = (string) parse_url($uri, PHP_URL_HOST);
+  $host = strtolower($host);
+  if ($host === '' || !_motaded_custom_is_social_host($host)) {
+    return;
+  }
+
+  $variables['options'] = $variables['options'] ?? [];
+  $attributes = $variables['options']['attributes'] ?? [];
+
+  $existing = trim((string) ($attributes['rel'] ?? ''));
+  $rels = $existing === '' ? [] : (preg_split('/\s+/', $existing) ?: []);
+  $rels_map = array_fill_keys(array_map('strtolower', $rels), TRUE);
+
+  foreach (['nofollow', 'noopener', 'noreferrer'] as $rel) {
+    if (!isset($rels_map[$rel])) {
+      $rels[] = $rel;
+      $rels_map[$rel] = TRUE;
+    }
+  }
+
+  $attributes['rel'] = trim(implode(' ', $rels));
+  $variables['options']['attributes'] = $attributes;
+}
+
+/**
+ * Checks whether host belongs to a known social platform.
+ */
+function _motaded_custom_is_social_host(string $host): bool {
+  $domains = [
+    'facebook.com',
+    'fb.com',
+    'instagram.com',
+    'linkedin.com',
+    'lnkd.in',
+    'twitter.com',
+    'x.com',
+    't.me',
+    'telegram.me',
+    'youtube.com',
+    'youtu.be',
+    'tiktok.com',
+    'wa.me',
+    'whatsapp.com',
+    'snapchat.com',
+    'pinterest.com',
+  ];
+
+  foreach ($domains as $domain) {
+    if ($host === $domain || str_ends_with($host, '.' . $domain)) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }

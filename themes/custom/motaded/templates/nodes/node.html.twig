@@ -235,7 +235,7 @@
 							{% set consultation_item = content.field_free_consultation['#items'][0] %}
 							{% set consultation_url = consultation_link['#url'] %}
 							<div	class="consultation-action">
-								<a	class="darkBtn consultation-button"	title="{{ content.field_free_consultation['#title'] }}"	target="_blank">
+								<a	class="darkBtn consultation-button"	title="{{ content.field_free_consultation['#title'] }}"	target="_blank" rel="nofollow noopener noreferrer">
 									{{ 'Free Consultation'|t({}, {'context': 'block_template'}) }}
 									{#{{ content.field_free_consultation['#title'] }}#}
 									<svg	width="12"	height="10"	viewbox="0 0 12 10"	fill="none"	xmlns="http://www.w3.org/2000/svg">

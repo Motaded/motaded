@@ -7,7 +7,7 @@ dependencies:
       - webform
 id: tasheer_number_of_entries
 label: 'Tasheer — Number of Entries'
-category: 'Tasheer'
+category: Tasheer
 likert: false
 options: |
   2: Multiple
