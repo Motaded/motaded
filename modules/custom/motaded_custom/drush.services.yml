@@ -6,3 +6,12 @@ services:
       - '@Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.fr_es_redirect_commands:
+    class: Drupal\motaded_custom\Drush\Commands\FrEsRedirectCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@path_alias.manager'
+      - '@database'
+      - '@language_manager'
+    tags:
+      - { name: drush.command }

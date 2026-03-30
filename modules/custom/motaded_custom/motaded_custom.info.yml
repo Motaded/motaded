@@ -7,6 +7,8 @@ weight: 10
 dependencies:
   - drupal:node
   - drupal:path_alias
+  - drupal:redirect
   - drupal:system
+  - drupal:taxonomy
   - drupal:webform
   - schema_metatag:schema_metatag
