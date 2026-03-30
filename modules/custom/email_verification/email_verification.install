@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for Email verification.
+ */
+
+/**
+ * Adds default config if the module was enabled before settings existed.
+ */
+function email_verification_update_9001() {
+  $config = \Drupal::configFactory()->getEditable('email_verification.settings');
+  if ($config->isNew()) {
+    $config->setData([
+      'webforms' => [
+        'book_a_free_consultation' => [
+          'email_element' => 'email',
+        ],
+      ],
+    ])->save();
+  }
+}

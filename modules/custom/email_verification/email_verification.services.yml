@@ -1,0 +1,14 @@
+services:
+  logger.channel.email_verification:
+    parent: logger.channel_base
+    tags:
+      - { name: logger.channel, channel: email_verification }
+
+  email_verification.otp_manager:
+    class: Drupal\email_verification\EmailVerificationOtpManager
+    arguments:
+      - '@tempstore.private'
+      - '@plugin.manager.mail'
+      - '@logger.channel.email_verification'
+      - '@config.factory'
+      - '@renderer'

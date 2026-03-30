@@ -49,6 +49,9 @@ elements: |-
       visible:
         ':input[name="select_nationality"]':
           filled: true
+  email:
+    '#type': email
+    '#title': Email
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'

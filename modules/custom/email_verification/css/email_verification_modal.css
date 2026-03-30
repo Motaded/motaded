@@ -1,0 +1,244 @@
+/**
+ * @file
+ * OTP modal: aligned with motaded_theme (DGA green, rounded-md, site fallbacks).
+ * Uses --color-primary-* when present (frontend); hex fallbacks work in Gin admin.
+ */
+
+.email-verification-dialog {
+  /* Brand tokens (mirror themes/custom/motaded_theme/css/main.css) */
+  --ev-primary: var(--color-primary-600, #006b44);
+  --ev-primary-hover: var(--color-primary-700, #004d30);
+  --ev-primary-soft: color-mix(in srgb, var(--ev-primary) 12%, transparent);
+  --ev-title: #0f2a1d;
+  --ev-muted: #1f2937;
+  --ev-border: #e5e7eb;
+
+  /* Center in viewport (native dialog top-left without this). */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  max-width: 28rem;
+  width: min(28rem, calc(100vw - 2rem));
+  max-height: min(90vh, 32rem);
+  padding: 0;
+  overflow: hidden;
+  overflow-y: auto;
+
+  color-scheme: light;
+  background: #fff;
+  color: #232429;
+  border: 1px solid var(--ev-border);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 24px rgba(15, 42, 29, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  z-index: 100050;
+}
+
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .email-verification-dialog {
+    --ev-primary-soft: rgba(0, 107, 68, 0.1);
+  }
+}
+
+.email-verification-dialog::backdrop {
+  background: rgba(15, 42, 29, 0.45);
+  backdrop-filter: blur(1px);
+}
+
+.email-verification-dialog__inner {
+  position: relative;
+  padding: 1.5rem;
+}
+
+.email-verification-dialog__close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: #6b7280;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.email-verification-dialog__close:hover {
+  background: rgba(0, 107, 68, 0.08);
+  color: var(--ev-primary);
+}
+
+.email-verification-dialog__close:focus-visible {
+  outline: 2px solid var(--ev-primary);
+  outline-offset: 2px;
+}
+
+.email-verification-dialog__close-icon {
+  display: block;
+  margin-top: -0.1em;
+}
+
+.email-verification-dialog__banner {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.email-verification-dialog__banner--error {
+  background: #fde8e8;
+  color: #7a1f1f;
+  border: 1px solid #e8b4b4;
+}
+
+.email-verification-dialog__banner--success {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.email-verification-dialog__title {
+  margin: 0 0 0.75rem;
+  padding-right: 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--ev-title);
+}
+
+.email-verification-dialog__hint {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--ev-muted);
+}
+
+.email-verification-dialog__label {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.email-verification-dialog__label-text {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: var(--ev-title);
+}
+
+.email-verification-dialog__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color-scheme: light;
+  background: #fff;
+  color: #232429;
+  border: 1px solid var(--ev-border);
+  border-radius: 0.375rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.email-verification-dialog__input:hover {
+  border-color: color-mix(in srgb, var(--ev-primary) 35%, var(--ev-border));
+}
+
+.email-verification-dialog__input:focus {
+  outline: none;
+  border-color: var(--ev-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ev-primary) 22%, transparent);
+}
+
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .email-verification-dialog__input:hover {
+    border-color: #b8d4c8;
+  }
+
+  .email-verification-dialog__input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 107, 68, 0.22);
+  }
+}
+
+.email-verification-dialog__error {
+  margin: 0.5rem 0 0;
+  color: #b73939;
+  font-size: 0.9rem;
+}
+
+.email-verification-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+/* Secondary = outline like main.css border-[#006B44] … bg-[#006B44]/10 */
+.email-verification-dialog .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  min-height: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  border: 1px solid var(--ev-primary);
+  background: var(--ev-primary-soft);
+  color: var(--ev-primary);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.email-verification-dialog .button:hover {
+  background: color-mix(in srgb, var(--ev-primary) 18%, transparent);
+}
+
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .email-verification-dialog .button:hover {
+    background: rgba(0, 107, 68, 0.15);
+  }
+}
+
+.email-verification-dialog .button:focus-visible {
+  outline: 2px solid var(--ev-primary);
+  outline-offset: 2px;
+}
+
+/* Primary = btn-brand (bg-primary-600 hover:bg-primary-700) */
+.email-verification-dialog .button--primary {
+  border-color: var(--ev-primary);
+  background: var(--ev-primary);
+  color: #fff;
+}
+
+.email-verification-dialog .button--primary:hover {
+  border-color: var(--ev-primary-hover);
+  background: var(--ev-primary-hover);
+  filter: none;
+}
