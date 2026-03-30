@@ -1,8 +1,0 @@
-display:
-  default:
-    display_options:
-      header:
-        area:
-          content:
-            value: '<p>Nuestros socios en todo el mundo</p>'
-            format: full_html
