@@ -322,6 +322,141 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Imports Redirect entities from a CSV mapping (source_path → New target_path).
+   *
+   * Expected headers (case-sensitive, as in the provided sheet):
+   * - source_path
+   * - New target_path
+   * Optional fallback header:
+   * - target_path
+   *
+   * Creates 301 redirects. By default, skips sources that already exist; use
+   * --force to update existing redirects to the new target.
+   */
+  #[CLI\Command(name: 'motaded:fr-es-import-redirects-csv')]
+  #[CLI\Option(name: 'file', description: 'Path to CSV file to import.')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving redirects.')]
+  #[CLI\Option(name: 'force', description: 'Update existing redirects for the same source path.')]
+  #[CLI\Usage(name: 'drush motaded:fr-es-import-redirects-csv --file=/tmp/redirects.csv --dry-run', description: 'Dry-run import from spreadsheet CSV.')]
+  public function importRedirectsFromCsv(array $options = ['file' => NULL, 'dry-run' => FALSE, 'force' => FALSE]): void {
+    $file = (string) ($options['file'] ?? '');
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Provide an absolute path to the CSV.');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $force = filter_var($options['force'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV file: %s', $file));
+    }
+
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV header row is missing/invalid.');
+    }
+
+    // Normalize possible UTF-8 BOM in the first header cell.
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+
+    $col = array_flip($header);
+    $source_idx = $col['source_path'] ?? NULL;
+    $new_target_idx = $col['New target_path'] ?? NULL;
+    $fallback_target_idx = $col['target_path'] ?? NULL;
+
+    if (!is_int($source_idx) || (!is_int($new_target_idx) && !is_int($fallback_target_idx))) {
+      fclose($fh);
+      throw new \InvalidArgumentException('CSV must include source_path and either New target_path or target_path columns.');
+    }
+
+    $created = 0;
+    $updated = 0;
+    $skipped = 0;
+    $row_num = 1;
+
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      $row_num++;
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+
+      $source_path = (string) ($row[$source_idx] ?? '');
+      $target_path = '';
+      if (is_int($new_target_idx)) {
+        $target_path = (string) ($row[$new_target_idx] ?? '');
+      }
+      if ($target_path === '' && is_int($fallback_target_idx)) {
+        $target_path = (string) ($row[$fallback_target_idx] ?? '');
+      }
+
+      $source_path = $this->normalizeInternalPath($source_path);
+      $source_key = $this->normalizeRedirectSourceKey($source_path);
+      if ($source_key === '' || $this->shouldSkipSourcePath($source_key)) {
+        $skipped++;
+        continue;
+      }
+
+      $target_path = trim($target_path);
+      if ($target_path === '') {
+        $this->logger()->warning(sprintf('Row %d: empty target for source %s; skipped.', $row_num, $source_path));
+        $skipped++;
+        continue;
+      }
+
+      $destination_uri = $this->destinationUriFromCsvTarget($target_path);
+
+      $existing_ids = $this->entityTypeManager->getStorage('redirect')->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('redirect_source.path', $source_key)
+        ->range(0, 1)
+        ->execute();
+
+      if ($existing_ids !== NULL && $existing_ids !== []) {
+        if (!$force) {
+          $skipped++;
+          continue;
+        }
+        $rid = (int) array_key_first($existing_ids);
+        /** @var \Drupal\redirect\Entity\Redirect|null $redirect */
+        $redirect = $this->entityTypeManager->getStorage('redirect')->load($rid);
+        if (!$redirect instanceof Redirect) {
+          $skipped++;
+          continue;
+        }
+        if (!$dry) {
+          $redirect->setRedirect($destination_uri);
+          $redirect->setStatusCode(301);
+          $redirect->save();
+        }
+        $updated++;
+        continue;
+      }
+
+      if (!$dry) {
+        $redirect = Redirect::create();
+        $redirect->setSource($source_key);
+        $redirect->setRedirect($destination_uri);
+        $redirect->setStatusCode(301);
+        $redirect->save();
+      }
+      $created++;
+    }
+
+    fclose($fh);
+
+    $this->logger()->notice(sprintf(
+      '%s: created %d, updated %d, skipped %d. File: %s',
+      $dry ? 'Dry-run' : 'Import',
+      $created,
+      $updated,
+      $skipped,
+      $file,
+    ));
+  }
+
+  /**
    * Project root (Composer root): parent of the Drupal root when composer.json lives there.
    *
    * With DDEV, this path is the mounted repo directory (same as on the host).
@@ -415,6 +550,24 @@ final class FrEsRedirectCommands extends DrushCommands {
   private function redirectDestinationUri(string $target_path): string {
     $path = $this->normalizeInternalPath($target_path);
     return 'internal:' . $path;
+  }
+
+  /**
+   * Converts a CSV target value into a redirect destination URI.
+   *
+   * Accepts:
+   * - internal paths like /career, career
+   * - absolute URLs (https://example.com/path)
+   */
+  private function destinationUriFromCsvTarget(string $target): string {
+    $target = trim($target);
+    if ($target === '') {
+      return 'internal:/';
+    }
+    if (preg_match('#^https?://#i', $target)) {
+      return $target;
+    }
+    return $this->redirectDestinationUri($target);
   }
 
   private function normalizeInternalPath(string $path): string {
