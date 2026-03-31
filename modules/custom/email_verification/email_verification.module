@@ -36,6 +36,47 @@ function email_verification_form_alter(&$form, FormStateInterface $form_state, $
 }
 
 /**
+ * Finds a scalar value by key in a nested webform elements array.
+ */
+function email_verification_find_value_in_elements(?array $branch, string $key): ?string {
+  if ($branch === NULL) {
+    return NULL;
+  }
+  foreach ($branch as $k => $v) {
+    if ((string) $k === $key) {
+      return is_scalar($v) ? (string) $v : NULL;
+    }
+    if (is_array($v)) {
+      $found = email_verification_find_value_in_elements($v, $key);
+      if ($found !== NULL) {
+        return $found;
+      }
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Locates the email form element for setError() when nested under wizard pages.
+ */
+function email_verification_find_email_element(array $form, string $key): ?array {
+  $elements = $form['elements'] ?? [];
+  if (!is_array($elements)) {
+    return NULL;
+  }
+  if (isset($elements[$key]['#type'])) {
+    return $elements[$key];
+  }
+  foreach ($elements as $page) {
+    if (!is_array($page) || empty($page[$key]['#type'] ?? NULL)) {
+      continue;
+    }
+    return $page[$key];
+  }
+  return NULL;
+}
+
+/**
  * Validates that the email was verified via OTP in this session.
  */
 function email_verification_validate_submission(array &$form, FormStateInterface $form_state) {
@@ -52,15 +93,25 @@ function email_verification_validate_submission(array &$form, FormStateInterface
   if (!$email_key) {
     return;
   }
-  $email = $form_state->getValue($email_key);
+  $elements_values = $form_state->getValue('elements');
+  $email = is_array($elements_values)
+    ? email_verification_find_value_in_elements($elements_values, $email_key)
+    : NULL;
+  if ($email === NULL || $email === '') {
+    $email = $form_state->getValue($email_key);
+  }
   if ($email === NULL || $email === '') {
     return;
   }
   if (!$otp_manager->isVerified($webform_id, (string) $email)) {
-    $form_state->setErrorByName(
-      $email_key,
-      t('Please confirm your email with the verification code before submitting.'),
-    );
+    $message = t('Please confirm your email with the verification code before submitting.');
+    $email_el = email_verification_find_email_element($form, $email_key);
+    if ($email_el !== NULL) {
+      $form_state->setError($email_el, $message);
+    }
+    else {
+      $form_state->setErrorByName('elements', $message);
+    }
   }
 }
 

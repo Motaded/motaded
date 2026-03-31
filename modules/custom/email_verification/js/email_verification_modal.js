@@ -298,7 +298,9 @@
           'input.webform-button--submit, button.webform-button--submit',
         );
         const emailName = settings.emailVerification.emailElementName || 'email';
-        const emailInput = form.querySelector(`[name="${emailName}"]`);
+        const emailInput =
+          form.querySelector(`[name="${emailName}"]`) ||
+          form.querySelector(`[name$="[${emailName}]"]`);
         if (!submitBtn || !emailInput) {
           return;
         }

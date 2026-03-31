@@ -12,3 +12,13 @@ gin-custom:
   css:
     component:
       css/gin-custom.css: {}
+
+tasheer_visa_appointment:
+  css:
+    theme:
+      css/tasheer-visa-appointment.css: {}
+  js:
+    js/tasheer-visa-appointment.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
