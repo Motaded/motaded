@@ -11,6 +11,16 @@ use Drupal\node\NodeInterface;
 use Drupal\webform\Entity\WebformOptions;
 
 /**
+ * Webform wizard page key: nationality + appointment + first consent.
+ */
+const MOTADED_CUSTOM_TASHEER_WIZARD_APPLICATION_PAGE = 'application';
+
+/**
+ * Webform wizard page key: visa chain (after Terms) + application type + email.
+ */
+const MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE = 'visa_followup';
+
+/**
  * Implements hook_theme().
  */
 function motaded_custom_theme() {
@@ -609,8 +619,18 @@ function motaded_custom_form_alter(array &$form, FormStateInterface $form_state,
   if (empty($form['elements']) || !is_array($form['elements'])) {
     return;
   }
-  foreach (['select_nationality', 'visa_type', 'number_of_entries', 'visa_validity'] as $key) {
-    if (!isset($form['elements'][$key])) {
+  $app_key = MOTADED_CUSTOM_TASHEER_WIZARD_APPLICATION_PAGE;
+  $chain_key = MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE;
+  if (!isset($form['elements'][$app_key]['select_nationality'])) {
+    return;
+  }
+  if (empty($form['elements'][$chain_key]) || !is_array($form['elements'][$chain_key])) {
+    return;
+  }
+  $app = &$form['elements'][$app_key];
+  $chain = &$form['elements'][$chain_key];
+  foreach (['visa_type', 'number_of_entries', 'visa_validity'] as $key) {
+    if (!isset($chain[$key])) {
       return;
     }
   }
@@ -619,8 +639,8 @@ function motaded_custom_form_alter(array &$form, FormStateInterface $form_state,
   // the whole region and the native <select> loses focus / closes the dropdown.
   $wrap_open = '<div id="tasheer-dependent-wrapper">';
   $wrap_close = '</div>';
-  $form['elements']['visa_type']['#prefix'] = $wrap_open . ($form['elements']['visa_type']['#prefix'] ?? '');
-  $form['elements']['visa_validity']['#suffix'] = ($form['elements']['visa_validity']['#suffix'] ?? '') . $wrap_close;
+  $chain['visa_type']['#prefix'] = $wrap_open . ($chain['visa_type']['#prefix'] ?? '');
+  $chain['visa_validity']['#suffix'] = ($chain['visa_validity']['#suffix'] ?? '') . $wrap_close;
 
   $ajax = [
     'callback' => 'motaded_custom_tasheer_ajax_refresh',
@@ -628,26 +648,31 @@ function motaded_custom_form_alter(array &$form, FormStateInterface $form_state,
     'wrapper' => 'tasheer-dependent-wrapper',
     'progress' => ['type' => 'throbber'],
   ];
-  $form['elements']['select_nationality']['#ajax'] = $ajax;
-  $form['elements']['visa_type']['#ajax'] = $ajax;
-  $form['elements']['number_of_entries']['#ajax'] = $ajax;
+  $app['select_nationality']['#ajax'] = $ajax;
+  $chain['visa_type']['#ajax'] = $ajax;
+  $chain['number_of_entries']['#ajax'] = $ajax;
 
   motaded_custom_tasheer_apply_dependent_options($form, $form_state);
   $form['#validate'][] = 'motaded_custom_tasheer_validate';
+
+  // Styling for markup defined in the webform (Structure → Webforms → Tasheer visa).
+  $form['#attached']['library'][] = 'motaded_custom/tasheer_visa_appointment';
 }
 
 /**
  * AJAX callback: rerender dependent elements.
  */
 function motaded_custom_tasheer_ajax_refresh(array &$form, FormStateInterface $form_state): array {
+  $chain_key = MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE;
+  $chain = $form['elements'][$chain_key] ?? [];
   return [
     '#type' => 'container',
     '#attributes' => [
       'id' => 'tasheer-dependent-wrapper',
     ],
-    'visa_type' => $form['elements']['visa_type'],
-    'number_of_entries' => $form['elements']['number_of_entries'],
-    'visa_validity' => $form['elements']['visa_validity'],
+    'visa_type' => $chain['visa_type'] ?? [],
+    'number_of_entries' => $chain['number_of_entries'] ?? [],
+    'visa_validity' => $chain['visa_validity'] ?? [],
   ];
 }
 
@@ -656,6 +681,13 @@ function motaded_custom_tasheer_ajax_refresh(array &$form, FormStateInterface $f
  */
 function motaded_custom_tasheer_apply_dependent_options(array &$form, FormStateInterface $form_state): void {
   $settings = \Drupal::config('motaded_custom.tasheer_visa');
+  $app_key = MOTADED_CUSTOM_TASHEER_WIZARD_APPLICATION_PAGE;
+  $chain_key = MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE;
+  if (!isset($form['elements'][$app_key], $form['elements'][$chain_key]) || !is_array($form['elements'][$chain_key])) {
+    return;
+  }
+  $app = &$form['elements'][$app_key];
+  $chain = &$form['elements'][$chain_key];
   $labels = [
     'nationality' => motaded_custom_tasheer_get_options((string) $settings->get('options.nationality')),
     'visa_type' => motaded_custom_tasheer_get_options((string) $settings->get('options.visa_type')),
@@ -664,28 +696,23 @@ function motaded_custom_tasheer_apply_dependent_options(array &$form, FormStateI
   ];
 
   $trigger_name = (string) ($form_state->getTriggeringElement()['#name'] ?? '');
+  $ep_chain = ['elements', $chain_key];
   if (motaded_custom_tasheer_triggered_by($trigger_name, 'select_nationality')) {
-    $form_state->setValue(['elements', 'visa_type'], '');
-    $form_state->setValue('visa_type', '');
-    $form_state->setValue(['elements', 'number_of_entries'], '');
-    $form_state->setValue('number_of_entries', '');
-    $form_state->setValue(['elements', 'visa_validity'], '');
-    $form_state->setValue('visa_validity', '');
+    $form_state->setValue(array_merge($ep_chain, ['visa_type']), '');
+    $form_state->setValue(array_merge($ep_chain, ['number_of_entries']), '');
+    $form_state->setValue(array_merge($ep_chain, ['visa_validity']), '');
   }
   elseif (motaded_custom_tasheer_triggered_by($trigger_name, 'visa_type')) {
-    $form_state->setValue(['elements', 'number_of_entries'], '');
-    $form_state->setValue('number_of_entries', '');
-    $form_state->setValue(['elements', 'visa_validity'], '');
-    $form_state->setValue('visa_validity', '');
+    $form_state->setValue(array_merge($ep_chain, ['number_of_entries']), '');
+    $form_state->setValue(array_merge($ep_chain, ['visa_validity']), '');
   }
   elseif (motaded_custom_tasheer_triggered_by($trigger_name, 'number_of_entries')) {
-    $form_state->setValue(['elements', 'visa_validity'], '');
-    $form_state->setValue('visa_validity', '');
+    $form_state->setValue(array_merge($ep_chain, ['visa_validity']), '');
   }
 
-  $nat = motaded_custom_tasheer_get_input_value($form_state, 'select_nationality');
-  $visa = motaded_custom_tasheer_get_input_value($form_state, 'visa_type');
-  $entries = motaded_custom_tasheer_get_input_value($form_state, 'number_of_entries');
+  $nat = motaded_custom_tasheer_get_nationality($form_state);
+  $visa = motaded_custom_tasheer_get_chain_value($form_state, 'visa_type');
+  $entries = motaded_custom_tasheer_get_chain_value($form_state, 'number_of_entries');
 
   $empty = (string) ($settings->get('messages.no_options') ?: 'No options available');
   $fallback = ['' => $empty];
@@ -695,11 +722,11 @@ function motaded_custom_tasheer_apply_dependent_options(array &$form, FormStateI
   $entriesByNatVisa = $conditions['entries_by_nat_visa_type'];
   $validityByTriple = $conditions['validity_by_nat_visa_type_entry'];
 
-  $form['elements']['select_nationality']['#options'] = $labels['nationality'];
+  $app['select_nationality']['#options'] = $labels['nationality'];
 
   $hasVisaCondition = array_key_exists($nat, $visaTypeByNat);
   $visaAllowed = is_array($visaTypeByNat[$nat] ?? NULL) ? $visaTypeByNat[$nat] : [];
-  $form['elements']['visa_type']['#options'] = $hasVisaCondition
+  $chain['visa_type']['#options'] = $hasVisaCondition
     ? (motaded_custom_tasheer_filter_options($labels['visa_type'], $visaAllowed) ?: $fallback)
     : $labels['visa_type'];
   if ($hasVisaCondition && !in_array($visa, $visaAllowed, TRUE)) {
@@ -710,7 +737,7 @@ function motaded_custom_tasheer_apply_dependent_options(array &$form, FormStateI
   $entriesKey = $nat . '|' . $visa;
   $hasEntriesCondition = array_key_exists($entriesKey, $entriesByNatVisa);
   $entriesAllowed = is_array($entriesByNatVisa[$entriesKey] ?? NULL) ? $entriesByNatVisa[$entriesKey] : [];
-  $form['elements']['number_of_entries']['#options'] = $hasEntriesCondition
+  $chain['number_of_entries']['#options'] = $hasEntriesCondition
     ? (motaded_custom_tasheer_filter_options($labels['number_of_entries'], $entriesAllowed) ?: $fallback)
     : $labels['number_of_entries'];
   if ($hasEntriesCondition && !in_array($entries, $entriesAllowed, TRUE)) {
@@ -720,7 +747,7 @@ function motaded_custom_tasheer_apply_dependent_options(array &$form, FormStateI
   $validityKey = $nat . '|' . $visa . '|' . $entries;
   $hasValidityCondition = array_key_exists($validityKey, $validityByTriple);
   $validityAllowed = is_array($validityByTriple[$validityKey] ?? NULL) ? $validityByTriple[$validityKey] : [];
-  $form['elements']['visa_validity']['#options'] = $hasValidityCondition
+  $chain['visa_validity']['#options'] = $hasValidityCondition
     ? (motaded_custom_tasheer_filter_options($labels['visa_validity'], $validityAllowed) ?: $fallback)
     : $labels['visa_validity'];
 }
@@ -735,10 +762,23 @@ function motaded_custom_tasheer_validate(array &$form, FormStateInterface $form_
     return;
   }
   $values = (array) $form_state->getValue('elements');
-  $nat = (string) ($values['select_nationality'] ?? '');
-  $visa = (string) ($values['visa_type'] ?? '');
-  $entries = (string) ($values['number_of_entries'] ?? '');
-  $validity = (string) ($values['visa_validity'] ?? '');
+  $app_key = MOTADED_CUSTOM_TASHEER_WIZARD_APPLICATION_PAGE;
+  $chain_key = MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE;
+  $app = isset($values[$app_key]) && is_array($values[$app_key]) ? $values[$app_key] : [];
+  $chain = isset($values[$chain_key]) && is_array($values[$chain_key]) ? $values[$chain_key] : [];
+
+  $app_form = $form['elements'][$app_key] ?? [];
+  if (empty($app['tasheer_consent']) && isset($app_form['tasheer_consent'])) {
+    $form_state->setError(
+      $app_form['tasheer_consent'],
+      t('You must consent to Tasheer processing your personal data to continue.')
+    );
+  }
+
+  $nat = (string) ($app['select_nationality'] ?? '');
+  $visa = (string) ($chain['visa_type'] ?? '');
+  $entries = (string) ($chain['number_of_entries'] ?? '');
+  $validity = (string) ($chain['visa_validity'] ?? '');
   if ($nat === '' || $visa === '' || $entries === '' || $validity === '') {
     return;
   }
@@ -748,16 +788,23 @@ function motaded_custom_tasheer_validate(array &$form, FormStateInterface $form_
   $c2 = $conditions['entries_by_nat_visa_type'];
   $c3 = $conditions['validity_by_nat_visa_type_entry'];
 
+  $chain_form = $form['elements'][$chain_key] ?? [];
   if (array_key_exists($nat, $c1) && !in_array($visa, (array) ($c1[$nat] ?? []), TRUE)) {
-    $form_state->setError($form['elements']['visa_type'], t('Invalid visa type for selected nationality.'));
+    if (isset($chain_form['visa_type'])) {
+      $form_state->setError($chain_form['visa_type'], t('Invalid visa type for selected nationality.'));
+    }
     return;
   }
   if (array_key_exists($nat . '|' . $visa, $c2) && !in_array($entries, (array) ($c2[$nat . '|' . $visa] ?? []), TRUE)) {
-    $form_state->setError($form['elements']['number_of_entries'], t('Invalid number of entries for selected nationality and visa type.'));
+    if (isset($chain_form['number_of_entries'])) {
+      $form_state->setError($chain_form['number_of_entries'], t('Invalid number of entries for selected nationality and visa type.'));
+    }
     return;
   }
   if (array_key_exists($nat . '|' . $visa . '|' . $entries, $c3) && !in_array($validity, (array) ($c3[$nat . '|' . $visa . '|' . $entries] ?? []), TRUE)) {
-    $form_state->setError($form['elements']['visa_validity'], t('Invalid visa validity for selected combination.'));
+    if (isset($chain_form['visa_validity'])) {
+      $form_state->setError($chain_form['visa_validity'], t('Invalid visa validity for selected combination.'));
+    }
   }
 }
 
@@ -799,11 +846,30 @@ function motaded_custom_tasheer_triggered_by(string $trigger_name, string $key):
 }
 
 /**
- * Reads value from both nested and flat Webform input structures.
+ * Reads nationality from the application wizard page.
  */
-function motaded_custom_tasheer_get_input_value(FormStateInterface $form_state, string $key): string {
+function motaded_custom_tasheer_get_nationality(FormStateInterface $form_state): string {
   $input = $form_state->getUserInput();
-  $raw = $input['elements'][$key] ?? $input[$key] ?? $form_state->getValue(['elements', $key]) ?? $form_state->getValue($key) ?? '';
+  $page_key = MOTADED_CUSTOM_TASHEER_WIZARD_APPLICATION_PAGE;
+  $page_input = $input['elements'][$page_key] ?? [];
+  $page_input = is_array($page_input) ? $page_input : [];
+  $raw = $page_input['select_nationality']
+    ?? $form_state->getValue(['elements', $page_key, 'select_nationality'])
+    ?? $form_state->getValue(['elements', 'select_nationality']) ?? '';
+  return is_scalar($raw) ? (string) $raw : '';
+}
+
+/**
+ * Reads a dependent-select value from the visa_followup wizard page.
+ */
+function motaded_custom_tasheer_get_chain_value(FormStateInterface $form_state, string $key): string {
+  $input = $form_state->getUserInput();
+  $page_key = MOTADED_CUSTOM_TASHEER_WIZARD_VISA_CHAIN_PAGE;
+  $page_input = $input['elements'][$page_key] ?? [];
+  $page_input = is_array($page_input) ? $page_input : [];
+  $raw = $page_input[$key]
+    ?? $form_state->getValue(['elements', $page_key, $key])
+    ?? $form_state->getValue(['elements', $key]) ?? '';
   return is_scalar($raw) ? (string) $raw : '';
 }
 

@@ -1,0 +1,127 @@
+/**
+ * @file
+ * Tasheer visa webform: appointment table + disclaimer block.
+ */
+
+/* Application type (visa_followup): Individual / Family buttons. */
+.form-item-elements-visa-followup-application-type .webform-options-display-buttons-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 36rem;
+  margin-top: 0.5rem;
+}
+
+.form-item-elements-visa-followup-application-type .webform-options-display-buttons-wrapper .form-type-radio {
+  margin: 0;
+}
+
+.tasheer-appointment-details {
+  margin: 1.25rem 0 1.5rem;
+}
+
+.tasheer-appointment-details__table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.tasheer-appointment-details__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.tasheer-appointment-details__table th,
+.tasheer-appointment-details__table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border: 1px solid #d1d5db;
+}
+
+.tasheer-appointment-details__table thead th {
+  background: #1e3a5f;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tasheer-appointment-details__table tbody td {
+  background: #fff;
+  color: #374151;
+}
+
+.tasheer-appointment-details__note {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.tasheer-appointment-details__disclaimer-title {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.tasheer-appointment-details__disclaimer {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.tasheer-appointment-details__disclaimer p {
+  margin: 0 0 0.65rem;
+}
+
+.tasheer-appointment-details__disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
+/* Consent checkbox: long label */
+.form-item-elements-application-tasheer-consent label.option,
+.form-item-elements-tasheer-consent label.option,
+.form-item-tasheer-consent label.option {
+  max-width: 100%;
+  line-height: 1.45;
+}
+
+/* Terms step: scrollable legal copy (edit markup in Webform UI). */
+.tasheer-terms-scroll {
+  max-height: min(28rem, 55vh);
+  overflow-y: auto;
+  padding: 1rem 1.1rem;
+  margin: 0 0 1rem;
+  border: 1px solid #d1d5db;
+  background: #fafafa;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #374151;
+}
+
+.tasheer-terms-scroll h3,
+.tasheer-terms-scroll h4 {
+  margin: 1rem 0 0.5rem;
+  color: #1e3a5f;
+  font-weight: 600;
+}
+
+.tasheer-terms-scroll h3:first-child,
+.tasheer-terms-scroll h4:first-child {
+  margin-top: 0;
+}
+
+.tasheer-terms-scroll ul {
+  margin: 0 0 0.75rem 1.1rem;
+  padding: 0;
+}
+
+.tasheer-terms-scroll p {
+  margin: 0 0 0.65rem;
+}
+
+.form-item-elements-terms-and-conditions-tasheer-terms-agree label.option,
+.form-item-elements-tasheer-terms-agree label.option {
+  max-width: 100%;
+  line-height: 1.45;
+}

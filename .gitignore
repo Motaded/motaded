@@ -67,3 +67,6 @@ composer.phar
 
 # Ignore reports
 reports/
+
+# Local Drush export (motaded:fr-es-export-map default output)
+/fr-es-redirect-map.csv

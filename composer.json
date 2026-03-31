@@ -136,7 +136,8 @@
                 "Avoid undefined langcode key warning in export": "patches/content_export_csv-undefined-array-key-langcode.patch"
             },
             "drupal/redirect": {
-                "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff"
+                "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff",
+                "redirect_404: safe logger.factory->get() when channel omitted": "patches/redirect_404-logger-factory-get-default.patch"
             }
         },
         "drupal-scaffold": {

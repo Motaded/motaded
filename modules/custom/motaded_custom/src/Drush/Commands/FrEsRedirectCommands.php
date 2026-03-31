@@ -58,6 +58,9 @@ final class FrEsRedirectCommands extends DrushCommands {
     $skip_existing_redirect = 0;
     $report = [];
 
+    // Views/static paths are not path_alias records; add them explicitly.
+    $this->createStaticLanguageRedirects($dry, $created, $skip_existing_redirect, $report);
+
     while (TRUE) {
       $ids = $storage->getQuery()
         ->accessCheck(FALSE)
@@ -144,6 +147,58 @@ final class FrEsRedirectCommands extends DrushCommands {
     }
     if (count($report) > 40) {
       $this->output()->writeln('… +' . (count($report) - 40) . ' more');
+    }
+  }
+
+  /**
+   * Adds redirects for known public routes that are not stored as path aliases.
+   *
+   * After removing language prefixes, URLs like /fr and /fr/blog would 404
+   * unless a redirect entity exists.
+   */
+  private function createStaticLanguageRedirects(
+    bool $dry,
+    int &$created,
+    int &$skip_existing_redirect,
+    array &$report,
+  ): void {
+    $map = [
+      // Language prefix roots.
+      'fr' => '/',
+      'es' => '/',
+      // Key listing pages (Views/menu routes).
+      'fr/blog' => '/blog',
+      'es/blog' => '/blog',
+      'fr/news' => '/news',
+      'es/news' => '/news',
+      'fr/services' => '/services',
+      'es/services' => '/services',
+      'fr/partners' => '/partners',
+      'es/partners' => '/partners',
+      // Contact page path used in metatags defaults.
+      'fr/contact-us' => '/contact-us',
+      'es/contact-us' => '/contact-us',
+    ];
+
+    foreach ($map as $source_key => $target_path) {
+      $source_key = trim((string) $source_key, '/');
+      $target_path = $this->normalizeInternalPath((string) $target_path);
+      $source_display = '/' . $source_key;
+
+      if ($this->redirectSourcePathExists($source_key)) {
+        $skip_existing_redirect++;
+        continue;
+      }
+
+      $report[] = sprintf('%s → %s', $source_display, $target_path);
+      if (!$dry) {
+        $redirect = Redirect::create();
+        $redirect->setSource($source_key);
+        $redirect->setRedirect($this->redirectDestinationUri($target_path));
+        $redirect->setStatusCode(301);
+        $redirect->save();
+      }
+      $created++;
     }
   }
 

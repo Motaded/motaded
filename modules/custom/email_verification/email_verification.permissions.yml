@@ -1,0 +1,3 @@
+administer email verification settings:
+  title: 'Administer email verification settings'
+  restrict access: true

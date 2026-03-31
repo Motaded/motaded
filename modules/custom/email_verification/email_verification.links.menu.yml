@@ -1,0 +1,6 @@
+email_verification.settings:
+  title: 'Email verification (webforms)'
+  description: 'Choose webforms that require an email verification code before submission.'
+  parent: system.admin_config_system
+  route_name: email_verification.settings
+  weight: 50

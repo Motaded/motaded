@@ -22,7 +22,7 @@ final class NodeToAliasRedirectSubscriber implements EventSubscriberInterface {
   /**
    * Language prefixes from language.negotiation (path_prefix).
    */
-  private const LANG_PREFIXES = ['ar', 'es', 'fr', 'zh-hans'];
+  private const LANG_PREFIXES = ['ar', 'zh-hans'];
 
   /**
    * @param \Drupal\path_alias\AliasManagerInterface $aliasManager

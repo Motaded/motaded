@@ -1,0 +1,23 @@
+email_verification.settings:
+  path: '/admin/config/system/email-verification'
+  defaults:
+    _form: '\Drupal\email_verification\Form\EmailVerificationSettingsForm'
+    _title: 'Email verification'
+  requirements:
+    _permission: 'administer email verification settings'
+
+email_verification.send_otp:
+  path: '/email-verification/send-otp'
+  defaults:
+    _controller: '\Drupal\email_verification\Controller\EmailVerificationController::sendOtp'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+email_verification.verify_otp:
+  path: '/email-verification/verify-otp'
+  defaults:
+    _controller: '\Drupal\email_verification\Controller\EmailVerificationController::verifyOtp'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
