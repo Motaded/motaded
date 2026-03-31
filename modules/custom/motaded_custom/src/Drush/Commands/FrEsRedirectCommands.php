@@ -457,6 +457,328 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Imports redirects from the "Rebuilding url - Url.csv" file (from_path → to_path).
+   *
+   * Intended for bulk URL restructuring like:
+   * - /foo → /blog/foo
+   * - /bar → /services/bar
+   *
+   * CSV headers:
+   * - from_path
+   * - to_path
+   * Optional filters:
+   * - section (e.g. blog/services)
+   */
+  #[CLI\Command(name: 'motaded:rebuild-url-import')]
+  #[CLI\Option(name: 'file', description: 'Path to CSV file to import.')]
+  #[CLI\Option(name: 'section', description: 'Comma-separated section filter (e.g. blog,services). If omitted, imports all rows.')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving redirects.')]
+  #[CLI\Option(name: 'force', description: 'Update existing redirects for the same source path.')]
+  #[CLI\Usage(name: 'drush motaded:rebuild-url-import --file=/tmp/rebuild.csv --section=blog,services --dry-run', description: 'Dry-run import blog/services URL redirects.')]
+  public function importRebuildingUrls(array $options = ['file' => NULL, 'section' => NULL, 'dry-run' => FALSE, 'force' => FALSE]): void {
+    $file = (string) ($options['file'] ?? '');
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Provide an absolute path to the CSV.');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $force = filter_var($options['force'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+
+    $section_filter = [];
+    $section_opt = (string) ($options['section'] ?? '');
+    if (trim($section_opt) !== '') {
+      foreach (explode(',', $section_opt) as $s) {
+        $s = strtolower(trim($s));
+        if ($s !== '') {
+          $section_filter[$s] = TRUE;
+        }
+      }
+    }
+
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV file: %s', $file));
+    }
+
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV header row is missing/invalid.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+    $col = array_flip($header);
+
+    $from_idx = $col['from_path'] ?? NULL;
+    $to_idx = $col['to_path'] ?? NULL;
+    $section_idx = $col['section'] ?? NULL;
+
+    if (!is_int($from_idx) || !is_int($to_idx)) {
+      fclose($fh);
+      throw new \InvalidArgumentException('CSV must include from_path and to_path columns.');
+    }
+
+    $created = 0;
+    $updated = 0;
+    $skipped = 0;
+    $row_num = 1;
+
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      $row_num++;
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+
+      if (is_int($section_idx) && $section_filter !== []) {
+        $sec = strtolower(trim((string) ($row[$section_idx] ?? '')));
+        if ($sec === '' || empty($section_filter[$sec])) {
+          continue;
+        }
+      }
+
+      $from_path = (string) ($row[$from_idx] ?? '');
+      $to_path = (string) ($row[$to_idx] ?? '');
+
+      $from_path = $this->normalizeInternalPath($from_path);
+      $source_key = $this->normalizeRedirectSourceKey($from_path);
+      if ($source_key === '' || $this->shouldSkipAnySourcePath($source_key)) {
+        $skipped++;
+        continue;
+      }
+
+      $to_path = trim($to_path);
+      if ($to_path === '') {
+        $this->logger()->warning(sprintf('Row %d: empty to_path for source %s; skipped.', $row_num, $from_path));
+        $skipped++;
+        continue;
+      }
+
+      $destination_uri = $this->destinationUriFromCsvTarget($to_path);
+
+      $existing_ids = $this->entityTypeManager->getStorage('redirect')->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('redirect_source.path', $source_key)
+        ->range(0, 1)
+        ->execute();
+
+      if ($existing_ids !== NULL && $existing_ids !== []) {
+        if (!$force) {
+          $skipped++;
+          continue;
+        }
+        $rid = (int) array_key_first($existing_ids);
+        /** @var \Drupal\redirect\Entity\Redirect|null $redirect */
+        $redirect = $this->entityTypeManager->getStorage('redirect')->load($rid);
+        if (!$redirect instanceof Redirect) {
+          $skipped++;
+          continue;
+        }
+        if (!$dry) {
+          $redirect->setRedirect($destination_uri);
+          $redirect->setStatusCode(301);
+          $redirect->save();
+        }
+        $updated++;
+        continue;
+      }
+
+      if (!$dry) {
+        $redirect = Redirect::create();
+        $redirect->setSource($source_key);
+        $redirect->setRedirect($destination_uri);
+        $redirect->setStatusCode(301);
+        $redirect->save();
+      }
+      $created++;
+    }
+
+    fclose($fh);
+    $this->logger()->notice(sprintf(
+      '%s: created %d, updated %d, skipped %d. File: %s',
+      $dry ? 'Dry-run' : 'Import',
+      $created,
+      $updated,
+      $skipped,
+      $file,
+    ));
+  }
+
+  /**
+   * Updates node path aliases from the "Rebuilding url - Url.csv" file.
+   *
+   * This changes the actual URLs (path aliases), not redirects.
+   *
+   * CSV headers:
+   * - nid
+   * - langcode
+   * - to_path
+   *
+   * Notes:
+   * - If to_path starts with "/{langcode}/", the language prefix is stripped
+   *   before saving the alias (Drupal adds it via language negotiation).
+   * - Existing redirects can be created automatically by Redirect module if
+   *   configured (auto_redirect).
+   */
+  #[CLI\Command(name: 'motaded:rebuild-url-update-aliases')]
+  #[CLI\Option(name: 'file', description: 'Path to CSV file to import.')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving aliases.')]
+  #[CLI\Option(name: 'only-langcodes', description: 'Comma-separated langcodes to process (e.g. ar,en). If omitted, all rows are processed.')]
+  #[CLI\Usage(name: 'drush motaded:rebuild-url-update-aliases --file=/tmp/rebuild.csv --dry-run', description: 'Dry-run update path aliases from CSV to_path.')]
+  public function updateAliasesFromRebuildCsv(array $options = ['file' => NULL, 'dry-run' => FALSE, 'only-langcodes' => NULL]): void {
+    $file = (string) ($options['file'] ?? '');
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Provide an absolute path to the CSV.');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+
+    $only = [];
+    $only_opt = (string) ($options['only-langcodes'] ?? '');
+    if (trim($only_opt) !== '') {
+      foreach (explode(',', $only_opt) as $lc) {
+        $lc = strtolower(trim($lc));
+        if ($lc !== '') {
+          $only[$lc] = TRUE;
+        }
+      }
+    }
+
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV file: %s', $file));
+    }
+
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV header row is missing/invalid.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+    $col = array_flip($header);
+
+    $nid_idx = $col['nid'] ?? NULL;
+    $lang_idx = $col['langcode'] ?? NULL;
+    $to_idx = $col['to_path'] ?? NULL;
+
+    if (!is_int($nid_idx) || !is_int($lang_idx) || !is_int($to_idx)) {
+      fclose($fh);
+      throw new \InvalidArgumentException('CSV must include nid, langcode, and to_path columns.');
+    }
+
+    $storage = $this->entityTypeManager->getStorage('path_alias');
+    $updated = 0;
+    $created = 0;
+    $skipped = 0;
+    $conflicts = 0;
+    $row_num = 1;
+
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      $row_num++;
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+
+      $nid = (int) ($row[$nid_idx] ?? 0);
+      $langcode = strtolower(trim((string) ($row[$lang_idx] ?? '')));
+      $to_path = (string) ($row[$to_idx] ?? '');
+
+      if ($nid <= 0 || $langcode === '') {
+        $skipped++;
+        continue;
+      }
+      if ($only !== [] && empty($only[$langcode])) {
+        continue;
+      }
+
+      $internal = '/node/' . $nid;
+      $alias_to_save = $this->aliasValueFromPublicPath($to_path, $langcode);
+      if ($alias_to_save === '') {
+        $this->logger()->warning(sprintf('Row %d: empty/invalid to_path for nid %d (%s); skipped.', $row_num, $nid, $langcode));
+        $skipped++;
+        continue;
+      }
+
+      // Prevent alias collisions: another path already uses this alias in this language.
+      $existing_for_alias = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('alias', $alias_to_save)
+        ->condition('langcode', $langcode)
+        ->range(0, 1)
+        ->execute();
+
+      if ($existing_for_alias !== NULL && $existing_for_alias !== []) {
+        $existing_id = (int) array_key_first($existing_for_alias);
+        /** @var \Drupal\path_alias\PathAliasInterface|null $collision */
+        $collision = $storage->load($existing_id);
+        if ($collision instanceof PathAliasInterface && $this->normalizeInternalPath($collision->getPath()) !== $internal) {
+          $this->logger()->warning(sprintf(
+            'Row %d: alias collision %s (%s) already points to %s; wanted %s. Skipped.',
+            $row_num,
+            $alias_to_save,
+            $langcode,
+            $collision->getPath(),
+            $internal,
+          ));
+          $conflicts++;
+          continue;
+        }
+      }
+
+      // Update existing alias for this internal path + language, else create one.
+      $existing_ids = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('path', $internal)
+        ->condition('langcode', $langcode)
+        ->condition('status', TRUE)
+        ->range(0, 1)
+        ->execute();
+
+      if ($existing_ids !== NULL && $existing_ids !== []) {
+        $id = (int) array_key_first($existing_ids);
+        /** @var \Drupal\path_alias\PathAliasInterface|null $alias */
+        $alias = $storage->load($id);
+        if (!$alias instanceof PathAliasInterface) {
+          $skipped++;
+          continue;
+        }
+        if ($alias->getAlias() === $alias_to_save) {
+          $skipped++;
+          continue;
+        }
+        if (!$dry) {
+          // PathAliasInterface doesn't guarantee a setter; the concrete entity does.
+          $alias->set('alias', $alias_to_save);
+          $alias->save();
+        }
+        $updated++;
+        continue;
+      }
+
+      if (!$dry) {
+        $new_alias = $storage->create([
+          'path' => $internal,
+          'alias' => $alias_to_save,
+          'langcode' => $langcode,
+          'status' => 1,
+        ]);
+        $new_alias->save();
+      }
+      $created++;
+    }
+
+    fclose($fh);
+
+    $this->logger()->notice(sprintf(
+      '%s: created %d, updated %d, skipped %d, conflicts %d. File: %s',
+      $dry ? 'Dry-run' : 'Update aliases',
+      $created,
+      $updated,
+      $skipped,
+      $conflicts,
+      $file,
+    ));
+  }
+
+  /**
    * Project root (Composer root): parent of the Drupal root when composer.json lives there.
    *
    * With DDEV, this path is the mounted repo directory (same as on the host).
@@ -564,14 +886,69 @@ final class FrEsRedirectCommands extends DrushCommands {
     if ($target === '') {
       return 'internal:/';
     }
+    // Normalize common malformed internal URIs that can appear in DB/inputs.
+    $target = ltrim($target, '/');
+    if (str_starts_with($target, 'internal:/internal:')) {
+      $target = str_replace('internal:/internal:', 'internal:', $target);
+    }
+    if (str_starts_with($target, 'internal://')) {
+      // internal://foo → internal:/foo
+      $target = 'internal:/' . ltrim(substr($target, strlen('internal://')), '/');
+    }
+    if (preg_match('#^internal:#i', $target)) {
+      // Already a destination URI.
+      return $target;
+    }
     if (preg_match('#^https?://#i', $target)) {
       return $target;
     }
     return $this->redirectDestinationUri($target);
   }
 
+  /**
+   * Generic scope guard for bulk imports (do not create redirects for admin paths).
+   */
+  private function shouldSkipAnySourcePath(string $source_key): bool {
+    if ($source_key === '') {
+      return TRUE;
+    }
+    if (preg_match('#(^|/)admin(/|$)#', $source_key)) {
+      return TRUE;
+    }
+    if (preg_match('#(^|/)user(/|$)#', $source_key)) {
+      return TRUE;
+    }
+    if (preg_match('#(^|/)(batch|cron|devel|filter|system)(/|$)#', $source_key)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
   private function normalizeInternalPath(string $path): string {
     return '/' . trim($path, '/');
+  }
+
+  /**
+   * Converts a public CSV path into a path_alias alias value for a language.
+   */
+  private function aliasValueFromPublicPath(string $public_path, string $langcode): string {
+    $public_path = $this->normalizeInternalPath($public_path);
+    if ($public_path === '/') {
+      // Don't try to map a node alias to the site front page.
+      return '';
+    }
+
+    // Strip language prefix if present (e.g. /ar/blog/foo → /blog/foo).
+    $trimmed = ltrim($public_path, '/');
+    if ($langcode !== '' && ($trimmed === $langcode || str_starts_with($trimmed, $langcode . '/'))) {
+      $rest = $trimmed === $langcode ? '' : substr($trimmed, strlen($langcode . '/'));
+      $public_path = $this->normalizeInternalPath($rest);
+      if ($public_path === '/') {
+        return '';
+      }
+    }
+
+    return $public_path;
   }
 
   private function normalizeRedirectSourceKey(string $path_with_slash): string {
