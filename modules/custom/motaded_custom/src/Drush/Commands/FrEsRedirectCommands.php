@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\motaded_custom\Drush\Commands;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -779,6 +780,179 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Rewrites old internal links inside content fields using a mapping CSV.
+   *
+   * Input file format: "Rebuilding url - Old links in content.csv"
+   * Columns:
+   * - entity_type, entity_id, langcode, table, column, old_paths, new_paths
+   *
+   * Currently supported targets:
+   * - node__body.body_value (field: body, property: value)
+   * - block_content__body.body_value (field: body, property: value)
+   */
+  #[CLI\Command(name: 'motaded:rebuild-url-fix-content-links')]
+  #[CLI\Option(name: 'file', description: 'Path to CSV file to import.')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving entities.')]
+  #[CLI\Option(name: 'limit', description: 'Max rows to process (0 = no limit).')]
+  #[CLI\Usage(name: 'drush motaded:rebuild-url-fix-content-links --file=/tmp/old-links.csv --dry-run', description: 'Dry-run rewrite internal links in content fields.')]
+  public function fixContentLinksFromCsv(array $options = ['file' => NULL, 'dry-run' => FALSE, 'limit' => 0]): void {
+    $file = (string) ($options['file'] ?? '');
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Provide an absolute path to the CSV.');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $limit = max(0, (int) ($options['limit'] ?? 0));
+
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV file: %s', $file));
+    }
+
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV header row is missing/invalid.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+    $col = array_flip($header);
+
+    $required = ['entity_type', 'entity_id', 'langcode', 'table', 'column', 'old_paths', 'new_paths'];
+    foreach ($required as $name) {
+      if (!array_key_exists($name, $col)) {
+        fclose($fh);
+        throw new \InvalidArgumentException(sprintf('CSV missing required column: %s', $name));
+      }
+    }
+
+    $processed = 0;
+    $changed_entities = 0;
+    $changed_links = 0;
+    $skipped = 0;
+    $unsupported = 0;
+    $missing_entity = 0;
+
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+      $processed++;
+      if ($limit > 0 && $processed > $limit) {
+        break;
+      }
+
+      $entity_type = (string) ($row[$col['entity_type']] ?? '');
+      $entity_id = (int) ($row[$col['entity_id']] ?? 0);
+      $langcode = (string) ($row[$col['langcode']] ?? '');
+      $table = (string) ($row[$col['table']] ?? '');
+      $column = (string) ($row[$col['column']] ?? '');
+      $old_paths_raw = (string) ($row[$col['old_paths']] ?? '');
+      $new_paths_raw = (string) ($row[$col['new_paths']] ?? '');
+
+      if ($entity_type === '' || $entity_id <= 0 || $langcode === '') {
+        $skipped++;
+        continue;
+      }
+
+      $target = $this->fieldTargetFromTableColumn($entity_type, $table, $column);
+      if ($target === NULL) {
+        $unsupported++;
+        continue;
+      }
+      [$field_name, $property] = $target;
+
+      $old_paths = array_values(array_filter(array_map('trim', explode(' | ', $old_paths_raw)), static fn($v) => $v !== ''));
+      $new_paths = array_values(array_filter(array_map('trim', explode(' | ', $new_paths_raw)), static fn($v) => $v !== ''));
+      if ($old_paths === [] || $new_paths === [] || count($old_paths) !== count($new_paths)) {
+        $this->logger()->warning(sprintf(
+          'Skip %s %d (%s): old/new paths mismatch (%d vs %d).',
+          $entity_type,
+          $entity_id,
+          $langcode,
+          count($old_paths),
+          count($new_paths),
+        ));
+        $skipped++;
+        continue;
+      }
+
+      $storage = $this->entityTypeManager->getStorage($entity_type);
+      $entity = $storage->load($entity_id);
+      if (!$entity instanceof TranslatableInterface || !$entity instanceof FieldableEntityInterface) {
+        $missing_entity++;
+        continue;
+      }
+      if (!$entity->hasTranslation($langcode)) {
+        $missing_entity++;
+        continue;
+      }
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface&\Drupal\Core\Entity\TranslatableInterface $t */
+      $t = $entity->getTranslation($langcode);
+      if (!$t->hasField($field_name)) {
+        $unsupported++;
+        continue;
+      }
+
+      $item = $t->get($field_name)->first();
+      if ($item === NULL) {
+        $skipped++;
+        continue;
+      }
+      $value = (string) ($item->{$property} ?? '');
+      if ($value === '') {
+        $skipped++;
+        continue;
+      }
+
+      $before = $value;
+      $local_changed = 0;
+      foreach ($old_paths as $i => $old) {
+        $new = $new_paths[$i];
+        // Only rewrite internal paths (start with /). Keep absolute URLs untouched.
+        if ($old === '' || $new === '' || $old[0] !== '/' || $new[0] !== '/') {
+          continue;
+        }
+        $count = 0;
+        if ($property === 'uri') {
+          $value = $this->replacePathOccurrencesForLinkUri($value, $old, $new, $count);
+        }
+        else {
+          $value = $this->replacePathOccurrences($value, $old, $new, $count);
+        }
+        $local_changed += $count;
+      }
+
+      if ($value === $before) {
+        $skipped++;
+        continue;
+      }
+
+      if (!$dry) {
+        // Do not overwrite text format/other properties (prevents HTML being escaped).
+        $t->get($field_name)->first()?->set($property, $value);
+        $t->save();
+      }
+
+      $changed_entities++;
+      $changed_links += $local_changed;
+    }
+
+    fclose($fh);
+
+    $this->logger()->notice(sprintf(
+      '%s: processed %d row(s). Changed entities: %d. Rewrites: %d. Skipped: %d. Missing: %d. Unsupported: %d. File: %s',
+      $dry ? 'Dry-run' : 'Rewrite links',
+      $processed,
+      $changed_entities,
+      $changed_links,
+      $skipped,
+      $missing_entity,
+      $unsupported,
+      $file,
+    ));
+  }
+
+  /**
    * Project root (Composer root): parent of the Drupal root when composer.json lives there.
    *
    * With DDEV, this path is the mounted repo directory (same as on the host).
@@ -949,6 +1123,55 @@ final class FrEsRedirectCommands extends DrushCommands {
     }
 
     return $public_path;
+  }
+
+  /**
+   * Maps report table/column to an entity field + property.
+   *
+   * @return array{0:string,1:string}|null
+   */
+  private function fieldTargetFromTableColumn(string $entity_type, string $table, string $column): ?array {
+    $key = $entity_type . '|' . $table . '|' . $column;
+    return match ($key) {
+      'node|node__body|body_value' => ['body', 'value'],
+      'block_content|block_content__body|body_value' => ['body', 'value'],
+      'paragraph|paragraph__field_link|field_link_uri' => ['field_link', 'uri'],
+      default => NULL,
+    };
+  }
+
+  /**
+   * Replaces occurrences of an internal path within HTML/text safely-ish.
+   *
+   * Only replaces when the old path is followed by a URL boundary.
+   */
+  private function replacePathOccurrences(string $text, string $old, string $new, int &$count): string {
+    $old = $this->normalizeInternalPath($old);
+    $new = $this->normalizeInternalPath($new);
+    $pattern = '~' . preg_quote($old, '~') . '(?=($|[\"\'\s?#/]))~u';
+    $result = preg_replace($pattern, $new, $text, -1, $count_local);
+    $count += (int) $count_local;
+    return is_string($result) ? $result : $text;
+  }
+
+  /**
+   * Like replacePathOccurrences(), but also supports link field URIs.
+   *
+   * For link fields, the stored value is often "internal:/path". We rewrite both
+   * the plain path and the internal URI form.
+   */
+  private function replacePathOccurrencesForLinkUri(string $text, string $old, string $new, int &$count): string {
+    $old_path = $this->normalizeInternalPath($old);
+    $new_path = $this->normalizeInternalPath($new);
+
+    $text = $this->replacePathOccurrences($text, $old_path, $new_path, $count);
+
+    $old_uri = 'internal:' . $old_path;
+    $new_uri = 'internal:' . $new_path;
+    $pattern = '~' . preg_quote($old_uri, '~') . '(?=($|[\"\'\s?#/]))~u';
+    $result = preg_replace($pattern, $new_uri, $text, -1, $count_local);
+    $count += (int) $count_local;
+    return is_string($result) ? $result : $text;
   }
 
   private function normalizeRedirectSourceKey(string $path_with_slash): string {
