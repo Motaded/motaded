@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Drupal\motaded_custom\Drush\Commands;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\path_alias\AliasManagerInterface;
@@ -35,11 +38,25 @@ final class FrEsRedirectCommands extends DrushCommands {
    */
   private const SOURCE_LANG_PREFIX = ['fr', 'es'];
 
+  /**
+   * Field types scanned for duplicate /services/services and /blog/blog segments.
+   */
+  private const DUPLICATE_PREFIX_FIELD_TYPES = [
+    'text',
+    'text_long',
+    'text_with_summary',
+    'string_long',
+    'string',
+    'link',
+  ];
+
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly AliasManagerInterface $aliasManager,
     protected readonly Connection $database,
     protected readonly LanguageManagerInterface $languageManager,
+    protected readonly EntityFieldManagerInterface $entityFieldManager,
+    protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
   ) {
     parent::__construct();
   }
@@ -788,14 +805,17 @@ final class FrEsRedirectCommands extends DrushCommands {
    *
    * Currently supported targets:
    * - node__body.body_value (field: body, property: value)
+   * - node__field_keywords.field_keywords_value (field: field_keywords, property: value)
    * - block_content__body.body_value (field: body, property: value)
+   * - paragraph__field_link.field_link_uri (field: field_link, property: uri)
    */
   #[CLI\Command(name: 'motaded:rebuild-url-fix-content-links')]
   #[CLI\Option(name: 'file', description: 'Path to CSV file to import.')]
   #[CLI\Option(name: 'dry-run', description: 'Preview changes without saving entities.')]
   #[CLI\Option(name: 'limit', description: 'Max rows to process (0 = no limit).')]
+  #[CLI\Option(name: 'report', description: 'Write details CSV report to this file (skipped/missing/unsupported).')]
   #[CLI\Usage(name: 'drush motaded:rebuild-url-fix-content-links --file=/tmp/old-links.csv --dry-run', description: 'Dry-run rewrite internal links in content fields.')]
-  public function fixContentLinksFromCsv(array $options = ['file' => NULL, 'dry-run' => FALSE, 'limit' => 0]): void {
+  public function fixContentLinksFromCsv(array $options = ['file' => NULL, 'dry-run' => FALSE, 'limit' => 0, 'report' => NULL]): void {
     $file = (string) ($options['file'] ?? '');
     if ($file === '' || !is_file($file)) {
       throw new \InvalidArgumentException('Missing or unreadable --file. Provide an absolute path to the CSV.');
@@ -803,6 +823,27 @@ final class FrEsRedirectCommands extends DrushCommands {
 
     $dry = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
     $limit = max(0, (int) ($options['limit'] ?? 0));
+    $report_path = (string) ($options['report'] ?? '');
+    $report_path = trim($report_path) !== '' ? $report_path : '';
+    $report_fh = NULL;
+    if ($report_path !== '') {
+      $report_fh = fopen($report_path, 'wb');
+      if ($report_fh === FALSE) {
+        throw new \RuntimeException(sprintf('Cannot open report file for writing: %s', $report_path));
+      }
+      fwrite($report_fh, "\xEF\xBB\xBF");
+      fputcsv($report_fh, [
+        'category',
+        'entity_type',
+        'entity_id',
+        'langcode',
+        'table',
+        'column',
+        'old_paths',
+        'new_paths',
+        'note',
+      ]);
+    }
 
     $fh = fopen($file, 'rb');
     if ($fh === FALSE) {
@@ -851,12 +892,18 @@ final class FrEsRedirectCommands extends DrushCommands {
 
       if ($entity_type === '' || $entity_id <= 0 || $langcode === '') {
         $skipped++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['skipped', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'missing required identifiers']);
+        }
         continue;
       }
 
       $target = $this->fieldTargetFromTableColumn($entity_type, $table, $column);
       if ($target === NULL) {
         $unsupported++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['unsupported', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'unsupported table/column']);
+        }
         continue;
       }
       [$field_name, $property] = $target;
@@ -873,6 +920,9 @@ final class FrEsRedirectCommands extends DrushCommands {
           count($new_paths),
         ));
         $skipped++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['skipped', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'old/new paths mismatch']);
+        }
         continue;
       }
 
@@ -880,27 +930,42 @@ final class FrEsRedirectCommands extends DrushCommands {
       $entity = $storage->load($entity_id);
       if (!$entity instanceof TranslatableInterface || !$entity instanceof FieldableEntityInterface) {
         $missing_entity++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['missing', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'entity missing or not translatable/fieldable']);
+        }
         continue;
       }
       if (!$entity->hasTranslation($langcode)) {
         $missing_entity++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['missing', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'translation missing']);
+        }
         continue;
       }
       /** @var \Drupal\Core\Entity\FieldableEntityInterface&\Drupal\Core\Entity\TranslatableInterface $t */
       $t = $entity->getTranslation($langcode);
       if (!$t->hasField($field_name)) {
         $unsupported++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['unsupported', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'field missing on entity translation']);
+        }
         continue;
       }
 
       $item = $t->get($field_name)->first();
       if ($item === NULL) {
         $skipped++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['skipped', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'empty field item']);
+        }
         continue;
       }
       $value = (string) ($item->{$property} ?? '');
       if ($value === '') {
         $skipped++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['skipped', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'empty field value']);
+        }
         continue;
       }
 
@@ -917,13 +982,16 @@ final class FrEsRedirectCommands extends DrushCommands {
           $value = $this->replacePathOccurrencesForLinkUri($value, $old, $new, $count);
         }
         else {
-          $value = $this->replacePathOccurrences($value, $old, $new, $count);
+          $value = $this->replacePathOccurrencesWithMotadedHost($value, $old, $new, $count);
         }
         $local_changed += $count;
       }
 
       if ($value === $before) {
         $skipped++;
+        if ($report_fh) {
+          fputcsv($report_fh, ['skipped', $entity_type, $entity_id, $langcode, $table, $column, $old_paths_raw, $new_paths_raw, 'no changes (already updated)']);
+        }
         continue;
       }
 
@@ -938,6 +1006,10 @@ final class FrEsRedirectCommands extends DrushCommands {
     }
 
     fclose($fh);
+    if ($report_fh) {
+      fclose($report_fh);
+      $this->logger()->notice(sprintf('Wrote report: %s', $report_path));
+    }
 
     $this->logger()->notice(sprintf(
       '%s: processed %d row(s). Changed entities: %d. Rewrites: %d. Skipped: %d. Missing: %d. Unsupported: %d. File: %s',
@@ -950,6 +1022,298 @@ final class FrEsRedirectCommands extends DrushCommands {
       $unsupported,
       $file,
     ));
+  }
+
+  /**
+   * Collapses duplicate URL path segments in entity text/link fields (content fix, not redirects).
+   *
+   * Fixes repeated /services/services/... and /blog/blog/... (any depth), including after
+   * language prefixes (e.g. /ar/services/services/...) and inside https://motaded.com.sa/... .
+   */
+  #[CLI\Command(name: 'motaded:fix-content-duplicate-path-prefixes')]
+  #[CLI\Option(name: 'dry-run', description: 'List counts without saving entities.')]
+  #[CLI\Option(name: 'types', description: 'Comma-separated entity type IDs (default: node,paragraph,block_content,taxonomy_term).')]
+  #[CLI\Option(name: 'report', description: 'Optional CSV path listing each changed field.')]
+  #[CLI\Usage(name: 'drush motaded:fix-content-duplicate-path-prefixes --dry-run', description: 'Preview duplicate-prefix fixes.')]
+  public function fixContentDuplicatePathPrefixes(array $options = ['dry-run' => TRUE, 'types' => 'node,paragraph,block_content,taxonomy_term', 'report' => NULL]): void {
+    $dry = filter_var($options['dry-run'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $types_raw = (string) ($options['types'] ?? 'node,paragraph,block_content,taxonomy_term');
+    $entity_type_ids = array_values(array_filter(array_map('trim', explode(',', $types_raw)), static fn($v) => $v !== ''));
+    $report_path = trim((string) ($options['report'] ?? ''));
+    $report_fh = NULL;
+    if ($report_path !== '') {
+      $report_fh = fopen($report_path, 'wb');
+      if ($report_fh === FALSE) {
+        throw new \RuntimeException(sprintf('Cannot open report: %s', $report_path));
+      }
+      fwrite($report_fh, "\xEF\xBB\xBF");
+      fputcsv($report_fh, ['entity_type', 'entity_id', 'langcode', 'field_name', 'replacements']);
+    }
+
+    $changed_entities = 0;
+    $changed_fields = 0;
+    $total_replacements = 0;
+
+    foreach ($entity_type_ids as $entity_type_id) {
+      if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+        $this->logger()->warning(sprintf('Unknown entity type, skipping: %s', $entity_type_id));
+        continue;
+      }
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      $bundle_key = $entity_type->getKey('bundle');
+      $id_key = $entity_type->getKey('id');
+      if (!$id_key) {
+        continue;
+      }
+      $storage = $this->entityTypeManager->getStorage($entity_type_id);
+      $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+      if ($bundle_key === NULL) {
+        $this->logger()->warning(sprintf('Entity type has no bundle key, skipping: %s', $entity_type_id));
+        continue;
+      }
+      foreach (array_keys($bundles) as $bundle) {
+        $field_map = $this->duplicatePrefixProcessableFields($entity_type_id, (string) $bundle);
+        if ($field_map === []) {
+          continue;
+        }
+        $this->processDuplicatePrefixEntityBatch(
+          $entity_type_id,
+          $storage,
+          $id_key,
+          $bundle_key,
+          (string) $bundle,
+          $field_map,
+          $dry,
+          $changed_entities,
+          $changed_fields,
+          $total_replacements,
+          $report_fh,
+        );
+      }
+    }
+
+    if ($report_fh !== NULL) {
+      fclose($report_fh);
+      $this->logger()->notice(sprintf('Wrote report: %s', $report_path));
+    }
+
+    $this->logger()->notice(sprintf(
+      $dry
+        ? 'Dry-run: would save %d entity translation(s), touch %d field(s), apply %d substring replacement(s) (no DB writes).'
+        : 'Updated: saved %d entity translation(s), touched %d field(s), applied %d substring replacement(s).',
+      $changed_entities,
+      $changed_fields,
+      $total_replacements,
+    ));
+  }
+
+  /**
+   * @param array<string, string> $field_map field name => field type plugin id
+   * @param resource|null $report_fh
+   */
+  private function processDuplicatePrefixEntityBatch(
+    string $entity_type_id,
+    $storage,
+    string $id_key,
+    string $bundle_property,
+    string $bundle_id,
+    array $field_map,
+    bool $dry,
+    int &$changed_entities,
+    int &$changed_fields,
+    int &$total_replacements,
+    $report_fh,
+  ): void {
+    $last_id = 0;
+    $batch = 80;
+    while (TRUE) {
+      $query = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($bundle_property, $bundle_id)
+        ->condition($id_key, $last_id, '>')
+        ->sort($id_key, 'ASC')
+        ->range(0, $batch);
+      $ids = $query->execute();
+      if ($ids === NULL || $ids === []) {
+        break;
+      }
+      $last_id = (int) max($ids);
+      foreach ($storage->loadMultiple($ids) as $entity) {
+        if (!$entity instanceof FieldableEntityInterface) {
+          continue;
+        }
+        if ($entity->bundle() !== $bundle_id) {
+          continue;
+        }
+        $to_save_langs = [];
+        if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
+          foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+            $t = $entity->getTranslation($langcode);
+            if (!$t instanceof FieldableEntityInterface) {
+              continue;
+            }
+            $n = $this->applyDuplicatePrefixFixesToFieldable(
+              $t,
+              $field_map,
+              $entity_type_id,
+              (int) $entity->id(),
+              (string) $langcode,
+              $report_fh,
+              $total_replacements,
+            );
+            if ($n > 0) {
+              $to_save_langs[] = $langcode;
+              $changed_fields += $n;
+            }
+          }
+          foreach ($to_save_langs as $langcode) {
+            $tr = $entity->getTranslation($langcode);
+            if (!$dry) {
+              $tr->save();
+            }
+            $changed_entities++;
+          }
+        }
+        else {
+          $n = $this->applyDuplicatePrefixFixesToFieldable(
+            $entity,
+            $field_map,
+            $entity_type_id,
+            (int) $entity->id(),
+            $entity->language()->getId(),
+            $report_fh,
+            $total_replacements,
+          );
+          if ($n > 0) {
+            $changed_fields += $n;
+            if (!$dry) {
+              $entity->save();
+            }
+            $changed_entities++;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @return array<string, string> field name => field type id
+   */
+  private function duplicatePrefixProcessableFields(string $entity_type_id, string $bundle): array {
+    $defs = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
+    $out = [];
+    foreach ($defs as $name => $def) {
+      if (in_array($def->getType(), self::DUPLICATE_PREFIX_FIELD_TYPES, TRUE)) {
+        $out[$name] = $def->getType();
+      }
+    }
+    return $out;
+  }
+
+  /**
+   * @param array<string, string> $field_map
+   * @param resource|null $report_fh
+   *
+   * @return int number of fields that had at least one replacement
+   */
+  private function applyDuplicatePrefixFixesToFieldable(
+    FieldableEntityInterface $entity,
+    array $field_map,
+    string $entity_type_id,
+    int $entity_id,
+    string $langcode,
+    $report_fh,
+    int &$total_replacements,
+  ): int {
+    $fields_touched = 0;
+    foreach ($field_map as $field_name => $field_type) {
+      if (!$entity->hasField($field_name)) {
+        continue;
+      }
+      $list = $entity->get($field_name);
+      if ($list->isEmpty()) {
+        continue;
+      }
+      $field_repls = 0;
+      foreach ($list as $item) {
+        if (!$item instanceof FieldItemInterface) {
+          continue;
+        }
+        $field_repls += $this->collapseDuplicatePrefixesOnFieldItem($item, $field_type);
+      }
+      if ($field_repls > 0) {
+        $fields_touched++;
+        $total_replacements += $field_repls;
+        if ($report_fh !== NULL && $report_fh !== FALSE) {
+          fputcsv($report_fh, [$entity_type_id, (string) $entity_id, $langcode, $field_name, (string) $field_repls]);
+        }
+      }
+    }
+    return $fields_touched;
+  }
+
+  /**
+   * Collapses /services/services/... and /blog/blog/... repeatedly (handles triple+ segments).
+   *
+   * @return array{0: string, 1: int} New text and number of preg replacements applied.
+   */
+  private function collapseDuplicatePathSegmentsInText(string $text): array {
+    if ($text === '') {
+      return [$text, 0];
+    }
+    $total = 0;
+    do {
+      $before = $text;
+      // Use ~ delimiter so # can appear in the character class (URL fragments).
+      $out = preg_replace('~/services/services(?=/|["\'\s?#]|$)~u', '/services', $text, -1, $c1);
+      $text = is_string($out) ? $out : $before;
+      $total += (int) $c1;
+      $out = preg_replace('~/blog/blog(?=/|["\'\s?#]|$)~u', '/blog', $text, -1, $c2);
+      $text = is_string($out) ? $out : $text;
+      $total += (int) $c2;
+    } while ($text !== $before);
+    return [$text, $total];
+  }
+
+  /**
+   * Mutates the field item in place; returns replacement count for this item.
+   */
+  private function collapseDuplicatePrefixesOnFieldItem(FieldItemInterface $item, string $field_type): int {
+    $repl = 0;
+    if ($field_type === 'link') {
+      $uri = (string) $item->get('uri')->getString();
+      if ($uri === '') {
+        return 0;
+      }
+      [$new, $c] = $this->collapseDuplicatePathSegmentsInText($uri);
+      if ($c > 0) {
+        $item->set('uri', $new);
+      }
+      return $c;
+    }
+    if ($field_type === 'text_with_summary') {
+      foreach (['value', 'summary'] as $prop) {
+        $chunk = (string) $item->get($prop)->getString();
+        if ($chunk === '') {
+          continue;
+        }
+        [$new, $c] = $this->collapseDuplicatePathSegmentsInText($chunk);
+        if ($c > 0) {
+          $item->set($prop, $new);
+        }
+        $repl += $c;
+      }
+      return $repl;
+    }
+    $chunk = (string) $item->get('value')->getString();
+    if ($chunk === '') {
+      return 0;
+    }
+    [$new, $c] = $this->collapseDuplicatePathSegmentsInText($chunk);
+    if ($c > 0) {
+      $item->set('value', $new);
+    }
+    return $c;
   }
 
   /**
@@ -1134,6 +1498,7 @@ final class FrEsRedirectCommands extends DrushCommands {
     $key = $entity_type . '|' . $table . '|' . $column;
     return match ($key) {
       'node|node__body|body_value' => ['body', 'value'],
+      'node|node__field_keywords|field_keywords_value' => ['field_keywords', 'value'],
       'block_content|block_content__body|body_value' => ['body', 'value'],
       'paragraph|paragraph__field_link|field_link_uri' => ['field_link', 'uri'],
       default => NULL,
@@ -1155,6 +1520,58 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Replaces an internal path both as relative and as full motaded.com.sa URL.
+   *
+   * Example: replaces "/ZATCA" and "https://motaded.com.sa/ZATCA".
+   *
+   * Keeps the matched scheme/host intact and only swaps the path segment.
+   */
+  private function replacePathOccurrencesWithMotadedHost(string $text, string $old, string $new, int &$count): string {
+    $old_path = $this->normalizeInternalPath($old);
+    $new_path = $this->normalizeInternalPath($new);
+
+    // Prevent double-prefix effects like "/blog/blog/..." when:
+    // - old="/foo"
+    // - new="/blog/foo"
+    // and the content already contains "/blog/foo" (which contains "/foo").
+    //
+    // We "protect" already-updated occurrences of $new_path so they won't be
+    // touched by the subsequent old->new replacement.
+    $token = '__MOTADED_REPL_' . substr(md5($old_path . '|' . $new_path), 0, 10) . '__';
+    if ($new_path !== '' && $new_path !== '/' && strpos($text, $new_path) !== FALSE) {
+      $text = str_replace($new_path, $token, $text);
+    }
+    // Also protect absolute URLs on our host with the new path.
+    foreach (['https://motaded.com.sa', 'http://motaded.com.sa', 'https://www.motaded.com.sa', 'http://www.motaded.com.sa'] as $host) {
+      $abs_new = $host . $new_path;
+      if ($new_path !== '' && $new_path !== '/' && strpos($text, $abs_new) !== FALSE) {
+        $text = str_replace($abs_new, $host . $token, $text);
+      }
+    }
+
+    // Relative path occurrences.
+    $text = $this->replacePathOccurrences($text, $old_path, $new_path, $count);
+
+    // Absolute URLs on our own host (keep host, replace path).
+    $host_pattern = '~(https?://(?:www\.)?motaded\.com\.sa)' . preg_quote($old_path, '~') . '(?=($|[\"\'\s?#/]))~iu';
+    $result = preg_replace($host_pattern, '$1' . $new_path, $text, -1, $count_local);
+    $count += (int) $count_local;
+    $text = is_string($result) ? $result : $text;
+
+    // Unprotect tokens back to the new path.
+    if ($new_path !== '' && $new_path !== '/' && strpos($text, $token) !== FALSE) {
+      $text = str_replace($token, $new_path, $text);
+    }
+    foreach (['https://motaded.com.sa', 'http://motaded.com.sa', 'https://www.motaded.com.sa', 'http://www.motaded.com.sa'] as $host) {
+      $abs_token = $host . $token;
+      if ($new_path !== '' && $new_path !== '/' && strpos($text, $abs_token) !== FALSE) {
+        $text = str_replace($abs_token, $host . $new_path, $text);
+      }
+    }
+    return $text;
+  }
+
+  /**
    * Like replacePathOccurrences(), but also supports link field URIs.
    *
    * For link fields, the stored value is often "internal:/path". We rewrite both
@@ -1164,7 +1581,7 @@ final class FrEsRedirectCommands extends DrushCommands {
     $old_path = $this->normalizeInternalPath($old);
     $new_path = $this->normalizeInternalPath($new);
 
-    $text = $this->replacePathOccurrences($text, $old_path, $new_path, $count);
+    $text = $this->replacePathOccurrencesWithMotadedHost($text, $old_path, $new_path, $count);
 
     $old_uri = 'internal:' . $old_path;
     $new_uri = 'internal:' . $new_path;
