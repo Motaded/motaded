@@ -340,6 +340,822 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Exports CSV: "short" public path → canonical path with /blog, /services, or /news.
+   *
+   * For each active path_alias whose alias looks like /{lang}/blog/... or /blog/..., builds:
+   * - new_path = alias as stored (canonical, with prefix)
+   * - old_path = same path with the first segment (blog|services|news) removed, keeping optional
+   *   language prefix (e.g. /ar/blog/foo → old /ar/foo, /blog/foo → old /foo).
+   *
+   * Use for bulk replacing legacy links in HTML (href without prefix → href with prefix).
+   */
+  #[CLI\Command(name: 'motaded:export-url-prefix-map')]
+  #[CLI\Option(name: 'output', description: 'CSV file path (default: url-prefix-map.csv in Composer project root).')]
+  #[CLI\Option(name: 'stdout', description: 'Print CSV to STDOUT instead of writing a file.')]
+  #[CLI\Option(name: 'base-url', description: 'Site base URL without trailing slash; adds old_url and new_url columns.')]
+  #[CLI\Option(name: 'langcodes', description: 'Comma-separated path_alias.langcode filter (empty = all).')]
+  #[CLI\Usage(name: 'drush motaded:export-url-prefix-map --base-url=https://motaded.com.sa', description: 'Writes url-prefix-map.csv with old_path/new_path and full URLs.')]
+  public function exportUrlPrefixMap(array $options = ['output' => NULL, 'stdout' => FALSE, 'base-url' => NULL, 'langcodes' => NULL]): void {
+    $base = rtrim((string) ($options['base-url'] ?? ''), '/');
+    $has_base = $base !== '';
+
+    $use_stdout = filter_var($options['stdout'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $path = $options['output'] ?? NULL;
+    $path = $path !== NULL && $path !== '' ? (string) $path : NULL;
+
+    $langcodes_filter = [];
+    $langcodes_raw = trim((string) ($options['langcodes'] ?? ''));
+    if ($langcodes_raw !== '') {
+      $langcodes_filter = array_values(array_filter(array_map('trim', explode(',', $langcodes_raw)), static fn($v) => $v !== ''));
+    }
+
+    if ($use_stdout) {
+      $path = NULL;
+      $target_label = 'STDOUT';
+    }
+    elseif ($path === NULL) {
+      $path = $this->getProjectRootDirectory() . '/url-prefix-map.csv';
+      $target_label = $path;
+    }
+    else {
+      $target_label = $path;
+    }
+
+    $fh = fopen($path ?? 'php://output', 'wb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException($path !== NULL
+        ? sprintf('Cannot open file for writing: %s', $path)
+        : 'Cannot open STDOUT for writing.');
+    }
+
+    fwrite($fh, "\xEF\xBB\xBF");
+
+    $header = ['old_path', 'new_path'];
+    if ($has_base) {
+      $header[] = 'old_url';
+      $header[] = 'new_url';
+    }
+    $header[] = 'langcode';
+    $header[] = 'drupal_internal_path';
+    fputcsv($fh, $header);
+
+    $q = $this->database->select('path_alias', 'pa')
+      ->fields('pa', ['alias', 'path', 'langcode'])
+      ->condition('status', 1)
+      ->orderBy('alias');
+
+    if ($langcodes_filter !== []) {
+      $q->condition('langcode', $langcodes_filter, 'IN');
+    }
+
+    /** @var list<array{alias: string, path: string, langcode: string}> $rows */
+    $rows = $q->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    $seen_old = [];
+    $written = 0;
+    $skipped_dup = 0;
+
+    foreach ($rows as $row) {
+      $alias_raw = (string) ($row['alias'] ?? '');
+      $internal = (string) ($row['path'] ?? '');
+      $langcode = (string) ($row['langcode'] ?? '');
+      if ($alias_raw === '') {
+        continue;
+      }
+
+      $alias_norm = $this->normalizeInternalPath('/' . trim($alias_raw, '/'));
+      if ($alias_norm === '/') {
+        continue;
+      }
+
+      if (!preg_match('#^/(?:(?P<lang>[a-z]{2}(?:-[a-zA-Z0-9]+)?)/)?(?P<cat>blog|services|news)/(?P<rest>.+)$#iu', $alias_norm, $m)) {
+        continue;
+      }
+
+      $rest = (string) $m['rest'];
+      if ($rest === '') {
+        continue;
+      }
+
+      $new_path = $alias_norm;
+      if (!empty($m['lang'])) {
+        $old_path = $this->normalizeInternalPath('/' . $m['lang'] . '/' . $rest);
+      }
+      else {
+        $old_path = $this->normalizeInternalPath('/' . $rest);
+      }
+
+      if ($old_path === $new_path) {
+        continue;
+      }
+
+      if (isset($seen_old[$old_path])) {
+        if ($seen_old[$old_path] === $new_path) {
+          continue;
+        }
+        $this->logger()->warning(sprintf(
+          'Skip conflicting old_path %s (already mapped to %s, also saw %s).',
+          $old_path,
+          $seen_old[$old_path],
+          $new_path,
+        ));
+        $skipped_dup++;
+        continue;
+      }
+      $seen_old[$old_path] = $new_path;
+
+      $out = [$old_path, $new_path];
+      if ($has_base) {
+        $out[] = $base . $old_path;
+        $out[] = $base . $new_path;
+      }
+      $out[] = $langcode;
+      $out[] = $this->normalizeInternalPath($internal);
+      fputcsv($fh, $out);
+      $written++;
+    }
+
+    fclose($fh);
+
+    $this->logger()->notice(sprintf(
+      'Exported %d mapping row(s) to %s.%s',
+      $written,
+      $target_label,
+      $skipped_dup > 0 ? sprintf(' Skipped %d conflicting duplicate(s).', $skipped_dup) : '',
+    ));
+  }
+
+  /**
+   * Scans content fields for legacy URLs from url-prefix-map.csv (read-only audit).
+   *
+   * Expects CSV from motaded:export-url-prefix-map with columns old_path, new_path.
+   * Writes a report of matches (hits) per entity translation, field, and map row.
+   */
+  #[CLI\Command(name: 'motaded:audit-url-prefix-map-in-content')]
+  #[CLI\Option(name: 'file', description: 'Path to url-prefix-map.csv (absolute path in container for DDEV).')]
+  #[CLI\Option(name: 'output', description: 'Report CSV (default: url-prefix-map-audit.csv in Composer project root).')]
+  #[CLI\Option(name: 'types', description: 'Comma-separated entity type IDs (default: node,paragraph,block_content,taxonomy_term).')]
+  #[CLI\Usage(name: 'drush motaded:audit-url-prefix-map-in-content --file=/var/www/html/url-prefix-map.csv', description: 'Audit content for legacy short paths.')]
+  public function auditUrlPrefixMapInContent(array $options = ['file' => NULL, 'output' => NULL, 'types' => 'node,paragraph,block_content,taxonomy_term']): void {
+    $file = trim((string) ($options['file'] ?? ''));
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Use an absolute path (e.g. /var/www/html/url-prefix-map.csv in DDEV).');
+    }
+
+    $map = $this->loadUrlPrefixMapFromCsv($file);
+    if ($map === []) {
+      throw new \RuntimeException('No rows loaded from CSV (need old_path and new_path columns).');
+    }
+
+    $output = trim((string) ($options['output'] ?? ''));
+    if ($output === '') {
+      $output = $this->getProjectRootDirectory() . '/url-prefix-map-audit.csv';
+    }
+
+    $fh = fopen($output, 'wb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open report: %s', $output));
+    }
+    fwrite($fh, "\xEF\xBB\xBF");
+    fputcsv($fh, [
+      'entity_type',
+      'entity_id',
+      'langcode',
+      'field_name',
+      'old_path',
+      'new_path',
+      'hits_total',
+      'hits_full_url',
+      'hits_internal',
+      'hits_relative',
+    ]);
+
+    $types_raw = (string) ($options['types'] ?? 'node,paragraph,block_content,taxonomy_term');
+    $entity_type_ids = array_values(array_filter(array_map('trim', explode(',', $types_raw)), static fn($v) => $v !== ''));
+
+    $audit_rows = 0;
+    foreach ($entity_type_ids as $entity_type_id) {
+      if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+        $this->logger()->warning(sprintf('Unknown entity type, skipping: %s', $entity_type_id));
+        continue;
+      }
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      $bundle_key = $entity_type->getKey('bundle');
+      $id_key = $entity_type->getKey('id');
+      if (!$id_key || $bundle_key === NULL) {
+        continue;
+      }
+      $storage = $this->entityTypeManager->getStorage($entity_type_id);
+      $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+      foreach (array_keys($bundles) as $bundle) {
+        $field_map = $this->duplicatePrefixProcessableFields($entity_type_id, (string) $bundle);
+        if ($field_map === []) {
+          continue;
+        }
+        $this->processUrlMapAuditEntityBatch(
+          $entity_type_id,
+          $storage,
+          $id_key,
+          $bundle_key,
+          (string) $bundle,
+          $field_map,
+          $map,
+          $fh,
+          $audit_rows,
+        );
+      }
+    }
+
+    fclose($fh);
+    $this->logger()->notice(sprintf('Wrote %d audit row(s) to %s.', $audit_rows, $output));
+  }
+
+  /**
+   * Rewrites legacy short paths in content fields using url-prefix-map.csv.
+   *
+   * Applies the same replacements as the audit counts (relative, internal:, motaded host).
+   * After each field item, collapses /blog/blog and /services/services to avoid doubling.
+   */
+  #[CLI\Command(name: 'motaded:fix-url-prefix-map-in-content')]
+  #[CLI\Option(name: 'file', description: 'Path to url-prefix-map.csv (old_path, new_path).')]
+  #[CLI\Option(name: 'audit', description: 'Optional url-prefix-map-audit.csv: only entity/field rows listed there are processed.')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview replacements without saving (default: true).')]
+  #[CLI\Option(name: 'types', description: 'Comma-separated entity type IDs when not using --audit (default: node,paragraph,block_content,taxonomy_term).')]
+  #[CLI\Option(name: 'report', description: 'Optional CSV path listing each changed field and replacement count.')]
+  #[CLI\Usage(name: 'drush motaded:fix-url-prefix-map-in-content --file=/var/www/html/url-prefix-map.csv --dry-run', description: 'Preview URL rewrites.')]
+  #[CLI\Usage(name: 'drush motaded:fix-url-prefix-map-in-content --file=/var/www/html/url-prefix-map.csv --audit=/var/www/html/url-prefix-map-audit.csv --dry-run=0', description: 'Fix only audited rows.')]
+  public function fixUrlPrefixMapInContent(array $options = [
+    'file' => NULL,
+    'audit' => NULL,
+    'dry-run' => TRUE,
+    'types' => 'node,paragraph,block_content,taxonomy_term',
+    'report' => NULL,
+  ]): void {
+    $file = trim((string) ($options['file'] ?? ''));
+    if ($file === '' || !is_file($file)) {
+      throw new \InvalidArgumentException('Missing or unreadable --file. Use an absolute path (e.g. /var/www/html/url-prefix-map.csv in DDEV).');
+    }
+
+    $map = $this->loadUrlPrefixMapFromCsv($file);
+    if ($map === []) {
+      throw new \RuntimeException('No rows loaded from CSV (need old_path and new_path columns).');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $audit_path = trim((string) ($options['audit'] ?? ''));
+    $report_path = trim((string) ($options['report'] ?? ''));
+    $report_fh = NULL;
+    if ($report_path !== '') {
+      $report_fh = fopen($report_path, 'wb');
+      if ($report_fh === FALSE) {
+        throw new \RuntimeException(sprintf('Cannot open report: %s', $report_path));
+      }
+      fwrite($report_fh, "\xEF\xBB\xBF");
+      fputcsv($report_fh, ['entity_type', 'entity_id', 'langcode', 'field_name', 'replacements']);
+    }
+
+    $changed_entities = 0;
+    $changed_fields = 0;
+    $total_replacements = 0;
+
+    if ($audit_path !== '') {
+      if (!is_file($audit_path)) {
+        throw new \InvalidArgumentException(sprintf('Unreadable --audit file: %s', $audit_path));
+      }
+      $targets = $this->loadUrlPrefixMapAuditTargets($audit_path);
+      if ($targets === []) {
+        $this->logger()->warning('No rows loaded from audit CSV; nothing to do.');
+        if ($report_fh !== NULL) {
+          fclose($report_fh);
+        }
+        return;
+      }
+      foreach ($targets as $target) {
+        $entity_type_id = $target['entity_type'];
+        $entity_id = $target['entity_id'];
+        $langcode = $target['langcode'];
+        $field_filter = $target['fields'];
+        if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+          continue;
+        }
+        $storage = $this->entityTypeManager->getStorage($entity_type_id);
+        $entity = $storage->load($entity_id);
+        if (!$entity instanceof FieldableEntityInterface || !$entity instanceof TranslatableInterface) {
+          continue;
+        }
+        if (!$entity->hasTranslation($langcode)) {
+          continue;
+        }
+        $t = $entity->getTranslation($langcode);
+        if (!$t instanceof FieldableEntityInterface) {
+          continue;
+        }
+        $bundle = $entity->bundle();
+        $field_map = $this->duplicatePrefixProcessableFields($entity_type_id, $bundle);
+        $allowed = array_intersect_key($field_map, $field_filter);
+        if ($allowed === []) {
+          continue;
+        }
+        $n = $this->applyUrlPrefixMapFixToFieldable(
+          $t,
+          $allowed,
+          $map,
+          $entity_type_id,
+          $entity_id,
+          $langcode,
+          $total_replacements,
+          $report_fh,
+        );
+        if ($n > 0) {
+          $changed_fields += $n;
+          if (!$dry) {
+            $t->save();
+          }
+          $changed_entities++;
+        }
+      }
+    }
+    else {
+      $types_raw = (string) ($options['types'] ?? 'node,paragraph,block_content,taxonomy_term');
+      $entity_type_ids = array_values(array_filter(array_map('trim', explode(',', $types_raw)), static fn($v) => $v !== ''));
+      foreach ($entity_type_ids as $entity_type_id) {
+        if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+          $this->logger()->warning(sprintf('Unknown entity type, skipping: %s', $entity_type_id));
+          continue;
+        }
+        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+        $bundle_key = $entity_type->getKey('bundle');
+        $id_key = $entity_type->getKey('id');
+        if (!$id_key || $bundle_key === NULL) {
+          continue;
+        }
+        $storage = $this->entityTypeManager->getStorage($entity_type_id);
+        $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+        foreach (array_keys($bundles) as $bundle) {
+          $field_map = $this->duplicatePrefixProcessableFields($entity_type_id, (string) $bundle);
+          if ($field_map === []) {
+            continue;
+          }
+          $this->processUrlPrefixMapFixEntityBatch(
+            $entity_type_id,
+            $storage,
+            $id_key,
+            $bundle_key,
+            (string) $bundle,
+            $field_map,
+            $map,
+            $dry,
+            $changed_entities,
+            $changed_fields,
+            $total_replacements,
+            $report_fh,
+          );
+        }
+      }
+    }
+
+    if ($report_fh !== NULL) {
+      fclose($report_fh);
+      $this->logger()->notice(sprintf('Wrote report: %s', $report_path));
+    }
+
+    $this->logger()->notice(sprintf(
+      $dry
+        ? 'Dry-run: would save %d entity translation(s), touch %d field(s), apply %d replacement(s).'
+        : 'Updated: saved %d entity translation(s), touched %d field(s), applied %d replacement(s).',
+      $changed_entities,
+      $changed_fields,
+      $total_replacements,
+    ));
+  }
+
+  /**
+   * @return list<array{entity_type: string, entity_id: int, langcode: string, fields: array<string, true>}>
+   */
+  private function loadUrlPrefixMapAuditTargets(string $file): array {
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open audit CSV: %s', $file));
+    }
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('Audit CSV header row is missing/invalid.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+    $col = array_flip($header);
+    foreach (['entity_type', 'entity_id', 'langcode', 'field_name'] as $required) {
+      if (!isset($col[$required])) {
+        fclose($fh);
+        throw new \InvalidArgumentException(sprintf('Audit CSV must include column: %s', $required));
+      }
+    }
+
+    $merged = [];
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+      $type = trim((string) ($row[$col['entity_type']] ?? ''));
+      $id = (int) ($row[$col['entity_id']] ?? 0);
+      $lang = trim((string) ($row[$col['langcode']] ?? ''));
+      $fname = trim((string) ($row[$col['field_name']] ?? ''));
+      if ($type === '' || $id < 1 || $lang === '' || $fname === '') {
+        continue;
+      }
+      $key = $type . ':' . $id . ':' . $lang;
+      if (!isset($merged[$key])) {
+        $merged[$key] = [
+          'entity_type' => $type,
+          'entity_id' => $id,
+          'langcode' => $lang,
+          'fields' => [],
+        ];
+      }
+      $merged[$key]['fields'][$fname] = TRUE;
+    }
+    fclose($fh);
+    return array_values($merged);
+  }
+
+  /**
+   * @param array<string, string> $field_map field name => field type id (subset allowed)
+   * @param array<string, string> $map old_path => new_path
+   * @param resource|null $report_fh
+   *
+   * @return int number of fields that had at least one replacement (including collapse)
+   */
+  private function applyUrlPrefixMapFixToFieldable(
+    FieldableEntityInterface $entity,
+    array $field_map,
+    array $map,
+    string $entity_type_id,
+    int $entity_id,
+    string $langcode,
+    int &$total_replacements,
+    $report_fh,
+  ): int {
+    $fields_touched = 0;
+    foreach ($field_map as $field_name => $field_type) {
+      if (!$entity->hasField($field_name)) {
+        continue;
+      }
+      $list = $entity->get($field_name);
+      if ($list->isEmpty()) {
+        continue;
+      }
+      $field_repls = 0;
+      foreach ($list as $item) {
+        if (!$item instanceof FieldItemInterface) {
+          continue;
+        }
+        $field_repls += $this->applyUrlPrefixMapReplacementsToFieldItem($item, $field_type, $map);
+      }
+      if ($field_repls > 0) {
+        $fields_touched++;
+        $total_replacements += $field_repls;
+        if ($report_fh !== NULL && $report_fh !== FALSE) {
+          fputcsv($report_fh, [$entity_type_id, (string) $entity_id, $langcode, $field_name, (string) $field_repls]);
+        }
+      }
+    }
+    return $fields_touched;
+  }
+
+  /**
+   * Applies map replacements then collapses duplicate /blog/blog segments on the item.
+   *
+   * @param array<string, string> $map
+   */
+  private function applyUrlPrefixMapReplacementsToFieldItem(
+    FieldItemInterface $item,
+    string $field_type,
+    array $map,
+  ): int {
+    $repl = 0;
+    if ($field_type === 'link') {
+      $uri = (string) $item->get('uri')->getString();
+      if ($uri === '') {
+        return 0;
+      }
+      foreach ($map as $old_path => $new_path) {
+        if (!$this->textMightContainLegacyPath($uri, $old_path)) {
+          continue;
+        }
+        if ($this->countLegacyPathOccurrencesInText($uri, $old_path)['total'] === 0) {
+          continue;
+        }
+        $uri = $this->replacePathOccurrencesForLinkUri($uri, $old_path, $new_path, $repl);
+      }
+      $item->set('uri', $uri);
+      $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, 'link');
+      return $repl;
+    }
+    if ($field_type === 'text_with_summary') {
+      foreach (['value', 'summary'] as $prop) {
+        $chunk = (string) $item->get($prop)->getString();
+        if ($chunk === '') {
+          continue;
+        }
+        foreach ($map as $old_path => $new_path) {
+          if (!$this->textMightContainLegacyPath($chunk, $old_path)) {
+            continue;
+          }
+          if ($this->countLegacyPathOccurrencesInText($chunk, $old_path)['total'] === 0) {
+            continue;
+          }
+          $chunk = $this->replacePathOccurrencesWithMotadedHost($chunk, $old_path, $new_path, $repl);
+        }
+        $item->set($prop, $chunk);
+      }
+      $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, 'text_with_summary');
+      return $repl;
+    }
+    $chunk = (string) $item->get('value')->getString();
+    if ($chunk === '') {
+      return 0;
+    }
+    foreach ($map as $old_path => $new_path) {
+      if (!$this->textMightContainLegacyPath($chunk, $old_path)) {
+        continue;
+      }
+      if ($this->countLegacyPathOccurrencesInText($chunk, $old_path)['total'] === 0) {
+        continue;
+      }
+      $chunk = $this->replacePathOccurrencesWithMotadedHost($chunk, $old_path, $new_path, $repl);
+    }
+    $item->set('value', $chunk);
+    $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, $field_type);
+    return $repl;
+  }
+
+  /**
+   * @param array<string, string> $field_map
+   * @param array<string, string> $map
+   * @param resource|null $report_fh
+   */
+  private function processUrlPrefixMapFixEntityBatch(
+    string $entity_type_id,
+    $storage,
+    string $id_key,
+    string $bundle_property,
+    string $bundle_id,
+    array $field_map,
+    array $map,
+    bool $dry,
+    int &$changed_entities,
+    int &$changed_fields,
+    int &$total_replacements,
+    $report_fh,
+  ): void {
+    $last_id = 0;
+    $batch = 80;
+    while (TRUE) {
+      $query = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($bundle_property, $bundle_id)
+        ->condition($id_key, $last_id, '>')
+        ->sort($id_key, 'ASC')
+        ->range(0, $batch);
+      $ids = $query->execute();
+      if ($ids === NULL || $ids === []) {
+        break;
+      }
+      $last_id = (int) max($ids);
+      foreach ($storage->loadMultiple($ids) as $entity) {
+        if (!$entity instanceof FieldableEntityInterface) {
+          continue;
+        }
+        if ($entity->bundle() !== $bundle_id) {
+          continue;
+        }
+        $to_save_langs = [];
+        if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
+          foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+            $t = $entity->getTranslation($langcode);
+            if (!$t instanceof FieldableEntityInterface) {
+              continue;
+            }
+            $n = $this->applyUrlPrefixMapFixToFieldable(
+              $t,
+              $field_map,
+              $map,
+              $entity_type_id,
+              (int) $entity->id(),
+              (string) $langcode,
+              $total_replacements,
+              $report_fh,
+            );
+            if ($n > 0) {
+              $to_save_langs[] = $langcode;
+              $changed_fields += $n;
+            }
+          }
+          foreach ($to_save_langs as $langcode) {
+            $tr = $entity->getTranslation($langcode);
+            if (!$dry) {
+              $tr->save();
+            }
+            $changed_entities++;
+          }
+        }
+        else {
+          $n = $this->applyUrlPrefixMapFixToFieldable(
+            $entity,
+            $field_map,
+            $map,
+            $entity_type_id,
+            (int) $entity->id(),
+            $entity->language()->getId(),
+            $total_replacements,
+            $report_fh,
+          );
+          if ($n > 0) {
+            $changed_fields += $n;
+            if (!$dry) {
+              $entity->save();
+            }
+            $changed_entities++;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @param array<string, string> $map old_path => new_path
+   * @param resource $report_fh
+   */
+  private function processUrlMapAuditEntityBatch(
+    string $entity_type_id,
+    $storage,
+    string $id_key,
+    string $bundle_property,
+    string $bundle_id,
+    array $field_map,
+    array $map,
+    $report_fh,
+    int &$audit_rows,
+  ): void {
+    $last_id = 0;
+    $batch = 80;
+    while (TRUE) {
+      $query = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($bundle_property, $bundle_id)
+        ->condition($id_key, $last_id, '>')
+        ->sort($id_key, 'ASC')
+        ->range(0, $batch);
+      $ids = $query->execute();
+      if ($ids === NULL || $ids === []) {
+        break;
+      }
+      $last_id = (int) max($ids);
+      foreach ($storage->loadMultiple($ids) as $entity) {
+        if (!$entity instanceof FieldableEntityInterface) {
+          continue;
+        }
+        if ($entity->bundle() !== $bundle_id) {
+          continue;
+        }
+        if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
+          foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+            $t = $entity->getTranslation($langcode);
+            if (!$t instanceof FieldableEntityInterface) {
+              continue;
+            }
+            $audit_rows += $this->applyAuditUrlMapToFieldable(
+              $t,
+              $field_map,
+              $map,
+              $report_fh,
+              $entity_type_id,
+              (int) $entity->id(),
+              (string) $langcode,
+            );
+          }
+        }
+        else {
+          $audit_rows += $this->applyAuditUrlMapToFieldable(
+            $entity,
+            $field_map,
+            $map,
+            $report_fh,
+            $entity_type_id,
+            (int) $entity->id(),
+            $entity->language()->getId(),
+          );
+        }
+      }
+    }
+  }
+
+  /**
+   * @param array<string, string> $map old_path => new_path
+   * @param resource $report_fh
+   */
+  private function applyAuditUrlMapToFieldable(
+    FieldableEntityInterface $entity,
+    array $field_map,
+    array $map,
+    $report_fh,
+    string $entity_type_id,
+    int $entity_id,
+    string $langcode,
+  ): int {
+    $rows = 0;
+    foreach ($field_map as $field_name => $field_type) {
+      if (!$entity->hasField($field_name)) {
+        continue;
+      }
+      $list = $entity->get($field_name);
+      if ($list->isEmpty()) {
+        continue;
+      }
+      $chunks = [];
+      foreach ($list as $item) {
+        if (!$item instanceof FieldItemInterface) {
+          continue;
+        }
+        if ($field_type === 'link') {
+          $chunks[] = (string) $item->get('uri')->getString();
+        }
+        elseif ($field_type === 'text_with_summary') {
+          $chunks[] = (string) $item->get('value')->getString();
+          $chunks[] = (string) $item->get('summary')->getString();
+        }
+        else {
+          $chunks[] = (string) $item->get('value')->getString();
+        }
+      }
+      $combined = implode("\n", array_filter($chunks, static fn($s) => $s !== ''));
+      if ($combined === '') {
+        continue;
+      }
+      foreach ($map as $old_path => $new_path) {
+        if (!$this->textMightContainLegacyPath($combined, $old_path)) {
+          continue;
+        }
+        $c = $this->countLegacyPathOccurrencesInText($combined, $old_path);
+        if ($c['total'] > 0) {
+          fputcsv($report_fh, [
+            $entity_type_id,
+            (string) $entity_id,
+            $langcode,
+            $field_name,
+            $old_path,
+            $new_path,
+            (string) $c['total'],
+            (string) $c['full'],
+            (string) $c['internal'],
+            (string) $c['relative'],
+          ]);
+          $rows++;
+        }
+      }
+    }
+    return $rows;
+  }
+
+  /**
+   * @return array<string, string>
+   */
+  private function loadUrlPrefixMapFromCsv(string $file): array {
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV: %s', $file));
+    }
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV header row is missing/invalid.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+    $col = array_flip($header);
+    if (!isset($col['old_path'], $col['new_path'])) {
+      fclose($fh);
+      throw new \InvalidArgumentException('CSV must include old_path and new_path columns.');
+    }
+
+    $map = [];
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      if (!is_array($row) || $row === []) {
+        continue;
+      }
+      $old = $this->normalizeInternalPath(trim((string) ($row[$col['old_path']] ?? '')));
+      $new = $this->normalizeInternalPath(trim((string) ($row[$col['new_path']] ?? '')));
+      if ($old === '' || $old === '/') {
+        continue;
+      }
+      if (!isset($map[$old])) {
+        $map[$old] = $new;
+      }
+    }
+    fclose($fh);
+    return $map;
+  }
+
+  /**
    * Imports Redirect entities from a CSV mapping (source_path → New target_path).
    *
    * Expected headers (case-sensitive, as in the provided sheet):
@@ -1510,10 +2326,108 @@ final class FrEsRedirectCommands extends DrushCommands {
    *
    * Only replaces when the old path is followed by a URL boundary.
    */
+  /**
+   * Host variants used when matching absolute motaded.com.sa URLs in content.
+   *
+   * @return list<string>
+   */
+  private function motadedHostPrefixes(): array {
+    return [
+      'https://motaded.com.sa',
+      'http://motaded.com.sa',
+      'https://www.motaded.com.sa',
+      'http://www.motaded.com.sa',
+    ];
+  }
+
+  /**
+   * Regex fragment for matching a legacy internal path without false positives.
+   *
+   * Paths like /blog/foo or /services/foo already end with /foo; the short legacy
+   * form in the map is /foo. A naive match would count /foo inside /blog/foo.
+   * Require that the path is not immediately preceded by /blog/, /services/, or
+   * /news/ (including after a language prefix, e.g. /ar/blog/foo).
+   */
+  private function legacyRelativeOldPathRegexFragment(string $old_path): string {
+    // $old_path in the map includes a leading "/" (e.g. "/what-neom").
+    // In the canonical path "/blog/what-neom", the substring "/what-neom"
+    // starts right after "blog" (i.e. preceded by ".../blog", not ".../blog/").
+    return '(?<!/blog)(?<!/services)(?<!/news)' . preg_quote($old_path, '~');
+  }
+
+  /**
+   * Quick filter before running regex counts over a large URL map.
+   */
+  private function textMightContainLegacyPath(string $text, string $old_path): bool {
+    $old_path = $this->normalizeInternalPath($old_path);
+    if ($old_path === '/' || $old_path === '') {
+      return FALSE;
+    }
+    if (strpos($text, 'motaded.com.sa') !== FALSE) {
+      return TRUE;
+    }
+    if (strpos($text, 'internal:' . $old_path) !== FALSE) {
+      return TRUE;
+    }
+    if (strpos($text, $old_path) !== FALSE) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Counts legacy URL forms: absolute on motaded.com.sa, internal: URIs, then relative path.
+   *
+   * Relative matches are counted on text with absolute and internal occurrences removed
+   * to reduce double-counting the same href.
+   *
+   * @return array{total: int, full: int, internal: int, relative: int}
+   */
+  private function countLegacyPathOccurrencesInText(string $text, string $old_path): array {
+    $old_path = $this->normalizeInternalPath($old_path);
+    if ($old_path === '/' || $old_path === '') {
+      return ['total' => 0, 'full' => 0, 'internal' => 0, 'relative' => 0];
+    }
+
+    $full = 0;
+    foreach ($this->motadedHostPrefixes() as $host) {
+      $abs = $host . $old_path;
+      preg_match_all('~' . preg_quote($abs, '~') . '(?=($|[\"\'\s?#/]))~iu', $text, $m);
+      $full += isset($m[0]) ? count($m[0]) : 0;
+    }
+
+    $internal_uri = 'internal:' . $old_path;
+    preg_match_all('~' . preg_quote($internal_uri, '~') . '(?=($|[\"\'\s?#/]))~iu', $text, $m2);
+    $internal = isset($m2[0]) ? count($m2[0]) : 0;
+
+    $t = $text;
+    foreach ($this->motadedHostPrefixes() as $host) {
+      $abs = $host . $old_path;
+      $out = preg_replace('~' . preg_quote($abs, '~') . '(?=($|[\"\'\s?#/]))~iu', '', $t);
+      $t = is_string($out) ? $out : $t;
+    }
+    $out = preg_replace('~' . preg_quote($internal_uri, '~') . '(?=($|[\"\'\s?#/]))~iu', '', $t);
+    $t = is_string($out) ? $out : $t;
+
+    preg_match_all(
+      '~' . $this->legacyRelativeOldPathRegexFragment($old_path) . '(?=($|[\"\'\s?#/]))~u',
+      $t,
+      $m3,
+    );
+    $relative = isset($m3[0]) ? count($m3[0]) : 0;
+
+    return [
+      'total' => $full + $internal + $relative,
+      'full' => $full,
+      'internal' => $internal,
+      'relative' => $relative,
+    ];
+  }
+
   private function replacePathOccurrences(string $text, string $old, string $new, int &$count): string {
     $old = $this->normalizeInternalPath($old);
     $new = $this->normalizeInternalPath($new);
-    $pattern = '~' . preg_quote($old, '~') . '(?=($|[\"\'\s?#/]))~u';
+    $pattern = '~' . $this->legacyRelativeOldPathRegexFragment($old) . '(?=($|[\"\'\s?#/]))~u';
     $result = preg_replace($pattern, $new, $text, -1, $count_local);
     $count += (int) $count_local;
     return is_string($result) ? $result : $text;
