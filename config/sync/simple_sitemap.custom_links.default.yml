@@ -14,7 +14,3 @@ links:
   -
     path: /services
     priority: '0.5'
-    changefreq: ''
-  -
-    path: /saudi-partners
-    priority: '0.5'

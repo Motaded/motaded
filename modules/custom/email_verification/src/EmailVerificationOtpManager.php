@@ -76,13 +76,19 @@ class EmailVerificationOtpManager {
     ];
     $store->set($this->key($webformId, $email), $data);
 
+    $site_name = trim((string) ($this->configFactory->get('system.site')->get('name') ?: ''));
+    $t_opts = ['langcode' => $langcode];
+    $subject = $site_name !== ''
+      ? $this->t('Confirm your email — @site', ['@site' => $site_name], $t_opts)
+      : $this->t('Confirm your email', [], $t_opts);
+
     $result = $this->mailManager->mail(
       'email_verification',
       'email_verification_otp',
       $email,
       $langcode,
       [
-        'subject' => $this->t('Email verification code'),
+        'subject' => $subject,
         'html_body' => $this->buildOtpEmailHtml($otp, $langcode),
       ],
       NULL,

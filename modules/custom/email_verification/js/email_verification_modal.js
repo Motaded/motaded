@@ -103,10 +103,37 @@
       showBanner('', '');
     }
 
-    function jsonHeaders() {
+    /**
+     * Fresh CSRF token for this session (required for anonymous + page cache).
+     *
+     * @returns {Promise<string>}
+     */
+    function fetchCsrfToken() {
+      const url = `${Drupal.url('email-verification/csrf')}?_=${Date.now()}`;
+      return fetch(url, {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(Drupal.t('Could not load security token.'));
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const t =
+            data && data.csrf_token ? String(data.csrf_token).trim() : '';
+          if (!t) {
+            throw new Error(Drupal.t('Could not load security token.'));
+          }
+          return t;
+        });
+    }
+
+    function jsonHeaders(csrfToken) {
       return {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': s.csrfToken,
+        'X-CSRF-Token': csrfToken,
       };
     }
 
@@ -116,15 +143,19 @@
         emailInput.reportValidity();
         return Promise.reject(new Error('no-email'));
       }
-      return fetch(Drupal.url('email-verification/send-otp'), {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: jsonHeaders(),
-        body: JSON.stringify({
-          webform_id: s.webformId,
-          email,
+      return fetchCsrfToken().then((csrfToken) =>
+        fetch(Drupal.url('email-verification/send-otp'), {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: jsonHeaders(csrfToken),
+          body: JSON.stringify({
+            webform_id: s.webformId,
+            email,
+            csrf_token: csrfToken,
+          }),
         }),
-      }).then((response) => {
+      ).then((response) => {
         if (!response.ok) {
           return response
             .json()
@@ -141,16 +172,20 @@
 
     function verifyOtp(code) {
       const email = emailInput.value.trim();
-      return fetch(Drupal.url('email-verification/verify-otp'), {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: jsonHeaders(),
-        body: JSON.stringify({
-          webform_id: s.webformId,
-          email,
-          code: String(code).trim(),
+      return fetchCsrfToken().then((csrfToken) =>
+        fetch(Drupal.url('email-verification/verify-otp'), {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: jsonHeaders(csrfToken),
+          body: JSON.stringify({
+            webform_id: s.webformId,
+            email,
+            code: String(code).trim(),
+            csrf_token: csrfToken,
+          }),
         }),
-      }).then((response) => {
+      ).then((response) => {
         if (!response.ok) {
           return response
             .json()

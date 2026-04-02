@@ -25,8 +25,9 @@ function email_verification_form_alter(&$form, FormStateInterface $form_state, $
   $config = $protected[$webform_id];
 
   $form['#attached']['library'][] = 'email_verification/modal';
+  // CSRF for POST is fetched in JS via GET /session/token (avoids stale tokens
+  // when the page HTML is served from cache for anonymous users).
   $form['#attached']['drupalSettings']['emailVerification'] = [
-    'csrfToken' => \Drupal::csrfToken()->get('rest'),
     'webformId' => $webform_id,
     'emailElementName' => $config['email_element'],
   ];
