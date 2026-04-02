@@ -1,6 +1,7 @@
 services:
   logger.channel.email_verification:
     parent: logger.channel_base
+    arguments: ['email_verification']
     tags:
       - { name: logger.channel, channel: email_verification }
 

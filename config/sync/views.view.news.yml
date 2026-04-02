@@ -4211,7 +4211,7 @@ display:
           admin_label: 'field_media: Media'
           plugin_id: standard
           required: false
-      use_ajax: true
+      use_ajax: false
       display_description: ''
       header: {  }
       rendering_language: '***LANGUAGE_entity_translation***'

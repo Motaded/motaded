@@ -58,10 +58,10 @@ elements: |-
               </tbody>
             </table>
           </div>
-  
+
           <p class="tasheer-appointment-details__note">* The dates indicated above are based on the earliest available time slot under each appointment category (Normal and Lounge), and is subject to availability at the time of booking the appointment.</p>
           <p class="tasheer-appointment-details__note">* Please click on the &lsquo;Continue&rsquo; button at the end of this page to see additional appointment date options, and to book your appointment.</p>
-  
+
           <h3 class="tasheer-appointment-details__disclaimer-title">Disclaimer :</h3>
           <div class="tasheer-appointment-details__disclaimer">
             <p>Tasheer does hereby declare that they have no role whatsoever in the assessment or decision making of a visa application, which is the sole prerogative of the Royal Embassies and Consulates of the Kingdom of Saudi Arabia.</p>
@@ -255,7 +255,6 @@ elements: |-
     '#type': webform_actions
     '#title': 'Submit button(s)'
     '#submit__label': ACCEPT
-
 css: ''
 javascript: ''
 settings:

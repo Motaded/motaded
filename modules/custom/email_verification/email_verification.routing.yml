@@ -6,6 +6,14 @@ email_verification.settings:
   requirements:
     _permission: 'administer email verification settings'
 
+email_verification.csrf:
+  path: '/email-verification/csrf'
+  defaults:
+    _controller: '\Drupal\email_verification\Controller\EmailVerificationController::getCsrfToken'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
 email_verification.send_otp:
   path: '/email-verification/send-otp'
   defaults:

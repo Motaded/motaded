@@ -2,8 +2,9 @@
 
 namespace Drupal\email_verification\Controller;
 
-use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Site\Settings;
 use Drupal\email_verification\EmailVerificationOtpManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,9 +17,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class EmailVerificationController extends ControllerBase {
 
+  /**
+   * Cache TTL for issued CSRF tokens (seconds).
+   */
+  private const CSRF_CACHE_TTL = 600;
+
   public function __construct(
     private EmailVerificationOtpManager $otpManager,
-    private CsrfTokenGenerator $csrfToken,
+    private CacheBackendInterface $cache,
   ) {}
 
   /**
@@ -27,7 +33,7 @@ class EmailVerificationController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('email_verification.otp_manager'),
-      $container->get('csrf_token')
+      $container->get('cache.default'),
     );
   }
 
@@ -47,12 +53,31 @@ class EmailVerificationController extends ControllerBase {
   }
 
   /**
+   * Issues a short-lived CSRF token (cache-backed, no session seed).
+   *
+   * Anonymous users often lack a stable session between two fetch() calls;
+   * Drupal's session CSRF then fails. This endpoint is safe: token is random
+   * and stored server-side until expiry.
+   */
+  public function getCsrfToken(): JsonResponse {
+    $token = bin2hex(random_bytes(32));
+    $cid = $this->csrfCacheId($token);
+    $this->cache->set($cid, 1, \Drupal::time()->getRequestTime() + self::CSRF_CACHE_TTL);
+    return new JsonResponse(
+      ['csrf_token' => $token],
+      200,
+      [
+        'Cache-Control' => 'no-store, private',
+      ],
+    );
+  }
+
+  /**
    * Sends OTP to the given email.
    */
   public function sendOtp(Request $request): JsonResponse {
-    $this->assertValidCsrf($request);
-
     $payload = $this->getJsonPayload($request);
+    $this->assertValidCsrf($request, $payload);
 
     $webformId = $payload['webform_id'] ?? '';
     $email = is_string($payload['email'] ?? NULL) ? trim($payload['email']) : '';
@@ -88,9 +113,8 @@ class EmailVerificationController extends ControllerBase {
    * Verifies OTP and marks session as verified for this email + webform.
    */
   public function verifyOtp(Request $request): JsonResponse {
-    $this->assertValidCsrf($request);
-
     $payload = $this->getJsonPayload($request);
+    $this->assertValidCsrf($request, $payload);
 
     $webformId = $payload['webform_id'] ?? '';
     $email = is_string($payload['email'] ?? NULL) ? trim($payload['email']) : '';
@@ -111,13 +135,28 @@ class EmailVerificationController extends ControllerBase {
   }
 
   /**
-   * Validates X-CSRF-Token for the "rest" token id (same as core JS uses).
+   * Validates CSRF token from header and/or JSON body against cache.
    */
-  protected function assertValidCsrf(Request $request): void {
-    $token = $request->headers->get('X-CSRF-Token');
-    if (!$token || !$this->csrfToken->validate($token, 'rest')) {
+  protected function assertValidCsrf(Request $request, array $payload = []): void {
+    $token = trim((string) ($request->headers->get('X-CSRF-Token') ?? ''));
+    if ($token === '' && isset($payload['csrf_token']) && is_string($payload['csrf_token'])) {
+      $token = trim($payload['csrf_token']);
+    }
+    if ($token === '' || !preg_match('/^[a-f0-9]{64}$/', $token)) {
       throw new AccessDeniedHttpException();
     }
+    $cid = $this->csrfCacheId($token);
+    if (!$this->cache->get($cid)) {
+      throw new AccessDeniedHttpException();
+    }
+    $this->cache->delete($cid);
+  }
+
+  /**
+   * Stable cache key for a client-provided token string.
+   */
+  private function csrfCacheId(string $token): string {
+    return 'email_verification:csrf:' . hash('sha256', $token . Settings::getHashSalt());
   }
 
 }
