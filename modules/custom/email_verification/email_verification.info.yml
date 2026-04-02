@@ -3,5 +3,7 @@ type: module
 description: 'Adds email verification functionality to webform submissions.'
 core_version_requirement: ^10 || ^11
 configure: email_verification.settings
+interface translation project: email_verification
+interface translation server pattern: translations/%language.po
 dependencies:
   - drupal:webform
