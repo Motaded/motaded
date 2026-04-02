@@ -17,12 +17,10 @@ form_settings:
   contact_message_feedback_form: true
   contact_message_personal_form: true
   node_article_form: true
-  node_business_activities_form: false
   node_entities_form: false
-  node_media_center_form: false
+  node_landing_page_form: false
+  node_news_form: false
   node_page_form: true
   node_partner_form: true
   node_pricing_form: false
-  node_team_form: false
-  node_testimonial_form: false
   comment_comment_form: true

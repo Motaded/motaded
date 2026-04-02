@@ -1,7 +1,13 @@
 uuid: 94129f02-9d6e-41ce-90a5-d7977051b448
 langcode: en
 status: open
-dependencies: {  }
+dependencies:
+  module:
+    - honeypot
+third_party_settings:
+  honeypot:
+    honeypot: true
+    time_restriction: true
 weight: 0
 open: null
 close: null
@@ -180,6 +186,7 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  form_file_limit_message: ''
   form_attributes: {  }
   form_method: ''
   form_action: ''
