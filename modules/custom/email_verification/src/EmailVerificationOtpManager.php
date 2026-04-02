@@ -3,6 +3,8 @@
 namespace Drupal\email_verification;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -27,6 +29,7 @@ class EmailVerificationOtpManager {
     private LoggerInterface $logger,
     private ConfigFactoryInterface $configFactory,
     private RendererInterface $renderer,
+    private LanguageManagerInterface $languageManager,
   ) {}
 
   /**
@@ -115,11 +118,22 @@ class EmailVerificationOtpManager {
    */
   protected function buildOtpEmailHtml(string $otp, string $langcode): string {
     $site_url = rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
+    $languages = $this->languageManager->getLanguages();
+    if (isset($languages[$langcode])) {
+      $text_direction = $languages[$langcode]->getDirection();
+    }
+    else {
+      // RTL email layout even if the language is not enabled as configurable.
+      $text_direction = in_array($langcode, ['ar', 'he', 'fa', 'ur', 'ps'], TRUE)
+        ? LanguageInterface::DIRECTION_RTL
+        : LanguageInterface::DIRECTION_LTR;
+    }
     // Theme variables must use # keys so ThemeManager passes them to Twig
     // (see core ThemeManager::render); un-prefixed keys are child render arrays.
     $build = [
       '#theme' => 'email_verification_otp',
       '#langcode' => $langcode,
+      '#text_direction' => $text_direction,
       '#site_url' => $site_url,
       '#otp_code' => $otp,
       '#expiry_minutes' => (int) (self::OTP_TTL / 60),
