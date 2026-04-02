@@ -1,0 +1,115 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: email_verification\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh-hans\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Enter verification code"
+msgstr "输入验证码"
+
+msgid "To submit this form, enter the code we sent to your email address."
+msgstr "要提交此表单，请输入我们发送到您电子邮箱的验证码。"
+
+msgid "Verification code"
+msgstr "验证码"
+
+msgid "Resend code"
+msgstr "重新发送验证码"
+
+msgid "Confirm and submit"
+msgstr "确认并提交"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Could not load security token."
+msgstr "无法加载安全令牌。"
+
+msgid "Could not send verification email."
+msgstr "无法发送验证邮件。"
+
+msgid "Invalid or expired code."
+msgstr "验证码无效或已过期。"
+
+msgid "Something went wrong."
+msgstr "出现错误。"
+
+msgid "Please enter the code from your email."
+msgstr "请输入邮件中的验证码。"
+
+msgid "A new code was sent to your email."
+msgstr "新的验证码已发送到您的邮箱。"
+
+msgid "Could not resend."
+msgstr "无法重新发送。"
+
+msgid "Please confirm your email with the verification code before submitting."
+msgstr "提交前请先使用验证码确认您的电子邮箱。"
+
+msgid "Confirm your email — @site"
+msgstr "请确认您的电子邮箱 — @site"
+
+msgid "Confirm your email"
+msgstr "请确认您的电子邮箱"
+
+msgid "Invalid email address."
+msgstr "电子邮箱地址无效。"
+
+msgid "Could not send verification email. Check the address and try again."
+msgstr "无法发送验证邮件。请检查地址后重试。"
+
+msgid "Your verification code"
+msgstr "您的验证码"
+
+msgid "Your Motaded verification code is ready. It expires in {{ expiry_minutes }} minutes."
+msgstr "您的 Motaded 验证码已就绪，将在 {{ expiry_minutes }} 分钟后过期。"
+
+msgid "Motaded"
+msgstr "Motaded"
+
+msgid "Verify your email"
+msgstr "验证您的电子邮箱"
+
+msgid "Your code"
+msgstr "您的验证码"
+
+msgid "You’re almost done. To continue with your form submission, use the verification code below. We sent this message because someone entered this email address on the Motaded website."
+msgstr "您即将完成。要继续提交表单，请使用下方的验证码。因有人在 Motaded 网站上填写了此邮箱地址，我们向您发送了此邮件。"
+
+msgid "This code expires in <strong style=\"color:#0f2a1d;\">{{ expiry_minutes }} minutes</strong>. If you didn’t request it, you can safely ignore this email — your account details won’t be changed."
+msgstr "此验证码将在 <strong>{{ expiry_minutes }} 分钟</strong>后过期。若非您本人操作，可忽略此邮件 — 您的账户信息不会被更改。"
+
+msgid "For your security, never share this code with anyone. Motaded staff will never ask you for it by phone or chat."
+msgstr "为保障安全，请勿向任何人透露此验证码。Motaded 工作人员绝不会通过电话或聊天向您索要验证码。"
+
+msgid "Motaded Consultancy is a premier firm facilitating Business Setup in Saudi Arabia."
+msgstr "Motaded Consultancy 是一家致力于协助在沙特阿拉伯开展企业设立的专业机构。"
+
+msgid "ⓒ {{ year }} Motaded Consultancy. All Rights Reserved."
+msgstr "ⓒ {{ year }} Motaded Consultancy。保留所有权利。"
+
+msgid "This is an automated message — please do not reply to this email."
+msgstr "此为自动发送邮件 — 请勿直接回复。"
+
+msgid "Webform machine names"
+msgstr "网页表单机器名"
+
+msgid "One per line. These forms will require a one-time code sent to the email field before the submission is accepted."
+msgstr "每行一个。这些表单在提交被接受前，需要向电子邮箱字段发送一次性验证码。"
+
+msgid "Email element key"
+msgstr "电子邮件字段键名"
+
+msgid "The machine name of the email element (same for all webforms listed above), e.g. %example."
+msgstr "电子邮件表单元素的机器名（以上所有网页表单共用），例如 %example。"
+
+msgid "Invalid webform machine name: %id. Use only lowercase letters, numbers, and underscores."
+msgstr "无效的网页表单机器名：%id。请仅使用小写字母、数字和下划线。"
+
+msgid "Duplicate webform: %id."
+msgstr "重复的网页表单：%id。"
+
+msgid "Enter a valid element machine name (e.g. email)."
+msgstr "请输入有效的元素机器名（例如 email）。"

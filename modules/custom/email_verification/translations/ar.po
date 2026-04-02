@@ -1,0 +1,115 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: email_verification\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=((n==0)?0:((n==1)?1:((n==2)?2:((((n%100)>=3)&&((n%100)<=10))?3:((((n%100)>=11)&&((n%100)<=99))?4:5)))));\n"
+
+msgid "Enter verification code"
+msgstr "أدخل رمز التحقق"
+
+msgid "To submit this form, enter the code we sent to your email address."
+msgstr "لإرسال هذا النموذج، أدخل الرمز الذي أرسلناه إلى عنوان بريدك الإلكتروني."
+
+msgid "Verification code"
+msgstr "رمز التحقق"
+
+msgid "Resend code"
+msgstr "إعادة إرسال الرمز"
+
+msgid "Confirm and submit"
+msgstr "تأكيد وإرسال"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Could not load security token."
+msgstr "تعذر تحميل رمز الأمان."
+
+msgid "Could not send verification email."
+msgstr "تعذر إرسال بريد التحقق."
+
+msgid "Invalid or expired code."
+msgstr "الرمز غير صالح أو منتهي الصلاحية."
+
+msgid "Something went wrong."
+msgstr "حدث خطأ ما."
+
+msgid "Please enter the code from your email."
+msgstr "يُرجى إدخال الرمز من بريدك الإلكتروني."
+
+msgid "A new code was sent to your email."
+msgstr "تم إرسال رمز جديد إلى بريدك الإلكتروني."
+
+msgid "Could not resend."
+msgstr "تعذر إعادة الإرسال."
+
+msgid "Please confirm your email with the verification code before submitting."
+msgstr "يُرجى تأكيد بريدك الإلكتروني برمز التحقق قبل الإرسال."
+
+msgid "Confirm your email — @site"
+msgstr "أكّد بريدك الإلكتروني — @site"
+
+msgid "Confirm your email"
+msgstr "أكّد بريدك الإلكتروني"
+
+msgid "Invalid email address."
+msgstr "عنوان البريد الإلكتروني غير صالح."
+
+msgid "Could not send verification email. Check the address and try again."
+msgstr "تعذر إرسال بريد التحقق. تحقق من العنوان وحاول مرة أخرى."
+
+msgid "Your verification code"
+msgstr "رمز التحقق الخاص بك"
+
+msgid "Your Motaded verification code is ready. It expires in {{ expiry_minutes }} minutes."
+msgstr "رمز تحقق موتاد جاهز. ينتهي خلال {{ expiry_minutes }} دقيقة."
+
+msgid "Motaded"
+msgstr "Motaded"
+
+msgid "Verify your email"
+msgstr "تحقق من بريدك الإلكتروني"
+
+msgid "Your code"
+msgstr "رمزك"
+
+msgid "You’re almost done. To continue with your form submission, use the verification code below. We sent this message because someone entered this email address on the Motaded website."
+msgstr "أوشكت على الانتهاء. لمتابعة إرسال النموذج، استخدم رمز التحقق أدناه. أرسلنا هذه الرسالة لأن شخصًا أدخل عنوان البريد الإلكتروني هذا على موقع Motaded."
+
+msgid "This code expires in <strong style=\"color:#0f2a1d;\">{{ expiry_minutes }} minutes</strong>. If you didn’t request it, you can safely ignore this email — your account details won’t be changed."
+msgstr "تنتهي صلاحية هذا الرمز خلال <strong>{{ expiry_minutes }} دقيقة</strong>. إذا لم تطلبه، يمكنك تجاهل هذا البريد بأمان — لن تتغير تفاصيل حسابك."
+
+msgid "For your security, never share this code with anyone. Motaded staff will never ask you for it by phone or chat."
+msgstr "لأمانك، لا تشارك هذا الرمز مع أي شخص. لن يطلب منك موظفو Motaded هذا الرمز عبر الهاتف أو الدردشة."
+
+msgid "Motaded Consultancy is a premier firm facilitating Business Setup in Saudi Arabia."
+msgstr "شركة Motaded الاستشارية هي شركة رائدة في تسهيل تأسيس الأعمال في المملكة العربية السعودية."
+
+msgid "ⓒ {{ year }} Motaded Consultancy. All Rights Reserved."
+msgstr "ⓒ {{ year }} Motaded Consultancy. جميع الحقوق محفوظة."
+
+msgid "This is an automated message — please do not reply to this email."
+msgstr "هذه رسالة تلقائية — يُرجى عدم الرد على هذا البريد."
+
+msgid "Webform machine names"
+msgstr "أسماء الآلة لنماذج الويب"
+
+msgid "One per line. These forms will require a one-time code sent to the email field before the submission is accepted."
+msgstr "واحد في كل سطر. ستتطلب هذه النماذج رمزًا لمرة واحدة يُرسل إلى حقل البريد الإلكتروني قبل قبول الإرسال."
+
+msgid "Email element key"
+msgstr "مفتاح عنصر البريد الإلكتروني"
+
+msgid "The machine name of the email element (same for all webforms listed above), e.g. %example."
+msgstr "الاسم الآلي لعنصر البريد الإلكتروني (نفسه لجميع نماذج الويب أعلاه)، مثل %example."
+
+msgid "Invalid webform machine name: %id. Use only lowercase letters, numbers, and underscores."
+msgstr "اسم آلة غير صالح لنموذج الويب: %id. استخدم فقط أحرفًا صغيرة وأرقامًا وشرطات سفلية."
+
+msgid "Duplicate webform: %id."
+msgstr "نموذج ويب مكرر: %id."
+
+msgid "Enter a valid element machine name (e.g. email)."
+msgstr "أدخل اسم آلة عنصر صالحًا (مثل email)."
