@@ -5,7 +5,7 @@
  */
 #}
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="{{ langcode }}" dir="{{ text_direction }}" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,12 +21,12 @@
   </noscript>
   <![endif]-->
 </head>
-<body style="margin:0;padding:0;background-color:#f0f4f2;-webkit-font-smoothing:antialiased;">
+<body style="margin:0;padding:0;background-color:#f0f4f2;-webkit-font-smoothing:antialiased;" dir="{{ text_direction }}">
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
     {% trans %}Your Motaded verification code is ready. It expires in {{ expiry_minutes }} minutes.{% endtrans %}
   </div>
 
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f0f4f2;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f0f4f2;" dir="{{ text_direction }}">
     <tr>
       <td align="center" style="padding:32px 16px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;">
@@ -66,7 +66,7 @@
                           <p style="margin:0 0 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#166534;">
                             {{ 'Your code'|t }}
                           </p>
-                          <p style="margin:0;font-family:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;font-size:32px;font-weight:700;letter-spacing:0.2em;color:#0f2a1d;line-height:1.2;">
+                          <p style="margin:0;font-family:'SF Mono',Consolas,'Liberation Mono',Menlo,monospace;font-size:32px;font-weight:700;letter-spacing:0.2em;color:#0f2a1d;line-height:1.2;" dir="ltr">
                             {{ otp_code }}
                           </p>
                         </td>

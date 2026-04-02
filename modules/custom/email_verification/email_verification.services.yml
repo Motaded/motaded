@@ -13,3 +13,4 @@ services:
       - '@logger.channel.email_verification'
       - '@config.factory'
       - '@renderer'
+      - '@language_manager'

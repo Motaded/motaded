@@ -144,6 +144,8 @@ function email_verification_theme($existing, $type, $theme, $path) {
   return [
     'email_verification_otp' => [
       'variables' => [
+        'langcode' => 'en',
+        'text_direction' => 'ltr',
         'site_url' => '',
         'otp_code' => '',
         'expiry_minutes' => 10,
