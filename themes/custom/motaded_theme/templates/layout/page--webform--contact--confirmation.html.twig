@@ -129,3 +129,9 @@
   {% endif %}
 </div>
 
+{% if linkedin_contact_lead_conversion_id is defined %}
+<script>
+window.lintrk = window.lintrk || function (a, b) { (window.lintrk.q = window.lintrk.q || []).push([a, b]); };
+window.lintrk('track', { conversion_id: {{ linkedin_contact_lead_conversion_id }} });
+</script>
+{% endif %}
