@@ -11,6 +11,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Stores OTP and verified state in private tempstore (session-scoped).
@@ -30,6 +31,7 @@ class EmailVerificationOtpManager {
     private ConfigFactoryInterface $configFactory,
     private RendererInterface $renderer,
     private LanguageManagerInterface $languageManager,
+    private RequestStack $requestStack,
   ) {}
 
   /**
@@ -117,7 +119,7 @@ class EmailVerificationOtpManager {
    * Renders the branded HTML email body (Twig template).
    */
   protected function buildOtpEmailHtml(string $otp, string $langcode): string {
-    $site_url = rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
+    $site_url = $this->getSiteBaseUrlWithoutLanguagePrefix();
     $languages = $this->languageManager->getLanguages();
     if (isset($languages[$langcode])) {
       $text_direction = $languages[$langcode]->getDirection();
@@ -140,6 +142,17 @@ class EmailVerificationOtpManager {
       '#year' => date('Y'),
     ];
     return (string) $this->renderer->renderPlain($build);
+  }
+
+  /**
+   * Absolute site root for email assets/links (no /ar etc. from path negotiation).
+   */
+  protected function getSiteBaseUrlWithoutLanguagePrefix(): string {
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request) {
+      return rtrim($request->getSchemeAndHttpHost() . $request->getBasePath(), '/');
+    }
+    return rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
   }
 
   /**

@@ -14,3 +14,4 @@ services:
       - '@config.factory'
       - '@renderer'
       - '@language_manager'
+      - '@request_stack'
