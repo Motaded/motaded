@@ -47,6 +47,35 @@
  * @see html.html.twig
  */
 #}
+{# Google Ads conversion: if gtag is already global, only fire conversion; else load gtag.js once and config+conversion. Do not duplicate this conversion in GTM. #}
+<script>
+(function () {
+  var sendTo = 'AW-11100781284/BQDSCI_viOYYEOT1oa0p';
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'conversion', { send_to: sendTo });
+    return;
+  }
+  window.dataLayer = window.dataLayer || [];
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-11100781284';
+  s.onload = function () {
+    if (typeof window.gtag !== 'function') {
+      return;
+    }
+    window.gtag('js', new Date());
+    window.gtag('config', 'AW-11100781284');
+    window.gtag('event', 'conversion', { send_to: sendTo });
+  };
+  document.head.appendChild(s);
+})();
+</script>
+{# Meta Pixel: Lead — only this template (contact form confirmation, e.g. /contact-us/confirmation). #}
+<script>
+  if (typeof fbq === 'function') {
+    fbq('track', 'Lead');
+  }
+</script>
 {% set show_service_side = true %}
 {% set main_wrapper_classes = [
   "main-wrapper",

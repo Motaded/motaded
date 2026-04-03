@@ -341,9 +341,9 @@ function motaded_theme_form_system_theme_settings_alter(&$form, FormStateInterfa
   ];
   $form['motaded_linkedin']['linkedin_contact_lead_conversion_id'] = [
     '#type' => 'textfield',
-    '#title' => t('Contact form lead conversion ID'),
+    '#title' => t('LinkedIn: contact form lead conversion ID'),
     '#default_value' => theme_get_setting('linkedin_contact_lead_conversion_id') ?: '',
-    '#description' => t('Numeric conversion ID from LinkedIn Campaign Manager → Conversions. Sent only on the contact form thank-you page. Leave empty if the conversion uses URL matching only.'),
+    '#description' => t('Digits only — from LinkedIn Campaign Manager → Conversions (not the Insight partner ID). Do not enter Google Ads IDs (AW-…); those belong in Google Tag Manager. Leave empty to skip LinkedIn conversion tracking on the thank-you page.'),
     '#maxlength' => 24,
     '#pattern' => '\d*',
   ];
