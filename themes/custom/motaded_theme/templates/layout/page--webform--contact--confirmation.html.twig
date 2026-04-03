@@ -47,29 +47,21 @@
  * @see html.html.twig
  */
 #}
-{# Google Ads conversion: if gtag is already global, only fire conversion; else load gtag.js once and config+conversion. Do not duplicate this conversion in GTM. #}
+{# Google Ads conversion: official gtag queue pattern (runs every time this page HTML loads). Do not duplicate this conversion in GTM. #}
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11100781284"></script>
 <script>
-(function () {
-  var sendTo = 'AW-11100781284/BQDSCI_viOYYEOT1oa0p';
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'conversion', { send_to: sendTo });
-    return;
-  }
   window.dataLayer = window.dataLayer || [];
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-11100781284';
-  s.onload = function () {
-    if (typeof window.gtag !== 'function') {
-      return;
-    }
-    window.gtag('js', new Date());
-    window.gtag('config', 'AW-11100781284');
-    window.gtag('event', 'conversion', { send_to: sendTo });
-  };
-  document.head.appendChild(s);
-})();
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-11100781284');
+  gtag('event', 'conversion', {
+    'send_to': 'AW-11100781284/BQDSCI_viOYYEOT1oa0p'
+  });
 </script>
+<noscript>
+  <img height="1" width="1" style="display:none" alt=""
+    src="https://www.googleadservices.com/pagead/conversion/11100781284/?label=BQDSCI_viOYYEOT1oa0p&amp;guid=ON&amp;script=0" />
+</noscript>
 {# Meta Pixel: Lead — only this template (contact form confirmation, e.g. /contact-us/confirmation). #}
 <script>
   if (typeof fbq === 'function') {
