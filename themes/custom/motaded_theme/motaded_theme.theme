@@ -71,6 +71,31 @@ function motaded_theme_preprocess_page(&$variables) {
   if (isset($variables['page']['footer']['motaded_theme_cta_3'])) {
     $variables['page']['footer']['motaded_theme_cta_3']['#access'] = FALSE;
   }
+
+  // Footer: two-row layout (see .footer-site in main.css).
+  if (!empty($variables['page']['footer']) && is_array($variables['page']['footer'])) {
+    $footer = &$variables['page']['footer'];
+
+    // Stack left column: about + secondary menus.
+    $left_keys = ['motaded_theme_footerabouttext', 'motaded_theme_otherservices', 'motaded_theme_quicklinks'];
+    $left_children = [];
+    foreach ($left_keys as $key) {
+      if (isset($footer[$key])) {
+        $left_children[$key] = $footer[$key];
+        unset($footer[$key]);
+      }
+    }
+    if ($left_children !== []) {
+      $footer['footer_site_col_left'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['footer-site__col-left']],
+        '#weight' => -50,
+      ];
+      foreach ($left_children as $key => $element) {
+        $footer['footer_site_col_left'][$key] = $element;
+      }
+    }
+  }
 }
 
 /**
