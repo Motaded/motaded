@@ -1,4 +1,7 @@
 motaded_theme.settings:
   type: config_object
   label: 'Motaded theme settings'
-  mapping: {}
+  mapping:
+    linkedin_contact_lead_conversion_id:
+      type: string
+      label: 'LinkedIn conversion ID for contact form thank-you page'

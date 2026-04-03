@@ -32,6 +32,9 @@ libraries-override:
         css/components/hidden.module.css: css/hidden.css
 generator: "starterkit_theme:11.2.5"
 
+settings:
+  linkedin_contact_lead_conversion_id: ''
+
 regions:
   main_menu: "Main menu"
   menu_mobile: "Mobile menu"
