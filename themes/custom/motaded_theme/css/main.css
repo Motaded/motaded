@@ -629,7 +629,7 @@ html[lang="es"] #site-header .menu-item ul a p {
   width: auto !important;
 }
 
-/* Footer: row1 ≈31% about+menus | ≈69% Our Services; row2 legal+copyright | Vision 2030 + social */
+/* Footer: ≥1024px region-footer = about (auto) | .footer-site__menus (1fr, flex row); bar: legal | Vision 2030 + social */
 .footer-site {
   display: grid;
   box-sizing: border-box;
@@ -642,7 +642,6 @@ html[lang="es"] #site-header .menu-item ul a p {
   align-items: start;
   padding-bottom: 1.25rem;
   /* Do not set max-width here — twig xl:max-w-[1320px] + main.css 1280px block */
-  --footer-row1-cols: minmax(0, 31fr) minmax(0, 69fr);
   --footer-row2-cols: minmax(0, 1fr) auto;
 }
 
@@ -657,7 +656,7 @@ html[lang="es"] #site-header .menu-item ul a p {
 
   .footer-site .region.region-footer {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 1.25rem;
     width: 100%;
     min-width: 0;
@@ -723,6 +722,7 @@ html[lang="es"] #site-header .menu-item ul a p {
   }
 
   .footer-site__col-left,
+  .footer-site__menus,
   #block-motaded-theme-ourservices,
   #block-motaded-theme-social,
   #block-motaded-theme-bottombar {
@@ -731,6 +731,18 @@ html[lang="es"] #site-header .menu-item ul a p {
     width: 100%;
     max-width: 100%;
     min-width: 0;
+  }
+
+  .footer-site__menus {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* Лише Our Services; Useful Resources + Legal — з десктопу (узгоджено з ≥1024px сіткою). */
+  .footer-site__menus #block-motaded-theme-otherservices,
+  .footer-site__menus #block-motaded-theme-quicklinks {
+    display: none !important;
   }
 
   .footer-site .social-link-field {
@@ -746,7 +758,7 @@ html[lang="es"] #site-header .menu-item ul a p {
   }
 }
 
-/* ≥1024px: дві вкладені сітки (31/69 і legal | Vision+соц) */
+/* ≥1024px: ліва колонка — лого/about; решта ширини — .footer-site__menus (flex row, три меню) */
 @media (min-width: 1024px) {
   .footer-site {
     display: grid;
@@ -754,12 +766,36 @@ html[lang="es"] #site-header .menu-item ul a p {
 
   .footer-site .region.region-footer {
     display: grid;
-    grid-template-columns: var(--footer-row1-cols);
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    grid-template-rows: auto;
     grid-column: 1 / -1;
     grid-row: 1;
     column-gap: clamp(1.25rem, 4vw, 2.5rem);
-    row-gap: 1rem;
+    row-gap: 0;
     align-items: start;
+    min-width: 0;
+  }
+
+  .footer-site__col-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .footer-site__menus {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .footer-site__menus > * {
+    flex: 1 1 0;
     min-width: 0;
   }
 
@@ -775,12 +811,11 @@ html[lang="es"] #site-header .menu-item ul a p {
 }
 
 .footer-site__col-left {
-  grid-column: 1;
-  grid-row: 1;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
+  max-width: 320px;
 }
 
 @media (min-width: 1280px) {
@@ -788,16 +823,6 @@ html[lang="es"] #site-header .menu-item ul a p {
     max-width: 1320px;
     margin-inline: auto;
   }
-}
-
-#block-motaded-theme-ourservices {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: stretch;
-  align-self: start;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
 }
 
 #block-motaded-theme-social {
@@ -856,7 +881,7 @@ html[lang="es"] #site-header .menu-item ul a p {
 
 #block-motaded-theme-ourservices .menu--our-services__grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(1, minmax(0, max-content));
   column-gap: clamp(1.25rem, 3vw, 5.5rem);
   row-gap: 1rem;
   width: 100%;
@@ -864,20 +889,6 @@ html[lang="es"] #site-header .menu-item ul a p {
   min-width: 0;
   box-sizing: border-box;
   justify-content: flex-start !important;
-}
-
-@media (min-width: 640px) {
-  #block-motaded-theme-ourservices .menu--our-services__grid {
-    grid-template-columns: repeat(2, minmax(0, max-content));
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-@media (min-width: 1024px) {
-  #block-motaded-theme-ourservices .menu--our-services__grid {
-    grid-template-columns: repeat(3, minmax(0, max-content));
-  }
 }
 
 /* Footer about block (logo + text) */

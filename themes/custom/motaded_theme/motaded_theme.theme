@@ -72,14 +72,13 @@ function motaded_theme_preprocess_page(&$variables) {
     $variables['page']['footer']['motaded_theme_cta_3']['#access'] = FALSE;
   }
 
-  // Footer: two-row layout (see .footer-site in main.css).
+  // Footer: about row, then Our Services | Useful Resources | Legal (see .footer-site in main.css).
   if (!empty($variables['page']['footer']) && is_array($variables['page']['footer'])) {
     $footer = &$variables['page']['footer'];
 
-    // Stack left column: about + secondary menus.
-    $left_keys = ['motaded_theme_footerabouttext', 'motaded_theme_otherservices', 'motaded_theme_quicklinks'];
+    $about_keys = ['motaded_theme_footerabouttext'];
     $left_children = [];
-    foreach ($left_keys as $key) {
+    foreach ($about_keys as $key) {
       if (isset($footer[$key])) {
         $left_children[$key] = $footer[$key];
         unset($footer[$key]);
@@ -93,6 +92,25 @@ function motaded_theme_preprocess_page(&$variables) {
       ];
       foreach ($left_children as $key => $element) {
         $footer['footer_site_col_left'][$key] = $element;
+      }
+    }
+
+    $menu_keys = ['motaded_theme_ourservices', 'motaded_theme_otherservices', 'motaded_theme_quicklinks'];
+    $menu_children = [];
+    foreach ($menu_keys as $key) {
+      if (isset($footer[$key])) {
+        $menu_children[$key] = $footer[$key];
+        unset($footer[$key]);
+      }
+    }
+    if ($menu_children !== []) {
+      $footer['footer_site_menus'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['footer-site__menus']],
+        '#weight' => -45,
+      ];
+      foreach ($menu_children as $key => $element) {
+        $footer['footer_site_menus'][$key] = $element;
       }
     }
   }
