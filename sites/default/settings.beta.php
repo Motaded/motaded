@@ -872,8 +872,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # $settings['migrate_source_version'] = '';
 # $settings['migrate_file_public_path'] = '';
 # $settings['migrate_file_private_path'] = '';
-$config['system.performance']['css']['preprocess'] = TRUE;
-$config['system.performance']['js']['preprocess'] = TRUE;
+// CSS/JS aggregation: controlled by config (system.performance), not overrides here.
 
 /**
  * Load local development override configuration, if available.
