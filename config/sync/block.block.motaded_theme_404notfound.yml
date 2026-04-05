@@ -6,6 +6,7 @@ dependencies:
     - 'block_content:paragraphs:fe98c98b-6bf8-4d70-9803-4f928485f527'
   module:
     - block_content
+    - motaded_custom
     - system
   theme:
     - motaded_theme
@@ -22,8 +23,6 @@ settings:
   provider: block_content
   view_mode: full
 visibility:
-  response_status:
-    id: response_status
+  motaded_404_page:
+    id: motaded_404_page
     negate: false
-    status_codes:
-      - 404

@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Motaded custom module.
+ */
+
+/**
+ * Fix invalid block_content langcodes that break Views (EntityViewDisplay).
+ *
+ * Rows with NULL, empty, or unknown langcode can make $entity->language() NULL for
+ * translatable block content, causing "getId() on null" on admin/content/block.
+ */
+function motaded_custom_update_10001(): void {
+  $db = \Drupal::database();
+  $languages = \Drupal::languageManager()->getLanguages();
+  if ($languages === []) {
+    return;
+  }
+  $valid = array_keys($languages);
+  $default = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+  $tables = [
+    'block_content_field_data',
+    'block_content_revision_field_data',
+  ];
+  foreach ($tables as $table) {
+    if (!$db->schema()->tableExists($table)) {
+      continue;
+    }
+    $db->update($table)
+      ->fields(['langcode' => $default])
+      ->condition('langcode', NULL, 'IS NULL')
+      ->execute();
+
+    $db->update($table)
+      ->fields(['langcode' => $default])
+      ->condition('langcode', '')
+      ->execute();
+
+    $db->update($table)
+      ->fields(['langcode' => $default])
+      ->condition('langcode', $valid, 'NOT IN')
+      ->execute();
+  }
+}
