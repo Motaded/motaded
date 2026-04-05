@@ -1,0 +1,61 @@
+--- a/src/Controller/ImageStyleDownloadController.php
++++ b/src/Controller/ImageStyleDownloadController.php
+@@ -15,19 +15,33 @@
+ class ImageStyleDownloadController extends CoreImageStyleDownloadController {
+ 
+   /**
+-   * Lookup potential source files based on webp uri.
++   * Finds a non-webp (or extensionless) source file for a webp sidecar URI.
+    *
++   * Native uploads that are only stored as .webp must not use this: when no
++   * sibling source exists, returns NULL so the original webp is passed to core.
++   *
+    * @param string $image_uri
+-   *   The webp image uri.
++   *   The webp image URI (e.g. public://dir/name.webp).
+    *
+-   * @return mixed|null
+-   *   The source image uri.
++   * @return string|null
++   *   An existing source URI to feed image styles, or NULL.
+    */
+   public function lookupSourceImage($image_uri) {
+-    $source_image = substr($image_uri, 0, strrpos($image_uri, "."));
+-    if($source_image . '.webp' === $image_uri) {
+-      return $source_image;
++    $pos = strrpos($image_uri, '.');
++    if ($pos === FALSE || substr($image_uri, $pos) !== '.webp') {
++      return NULL;
+     }
++    $base = substr($image_uri, 0, $pos);
++    foreach (['.png', '.jpg', '.jpeg', '.gif'] as $ext) {
++      $candidate = $base . $ext;
++      if (file_exists($candidate)) {
++        return $candidate;
++      }
++    }
++    if (file_exists($base)) {
++      return $base;
++    }
++    return NULL;
+   }
+ 
+   /**
+@@ -42,7 +56,7 @@
+     // If .webp file, look for image to derive from.
+     if (isset($path_info['extension']) && $path_info['extension'] === 'webp') {
+       $image_uri = $scheme . '://' . $target;
+-      // Continue processing if source found, else throw NotFoundHttpException.
++      // Only swap to a raster sibling when one exists (sidecar workflow).
+       if ($source_uri = $this->lookupSourceImage($image_uri)) {
+         // Replace webp image with source image and call parent:deliver().
+         $request->query->set('file', str_replace($scheme . '://', '', $source_uri));
+@@ -68,7 +82,7 @@
+         // then return the response unchanged.
+         return $source_response;
+       }
+-      throw new NotFoundHttpException();
++      return parent::deliver($request, $scheme, $image_style, $required_derivative_scheme);
+     }
+     else {
+       return parent::deliver($request, $scheme, $image_style, $required_derivative_scheme);

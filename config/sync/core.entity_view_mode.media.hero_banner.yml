@@ -1,0 +1,11 @@
+uuid: 9f0e1a2b-3c4d-5e6f-7081-92a3b4c5d6e7
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.hero_banner
+label: 'Hero banner'
+description: 'Full-bleed hero background with responsive srcset'
+targetEntityType: media
+cache: true

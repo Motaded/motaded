@@ -57,17 +57,20 @@
     {% set banner_type = content.field_banner_type['#items'].0.value ?? '' %}
     {% if banner_type == "banner_style_1" %}
       <section
-        class="relative isolate">
-        <!-- Background image + overlay -->
-        <div class="absolute inset-0">
-          <img
-          alt="Why Invest in Saudi Arabia" src="{{file_url(content.field_media.0['#media'].field_media_image.entity.uri.value)}}" class="h-full w-full object-cover hidden md:block" loading="eager" fetchpriority="high"/>
+        class="relative isolate banner-hero-fullbleed">
+        <!-- Background: grey on mobile (підклад), зображення на всю площину шару -->
+        <div class="banner-hero-fullbleed__bg absolute inset-0 z-0 bg-gray-200 md:bg-transparent">
+          {% if paragraph.field_media.entity %}
+            <div class="banner-hero-fullbleed__media">
+              {{ drupal_entity('media', paragraph.field_media.entity.id, 'hero_banner') }}
+            </div>
+          {% endif %}
           <!-- dark-to-transparent gradient for legibility -->
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/20"></div>
+          <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/40 to-black/20"></div>
         </div>
 
         <!-- Hero copy -->
-        <div class="relative">
+        <div class="relative z-10">
           <div class="mx-auto max-w-[72rem] px-4 pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-28">
             <div class="mx-auto text-center max-w-[46rem]">
 
@@ -116,7 +119,7 @@
         </div>
 
         <!-- 3 key reasons -->
-        <div class="relative">
+        <div class="relative z-10">
           <div class="mx-auto max-w-[82.5rem] px-4 translate-y-12 sm:translate-y-16">
             <div
               class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

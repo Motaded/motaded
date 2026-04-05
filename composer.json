@@ -56,6 +56,8 @@
         "drupal/formdazzle": "^4.0",
         "drupal/gin": "^5.0",
         "drupal/honeypot": "^2.2",
+        "drupal/imageapi_optimize": "^4.1",
+        "drupal/imageapi_optimize_webp": "^2.1",
         "drupal/lang_dropdown": "^2.4",
         "drupal/like_dislike": "^2.4",
         "drupal/metatag": "^2.2",
@@ -142,6 +144,10 @@
             "drupal/redirect": {
                 "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff",
                 "redirect_404: safe logger.factory->get() when channel omitted": "patches/redirect_404-logger-factory-get-default.patch"
+            },
+            "drupal/imageapi_optimize_webp": {
+                "Drupal 11: use GDToolkit::getImage() (getResource removed)": "patches/imageapi_optimize_webp-drupal-11-gd-getimage.patch",
+                "Native .webp only: do not rewrite file query to extensionless URI": "patches/imageapi_optimize_webp-native-webp-source.patch"
             }
         },
         "drupal-scaffold": {
