@@ -80,7 +80,11 @@
         <!-- Banner -->
         {% if content.field_style['#items'].0.value == "left" %}
           <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-{{ gradientColor }}-50 to-white border border-{{ gradientColor }}-200 flex flex-col md:flex-row items-center justify-between">
-            <img src="{{ file_url(content.field_media.0['#media'].field_media_image.entity.uri.value) }}" alt="{{ content.field_media.0['#media'].field_media_image.entity.alt }}" class="mt-6 md:mt-0 md:w-1/3 max-h-[300px] object-cover"/>
+            {% if paragraph.field_media.entity %}
+              <div class="banner-sm__media mt-6 w-full md:mt-0 md:w-1/3 shrink-0">
+                {{ drupal_entity('media', paragraph.field_media.entity.id, 'banner_sm') }}
+              </div>
+            {% endif %}
             <div class="max-w-xl p-8">
               <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
                 {{ content.field_title.0 }}
@@ -118,8 +122,10 @@
                 <a href="{{ content.field_link.0['#url'] }}" class="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-primary-600 text-white text-sm font-medium hover:bg-primary-700">{{ content.field_link.0['#title'] }}</a>
               </div>
             </div>
-            {% if content.field_media.0 is not empty %}
-              <img src="{{ file_url(content.field_media.0['#media'].field_media_image.entity.uri.value) }}" alt="{{ content.field_media.0['#media'].field_media_image.entity.alt }}" class="mt-6 md:mt-0 md:w-1/3 max-h-[300px] object-cover"/>
+            {% if paragraph.field_media.entity %}
+              <div class="banner-sm__media mt-6 w-full md:mt-0 md:w-1/3 shrink-0">
+                {{ drupal_entity('media', paragraph.field_media.entity.id, 'banner_sm') }}
+              </div>
             {% endif %}
           </div>
         {% endif %}

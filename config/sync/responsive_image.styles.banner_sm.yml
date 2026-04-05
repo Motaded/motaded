@@ -1,0 +1,21 @@
+uuid: e5f6a7b8-c9d0-1234-ef01-345678901234
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.max_1300x1300
+    - image.style.max_650x650
+id: banner_sm
+label: 'Banner SM (inline card)'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: '(min-width: 768px) 33vw, 100vw'
+      sizes_image_styles:
+        - max_650x650
+        - max_1300x1300
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: max_650x650

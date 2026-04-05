@@ -1,0 +1,11 @@
+uuid: d4e5f6a7-b8c9-0123-def0-234567890123
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.banner_sm
+label: 'Banner SM (inline card)'
+description: 'Responsive image for small CTA / paragraph banner card'
+targetEntityType: media
+cache: true

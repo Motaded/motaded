@@ -1,0 +1,16 @@
+uuid: 8c7f1a2b-3d4e-5f60-9a8b-7c6d5e4f3a2b
+langcode: en
+status: true
+dependencies:
+  module:
+    - imageapi_optimize
+    - imageapi_optimize_webp
+name: webp_derivative
+label: 'WebP parallel derivative'
+processors:
+  b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7:
+    uuid: b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7
+    id: imageapi_optimize_webp
+    weight: 0
+    data:
+      quality: 82

@@ -1,0 +1,23 @@
+uuid: 7c4e8a1b-2d3f-4a5b-9c0d-1e2f3a4b5c6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.max_1300x1300
+    - image.style.max_2600x2600
+    - image.style.max_650x650
+id: hero_banner
+label: 'Hero banner (full width)'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: 100vw
+      sizes_image_styles:
+        - max_650x650
+        - max_1300x1300
+        - max_2600x2600
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: max_1300x1300
