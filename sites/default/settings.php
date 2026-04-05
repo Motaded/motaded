@@ -917,7 +917,7 @@ $settings['file_private_path'] = $app_root . '/sites/default/files/private';
 
 $settings['simple_sitemap_engines.index_now.key'] = 'c4755d75-1a26-46e7-aad9-7a819eb4f020'; 
 
-$config['system.logging']['error_level'] = 'verbose';
+//$config['system.logging']['error_level'] = 'verbose';
 
 // Force higher upload limits for AJAX Webform submissions.
 @ini_set('upload_max_filesize', '1G');
