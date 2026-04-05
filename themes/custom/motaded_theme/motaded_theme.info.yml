@@ -10,7 +10,7 @@ libraries:
   - motaded_theme/base
   - motaded_theme/messages
   # - core/normalize
-  - motaded_theme/alpine
+  # Alpine: attach_library in includes/header.html.twig (required by header/menus).
 libraries-extend:
   user/drupal.user:
     - motaded_theme/user

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\motaded_custom\Drush\Commands;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -48,6 +50,18 @@ final class FrEsRedirectCommands extends DrushCommands {
     'string_long',
     'string',
     'link',
+  ];
+
+  /**
+   * Entity types skipped by default for motaded:rewrite-urls-from-full-url-csv (safety).
+   */
+  private const URL_REWRITE_DEFAULT_EXCLUDED_ENTITY_TYPES = [
+    'user',
+    'file',
+    'path_alias',
+    'redirect',
+    // Search API queue rows: SQL table mapping can throw "'' not found"; not public content.
+    'search_api_task',
   ];
 
   public function __construct(
@@ -1841,6 +1855,537 @@ final class FrEsRedirectCommands extends DrushCommands {
   }
 
   /**
+   * Rewrites full motaded.com.sa URLs across fieldable entities (spreadsheet-style CSV).
+   *
+   * CSV: two columns — old absolute URL, new absolute URL (e.g. "Alina Task - Sheet1.csv").
+   * Rows without http(s):// in column A are skipped (header lines). Longer old URLs run first.
+   * Replaces: full URL variants (http/https, www), internal:/path, and path occurrences in text.
+   */
+  #[CLI\Command(name: 'motaded:rewrite-urls-from-full-url-csv')]
+  #[CLI\Option(name: 'file', description: 'CSV path (DDEV: use /var/www/html/... or filename in project root; host /Users/... is not visible in the container).')]
+  #[CLI\Option(name: 'dry-run', description: 'Preview without saving (default: true).')]
+  #[CLI\Option(name: 'types', description: 'Comma-separated entity type IDs, or * for all fieldable types (default: *).')]
+  #[CLI\Option(name: 'exclude-types', description: 'Extra entity types to skip (comma list). Defaults include user,file,path_alias,redirect.')]
+  #[CLI\Option(name: 'collapse-duplicates', description: 'After rewrites, collapse /blog/blog and /services/services (default: true).')]
+  #[CLI\Option(name: 'report', description: 'Optional CSV: entity_type, entity_id, bundle, entity_label (title for nodes), langcode, field_name, replacements.')]
+  #[CLI\Usage(name: 'drush motaded:rewrite-urls-from-full-url-csv --file=/var/www/html/Alina\\ Task\\ -\\ Sheet1.csv --dry-run', description: 'Dry-run (DDEV: path must be inside the container, e.g. /var/www/html/...).')]
+  public function rewriteUrlsFromFullUrlCsv(array $options = [
+    'file' => NULL,
+    'dry-run' => TRUE,
+    'types' => '*',
+    'exclude-types' => NULL,
+    'collapse-duplicates' => TRUE,
+    'report' => NULL,
+  ]): void {
+    $file = $this->resolveReadablePathInProject((string) ($options['file'] ?? ''), 'file');
+
+    $pairs = $this->loadFullUrlRewritePairsFromCsv($file);
+    if ($pairs === []) {
+      throw new \RuntimeException('No valid URL pairs loaded from CSV (need two columns with http(s) URLs).');
+    }
+
+    $dry = filter_var($options['dry-run'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $collapse = filter_var($options['collapse-duplicates'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+
+    $exclude = self::URL_REWRITE_DEFAULT_EXCLUDED_ENTITY_TYPES;
+    $extra_ex = trim((string) ($options['exclude-types'] ?? ''));
+    if ($extra_ex !== '') {
+      foreach (array_filter(array_map('trim', explode(',', $extra_ex)), static fn($v) => $v !== '') as $ex) {
+        $exclude[] = $ex;
+      }
+    }
+    $exclude = array_values(array_unique($exclude));
+
+    $types_raw = trim((string) ($options['types'] ?? '*'));
+    if ($types_raw === '' || $types_raw === '*') {
+      $entity_type_ids = $this->listFieldableEntityTypeIdsForUrlRewrite($exclude);
+    }
+    else {
+      $entity_type_ids = array_values(array_filter(array_map('trim', explode(',', $types_raw)), static fn($v) => $v !== ''));
+    }
+
+    $report_path = trim((string) ($options['report'] ?? ''));
+    $report_fh = NULL;
+    if ($report_path !== '') {
+      $report_fh = fopen($report_path, 'wb');
+      if ($report_fh === FALSE) {
+        throw new \RuntimeException(sprintf('Cannot open report: %s', $report_path));
+      }
+      fwrite($report_fh, "\xEF\xBB\xBF");
+      fputcsv($report_fh, ['entity_type', 'entity_id', 'bundle', 'entity_label', 'langcode', 'field_name', 'replacements']);
+    }
+
+    $changed_entities = 0;
+    $changed_fields = 0;
+    $total_replacements = 0;
+
+    foreach ($entity_type_ids as $entity_type_id) {
+      if (in_array($entity_type_id, $exclude, TRUE)) {
+        continue;
+      }
+      if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+        $this->logger()->warning(sprintf('Unknown entity type, skipping: %s', $entity_type_id));
+        continue;
+      }
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      if (!is_a($entity_type->getClass(), ContentEntityInterface::class, TRUE)) {
+        continue;
+      }
+      $base_table = $entity_type->getBaseTable();
+      if (!is_string($base_table) || $base_table === '') {
+        continue;
+      }
+      $bundle_key = $entity_type->getKey('bundle');
+      $id_key = $entity_type->getKey('id');
+      if (!$id_key || $bundle_key === NULL) {
+        continue;
+      }
+      $storage = $this->entityTypeManager->getStorage($entity_type_id);
+      if (!$storage instanceof SqlContentEntityStorage) {
+        continue;
+      }
+      $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+      foreach (array_keys($bundles) as $bundle) {
+        if ($bundle === '') {
+          continue;
+        }
+        $field_map = $this->urlRewriteProcessableFields($entity_type_id, (string) $bundle);
+        if ($field_map === []) {
+          continue;
+        }
+        try {
+          $this->processUrlRewriteEntityBatch(
+            $entity_type_id,
+            $storage,
+            $id_key,
+            $bundle_key,
+            (string) $bundle,
+            $field_map,
+            $pairs,
+            $collapse,
+            $dry,
+            $changed_entities,
+            $changed_fields,
+            $total_replacements,
+            $report_fh,
+          );
+        }
+        catch (\Throwable $e) {
+          $this->logger()->warning(sprintf(
+            'URL rewrite skipped for %s bundle %s: %s',
+            $entity_type_id,
+            (string) $bundle,
+            $e->getMessage(),
+          ));
+        }
+      }
+    }
+
+    if ($report_fh !== NULL) {
+      fclose($report_fh);
+      $this->logger()->notice(sprintf('Wrote report: %s', $report_path));
+    }
+
+    $this->logger()->notice(sprintf(
+      $dry
+        ? 'Dry-run: would save %d entity translation(s), touch %d field(s), apply %d replacement(s). Loaded %d URL pair(s).'
+        : 'Updated: saved %d entity translation(s), touched %d field(s), applied %d replacement(s). Loaded %d URL pair(s).',
+      $changed_entities,
+      $changed_fields,
+      $total_replacements,
+      count($pairs),
+    ));
+  }
+
+  /**
+   * @return list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}>
+   */
+  private function loadFullUrlRewritePairsFromCsv(string $file): array {
+    $fh = fopen($file, 'rb');
+    if ($fh === FALSE) {
+      throw new \RuntimeException(sprintf('Cannot open CSV: %s', $file));
+    }
+    $header = fgetcsv($fh);
+    if (!is_array($header) || $header === []) {
+      fclose($fh);
+      throw new \RuntimeException('CSV is empty.');
+    }
+    $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]) ?? (string) $header[0];
+
+    $pairs = [];
+    $seen = [];
+    while (($row = fgetcsv($fh)) !== FALSE) {
+      if (!is_array($row) || count($row) < 2) {
+        continue;
+      }
+      $old = trim((string) ($row[0] ?? ''));
+      $new = trim((string) ($row[1] ?? ''));
+      if ($old === '' || $new === '') {
+        continue;
+      }
+      if (!preg_match('#^https?://#i', $old) || !preg_match('#^https?://#i', $new)) {
+        continue;
+      }
+      if ($old === $new) {
+        continue;
+      }
+      if (isset($seen[$old])) {
+        $this->logger()->warning(sprintf('Duplicate old URL in CSV (using first row): %s', $old));
+        continue;
+      }
+      $seen[$old] = TRUE;
+
+      $old_path_raw = parse_url($old, PHP_URL_PATH);
+      $new_path_raw = parse_url($new, PHP_URL_PATH);
+      $old_path = $this->normalizeInternalPath((string) ($old_path_raw !== NULL && $old_path_raw !== '' ? $old_path_raw : '/'));
+      $new_path = $this->normalizeInternalPath((string) ($new_path_raw !== NULL && $new_path_raw !== '' ? $new_path_raw : '/'));
+
+      $pairs[] = [
+        'old_full' => $old,
+        'new_full' => $new,
+        'old_path' => $old_path,
+        'new_path' => $new_path,
+        'old_variants' => $this->expandMotadedUrlVariantsForRewrite($old),
+      ];
+    }
+    fclose($fh);
+
+    usort($pairs, static function (array $a, array $b): int {
+      return strlen($b['old_full']) <=> strlen($a['old_full']);
+    });
+
+    return $pairs;
+  }
+
+  /**
+   * @return list<string>
+   */
+  private function expandMotadedUrlVariantsForRewrite(string $url): array {
+    $parts = parse_url($url);
+    if ($parts === FALSE || empty($parts['host'])) {
+      return [$url];
+    }
+    if (!preg_match('/(^|\\.)motaded\\.com\\.sa$/i', (string) $parts['host'])) {
+      return [$url];
+    }
+    $path = (string) ($parts['path'] ?? '');
+    $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+    $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+    $tail = $path . $query . $fragment;
+    $out = [];
+    foreach (['https', 'http'] as $scheme) {
+      foreach (['motaded.com.sa', 'www.motaded.com.sa'] as $host) {
+        $out[] = $scheme . '://' . $host . $tail;
+      }
+    }
+    return array_values(array_unique($out));
+  }
+
+  /**
+   * @param list<string> $exclude entity type ids
+   *
+   * @return list<string>
+   */
+  private function listFieldableEntityTypeIdsForUrlRewrite(array $exclude): array {
+    $exclude_set = array_fill_keys($exclude, TRUE);
+    $out = [];
+    foreach ($this->entityTypeManager->getDefinitions() as $id => $def) {
+      if (isset($exclude_set[$id])) {
+        continue;
+      }
+      $class = $def->getClass();
+      if (!is_a($class, FieldableEntityInterface::class, TRUE) || !is_a($class, ContentEntityInterface::class, TRUE)) {
+        continue;
+      }
+      $base = $def->getBaseTable();
+      if (!is_string($base) || $base === '') {
+        continue;
+      }
+      $storage = $this->entityTypeManager->getStorage((string) $id);
+      if (!$storage instanceof SqlContentEntityStorage) {
+        continue;
+      }
+      $out[] = (string) $id;
+    }
+    sort($out);
+    return $out;
+  }
+
+  /**
+   * @return array<string, string> field name => field type id
+   */
+  private function urlRewriteProcessableFields(string $entity_type_id, string $bundle): array {
+    $defs = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
+    $out = [];
+    foreach ($defs as $name => $def) {
+      if (in_array($def->getType(), self::DUPLICATE_PREFIX_FIELD_TYPES, TRUE)) {
+        $out[$name] = $def->getType();
+      }
+    }
+    return $out;
+  }
+
+  /**
+   * @param list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}> $pairs
+   * @param resource|null $report_fh
+   */
+  private function processUrlRewriteEntityBatch(
+    string $entity_type_id,
+    $storage,
+    string $id_key,
+    string $bundle_property,
+    string $bundle_id,
+    array $field_map,
+    array $pairs,
+    bool $collapse,
+    bool $dry,
+    int &$changed_entities,
+    int &$changed_fields,
+    int &$total_replacements,
+    $report_fh,
+  ): void {
+    $last_id = 0;
+    $batch = 80;
+    while (TRUE) {
+      $query = $storage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($bundle_property, $bundle_id)
+        ->condition($id_key, $last_id, '>')
+        ->sort($id_key, 'ASC')
+        ->range(0, $batch);
+      $ids = $query->execute();
+      if ($ids === NULL || $ids === []) {
+        break;
+      }
+      $last_id = (int) max($ids);
+      foreach ($storage->loadMultiple($ids) as $entity) {
+        if (!$entity instanceof FieldableEntityInterface) {
+          continue;
+        }
+        if ($entity->bundle() !== $bundle_id) {
+          continue;
+        }
+        $to_save_langs = [];
+        if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
+          foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+            $t = $entity->getTranslation($langcode);
+            if (!$t instanceof FieldableEntityInterface) {
+              continue;
+            }
+            $n = $this->applyUrlRewriteFixesToFieldable(
+              $t,
+              $field_map,
+              $pairs,
+              $collapse,
+              $entity_type_id,
+              (int) $entity->id(),
+              (string) $langcode,
+              $report_fh,
+              $total_replacements,
+            );
+            if ($n > 0) {
+              $to_save_langs[] = $langcode;
+              $changed_fields += $n;
+            }
+          }
+          foreach ($to_save_langs as $langcode) {
+            $tr = $entity->getTranslation($langcode);
+            if (!$dry) {
+              $tr->save();
+            }
+            $changed_entities++;
+          }
+        }
+        else {
+          $n = $this->applyUrlRewriteFixesToFieldable(
+            $entity,
+            $field_map,
+            $pairs,
+            $collapse,
+            $entity_type_id,
+            (int) $entity->id(),
+            $entity->language()->getId(),
+            $report_fh,
+            $total_replacements,
+          );
+          if ($n > 0) {
+            $changed_fields += $n;
+            if (!$dry) {
+              $entity->save();
+            }
+            $changed_entities++;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @param array<string, string> $field_map
+   * @param list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}> $pairs
+   * @param resource|null $report_fh
+   */
+  private function applyUrlRewriteFixesToFieldable(
+    FieldableEntityInterface $entity,
+    array $field_map,
+    array $pairs,
+    bool $collapse,
+    string $entity_type_id,
+    int $entity_id,
+    string $langcode,
+    $report_fh,
+    int &$total_replacements,
+  ): int {
+    [$bundle, $entity_label] = $this->entityBundleAndLabelForReport($entity);
+    $fields_touched = 0;
+    foreach ($field_map as $field_name => $field_type) {
+      if (!$entity->hasField($field_name)) {
+        continue;
+      }
+      $list = $entity->get($field_name);
+      if ($list->isEmpty()) {
+        continue;
+      }
+      $field_repls = 0;
+      foreach ($list as $item) {
+        if (!$item instanceof FieldItemInterface) {
+          continue;
+        }
+        $field_repls += $this->applyUrlRewriteToFieldItem($item, $field_type, $pairs, $collapse);
+      }
+      if ($field_repls > 0) {
+        $fields_touched++;
+        $total_replacements += $field_repls;
+        if ($report_fh !== NULL && $report_fh !== FALSE) {
+          fputcsv($report_fh, [
+            $entity_type_id,
+            (string) $entity_id,
+            $bundle,
+            $entity_label,
+            $langcode,
+            $field_name,
+            (string) $field_repls,
+          ]);
+        }
+      }
+    }
+    return $fields_touched;
+  }
+
+  /**
+   * @return array{0: string, 1: string} bundle id, human label (e.g. node title for this translation)
+   */
+  private function entityBundleAndLabelForReport(FieldableEntityInterface $entity): array {
+    $bundle = '';
+    $label = '';
+    try {
+      $bundle = $entity->bundle();
+    }
+    catch (\Throwable) {
+    }
+    try {
+      $label = (string) $entity->label();
+    }
+    catch (\Throwable) {
+    }
+    return [$bundle, $label];
+  }
+
+  /**
+   * @param list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}> $pairs
+   */
+  private function applyUrlRewriteToFieldItem(
+    FieldItemInterface $item,
+    string $field_type,
+    array $pairs,
+    bool $collapse,
+  ): int {
+    $repl = 0;
+    if ($field_type === 'link') {
+      $uri = (string) $item->get('uri')->getString();
+      if ($uri === '' || !$this->textMightContainAnyUrlRewritePair($uri, $pairs)) {
+        return 0;
+      }
+      $uri = $this->applyFullUrlRewritePairsToText($uri, $pairs, $repl, TRUE);
+      $item->set('uri', $uri);
+      if ($collapse) {
+        $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, 'link');
+      }
+      return $repl;
+    }
+    if ($field_type === 'text_with_summary') {
+      foreach (['value', 'summary'] as $prop) {
+        $chunk = (string) $item->get($prop)->getString();
+        if ($chunk === '' || !$this->textMightContainAnyUrlRewritePair($chunk, $pairs)) {
+          continue;
+        }
+        $chunk = $this->applyFullUrlRewritePairsToText($chunk, $pairs, $repl, FALSE);
+        $item->set($prop, $chunk);
+      }
+      if ($collapse) {
+        $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, 'text_with_summary');
+      }
+      return $repl;
+    }
+    $chunk = (string) $item->get('value')->getString();
+    if ($chunk === '' || !$this->textMightContainAnyUrlRewritePair($chunk, $pairs)) {
+      return 0;
+    }
+    $chunk = $this->applyFullUrlRewritePairsToText($chunk, $pairs, $repl, FALSE);
+    $item->set('value', $chunk);
+    if ($collapse) {
+      $repl += $this->collapseDuplicatePrefixesOnFieldItem($item, $field_type);
+    }
+    return $repl;
+  }
+
+  /**
+   * @param list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}> $pairs
+   */
+  private function textMightContainAnyUrlRewritePair(string $text, array $pairs): bool {
+    foreach ($pairs as $p) {
+      if (str_contains($text, $p['old_full'])) {
+        return TRUE;
+      }
+      foreach ($p['old_variants'] as $v) {
+        if (str_contains($text, $v)) {
+          return TRUE;
+        }
+      }
+      if (str_contains($text, $p['old_path'])) {
+        return TRUE;
+      }
+      if (str_contains($text, 'internal:' . $p['old_path'])) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * @param list<array{old_full: string, new_full: string, old_path: string, new_path: string, old_variants: list<string>}> $pairs
+   */
+  private function applyFullUrlRewritePairsToText(string $text, array $pairs, int &$repl, bool $is_link_uri): string {
+    foreach ($pairs as $p) {
+      foreach ($p['old_variants'] as $from) {
+        $c = 0;
+        $text = str_replace($from, $p['new_full'], $text, $c);
+        $repl += (int) $c;
+      }
+      $c2 = 0;
+      $text = str_replace('internal:' . $p['old_path'], 'internal:' . $p['new_path'], $text, $c2);
+      $repl += (int) $c2;
+      if ($is_link_uri) {
+        $text = $this->replacePathOccurrencesForLinkUri($text, $p['old_path'], $p['new_path'], $repl);
+      }
+      else {
+        $text = $this->replacePathOccurrencesWithMotadedHost($text, $p['old_path'], $p['new_path'], $repl);
+      }
+    }
+    return $text;
+  }
+
+  /**
    * Collapses duplicate URL path segments in entity text/link fields (content fix, not redirects).
    *
    * Fixes repeated /services/services/... and /blog/blog/... (any depth), including after
@@ -2144,6 +2689,44 @@ final class FrEsRedirectCommands extends DrushCommands {
       return $parent;
     }
     return $drupal_root;
+  }
+
+  /**
+   * Resolves a host-side path (e.g. /Users/...) to a file inside the project when using DDEV.
+   *
+   * Tries: exact path, then project_root/basename, then project_root/relative_path.
+   */
+  private function resolveReadablePathInProject(string $path, string $option_name): string {
+    $path = trim($path);
+    if ($path === '') {
+      throw new \InvalidArgumentException(sprintf('Missing --%s.', $option_name));
+    }
+    $normalized = str_replace('\\', '/', $path);
+    if (is_file($normalized) && is_readable($normalized)) {
+      return $normalized;
+    }
+    $root = $this->getProjectRootDirectory();
+    $basename = basename($normalized);
+    if ($basename !== '' && $basename !== '.' && $basename !== '..') {
+      $try = $root . '/' . $basename;
+      if (is_file($try) && is_readable($try)) {
+        return $try;
+      }
+    }
+    if (!str_starts_with($normalized, '/')) {
+      $try_rel = $root . '/' . ltrim($normalized, '/');
+      if (is_file($try_rel) && is_readable($try_rel)) {
+        return $try_rel;
+      }
+    }
+    $hint = '';
+    if (str_starts_with($normalized, '/Users/') || str_starts_with($normalized, '/home/')) {
+      $hint = sprintf(
+        ' With DDEV, Drush runs in the container: use /var/www/html/%s or place the CSV in the project root and pass only the filename.',
+        $basename,
+      );
+    }
+    throw new \InvalidArgumentException(sprintf('Unreadable --%s: %s.%s', $option_name, $path, $hint));
   }
 
   /**

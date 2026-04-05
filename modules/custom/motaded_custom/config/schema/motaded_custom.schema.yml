@@ -1,3 +1,7 @@
+condition.plugin.motaded_404_page:
+  type: condition.plugin
+  label: 'Motaded 404 page visibility'
+
 motaded_custom.tasheer_visa:
   type: config_object
   label: 'Tasheer visa conditions'

@@ -142,6 +142,12 @@ function motaded_theme_preprocess_node(&$variables) {
  * Implements hook_theme_suggestions_page_alter().
  */
 function motaded_theme_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  // Core route /system/404 (system.404) is a normal route match, so Drupal does
+  // not add page__404; use the same layout as for real 404 responses.
+  if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
+    array_unshift($suggestions, 'page__404');
+  }
+
   if ($node = \Drupal::routeMatch()->getParameter('node')) {
     $suggestions[] = 'page__' . $node->bundle();
   }

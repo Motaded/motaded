@@ -2,6 +2,7 @@
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
+{{ attach_library('motaded_theme/alpine') }}
 
 <header
 	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null }" class="sticky top-0 z-[201] h-[91px] bg-white border-b border-gray-200" @keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null">
