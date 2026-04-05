@@ -133,12 +133,12 @@ html {
   }
 }
 
-/* Фоновий шар: на всю висоту секції (inset-0); на мобайлі сірий у Twig (bg-gray-200). */
+/* Background layer: full section height; mobile grey from Twig (bg-gray-200). */
 .banner-hero-fullbleed__bg {
   min-height: 100%;
 }
 
-/* Медіа — заповнює батька __bg зверху донизу (absolute inset-0). */
+/* Media fills __bg (absolute inset-0). */
 .banner-hero-fullbleed__media {
   position: absolute;
   inset: 0;
@@ -148,14 +148,14 @@ html {
   overflow: hidden;
 }
 
-/* Drupal field markup (media hero): ланцюг висоти до responsive_image. */
+/* Drupal field wrappers: height chain to responsive_image. */
 .banner-hero-fullbleed__media .field--name-field-media-image,
 .banner-hero-fullbleed__media .field--name-field-media-image .field__item {
   height: 100%;
   min-height: 100%;
 }
 
-/* Paragraph banner_sm: responsive_image + стилі (max_650 / max_1300, WebP pipeline). */
+/* Paragraph banner_sm: responsive_image (max_650 / max_1300, WebP pipeline). */
 .banner-sm__media {
   height: min(300px, 70vw);
   max-height: 300px;
@@ -735,7 +735,7 @@ html[lang="es"] #site-header .menu-item ul a p {
   --footer-row2-cols: minmax(0, 1fr) auto;
 }
 
-/* ≤1023px: logo/about → Our Services; у bar: legal → Vision+соц → копірайт (через display:contents у bottombar) */
+/* ≤1023px: logo/about, Our Services; footer bar: legal, vision+social, copyright (display:contents on bottombar). */
 @media (max-width: 1023px) {
   .footer-site {
     display: flex;
@@ -762,7 +762,7 @@ html[lang="es"] #site-header .menu-item ul a p {
     min-width: 0;
   }
 
-  /* Розплющити bottombar: у flex регіону лишаються перший блок body, другий, потім #block-social */
+  /* Flatten bottombar: flex region keeps body block, then #block-social. */
   .footer-site .region.region-footer-bar #block-motaded-theme-bottombar {
     display: contents;
   }
@@ -779,9 +779,7 @@ html[lang="es"] #site-header .menu-item ul a p {
     display: contents;
   }
 
-  /*
-   * Після contents + column-reverse: order 3,2,1 дає зверху вниз лінки → соц → копірайт.
-   */
+  /* After contents + column-reverse: order 3,2,1 yields links, social, copyright top to bottom. */
   .footer-site .region.region-footer-bar #block-motaded-theme-bottombar .field--name-body > *:first-child {
     order: 3;
   }
@@ -829,7 +827,7 @@ html[lang="es"] #site-header .menu-item ul a p {
     gap: 1.25rem;
   }
 
-  /* Лише Our Services; Useful Resources + Legal — з десктопу (узгоджено з ≥1024px сіткою). */
+  /* Our Services only; Useful Resources + Legal from desktop (matches ≥1024px grid). */
   .footer-site__menus #block-motaded-theme-otherservices,
   .footer-site__menus #block-motaded-theme-quicklinks {
     display: none !important;
@@ -848,7 +846,7 @@ html[lang="es"] #site-header .menu-item ul a p {
   }
 }
 
-/* ≥1024px: ліва колонка — лого/about; решта ширини — .footer-site__menus (flex row, три меню) */
+/* ≥1024px: left column logo/about; remainder .footer-site__menus (flex row, three menus). */
 @media (min-width: 1024px) {
   .footer-site {
     display: grid;
