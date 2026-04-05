@@ -87,45 +87,70 @@
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<!-- Meta Pixel -->
+<!-- Meta Pixel + LinkedIn Insight (deferred: same strategy as GTM) -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '638172781527457');
-fbq('track', 'PageView');
+(function (w, d) {
+  var loaded = false;
+  function loadMetaPixel() {
+    if (w.fbq) return;
+    !(function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(w, d, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    w.fbq('init', '638172781527457');
+    w.fbq('track', 'PageView');
+  }
+  function loadLinkedIn() {
+    w._linkedin_partner_id = '6424985';
+    w._linkedin_data_partner_ids = w._linkedin_data_partner_ids || [];
+    w._linkedin_data_partner_ids.push(w._linkedin_partner_id);
+    (function (l) {
+      if (!l) {
+        w.lintrk = function (a, b) {
+          w.lintrk.q.push([a, b]);
+        };
+        w.lintrk.q = [];
+      }
+      var s = d.getElementsByTagName('script')[0];
+      var b = d.createElement('script');
+      b.type = 'text/javascript';
+      b.async = true;
+      b.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
+      s.parentNode.insertBefore(b, s);
+    })(w.lintrk);
+  }
+  function loadDeferredMarketingTags() {
+    if (loaded) return;
+    loaded = true;
+    loadMetaPixel();
+    loadLinkedIn();
+  }
+  ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(function (ev) {
+    w.addEventListener(ev, loadDeferredMarketingTags, { once: true, passive: true });
+  });
+  setTimeout(loadDeferredMarketingTags, 3000);
+})(window, document);
 </script>
 <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=638172781527457&amp;ev=PageView&amp;noscript=1"
   alt="" /></noscript>
-<!-- End Meta Pixel -->
-
-<!-- LinkedIn Insight Tag -->
-<script type="text/javascript">
-_linkedin_partner_id = "6424985";
-window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-</script>
-<script type="text/javascript">
-(function(l) {
-if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-window.lintrk.q=[]}
-var s = document.getElementsByTagName("script")[0];
-var b = document.createElement("script");
-b.type = "text/javascript";b.async = true;
-b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-s.parentNode.insertBefore(b, s);})(window.lintrk);
-</script>
 <noscript>
 <img height="1" width="1" style="display:none;" alt=""
   src="https://px.ads.linkedin.com/collect/?pid=6424985&amp;fmt=gif" />
 </noscript>
-<!-- End LinkedIn Insight Tag -->
+<!-- End Meta Pixel + LinkedIn -->
 
 				</head>
 				<body{{attributes.addClass(body_classes)}}>
@@ -141,7 +166,7 @@ s.parentNode.insertBefore(b, s);})(window.lintrk);
 					{{ page_bottom }}
 					<js-bottom-placeholder token="{{ placeholder_token }}">
 					
-					 <script defer type="application/javascript" src=https://pulse.clickguard.com/s/accqf1jtljMP6/astOxT2EN0qJL></script>
-					 <script defer type="application/javascript" src=https://pulse.clickguard.com/sc></script>
+					 <script defer type="application/javascript" src="https://pulse.clickguard.com/s/accqf1jtljMP6/astOxT2EN0qJL"></script>
+					 <script defer type="application/javascript" src="https://pulse.clickguard.com/sc"></script>
 					</body>
 				</html>
