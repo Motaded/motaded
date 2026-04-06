@@ -22,6 +22,38 @@ function motaded_theme_preprocess_responsive_image_formatter(array &$variables) 
   }
 }
 
+/**
+ * Preloads local Font Awesome Brands woff2 (see dist/fontawesome + brands.min.css).
+ *
+ * Together with font-display:swap this reduces time-to-icon vs loading CSS first.
+ */
+function motaded_theme_preprocess_html(array &$variables): void {
+  $theme_path = \Drupal::theme()->getActiveTheme()->getPath();
+  $font_path = DRUPAL_ROOT . '/' . $theme_path . '/dist/fontawesome/webfonts/fa-brands-400.woff2';
+  if (!is_readable($font_path)) {
+    return;
+  }
+  $base = \Drupal::request()->getBasePath();
+  $href = ($base === '' ? '' : rtrim($base, '/')) . '/' . $theme_path . '/dist/fontawesome/webfonts/fa-brands-400.woff2';
+  $href = preg_replace('#/+#', '/', $href);
+  if ($href[0] !== '/') {
+    $href = '/' . $href;
+  }
+  $variables['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'preload',
+        'href' => $href,
+        'as' => 'font',
+        'type' => 'font/woff2',
+        'crossorigin' => 'anonymous',
+      ],
+    ],
+    'motaded_theme_fa_brands_preload',
+  ];
+}
+
 function motaded_theme_preprocess_block(array &$variables) {
   if (!empty($variables['elements']['#id']) && $variables['elements']['#id'] == 'motaded_theme_mainnavigation') {
     $variables['content']['#attributes']['data-block-id'] = $variables['elements']['#id'];

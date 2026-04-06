@@ -126,19 +126,15 @@ alpine:
       # minified: true
       # defer: true
 toc:
-  header: true
   js:
     js/toc.js: {}
 search-page:
-  header: true
   js:
     js/content-search.js: {}
 quick-links:
-  header: true
   js:
     js/quick-links.js: {}
 steps:
-  header: true
   js:
     js/steps.js: {}
   dependencies:
@@ -151,11 +147,9 @@ partner-carousel:
     - core/drupal
     - core/once
 news-carousel:
-  header: true
   js:
     js/news-carousel.js: {}
 
 featured-contents:
-  header: true
   js:
     js/featured-contents.js: {}

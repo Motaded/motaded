@@ -30,6 +30,14 @@ libraries-override:
     css:
       component:
         css/components/hidden.module.css: css/hidden.css
+  # Social Link Field: serve Font Awesome from the theme (first-party) instead
+  # of cdnjs — removes extra connection and matches aggregate caching.
+  social_link_field/fontawesome.component:
+    css:
+      component:
+        dist/fontawesome/css/fontawesome.min.css: { minified: true }
+        dist/fontawesome/css/brands.min.css: { minified: true }
+        dist/fontawesome/css/v4-shims.min.css: { minified: true }
 generator: "starterkit_theme:11.2.5"
 
 settings:
