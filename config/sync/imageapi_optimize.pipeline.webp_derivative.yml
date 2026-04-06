@@ -9,8 +9,8 @@ name: webp_derivative
 label: 'WebP parallel derivative'
 processors:
   b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7:
-    uuid: b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7
     id: imageapi_optimize_webp
-    weight: 0
     data:
       quality: 82
+    weight: 0
+    uuid: b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7

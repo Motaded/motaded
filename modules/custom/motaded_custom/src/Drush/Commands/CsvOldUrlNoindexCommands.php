@@ -15,7 +15,7 @@ use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 
 /**
- * Excludes nodes from Simple XML Sitemap and/or sets metatag robots from CSV old URLs.
+ * CSV old-URL helpers: sitemap/metatag noindex, unpublish nodes.
  */
 final class CsvOldUrlNoindexCommands extends DrushCommands {
 
@@ -213,6 +213,80 @@ final class CsvOldUrlNoindexCommands extends DrushCommands {
     $this->logger()->success(dt('Done: !parts. Regenerate sitemaps: drush simple-sitemap:rebuild-queue && drush simple-sitemap:generate. Then drush cr.', [
       '!parts' => implode(', ', $parts),
     ]));
+  }
+
+  /**
+   * Unpublish nodes matching old URLs in CSV column A (unique nid; same resolver as csv-noindex).
+   */
+  #[CLI\Command(name: 'motaded:csv-unpublish-by-old-url')]
+  #[CLI\Option(name: 'file', description: 'CSV path: column A = old absolute URL (e.g. Alina Task - Sheet1.csv).')]
+  #[CLI\Option(name: 'dry-run', description: 'List nodes only; do not save (default: true).')]
+  #[CLI\Usage(name: 'drush motaded:csv-unpublish-by-old-url --file=Alina\\ Task\\ -\\ Sheet1.csv --dry-run', description: 'Preview which nodes would be unpublished.')]
+  #[CLI\Usage(name: 'drush motaded:csv-unpublish-by-old-url --file=sheet.csv --no-dry-run -y', description: 'Unpublish resolved nodes.')]
+  public function csvUnpublishByOldUrl(array $options = [
+    'file' => NULL,
+    'dry-run' => TRUE,
+  ]): void {
+    $file = $this->resolveReadablePathInProject((string) ($options['file'] ?? ''), 'file');
+    $dry = filter_var($options['dry-run'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+
+    $paths = $this->loadOldUrlPathsFromCsv($file);
+    if ($paths === []) {
+      throw new \RuntimeException('No old URLs with http(s) found in CSV.');
+    }
+
+    $nids = [];
+    foreach ($paths as $path) {
+      if ($this->isLanguageRootPath($path)) {
+        $this->logger()->notice(dt('Skip language home path: @p', ['@p' => $path]));
+        continue;
+      }
+      $resolved = $this->resolveNodeFromPublicPath($path);
+      if ($resolved === NULL) {
+        $this->logger()->warning(dt('No path_alias → node for: @p', ['@p' => $path]));
+        continue;
+      }
+      $nids[$resolved['nid']] = TRUE;
+    }
+
+    $nid_list = array_keys($nids);
+    sort($nid_list);
+    if ($nid_list === []) {
+      $this->logger()->warning(dt('No resolvable nodes; nothing to do.'));
+      return;
+    }
+
+    $this->io()->writeln(dt('Unique nodes to process: @n', ['@n' => count($nid_list)]));
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    $saved = 0;
+    foreach ($nid_list as $nid) {
+      $node = $storage->load($nid);
+      if (!$node instanceof NodeInterface) {
+        $this->logger()->warning(dt('Node @nid missing.', ['@nid' => $nid]));
+        continue;
+      }
+      if (!$node->isPublished()) {
+        $this->io()->writeln(dt('Already unpublished: @nid — @t', ['@nid' => $nid, '@t' => $node->label()]));
+        continue;
+      }
+      if ($dry) {
+        $this->io()->writeln(dt('Would unpublish: @nid — @t', ['@nid' => $nid, '@t' => $node->label()]));
+        continue;
+      }
+      $node->setUnpublished();
+      $node->setNewRevision(FALSE);
+      $node->save();
+      $saved++;
+      $this->logger()->notice(dt('Unpublished @nid — @t', ['@nid' => $nid, '@t' => $node->label()]));
+    }
+
+    if ($dry) {
+      $this->logger()->notice(dt('Dry run only. Re-run with --no-dry-run to unpublish.'));
+      return;
+    }
+
+    $this->logger()->success(dt('Unpublished @n node(s). Run drush cr if needed.', ['@n' => $saved]));
   }
 
   /**

@@ -1,30 +1,27 @@
-uuid: af1ac722-37f4-40c1-9731-5b4838bb1472
+uuid: 28a26bb3-2627-4b10-8f46-206b0b4c1916
 langcode: en
 status: true
 dependencies:
   module:
     - language
     - node
-id: node_title
-label: 'Node title'
+id: node_title_services
+label: 'Node title - Services'
 type: 'canonical_entities:node'
-pattern: '/[node:title]'
+pattern: '/services/[node:title]'
 selection_criteria:
-  6c2feb64-d623-4a0e-9236-0eceaed94b2c:
+  906d53d7-0d4f-4b81-9ca9-45551772b171:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 6c2feb64-d623-4a0e-9236-0eceaed94b2c
+    uuid: 906d53d7-0d4f-4b81-9ca9-45551772b171
     context_mapping:
       node: node
     bundles:
-      entities: entities
-      landing_page: landing_page
-      partner: partner
-      pricing: pricing
-  661950e5-98a1-44a8-afbc-4860df605626:
+      page: page
+  50e6c6fe-34f0-48e7-9383-2938c8ac36d4:
     id: language
     negate: false
-    uuid: 661950e5-98a1-44a8-afbc-4860df605626
+    uuid: 50e6c6fe-34f0-48e7-9383-2938c8ac36d4
     context_mapping:
       language: 'node:langcode:language'
     langcodes:
