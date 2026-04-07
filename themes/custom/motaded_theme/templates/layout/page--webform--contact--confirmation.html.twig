@@ -47,7 +47,11 @@
  * @see html.html.twig
  */
 #}
-{# Google Ads conversion: injected in html.html.twig <head> via motaded_theme_preprocess_html (contact confirmation route or /contact-us/confirmation). Do not duplicate in GTM. #}
+{# Submit Form — Google Ads conversion (requires GA4 gtag in html.html.twig). Do not duplicate in GTM. #}
+<!-- Event snippet for Submit Form conversion page -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-11100781284/BQDSCI_viOYYEOT1oa0p'});
+</script>
 <noscript>
   <img height="1" width="1" style="display:none" alt=""
     src="https://www.googleadservices.com/pagead/conversion/11100781284/?label=BQDSCI_viOYYEOT1oa0p&amp;guid=ON&amp;script=0" />
