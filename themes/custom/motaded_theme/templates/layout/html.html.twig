@@ -48,32 +48,12 @@
 				{# Hero LCP: responsive image uses loading=eager + fetchpriority=high (see motaded_theme_preprocess_responsive_image_formatter). #}
 
 
-			<!-- Google Tag Manager (delayed & optimized) -->
-<script>
-(function (w, d, l, i) {
-  w[l] = w[l] || [];
-  w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-
-  var loaded = false;
-  function loadGTM() {
-    if (loaded) return;
-    loaded = true;
-
-    var f = d.getElementsByTagName('script')[0];
-    var j = d.createElement('script');
-    var dl = l !== 'dataLayer' ? '&l=' + l : '';
-    j.async = true;
-    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-    f.parentNode.insertBefore(j, f);
-  }
-
-  ['scroll','mousemove','touchstart','keydown','click'].forEach(function (ev) {
-    w.addEventListener(ev, loadGTM, { once: true, passive: true });
-  });
-
-  setTimeout(loadGTM, 3000);
-})(window, document, 'dataLayer', 'GTM-NBFPBC74');
-</script>
+			<!-- Google Tag Manager (loads immediately for reliable GTM / Tag Assistant) -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NBFPBC74');</script>
 <!-- End Google Tag Manager -->
 
 <!-- Google Tag Manager (noscript) -->
