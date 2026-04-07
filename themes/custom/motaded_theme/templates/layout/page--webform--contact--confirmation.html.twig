@@ -47,17 +47,7 @@
  * @see html.html.twig
  */
 #}
-{# Google Ads conversion: official gtag queue pattern (runs every time this page HTML loads). Do not duplicate this conversion in GTM. #}
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11100781284"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-11100781284');
-  gtag('event', 'conversion', {
-    'send_to': 'AW-11100781284/BQDSCI_viOYYEOT1oa0p'
-  });
-</script>
+{# Google Ads conversion: injected in html.html.twig <head> via motaded_theme_preprocess_html (contact confirmation route or /contact-us/confirmation). Do not duplicate in GTM. #}
 <noscript>
   <img height="1" width="1" style="display:none" alt=""
     src="https://www.googleadservices.com/pagead/conversion/11100781284/?label=BQDSCI_viOYYEOT1oa0p&amp;guid=ON&amp;script=0" />

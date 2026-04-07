@@ -36,7 +36,10 @@ content: |
   Allow: /profiles/*.jpeg
   Allow: /profiles/*.png
   Allow: /profiles/*.svg
-  # Directories (Drupal internals; same paths for every language)
+  # Directories (Drupal internals; same paths for every language).
+  # Note: crawlers that only read robots will skip these; tools like Screaming Frog
+  # still list URLs discovered via in-page links unless you enable "respect robots.txt"
+  # in the spider config or add URL excludes.
   Disallow: /core/
   Disallow: /profiles/
   Disallow: /sites/
@@ -72,6 +75,11 @@ content: |
   Disallow: /contact-us?*package=
   Disallow: /*/contact-us?*package=
   # Paths (no clean URLs)
+  Disallow: /index.php/core/
+  Disallow: /index.php/profiles/
+  Disallow: /index.php/sites/
+  Disallow: /index.php/themes/
+  Disallow: /index.php/modules/
   Disallow: /index.php/admin/
   Disallow: /index.php/comment/reply/
   Disallow: /index.php/filter/tips

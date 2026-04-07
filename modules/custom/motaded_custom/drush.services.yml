@@ -33,3 +33,12 @@ services:
       - '@language_manager'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.translation_audit_commands:
+    class: Drupal\motaded_custom\Drush\Commands\TranslationAuditCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@language_manager'
+      - '@content_translation.manager'
+    tags:
+      - { name: drush.command }
