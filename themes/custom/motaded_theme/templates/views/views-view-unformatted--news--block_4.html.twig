@@ -36,7 +36,11 @@ rows.
 							</div>
 						</div>
 						<div class="flex-shrink-0 w-[151px] h-[120px]">
-							<img alt="{{ row.image.alt }}" width="151" height="120" class="w-full h-full object-cover rounded-lg" src="{{ row.image.url }}"/>
+							{% if row.image.srcset %}
+								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 100vw, 151px" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover rounded-lg"/>
+							{% else %}
+								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover rounded-lg" src="{{ row.image.src }}"/>
+							{% endif %}
 						</div>
 					</div>
 				</div>
@@ -52,8 +56,11 @@ rows.
 				<div
 					class="relative w-full h-full rounded-lg overflow-hidden">
 					<!-- image -->
-					<img
-					alt="{{ row.image.alt }}" class="absolute inset-0 w-full h-full object-cover" src="{{ row.image.url }}"/>
+					{% if row.image.srcset %}
+						<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 100vw, (min-width: 768px) min(50vw, 640px)" width="{{ row.image.width }}" height="{{ row.image.height }}" class="absolute inset-0 w-full h-full object-cover"/>
+					{% else %}
+						<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="absolute inset-0 w-full h-full object-cover" src="{{ row.image.src }}"/>
+					{% endif %}
 					<!-- gradient overlay -->
 					<div class="absolute inset-0 bg-gradient-to-t from-primary-700/90 via-primary-700/20 to-transparent"></div>
 					<!-- text -->
@@ -72,7 +79,7 @@ rows.
 </div>
 
 <!-- Mobile Carousel -->
-<div class="block md:hidden my-10" x-data="newsCarousel({{ rows | length }})">
+<div class="block md:hidden my-10" x-data="newsCarousel" data-carousel-length="{{ rows | length }}">
 	<div class="relative">
 		<div class="overflow-hidden rounded-xl">
 			{% for key, row in rows %}
@@ -80,7 +87,11 @@ rows.
 					<div class="bg-white rounded-xl p-4 h-full border border-transparent hover:border-primary-600 shadow-sm transition">
 						<div class="flex flex-col justify-between h-full">
 							<div class="relative w-full">
-								<img alt="{{ row.image.alt }}" class="rounded-lg w-full h-[210px] object-cover" src="{{ row.image.url }}"/>
+								{% if row.image.srcset %}
+									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="100vw" width="{{ row.image.width }}" height="{{ row.image.height }}" class="rounded-lg w-full h-[210px] object-cover"/>
+								{% else %}
+									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="rounded-lg w-full h-[210px] object-cover" src="{{ row.image.src }}"/>
+								{% endif %}
 							</div>
 							<div class="mt-5 flex flex-col justify-between flex-1">
 								<p class="text-md font-medium leading-[1.6]">{{ row.title }}</p>
@@ -101,9 +112,7 @@ rows.
 			</button>
 			<div class="flex gap-3">
 				{% for row in rows %}
-					<button type="button" class="size-3 rounded-full" aria-label="news-carousel-{{ loop.index0 }}" :class="current === {{
-												            loop.index0
-												          }} ? 'bg-primary-600' : 'bg-gray-300'" @click="go({{ loop.index0 }})"></button>
+					<button type="button" class="size-3 rounded-full" aria-label="news-carousel-{{ loop.index0 }}" :class="current === {{ loop.index0 }} ? 'bg-primary-600' : 'bg-gray-300'" @click="go({{ loop.index0 }})"></button>
 				{% endfor %}
 			</div>
 			<button type="button" class="px-3 py-1.5 rounded border text-sm hover:bg-gray-50" @click="next()">

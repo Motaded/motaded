@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/includes/motaded_theme.image.inc';
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
@@ -20,38 +23,6 @@ function motaded_theme_preprocess_responsive_image_formatter(array &$variables) 
   elseif (is_array($attr)) {
     $variables['responsive_image']['#attributes']['fetchpriority'] = 'high';
   }
-}
-
-/**
- * Preloads local Font Awesome Brands woff2 (see dist/fontawesome + brands.min.css).
- *
- * Together with font-display:swap this reduces time-to-icon vs loading CSS first.
- */
-function motaded_theme_preprocess_html(array &$variables): void {
-  $theme_path = \Drupal::theme()->getActiveTheme()->getPath();
-  $font_path = DRUPAL_ROOT . '/' . $theme_path . '/dist/fontawesome/webfonts/fa-brands-400.woff2';
-  if (!is_readable($font_path)) {
-    return;
-  }
-  $base = \Drupal::request()->getBasePath();
-  $href = ($base === '' ? '' : rtrim($base, '/')) . '/' . $theme_path . '/dist/fontawesome/webfonts/fa-brands-400.woff2';
-  $href = preg_replace('#/+#', '/', $href);
-  if ($href[0] !== '/') {
-    $href = '/' . $href;
-  }
-  $variables['#attached']['html_head'][] = [
-    [
-      '#tag' => 'link',
-      '#attributes' => [
-        'rel' => 'preload',
-        'href' => $href,
-        'as' => 'font',
-        'type' => 'font/woff2',
-        'crossorigin' => 'anonymous',
-      ],
-    ],
-    'motaded_theme_fa_brands_preload',
-  ];
 }
 
 function motaded_theme_preprocess_block(array &$variables) {
@@ -218,21 +189,19 @@ function motaded_theme_preprocess_paragraph__steps(array &$variables) {
       $stepTitle = $item->hasField('field_sub_title') ? $item->get('field_sub_title')->value : '';
       $title = $item->hasField('field_title') ? $item->get('field_title')->value : '';
       $desc = $item->hasField('field_body') ? $item->get('field_body')->processed : '';
-      $img_url = '';
-      if ($item->hasField('field_media') && !$item->get('field_media')->isEmpty()) {
-        /** @var \Drupal\media\Entity\Media $media */
-        $media = $item->get('field_media')->entity;
-        if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
-          $file = $media->get('field_media_image')->entity?->uri?->value;
-          $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
-        }
-      }
+
+      $extracted = motaded_theme_entity_field_media_image_uri_and_alt($item, (string) $title);
+      $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
 
       $steps[] = [
         'step_title' => $stepTitle,
         'title' => $title,
-        'desc'  => $desc,
-        'img'   => $img_url,
+        'desc' => $desc,
+        'img' => $meta['src'],
+        'img_srcset' => $meta['srcset'],
+        'img_width' => $meta['width'],
+        'img_height' => $meta['height'],
+        'img_alt' => $extracted['alt'] !== '' ? $extracted['alt'] : (string) $title,
       ];
     }
   }
@@ -246,32 +215,69 @@ function motaded_theme_preprocess_paragraph__steps(array &$variables) {
 }
 
 /**
+ * Implements hook_preprocess_paragraph__featured_contents().
+ */
+function motaded_theme_preprocess_paragraph__featured_contents(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['featured_card_images'] = [];
+  if (!$paragraph->hasField('field_contents') || $paragraph->get('field_contents')->isEmpty()) {
+    return;
+  }
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  foreach ($paragraph->get('field_contents')->referencedEntities() as $node) {
+    if ($node->hasTranslation($langcode)) {
+      $node = $node->getTranslation($langcode);
+    }
+    $nid = (int) $node->id();
+    $extracted = motaded_theme_entity_field_media_image_uri_and_alt($node, $node->label());
+    $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+    $meta['alt'] = $extracted['alt'];
+    $variables['featured_card_images'][$nid] = $meta;
+  }
+}
+
+/**
  * Preprocess for News View block (unformatted).
  */
 function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variables) {
   $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
   foreach ($variables['rows'] as &$row) {
     $entity = $row['content']['#row']->_entity ?? NULL;
-    // Try to get the translation if available.
-    if ($entity->hasTranslation($langcode)) {
-      $entity = $entity->getTranslation($langcode);
-    }
+    $img_meta = [
+      'src' => '',
+      'srcset' => '',
+      'width' => 151,
+      'height' => 120,
+    ];
+    $img_alt = '';
 
-    if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
-      $media = $entity->get('field_media')->entity;
-      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
-        $file = $media->get('field_media_image')->entity?->uri?->value;
-        $img_alt = $media->get('field_media_image')->entity?->alt;
-        $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
+    if ($entity) {
+      if ($entity->hasTranslation($langcode)) {
+        $entity = $entity->getTranslation($langcode);
       }
+
+      $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $entity->label());
+      $img_meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+      $img_alt = $extracted['alt'];
+
+      $row['title'] = $entity->label();
+      $row['url'] = $entity->toUrl()->toString();
+      $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
+    }
+    else {
+      $row['title'] = '';
+      $row['url'] = '';
+      $row['created'] = '';
     }
 
-    // Add title, URL, and created date.
-    $row['title'] = $entity->label();
-    $row['url'] = $entity->toUrl()->toString();
-    $row['image']['url'] = $img_url ?? '';
-    $row['image']['alt'] = $img_alt ?? '';
-    $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
+    $row['image']['alt'] = $img_alt;
+    $row['image']['src'] = $img_meta['src'];
+    $row['image']['srcset'] = $img_meta['srcset'];
+    $row['image']['width'] = $img_meta['width'];
+    $row['image']['height'] = $img_meta['height'];
+    // Back-compat for any code using a single URL.
+    $row['image']['url'] = $img_meta['src'];
   }
 }
 /**
@@ -280,18 +286,24 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
 function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$variables) {
   foreach ($variables['rows'] as &$row) {
     $entity = $row['content']['#row']->_entity ?? NULL;
-
-    if ($entity && $entity->hasField('field_media') && !$entity->get('field_media')->isEmpty()) {
-      $media = $entity->get('field_media')->entity;
-      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
-        $file = $media->get('field_media_image')->entity?->uri?->value;
-        $img_alt = $media->get('field_media_image')->entity?->alt;
-        $img_url = $file ? \Drupal::service('file_url_generator')->generateAbsoluteString($file) : NULL;
-      }
+    $fallback_label = $entity ? $entity->label() : '';
+    $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $fallback_label);
+    $img_meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+    $img_alt = trim($extracted['alt']);
+    if ($img_alt === '' && $entity) {
+      $img_alt = (string) t('@name logo', ['@name' => $entity->label()]);
+    }
+    elseif ($img_alt === '') {
+      $img_alt = (string) t('Partner logo');
     }
 
-    $row['image']['url'] = $img_url ?? '';
-    $row['image']['alt'] = $img_alt ?? '';
+    $row['image']['src'] = $img_meta['src'];
+    $row['image']['srcset'] = $img_meta['srcset'];
+    $row['image']['width'] = $img_meta['width'];
+    $row['image']['height'] = $img_meta['height'];
+    $row['image']['url'] = $img_meta['src'];
+    $row['image']['alt'] = $img_alt;
+    $row['title'] = $entity ? $entity->label() : '';
   }
 }
 

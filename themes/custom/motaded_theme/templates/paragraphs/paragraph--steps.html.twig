@@ -56,7 +56,7 @@
   <div{{attributes.addClass(classes)}}>
     {% block content %}
       <!-- Investor Journey Timeline -->
-      <div class="py-14 bg-gray-100" x-data="newsCarousel()">
+      <div class="py-14 bg-gray-100">
         <div
           class="max-w-[1320px] mx-auto px-4">
           <!-- Heading / CTA -->
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <div class="bg-white rounded-xl p-4 max-sm:px-1 sm:p-6 mt-5" x-data="investorTimeline()">
+          <div class="bg-white rounded-xl p-4 max-sm:px-1 sm:p-6 mt-5" x-data="investorTimeline">
             <div
               class="flex flex-row items-start gap-2">
               <!-- Prev -->
@@ -105,7 +105,18 @@
                     class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
                     <!-- Image -->
                     <div class="mx-auto grid place-items-center">
-                      <img :alt="steps[current].title" width="300" height="300" class="rounded-lg border p-5 border-gray-200 h-auto object-contain bg-white" :src="steps[current].img" loading="lazy" decoding="async"/>
+                      <img
+                        :key="current"
+                        class="motaded-steps-panel__img rounded-lg border p-5 border-gray-200 max-w-full bg-white"
+                        loading="eager"
+                        decoding="async"
+                        sizes="(max-width: 1023px) 100vw, 400px"
+                        :alt="steps[current].img_alt || steps[current].title"
+                        :width="steps[current].img_width"
+                        :height="steps[current].img_height"
+                        :src="steps[current].img"
+                        x-bind:srcset="steps[current].img_srcset ? steps[current].img_srcset : null"
+                      />
                     </div>
 
                     <!-- Content -->

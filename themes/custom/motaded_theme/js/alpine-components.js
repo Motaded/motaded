@@ -1,0 +1,158 @@
+/*
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+*/
+
+/**
+ * Registers Alpine.data() before components mount. Must load before alpine.min.js.
+ */
+(function () {
+  'use strict';
+
+  document.addEventListener('alpine:init', () => {
+    if (typeof Alpine === 'undefined') {
+      return;
+    }
+
+    Alpine.data('investorTimeline', () => ({
+      current: 0,
+      steps: [],
+      init() {
+        this.steps = drupalSettings.motaded_theme?.steps ?? [];
+        const url = new URL(window.location.href);
+        const idx = parseInt(url.searchParams.get('step'), 10);
+        if (!Number.isNaN(idx) && idx >= 0 && idx < this.steps.length) {
+          this.current = idx;
+        }
+        // Preload step images so fast prev/next still shows the correct bitmap (srcset candidates).
+        const sizes = '(max-width: 1023px) 100vw, 400px';
+        this.steps.forEach((step) => {
+          if (!step.img) {
+            return;
+          }
+          const img = new Image();
+          if (step.img_srcset) {
+            img.srcset = step.img_srcset;
+            img.sizes = sizes;
+          }
+          img.src = step.img;
+        });
+      },
+      go(i) {
+        if (i >= 0 && i < this.steps.length) {
+          this.current = i;
+        }
+      },
+      next() {
+        if (this.current < this.steps.length - 1) {
+          this.current++;
+        }
+      },
+      prev() {
+        if (this.current > 0) {
+          this.current--;
+        }
+      },
+    }));
+
+    Alpine.data('newsCarousel', () => ({
+      current: 0,
+      autoplayMs: 5000,
+      length: 0,
+      timer: null,
+      init() {
+        const raw = this.$el.getAttribute('data-carousel-length');
+        this.length = Math.max(0, parseInt(raw || '0', 10));
+      },
+      next() {
+        if (this.length < 1) {
+          return;
+        }
+        this.current = (this.current + 1) % this.length;
+      },
+      prev() {
+        if (this.length < 1) {
+          return;
+        }
+        this.current = (this.current - 1 + this.length) % this.length;
+      },
+      go(i) {
+        this.current = i;
+      },
+      startAutoplay() {
+        this.stopAutoplay();
+        this.timer = setInterval(() => this.next(), this.autoplayMs);
+      },
+      stopAutoplay() {
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
+        this.timer = null;
+      },
+    }));
+
+    Alpine.data('articlesCarousel', () => ({
+      length: 0,
+      current: 0,
+      startX: 0,
+      deltaX: 0,
+      swiping: false,
+      isRtl: (document.documentElement.lang || '').toLowerCase().startsWith('ar'),
+      init() {
+        const raw = this.$el.getAttribute('data-articles-length');
+        this.length = Math.max(0, parseInt(raw || '0', 10));
+        this.current = 0;
+      },
+      go(i) {
+        if (i >= 0 && i < this.length) {
+          this.current = i;
+        }
+      },
+      prev() {
+        if (this.current > 0) {
+          this.current--;
+        }
+      },
+      next() {
+        if (this.current < this.length - 1) {
+          this.current++;
+        }
+      },
+      onTouchStart(e) {
+        this.swiping = true;
+        this.startX = e.touches[0].clientX;
+        this.deltaX = 0;
+      },
+      onTouchMove(e) {
+        if (!this.swiping) {
+          return;
+        }
+        this.deltaX = e.touches[0].clientX - this.startX;
+      },
+      onTouchEnd() {
+        if (!this.swiping) {
+          return;
+        }
+        const threshold = 50;
+        if (this.isRtl) {
+          if (this.deltaX > threshold) {
+            this.next();
+          }
+          if (this.deltaX < -threshold) {
+            this.prev();
+          }
+        }
+        else {
+          if (this.deltaX > threshold) {
+            this.prev();
+          }
+          if (this.deltaX < -threshold) {
+            this.next();
+          }
+        }
+        this.swiping = false;
+        this.deltaX = 0;
+      },
+    }));
+  });
+})();

@@ -85,6 +85,7 @@
         "drupal/twig_tweak": "^3.4",
         "drupal/viewsreference": "^2.0@beta",
         "drupal/webform": "^6.3@beta",
+        "drupal/yoast_seo": "^2.2",
         "drush/drush": "^13.6",
         "mglaman/composer-drupal-lenient": "^1.0",
         "noli42/chosen": "3.0.0",

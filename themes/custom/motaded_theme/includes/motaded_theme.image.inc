@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * @file
+ * Shared helpers for responsive teaser images (src / srcset / dimensions, itok-safe URLs).
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Converts an absolute file URL to a root-relative path (keeps ?itok= for image styles).
+ */
+function motaded_theme_absolute_file_url_to_root_relative(string $absolute_url): string {
+  $parts = parse_url($absolute_url);
+  if ($parts === FALSE || empty($parts['path'])) {
+    return $absolute_url;
+  }
+  $path = $parts['path'];
+  $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+
+  return $path . $query;
+}
+
+/**
+ * Root-relative URL for an image style derivative, including itok when required.
+ *
+ * Do not use FileUrlGenerator::generateString(style->buildUri()) alone — it omits
+ * the derivative token and can yield 404 on sites that validate image requests.
+ */
+function motaded_theme_image_style_root_relative_url(string $file_uri, ImageStyle $style): string {
+  return motaded_theme_absolute_file_url_to_root_relative($style->buildUrl($file_uri));
+}
+
+/**
+ * File URI and alt from a Media entity's standard image field (field_media_image).
+ *
+ * @return array{uri: ?string, alt: string}
+ */
+function motaded_theme_media_image_uri_and_alt(?EntityInterface $media, string $fallback_alt): array {
+  $alt = trim($fallback_alt);
+  if (!$media || !$media->hasField('field_media_image') || $media->get('field_media_image')->isEmpty()) {
+    return ['uri' => NULL, 'alt' => $alt];
+  }
+  $image_item = $media->get('field_media_image')->first();
+  if (!$image_item) {
+    return ['uri' => NULL, 'alt' => $alt];
+  }
+  $alt = trim((string) ($image_item->get('alt')->value ?? '')) ?: $alt;
+  $file_entity = $image_item->entity;
+  $uri = $file_entity ? $file_entity->getFileUri() : NULL;
+
+  return ['uri' => $uri, 'alt' => $alt];
+}
+
+/**
+ * File URI and alt from an entity with field_media (e.g. node) referencing image media.
+ *
+ * @return array{uri: ?string, alt: string}
+ */
+function motaded_theme_entity_field_media_image_uri_and_alt(?EntityInterface $entity, string $fallback_alt): array {
+  if (!$entity || !$entity->hasField('field_media') || $entity->get('field_media')->isEmpty()) {
+    return ['uri' => NULL, 'alt' => trim($fallback_alt)];
+  }
+  $media = $entity->get('field_media')->entity;
+
+  return motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
+}
+
+/**
+ * Responsive metadata for card/teaser images: max_650 default src, max_650 + max_1300 srcset.
+ *
+ * @return array{src: string, srcset: string, width: int, height: int}
+ */
+function motaded_theme_responsive_teaser_image_metadata(?string $file_uri): array {
+  $fallback = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 151,
+    'height' => 120,
+  ];
+  if ($file_uri === NULL || $file_uri === '') {
+    return $fallback;
+  }
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $original_url = $file_url_generator->generateString($file_uri);
+
+  if (str_ends_with(strtolower($file_uri), '.svg')) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 151,
+      'height' => 120,
+    ];
+  }
+
+  $image = \Drupal::service('image.factory')->get($file_uri);
+  if (!$image->isValid()) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 151,
+      'height' => 120,
+    ];
+  }
+
+  $w_orig = $image->getWidth();
+  $h_orig = $image->getHeight();
+
+  $srcset_parts = [];
+  foreach (['max_650x650' => 650, 'max_1300x1300' => 1300] as $style_id => $descriptor_w) {
+    $style = ImageStyle::load($style_id);
+    if ($style) {
+      $srcset_parts[] = motaded_theme_image_style_root_relative_url($file_uri, $style) . ' ' . $descriptor_w . 'w';
+    }
+  }
+
+  $src = $original_url;
+  $style_650 = ImageStyle::load('max_650x650');
+  if ($style_650) {
+    $src = motaded_theme_image_style_root_relative_url($file_uri, $style_650);
+  }
+
+  $display_w = min(650, $w_orig);
+  $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+
+  return [
+    'src' => $src,
+    'srcset' => implode(', ', $srcset_parts),
+    'width' => $display_w,
+    'height' => $display_h,
+  ];
+}
