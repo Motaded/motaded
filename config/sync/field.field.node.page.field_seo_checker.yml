@@ -1,0 +1,21 @@
+uuid: 89a3f8cd-5191-4ded-9b49-c27fe40aafad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_seo_checker
+    - node.type.page
+  module:
+    - yoast_seo
+id: node.page.field_seo_checker
+field_name: field_seo_checker
+entity_type: node
+bundle: page
+label: 'SEO checker'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: yoast_seo

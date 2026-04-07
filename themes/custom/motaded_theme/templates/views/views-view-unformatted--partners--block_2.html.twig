@@ -9,16 +9,16 @@
     {% for row in rows %}
     <div class="swiper-slide">
       <div class="border rounded-lg p-2 bg-white hover:shadow-sm transition h-full">
-        <a href="#" class="block" aria-label="{{ row.image.alt }}">
+        {# img alt is always set in preprocess — link needs no duplicate aria-label #}
+        <a href="#" class="block">
           <div class="mx-auto grid place-items-center">
-            <img
-              class="p-3 max-h-16 object-contain w-full"
-              alt="{{ row.image.alt }}"
-              src="{{ row.image.url }}"
-              width="120"
-              height="64"
-              loading="lazy"
-            />
+            {% if row.image.src %}
+              {% if row.image.srcset %}
+                <img class="p-3 max-h-16 object-contain w-full" loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 45vw, 160px" width="{{ row.image.width }}" height="{{ row.image.height }}"/>
+              {% else %}
+                <img class="p-3 max-h-16 object-contain w-full" loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" width="{{ row.image.width }}" height="{{ row.image.height }}"/>
+              {% endif %}
+            {% endif %}
           </div>
         </a>
       </div>

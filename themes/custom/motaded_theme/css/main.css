@@ -45,6 +45,9 @@ html {
   --color-amber-200: oklch(92.4% 0.12 95.746);
   --color-amber-500: oklch(0.68 0.15 95.746);
   --color-amber-600: oklch(0.58 0.15 95.746);
+  /* Darker amber — white text meets WCAG AA on buttons */
+  --color-amber-700: oklch(0.48 0.14 95.746);
+  --color-amber-800: oklch(0.40 0.12 95.746);
 
   /* Neutral */
   --color-neutral-400: oklch(0.74 0.02 260);
@@ -1327,11 +1330,14 @@ table {
 .block-cta__btn--navy:hover {
   background-color: var(--color-primary-900);
 }
+/* White copy on darker amber (amber-700/800) for sufficient contrast vs amber-500 */
 .block-cta__btn--amber {
-  background-color: var(--color-amber-500);
+  background-color: var(--color-amber-700);
+  color: #fff;
 }
 .block-cta__btn--amber:hover {
-  background-color: var(--color-amber-600);
+  background-color: var(--color-amber-800);
+  color: #fff;
 }
 .block-cta__icon {
   width: 18px;
@@ -1466,4 +1472,15 @@ table {
   min-height: 2.75rem;
   padding: 0.625rem;
   border-radius: 9999px;
+}
+
+/* Paragraph "steps": panel image max height (arbitrary Tailwind in .twig may be absent from built CSS). */
+@layer components {
+  .motaded-steps-panel__img {
+    min-height: 200px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
 }

@@ -27,6 +27,7 @@ dependencies:
     - field.field.node.page.field_phone_number
     - field.field.node.page.field_provided_languages
     - field.field.node.page.field_requirements
+    - field.field.node.page.field_seo_checker
     - field.field.node.page.field_service_channels
     - field.field.node.page.field_service_cost
     - field.field.node.page.field_service_duration
@@ -213,9 +214,11 @@ hidden:
   field_payment_options: true
   field_phone_number: true
   field_provided_languages: true
+  field_seo_checker: true
   field_service_channels: true
   field_service_cost: true
   field_service_duration: true
   field_target_audience: true
   langcode: true
   links: true
+  search_api_excerpt: true

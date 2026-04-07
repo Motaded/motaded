@@ -121,10 +121,12 @@ alpine:
     name: MIT
     url: https://github.com/alpinejs/alpine/blob/main/LICENSE.md
     gpl-compatible: true
+  dependencies:
+    - core/drupal
   js:
-    js/alpine.min.js: { defer: true }
-      # minified: true
-      # defer: true
+    # Registers Alpine.data() in alpine:init; must run before alpine.min.js.
+    js/alpine-components.js: { weight: -50 }
+    js/alpine.min.js: { defer: true, weight: 0 }
 toc:
   js:
     js/toc.js: {}
@@ -135,11 +137,10 @@ quick-links:
   js:
     js/quick-links.js: {}
 steps:
-  js:
-    js/steps.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
+    - motaded_theme/alpine
 partner-carousel:
   js:
     js/partner-carousel.js: {}
@@ -147,9 +148,9 @@ partner-carousel:
     - core/drupal
     - core/once
 news-carousel:
-  js:
-    js/news-carousel.js: {}
+  dependencies:
+    - motaded_theme/alpine
 
 featured-contents:
-  js:
-    js/featured-contents.js: {}
+  dependencies:
+    - motaded_theme/alpine

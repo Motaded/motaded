@@ -27,6 +27,7 @@ dependencies:
     - field.field.node.page.field_phone_number
     - field.field.node.page.field_provided_languages
     - field.field.node.page.field_requirements
+    - field.field.node.page.field_seo_checker
     - field.field.node.page.field_service_channels
     - field.field.node.page.field_service_cost
     - field.field.node.page.field_service_duration
@@ -47,6 +48,7 @@ dependencies:
     - path
     - text
     - webform
+    - yoast_seo
 _core:
   default_config_hash: SfpLhPExzvR0MgFp0Wp7CrmgEnhcqQ-fXIWFhbf4ue0
 id: node.page.default
@@ -532,6 +534,16 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_seo_checker:
+    type: yoast_seo_widget
+    weight: 51
+    region: content
+    settings:
+      edit_title: false
+      edit_description: false
+      render_theme: null
+      render_view_mode: default
+    third_party_settings: {  }
   field_service_channels:
     type: string_textarea
     weight: 8
