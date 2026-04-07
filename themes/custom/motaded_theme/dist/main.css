@@ -8335,6 +8335,26 @@ table {
     object-fit: contain;
   }
 }
+.footer-site .social-link-field i.fa-brands,
+.footer-site .social-link-field i.fab,
+.social-link-field i.fa-brands,
+.social-link-field i.fab {
+  font-family: "Font Awesome 6 Brands", sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+  -webkit-font-smoothing: antialiased;
+}
+.social-link-field i.fab {
+  position: static !important;
+  inset: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
     color-scheme: light;

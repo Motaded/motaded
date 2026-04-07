@@ -30,18 +30,6 @@ libraries-override:
     css:
       component:
         css/components/hidden.module.css: css/hidden.css
-  # Social Link Field: contrib loads FA 6.x from cdnjs; we must set those URLs to
-  # false so they are removed, then attach local copies (see social_link_field.libraries.yml).
-  social_link_field/fontawesome.component:
-    css:
-      component:
-        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css': false
-        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/v4-shims.min.css': false
-        # preprocess: false — relative ../webfonts/ in FA CSS must resolve from theme path;
-        # aggregation breaks url() and fab icons / @font-face stop working.
-        dist/fontawesome/css/fontawesome.min.css: { minified: true, preprocess: false }
-        dist/fontawesome/css/brands.min.css: { minified: true, preprocess: false }
-        dist/fontawesome/css/v4-shims.min.css: { minified: true, preprocess: false }
 generator: "starterkit_theme:11.2.5"
 
 settings:
