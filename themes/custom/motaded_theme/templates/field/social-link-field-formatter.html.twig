@@ -14,7 +14,7 @@ set classes = [
       {% for link in links %}
         <li>
           <a href="{{ link.url }}" class="{{ link.class }}" title="{{ link.title }}"{% if new_tab %} target="_blank" rel="nofollow noopener noreferrer"{% endif %}>
-            {{ link.text }}
+            {{ link.text|render }}
           </a>
         </li>
       {% endfor %}
