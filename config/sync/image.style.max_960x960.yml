@@ -1,0 +1,26 @@
+uuid: 29257e0d-f94d-445c-a0cf-0b7eefd53bb3
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - responsive_image
+_core:
+  default_config_hash: QTMj4kzHDrXsn5imDNxpUHT8xmI2bGCegh3WgiuwLkY=
+name: max_960x960
+label: 'Max 960x960'
+effects:
+  e1bb2ec3-202b-47e9-b834-8f1c3c431649:
+    uuid: 9a65bbe4-7e91-40f9-bd50-8b4678120b5b
+    id: image_scale
+    weight: 1
+    data:
+      width: 960
+      height: 960
+      upscale: false
+  8baf3b71-fdc0-46e3-ab1e-a910b1ffea48:
+    uuid: 25b04dee-bbdf-4273-9906-4fd3050a299d
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

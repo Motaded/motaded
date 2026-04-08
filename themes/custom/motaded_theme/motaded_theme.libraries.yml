@@ -60,6 +60,9 @@ base:
         weight: -10
   js:
     js/lang-switcher.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 dialog:
   version: VERSION
   css:
