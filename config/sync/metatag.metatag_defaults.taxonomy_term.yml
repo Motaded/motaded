@@ -1,7 +1,10 @@
 uuid: 65502d39-059f-40b2-aefd-0008c5b277e7
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - metatag_open_graph
+    - metatag_twitter_cards
 _core:
   default_config_hash: 92bXZdyYJ5xqukdfmGRr_CYcwm1vfuS8b8aJ7X_G7E0
 id: taxonomy_term
@@ -10,3 +13,11 @@ tags:
   canonical_url: '[term:url]'
   description: '[term:description]'
   title: '[term:name] | [site:name]'
+  og_title: '[term:name]'
+  og_description: '[term:description]'
+  og_url: '[term:url:absolute]'
+  og_type: website
+  og_site_name: '[site:name]'
+  twitter_cards_type: summary
+  twitter_cards_title: '[term:name]'
+  twitter_cards_description: '[term:description]'

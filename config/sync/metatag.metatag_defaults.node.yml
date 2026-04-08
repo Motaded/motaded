@@ -1,7 +1,10 @@
 uuid: b9dcf38e-1932-4f38-bfbb-75c798e561e6
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - metatag_open_graph
+    - metatag_twitter_cards
 _core:
   default_config_hash: rpwvgyEURXLz_JjgMCrkS1rUv-0k3L79BpO-ReN7fDI
 id: node
@@ -10,3 +13,14 @@ tags:
   canonical_url: '[node:url]'
   description: '[node:summary]'
   title: '[node:title] | [site:name]'
+  og_title: '[node:title]'
+  og_description: '[node:summary]'
+  og_url: '[node:url:absolute]'
+  og_type: article
+  og_site_name: '[site:name]'
+  og_image: '[node:field_media:entity:field_media_image:entity:url]'
+  og_image_alt: '[node:title]'
+  twitter_cards_type: summary_large_image
+  twitter_cards_title: '[node:title]'
+  twitter_cards_description: '[node:summary]'
+  twitter_cards_image: '[node:field_media:entity:field_media_image:entity:url]'

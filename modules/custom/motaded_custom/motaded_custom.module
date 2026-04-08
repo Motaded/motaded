@@ -2,6 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -57,6 +58,62 @@ function motaded_custom_page_attachments(array &$attachments) {
 }
 
 /**
+ * Whether the current page needs CKEditor accordion frontend (dl.ckeditor-accordion markup).
+ */
+function _motaded_custom_page_needs_ckeditor_accordion_frontend(): bool {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof NodeInterface) {
+    return FALSE;
+  }
+  return _motaded_custom_entity_contains_ckeditor_accordion_markup($node);
+}
+
+/**
+ * Recursively scans text fields and paragraph references for accordion HTML.
+ */
+function _motaded_custom_entity_contains_ckeditor_accordion_markup(ContentEntityInterface $entity, array &$visited = [], int $depth = 0): bool {
+  if ($depth > 12) {
+    return FALSE;
+  }
+  $vid = $entity->getEntityTypeId() . ':' . ($entity->id() ?? 'new');
+  if (isset($visited[$vid])) {
+    return FALSE;
+  }
+  $visited[$vid] = TRUE;
+
+  foreach ($entity->getFields() as $field) {
+    if ($field->isEmpty()) {
+      continue;
+    }
+    $definition = $field->getFieldDefinition();
+    $type = $definition->getType();
+
+    if (in_array($type, ['text_long', 'text_with_summary', 'string_long', 'string', 'text'], TRUE)) {
+      foreach ($field as $item) {
+        $value = $item->value ?? '';
+        if (is_string($value) && strpos($value, 'ckeditor-accordion') !== FALSE) {
+          return TRUE;
+        }
+        if (!empty($item->processed) && is_string($item->processed) && strpos($item->processed, 'ckeditor-accordion') !== FALSE) {
+          return TRUE;
+        }
+      }
+    }
+    elseif (in_array($type, ['entity_reference_revisions', 'entity_reference'], TRUE)) {
+      foreach ($field->referencedEntities() as $ref) {
+        if ($ref instanceof ContentEntityInterface) {
+          if (_motaded_custom_entity_contains_ckeditor_accordion_markup($ref, $visited, $depth + 1)) {
+            return TRUE;
+          }
+        }
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
  * Implements hook_page_attachments_alter().
  *
  * - Ensures FAQ Answer text is always a string (schema_metatag may explode on comma).
@@ -67,6 +124,20 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
   // Skip admin pages.
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     return;
+  }
+
+  // CKEditor accordion: attach frontend only when content contains accordion markup.
+  $libs = &$attachments['#attached']['library'];
+  if (is_array($libs)) {
+    $libs = array_values(array_filter($libs, function ($lib) {
+      return $lib !== 'ckeditor_accordion/accordion.frontend';
+    }));
+  }
+  if (_motaded_custom_page_needs_ckeditor_accordion_frontend()) {
+    $attachments['#attached']['library'][] = 'ckeditor_accordion/accordion.frontend';
+  }
+  else {
+    unset($attachments['#attached']['drupalSettings']['ckeditorAccordion']);
   }
 
   $breadcrumb_list = _motaded_custom_build_breadcrumb_list_schema();

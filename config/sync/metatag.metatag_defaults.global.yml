@@ -1,7 +1,10 @@
 uuid: f8336700-fe1a-46f5-94b8-bda68b7d2e21
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - metatag_open_graph
+    - metatag_twitter_cards
 _core:
   default_config_hash: sL588ui1E_8-2c_UupwyYxcqX2OVyMFp3HTLbbFqvPc
 id: global
@@ -10,3 +13,5 @@ tags:
   canonical_url: '[current-page:url]'
   title: '[current-page:title] | [site:name]'
   robots: 'index, follow'
+  og_site_name: '[site:name]'
+  og_type: website

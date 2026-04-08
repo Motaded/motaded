@@ -25,6 +25,14 @@ function motaded_theme_preprocess_responsive_image_formatter(array &$variables) 
   }
 }
 
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * Kept as a no-op so the theme hook remains a valid callable (FA uses libraries).
+ */
+function motaded_theme_page_attachments_alter(array &$attachments): void {
+}
+
 function motaded_theme_preprocess_block(array &$variables) {
   if (!empty($variables['elements']['#id']) && $variables['elements']['#id'] == 'motaded_theme_mainnavigation') {
     $variables['content']['#attributes']['data-block-id'] = $variables['elements']['#id'];
