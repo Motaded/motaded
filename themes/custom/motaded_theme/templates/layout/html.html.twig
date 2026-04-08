@@ -48,36 +48,34 @@
 				{# Hero LCP: responsive image uses loading=eager + fetchpriority=high (see motaded_theme_preprocess_responsive_image_formatter). #}
 
 
-			<!-- Google Tag Manager (loads immediately for reliable GTM / Tag Assistant) -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NBFPBC74');</script>
-<!-- End Google Tag Manager -->
+			{# GTM + gtag after window.load (not render-blocking). If GA4 for G-G1C83L3T2V is already in GTM, remove the gtag block below to avoid duplicate pageviews. #}
+			<script>
+			window.addEventListener('load', function () {
+				(function (w, d, s, l, i) {
+					w[l] = w[l] || [];
+					w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+					var f = d.getElementsByTagName(s)[0],
+						j = d.createElement(s),
+						dl = l != 'dataLayer' ? '&l=' + l : '';
+					j.async = true;
+					j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+					f.parentNode.insertBefore(j, f);
+				})(window, document, 'script', 'dataLayer', 'GTM-NBFPBC74');
 
-<!-- Google Tag Manager (noscript) -->
-<noscript>
-  <iframe
-    src="https://www.googletagmanager.com/ns.html?id=GTM-NBFPBC74"
-    height="0"
-    width="0"
-    style="display:none;visibility:hidden">
-  </iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
+				window.dataLayer = window.dataLayer || [];
+				function gtag() { dataLayer.push(arguments); }
+				var g = document.createElement('script');
+				g.async = true;
+				g.src = 'https://www.googletagmanager.com/gtag/js?id=G-G1C83L3T2V';
+				g.onload = function () {
+					gtag('js', new Date());
+					gtag('config', 'G-G1C83L3T2V');
+				};
+				document.head.appendChild(g);
+			});
+			</script>
 
-<!-- Google tag (gtag.js) — GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-G1C83L3T2V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-G1C83L3T2V');
-</script>
-
-<!-- Meta Pixel + LinkedIn Insight (deferred: same strategy as GTM) -->
+<!-- Meta Pixel + LinkedIn: load after first interaction or 3s timeout -->
 <script>
 (function (w, d) {
   var loaded = false;
@@ -144,6 +142,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 				</head>
 				<body{{attributes.addClass(body_classes)}}>
+					<noscript>
+						<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NBFPBC74" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
+					</noscript>
 					{#
 					      Keyboard navigation/accessibility link to main content section in
 					      page.html.twig.

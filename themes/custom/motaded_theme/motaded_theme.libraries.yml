@@ -1,3 +1,15 @@
+# Async Font Awesome: local core + brands only (see motaded_theme.info.yml libraries-override + extend).
+fontawesome_async:
+  version: VERSION
+  js:
+    js/load-fontawesome.js:
+      preprocess: false
+      scope: footer
+      attributes:
+        defer: true
+  dependencies:
+    - core/drupal
+
 base:
   version: VERSION
   css:
@@ -48,6 +60,9 @@ base:
         weight: -10
   js:
     js/lang-switcher.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 dialog:
   version: VERSION
   css:

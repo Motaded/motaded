@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - editor
+    - inline_responsive_images
     - token_filter
 _core:
   default_config_hash: vpZysv3RHJjhYzq7O_q5q8mVlHdrSzKELmXyiX6RtV0
@@ -50,6 +51,23 @@ filters:
     status: true
     weight: 15
     settings: {  }
+  motaded_default_responsive_image_style:
+    id: motaded_default_responsive_image_style
+    provider: motaded_custom
+    status: true
+    weight: 99
+    settings:
+      default_style: news_full
+  filter_responsive_image_style:
+    id: filter_responsive_image_style
+    provider: inline_responsive_images
+    status: true
+    weight: 100
+    settings:
+      image_styles:
+        hero_banner: hero_banner
+        banner_sm: banner_sm
+        news_full: news_full
   token_filter:
     id: token_filter
     provider: token_filter

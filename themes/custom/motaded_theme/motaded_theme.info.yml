@@ -24,12 +24,21 @@ libraries-extend:
     - motaded_theme/progress
   core/drupal.tablesort:
     - motaded_theme/drupal.tablesort
+  # Non-blocking FA: override strips sync CSS; this attaches footer JS loader.
+  social_link_field/fontawesome.component:
+    - motaded_theme/fontawesome_async
 libraries-override:
   # Replace an asset with another.
   system/base:
     css:
       component:
         css/components/hidden.module.css: css/hidden.css
+  # Remove render-blocking FA from head; motaded_theme/fontawesome_async loads after parse.
+  social_link_field/fontawesome.component:
+    css:
+      component:
+        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css': false
+        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/v4-shims.min.css': false
 generator: "starterkit_theme:11.2.5"
 
 settings:

@@ -1,7 +1,10 @@
 uuid: c25f14d1-a446-41c3-8ea8-531246f939a0
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - metatag_open_graph
+    - metatag_twitter_cards
 _core:
   default_config_hash: 1noCXlegCr5HFehQRF1ViXy1jhU1jZ_sNN99a8Sj5jo
 id: front
@@ -31,4 +34,15 @@ tags:
   schema_place_telephone: '+966539797197'
   schema_place_type: Place
   schema_place_url: '[site:url]'
+  og_title: 'Motaded help businesses thrive in Saudi Arabia'
+  og_description: 'Comprehensive Business Setup Solutions, Market Entry Strategies, Licenses and Permits, Support for Foreign Investors, PRO and GRO Services, Operational Support'
+  og_url: '[site:url]'
+  og_type: website
+  og_site_name: '[site:name]'
+  og_image: 'https://motaded.com.sa/themes/custom/motaded_theme/logo.svg'
+  og_image_alt: '[site:name]'
+  twitter_cards_type: summary_large_image
+  twitter_cards_title: 'Motaded help businesses thrive in Saudi Arabia'
+  twitter_cards_description: 'Comprehensive Business Setup Solutions, Market Entry Strategies, Licenses and Permits, Support for Foreign Investors, PRO and GRO Services, Operational Support'
+  twitter_cards_image: 'https://motaded.com.sa/themes/custom/motaded_theme/logo.svg'
   title: 'Motaded help businesses thrive in Saudi Arabia'

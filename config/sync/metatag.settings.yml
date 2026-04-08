@@ -4,29 +4,45 @@ entity_type_groups:
   front:
     '':
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
       schema_organization: schema_organization
       schema_place: schema_place
   node:
     article:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
       schema_article: schema_article
     entities:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
     news:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
       schema_article: schema_article
     landing_page:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
       schema_web_page: schema_web_page
     page:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
       schema_qa_page: schema_qa_page
       schema_service: schema_service
     pricing:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
   taxonomy_term:
     partnership:
       basic: basic
+      open_graph: open_graph
+      twitter_cards: twitter_cards
 separator: ','
 tag_trim_method: beforeValue
 use_maxlength: true

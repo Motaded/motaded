@@ -1,13 +1,19 @@
 uuid: b2c3d4e5-f6a7-8901-bcde-f23456789012
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - metatag_open_graph
+    - metatag_twitter_cards
 id: node__landing_page
 label: 'Content: Landing Page'
 tags:
   canonical_url: '[node:url]'
   description: '[node:summary]'
   title: '[node:title] | [site:name]'
+  og_type: website
+  og_image: 'https://motaded.com.sa/themes/custom/motaded_theme/logo.svg'
+  og_image_alt: '[node:title]'
   schema_web_page_type: WebPage
   schema_web_page_id: '[node:url:absolute]'
   schema_web_page_description: '[node:summary]'

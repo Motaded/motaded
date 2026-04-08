@@ -1,0 +1,26 @@
+uuid: 59c54517-f958-482d-9dba-d9d7ab06d7af
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - responsive_image
+_core:
+  default_config_hash: odTYjHp5GOmh45z27VQbcr5J269dKt73+yudxlEELp8=
+name: max_768x768
+label: 'Max 768x768'
+effects:
+  f812ca05-db18-46c2-bef6-cbdfbf8b33d5:
+    uuid: daf30d30-1055-4ab2-8d13-7729242256a9
+    id: image_scale
+    weight: 1
+    data:
+      width: 768
+      height: 768
+      upscale: false
+  5a0a51a7-2ca5-4a05-b9d7-61fe3d3fa1c6:
+    uuid: 46f219ae-ca71-4efd-9985-db849bc00768
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

@@ -6,6 +6,8 @@ dependencies:
     - image.style.max_1300x1300
     - image.style.max_325x325
     - image.style.max_650x650
+    - image.style.max_768x768
+    - image.style.max_960x960
     - image.style.medium
 _core:
   default_config_hash: Pvik9YqtjA9ALn5ccla1mwTIE4gN5fQ-dK1B0zX0b1o
@@ -20,6 +22,8 @@ image_style_mappings:
         - max_1300x1300
         - max_325x325
         - max_650x650
+        - max_768x768
+        - max_960x960
     breakpoint_id: responsive_image.viewport_sizing
     multiplier: 1x
 breakpoint_group: responsive_image
