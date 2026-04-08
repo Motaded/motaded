@@ -261,8 +261,18 @@
 					{% for i in content.field_download_user_guides|keys %}
 						{% if i matches '/^\\d+$/' %}
 							{% set field_media = file_url(content.field_download_user_guides[i]['#entity'].field_media_document.entity.uri.value) %}
-							<a href="{{ field_media }}" target="_blank" class="flex relative gap-2 items-center p-0">
-								<span class="relative text-base leading-6 text-green-700">{{ content.field_download_user_guides[i]['#title'] }}</span>
+							{% set link_text = (content.field_download_user_guides[i]['#title'] ?? '')|render|striptags|trim %}
+							{% if link_text is empty and content.field_download_user_guides[i]['#entity'] is not empty %}
+								{% set link_text = content.field_download_user_guides[i]['#entity'].label|default('Download') %}
+							{% endif %}
+							<a
+								href="{{ field_media }}"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="flex relative gap-2 items-center p-0"
+								aria-label="{{ 'Download @name'|t({'@name': link_text}) }}"
+							>
+								<span class="relative text-base leading-6 text-green-700">{{ link_text }}</span>
 								{# <div class="flex relative justify-center items-center">
 								                  <span class="relative text-base font-medium leading-6 text-neutral-900">{{ content.field_download_user_guides[i]['#title'] }}</span>
 								                </div> #}
