@@ -1689,13 +1689,13 @@ display:
       exposed_form:
         type: bef
         options:
-          submit_button: Apply
+          submit_button: Search
           reset_button: true
-          reset_button_label: 'Clear filters'
+          reset_button_label: 'Reset Filters'
           exposed_sorts_label: Sort
-          expose_sort_order: false
-          sort_asc_label: A-Z
-          sort_desc_label: Z-A
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
           text_input_required: 'Select any filter and click on Apply to see results'
           text_input_required_format: plain_text
           bef:
@@ -1703,15 +1703,15 @@ display:
               autosubmit: true
               auto_submit_sort_only: false
               autosubmit_breakpoint: ''
-              autosubmit_exclude_textfield: false
+              autosubmit_exclude_textfield: true
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
-              autosubmit_hide: true
+              autosubmit_hide: false
               input_required: false
-              allow_secondary: false
-              secondary_label: 'Advanced options'
-              secondary_open: false
-              reset_button_always_show: false
+              allow_secondary: true
+              secondary_label: 'Filter Services'
+              secondary_open: true
+              reset_button_always_show: true
             sort:
               plugin_id: default
               advanced:
@@ -1722,7 +1722,7 @@ display:
                 reset_label: ''
                 collapsible: false
                 collapsible_label: 'Sort options'
-                is_secondary: false
+                is_secondary: true
             filter:
               combine:
                 plugin_id: default
@@ -1749,7 +1749,7 @@ display:
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   open_by_default: false
-                  is_secondary: false
+                  is_secondary: true
                   hide_label: false
                   field_classes: ''
                 select_all_none: false
@@ -1770,8 +1770,8 @@ display:
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   open_by_default: false
-                  is_secondary: false
-                  hide_label: true
+                  is_secondary: true
+                  hide_label: false
                   field_classes: ''
                 select_all_none: false
                 select_all_none_nested: false
@@ -1780,6 +1780,22 @@ display:
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
       sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: 'Authored on'
+            field_identifier: created
+          exposed: true
+          granularity: second
         title:
           id: title
           table: node_field_data
@@ -1795,22 +1811,6 @@ display:
             label: Title
             field_identifier: title
           exposed: true
-        created:
-          id: created
-          table: node_field_data
-          field: created
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: created
-          plugin_id: date
-          order: ASC
-          expose:
-            label: 'Authored on'
-            field_identifier: created
-          exposed: true
-          granularity: second
       filters:
         status:
           id: status
@@ -1926,7 +1926,7 @@ display:
           exposed: true
           expose:
             operator_id: combine_op
-            label: Search
+            label: ''
             description: ''
             use_operator: false
             operator: combine_op
@@ -1971,7 +1971,7 @@ display:
           exposed: true
           expose:
             operator_id: field_tags_target_id_op
-            label: Categories
+            label: Beneficiaries
             description: ''
             use_operator: false
             operator: field_tags_target_id_op
@@ -2016,7 +2016,7 @@ display:
           exposed: true
           expose:
             operator_id: field_taxonomy_target_id_op
-            label: ''
+            label: 'Target Attribute'
             description: ''
             use_operator: false
             operator: field_taxonomy_target_id_op

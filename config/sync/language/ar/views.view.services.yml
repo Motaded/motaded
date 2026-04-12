@@ -5,16 +5,24 @@ display:
       filters:
         combine:
           expose:
-            label: بحث
+            label: ''
             placeholder: 'خدمات البحث...'
         field_tags_target_id:
           expose:
-            label: فئات
+            label: المستفيدون
+        field_taxonomy_target_id:
+          expose:
+            label: 'السمة المستهدفة'
       exposed_form:
         options:
-          submit_button: يتقدم
-          reset_button_label: مسح
-          exposed_sorts_label: نوع
+          submit_button: بحث
+          reset_button_label: 'إعادة تعيين عوامل التصفية'
+          exposed_sorts_label: ترتيب
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          bef:
+            general:
+              secondary_label: 'تصفية الخدمات'
       sorts:
         title:
           expose:

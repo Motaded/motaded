@@ -169,3 +169,10 @@ news-carousel:
 featured-contents:
   dependencies:
     - motaded_theme/alpine
+
+services-page:
+  version: VERSION
+  css:
+    component:
+      css/components/services-page.css:
+        weight: -5
