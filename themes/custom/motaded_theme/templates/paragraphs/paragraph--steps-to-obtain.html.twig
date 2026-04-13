@@ -44,6 +44,7 @@
  */
 #}
 {% block paragraph %}
+  {{ attach_library('motaded_theme/num-card') }}
   {{ include('motaded_theme:num-card', {
       title: content.field_title.0,
       desc: content.field_content.0,

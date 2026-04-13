@@ -2,9 +2,15 @@
 
 require_once __DIR__ . '/includes/motaded_theme.image.inc';
 
+use Drupal\block\BlockInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
 /**
  * LCP: fetchpriority=high for responsive hero banner images.
@@ -138,6 +144,63 @@ function motaded_theme_preprocess_page(&$variables) {
       }
     }
   }
+
+  // Service (Basic page + Display on services): full-width hero; sidebar renders in node template.
+  $route_node = \Drupal::routeMatch()->getParameter('node');
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'page'
+    && $route_node->hasField('field_display_on_services')
+    && !$route_node->get('field_display_on_services')->isEmpty()
+    && (int) $route_node->get('field_display_on_services')->value === 1) {
+    $variables['service_page_full_bleed'] = TRUE;
+    $sidebar_build = $variables['page']['sidebar_second'] ?? NULL;
+    if (is_array($sidebar_build) && Element::children($sidebar_build) !== []) {
+      \Drupal::request()->attributes->set('motaded_theme_service_sidebar_second', $sidebar_build);
+    }
+    // Never render sidebar in page.html.twig for this layout (node template owns it).
+    unset($variables['page']['sidebar_second']);
+  }
+}
+
+/**
+ * Truncates HTML to a plain-text string for hero intro fallback.
+ */
+/**
+ * Builds a render array for the active theme's sidebar_second region.
+ *
+ * Used when the region copy from preprocess_page is missing (ordering / empty()).
+ */
+function motaded_theme_build_sidebar_second_region(): array {
+  /** @var \Drupal\block\BlockRepositoryInterface $repo */
+  $repo = \Drupal::service('block.repository');
+  $cacheability = [];
+  $regions = $repo->getVisibleBlocksPerRegion($cacheability);
+  $region_blocks = $regions['sidebar_second'] ?? [];
+  if ($region_blocks === []) {
+    return [];
+  }
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+  $build = [];
+  foreach ($region_blocks as $block) {
+    if (!$block instanceof BlockInterface) {
+      continue;
+    }
+    if ($block->access('view')) {
+      $build[$block->id()] = $view_builder->view($block);
+    }
+  }
+  return $build;
+}
+
+function motaded_theme_plain_text_truncate(string $html, int $max_length): string {
+  $text = trim(preg_replace('/\s+/u', ' ', strip_tags($html)));
+  if ($text === '') {
+    return '';
+  }
+  if (mb_strlen($text) <= $max_length) {
+    return $text;
+  }
+  return mb_substr($text, 0, $max_length) . '…';
 }
 
 /**
@@ -152,6 +215,46 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['summary'] = ['#markup' => $variables['node']->body->summary];
   }
 
+  // Service page (Basic page + Display on services): compact hero data.
+  if ($node->bundle() === 'page'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && $node->hasField('field_display_on_services')
+    && !$node->get('field_display_on_services')->isEmpty()
+    && (int) $node->get('field_display_on_services')->value === 1) {
+    $request = \Drupal::request();
+    $sidebar_build = [];
+    if ($request->attributes->has('motaded_theme_service_sidebar_second')) {
+      $sidebar_build = $request->attributes->get('motaded_theme_service_sidebar_second');
+      $request->attributes->remove('motaded_theme_service_sidebar_second');
+    }
+    if (!is_array($sidebar_build) || Element::children($sidebar_build) === []) {
+      $sidebar_build = motaded_theme_build_sidebar_second_region();
+    }
+    $variables['service_sidebar_second'] = $sidebar_build;
+    $variables['service_hero_intro'] = NULL;
+    $variables['service_contact_url'] = Url::fromUserInput('/contact-us')->toString();
+    $variables['service_other_services_url'] = Url::fromUserInput('/services')->toString();
+    $has_sidebar_blocks = is_array($sidebar_build) && Element::children($sidebar_build) !== [];
+    $variables['service_show_right_column'] = $has_sidebar_blocks;
+    $variables['service_body_use_readmore'] = FALSE;
+    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+      $item = $node->get('body')->first();
+      $summary = trim((string) $item->summary);
+      if ($summary !== '') {
+        $variables['service_hero_intro'] = ['#markup' => nl2br(Html::escape($summary))];
+      }
+      else {
+        $truncated = motaded_theme_plain_text_truncate((string) $item->processed, 320);
+        if ($truncated !== '') {
+          $variables['service_hero_intro'] = ['#markup' => Html::escape($truncated)];
+        }
+      }
+      // Long body: collapsible UI; full HTML stays in the template for SEO.
+      $plain_len = mb_strlen(trim(strip_tags((string) $item->value)));
+      $variables['service_body_use_readmore'] = $plain_len > 2499;
+    }
+  }
+
   // Add step numbers to field_steps_to_obtain items.
   if ($node->bundle() == 'page' && !empty($variables['content']['field_steps_to_obtain'])) {
     foreach ($variables['content']['field_steps_to_obtain'] as $i => &$item) {
@@ -160,6 +263,97 @@ function motaded_theme_preprocess_node(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for paragraph templates.
+ *
+ * Splits objectives body on a blank line into title + description when present.
+ */
+function motaded_theme_preprocess_paragraph(array &$variables): void {
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->bundle() !== 'objectives') {
+    return;
+  }
+  if (!$paragraph->hasField('field_content') || $paragraph->get('field_content')->isEmpty()) {
+    return;
+  }
+  $text = trim((string) $paragraph->get('field_content')->value);
+  if ($text === '') {
+    return;
+  }
+  $parts = preg_split('/\R(?:\s*\R)+/', $text, 2);
+  if (isset($parts[1])) {
+    $variables['objectives_card_title'] = trim((string) $parts[0]);
+    $variables['objectives_card_body'] = trim((string) $parts[1]);
+  }
+}
+
+/**
+ * Plain title + image alt from media (fallback to title) for article-card output.
+ */
+function motaded_theme_preprocess_paragraph__business_activity(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $title_plain = '';
+  if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+    $title_plain = trim((string) $paragraph->get('field_title')->value);
+  }
+  $variables['business_activity_title_plain'] = $title_plain;
+  $image_alt = $title_plain;
+  if ($paragraph->hasField('field_media') && !$paragraph->get('field_media')->isEmpty()) {
+    $media = $paragraph->get('field_media')->entity;
+    if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+      $image_item = $media->get('field_media_image')->first();
+      if ($image_item) {
+        $alt_data = $image_item->get('alt');
+        $from_media = trim($alt_data instanceof \Drupal\Core\TypedData\PrimitiveInterface
+          ? $alt_data->getString()
+          : (string) $alt_data->getValue());
+        if ($from_media !== '') {
+          $image_alt = $from_media;
+        }
+      }
+    }
+  }
+  if ($image_alt === '' && $title_plain !== '') {
+    $image_alt = $title_plain;
+  }
+  if ($image_alt === '') {
+    $image_alt = (string) t('Illustration for service information');
+  }
+  $variables['business_activity_image_alt'] = $image_alt;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for areas_of_work paragraphs.
+ *
+ * Splits plain text on the first colon so the lead phrase can be styled bold
+ * (e.g. "Mandatory activities: These include…").
+ */
+function motaded_theme_preprocess_paragraph__areas_of_work(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  if (!$paragraph->hasField('field_content') || $paragraph->get('field_content')->isEmpty()) {
+    return;
+  }
+  $full = trim((string) $paragraph->get('field_content')->value);
+  if ($full === '') {
+    return;
+  }
+  $pos = strpos($full, ':');
+  if ($pos === FALSE) {
+    return;
+  }
+  $label = trim(substr($full, 0, $pos));
+  $rest = trim(substr($full, $pos + 1));
+  if ($label === '') {
+    return;
+  }
+  $variables['areas_lead_label'] = $label;
+  $variables['areas_rest_safe'] = $rest === ''
+    ? NULL
+    : Markup::create(nl2br(Html::escape($rest), FALSE));
 }
 
 /**

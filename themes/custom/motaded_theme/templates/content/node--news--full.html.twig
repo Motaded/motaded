@@ -117,7 +117,19 @@
   <section class="pt-8 prose prose-neutral max-w-none">
     <div class="max-w-[1320px] mx-auto">
       <div{{ content_attributes.addClass('node__content') }}>
-        {{ content }}
+        {{ content|without(
+          'addtoany',
+          'field_target_audience',
+          'field_service_duration',
+          'field_provided_languages',
+          'field_service_channels',
+          'field_service_cost',
+          'field_payment_options',
+          'field_phone_number',
+          'field_email_address',
+          'field_document',
+          'field_download_user_guides'
+        ) }}
       </div>
     </div>
       <!-- Back to top (anchor) -->

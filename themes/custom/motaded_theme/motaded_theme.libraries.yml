@@ -1,4 +1,16 @@
 # Async Font Awesome: local core + brands only (see motaded_theme.info.yml libraries-override + extend).
+icon-card-tiny:
+  version: VERSION
+  css:
+    component:
+      components/icon-card-tiny/icon-card-tiny.css: {}
+
+num-card:
+  version: VERSION
+  css:
+    component:
+      components/num-card/num-card.css: {}
+
 fontawesome_async:
   version: VERSION
   js:
@@ -103,6 +115,11 @@ node:
     component:
       css/components/node.css:
         weight: -10
+  js:
+    js/service-body-readmore.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 progress:
   version: VERSION
   css:

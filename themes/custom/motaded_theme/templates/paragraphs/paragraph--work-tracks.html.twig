@@ -55,10 +55,11 @@
   {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
 {% endif %}
 {% block paragraph %}
+  {{ attach_library('motaded_theme/icon-card-tiny') }}
   {{ include('motaded_theme:icon-card-tiny', {
+      variant: 'service_icon_row',
       title: content.field_title.0,
       desc: content.field_content.0,
       icon_url: field_media,
-      icon_position: 'topLeft',
     }, with_context = false) }}
 {% endblock paragraph %}
