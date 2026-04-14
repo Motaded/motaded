@@ -1,11 +1,13 @@
 uuid: b7fca28d-ffff-4713-89b0-80728ba38e7d
 langcode: en
-status: false
+status: true
 dependencies:
   content:
     - 'block_content:paragraphs:fe98c98b-6bf8-4d70-9803-4f928485f527'
   module:
     - block_content
+    - motaded_custom
+    - system
   theme:
     - motaded_theme
 id: motaded_theme_404notfound
@@ -20,4 +22,8 @@ settings:
   label_display: '0'
   provider: block_content
   view_mode: full
-visibility: {  }
+visibility:
+  motaded_404_page:
+    id: motaded_404_page
+    negate: false
+    context_mapping: {  }

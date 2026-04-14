@@ -20,13 +20,13 @@ display:
             placeholder: 'ابحث في الخدمات…'
         field_beneficiaries_target_id:
           expose:
-            label: 'المستفيدون'
+            label: المستفيدون
         field_taxonomy_target_id:
           expose:
-            label: 'الفئات'
+            label: الفئات
         field_tags_target_id:
           expose:
-            label: 'الوسوم'
+            label: الوسوم
       exposed_form:
         options:
           submit_button: بحث
@@ -46,11 +46,11 @@ display:
             field_beneficiaries_target_id:
               advanced:
                 rewrite:
-                  filter_rewrite_values: 'الكل|المستفيدون'
+                  filter_rewrite_values: الكل|المستفيدون
             field_tags_target_id:
               advanced:
                 rewrite:
-                  filter_rewrite_values: 'الكل|الوسوم'
+                  filter_rewrite_values: الكل|الوسوم
             field_taxonomy_target_id:
               soft_limit_label_less: أقل
               soft_limit_label_more: المزيد

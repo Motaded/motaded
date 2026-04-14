@@ -18,6 +18,7 @@ $nids = \Drupal::entityQuery('node')
   ->condition('type', 'page')
   ->condition('status', 1)
   ->condition('field_display_on_services.value', 1)
+  ->condition('langcode', 'en')
   ->sort('nid')
   ->execute();
 
