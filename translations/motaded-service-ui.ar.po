@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Motaded\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "Start the service"
+msgstr "ابدأ الخدمة"
+
+msgid "Go to other services"
+msgstr "انتقل إلى الخدمات الأخرى"
+
+msgid "Share the page"
+msgstr "شارك الصفحة"
+
+msgid "On this page"
+msgstr "في هذه الصفحة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Snapshot"
+msgstr "لمحة"
+
+msgid "Objectives"
+msgstr "الأهداف"
+
+msgid "Work Tracks"
+msgstr "مسارات العمل"
+
+msgid "Steps to Obtain"
+msgstr "خطوات الحصول على الخدمة"
+
+msgid "Areas of Work"
+msgstr "مجالات العمل"
+
+msgid "Extra data"
+msgstr "بيانات إضافية"
+
+msgid "FAQs"
+msgstr "الأسئلة الشائعة"
+
+msgid "Service details"
+msgstr "تفاصيل الخدمة"
+
+msgid "Read more"
+msgstr "اقرأ المزيد"
+
+msgid "Read less"
+msgstr "اقرأ أقل"
+
+msgid "Phone number"
+msgstr "رقم الهاتف"
+
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+msgid "Email Address"
+msgstr "البريد الإلكتروني"
+
+msgid "Frequently Asked Questions"
+msgstr "الأسئلة الشائعة"
+
+msgid "View consultation FAQs"
+msgstr "اطلع على الأسئلة الشائعة حول الاستشارات"
+
+msgid "Download user guide"
+msgstr "تنزيل دليل المستخدم"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "External Link"
+msgstr "رابط خارجي"

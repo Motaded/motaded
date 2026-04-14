@@ -11,6 +11,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -545,7 +546,10 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
     }
 
     if ($node->bundle() == "article") {
-      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/blog') {
+      if (
+        !isset($variables['breadcrumb'][1]) ||
+        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'blog')
+      ) {
         $list_crumb = [
           'text' => t('Articles'),
           'url' => $prefix . "blog",
@@ -553,7 +557,10 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }
     } elseif ($node->bundle() == "page") {
-      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/services') {
+      if (
+        !isset($variables['breadcrumb'][1]) ||
+        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'services')
+      ) {
         $list_crumb = [
           'text' => t('Services'),
           'url' => $prefix . "services",
@@ -561,7 +568,10 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }
     } elseif ($node->bundle() == "news") {
-      if (isset($variables['breadcrumb'][1]) && $variables['breadcrumb'][1]['url'] != '/news') {
+      if (
+        !isset($variables['breadcrumb'][1]) ||
+        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'news')
+      ) {
         $list_crumb = [
           'text' => t('News'),
           'url' => $prefix . "news",
@@ -570,6 +580,26 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Checks whether breadcrumb URL already points to a section root.
+ */
+function motaded_theme_breadcrumb_url_matches_section($url, string $section): bool {
+  if (!is_string($url) || $url === '') {
+    return FALSE;
+  }
+
+  $path = parse_url($url, PHP_URL_PATH);
+  if (!is_string($path) || $path === '') {
+    return FALSE;
+  }
+
+  $normalized = '/' . trim($path, '/');
+  return (bool) preg_match(
+    '#^/(?:beta/)?(?:[a-z]{2}/)?' . preg_quote($section, '#') . '$#i',
+    $normalized
+  );
 }
 
 /**
@@ -621,6 +651,91 @@ function motaded_theme_preprocess_views_view__services__page_1(&$variables) {
     }
   }
   $variables['services_categories_sidebar'] = $sidebar;
+  $is_arabic = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId() === 'ar';
+  $variables['services_categories_aria_label'] = $is_arabic
+    ? 'الفئات'
+    : (string) t('Categories');
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views_view_fields.
+ *
+ * Builds translated chip labels for the Services directory cards.
+ */
+function motaded_theme_preprocess_views_view_fields(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  $display_id = $variables['display_id'] ?? $view->current_display ?? '';
+  if ($view->id() !== 'services' || $display_id !== 'page_1') {
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId();
+  $is_arabic = $langcode === 'ar';
+
+  $variables['services_book_now_label'] = $is_arabic
+    ? 'احجز الآن'
+    : (string) t('Book now');
+  $variables['services_explore_benefits_label'] = $is_arabic
+    ? 'اكتشف المزايا'
+    : (string) t('Explore benefits');
+
+  $variables['services_beneficiary_labels'] = [];
+  $variables['services_category_labels'] = [];
+  $variables['services_tag_labels'] = [];
+
+  $row = $variables['row'] ?? NULL;
+  if (!is_object($row) || !isset($row->_entity)) {
+    return;
+  }
+
+  $node = $row->_entity;
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'page') {
+    return;
+  }
+
+  if ($node->hasField('field_beneficiaries') && !$node->get('field_beneficiaries')->isEmpty()) {
+    foreach ($node->get('field_beneficiaries') as $item) {
+      $entity = $item->entity ?? NULL;
+      if ($entity instanceof TermInterface) {
+        $variables['services_beneficiary_labels'][] = motaded_theme_taxonomy_term_translated_label($entity, $langcode);
+      }
+    }
+  }
+
+  if ($node->hasField('field_taxonomy') && !$node->get('field_taxonomy')->isEmpty()) {
+    foreach ($node->get('field_taxonomy') as $item) {
+      $entity = $item->entity ?? NULL;
+      if ($entity instanceof TermInterface) {
+        $variables['services_category_labels'][] = motaded_theme_taxonomy_term_translated_label($entity, $langcode);
+      }
+    }
+  }
+
+  if ($node->hasField('field_tags') && !$node->get('field_tags')->isEmpty()) {
+    foreach ($node->get('field_tags') as $item) {
+      $entity = $item->entity ?? NULL;
+      if ($entity instanceof TermInterface) {
+        $variables['services_tag_labels'][] = motaded_theme_taxonomy_term_translated_label($entity, $langcode);
+      }
+    }
+  }
+}
+
+/**
+ * Returns a taxonomy term label for a requested langcode when available.
+ */
+function motaded_theme_taxonomy_term_translated_label(TermInterface $term, string $langcode): string {
+  if ($langcode !== '' && $term->hasTranslation($langcode)) {
+    return (string) $term->getTranslation($langcode)->label();
+  }
+  return (string) $term->label();
 }
 
 /**
@@ -690,8 +805,80 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 
   if (($form['#id'] ?? '') === 'views-exposed-form-services-page-1') {
     $form['#attributes']['class'][] = 'services-directory__exposed-form';
+    // Better Exposed Filters can build some option labels after generic form alters.
+    // Ensure Arabic labels for the "All" option and submit/reset strings are applied
+    // on the final render array.
+    $form['#after_build'][] = 'motaded_theme_services_views_exposed_form_after_build';
   }
 
+}
+
+/**
+ * After-build callback: finalizes Arabic strings for Services directory exposed form.
+ */
+function motaded_theme_services_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-services-page-1') {
+    return $form;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  if ($langcode !== 'ar') {
+    return $form;
+  }
+
+  if (isset($form['actions']['submit']) && is_array($form['actions']['submit'])) {
+    $form['actions']['submit']['#value'] = 'بحث';
+  }
+  if (isset($form['actions']['reset']) && is_array($form['actions']['reset'])) {
+    $form['actions']['reset']['#value'] = 'إعادة تعيين المرشحات';
+  }
+
+  foreach (['field_beneficiaries_target_id', 'field_tags_target_id'] as $key) {
+    if (empty($form[$key]) || !is_array($form[$key])) {
+      continue;
+    }
+    if ($key === 'field_beneficiaries_target_id') {
+      motaded_theme_services_rewrite_all_option_label($form[$key], ['beneficiaries', 'المستفيدون'], 'الكل');
+    }
+    else {
+      motaded_theme_services_rewrite_all_option_label($form[$key], ['tags', 'الوسوم'], 'الكل');
+    }
+  }
+
+  return $form;
+}
+
+/**
+ * Rewrites Views/BEF "All" option label for Arabic when it still shows English.
+ *
+ * @param array $element
+ *   A form element (possibly nested) that may contain #options.
+ * @param array $english_labels
+ *   English labels that should be rewritten to Arabic for the "All" option.
+ * @param string $replacement
+ *   Replacement label for the "All" option.
+ */
+function motaded_theme_services_rewrite_all_option_label(array &$element, array $english_labels, string $replacement): void {
+  if (isset($element['#options']) && is_array($element['#options']) && isset($element['#options']['All']) && is_string($element['#options']['All'])) {
+    $current = trim($element['#options']['All']);
+    $lower = mb_strtolower($current);
+    foreach ($english_labels as $candidate) {
+      $candidate = trim((string) $candidate);
+      if ($candidate === '') {
+        continue;
+      }
+      if (mb_strtolower($candidate) === $lower) {
+        $element['#options']['All'] = $replacement;
+        break;
+      }
+    }
+  }
+
+  foreach (Element::children($element) as $child) {
+    if (isset($element[$child]) && is_array($element[$child])) {
+      motaded_theme_services_rewrite_all_option_label($element[$child], $english_labels, $replacement);
+    }
+  }
 }
 
 /**

@@ -219,6 +219,71 @@
   border-color: #d1d5db;
 }
 
+/* Services directory: exposed Search/Reset buttons — hover/focus feedback */
+.services-directory .services-exposed-top [data-drupal-selector^="edit-actions"] input.form-submit,
+.services-directory .services-exposed-top #edit-actions input.form-submit {
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease,
+    filter 160ms ease;
+}
+
+.services-directory .services-exposed-top [data-drupal-selector^="edit-actions"] input.form-submit:hover,
+.services-directory .services-exposed-top #edit-actions input.form-submit:hover {
+  transform: translateY(-1px);
+}
+
+.services-directory .services-exposed-top [data-drupal-selector^="edit-actions"] input.form-submit:active,
+.services-directory .services-exposed-top #edit-actions input.form-submit:active {
+  transform: translateY(0);
+  transition-duration: 90ms;
+}
+
+.services-directory .services-exposed-top input[data-drupal-selector^="edit-submit-services"]:hover,
+.services-directory .services-exposed-top input[data-drupal-selector*="submit-services"]:hover,
+.services-directory .services-exposed-top .form-actions input[data-drupal-selector*="submit"]:hover {
+  background-color: #145c38;
+  border-color: #145c38;
+  box-shadow: 0 10px 22px rgba(26, 115, 68, 0.22);
+  filter: brightness(1.02);
+}
+
+.services-directory .services-exposed-top input[data-drupal-selector^="edit-submit-services"]:active,
+.services-directory .services-exposed-top input[data-drupal-selector*="submit-services"]:active,
+.services-directory .services-exposed-top .form-actions input[data-drupal-selector*="submit"]:active {
+  background-color: #114f31;
+  border-color: #114f31;
+  box-shadow: 0 6px 14px rgba(26, 115, 68, 0.18);
+  filter: brightness(0.98);
+}
+
+.services-directory .services-exposed-top input[data-drupal-selector^="edit-reset-services"]:hover,
+.services-directory .services-exposed-top input[data-drupal-selector*="reset-services"]:hover,
+.services-directory .services-exposed-top .form-actions input[data-drupal-selector*="reset"]:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #111827;
+  box-shadow: 0 10px 22px rgba(17, 24, 39, 0.08);
+}
+
+.services-directory .services-exposed-top input[data-drupal-selector^="edit-reset-services"]:active,
+.services-directory .services-exposed-top input[data-drupal-selector*="reset-services"]:active,
+.services-directory .services-exposed-top .form-actions input[data-drupal-selector*="reset"]:active {
+  background-color: #f3f4f6;
+  border-color: #94a3b8;
+  box-shadow: 0 6px 14px rgba(17, 24, 39, 0.08);
+}
+
+.services-directory .services-exposed-top [data-drupal-selector^="edit-actions"] input.form-submit:focus-visible,
+.services-directory .services-exposed-top #edit-actions input.form-submit:focus-visible {
+  outline: 3px solid rgba(26, 115, 68, 0.35);
+  outline-offset: 2px;
+}
+
 .services-directory .services-exposed-top select.services-directory__select--placeholder {
   color: #9ca3af;
 }

@@ -39,7 +39,7 @@
         {{ exposed }}
         <div class="services-directory__main">
           {% if services_categories_sidebar %}
-            <aside class="services-filters-sidebar" role="group" aria-label="{{ 'Categories'|t }}">
+            <aside class="services-filters-sidebar" role="group" aria-label="{{ services_categories_aria_label|default('Categories'|t) }}">
               {{ services_categories_sidebar }}
             </aside>
           {% endif %}
