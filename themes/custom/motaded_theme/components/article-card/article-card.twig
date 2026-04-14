@@ -2,12 +2,20 @@
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
+{% set card_title_text = title|render|striptags|trim %}
+{% set card_img_alt = (image_alt ?? '')|trim %}
+{% if card_img_alt is empty %}
+  {% set card_img_alt = card_title_text %}
+{% endif %}
+{% if card_img_alt is empty %}
+  {% set card_img_alt = 'Article image'|t %}
+{% endif %}
 
 {% if view_link %}
 <a
   href="{{ view_link }}"
   class="block group"
-  aria-label="Read article"
+  aria-label="{% if card_title_text %}{{ 'More about @title'|t({'@title': card_title_text }) }}{% else %}{{ 'Read more'|t }}{% endif %}"
 >
 {% else %}
 <div class="block group">
@@ -18,9 +26,11 @@
     <!-- image on top -->
     <div  class="relative w-full h-[180px] md:h-[200px] overflow-hidden">
       <img
-        alt="{{ title }}"
+        alt="{{ card_img_alt|e }}"
         class="w-full h-full object-cover group-hover:scale-[1.02] transition"
         src="{{ media_url }}"
+        loading="lazy"
+        decoding="async"
       />
     </div>
     <!-- content -->

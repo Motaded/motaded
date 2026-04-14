@@ -48,7 +48,8 @@
 {% endif %}
 {% block paragraph %}
   {{ include("motaded_theme:article-card", {
-    'title': content.field_title.0,
+    'title': business_activity_title_plain|default(''),
+    'image_alt': business_activity_image_alt|default(''),
     'media_url': field_media,
     'excerpt': content.field_content.0
   }) }}

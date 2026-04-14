@@ -29,6 +29,7 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
+        "drupal/addtoany": "^2.0",
         "drupal/admin_toolbar": "^3.6",
         "drupal/backup_migrate": "^5.1",
         "drupal/better_exposed_filters": "^7.0",
@@ -84,6 +85,7 @@
         "drupal/token_filter": "^2.2",
         "drupal/tus": "^2.1",
         "drupal/twig_tweak": "^3.4",
+        "drupal/views_fieldsets": "^4.0",
         "drupal/viewsreference": "^2.0@beta",
         "drupal/webform": "^6.3@beta",
         "drupal/yoast_seo": "^2.2",

@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Services page_1: top filters only (categories moved in preprocess_views_view).
+ *
+ * @see motaded_theme_preprocess_views_view__services__page_1()
+ */
+#}
+{% if q is not empty %}
+  {{ q }}
+{% endif %}
+<div class="services-exposed-top">
+  <div class="form--inline clearfix">
+    {{ form }}
+  </div>
+</div>

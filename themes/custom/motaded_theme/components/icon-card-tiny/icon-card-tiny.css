@@ -1,5 +1,237 @@
 /*
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
-*/
+ */
 
+/* Light PNG/SVG icons → readable green on mint circle */
+.icon-card--snapshot .icon-card__iconImg,
+.icon-card--objectives .icon-card__iconImg,
+.icon-card--service-row .icon-card__iconImg {
+  filter: brightness(0) saturate(100%) invert(30%) sepia(42%) saturate(900%) hue-rotate(118deg) brightness(0.88) contrast(0.95);
+}
+
+/* --- Service snapshot (data / summary cards) --- */
+.icon-card--snapshot {
+  box-sizing: border-box;
+  display: grid;
+  height: 100%;
+  align-items: start;
+  align-content: start;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #e9eef5;
+  border-radius: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+}
+
+.icon-card--snapshot .icon-card__iconWrap {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #d1fae5;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.icon-card--snapshot .icon-card__iconImg {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.icon-card--snapshot .icon-card__label {
+  margin: 0;
+  min-width: 0;
+  align-self: center;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.icon-card--snapshot .icon-card__value {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #6b7280;
+  word-break: break-word;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: start;
+}
+
+.icon-card--snapshot .icon-card__value :where(p):last-child {
+  margin-bottom: 0;
+}
+
+.icon-card--snapshot .icon-card__value :where(p):first-child {
+  margin-top: 0;
+}
+
+/* --- Objectives: same shell + type scale as service-row (title semibold, body regular) --- */
+.icon-card--objectives {
+  box-sizing: border-box;
+  display: flow-root;
+  height: 100%;
+  min-height: 0;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid #e9eef5;
+  border-radius: 1.25rem;
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+  overflow: visible;
+}
+
+.icon-card--objectives .icon-card__iconWrap {
+  display: flex;
+  float: left;
+  float: inline-start;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: 0.35rem;
+  margin-inline-end: 0.75rem;
+  border-radius: 9999px;
+  background-color: #d1fae5;
+  shape-outside: circle(1.25rem at 50% 50%);
+}
+
+.icon-card--objectives .icon-card__iconImg {
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+}
+
+.icon-card--objectives .icon-card__title {
+  margin: 0 0 0.3rem;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.icon-card--objectives .icon-card__desc {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #6b7280;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.icon-card--objectives .icon-card__body {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #6b7280;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.icon-card--objectives .icon-card__body :where(p):last-child,
+.icon-card--objectives .icon-card__desc :where(p):last-child {
+  margin-bottom: 0;
+}
+
+.icon-card--objectives .icon-card__body :where(p):first-child,
+.icon-card--objectives .icon-card__desc :where(p):first-child {
+  margin-top: 0;
+}
+
+/* Work tracks / Areas of work: icon floats, text wraps (shape-outside avoids harsh “crop”) */
+.icon-card--service-row {
+  box-sizing: border-box;
+  display: flow-root;
+  height: 100%;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid #e9eef5;
+  border-radius: 1.25rem;
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+  overflow: visible;
+}
+
+.icon-card--service-row .icon-card__iconWrap {
+  display: flex;
+  float: left;
+  float: inline-start;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: 0.35rem;
+  margin-inline-end: 0.75rem;
+  border-radius: 9999px;
+  background-color: #d1fae5;
+  shape-outside: circle(1.25rem at 50% 50%);
+}
+
+.icon-card--service-row .icon-card__iconImg {
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+}
+
+.icon-card--service-row .icon-card__textCol {
+  display: block;
+  min-width: 0;
+  padding-top: 0.1rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.icon-card--service-row .icon-card__rowTitle {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.icon-card--service-row .icon-card__rowBody {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.icon-card--service-row .icon-card__rowBody :where(p):last-child {
+  margin-bottom: 0;
+}
+
+.icon-card--service-row .icon-card__rowBody :where(p):first-child {
+  margin-top: 0;
+}
+
+.icon-card--service-row .icon-card__rowBodyPara {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.icon-card--service-row .icon-card__rowLead {
+  font-weight: 600;
+  color: #1f2937;
+}

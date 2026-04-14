@@ -6,41 +6,156 @@
  */
 
 /**
- * Fix invalid block_content langcodes that break Views (EntityViewDisplay).
+ * Adds Arabic translations for taxonomy terms in the "beneficiaries" vocabulary.
  *
- * Rows with NULL, empty, or unknown langcode can make $entity->language() NULL for
- * translatable block content, causing "getId() on null" on admin/content/block.
+ * Terms are content (not config-exportable by default). Keeping translations in
+ * code via an update hook makes deployments deterministic across environments.
  */
-function motaded_custom_update_10001(): void {
-  $db = \Drupal::database();
-  $languages = \Drupal::languageManager()->getLanguages();
-  if ($languages === []) {
+function motaded_custom_update_10002(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
     return;
   }
-  $valid = array_keys($languages);
-  $default = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
-  $tables = [
-    'block_content_field_data',
-    'block_content_revision_field_data',
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $tids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'beneficiaries')
+    ->sort('tid')
+    ->execute();
+
+  if (!$tids) {
+    return;
+  }
+
+  /** @var array<int, string> $by_tid */
+  $by_tid = [
+    165 => 'مالكو الشركات',
+    166 => 'المستوردون والمصدرون',
+    167 => 'فرق العلاقات الحكومية ومكاتب PRO',
+    168 => 'فرق الامتثال والشؤون القانونية',
+    169 => 'فرق الموارد البشرية وإدارة القوى العاملة',
+    170 => 'فرق المالية والرواتب',
+    171 => 'الشركات المحلية والدولية',
   ];
-  foreach ($tables as $table) {
-    if (!$db->schema()->tableExists($table)) {
+
+  /** @var array<string, string> $by_en_label */
+  $by_en_label = [
+    'Company Owners' => 'مالكو الشركات',
+    'Importers and Exporters' => 'المستوردون والمصدرون',
+    'PRO and Government Relations Teams' => 'فرق العلاقات الحكومية ومكاتب PRO',
+    'Compliance and Legal Teams' => 'فرق الامتثال والشؤون القانونية',
+    'HR and Workforce Teams' => 'فرق الموارد البشرية وإدارة القوى العاملة',
+    'Finance and Payroll Teams' => 'فرق المالية والرواتب',
+    'Local and International Businesses' => 'الشركات المحلية والدولية',
+  ];
+
+  foreach ($tids as $tid) {
+    $tid = (int) $tid;
+    $term = $storage->load($tid);
+    if (!$term instanceof \Drupal\taxonomy\TermInterface) {
       continue;
     }
-    $db->update($table)
-      ->fields(['langcode' => $default])
-      ->condition('langcode', NULL, 'IS NULL')
-      ->execute();
 
-    $db->update($table)
-      ->fields(['langcode' => $default])
-      ->condition('langcode', '')
-      ->execute();
+    $default = $term->getUntranslated()->language()->getId();
+    $source = $term->hasTranslation($default) ? $term->getTranslation($default) : $term;
+    $en_label = trim((string) $source->label());
 
-    $db->update($table)
-      ->fields(['langcode' => $default])
-      ->condition('langcode', $valid, 'NOT IN')
-      ->execute();
+    $name_ar = $by_tid[$tid] ?? ($by_en_label[$en_label] ?? '');
+    if ($name_ar === '') {
+      continue;
+    }
+
+    if ($term->hasTranslation('ar')) {
+      $ar = $term->getTranslation('ar');
+    }
+    else {
+      $ar = $term->addTranslation('ar');
+    }
+
+    $ar->setName($name_ar);
+    if ($ar->hasField('status')) {
+      $ar->set('status', TRUE);
+    }
+    $term->save();
+  }
+}
+
+/**
+ * Adds missing Arabic translation for a specific service tag term.
+ */
+function motaded_custom_update_10003(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+
+  $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load(82);
+  if (!$term instanceof \Drupal\taxonomy\TermInterface) {
+    return;
+  }
+
+  if ($term->hasTranslation('ar')) {
+    return;
+  }
+
+  $name_ar = 'العلاقات الحكومية في المملكة العربية السعودية';
+  $ar = $term->addTranslation('ar');
+  $ar->setName($name_ar);
+  if ($ar->hasField('status')) {
+    $ar->set('status', TRUE);
+  }
+  $term->save();
+}
+
+/**
+ * Copies reference field values from default translation to AR when missing.
+ *
+ * Some Arabic translations of service pages were created without copying taxonomy
+ * references from English, which makes chips/filters fall back to English labels.
+ */
+function motaded_custom_update_10004(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'page')
+    ->condition('field_display_on_services', 1)
+    ->execute();
+
+  if (!$nids) {
+    return;
+  }
+
+  foreach ($nids as $nid) {
+    $node = $storage->load($nid);
+    if (!$node instanceof \Drupal\node\NodeInterface) {
+      continue;
+    }
+    if (!$node->hasTranslation('ar')) {
+      continue;
+    }
+
+    $default_langcode = $node->getUntranslated()->language()->getId();
+    $src = $node->getTranslation($default_langcode);
+    $ar = $node->getTranslation('ar');
+
+    $changed = FALSE;
+    foreach (['field_beneficiaries', 'field_tags', 'field_taxonomy'] as $field_name) {
+      if (!$node->hasField($field_name)) {
+        continue;
+      }
+      if (!$ar->get($field_name)->isEmpty()) {
+        continue;
+      }
+      if ($src->get($field_name)->isEmpty()) {
+        continue;
+      }
+      $ar->set($field_name, $src->get($field_name)->getValue());
+      $changed = TRUE;
+    }
+
+    if ($changed) {
+      // Avoid creating noisy revisions for a data hygiene fix.
+      $ar->setNewRevision(FALSE);
+      $node->save();
+    }
   }
 }

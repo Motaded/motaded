@@ -1,5 +1,65 @@
 /*
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
-*/
+ */
 
+.num-card {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid #e9eef5;
+  border-radius: 1.25rem;
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+}
+
+.num-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.num-card__badge {
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #ecfdf5;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #166534;
+}
+
+.num-card__main {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-top: 0.15rem;
+}
+
+.num-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.num-card__desc {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.num-card__desc :where(p):last-child {
+  margin-bottom: 0;
+}
+
+.num-card__desc :where(p):first-child {
+  margin-top: 0;
+}

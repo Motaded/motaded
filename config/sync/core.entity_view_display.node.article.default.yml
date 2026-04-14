@@ -28,6 +28,7 @@ content:
     weight: 0
     region: content
 hidden:
+  addtoany: true
   comment: true
   field_image: true
   field_media: true
@@ -35,3 +36,4 @@ hidden:
   field_tags: true
   langcode: true
   links: true
+  search_api_excerpt: true
