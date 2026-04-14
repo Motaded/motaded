@@ -14,6 +14,9 @@ services:
   Drupal\motaded_custom\EventSubscriber\ContactUsNoindexSubscriber:
     tags:
       - { name: event_subscriber }
+  Drupal\motaded_custom\EventSubscriber\DevSeoTrackingSubscriber:
+    tags:
+      - { name: event_subscriber }
   Drupal\motaded_custom\EventSubscriber\NodeToAliasRedirectSubscriber:
     arguments:
       - '@path_alias.manager'

@@ -48,6 +48,7 @@
 				{# Hero LCP: responsive image uses loading=eager + fetchpriority=high (see motaded_theme_preprocess_responsive_image_formatter). #}
 
 
+			{% if not motaded_suppress_seo_tracking %}
 			{# GTM + gtag after window.load (not render-blocking). If GA4 for G-G1C83L3T2V is already in GTM, remove the gtag block below to avoid duplicate pageviews. #}
 			<script>
 			window.addEventListener('load', function () {
@@ -142,12 +143,15 @@
   src="https://px.ads.linkedin.com/collect/?pid=6424985&amp;fmt=gif" />
 </noscript>
 <!-- End Meta Pixel + LinkedIn -->
+			{% endif %}
 
 				</head>
 				<body{{attributes.addClass(body_classes)}}>
+					{% if not motaded_suppress_seo_tracking %}
 					<noscript>
 						<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NBFPBC74" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
 					</noscript>
+					{% endif %}
 					{#
 					      Keyboard navigation/accessibility link to main content section in
 					      page.html.twig.
@@ -159,8 +163,9 @@
 					{{ page }}
 					{{ page_bottom }}
 					<js-bottom-placeholder token="{{ placeholder_token }}">
-					
+					{% if not motaded_suppress_seo_tracking %}
 					 <script defer type="application/javascript" src="https://pulse.clickguard.com/s/accqf1jtljMP6/astOxT2EN0qJL"></script>
 					 <script defer type="application/javascript" src="https://pulse.clickguard.com/sc"></script>
+					{% endif %}
 					</body>
 				</html>
