@@ -13,7 +13,7 @@ dependencies:
 id: motaded_theme_contactustitle
 theme: motaded_theme
 region: content
-weight: -20
+weight: -14
 provider: null
 plugin: 'block_content:cb3c5c8a-6a7f-4c94-860d-5cc68cb37746'
 settings:

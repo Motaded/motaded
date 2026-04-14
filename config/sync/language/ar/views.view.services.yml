@@ -7,18 +7,12 @@ display:
           expose:
             label: بحث
             placeholder: 'خدمات البحث...'
-        field_tags_target_id:
-          expose:
-            label: فئات
       exposed_form:
         options:
           submit_button: يتقدم
           reset_button_label: مسح
           exposed_sorts_label: نوع
       sorts:
-        title:
-          expose:
-            label: عنوان
         created:
           expose:
             label: 'تأليف بتاريخ'

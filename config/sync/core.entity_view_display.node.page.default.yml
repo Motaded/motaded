@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.page.field_advantages
     - field.field.node.page.field_areas_of_work
     - field.field.node.page.field_basic_paragraphs
+    - field.field.node.page.field_beneficiaries
     - field.field.node.page.field_comments
     - field.field.node.page.field_default_page
     - field.field.node.page.field_display_on_services
@@ -39,10 +40,8 @@ dependencies:
     - field.field.node.page.field_work_tracks
     - node.type.page
   module:
-    - addtoany
     - entity_reference_revisions
     - link
-    - media
     - text
     - user
     - webform
@@ -91,6 +90,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 8
+    region: content
+  field_beneficiaries:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 35
     region: content
   field_document:
     type: entity_reference_label

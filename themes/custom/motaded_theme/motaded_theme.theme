@@ -11,6 +11,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * LCP: fetchpriority=high for responsive hero banner images.
@@ -40,6 +41,12 @@ function motaded_theme_page_attachments_alter(array &$attachments): void {
 }
 
 function motaded_theme_preprocess_block(array &$variables) {
+  // Services page: hide standalone exposed block; we render it inside the view.
+  if (($variables['elements']['#plugin_id'] ?? '') === 'views_exposed_filter_block:services-page_1') {
+    $variables['elements']['#access'] = FALSE;
+    return;
+  }
+
   if (!empty($variables['elements']['#id']) && $variables['elements']['#id'] == 'motaded_theme_mainnavigation') {
     $variables['content']['#attributes']['data-block-id'] = $variables['elements']['#id'];
   }
@@ -76,6 +83,21 @@ function motaded_theme_preprocess_block(array &$variables) {
         ->getViewBuilder('block')
         ->view($cta_block);
     }
+  }
+}
+
+/**
+ * Implements hook_views_pre_view().
+ *
+ * Forces services page_1 exposed filters to render inside the view output,
+ * even if config still has "Exposed form in block" enabled.
+ */
+function motaded_theme_views_pre_view(ViewExecutable $view, string $display_id, array &$args): void {
+  if ($view->id() !== 'services' || $display_id !== 'page_1') {
+    return;
+  }
+  if ($view->display_handler) {
+    $view->display_handler->setOption('exposed_block', FALSE);
   }
 }
 
@@ -561,6 +583,84 @@ function getLanguagePrefix() {
   return null;
 }
 
+/**
+ * Implements hook_preprocess_views_exposed_form().
+ *
+ * Detaches categories from services page_1 exposed form and stores them for
+ * the parent view template where sidebar + results share one container.
+ */
+function motaded_theme_preprocess_views_exposed_form(&$variables) {
+  $form = &$variables['form'];
+  if (($form['#id'] ?? '') !== 'views-exposed-form-services-page-1') {
+    return;
+  }
+  if (empty($form['field_taxonomy_target_id']) || !is_array($form['field_taxonomy_target_id'])) {
+    return;
+  }
+  $categories = $form['field_taxonomy_target_id'];
+  unset($form['field_taxonomy_target_id']);
+  motaded_theme_services_attach_form_attribute_recursive($categories, (string) $form['#id']);
+  motaded_theme_services_sidebar_categories_store($categories);
+}
+
+/**
+ * Implements hook_preprocess_views_view__services__page_1().
+ */
+function motaded_theme_preprocess_views_view__services__page_1(&$variables) {
+  $sidebar = motaded_theme_services_sidebar_categories_store();
+  if ($sidebar === NULL && !empty($variables['view']) && $variables['view'] instanceof ViewExecutable) {
+    $exposed_plugin = $variables['view']->display_handler
+      ? $variables['view']->display_handler->getPlugin('exposed_form')
+      : NULL;
+    if ($exposed_plugin && method_exists($exposed_plugin, 'renderExposedForm')) {
+      $built_form = $exposed_plugin->renderExposedForm(FALSE);
+      if (is_array($built_form) && !empty($built_form['field_taxonomy_target_id']) && is_array($built_form['field_taxonomy_target_id'])) {
+        $sidebar = $built_form['field_taxonomy_target_id'];
+        motaded_theme_services_attach_form_attribute_recursive($sidebar, 'views-exposed-form-services-page-1');
+      }
+    }
+  }
+  $variables['services_categories_sidebar'] = $sidebar;
+}
+
+/**
+ * Stores/retrieves detached categories for current request.
+ */
+function motaded_theme_services_sidebar_categories_store(?array $set = NULL): ?array {
+  static $stored = NULL;
+  if ($set !== NULL) {
+    $stored = $set;
+  }
+  return $stored;
+}
+
+/**
+ * Sets form="" on form controls (sidebar fields associated with main exposed form).
+ */
+function motaded_theme_services_attach_form_attribute_recursive(array &$element, string $form_html_id): void {
+  $input_types = [
+    'textfield', 'search', 'tel', 'email', 'url', 'password', 'textarea',
+    'number', 'hidden', 'checkbox', 'radio', 'select', 'file', 'button',
+    'submit', 'image_button', 'color', 'range', 'date', 'datetime',
+    'entity_autocomplete', 'machine_name', 'weight', 'managed_file',
+  ];
+  if (isset($element['#type']) && in_array($element['#type'], $input_types, TRUE)) {
+    if (!isset($element['#attributes'])) {
+      $element['#attributes'] = [];
+    }
+    if ($element['#attributes'] instanceof \Drupal\Core\Template\Attribute) {
+      $element['#attributes']->setAttribute('form', $form_html_id);
+    }
+    else {
+      $element['#attributes']['form'] = $form_html_id;
+    }
+  }
+  foreach (Element::children($element) as $child_key) {
+    if (isset($element[$child_key]) && is_array($element[$child_key])) {
+      motaded_theme_services_attach_form_attribute_recursive($element[$child_key], $form_html_id);
+    }
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -587,6 +687,11 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
       $form_state->setUserInput($input);
     }
   }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-services-page-1') {
+    $form['#attributes']['class'][] = 'services-directory__exposed-form';
+  }
+
 }
 
 /**

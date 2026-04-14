@@ -165,6 +165,19 @@ toc:
 search-page:
   js:
     js/content-search.js: {}
+services-directory:
+  version: VERSION
+  css:
+    component:
+      css/components/services-directory.css:
+        weight: -9
+  js:
+    js/services-directory-filters.js: {}
+  dependencies:
+    - motaded_theme/base
+    - core/drupal
+    - core/once
+
 quick-links:
   js:
     js/quick-links.js: {}
