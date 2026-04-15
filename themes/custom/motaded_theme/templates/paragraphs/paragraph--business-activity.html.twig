@@ -43,14 +43,15 @@
  * @ingroup themeable
  */
 #}
-{% if content.field_media|render is not empty %}
-  {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
-{% endif %}
 {% block paragraph %}
   {{ include("motaded_theme:article-card", {
     'title': business_activity_title_plain|default(''),
     'image_alt': business_activity_image_alt|default(''),
-    'media_url': field_media,
-    'excerpt': content.field_content.0
+    'media_url': business_activity_image_meta.src|default(''),
+    'media_srcset': business_activity_image_meta.srcset|default(''),
+    'media_width': business_activity_image_meta.width|default(151),
+    'media_height': business_activity_image_meta.height|default(120),
+    'excerpt': content.field_content.0,
+    'tag': business_activity_tag|default('')
   }) }}
 {% endblock paragraph %}

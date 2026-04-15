@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.news.field_comments
     - field.field.node.news.field_media
     - field.field.node.news.field_meta
+    - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
     - node.type.news
   module:
@@ -40,8 +41,10 @@ content:
     weight: 100
     region: content
 hidden:
+  addtoany: true
   field_comments: true
   field_media: true
   field_meta: true
+  field_taxonomy: true
   langcode: true
   search_api_excerpt: true

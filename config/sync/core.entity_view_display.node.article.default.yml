@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.article.field_image
     - field.field.node.article.field_media
     - field.field.node.article.field_meta
+    - field.field.node.article.field_taxonomy
     - field.field.node.article.field_tags
     - node.type.article
   module:
@@ -34,6 +35,7 @@ hidden:
   field_media: true
   field_meta: true
   field_tags: true
+  field_taxonomy: true
   langcode: true
   links: true
   search_api_excerpt: true
