@@ -11,8 +11,10 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -127,6 +129,65 @@ function motaded_theme_theme_suggestions_menu_alter(array &$suggestions, array $
 }
 
 /**
+ * Builds the "More on this topic" below_content block (same view + markup for all bundles).
+ *
+ * @return array|null
+ *   Render array, or NULL if no category or view is missing.
+ */
+function motaded_theme_more_on_topic_build(NodeInterface $node): ?array {
+  if (!$node->hasField('field_taxonomy') || $node->get('field_taxonomy')->isEmpty()) {
+    return NULL;
+  }
+  $tid = (int) $node->get('field_taxonomy')->target_id;
+  if ($tid <= 0) {
+    return NULL;
+  }
+  $view = Views::getView('related_similar');
+  if (!$view) {
+    return NULL;
+  }
+  switch ($node->bundle()) {
+    case 'article':
+      $display_id = 'block_2';
+      break;
+
+    case 'news':
+      $display_id = 'block_3';
+      break;
+
+    case 'page':
+      $display_id = 'block_1';
+      $is_service = $node->hasField('field_display_on_services')
+        && !$node->get('field_display_on_services')->isEmpty()
+        && (int) $node->get('field_display_on_services')->value === 1;
+      if (!$is_service) {
+        return NULL;
+      }
+      break;
+
+    default:
+      return NULL;
+  }
+
+  return [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['more-on-topic-region', 'mt-10']],
+    '#cache' => [
+      'contexts' => ['route'],
+      'tags' => $node->getCacheTags(),
+    ],
+    'title' => [
+      '#markup' => '<h2 class="more-on-topic-heading">' . (string) t('More on this topic') . '</h2>',
+    ],
+    'view' => $view->buildRenderable($display_id, [
+      (string) $tid,
+      (string) $node->id(),
+    ]),
+    '#weight' => 50,
+  ];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for page templates.
  *
  * Preprocesses variables for the page template.
@@ -198,6 +259,22 @@ function motaded_theme_preprocess_page(&$variables) {
     }
     // Never render sidebar in page.html.twig for this layout (node template owns it).
     unset($variables['page']['sidebar_second']);
+
+    // Related articles/news (same band as article & news full pages).
+    $more_on_topic = motaded_theme_more_on_topic_build($route_node);
+    if ($more_on_topic !== NULL) {
+      $variables['page']['below_content']['more_on_topic_related'] = $more_on_topic;
+    }
+  }
+
+  // Article / News full node: same "More on this topic" band (reuses helper + view + CSS).
+  if ($route_node instanceof NodeInterface
+    && in_array($route_node->bundle(), ['article', 'news'], TRUE)
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $more_on_topic = motaded_theme_more_on_topic_build($route_node);
+    if ($more_on_topic !== NULL) {
+      $variables['page']['below_content']['more_on_topic_related'] = $more_on_topic;
+    }
   }
 }
 
@@ -339,20 +416,26 @@ function motaded_theme_preprocess_paragraph__business_activity(array &$variables
     $title_plain = trim((string) $paragraph->get('field_title')->value);
   }
   $variables['business_activity_title_plain'] = $title_plain;
+
+  $variables['business_activity_tag'] = '';
+  $parent = $paragraph->getParentEntity();
+  if ($parent instanceof NodeInterface) {
+    $tag_map = [
+      'page' => (string) t('Service'),
+      'article' => (string) t('Blog'),
+      'news' => (string) t('News'),
+    ];
+    $variables['business_activity_tag'] = $tag_map[$parent->bundle()] ?? '';
+  }
+
   $image_alt = $title_plain;
+  $image_uri = NULL;
   if ($paragraph->hasField('field_media') && !$paragraph->get('field_media')->isEmpty()) {
     $media = $paragraph->get('field_media')->entity;
-    if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
-      $image_item = $media->get('field_media_image')->first();
-      if ($image_item) {
-        $alt_data = $image_item->get('alt');
-        $from_media = trim($alt_data instanceof \Drupal\Core\TypedData\PrimitiveInterface
-          ? $alt_data->getString()
-          : (string) $alt_data->getValue());
-        if ($from_media !== '') {
-          $image_alt = $from_media;
-        }
-      }
+    $image_data = motaded_theme_media_image_uri_and_alt($media, $title_plain);
+    $image_uri = $image_data['uri'];
+    if ($image_data['alt'] !== '') {
+      $image_alt = $image_data['alt'];
     }
   }
   if ($image_alt === '' && $title_plain !== '') {
@@ -362,6 +445,7 @@ function motaded_theme_preprocess_paragraph__business_activity(array &$variables
     $image_alt = (string) t('Illustration for service information');
   }
   $variables['business_activity_image_alt'] = $image_alt;
+  $variables['business_activity_image_meta'] = motaded_theme_responsive_teaser_image_metadata($image_uri);
 }
 
 /**
@@ -549,6 +633,94 @@ function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$va
 }
 
 /**
+ * Preprocess for Related Similar view fields displays.
+ */
+function motaded_theme_preprocess_views_view_fields__related_similar(array &$variables): void {
+  $entity = $variables['row']->_entity ?? NULL;
+  $card_data = motaded_theme_build_views_node_card_data($entity);
+  $variables['card_type_label'] = $card_data['card_type_label'];
+  $variables['card_bundle'] = $card_data['card_bundle'];
+  $variables['card_image'] = $card_data['card_image'];
+}
+
+/**
+ * Preprocess for News view cards in related displays.
+ */
+function motaded_theme_preprocess_views_view_fields__news(array &$variables): void {
+  $display_id = $variables['view']->current_display ?? '';
+  if (!in_array($display_id, ['block_2', 'block_3', 'block_6'], TRUE)) {
+    return;
+  }
+  $entity = $variables['row']->_entity ?? NULL;
+  $card_data = motaded_theme_build_views_node_card_data($entity);
+  $variables['card_type_label'] = $card_data['card_type_label'];
+  $variables['card_bundle'] = $card_data['card_bundle'];
+  $variables['card_image'] = $card_data['card_image'];
+}
+
+/**
+ * Shared card data builder for Views rows with Node entities.
+ *
+ * @param mixed $entity
+ *   Row entity from Views result.
+ *
+ * @return array{card_type_label: string, card_bundle: string, card_image: array{src: string, srcset: string, width: int, height: int, alt: string}}
+ *   Normalized card metadata for Twig templates.
+ */
+function motaded_theme_build_views_node_card_data($entity): array {
+  $card_type_label = '';
+  $card_bundle = '';
+  $site_name = (string) \Drupal::config('system.site')->get('name');
+  $img_meta = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 151,
+    'height' => 120,
+    'alt' => $site_name,
+  ];
+
+  if ($entity instanceof NodeInterface) {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+    if ($entity->hasTranslation($langcode)) {
+      $entity = $entity->getTranslation($langcode);
+    }
+
+    $bundle = $entity->bundle();
+    $card_bundle = $bundle;
+    $node_type = NodeType::load($bundle);
+    $type_label = $node_type !== NULL ? (string) $node_type->label() : $bundle;
+    $card_type_map_by_bundle = [
+      'page' => (string) t('Service'),
+      'article' => (string) t('Blog'),
+      'news' => (string) t('News'),
+    ];
+    $card_type_label = $card_type_map_by_bundle[$bundle] ?? $type_label;
+
+    $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $entity->label());
+    $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+    $img_meta['src'] = $meta['src'];
+    $img_meta['srcset'] = $meta['srcset'];
+    $img_meta['width'] = $meta['width'];
+    $img_meta['height'] = $meta['height'];
+    $img_meta['alt'] = $extracted['alt'] !== '' ? $extracted['alt'] : $entity->label();
+  }
+
+  if ($img_meta['src'] === '') {
+    $logo_uri = theme_get_setting('logo.url');
+    if (is_string($logo_uri) && $logo_uri !== '') {
+      $img_meta['src'] = \Drupal::service('file_url_generator')->generateString($logo_uri);
+      $img_meta['srcset'] = '';
+    }
+  }
+
+  return [
+    'card_type_label' => $card_type_label,
+    'card_bundle' => $card_bundle,
+    'card_image' => $img_meta,
+  ];
+}
+
+/**
  * Implements hook__preprocess_HOOK().
  */
 function motaded_theme_preprocess_breadcrumb(&$variables) {
@@ -562,13 +734,18 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
     }
 
     if ($node->bundle() == "article") {
+      $blog_url = $prefix . "blog";
       if (
-        !isset($variables['breadcrumb'][1]) ||
-        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'blog')
+        isset($variables['breadcrumb'][1]) &&
+        motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'blog')
       ) {
+        // Normalize the section label even when contributed by Views.
+        $variables['breadcrumb'][1]['text'] = (string) t('Blog');
+      }
+      else {
         $list_crumb = [
-          'text' => t('Articles'),
-          'url' => $prefix . "blog",
+          'text' => (string) t('Blog'),
+          'url' => $blog_url,
         ];
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }

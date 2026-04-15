@@ -738,7 +738,7 @@ display:
           entity_field: title
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -801,7 +801,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -864,7 +864,7 @@ display:
           entity_type: node
           plugin_id: entity_link
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1305,7 +1305,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related Content</h2>'
+            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related articles</h2>'
             format: full_html
           tokenize: false
       rendering_language: '***LANGUAGE_language_interface***'
@@ -1339,7 +1339,7 @@ display:
           entity_field: title
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1402,7 +1402,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1466,7 +1466,7 @@ display:
           entity_type: node
           plugin_id: entity_link
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -1867,7 +1867,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related Content</h2>'
+            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related news</h2>'
             format: full_html
           tokenize: false
       rendering_language: '***LANGUAGE_language_interface***'
@@ -2730,7 +2730,7 @@ display:
           entity_field: title
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -2793,7 +2793,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -2857,7 +2857,7 @@ display:
           entity_type: node
           plugin_id: entity_link
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3296,7 +3296,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related Content</h2>'
+            value: '<h2 class="text-2xl font-bold text-primary-600 mb-6">Related services</h2>'
             format: full_html
           tokenize: false
       rendering_language: '***LANGUAGE_language_interface***'
@@ -3428,7 +3428,6 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -4231,7 +4230,6 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
@@ -4973,7 +4971,6 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args

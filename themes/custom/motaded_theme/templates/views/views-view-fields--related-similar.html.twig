@@ -1,0 +1,82 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{% set card_image = card_image|default({}) %}
+{% set view_link = fields.view_node.content|render|striptags|trim %}
+{% set card_tag = (card_type_label ?? '')|trim %}
+{% set card_title_text = fields.title.content|render|striptags|trim %}
+{% set card_date = fields.created.content|render|striptags|trim %}
+{% set excerpt_text = fields.body.content|render|striptags|trim %}
+{% if excerpt_text is empty %}
+  {% set excerpt_text = 'Read the full article for key insights and practical guidance.'|t %}
+{% endif %}
+{% set has_image = card_image.src is not empty %}
+
+<a
+  href="{{ view_link }}"
+  class="article-card article-card--related article-card--link group block h-full {{ has_image ? 'article-card--has-image' : 'article-card--no-image' }}"
+  aria-label="{% if card_title_text %}{{ 'More about @title'|t({'@title': card_title_text }) }}{% else %}{{ 'Read more'|t }}{% endif %}"
+>
+  <article class="article-card__inner relative h-full overflow-hidden rounded-xl border border-gray-200 shadow-sm transition duration-200">
+    {% if has_image %}
+      <div class="article-card__media article-card__media--cover relative z-0 w-full overflow-hidden">
+        {% if card_image.srcset %}
+          <img
+            loading="lazy"
+            decoding="async"
+            src="{{ card_image.src }}"
+            srcset="{{ card_image.srcset }}"
+            sizes="(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1023px) 50vw, 25vw"
+            width="{{ card_image.width }}"
+            height="{{ card_image.height }}"
+            alt="{{ card_image.alt|e }}"
+            class="article-card__image w-full object-cover group-hover:opacity-95 transition"
+          />
+        {% else %}
+          <img
+            loading="lazy"
+            decoding="async"
+            src="{{ card_image.src }}"
+            width="{{ card_image.width }}"
+            height="{{ card_image.height }}"
+            alt="{{ card_image.alt|e }}"
+            class="article-card__image w-full object-cover group-hover:opacity-95 transition"
+          />
+        {% endif %}
+        <span class="article-card__media-glow" aria-hidden="true"></span>
+      </div>
+    {% else %}
+      <div class="article-card__media article-card__media--placeholder relative z-0 w-full shrink-0" aria-hidden="true"></div>
+    {% endif %}
+
+    {% if card_tag %}
+      <span class="article-card__tag article-card__tag--solid article-card__tag--corner">
+        {{ card_tag }}
+      </span>
+    {% endif %}
+
+    <div class="article-card__content relative z-10 flex min-h-0 flex-1 flex-col px-4 pb-4 {{ has_image ? 'pt-5' : 'pt-11' }}">
+      {% if card_date %}
+        <div class="article-card__meta-row mb-1 flex items-center gap-2">
+          <span class="article-card__date">{{ card_date }}</span>
+        </div>
+      {% endif %}
+
+      <h3 class="article-card__title text-base font-bold leading-snug transition mt-4">
+        {{ fields.title.content }}
+      </h3>
+
+      <p class="article-card__excerpt mb-0 mt-4 flex-1 text-sm leading-relaxed mb-4">
+        {{ excerpt_text }}
+      </p>
+
+      <div class="article-card__cta-row mt-auto flex items-center justify-between border-t border-gray-200 pt-3">
+        <span class="article-card__cta text-sm font-semibold">
+          {{ 'Read more'|t }}
+        </span>
+        <span class="article-card__cta-icon" aria-hidden="true">&#8594;</span>
+      </div>
+    </div>
+  </article>
+</a>

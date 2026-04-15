@@ -70,6 +70,8 @@ base:
         weight: -10
       css/components/ui-dialog.css:
         weight: -10
+      components/article-card/article-card.css:
+        weight: -8
   js:
     js/lang-switcher.js: {}
   dependencies:
