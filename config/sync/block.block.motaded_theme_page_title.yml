@@ -31,7 +31,6 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
-      article: article
       business_activities: business_activities
       entities: entities
       media_center: media_center
