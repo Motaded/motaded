@@ -1,0 +1,23 @@
+uuid: 2c60857b-680e-4876-905d-cfa76446a169
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_estimated_read_time
+    - node.type.article
+  module:
+    - estimated_read_time
+id: node.article.field_estimated_read_time
+field_name: field_estimated_read_time
+entity_type: node
+bundle: article
+label: 'Estimated read time'
+description: 'Calculated on save from the article body (default view mode). Editors can override when “Automatic” is off.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  view_mode: default
+  words_per_minute: 230
+field_type: estimated_read_time

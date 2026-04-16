@@ -6,63 +6,7 @@
 {#
 /**
  * @file
- * Theme override to display a node.
- *
- * Available variables:
- * - node: The node entity with limited access to object properties and methods.
- *   Only method names starting with "get", "has", or "is" and a few common
- *   methods such as "id", "label", and "bundle" are available. For example:
- *   - node.getCreatedTime() will return the node creation timestamp.
- *   - node.hasField('field_example') returns TRUE if the node bundle includes
- *     field_example. (This does not indicate the presence of a value in this
- *     field.)
- *   - node.isPublished() will return whether the node is published or not.
- *   Calling other methods, such as node.delete(), will result in an exception.
- *   See \Drupal\node\Entity\Node for a full list of public properties and
- *   methods for the node object.
- * - label: (optional) The title of the node.
- * - content: All node items. Use {{ content }} to print them all,
- *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') }} to temporarily suppress the printing
- *   of a given child element.
- * - author_picture: The node author user entity, rendered using the "compact"
- *   view mode.
- * - date: (optional) Themed creation date field.
- * - author_name: (optional) Themed author name field.
- * - url: Direct URL of the current node.
- * - display_submitted: Whether submission information should be displayed.
- * - attributes: HTML attributes for the containing element.
- *   The attributes.class element may contain one or more of the following
- *   classes:
- *   - node: The current template type (also known as a "theming hook").
- *   - node--type-[type]: The current node type. For example, if the node is an
- *     "Article" it would result in "node--type-article". Note that the machine
- *     name will often be in a short form of the human readable label.
- *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
- *     teaser would result in: "node--view-mode-teaser", and
- *     full: "node--view-mode-full".
- *   The following are controlled through the node publishing options.
- *   - node--promoted: Appears on nodes promoted to the front page.
- *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
- *     teaser listings.
- *   - node--unpublished: Appears on unpublished nodes visible only to site
- *     admins.
- * - title_attributes: Same as attributes, except applied to the main title
- *   tag that appears in the template.
- * - content_attributes: Same as attributes, except applied to the main
- *   content tag that appears in the template.
- * - author_attributes: Same as attributes, except applied to the author of
- *   the node tag that appears in the template.
- * - title_prefix: Additional output populated by modules, intended to be
- *   displayed in front of the main title tag that appears in the template.
- * - title_suffix: Additional output populated by modules, intended to be
- *   displayed after the main title tag that appears in the template.
- * - view_mode: View mode; for example, "teaser" or "full".
- * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
- * - page: Flag for the full page state. Will be true if view_mode is 'full'.
- *
- * @see template_preprocess_node()
- *
+ * Article (blog post) — full view: lead + rail (hero + ToC), then body in main column.
  */
 #}
 {%
@@ -73,27 +17,34 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'node--article-full',
     'mb-12',
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
 {{ attach_library('motaded_theme/toc') }}
-<article{{ attributes.addClass(classes) }} 
-    id="toc-root" 
+<article{{ attributes.addClass(classes) }}
+    id="toc-root"
     x-data="articlePageEN()"
     x-init="init()"
+    data-inline-cta-eyebrow="{{ 'Next step'|t }}"
+    data-inline-cta-title="{{ 'Talk to Motaded experts today'|t }}"
+    data-inline-cta-text="{{ 'Book a quick consultation and receive clear, actionable guidance tailored to your case.'|t }}"
     @keydown.escape.window="tocOpen=false">
+  <div class="hidden article-inline-cta-source" aria-hidden="true">
+    {{ drupal_region('article_toc_cta') }}
+  </div>
 
   {{ title_prefix }}
   {% if label and not page %}
-    <h2{{ title_attributes }}>
+    <h2{{ title_attributes.addClass('text-xl', 'font-bold', 'text-gray-900') }}>
       <a href="{{ url }}" rel="bookmark">{{ label }}</a>
     </h2>
   {% endif %}
   {{ title_suffix }}
 
   {% if display_submitted %}
-    <footer class="node__meta">
+    <footer class="node__meta visually-hidden">
       {{ author_picture }}
       <div{{ author_attributes.addClass('node__submitted') }}>
         {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
@@ -102,88 +53,115 @@
     </footer>
   {% endif %}
 
-  <section class="mt-6">
-    <div class="flex flex-col gap-6 pb-8 border-b border-gray-300">
-      {{ summary }}
-    </div>
-  </section>
+  <div class="article-page-grid">
+    {# One vertical stripe through lead + row-gap + body (gradient); desktop only — see node.css #}
+    <div class="article-page-grid__accent" role="presentation" aria-hidden="true"></div>
+    <div class="article-page-grid__lead">
+      {% if page and label %}
+        <h1{{ title_attributes.addClass('article-page-grid__title', 'text-3xl', 'font-extrabold', 'text-gray-900', 'lg:text-4xl', 'leading-tight', 'm-0') }}>{{ label }}</h1>
+      {% endif %}
 
-  <!-- Content + ToC -->
-  <section class="flex items-start md:gap-8 max-md:flex-col">
-    <!-- ToC (sticky on md+, collapsible on mobile) -->
-    <div class="w-full md:w-80 md:shrink-0 md:sticky md:top-4 mt-6">
-      <!-- Mobile ToC toggle -->
-      <button
-        class="md:hidden w-full flex items-center justify-between rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-semibold"
-        @click="tocOpen=!tocOpen"
-        :aria-expanded="tocOpen"
-        aria-controls="toc-panel"
-      >
-        <span>{{ "On this page"|t }}</span>
-        <img
-          src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
-          alt=""
-          width="16"
-          height="16"
-          :class="tocOpen ? 'rotate-180' : ''"
-          class="transition-transform"
-        />
-      </button>
+      {% if summary %}
+        <div class="article-page-grid__intro prose prose-neutral max-w-none text-base leading-relaxed text-gray-700 mt-4">
+          {{ summary }}
+        </div>
+      {% endif %}
 
-      <aside
-        id="toc-panel"
-        class="table-of-content md:block mt-3 md:mt-0 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200"
-        :class="tocOpen ? 'block' : 'hidden md:block'"
-      >
-        <header class="mb-3">
-          <p class="text-sm text-gray-600">{{ "On this page"|t }}</p>
-          <p class="text-lg font-semibold">{{ label }}</p>
-        </header>
-
-        <nav class="space-y-1" aria-label="Table of contents">
-          <template x-for="item in toc" :key="item.id">
-            <div>
-              <a
-                :href="`#${item.id}`"
-                @click.prevent="scrollTo(item.id)"
-                class="block rounded-md px-3 py-2 text-sm transition"
-                :class="activeId===item.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : 'hover:bg-white'"
-                x-text="item.label"
-              ></a>
-
-              <!-- Children -->
-              <template x-if="item.children?.length">
-                <ul class="mt-1 pl-3 space-y-1">
-                  <template x-for="sub in item.children" :key="sub.id">
-                    <li>
-                      <a
-                        :href="`#${sub.id}`"
-                        @click.prevent="scrollTo(sub.id)"
-                        class="block rounded-md px-3 py-1.5 text-[13px] text-gray-700 hover:bg-white"
-                        :class="activeId===sub.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : ''"
-                        x-text="sub.label"
-                      ></a>
-                    </li>
-                  </template>
-                </ul>
-              </template>
-            </div>
-          </template>
-        </nav>
-      </aside>
-
-      <div class="mt-4" :class="tocOpen ? 'block' : 'hidden md:block'">
-        {{ drupal_region('article_toc_cta') }}
+      <div class="article-page-grid__meta flex flex-wrap items-center gap-2 mt-4 text-xs sm:text-sm">
+        {% if article_updated_formatted %}
+          <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 font-medium text-slate-800">
+            <time datetime="{{ article_changed_iso }}">{{ article_updated_formatted }}</time>
+          </span>
+        {% endif %}
+        <span class="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 font-medium text-primary-900">{{ 'Motaded Team'|t }}</span>
+        {% if article_read_time %}
+          <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-medium text-amber-950">{{ article_read_time }}</span>
+        {% endif %}
+        {% if content.addtoany %}
+          <span class="article-meta__addtoany inline-flex items-center rounded-full border border-slate-200/90 bg-white/95 px-1.5 py-0.5 shadow-sm">
+            {{ content.addtoany }}
+          </span>
+        {% endif %}
       </div>
     </div>
 
-    <!-- Article body -->
+    <aside class="article-page-grid__rail" aria-label="{{ 'Article tools'|t }}">
+      {% if article_hero_media %}
+        <div class="article-hero-media overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm">
+          {{ article_hero_media }}
+        </div>
+      {% endif %}
+
+      <div class="article-toc-wrap">
+        <button
+          class="md:hidden w-full flex items-center justify-between rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-semibold"
+          @click="tocOpen=!tocOpen"
+          :aria-expanded="tocOpen"
+          aria-controls="toc-panel"
+        >
+          <span>{{ "On this page"|t }}</span>
+          <img
+            src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
+            alt=""
+            width="16"
+            height="16"
+            :class="tocOpen ? 'rotate-180' : ''"
+            class="transition-transform"
+          />
+        </button>
+
+        <div
+          id="toc-panel"
+          class="table-of-content md:block mt-3 md:mt-0 px-4 py-4 bg-gray-50 rounded-lg border border-gray-200"
+          :class="tocOpen ? 'block' : 'hidden md:block'"
+        >
+          <div class="mb-3">
+            <p class="text-sm font-semibold text-gray-800 m-0">{{ "On this page"|t }}</p>
+          </div>
+
+          <nav class="space-y-1" aria-label="{{ 'Table of contents'|t }}">
+            <template x-for="item in toc" :key="item.id">
+              <div>
+                <a
+                  :href="`#${item.id}`"
+                  @click.prevent="scrollTo(item.id)"
+                  class="block rounded-md px-3 py-2 text-sm transition"
+                  :class="activeId===item.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : 'hover:bg-white'"
+                  x-text="item.label"
+                ></a>
+
+                <template x-if="item.children?.length">
+                  <ul class="mt-1 pl-3 space-y-1">
+                    <template x-for="sub in item.children" :key="sub.id">
+                      <li>
+                        <a
+                          :href="`#${sub.id}`"
+                          @click.prevent="scrollTo(sub.id)"
+                          class="block rounded-md px-3 py-1.5 text-[13px] text-gray-700 hover:bg-white"
+                          :class="activeId===sub.id ? 'bg-primary-50 text-primary-700 ring-1 ring-primary-600/20' : ''"
+                          x-text="sub.label"
+                        ></a>
+                      </li>
+                    </template>
+                  </ul>
+                </template>
+              </div>
+            </template>
+          </nav>
+        </div>
+
+        <div class="mt-4 article-rail-cta-source" :class="tocOpen ? 'block' : 'hidden md:block'">
+          {{ drupal_region('article_toc_cta') }}
+        </div>
+      </div>
+    </aside>
+
     <div
-      {{ content_attributes.addClass('node__content flex-1 mt-8 md:mt-6 prose prose-neutral max-w-none prose-h2:mt-0 overflow-x-scroll') }}
+      {{ content_attributes.addClass('article-page-grid__main', 'article-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none') }}
       id="article-root"
     >
-      {{ content }}
+      {{ content|without('addtoany') }}
     </div>
-  </section>
+  </div>
 
 </article>

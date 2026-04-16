@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78ac64b18e104a90518fafed2cac79a9",
+    "content-hash": "44e7bec8f04747e91351c794906db133",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -3402,6 +3402,52 @@
             "homepage": "https://www.drupal.org/project/entity_reference_revisions",
             "support": {
                 "source": "https://git.drupalcode.org/project/entity_reference_revisions"
+            }
+        },
+        {
+            "name": "drupal/estimated_read_time",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/estimated_read_time.git",
+                "reference": "1.2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/estimated_read_time-1.2.1.zip",
+                "reference": "1.2.1",
+                "shasum": "625020fceeceb7d23dbc00db0500cb863d79fca2"
+            },
+            "require": {
+                "drupal/core": "^10.3 || ^11",
+                "mtownsend/read-time": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.2.1",
+                    "datestamp": "1772554017",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Taltavull",
+                    "homepage": "https://www.drupal.org/u/mtalt"
+                }
+            ],
+            "description": "Creates a field that estimates the read time of an entity.",
+            "homepage": "https://drupal.org/project/estimated_read_time",
+            "support": {
+                "source": "https://git.drupalcode.org/project/estimated_read_time",
+                "issues": "https://www.drupal.org/project/issues/estimated_read_time"
             }
         },
         {
@@ -7241,6 +7287,71 @@
                 }
             ],
             "time": "2024-11-21T15:59:26+00:00"
+        },
+        {
+            "name": "mtownsend/read-time",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtownsend5512/read-time.git",
+                "reference": "b43f178095383bda3cdf606c8a288bf8cacf537e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtownsend5512/read-time/zipball/b43f178095383bda3cdf606c8a288bf8cacf537e",
+                "reference": "b43f178095383bda3cdf606c8a288bf8cacf537e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mtownsend\\ReadTime\\Providers\\ReadTimeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Mtownsend\\ReadTime\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Townsend",
+                    "email": "mtownsend5512@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP package to show users how long it takes to read content.",
+            "keywords": [
+                "Minutes",
+                "article",
+                "blog",
+                "content",
+                "medium",
+                "min",
+                "read",
+                "reading",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/mtownsend5512/read-time/issues",
+                "source": "https://github.com/mtownsend5512/read-time/tree/2.0.0"
+            },
+            "time": "2021-01-11T13:46:58+00:00"
         },
         {
             "name": "nesbot/carbon",

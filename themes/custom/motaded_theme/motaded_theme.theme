@@ -327,8 +327,50 @@ function motaded_theme_plain_text_truncate(string $html, int $max_length): strin
  */
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
+  $variables['summary'] = NULL;
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-    $variables['summary'] = ['#markup' => $variables['node']->body->summary];
+    $body_item = $node->get('body')->first();
+    if ($body_item) {
+      $summary_text = trim((string) $body_item->summary);
+      if ($summary_text !== '') {
+        $variables['summary'] = ['#markup' => nl2br(Html::escape($summary_text))];
+      }
+    }
+  }
+
+  // Article (full page): blog-style hero rail — read time, media, meta for twig.
+  if ($node->bundle() === 'article'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])) {
+    $variables['article_hero_media'] = [];
+    if ($node->hasField('field_media') && !$node->get('field_media')->isEmpty()) {
+      $media = $node->get('field_media')->entity;
+      if ($media) {
+        $variables['article_hero_media'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($media, 'banner_sm');
+      }
+    }
+    $variables['article_read_time'] = [];
+    if ($node->hasField('field_estimated_read_time') && !$node->get('field_estimated_read_time')->isEmpty()) {
+      $variables['article_read_time'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('node')
+        ->viewField($node->get('field_estimated_read_time'), [
+          'label' => 'hidden',
+          'type' => 'estimated_read_time_text',
+          'weight' => 0,
+          'settings' => [
+            'tokenized_string' => (string) t('@minutes min read'),
+          ],
+          'third_party_settings' => [],
+        ]);
+    }
+    $variables['article_updated_formatted'] = \Drupal::service('date.formatter')->format(
+      (int) $node->getChangedTime(),
+      'custom',
+      'j F Y'
+    );
+    $variables['article_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
   }
 
   // Service page (Basic page + Display on services): compact hero data.

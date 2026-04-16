@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.article.body
     - field.field.node.article.comment
+    - field.field.node.article.field_estimated_read_time
     - field.field.node.article.field_image
     - field.field.node.article.field_media
     - field.field.node.article.field_meta
@@ -13,6 +14,7 @@ dependencies:
     - node.type.article
   module:
     - comment
+    - estimated_read_time
     - media_library
     - metatag
     - path
@@ -45,6 +47,13 @@ content:
     weight: 5
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_estimated_read_time:
+    type: estimated_read_time_default
+    weight: 13
+    region: content
+    settings:
+      sidebar: true
     third_party_settings: {  }
   field_media:
     type: media_library_widget
