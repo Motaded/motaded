@@ -8,17 +8,16 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_media
     - field.storage.node.field_tags
+    - field.storage.node.field_taxonomy
     - image.style.large
     - node.type.article
     - node.type.news
     - node.type.page
     - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.taxonomy
   content:
     - 'taxonomy_term:tags:0797d0c0-6635-4c40-9596-c46aae77f178'
     - 'taxonomy_term:tags:1582b960-8bd9-4566-a412-7941f2252753'
-    - 'taxonomy_term:tags:18541bf1-d0ce-4837-a482-ce75f71d248f'
-    - 'taxonomy_term:tags:3d69f13d-542a-4c55-a587-82a26de17286'
-    - 'taxonomy_term:tags:6e64bebb-fb09-4218-8a22-20efca0d514c'
     - 'taxonomy_term:tags:8110951b-371a-42c9-b2b9-c6de1ce6e27b'
     - 'taxonomy_term:tags:8f349b4f-e9bb-4c90-bb8b-9e0c2786a455'
     - 'taxonomy_term:tags:9dfe7e67-b4dc-4588-84c9-2ea0837d69be'
@@ -713,6 +712,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
@@ -1313,6 +1313,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -1875,6 +1876,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -2200,7 +2202,7 @@ display:
           click_sort_column: target_id
           type: image_url
           settings:
-            image_style: medium
+            image_style: max_325x325
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -3305,6 +3307,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -3428,6 +3431,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -3454,7 +3458,7 @@ display:
           entity_field: created
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3531,7 +3535,7 @@ display:
           entity_field: title
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3594,7 +3598,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3635,8 +3639,9 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: text_default
-          settings: {  }
+          type: text_summary_or_trimmed
+          settings:
+            trim_length: 200
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3657,7 +3662,7 @@ display:
           entity_type: node
           plugin_id: entity_link
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3752,11 +3757,74 @@ display:
           click_sort_column: target_id
           type: image_url
           settings:
-            image_style: ''
+            image_style: max_325x325
           group_column: ''
           group_columns: {  }
           group_rows: true
           delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_taxonomy:
+          id: field_taxonomy
+          table: node__field_taxonomy
+          field: field_taxonomy
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 1
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
@@ -3772,7 +3840,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -3838,7 +3906,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "{{ include(\"motaded_theme:article-card\", {\r\n  'view_link':  view_node,\r\n  'title': title,\r\n  'media_url': field_media_image,\r\n  'excerpt': body,\r\n  'date': created,\r\n  'tag': field_tags\r\n}) }}"
+            text: "{{ include(\"motaded_theme:article-card\", {\r\n  'view_link':  view_node,\r\n  'title': title,\r\n  'media_url': field_media_image,\r\n  'excerpt': body,\r\n  'date': created,\r\n  'service_type': field_taxonomy\r\n}) }}"
             make_link: false
             path: ''
             absolute: false
@@ -3917,7 +3985,7 @@ display:
               autosubmit_exclude_textfield: true
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
-              autosubmit_hide: true
+              autosubmit_hide: false
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
@@ -3927,8 +3995,6 @@ display:
               combine:
                 plugin_id: default
                 advanced:
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
@@ -3936,20 +4002,21 @@ display:
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-              field_tags_target_id:
+                  sort_options_unsupported: ''
+              field_taxonomy_target_id:
                 plugin_id: bef
                 advanced:
                   sort_options: false
                   sort_options_method: alphabetical_asc
                   sort_options_natural: true
                   rewrite:
-                    filter_rewrite_values: ''
-                    filter_rewrite_values_key: false
+                    filter_rewrite_values: '-Any-|All'
+                    filter_rewrite_values_key: true
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   open_by_default: false
                   is_secondary: false
-                  hide_label: false
+                  hide_label: true
                   field_classes: ''
                 select_all_none: false
                 select_all_none_nested: false
@@ -4109,40 +4176,33 @@ display:
           fields:
             title: title
             body: body
-        field_tags_target_id:
-          id: field_tags_target_id
-          table: node__field_tags
-          field: field_tags_target_id
+        field_taxonomy_target_id:
+          id: field_taxonomy_target_id
+          table: node__field_taxonomy
+          field: field_taxonomy_target_id
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value:
-            136: 136
-            141: 141
-            70: 70
-            112: 112
-            94: 94
-            126: 126
-            99: 99
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: field_tags_target_id_op
-            label: ''
+            operator_id: field_taxonomy_target_id_op
+            label: 'Service type (field_taxonomy)'
             description: ''
             use_operator: false
-            operator: field_tags_target_id_op
+            operator: field_taxonomy_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_tags_target_id
+            identifier: field_taxonomy_target_id
             required: false
             remember: false
             multiple: true
             remember_roles:
               authenticated: authenticated
-            reduce: true
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -4156,9 +4216,9 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          vid: tags
+          vid: taxonomy
           type: select
-          hierarchy: true
+          hierarchy: false
           limit: true
           error_message: true
       filter_groups:
@@ -4210,7 +4270,7 @@ display:
           admin_label: 'field_media: Media'
           plugin_id: standard
           required: false
-      use_ajax: false
+      use_ajax: true
       display_description: ''
       header: {  }
       rendering_language: '***LANGUAGE_entity_translation***'
@@ -4230,6 +4290,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
@@ -4239,6 +4300,7 @@ display:
         - 'config:field.storage.media.field_media_image'
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_tags'
+        - 'config:field.storage.node.field_taxonomy'
   page_2:
     id: page_2
     display_title: 'News page'
@@ -4557,7 +4619,7 @@ display:
           click_sort_column: target_id
           type: image_url
           settings:
-            image_style: medium
+            image_style: max_325x325
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -4659,7 +4721,7 @@ display:
               autosubmit_exclude_textfield: true
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
-              autosubmit_hide: true
+              autosubmit_hide: false
               input_required: false
               allow_secondary: false
               secondary_label: 'Advanced options'
@@ -4669,8 +4731,6 @@ display:
               combine:
                 plugin_id: default
                 advanced:
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
@@ -4678,6 +4738,7 @@ display:
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
+                  sort_options_unsupported: ''
               field_tags_target_id:
                 plugin_id: bef
                 advanced:
@@ -4710,7 +4771,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: "<div\r\n    class=\"mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center\"\r\n    role=\"status\"\r\n>\r\n    <h2 class=\"text-xl font-semibold text-gray-900 m-0\">\r\n    No articles found\r\n    </h2>\r\n    <p class=\"text-sm text-gray-600 m-0\" x-data=\"{q : '[current-page:query:search]'}\">\r\n    <span>We couldn’t find any results</span>\r\n    <template x-if=\"q\">\r\n        <span>\r\n        for\r\n        <span class=\"font-medium text-primary-700\" x-text=\"'“' + q + '”'\"></span>\r\n        </span>\r\n    </template>\r\n    <span>matching your filters.</span>\r\n    </p>\r\n    <p class=\"text-xs text-gray-500 m-0\">\r\n    Try adjusting your search or clearing the filters to discover more articles.\r\n    </p>\r\n</div>"
+            value: "<div\r\n    class=\"mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center\"\r\n    role=\"status\"\r\n>\r\n    <h2 class=\"text-xl font-semibold text-gray-900 m-0\">\r\n    No news found\r\n    </h2>\r\n    <p class=\"text-sm text-gray-600 m-0\" x-data=\"{q : '[current-page:query:search]'}\">\r\n    <span>We couldn’t find any results</span>\r\n    <template x-if=\"q\">\r\n        <span>\r\n        for\r\n        <span class=\"font-medium text-primary-700\" x-text=\"'“' + q + '”'\"></span>\r\n        </span>\r\n    </template>\r\n    <span>matching your filters.</span>\r\n    </p>\r\n    <p class=\"text-xs text-gray-500 m-0\">\r\n    Try adjusting your search or clearing the filters to discover more news.\r\n    </p>\r\n</div>"
             format: full_html
           tokenize: false
       filters:
@@ -4971,6 +5032,7 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args

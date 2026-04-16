@@ -4,89 +4,99 @@
 */
 
 function articlePageEN() {
-  const article = document.getElementById("toc-root");
-  const inlineCtaCopy = {
-    eyebrow: article?.dataset.inlineCtaEyebrow || "Next step",
-    title: article?.dataset.inlineCtaTitle || "Talk to Motaded experts today",
-    text:
-      article?.dataset.inlineCtaText ||
-      "Book a quick consultation and receive clear, actionable guidance tailored to your case.",
-  };
-  const injectInlineCta = () => {
-    if (!article || !contentRoot) return;
-    if (contentRoot.querySelector(".article-inline-cta")) return;
+  try {
+    const article = document.getElementById("toc-root");
+    const ds = article && article.dataset ? article.dataset : {};
+    const inlineCtaCopy = {
+      eyebrow: ds.inlineCtaEyebrow || "Next step",
+      title: ds.inlineCtaTitle || "Talk to Motaded experts today",
+      text:
+        ds.inlineCtaText ||
+        "Book a quick consultation and receive clear, actionable guidance tailored to your case.",
+    };
+    const injectInlineCta = (contentRoot) => {
+      try {
+        if (!article || !contentRoot) return;
+        if (contentRoot.querySelector(".article-inline-cta")) return;
 
-    const ctaSource =
-      article.querySelector(".article-inline-cta-source") ||
-      article.querySelector(".article-rail-cta-source");
-    if (!ctaSource) return;
+        const ctaSource =
+          article.querySelector(".article-inline-cta-source") ||
+          article.querySelector(".article-rail-cta-source");
+        if (!ctaSource) return;
 
-    const ctaMarkup = (ctaSource.innerHTML || "").trim();
-    if (!ctaMarkup) return;
+        const ctaMarkup = (ctaSource.innerHTML || "").trim();
+        if (!ctaMarkup) return;
 
-    const bodyItem =
-      contentRoot.querySelector(".field--name-body .field__item") || contentRoot;
-    const paragraphs = Array.from(bodyItem.querySelectorAll("p")).filter((p) => {
-      const textLength = (p.textContent || "").trim().length;
-      if (textLength < 40) return false;
-      if (p.closest(".article-inline-cta")) return false;
+        const bodyItem =
+          contentRoot.querySelector(".field--name-body .field__item") || contentRoot;
+        const paragraphs = Array.from(bodyItem.querySelectorAll("p")).filter((p) => {
+          const textLength = (p.textContent || "").trim().length;
+          if (textLength < 40) return false;
+          if (p.closest(".article-inline-cta")) return false;
+          return true;
+        });
+        if (paragraphs.length < 4) return;
+
+        // Prefer section boundaries (before headings), not list-intro paragraphs.
+        const preferredBoundaryTags = new Set(["H2", "H3"]);
+        const secondaryBoundaryTags = new Set(["TABLE", "BLOCKQUOTE", "PRE", "FIGURE"]);
+        const withPreferredBoundaryAfter = paragraphs.filter((p) => {
+          const next = p.nextElementSibling;
+          return next && preferredBoundaryTags.has(next.tagName);
+        });
+        const withSecondaryBoundaryAfter = paragraphs.filter((p) => {
+          const next = p.nextElementSibling;
+          return next && secondaryBoundaryTags.has(next.tagName);
+        });
+        const candidatePool = withPreferredBoundaryAfter.length
+          ? withPreferredBoundaryAfter
+          : withSecondaryBoundaryAfter.length
+            ? withSecondaryBoundaryAfter
+            : paragraphs;
+        const targetParagraph = candidatePool[Math.floor(candidatePool.length / 2)];
+        if (!targetParagraph || !targetParagraph.parentNode) return;
+
+        const inlineCta = document.createElement("div");
+        inlineCta.className = "article-inline-cta";
+        inlineCta.innerHTML = `
+          <div class="article-inline-cta__eyebrow">${inlineCtaCopy.eyebrow}</div>
+          <h3 class="article-inline-cta__title">${inlineCtaCopy.title}</h3>
+          <p class="article-inline-cta__text">
+            ${inlineCtaCopy.text}
+          </p>
+          <div class="article-inline-cta__content">${ctaMarkup}</div>
+        `;
+
+        // Avoid duplicate IDs in DOM when we clone CTA markup from sidebar.
+        inlineCta.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+
+        targetParagraph.parentNode.insertBefore(
+          inlineCta,
+          targetParagraph.nextSibling
+        );
+      } catch (e) {
+        // Never break ToC / Alpine data init if CTA injection fails.
+        console.warn("Inline CTA injection failed", e);
+      }
+    };
+
+    const isLikelyTocParagraphHeading = (text) => {
+      const normalized = (text || "").replace(/\s+/g, " ").trim();
+      if (!normalized) return false;
+      if (normalized.length > 140) return false;
+      if (/[:؛：]\s*$/.test(normalized)) return false;
+      if (/^(read|learn)\s+more\s+about\b/i.test(normalized)) return false;
+      if (/^(these|this)\b/i.test(normalized)) return false;
       return true;
-    });
-    if (paragraphs.length < 4) return;
-
-    // Prefer section boundaries (before headings), not list-intro paragraphs.
-    const preferredBoundaryTags = new Set(["H2", "H3"]);
-    const secondaryBoundaryTags = new Set(["TABLE", "BLOCKQUOTE", "PRE", "FIGURE"]);
-    const withPreferredBoundaryAfter = paragraphs.filter((p) => {
-      const next = p.nextElementSibling;
-      return next && preferredBoundaryTags.has(next.tagName);
-    });
-    const withSecondaryBoundaryAfter = paragraphs.filter((p) => {
-      const next = p.nextElementSibling;
-      return next && secondaryBoundaryTags.has(next.tagName);
-    });
-    const candidatePool = withPreferredBoundaryAfter.length
-      ? withPreferredBoundaryAfter
-      : withSecondaryBoundaryAfter.length
-        ? withSecondaryBoundaryAfter
-        : paragraphs;
-    const targetParagraph = candidatePool[Math.floor(candidatePool.length / 2)];
-    if (!targetParagraph || !targetParagraph.parentNode) return;
-
-    const inlineCta = document.createElement("div");
-    inlineCta.className = "article-inline-cta";
-    inlineCta.innerHTML = `
-      <div class="article-inline-cta__eyebrow">${inlineCtaCopy.eyebrow}</div>
-      <h3 class="article-inline-cta__title">${inlineCtaCopy.title}</h3>
-      <p class="article-inline-cta__text">
-        ${inlineCtaCopy.text}
-      </p>
-      <div class="article-inline-cta__content">${ctaMarkup}</div>
-    `;
-
-    // Avoid duplicate IDs in DOM when we clone CTA markup from sidebar.
-    inlineCta.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
-
-    targetParagraph.parentNode.insertBefore(inlineCta, targetParagraph.nextSibling);
-  };
-
-  const isLikelyTocParagraphHeading = (text) => {
-    const normalized = (text || "").replace(/\s+/g, " ").trim();
-    if (!normalized) return false;
-    if (normalized.length > 140) return false;
-    if (/[:؛：]\s*$/.test(normalized)) return false;
-    if (/^(read|learn)\s+more\s+about\b/i.test(normalized)) return false;
-    if (/^(these|this)\b/i.test(normalized)) return false;
-    return true;
-  };
-  const contentRoot = article?.querySelector("#article-root");
-  const contentHeadings = contentRoot
-    ? Array.from(contentRoot.querySelectorAll("h2, h3"))
-    : [];
-  const strongParagraphHeadings = contentRoot
-    ? Array.from(contentRoot.querySelectorAll("p > strong:first-child"))
-    : [];
-  const headings = [...contentHeadings];
+    };
+    const contentRoot = article ? article.querySelector("#article-root") : null;
+    const contentHeadings = contentRoot
+      ? Array.from(contentRoot.querySelectorAll("h2, h3"))
+      : [];
+    const strongParagraphHeadings = contentRoot
+      ? Array.from(contentRoot.querySelectorAll("p > strong:first-child"))
+      : [];
+    const headings = [...contentHeadings];
 
   strongParagraphHeadings.forEach((strongEl) => {
     const parentParagraph = strongEl.parentElement;
@@ -156,13 +166,13 @@ function articlePageEN() {
       });
     }
   });
-  return {
-    tocOpen: false,
-    activeId: null,
-    toc: result,
-    _observer: null,
+    return {
+      tocOpen: false,
+      activeId: null,
+      toc: result,
+      _observer: null,
 
-    init() {
+      init() {
       // Smooth hash scrolling if the page loads with a hash
       if (location.hash) {
         const id = decodeURIComponent(location.hash.slice(1));
@@ -190,9 +200,10 @@ function articlePageEN() {
         if (mq.matches) this.tocOpen = true;
       };
       mq.addEventListener?.("change", sync);
-      sync();
-      injectInlineCta();
-    },
+        sync();
+        // Defer injection so ToC paint is never blocked.
+        window.setTimeout(() => injectInlineCta(contentRoot), 0);
+      },
 
     scrollTo(id, pushHash = true) {
       const el = document.getElementById(id);
@@ -202,6 +213,16 @@ function articlePageEN() {
       this.activeId = id;
       if (pushHash) history.replaceState(null, "", `#${id}`);
       if (window.innerWidth < 768) this.tocOpen = false; // collapse on mobile after nav
-    },
-  };
+      },
+    };
+  } catch (e) {
+    console.error("articlePageEN init failed", e);
+    return {
+      tocOpen: false,
+      activeId: null,
+      toc: [],
+      init() {},
+      scrollTo() {},
+    };
+  }
 }

@@ -1,0 +1,141 @@
+/* Blog (/blog) + News (/news): exposed filters layout + button styling (scoped .blog-listing) */
+
+.blog-listing .view-filters .views-exposed-form .form--inline {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .blog-listing .view-filters .views-exposed-form .form--inline {
+    gap: 1rem;
+  }
+}
+
+/* Undo Drupal core .form--inline floats (components/inline-form.css) so flex column works. */
+.blog-listing .view-filters .views-exposed-form .form--inline > .form-item,
+.blog-listing .view-filters .views-exposed-form .form--inline > fieldset,
+.blog-listing .view-filters .views-exposed-form .form--inline > .form-actions {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+[dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > .form-item,
+[dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > fieldset,
+[dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > .form-actions {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.blog-listing .view-filters .views-exposed-form .form--inline > fieldset {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.blog-listing .view-filters .views-exposed-form .form--inline > fieldset .fieldset-wrapper {
+  padding: 0;
+}
+
+.blog-listing .view-filters .form-item-search {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 0;
+}
+
+.blog-listing .view-filters .form-checkboxes.bef-checkboxes.form--inline {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.blog-listing .view-filters .form-checkboxes.bef-checkboxes.form--inline .form-type-checkbox {
+  width: auto;
+  max-width: 100%;
+  flex: 0 0 auto;
+}
+
+.blog-listing .view-filters .form-checkboxes.bef-checkboxes.form--inline label.option {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+}
+
+.blog-listing .view-filters .form-checkboxes .js-form-type-checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.blog-listing .view-filters .form-actions {
+  width: 100%;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  clear: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-inline: 0;
+}
+
+.blog-listing .view-filters .form-actions .button,
+.blog-listing .view-filters .form-actions input.form-submit {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.blog-listing .view-filters .form-actions .button,
+.blog-listing .view-filters .form-actions input.form-submit {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.blog-listing .view-filters .form-actions .button:not([name="reset"]),
+.blog-listing .view-filters .form-actions input.form-submit:not([name="reset"]) {
+  background-color: #007a4d;
+  border-color: #006b44;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgb(15 23 42 / 0.12);
+}
+
+.blog-listing .view-filters .form-actions .button:not([name="reset"]):hover,
+.blog-listing .view-filters .form-actions input.form-submit:not([name="reset"]):hover {
+  background-color: #006b44;
+  border-color: #005c3b;
+}
+
+.blog-listing .view-filters .form-actions .button[name="reset"],
+.blog-listing .view-filters .form-actions input.form-submit[name="reset"] {
+  background-color: #ffffff;
+  border-color: rgb(203 213 225);
+  color: rgb(51 65 85);
+}
+
+.blog-listing .view-filters .form-actions .button[name="reset"]:hover,
+.blog-listing .view-filters .form-actions input.form-submit[name="reset"]:hover {
+  background-color: rgb(248 250 252);
+  border-color: rgb(148 163 184);
+}

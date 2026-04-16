@@ -1,0 +1,18 @@
+{# 
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{% set card_image = card_image|default({}) %}
+{% include 'motaded_theme:article-card' with {
+  'view_link': fields.view_node.content|render|striptags|trim,
+  'title': fields.title.content,
+  'media_url': card_image.src|default(''),
+  'media_srcset': card_image.srcset|default(''),
+  'media_width': card_image.width|default(325),
+  'media_height': card_image.height|default(200),
+  'media_sizes': '(max-width: 767px) 100vw, 33vw',
+  'image_alt': card_image.alt|default(''),
+  'excerpt': fields.body.content,
+  'date': fields.created.content,
+  'service_type': fields.field_taxonomy.content,
+} %}

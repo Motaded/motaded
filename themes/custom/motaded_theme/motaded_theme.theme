@@ -701,6 +701,63 @@ function motaded_theme_preprocess_views_view_fields__news(array &$variables): vo
 }
 
 /**
+ * Responsive teaser image metadata for news Views row templates (blog + news).
+ */
+function motaded_theme_preprocess_views_view_fields_news_listing_card_image(array &$variables): void {
+  $site_name = (string) \Drupal::config('system.site')->get('name');
+  $img_meta = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 325,
+    'height' => 200,
+    'alt' => $site_name,
+  ];
+
+  $entity = $variables['row']->_entity ?? NULL;
+  if (!$entity instanceof NodeInterface) {
+    $variables['card_image'] = $img_meta;
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  if ($entity->hasTranslation($langcode)) {
+    $entity = $entity->getTranslation($langcode);
+  }
+
+  $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $entity->label());
+  $meta = motaded_theme_blog_listing_card_image_metadata($extracted['uri']);
+  $img_meta['src'] = $meta['src'];
+  $img_meta['srcset'] = $meta['srcset'];
+  $img_meta['width'] = $meta['width'];
+  $img_meta['height'] = $meta['height'];
+  $img_meta['alt'] = $extracted['alt'] !== '' ? $extracted['alt'] : $entity->label();
+
+  if ($img_meta['src'] === '') {
+    $logo_uri = theme_get_setting('logo.url');
+    if (is_string($logo_uri) && $logo_uri !== '') {
+      $img_meta['src'] = \Drupal::service('file_url_generator')->generateString($logo_uri);
+      $img_meta['srcset'] = '';
+    }
+  }
+
+  $variables['card_image'] = $img_meta;
+}
+
+/**
+ * Blog listing (/blog): responsive image metadata for article cards.
+ */
+function motaded_theme_preprocess_views_view_fields__news__page_1(array &$variables): void {
+  motaded_theme_preprocess_views_view_fields_news_listing_card_image($variables);
+}
+
+/**
+ * News listing (/news): responsive image metadata for news cards.
+ */
+function motaded_theme_preprocess_views_view_fields__news__page_2(array &$variables): void {
+  motaded_theme_preprocess_views_view_fields_news_listing_card_image($variables);
+}
+
+/**
  * Shared card data builder for Views rows with Node entities.
  *
  * @param mixed $entity

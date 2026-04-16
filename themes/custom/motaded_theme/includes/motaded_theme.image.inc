@@ -132,3 +132,78 @@ function motaded_theme_responsive_teaser_image_metadata(?string $file_uri): arra
     'height' => $display_h,
   ];
 }
+
+/**
+ * Blog listing (/blog) card image: smaller default + tighter srcset than teasers.
+ *
+ * Uses max_325x325 as the default `src` when available so mobile rows do not
+ * download a 650px-wide derivative for a ~360px slot. Adds 650w/1300w for DPR.
+ *
+ * @return array{src: string, srcset: string, width: int, height: int}
+ */
+function motaded_theme_blog_listing_card_image_metadata(?string $file_uri): array {
+  $fallback = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 325,
+    'height' => 200,
+  ];
+  if ($file_uri === NULL || $file_uri === '') {
+    return $fallback;
+  }
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $original_url = $file_url_generator->generateString($file_uri);
+
+  if (str_ends_with(strtolower($file_uri), '.svg')) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 325,
+      'height' => 200,
+    ];
+  }
+
+  $image = \Drupal::service('image.factory')->get($file_uri);
+  if (!$image->isValid()) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 325,
+      'height' => 200,
+    ];
+  }
+
+  $w_orig = $image->getWidth();
+  $h_orig = $image->getHeight();
+
+  $srcset_parts = [];
+  foreach (['max_325x325' => 325, 'max_650x650' => 650, 'max_1300x1300' => 1300] as $style_id => $descriptor_w) {
+    $style = ImageStyle::load($style_id);
+    if ($style) {
+      $srcset_parts[] = motaded_theme_image_style_root_relative_url($file_uri, $style) . ' ' . $descriptor_w . 'w';
+    }
+  }
+
+  $src = $original_url;
+  $style_325 = ImageStyle::load('max_325x325');
+  if ($style_325) {
+    $src = motaded_theme_image_style_root_relative_url($file_uri, $style_325);
+  }
+  else {
+    $style_650 = ImageStyle::load('max_650x650');
+    if ($style_650) {
+      $src = motaded_theme_image_style_root_relative_url($file_uri, $style_650);
+    }
+  }
+
+  $display_w = min(325, $w_orig);
+  $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+
+  return [
+    'src' => $src,
+    'srcset' => implode(', ', $srcset_parts),
+    'width' => $display_w,
+    'height' => $display_h,
+  ];
+}

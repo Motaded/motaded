@@ -122,6 +122,13 @@ node:
   dependencies:
     - core/drupal
     - core/once
+
+blog_listing:
+  version: VERSION
+  css:
+    component:
+      css/components/blog-listing.css:
+        weight: -8
 progress:
   version: VERSION
   css:
