@@ -480,17 +480,24 @@ function _motaded_custom_extract_faq_from_ckeditor_accordion($html) {
  */
 function motaded_custom_block_access(Block $block, $operation, AccountInterface $account) {
   if ($operation === 'view' && $block->getPluginId() === 'page_title_block') {
-
+    $route_name = \Drupal::routeMatch()->getRouteName();
     $node = \Drupal::routeMatch()->getParameter('node');
 
-    $hero_image_exists = FALSE;
+    if ($route_name === 'entity.node.canonical' && $node instanceof NodeInterface) {
+      // Article and news full pages render their own <h1> inside the node template.
+      if (in_array($node->bundle(), ['article', 'news'], TRUE)) {
+        return AccessResult::forbidden()
+          ->addCacheableDependency($block)
+          ->addCacheableDependency($node);
+      }
 
-    if ($node instanceof NodeInterface && $node->bundle() === 'page') {
-      if ($node->get("field_display_on_services")->value == TRUE) {
-        return AccessResult::forbidden()->addCacheableDependency($block);
+      // Basic pages: <h1> is rendered in node--page--full (service hero or centered basic layout).
+      if ($node->bundle() === 'page') {
+        return AccessResult::forbidden()
+          ->addCacheableDependency($block)
+          ->addCacheableDependency($node);
       }
     }
-
   }
   return AccessResult::neutral();
 }

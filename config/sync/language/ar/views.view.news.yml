@@ -9,7 +9,28 @@ display:
       empty:
         area:
           content:
-            value: '<div class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center" role="status"><h2 class="text-xl font-semibold text-gray-900 m-0">No articles found</h2><p class="text-sm text-gray-600 m-0" x-data="{q : &apos;[current-page:query:search]&apos;}"><span>We couldn’t find any results</span>&nbsp;<template x-if="q"></template> <span>matching your filters.</span></p><p class="text-xs text-gray-500 m-0">Try adjusting your search or clearing the filters to discover more articles.</p></div>'
+            value: |
+              <div
+                  class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center"
+                  role="status"
+              >
+                  <h2 class="text-xl font-semibold text-gray-900 m-0">
+                  لم يُعثر على مقالات
+                  </h2>
+                  <p class="text-sm text-gray-600 m-0" x-data="{q : '[current-page:query:search]'}">
+                  <span>لا توجد نتائج</span>
+                  <template x-if="q">
+                      <span>
+                      لـ
+                      <span class="font-medium text-primary-700" x-text="'«' + q + '»'"></span>
+                      </span>
+                  </template>
+                  <span> المطابقة للمرشّحات.</span>
+                  </p>
+                  <p class="text-xs text-gray-500 m-0">
+                  جرّب تعديل عبارة البحث أو إلغاء التصفية للعثور على المزيد من المقالات.
+                  </p>
+              </div>
             format: full_html
       title: 'أحدث المقالات'
       display_extenders:
@@ -19,8 +40,8 @@ display:
             description: 'أحدث المقالات. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
       exposed_form:
         options:
-          submit_button: تطبق
-          reset_button_label: صاف
+          submit_button: تطبيق
+          reset_button_label: مسح
           exposed_sorts_label: 'الترتيب حسب'
       filters:
         combine:
@@ -32,7 +53,28 @@ display:
       empty:
         area:
           content:
-            value: '<div class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center" role="status"><h2 class="text-xl font-semibold text-gray-900 m-0">No articles found</h2><p class="text-sm text-gray-600 m-0" x-data="{q : &apos;[current-page:query:search]&apos;}"><span>We couldn’t find any results</span>&nbsp;<template x-if="q"></template> <span>matching your filters.</span></p><p class="text-xs text-gray-500 m-0">Try adjusting your search or clearing the filters to discover more articles.</p></div>'
+            value: |
+              <div
+                  class="mt-10 flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center"
+                  role="status"
+              >
+                  <h2 class="text-xl font-semibold text-gray-900 m-0">
+                  لم يُعثر على أخبار
+                  </h2>
+                  <p class="text-sm text-gray-600 m-0" x-data="{q : '[current-page:query:search]'}">
+                  <span>لا توجد نتائج</span>
+                  <template x-if="q">
+                      <span>
+                      لـ
+                      <span class="font-medium text-primary-700" x-text="'«' + q + '»'"></span>
+                      </span>
+                  </template>
+                  <span> المطابقة للمرشّحات.</span>
+                  </p>
+                  <p class="text-xs text-gray-500 m-0">
+                  جرّب تعديل عبارة البحث أو إلغاء التصفية للعثور على المزيد من الأخبار.
+                  </p>
+              </div>
             format: full_html
       title: 'أحدث الأخبار'
       display_extenders:
@@ -42,7 +84,8 @@ display:
             description: 'آخر الأخبار. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
       exposed_form:
         options:
-          reset_button_label: صاف
+          submit_button: تطبيق
+          reset_button_label: مسح
       filters:
         combine:
           expose:

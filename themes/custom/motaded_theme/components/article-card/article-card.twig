@@ -3,6 +3,7 @@
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
 {% set card_title_text = title|render|striptags|trim %}
+{% set service_type_text = service_type|default('')|render|striptags|trim %}
 {% set card_img_alt = (image_alt ?? '')|trim %}
 {% if card_img_alt is empty %}
   {% set card_img_alt = card_title_text %}
@@ -14,11 +15,11 @@
 {% if view_link %}
 <a
   href="{{ view_link }}"
-  class="article-card article-card--link group block h-full pt-3"
+  class="article-card article-card--link group block h-full pt-3{{ service_type_text ? ' article-card--has-service-type' : '' }}"
   aria-label="{% if card_title_text %}{{ 'More about @title'|t({'@title': card_title_text }) }}{% else %}{{ 'Read more'|t }}{% endif %}"
 >
 {% else %}
-<div class="article-card article-card--static group block h-full">
+<div class="article-card article-card--static group block h-full{{ service_type_text ? ' article-card--has-service-type' : '' }}">
 {% endif %}
   <article class="article-card__inner h-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200">
     <div class="article-card__media relative h-[180px] w-full overflow-hidden md:h-[200px]">
@@ -28,13 +29,18 @@
         src="{{ media_url }}"
         {% if media_srcset|default('') %}
         srcset="{{ media_srcset }}"
-        sizes="(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1023px) 50vw, 25vw"
+        sizes="{{ media_sizes|default('(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1023px) 50vw, 25vw') }}"
         {% endif %}
-        width="{{ media_width|default(151) }}"
-        height="{{ media_height|default(120) }}"
+        width="{{ media_width|default(650) }}"
+        height="{{ media_height|default(650) }}"
         loading="lazy"
         decoding="async"
       />
+      {% if service_type_text %}
+        <span class="article-card__tag article-card__tag--media article-card__tag--service">
+          {{ service_type }}
+        </span>
+      {% endif %}
       <span class="article-card__media-glow" aria-hidden="true"></span>
     </div>
 
@@ -49,7 +55,7 @@
 
       <div class="article-card__title-row mb-3 flex min-w-0 items-center gap-2">
         {% set card_tag = tag|default('')|trim %}
-        {% if card_tag %}
+        {% if card_tag and not service_type_text %}
           <span class="article-card__tag shrink-0">
             {{ card_tag }}
           </span>

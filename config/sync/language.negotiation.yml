@@ -7,9 +7,7 @@ url:
   prefixes:
     en: ''
     ar: ar
-    zh-hans: zh-hans
   domains:
     en: ''
     ar: ''
-    zh-hans: ''
 selected_langcode: site_default

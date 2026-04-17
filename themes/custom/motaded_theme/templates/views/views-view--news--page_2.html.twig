@@ -34,6 +34,7 @@
  * @see template_preprocess_views_view()
  */
 #}
+{{ attach_library('motaded_theme/blog_listing') }}
 {%
   set classes = [
     'view',
@@ -43,6 +44,7 @@
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'max-w-[1320px] mx-auto',
     'page-green',
+    'blog-listing',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
@@ -57,7 +59,7 @@
     </header>
   {% endif %}
   {% if exposed %}
-    <section class="view-filters mt-6 bg-white rounded-xl border border-gray-200 p-4 md:py-0">
+    <section class="view-filters mt-6 bg-white rounded-xl border border-gray-200 px-4 py-3">
       {{ exposed }}
     </section>
   {% endif %}
