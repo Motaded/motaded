@@ -373,6 +373,27 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['article_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
   }
 
+  // News (full page): hero media (view mode news) + updated date for meta row.
+  if ($node->bundle() === 'news'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])) {
+    $variables['news_hero_media'] = [];
+    if ($node->hasField('field_media') && !$node->get('field_media')->isEmpty()) {
+      $media = $node->get('field_media')->entity;
+      if ($media) {
+        $variables['news_hero_media'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($media, 'news');
+      }
+    }
+    $variables['news_updated_formatted'] = \Drupal::service('date.formatter')->format(
+      (int) $node->getChangedTime(),
+      'custom',
+      'j F Y'
+    );
+    $variables['news_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
+  }
+
   // Service page (Basic page + Display on services): compact hero data.
   if ($node->bundle() === 'page'
     && ($variables['view_mode'] ?? '') === 'full'

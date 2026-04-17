@@ -4320,7 +4320,7 @@ display:
           entity_field: created
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -4397,7 +4397,7 @@ display:
           entity_field: title
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -4460,7 +4460,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -4524,7 +4524,7 @@ display:
           entity_type: node
           plugin_id: entity_link
           label: ''
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''

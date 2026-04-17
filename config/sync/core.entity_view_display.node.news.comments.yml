@@ -6,9 +6,13 @@ dependencies:
     - core.entity_view_display.comment.comment.default
     - core.entity_view_mode.node.comments
     - field.field.node.news.body
+    - field.field.node.news.field_applies_to
     - field.field.node.news.field_comments
+    - field.field.node.news.field_effective_date
     - field.field.node.news.field_media
     - field.field.node.news.field_meta
+    - field.field.node.news.field_requirement
+    - field.field.node.news.field_source_scope
     - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
     - node.type.news
@@ -32,8 +36,12 @@ content:
 hidden:
   addtoany: true
   body: true
+  field_applies_to: true
+  field_effective_date: true
   field_media: true
   field_meta: true
+  field_requirement: true
+  field_source_scope: true
   field_tags: true
   field_taxonomy: true
   langcode: true

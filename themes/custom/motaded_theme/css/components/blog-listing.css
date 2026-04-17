@@ -4,12 +4,12 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 @media (min-width: 768px) {
   .blog-listing .view-filters .views-exposed-form .form--inline {
-    gap: 1rem;
+    gap: 0.625rem;
   }
 }
 
@@ -20,27 +20,53 @@
   float: none;
   width: 100%;
   max-width: 100%;
-  margin-right: 0;
-  margin-left: 0;
+  margin: 0;
 }
 
 [dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > .form-item,
 [dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > fieldset,
 [dir="rtl"] .blog-listing .view-filters .views-exposed-form .form--inline > .form-actions {
-  margin-right: 0;
-  margin-left: 0;
+  margin: 0;
 }
 
 .blog-listing .view-filters .views-exposed-form .form--inline > fieldset {
+  position: relative;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
   border: 0;
   min-width: 0;
+  flex: 0 0 auto;
 }
 
 .blog-listing .view-filters .views-exposed-form .form--inline > fieldset .fieldset-wrapper {
   padding: 0;
+  margin: 0;
+  min-height: 0;
+}
+
+/* Empty composite legend still reserves space in some browsers — hide visually, keep for a11y APIs. */
+.blog-listing .view-filters fieldset.form-composite > legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.blog-listing .view-filters fieldset .form-checkboxes > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.blog-listing .view-filters fieldset .form-checkboxes > ul > li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .blog-listing .view-filters .form-item-search {
@@ -74,15 +100,18 @@
   margin-bottom: 0;
 }
 
-.blog-listing .view-filters .form-actions {
+.blog-listing .view-filters .form-actions,
+.blog-listing .view-filters .views-exposed-form .form--inline > .form-actions {
   width: 100%;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.5rem;
   clear: none;
-  margin-top: 0;
+  margin-top: 0.25rem;
   margin-bottom: 0;
   margin-inline: 0;
+  padding-top: 0;
+  flex: 0 0 auto;
 }
 
 .blog-listing .view-filters .form-actions .button,

@@ -65,6 +65,9 @@
  *
  */
 #}
+{% set is_service_display = node.hasField('field_display_on_services')
+  and not node.get('field_display_on_services').isEmpty()
+  and node.field_display_on_services.value %}
 {%
   set classes = [
     'node',
@@ -73,12 +76,12 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'node--service-page',
+    is_service_display ? 'node--service-page' : 'node--page-basic',
   ]
 %}
 
 {{ attach_library('motaded_theme/node') }}
-{% if node.field_display_on_services.value == "1" %}
+{% if is_service_display %}
   <article{{ attributes.addClass(classes) }}>
     {{ title_prefix }}
     {% set tag_styles_hero = [
@@ -382,5 +385,35 @@
 
   </article>
 {% else %}
-  {% include "node--news--full.html.twig" %}
+  {# Basic page (Display on services = off): site-style band, large centered title, share, centered column. #}
+  <article{{ attributes.addClass(classes) }}>
+    <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+      {{ title_prefix }}
+      {% if page and label %}
+        <header class="page-basic-hero mx-auto w-full max-w-[52rem] pt-8 text-center sm:pt-12">
+          <h1{{ title_attributes.addClass('page-basic-hero__title', 'm-0', 'font-extrabold', 'text-gray-900') }}>{{ label }}</h1>
+          {% if content.addtoany %}
+            <div class="page-basic-hero__share mt-6 flex justify-center sm:mt-7" role="group" aria-label="{{ 'Share this page'|t }}">
+              <div class="page-basic-hero__share-inner inline-flex flex-wrap items-center justify-center gap-2">
+                {{ content.addtoany }}
+              </div>
+            </div>
+          {% endif %}
+        </header>
+      {% endif %}
+      {{ title_suffix }}
+      {% if display_submitted %}
+        <footer class="node__meta visually-hidden">
+          {{ author_picture }}
+          <div{{ author_attributes.addClass('node__submitted') }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+            {{ metadata }}
+          </div>
+        </footer>
+      {% endif %}
+      <div{{ content_attributes.addClass('page-basic-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none', 'mx-auto', 'mt-10', 'w-full', 'max-w-[52rem]', 'text-left', 'sm:mt-12') }}>
+        {{ content|without('addtoany') }}
+      </div>
+    </div>
+  </article>
 {% endif %}
