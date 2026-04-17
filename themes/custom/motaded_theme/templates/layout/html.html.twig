@@ -51,6 +51,9 @@
 			{% if not motaded_suppress_seo_tracking %}
 			{# GTM + gtag after window.load (not render-blocking). If GA4 for G-G1C83L3T2V is already in GTM, remove the gtag block below to avoid duplicate pageviews. #}
 			<script>
+			window.dataLayer = window.dataLayer || [];
+			window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
 			window.addEventListener('load', function () {
 				(function (w, d, s, l, i) {
 					w[l] = w[l] || [];
@@ -63,14 +66,12 @@
 					f.parentNode.insertBefore(j, f);
 				})(window, document, 'script', 'dataLayer', 'GTM-NBFPBC74');
 
-				window.dataLayer = window.dataLayer || [];
-				function gtag() { dataLayer.push(arguments); }
 				var g = document.createElement('script');
 				g.async = true;
 				g.src = 'https://www.googletagmanager.com/gtag/js?id=G-G1C83L3T2V';
 				g.onload = function () {
-					gtag('js', new Date());
-					gtag('config', 'G-G1C83L3T2V');
+					window.gtag('js', new Date());
+					window.gtag('config', 'G-G1C83L3T2V');
 				};
 				document.head.appendChild(g);
 			});

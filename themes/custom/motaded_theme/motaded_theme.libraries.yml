@@ -171,6 +171,8 @@ alpine:
 toc:
   js:
     js/toc.js: {}
+  dependencies:
+    - motaded_theme/alpine
 search-page:
   js:
     js/content-search.js: {}
