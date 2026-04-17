@@ -226,3 +226,6 @@ function articlePageEN() {
     };
   }
 }
+
+// Keep backward compatibility with x-data="articlePageEN()".
+window.articlePageEN = articlePageEN;
