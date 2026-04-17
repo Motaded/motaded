@@ -1,0 +1,15 @@
+label: المدونة
+display:
+  default:
+    display_options:
+      title: 'أحدث ما في مدونتنا'
+      fields:
+        view_node:
+          text: 'اقرأ المزيد'
+      exposed_form:
+        options:
+          submit_button: تطبيق
+          reset_button_label: إعادة ضبط
+          exposed_sorts_label: 'ترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي

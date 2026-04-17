@@ -78,3 +78,99 @@ msgstr "البريد الإلكتروني"
 
 msgid "External Link"
 msgstr "رابط خارجي"
+
+msgid "Next step"
+msgstr "الخطوة التالية"
+
+msgid "Talk to Motaded experts today"
+msgstr "تحدث مع خبراء معتد اليوم"
+
+msgid "Book a quick consultation and receive clear, actionable guidance tailored to your case."
+msgstr "احجز استشارة سريعة واحصل على توجيهات واضحة وقابلة للتنفيذ مخصصة لحالتك."
+
+msgid "Motaded Team"
+msgstr "فريق معتد"
+
+msgid "Article tools"
+msgstr "أدوات المقال"
+
+msgid "Table of contents"
+msgstr "جدول المحتويات"
+
+msgid "@minutes min read"
+msgstr "@minutes دقيقة للقراءة"
+
+msgid "Blog"
+msgstr "المدونة"
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Service"
+msgstr "خدمة"
+
+msgid "The latest from our blog"
+msgstr "أحدث ما في مدونتنا"
+
+msgid "Sort by"
+msgstr "ترتيب حسب"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Reset"
+msgstr "إعادة ضبط"
+
+msgid "Asc"
+msgstr "تصاعدي"
+
+msgid "Desc"
+msgstr "تنازلي"
+
+msgid "More about @title"
+msgstr "المزيد عن @title"
+
+msgid "Article image"
+msgstr "صورة المقال"
+
+msgid "Read the full article for key insights and practical guidance."
+msgstr "اقرأ المقال كاملاً للاطلاع على الرؤى الأساسية والإرشادات العملية."
+
+msgid "More on this topic"
+msgstr "المزيد حول هذا الموضوع"
+
+msgid "Share this article"
+msgstr "شارك هذا المقال"
+
+msgid "Categories"
+msgstr "التصنيفات"
+
+msgid "Book now"
+msgstr "احجز الآن"
+
+msgid "Explore benefits"
+msgstr "استكشف المزايا"
+
+msgid "Illustration for service information"
+msgstr "رسم توضيحي لمعلومات الخدمة"
+
+msgid "News header"
+msgstr "رأس الخبر"
+
+msgid "At a glance"
+msgstr "لمحة سريعة"
+
+msgid "Effective date"
+msgstr "تاريخ السريان"
+
+msgid "Applies to"
+msgstr "ينطبق على"
+
+msgid "Requirement"
+msgstr "المتطلب"
+
+msgid "Source / scope"
+msgstr "المصدر / النطاق"
+
+msgid "Found this helpful? Share it so colleagues and contacts can stay up to date."
+msgstr "وجدت هذا مفيدًا؟ شاركه ليبقى الزملاء وجهات الاتصال على اطلاع."
