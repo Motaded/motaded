@@ -145,6 +145,12 @@
   border-collapse: collapse;
 }
 
+.node--service-page #service-details .service-page__body :where(table, table.table) :where(thead, tfoot, th, td) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .node--service-page #service-details .service-page__body :where(pre) {
   max-width: 100%;
   overflow-x: auto;
@@ -619,8 +625,7 @@
   border-inline-start: 3px solid #6366f1;
   border-top: 1px solid rgb(226 232 240 / 0.85);
   color: rgb(30 41 59);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: clip !important;
 }
 
 @media (min-width: 1024px) {
@@ -634,10 +639,17 @@
 /* Article body: type rhythm, tables, code; stay within column */
 .node--article-full .article-body {
   max-width: 100%;
+  overflow-x: clip !important;
   font-size: 1.0625rem;
   line-height: 1.7;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
+}
+
+.node--article-full #article-root {
+  max-width: 100%;
+  overflow-x: clip !important;
 }
 
 /* Drupal field wrappers must not add horizontal inset on top of main padding. */
@@ -730,10 +742,25 @@
 }
 
 .node--article-full .article-body table {
+  display: block;
   width: 100%;
   max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: 0.95em;
+}
+
+.node--article-full .article-body table.table {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.node--article-full .article-body :where(table, table.table) :where(thead, tfoot, th, td) {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .node--article-full .article-body table th,
@@ -1083,8 +1110,8 @@
   margin-inline: auto;
   padding: 2rem 1rem 3.5rem;
   color: rgb(30 41 59);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  overflow-x: clip;
   border-top: 1px solid rgb(241 245 249 / 0.95);
 }
 
@@ -1100,8 +1127,10 @@
   line-height: 1.75;
   letter-spacing: 0.01em;
   color: rgb(51 65 85);
+  overflow-x: clip;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Main article text: comfortable measure, centred (other fields stay full width). */
@@ -1228,13 +1257,22 @@
 }
 
 .node--news-full .news-body table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   margin: 1.25rem 0;
   font-size: 0.95em;
   border-collapse: collapse;
   border-radius: 0.5rem;
-  overflow: hidden;
+  overflow-y: hidden;
   box-shadow: 0 1px 0 rgb(226 232 240 / 0.95);
+}
+
+.node--news-full .news-body :where(table, table.table) :where(thead, tfoot, th, td) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .node--news-full .news-body th,
@@ -1570,6 +1608,37 @@
   font-size: 1.0625rem;
   line-height: 1.78;
   letter-spacing: 0.012em;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.node--page-basic .page-basic-body :where(img, video, iframe) {
+  max-width: 100%;
+  height: auto;
+}
+
+.node--page-basic .page-basic-body :where(table) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.node--page-basic .page-basic-body :where(table, table.table) :where(thead, tfoot, th, td) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.node--page-basic .page-basic-body :where(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .node--page-basic .page-basic-body > .field {
