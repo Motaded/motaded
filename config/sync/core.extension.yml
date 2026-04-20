@@ -1,6 +1,7 @@
 _core:
   default_config_hash: 4GIX5Esnc_umpXUBj4IIocRX7Mt5fPhm4AgXfE3E56E
 module:
+  addtoany: 0
   admin_toolbar: 0
   admin_toolbar_tools: 0
   announcements_feed: 0
@@ -35,6 +36,7 @@ module:
   email_verification: 0
   entity_export_csv: 0
   entity_reference_revisions: 0
+  estimated_read_time: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -72,6 +74,7 @@ module:
   node_view_redirect: 0
   options: 0
   page_cache: 0
+  page_specific_class: 0
   path: 0
   path_alias: 0
   recaptcha: 0
@@ -110,6 +113,7 @@ module:
   twig_tweak: 0
   update: 0
   user: 0
+  views_fieldsets: 0
   views_ui: 0
   viewsreference: 0
   webform: 0

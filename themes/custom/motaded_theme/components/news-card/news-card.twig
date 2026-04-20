@@ -2,6 +2,14 @@
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
+{% set title_plain = title|render|striptags|trim %}
+{% set img_alt = (image_alt ?? '')|trim %}
+{% if img_alt is empty %}
+  {% set img_alt = title_plain %}
+{% endif %}
+{% if img_alt is empty %}
+  {% set img_alt = 'News image'|t %}
+{% endif %}
 
 <a href="{{ view_link }}" class="block">
   <div
@@ -16,11 +24,17 @@
       </div>
       <div class="flex-shrink-0 w-[151px] h-[120px]">
         <img
-          alt="item.title"
-          width="151"
-          height="120"
+          alt="{{ img_alt|e }}"
+          width="{{ media_width|default(151) }}"
+          height="{{ media_height|default(120) }}"
           class="w-full h-full object-cover rounded-lg"
           src="{{ media_url }}"
+          {% if media_srcset|default('') %}
+          srcset="{{ media_srcset }}"
+          sizes="{{ media_sizes|default('151px') }}"
+          {% endif %}
+          loading="lazy"
+          decoding="async"
         />
       </div>
     </div>

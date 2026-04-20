@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.page.field_advantages
     - field.field.node.page.field_areas_of_work
     - field.field.node.page.field_basic_paragraphs
+    - field.field.node.page.field_beneficiaries
     - field.field.node.page.field_comments
     - field.field.node.page.field_default_page
     - field.field.node.page.field_display_on_services
@@ -54,10 +55,12 @@ content:
     weight: 0
     region: content
 hidden:
+  addtoany: true
   body: true
   field_advantages: true
   field_areas_of_work: true
   field_basic_paragraphs: true
+  field_beneficiaries: true
   field_comments: true
   field_default_page: true
   field_display_on_services: true

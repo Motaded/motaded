@@ -1,0 +1,176 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Motaded\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "Start the service"
+msgstr "ابدأ الخدمة"
+
+msgid "Go to other services"
+msgstr "انتقل إلى الخدمات الأخرى"
+
+msgid "Share the page"
+msgstr "شارك الصفحة"
+
+msgid "On this page"
+msgstr "في هذه الصفحة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Snapshot"
+msgstr "لمحة"
+
+msgid "Objectives"
+msgstr "الأهداف"
+
+msgid "Work Tracks"
+msgstr "مسارات العمل"
+
+msgid "Steps to Obtain"
+msgstr "خطوات الحصول على الخدمة"
+
+msgid "Areas of Work"
+msgstr "مجالات العمل"
+
+msgid "Extra data"
+msgstr "بيانات إضافية"
+
+msgid "FAQs"
+msgstr "الأسئلة الشائعة"
+
+msgid "Service details"
+msgstr "تفاصيل الخدمة"
+
+msgid "Read more"
+msgstr "اقرأ المزيد"
+
+msgid "Read less"
+msgstr "اقرأ أقل"
+
+msgid "Phone number"
+msgstr "رقم الهاتف"
+
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+msgid "Email Address"
+msgstr "البريد الإلكتروني"
+
+msgid "Frequently Asked Questions"
+msgstr "الأسئلة الشائعة"
+
+msgid "View consultation FAQs"
+msgstr "اطلع على الأسئلة الشائعة حول الاستشارات"
+
+msgid "Download user guide"
+msgstr "تنزيل دليل المستخدم"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "External Link"
+msgstr "رابط خارجي"
+
+msgid "Next step"
+msgstr "الخطوة التالية"
+
+msgid "Talk to Motaded experts today"
+msgstr "تحدث مع خبراء معتد اليوم"
+
+msgid "Book a quick consultation and receive clear, actionable guidance tailored to your case."
+msgstr "احجز استشارة سريعة واحصل على توجيهات واضحة وقابلة للتنفيذ مخصصة لحالتك."
+
+msgid "Motaded Team"
+msgstr "فريق معتد"
+
+msgid "Article tools"
+msgstr "أدوات المقال"
+
+msgid "Table of contents"
+msgstr "جدول المحتويات"
+
+msgid "@minutes min read"
+msgstr "@minutes دقيقة للقراءة"
+
+msgid "Blog"
+msgstr "المدونة"
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Service"
+msgstr "خدمة"
+
+msgid "The latest from our blog"
+msgstr "أحدث ما في مدونتنا"
+
+msgid "Sort by"
+msgstr "ترتيب حسب"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Reset"
+msgstr "إعادة ضبط"
+
+msgid "Asc"
+msgstr "تصاعدي"
+
+msgid "Desc"
+msgstr "تنازلي"
+
+msgid "More about @title"
+msgstr "المزيد عن @title"
+
+msgid "Article image"
+msgstr "صورة المقال"
+
+msgid "Read the full article for key insights and practical guidance."
+msgstr "اقرأ المقال كاملاً للاطلاع على الرؤى الأساسية والإرشادات العملية."
+
+msgid "More on this topic"
+msgstr "المزيد حول هذا الموضوع"
+
+msgid "Share this article"
+msgstr "شارك هذا المقال"
+
+msgid "Categories"
+msgstr "التصنيفات"
+
+msgid "Book now"
+msgstr "احجز الآن"
+
+msgid "Explore benefits"
+msgstr "استكشف المزايا"
+
+msgid "Illustration for service information"
+msgstr "رسم توضيحي لمعلومات الخدمة"
+
+msgid "News header"
+msgstr "رأس الخبر"
+
+msgid "At a glance"
+msgstr "لمحة سريعة"
+
+msgid "Effective date"
+msgstr "تاريخ السريان"
+
+msgid "Applies to"
+msgstr "ينطبق على"
+
+msgid "Requirement"
+msgstr "المتطلب"
+
+msgid "Source / scope"
+msgstr "المصدر / النطاق"
+
+msgid "Found this helpful? Share it so colleagues and contacts can stay up to date."
+msgstr "وجدت هذا مفيدًا؟ شاركه ليبقى الزملاء وجهات الاتصال على اطلاع."

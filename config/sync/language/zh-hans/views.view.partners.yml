@@ -1,8 +1,0 @@
-display:
-  default:
-    display_options:
-      header:
-        area:
-          content:
-            value: '<p>我们的合作伙伴遍布世界各地</p>'
-            format: full_html

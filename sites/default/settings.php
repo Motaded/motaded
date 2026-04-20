@@ -945,3 +945,14 @@ if (isset($_SERVER['REQUEST_URI']) && str_starts_with($_SERVER['REQUEST_URI'], '
  if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
    include $app_root . '/' . $site_path . '/settings.local.php';
  }
+
+// Non-production: block crawlers (robots.txt + X-Robots-Tag) and marketing tags in html.html.twig.
+// DDEV sets IS_DDEV_PROJECT=true. For other dev/staging hosts set MOTADED_SUPPRESS_TRACKING=1 in the environment.
+// Override in settings.local.php: $settings['motaded_suppress_seo_tracking'] = FALSE;
+$motaded_auto_suppress_seo = getenv('IS_DDEV_PROJECT') === 'true' || getenv('MOTADED_SUPPRESS_TRACKING') === '1';
+if (!array_key_exists('motaded_suppress_seo_tracking', $settings)) {
+  $settings['motaded_suppress_seo_tracking'] = $motaded_auto_suppress_seo;
+}
+if (!empty($settings['motaded_suppress_seo_tracking'])) {
+  $config['robotstxt.settings']['content'] = "User-agent: *\nDisallow: /\n";
+}

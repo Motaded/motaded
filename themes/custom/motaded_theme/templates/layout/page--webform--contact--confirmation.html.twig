@@ -47,6 +47,7 @@
  * @see html.html.twig
  */
 #}
+{% if not motaded_suppress_seo_tracking %}
 {# Submit Form — Google Ads conversion (requires GA4 gtag in html.html.twig). Do not duplicate in GTM. #}
 <!-- Event snippet for Submit Form conversion page -->
 <script>
@@ -62,6 +63,7 @@
     fbq('track', 'Lead');
   }
 </script>
+{% endif %}
 {% set show_service_side = true %}
 {% set main_wrapper_classes = [
   "main-wrapper",
@@ -144,7 +146,7 @@
   {% endif %}
 </div>
 
-{% if linkedin_contact_lead_conversion_id is defined %}
+{% if linkedin_contact_lead_conversion_id is defined and not motaded_suppress_seo_tracking %}
 <script>
 window.lintrk = window.lintrk || function (a, b) { (window.lintrk.q = window.lintrk.q || []).push([a, b]); };
 window.lintrk('track', { conversion_id: {{ linkedin_contact_lead_conversion_id }} });

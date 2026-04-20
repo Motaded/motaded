@@ -12,7 +12,7 @@ _core:
 id: motaded_theme_page_title
 theme: motaded_theme
 region: content
-weight: -24
+weight: -18
 provider: null
 plugin: page_title_block
 settings:
@@ -31,7 +31,6 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
-      article: article
       business_activities: business_activities
       entities: entities
       media_center: media_center

@@ -9,6 +9,7 @@ dependencies:
   - drupal:path_alias
   - drupal:redirect
   - drupal:content_translation
+  - drupal:locale
   - drupal:system
   - drupal:taxonomy
   - drupal:webform

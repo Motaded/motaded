@@ -47,9 +47,12 @@
   {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
 {% endif %}
 {% block paragraph %}
+  {{ attach_library('motaded_theme/icon-card-tiny') }}
   {{ include('motaded_theme:icon-card-tiny', {
+      variant: 'service_icon_row',
       desc: content.field_content.0,
       icon_url: field_media,
-      icon_position: 'topLeft',
+      areas_lead_label: areas_lead_label|default(null),
+      areas_rest_safe: areas_rest_safe|default(null),
     }, with_context = false) }}
 {% endblock paragraph %}

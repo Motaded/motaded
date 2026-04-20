@@ -15,7 +15,7 @@ image_style_mappings:
   -
     image_mapping_type: sizes
     image_mapping:
-      sizes: min(100vw, 1920px)
+      sizes: 'min(100vw, 1920px)'
       sizes_image_styles:
         - max_325x325
         - max_650x650

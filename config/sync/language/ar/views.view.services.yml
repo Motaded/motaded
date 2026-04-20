@@ -2,29 +2,65 @@ label: خدمات
 display:
   page_1:
     display_options:
+      empty:
+        area:
+          content:
+            value: 'لم يتم العثور على نتائج'
+            format: plain_text
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
       filters:
         combine:
           expose:
             label: بحث
-            placeholder: 'خدمات البحث...'
+            placeholder: 'ابحث في الخدمات…'
+        field_beneficiaries_target_id:
+          expose:
+            label: المستفيدون
+        field_taxonomy_target_id:
+          expose:
+            label: الفئات
         field_tags_target_id:
           expose:
-            label: فئات
+            label: الوسوم
       exposed_form:
         options:
-          submit_button: يتقدم
-          reset_button_label: مسح
-          exposed_sorts_label: نوع
+          submit_button: بحث
+          reset_button_label: 'إعادة تعيين المرشحات'
+          exposed_sorts_label: ترتيب
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          text_input_required: 'اختر أي مرشح ثم انقر على بحث لعرض النتائج'
+        bef:
+          general:
+            secondary_label: 'تصفية الخدمات'
+          sort:
+            advanced:
+              combine_rewrite: "تاريخ الإنشاء تصاعدي|تصاعدي\r\nتاريخ الإنشاء تنازلي|تنازلي"
+              collapsible_label: 'خيارات الترتيب'
+          filter:
+            field_beneficiaries_target_id:
+              advanced:
+                rewrite:
+                  filter_rewrite_values: الكل|المستفيدون
+            field_tags_target_id:
+              advanced:
+                rewrite:
+                  filter_rewrite_values: الكل|الوسوم
+            field_taxonomy_target_id:
+              soft_limit_label_less: أقل
+              soft_limit_label_more: المزيد
       sorts:
-        title:
-          expose:
-            label: عنوان
         created:
           expose:
-            label: 'تأليف بتاريخ'
+            label: 'تاريخ الإنشاء'
       header:
         result:
-          content: '@total نتائج'
+          content: '@total نتيجة'
       display_extenders:
         metatag_display_extender:
           metatags:

@@ -50,7 +50,9 @@
   {% set field_media = file_url(content.field_media[0]['#media'].field_media_image.entity.uri.value) %}
 {% endif %}
 {% block paragraph %}
+  {{ attach_library('motaded_theme/icon-card-tiny') }}
   {{ include('motaded_theme:icon-card-tiny', {
+      variant: 'snapshot',
       title: content.field_title.0,
       desc: description,
       icon_url: field_media,

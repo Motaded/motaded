@@ -6,63 +6,7 @@
 {#
 /**
  * @file
- * Theme override to display a node.
- *
- * Available variables:
- * - node: The node entity with limited access to object properties and methods.
- *   Only method names starting with "get", "has", or "is" and a few common
- *   methods such as "id", "label", and "bundle" are available. For example:
- *   - node.getCreatedTime() will return the node creation timestamp.
- *   - node.hasField('field_example') returns TRUE if the node bundle includes
- *     field_example. (This does not indicate the presence of a value in this
- *     field.)
- *   - node.isPublished() will return whether the node is published or not.
- *   Calling other methods, such as node.delete(), will result in an exception.
- *   See \Drupal\node\Entity\Node for a full list of public properties and
- *   methods for the node object.
- * - label: (optional) The title of the node.
- * - content: All node items. Use {{ content }} to print them all,
- *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') }} to temporarily suppress the printing
- *   of a given child element.
- * - author_picture: The node author user entity, rendered using the "compact"
- *   view mode.
- * - date: (optional) Themed creation date field.
- * - author_name: (optional) Themed author name field.
- * - url: Direct URL of the current node.
- * - display_submitted: Whether submission information should be displayed.
- * - attributes: HTML attributes for the containing element.
- *   The attributes.class element may contain one or more of the following
- *   classes:
- *   - node: The current template type (also known as a "theming hook").
- *   - node--type-[type]: The current node type. For example, if the node is an
- *     "Article" it would result in "node--type-article". Note that the machine
- *     name will often be in a short form of the human readable label.
- *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
- *     teaser would result in: "node--view-mode-teaser", and
- *     full: "node--view-mode-full".
- *   The following are controlled through the node publishing options.
- *   - node--promoted: Appears on nodes promoted to the front page.
- *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
- *     teaser listings.
- *   - node--unpublished: Appears on unpublished nodes visible only to site
- *     admins.
- * - title_attributes: Same as attributes, except applied to the main title
- *   tag that appears in the template.
- * - content_attributes: Same as attributes, except applied to the main
- *   content tag that appears in the template.
- * - author_attributes: Same as attributes, except applied to the author of
- *   the node tag that appears in the template.
- * - title_prefix: Additional output populated by modules, intended to be
- *   displayed in front of the main title tag that appears in the template.
- * - title_suffix: Additional output populated by modules, intended to be
- *   displayed after the main title tag that appears in the template.
- * - view_mode: View mode; for example, "teaser" or "full".
- * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
- * - page: Flag for the full page state. Will be true if view_mode is 'full'.
- *
- * @see template_preprocess_node()
- *
+ * News — full view: hero (title + summary left, media right on lg; meta + facts below), then body.
  */
 #}
 {%
@@ -73,23 +17,22 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    node.bundle == 'news' ? 'bg-white',
+    'node--news-full',
+    'mb-12',
   ]
 %}
 {{ attach_library('motaded_theme/node') }}
-{{ attach_library('motaded_theme/quick-links') }}
-<article{{ attributes.addClass(classes) }} x-data="quickLinks()" x-init="init()">
-
+<article{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if label and not page %}
-    <h2{{ title_attributes }}>
+    <h2{{ title_attributes.addClass('text-xl', 'font-bold', 'text-gray-900') }}>
       <a href="{{ url }}" rel="bookmark">{{ label }}</a>
     </h2>
   {% endif %}
   {{ title_suffix }}
 
   {% if display_submitted %}
-    <footer class="node__meta">
+    <footer class="node__meta visually-hidden">
       {{ author_picture }}
       <div{{ author_attributes.addClass('node__submitted') }}>
         {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
@@ -98,37 +41,119 @@
     </footer>
   {% endif %}
 
-  <section class="mt-6">
-    <div class="flex flex-col gap-6 pb-3 border-b border-gray-300">
-      {{ summary }}
-      <div class="flex flex-wrap gap-2">
-        <template x-for="item in links" :key="item.id">
-          <a
-            :href="`#${item.id}`"
-            @click.prevent="scrollTo(item.id)"
-            class="inline-flex items-center rounded-full border border-gray-300 px-3 py-1.5 text-sm bg-white hover:bg-gray-50"
-            x-text="item.label"
-          ></a>
-        </template>
+  <div class="news-hero" role="region" aria-label="{{ 'News header'|t }}">
+    <div class="news-hero__inner mx-auto w-full max-w-[1320px] px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
+      <div class="news-hero__content flex w-full min-w-0 flex-col gap-6">
+        <div class="news-hero__lead flex w-full min-w-0 flex-col gap-5{{ news_hero_media|default([]) ? ' news-hero__lead--has-media' : '' }}">
+          <div class="news-hero__lead-text min-w-0">
+            {% if page and label %}
+              <h1{{ title_attributes.addClass('news-hero__title', 'text-3xl', 'font-extrabold', 'text-gray-900', 'lg:text-4xl', 'leading-tight', 'm-0') }}>{{ label }}</h1>
+            {% endif %}
+
+            {% if summary %}
+              <div class="news-hero__intro prose prose-neutral max-w-none text-base leading-relaxed text-gray-700 mt-4">
+                {{ summary }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if news_hero_media|default([]) %}
+            <div class="news-hero__lead-media w-full shrink-0 mx-auto lg:mx-0">
+              <div class="news-hero-media overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm">
+                {{ news_hero_media }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="news-hero__trail w-full min-w-0">
+          <div class="news-hero__meta flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+            {% if news_updated_formatted %}
+              <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 font-medium text-slate-800">
+                <time datetime="{{ news_changed_iso }}">{{ news_updated_formatted }}</time>
+              </span>
+            {% endif %}
+            <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-medium text-amber-950">{{ 'News'|t }}</span>
+            {% if content.field_taxonomy is defined and content.field_taxonomy|render|striptags|trim is not empty %}
+              <span class="news-hero__meta-chips inline-flex flex-wrap items-center gap-2">
+                {{ content.field_taxonomy }}
+              </span>
+            {% endif %}
+            {% if content.field_tags is defined and content.field_tags|render|striptags|trim is not empty %}
+              <span class="news-hero__meta-chips inline-flex flex-wrap items-center gap-2">
+                {{ content.field_tags }}
+              </span>
+            {% endif %}
+          </div>
+
+          {% set show_glance =
+            (content.field_effective_date is defined and content.field_effective_date|render|striptags|trim)
+            or (content.field_applies_to is defined and content.field_applies_to|render|striptags|trim)
+            or (content.field_requirement is defined and content.field_requirement|render|striptags|trim)
+            or (content.field_source_scope is defined and content.field_source_scope|render|striptags|trim)
+          %}
+
+          {% if show_glance %}
+            <section class="news-facts mt-5" aria-label="{{ 'At a glance'|t }}">
+              <p class="news-facts__heading">{{ 'At a glance'|t }}</p>
+              {% if content.field_effective_date is defined and content.field_effective_date|render|striptags|trim is not empty %}
+                <div class="news-facts__row">
+                  <span class="news-facts__label">{{ 'Effective date'|t }}</span>
+                  <div class="news-facts__value">{{ content.field_effective_date }}</div>
+                </div>
+              {% endif %}
+              {% if content.field_applies_to is defined and content.field_applies_to|render|striptags|trim is not empty %}
+                <div class="news-facts__row">
+                  <span class="news-facts__label">{{ 'Applies to'|t }}</span>
+                  <div class="news-facts__value">{{ content.field_applies_to }}</div>
+                </div>
+              {% endif %}
+              {% if content.field_requirement is defined and content.field_requirement|render|striptags|trim is not empty %}
+                <div class="news-facts__row">
+                  <span class="news-facts__label">{{ 'Requirement'|t }}</span>
+                  <div class="news-facts__value">{{ content.field_requirement }}</div>
+                </div>
+              {% endif %}
+              {% if content.field_source_scope is defined and content.field_source_scope|render|striptags|trim is not empty %}
+                <div class="news-facts__row">
+                  <span class="news-facts__label">{{ 'Source / scope'|t }}</span>
+                  <div class="news-facts__value">{{ content.field_source_scope }}</div>
+                </div>
+              {% endif %}
+            </section>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="pt-8 prose prose-neutral max-w-none">
-    <div class="max-w-[1320px] mx-auto">
-      <div{{ content_attributes.addClass('node__content') }}>
-        {{ content }}
+  <div
+    {{ content_attributes.addClass('news-main', 'news-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none') }}
+    id="news-root"
+  >
+    {{ content|without(
+      'addtoany',
+      'field_media',
+      'field_effective_date',
+      'field_applies_to',
+      'field_requirement',
+      'field_source_scope',
+      'field_meta',
+      'field_tags',
+      'field_taxonomy',
+      'field_comments'
+    ) }}
+  </div>
+
+  {# AddToAny is mostly icons/links — do not gate on striptags|trim (that hides the block). #}
+  {% if content.addtoany %}
+    <aside class="news-after-body mx-auto mt-10 w-full max-w-[1320px] px-4 sm:px-6" aria-label="{{ 'Share this article'|t }}">
+      <div class="news-after-body__card">
+        <p class="news-after-body__title">{{ 'Found this helpful? Share it so colleagues and contacts can stay up to date.'|t }}</p>
+        <div class="news-after-body__inner">
+          {{ content.addtoany }}
+        </div>
       </div>
-    </div>
-      <!-- Back to top (anchor) -->
-    <div class="mt-10">
-      <a
-        href="#top"
-        class="inline-flex items-center gap-2 text-sm underline underline-offset-2 text-gray-700 hover:text-gray-900"
-      >
-        {{ "Back to top"|t }}
-      </a>
-    </div>
-  </section>
-
+    </aside>
+  {% endif %}
 </article>

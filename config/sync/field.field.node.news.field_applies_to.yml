@@ -1,0 +1,19 @@
+uuid: c98f7fed-5b90-4361-802e-dff3f3111b19
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_applies_to
+    - node.type.news
+id: node.news.field_applies_to
+field_name: field_applies_to
+entity_type: node
+bundle: news
+label: 'Applies to'
+description: 'Who or which entities the news item applies to (short text).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

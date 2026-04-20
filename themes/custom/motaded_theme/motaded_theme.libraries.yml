@@ -1,4 +1,16 @@
 # Async Font Awesome: local core + brands only (see motaded_theme.info.yml libraries-override + extend).
+icon-card-tiny:
+  version: VERSION
+  css:
+    component:
+      components/icon-card-tiny/icon-card-tiny.css: {}
+
+num-card:
+  version: VERSION
+  css:
+    component:
+      components/num-card/num-card.css: {}
+
 fontawesome_async:
   version: VERSION
   js:
@@ -58,6 +70,8 @@ base:
         weight: -10
       css/components/ui-dialog.css:
         weight: -10
+      components/article-card/article-card.css:
+        weight: -8
   js:
     js/lang-switcher.js: {}
   dependencies:
@@ -103,6 +117,18 @@ node:
     component:
       css/components/node.css:
         weight: -10
+  js:
+    js/service-body-readmore.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+blog_listing:
+  version: VERSION
+  css:
+    component:
+      css/components/blog-listing.css:
+        weight: -8
 progress:
   version: VERSION
   css:
@@ -145,9 +171,24 @@ alpine:
 toc:
   js:
     js/toc.js: {}
+  dependencies:
+    - motaded_theme/alpine
 search-page:
   js:
     js/content-search.js: {}
+services-directory:
+  version: VERSION
+  css:
+    component:
+      css/components/services-directory.css:
+        weight: -9
+  js:
+    js/services-directory-filters.js: {}
+  dependencies:
+    - motaded_theme/base
+    - core/drupal
+    - core/once
+
 quick-links:
   js:
     js/quick-links.js: {}

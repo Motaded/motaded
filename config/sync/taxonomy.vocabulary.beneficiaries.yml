@@ -1,0 +1,9 @@
+uuid: bd6ce161-2537-4347-9f03-862cc908b3d3
+langcode: en
+status: true
+dependencies: {  }
+name: Beneficiaries
+vid: beneficiaries
+description: 'Target beneficiary groups for services.'
+weight: 0
+new_revision: false

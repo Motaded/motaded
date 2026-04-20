@@ -2,18 +2,14 @@
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
-
-<article class="icon-card flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6">
-  <div class="flex items-center gap-3">
-    <span
-      class="icon-wrapper flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-base font-semibold text-green-700"
-      >{{ number }}</span
-    >
-    {% if title %}
-      <h3 class="text-base font-semibold leading-6 text-neutral-900">
-        {{ title }}
-      </h3>
-    {% endif %}
+<article class="num-card">
+  <div class="num-card__inner">
+    <span class="num-card__badge icon-wrapper" aria-hidden="true">{{ number }}</span>
+    <div class="num-card__main">
+      {% if title %}
+        <h3 class="num-card__title">{{ title }}</h3>
+      {% endif %}
+      <div class="num-card__desc">{{ desc }}</div>
+    </div>
   </div>
-  <p class="text-sm leading-5 text-gray-700">{{ desc }}</p>
 </article>

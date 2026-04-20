@@ -27,11 +27,12 @@ settings:
   preselect_views:
     news: news
     partners: partners
+    related_similar: related_similar
     services: services
   enabled_settings:
-    title: title
-    limit: limit
-    offset: offset
     argument: argument
     header: header
+    limit: limit
+    offset: offset
+    title: title
 field_type: viewsreference

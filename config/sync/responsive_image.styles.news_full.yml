@@ -14,7 +14,6 @@ image_style_mappings:
   -
     image_mapping_type: sizes
     image_mapping:
-      # Content container is max 1320px with px-4 gutters.
       sizes: 'min(100vw - 32px, 1320px)'
       sizes_image_styles:
         - max_325x325
@@ -26,4 +25,3 @@ image_style_mappings:
     multiplier: 1x
 breakpoint_group: responsive_image
 fallback_image_style: max_650x650
-

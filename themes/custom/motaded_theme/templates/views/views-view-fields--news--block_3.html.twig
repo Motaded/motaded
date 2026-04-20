@@ -1,0 +1,76 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{% set card_image = card_image|default({}) %}
+{% set view_link = fields.view_node.content|render|striptags|trim %}
+{% set card_tag = (card_type_label ?? '')|trim %}
+{% set card_title_text = fields.title.content|render|striptags|trim %}
+{% set card_date = fields.created.content|render|striptags|trim %}
+{% set excerpt_text = fields.body.content|render|striptags|trim %}
+{% set has_image = card_image.src is not empty %}
+
+<a
+  href="{{ view_link }}"
+  class="article-card article-card--link group block h-full pt-3"
+  aria-label="{% if card_title_text %}{{ 'More about @title'|t({'@title': card_title_text }) }}{% else %}{{ 'Read more'|t }}{% endif %}"
+>
+  <article class="article-card__inner h-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200">
+    <div class="article-card__media relative h-[180px] w-full overflow-hidden md:h-[200px]">
+      {% if has_image %}
+        <img
+          alt="{{ card_image.alt|default(card_title_text)|e }}"
+          class="article-card__image h-full w-full object-cover transition duration-300"
+          src="{{ card_image.src }}"
+          {% if card_image.srcset %}
+          srcset="{{ card_image.srcset }}"
+          sizes="(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1023px) 50vw, 25vw"
+          {% endif %}
+          width="{{ card_image.width|default(151) }}"
+          height="{{ card_image.height|default(120) }}"
+          loading="lazy"
+          decoding="async"
+        />
+      {% else %}
+        <div class="article-card__media article-card__media--placeholder relative z-0 w-full h-full" aria-hidden="true"></div>
+      {% endif %}
+      <span class="article-card__media-glow" aria-hidden="true"></span>
+    </div>
+
+    <div class="article-card__content flex flex-1 flex-col p-4">
+      {% if card_date %}
+        <div class="article-card__meta-row mb-2 flex justify-end">
+          <span class="article-card__date">
+            {{ card_date }}
+          </span>
+        </div>
+      {% endif %}
+
+      <div class="article-card__title-row mb-3 flex min-w-0 items-center gap-2">
+        {% if card_tag %}
+          <span class="article-card__tag shrink-0">
+            {{ card_tag }}
+          </span>
+        {% endif %}
+        <h3 class="article-card__title m-0 min-w-0 flex-1 text-lg font-bold leading-snug text-gray-900 transition">
+          {{ fields.title.content }}
+        </h3>
+      </div>
+
+      {% if excerpt_text %}
+        <p class="article-card__excerpt mb-4 mt-0 flex-1 text-sm leading-6 text-gray-600">
+          {{ excerpt_text }}
+        </p>
+      {% endif %}
+
+      <div class="article-card__cta-row mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+        <span class="article-card__cta text-sm font-semibold text-primary-600">
+          {{ 'Read more'|t }}
+        </span>
+        <span class="article-card__cta-icon text-primary-600" aria-hidden="true">
+          &#8594;
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

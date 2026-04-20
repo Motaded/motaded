@@ -7,8 +7,13 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.storage.node.body
     - field.storage.node.field_free_consultation
+    - field.storage.node.field_keywords
+    - field.storage.node.field_service_cost
+    - field.storage.node.field_service_duration
     - field.storage.node.field_tags
+    - field.storage.node.field_target_audience
     - node.type.page
+    - taxonomy.vocabulary.beneficiaries
     - taxonomy.vocabulary.service_tags
     - taxonomy.vocabulary.taxonomy
   content:
@@ -267,7 +272,6 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
@@ -441,7 +445,6 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - 'user.node_grants:view'
@@ -1486,6 +1489,257 @@ display:
           text: view
           output_url_as_text: true
           absolute: false
+        field_keywords:
+          id: field_keywords
+          table: node__field_keywords
+          field: field_keywords
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_target_audience:
+          id: field_target_audience
+          table: node__field_target_audience
+          field: field_target_audience
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_service_cost:
+          id: field_service_cost
+          table: node__field_service_cost
+          field: field_service_cost
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_service_duration:
+          id: field_service_duration
+          table: node__field_service_duration
+          field: field_service_duration
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_tags:
           id: field_tags
           table: node__field_tags
@@ -1689,13 +1943,13 @@ display:
       exposed_form:
         type: bef
         options:
-          submit_button: Apply
+          submit_button: Search
           reset_button: true
-          reset_button_label: 'Clear filters'
+          reset_button_label: 'Reset Filters'
           exposed_sorts_label: Sort
-          expose_sort_order: false
-          sort_asc_label: A-Z
-          sort_desc_label: Z-A
+          expose_sort_order: true
+          sort_asc_label: ASC
+          sort_desc_label: DESC
           text_input_required: 'Select any filter and click on Apply to see results'
           text_input_required_format: plain_text
           bef:
@@ -1703,61 +1957,53 @@ display:
               autosubmit: true
               auto_submit_sort_only: false
               autosubmit_breakpoint: ''
-              autosubmit_exclude_textfield: false
+              autosubmit_exclude_textfield: true
               autosubmit_textfield_delay: 500
               autosubmit_textfield_minimum_length: 3
-              autosubmit_hide: true
+              autosubmit_hide: false
               input_required: false
               allow_secondary: false
-              secondary_label: 'Advanced options'
-              secondary_open: false
-              reset_button_always_show: false
+              secondary_label: 'Filter Services'
+              secondary_open: true
+              reset_button_always_show: true
             sort:
               plugin_id: default
               advanced:
-                combine: false
-                combine_rewrite: ''
+                combine: true
+                combine_rewrite: "Authored on ASC|ASC\r\nAuthored on DESC|DESC"
                 combine_param: sort_bef_combine
                 reset: false
                 reset_label: ''
                 collapsible: false
                 collapsible_label: 'Sort options'
-                is_secondary: false
+                is_secondary: true
             filter:
               combine:
                 plugin_id: default
                 advanced:
-                  sort_options_method: alphabetical_asc
-                  sort_options_natural: true
                   placeholder_text: ''
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   open_by_default: false
                   is_secondary: false
-                  hide_label: false
-                  field_classes: ''
+                  hide_label: true
+                  field_classes: search-all
                   sort_options_unsupported: ''
-              field_tags_target_id:
-                plugin_id: bef
+              field_beneficiaries_target_id:
+                plugin_id: default
                 advanced:
                   sort_options: false
                   sort_options_method: alphabetical_asc
                   sort_options_natural: true
                   rewrite:
-                    filter_rewrite_values: ''
-                    filter_rewrite_values_key: false
+                    filter_rewrite_values: All|Beneficiaries
+                    filter_rewrite_values_key: true
                   collapsible: false
                   collapsible_disable_automatic_open: false
                   open_by_default: false
                   is_secondary: false
-                  hide_label: false
+                  hide_label: true
                   field_classes: ''
-                select_all_none: false
-                select_all_none_nested: false
-                display_inline: true
-                soft_limit: 0
-                soft_limit_label_less: 'Show less'
-                soft_limit_label_more: 'Show more'
               field_taxonomy_target_id:
                 plugin_id: bef
                 advanced:
@@ -1771,30 +2017,44 @@ display:
                   collapsible_disable_automatic_open: false
                   open_by_default: false
                   is_secondary: false
-                  hide_label: true
-                  field_classes: ''
+                  hide_label: false
+                  field_classes: services-directory__taxonomy
                 select_all_none: false
-                select_all_none_nested: false
-                display_inline: true
+                select_all_none_nested: true
+                display_inline: false
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
-      sorts:
-        title:
-          id: title
-          table: node_field_data
-          field: title
+              field_tags_target_id:
+                plugin_id: default
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: All|Tags
+                    filter_rewrite_values_key: true
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: true
+                  field_classes: ''
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: node
-          entity_field: title
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: Title
-            field_identifier: title
-          exposed: true
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No results found'
+            format: plain_text
+          tokenize: false
+      sorts:
         created:
           id: created
           table: node_field_data
@@ -1805,7 +2065,7 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: date
-          order: ASC
+          order: DESC
           expose:
             label: 'Authored on'
             field_identifier: created
@@ -1832,6 +2092,7 @@ display:
           plugin_id: bundle
           value:
             page: page
+          group: 1
         field_display_on_services_value:
           id: field_display_on_services_value
           table: node__field_display_on_services
@@ -1922,7 +2183,7 @@ display:
           plugin_id: combine
           operator: allwords
           value: ''
-          group: 1
+          group: 2
           exposed: true
           expose:
             operator_id: combine_op
@@ -1954,36 +2215,37 @@ display:
           fields:
             title: title
             body: body
-        field_tags_target_id:
-          id: field_tags_target_id
-          table: node__field_tags
-          field: field_tags_target_id
+            field_keywords: field_keywords
+            field_target_audience: field_target_audience
+            field_service_cost: field_service_cost
+            field_service_duration: field_service_duration
+        field_beneficiaries_target_id:
+          id: field_beneficiaries_target_id
+          table: node__field_beneficiaries
+          field: field_beneficiaries_target_id
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value:
-            142: 142
-            143: 143
-            151: 151
-          group: 1
+          value: {  }
+          group: 3
           exposed: true
           expose:
-            operator_id: field_tags_target_id_op
-            label: Categories
+            operator_id: field_beneficiaries_target_id_op
+            label: Beneficiaries
             description: ''
             use_operator: false
-            operator: field_tags_target_id_op
+            operator: field_beneficiaries_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_tags_target_id
+            identifier: field_beneficiaries_target_id
             required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: true
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -1997,7 +2259,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          vid: service_tags
+          vid: beneficiaries
           type: select
           hierarchy: false
           limit: true
@@ -2012,11 +2274,11 @@ display:
           plugin_id: taxonomy_index_tid
           operator: or
           value: {  }
-          group: 1
+          group: 3
           exposed: true
           expose:
             operator_id: field_taxonomy_target_id_op
-            label: ''
+            label: Categories
             description: ''
             use_operator: false
             operator: field_taxonomy_target_id_op
@@ -2044,6 +2306,54 @@ display:
           reduce_duplicates: false
           vid: taxonomy
           type: select
+          hierarchy: true
+          limit: true
+          error_message: true
+        field_tags_target_id:
+          id: field_tags_target_id
+          table: node__field_tags
+          field: field_tags_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value:
+            142: 142
+            143: 143
+            151: 151
+          group: 3
+          exposed: true
+          expose:
+            operator_id: field_tags_target_id_op
+            label: Tags
+            description: ''
+            use_operator: false
+            operator: field_tags_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_tags_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: service_tags
+          type: select
           hierarchy: false
           limit: true
           error_message: true
@@ -2051,6 +2361,8 @@ display:
         operator: AND
         groups:
           1: AND
+          2: AND
+          3: AND
       style:
         type: default
         options:
@@ -2065,6 +2377,7 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        empty: false
         css_class: false
         use_ajax: false
         pager: false
@@ -2090,6 +2403,7 @@ display:
           empty: false
           content: '@total result(s)'
       rendering_language: '***LANGUAGE_language_interface***'
+      exposed_block: false
       display_extenders:
         metatag_display_extender:
           metatags:
@@ -2110,8 +2424,13 @@ display:
         - url
         - url.query_args
         - 'url.query_args:sort_by'
+        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_keywords'
+        - 'config:field.storage.node.field_service_cost'
+        - 'config:field.storage.node.field_service_duration'
         - 'config:field.storage.node.field_tags'
+        - 'config:field.storage.node.field_target_audience'
