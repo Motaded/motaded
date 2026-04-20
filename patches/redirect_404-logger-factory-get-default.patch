@@ -1,8 +1,6 @@
-diff --git a/modules/redirect_404/src/Render/Redirect404LogSuppressor.php b/modules/redirect_404/src/Render/Redirect404LogSuppressor.php
-index 3d7c3ae..b5d5c3f 100644
 --- a/modules/redirect_404/src/Render/Redirect404LogSuppressor.php
 +++ b/modules/redirect_404/src/Render/Redirect404LogSuppressor.php
-@@ -44,12 +44,17 @@ class Redirect404LogSuppressor implements LoggerChannelFactoryInterface {
+@@ -44,7 +44,11 @@
    /**
     * {@inheritdoc}
     */
@@ -15,9 +13,3 @@ index 3d7c3ae..b5d5c3f 100644
      if ($channel == 'page not found' && $this->configFactory->get('redirect_404.settings')->get('suppress_404')) {
        // Do not log if a 404 error is detected and the suppress_404 is enabled.
        return new NullLogger();
-     }
- 
-     // Call LoggerChannelFactory to let the default logger workflow proceed.
-    return $this->loggerChannelFactory->get($channel);
-  }
-\ No newline at end of file
