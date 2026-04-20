@@ -25,7 +25,30 @@
 {{ attach_library('motaded_theme/toc') }}
 <article{{ attributes.addClass(classes) }}
     id="toc-root"
-    x-data="articlePageEN()"
+    x-data="window.articlePageEN ? window.articlePageEN() : {
+      tocOpen: false,
+      activeId: null,
+      toc: [],
+      _booted: false,
+      init() {
+        if (this._booted) return;
+        const boot = () => {
+          if (this._booted || !window.articlePageEN) return;
+          const real = window.articlePageEN();
+          this.tocOpen = real.tocOpen ?? this.tocOpen;
+          this.activeId = real.activeId ?? this.activeId;
+          this.toc = real.toc ?? this.toc;
+          this.scrollTo = typeof real.scrollTo === 'function' ? real.scrollTo.bind(this) : this.scrollTo;
+          this._booted = true;
+          if (typeof real.init === 'function') real.init.call(this);
+        };
+        boot();
+        setTimeout(boot, 50);
+        setTimeout(boot, 250);
+        setTimeout(boot, 1000);
+      },
+      scrollTo() {},
+    }"
     x-init="init()"
     data-inline-cta-eyebrow="{{ 'Next step'|t }}"
     data-inline-cta-title="{{ 'Talk to Motaded experts today'|t }}"
