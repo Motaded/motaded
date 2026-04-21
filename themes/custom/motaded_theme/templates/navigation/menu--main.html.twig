@@ -81,8 +81,10 @@
 								{# {{ link(item.title, item.url) }} #}
 								{{ menus.menu_links(item.below, attributes.setAttribute('menu_parent', title), menu_level + 1) }}
 							{% else %}
+								{% set internal_path = (menu_level == 1 and item.url.isRouted) ? item.url.getInternalPath() : '' %}
+								{% set is_services_hub = menu_level == 1 and internal_path == 'services' %}
 								{% if menu_level == 1 %}
-									<li>
+									<li{% if is_services_hub %} class="col-span-full flex justify-start mb-2 lg:mb-4 list-none"{% endif %}>
 									{% endif %}
 									{% set link_classes = [
               'flex',
@@ -106,9 +108,37 @@
               'text-gray-900'
             ]
           %}
-									{% set tmp = menu_level == 0 ? '<span>'~item.title~'</span>' : '<p class="text-xs font-medium leading-[1.6]">'~item.title~'</p>' %}
+									{% set mega_hub_classes = [
+              'inline-flex',
+              'items-center',
+              'justify-center',
+              'rounded-full',
+              'bg-primary-600',
+              'text-white',
+              'px-8',
+              'py-3.5',
+              'text-xs',
+              'font-normal',
+              'no-underline',
+              'shadow-sm',
+              'transition',
+              'hover:bg-primary-700',
+              'hover:no-underline',
+              'focus-visible:outline',
+              'focus-visible:outline-2',
+              'focus-visible:outline-offset-2',
+              'focus-visible:outline-gray-800',
+            ] %}
+									{% set mega_default_classes = ['hover:underline', 'block'] %}
+									{% set tmp = menu_level == 0 ? '<span>'~item.title~'</span>' : (is_services_hub ? '<span class="leading-none">'~item.title~'</span>' : '<p class="text-xs font-medium leading-[1.6]">'~item.title~'</p>') %}
 									{% set link_text %}{{ tmp|raw }}{% endset %}
-									{{ link(link_text, item.url, create_attribute({'class': menu_level == 0 ? link_classes : 'hover:underline block'})) }}
+									{% set link_attributes = menu_level == 0
+              ? create_attribute({'class': link_classes})
+              : (is_services_hub
+                ? create_attribute({'class': mega_hub_classes, 'style': 'min-width: 180px;'})
+                : create_attribute({'class': mega_default_classes}))
+            %}
+									{{ link(link_text, item.url, link_attributes) }}
 									{% if menu_level == 1 %}
 									</li>
 								{% endif %}
@@ -118,9 +148,9 @@
 						{% endif %}
 					{% endfor %}
 					{% if menu_level == 1 %}
-					</div>
+					</ul>
 				</div>
-			</ul>
+			</div>
 		{% endif %}
 	{% endif %}
 {% endmacro %}

@@ -46,7 +46,7 @@ display:
             field_beneficiaries_target_id:
               advanced:
                 rewrite:
-                  filter_rewrite_values: الكل|المستفيدون
+                  filter_rewrite_values: All|المستفيدون
             field_tags_target_id:
               advanced:
                 rewrite:
