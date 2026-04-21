@@ -46,3 +46,11 @@ ul.menu {
 ul.menu a.is-active {
   color: #000;
 }
+
+/* Logged-in users get contextual wrappers around blocks.
+ * Keep wrappers static in header nav so mega menu positions to full header width.
+ */
+#site-header nav .contextual-region {
+  position: static;
+  width: 100%;
+}

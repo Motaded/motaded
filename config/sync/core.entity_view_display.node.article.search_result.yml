@@ -38,6 +38,7 @@ hidden:
   addtoany: true
   body: true
   comment: true
+  field_estimated_read_time: true
   field_image: true
   field_media: true
   field_meta: true

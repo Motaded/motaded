@@ -57,6 +57,8 @@
 							</button>
 							{{ menus.menu_links(item.below, attributes.setAttribute('menu_parent', title), menu_level + 1) }}
 						{% else %}
+							{% set internal_path = (menu_level == 1 and item.url.isRouted) ? item.url.getInternalPath() : '' %}
+							{% set is_services_hub = menu_level == 1 and internal_path == 'services' %}
 							{% if menu_level == 1 %}
 								<li>
 								{% endif %}
@@ -81,7 +83,40 @@
             'text-gray-900',
           ]
         %}
-								{{ link(item.title, item.url, create_attribute({'class': menu_level == 0 ? link_classes : 'block rounded-md px-3 py-2 hover:bg-gray-50 text-sm'})) }}
+								{% set mobile_hub_classes = [
+            'inline-flex',
+            'items-center',
+            'justify-center',
+            'rounded-full',
+            'bg-primary-600',
+            'text-white',
+            'px-8',
+            'py-3.5',
+            'font-normal',
+            'no-underline',
+            'shadow-sm',
+            'transition',
+            'hover:bg-primary-700',
+            'hover:no-underline',
+            'focus-visible:outline',
+            'focus-visible:outline-2',
+            'focus-visible:outline-offset-2',
+            'focus-visible:outline-gray-800',
+            'block',
+            'rounded-md',
+            'px-3',
+            'py-2',
+            'hover:bg-gray-50',
+            'text-sm',
+          ] %}
+								{% set mobile_default_classes = ['block', 'rounded-md', 'px-3', 'py-2', 'hover:bg-gray-50', 'text-sm'] %}
+								{% set mobile_link_attributes = menu_level == 0
+            ? create_attribute({'class': link_classes})
+            : (is_services_hub
+              ? create_attribute({'class': mobile_hub_classes})
+              : create_attribute({'class': mobile_default_classes}))
+          %}
+								{{ link(item.title, item.url, mobile_link_attributes) }}
 								{% if menu_level == 1 %}
 								</li>
 							{% endif %}
