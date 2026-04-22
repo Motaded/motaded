@@ -1,0 +1,21 @@
+{
+    "name": "drupal/content_export_csv",
+    "type": "drupal-module",
+    "description": "Exports node content to CSV file.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "George Anderson (geoanders)",
+            "homepage": "https://www.drupal.org/u/geoanders",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://drupal.org/project/content_export_csv",
+    "support": {
+        "issues": "https://drupal.org/project/issues/content_export_csv",
+        "source": "https://git.drupalcode.org/project/content_export_csv"
+    },
+    "require": {
+        "drupal/core": "^8.8 || ^9 || ^10 || ^11"
+    }
+}

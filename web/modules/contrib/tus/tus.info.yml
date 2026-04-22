@@ -1,0 +1,11 @@
+name: 'TUS'
+type: module
+description: 'Integrate the TUS resumable upload protocol.'
+core_version_requirement: ^8.8 || ~9.0 || ^10 || ^11
+package: 'Media'
+configure: tus.tus_settings_form
+
+# Information added by Drupal.org packaging script on 2024-05-07
+version: '8.x-2.1'
+project: 'tus'
+datestamp: 1715096333

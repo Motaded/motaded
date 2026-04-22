@@ -1,0 +1,12 @@
+name: 'Redirect Regex'
+type: module
+description: 'Extends the redirect module to support regex pattern matching using core redirect entities.'
+package: Custom
+core_version_requirement: '>=10'
+dependencies:
+  - redirect:redirect (>=1.12)
+
+# Information added by Drupal.org packaging script on 2025-09-25
+version: '1.0.0-alpha5'
+project: 'redirect_regex'
+datestamp: 1758812054

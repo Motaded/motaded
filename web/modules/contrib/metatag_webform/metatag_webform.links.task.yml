@@ -1,0 +1,5 @@
+metatag_webform.settings_form:
+  title: 'Metatags'
+  route_name: metatag_webform.settings_form
+  parent_id: entity.webform.settings
+  weight: 90

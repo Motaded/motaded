@@ -1,0 +1,8 @@
+# Plugin \Drupal\ckeditor5_font\FontColorsManager
+ckeditor5.plugin.ckeditor5_font_colors:
+  type: mapping
+  label: Font Colors
+  mapping:
+    colors:
+      type: string
+      label: 'Font Colors'

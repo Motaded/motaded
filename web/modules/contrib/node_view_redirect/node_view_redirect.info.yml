@@ -1,0 +1,11 @@
+name: Node View Redirect
+type: module
+description: Implements a redirect from node view to a existing path for each content type
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+package: other
+configure: node_view_redirect.config_form
+
+# Information added by Drupal.org packaging script on 2024-09-12
+version: '8.x-1.2'
+project: 'node_view_redirect'
+datestamp: 1726160010

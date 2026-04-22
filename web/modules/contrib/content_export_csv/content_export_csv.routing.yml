@@ -1,0 +1,7 @@
+content_export_csv.export:
+  path: '/admin/content/content-export'
+  defaults:
+    _form: '\Drupal\content_export_csv\Form\ContentExportForm'
+    _title: Content export
+  requirements:
+    _permission: 'access content export'

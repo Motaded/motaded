@@ -1,0 +1,6 @@
+content_export_csv.content_export:
+  route_name: content_export_csv.export
+  title: 'Export Content'
+  appears_on:
+    - system.admin_content
+  weight: 2

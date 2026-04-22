@@ -1,0 +1,11 @@
+name: Recreate Block Content
+type: module
+description: Recreates the block content for a exported block.
+core_version_requirement: ^9.3 || ^10 || ^11
+dependencies:
+  - drupal:block_content
+
+# Information added by Drupal.org packaging script on 2024-11-28
+version: '3.0.1'
+project: 'recreate_block_content'
+datestamp: 1732819578

@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Metatag Webform module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\webform\WebformInterface;
+
+/**
+ * Implements hook_help().
+ */
+function metatag_webform_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.metatag_webform') {
+    $output = '';
+    $output .= '<h3>' . (string) new TranslatableMarkup('About') . '</h3>';
+    $output .= '<p>' . (string) new TranslatableMarkup('This module provides the ability to add metatags for webforms.') . '</p>';
+    $output .= '<h3>' . (string) new TranslatableMarkup('How to use') . '</h3>';
+    $output .= '<ul>';
+    $output .= '<li>' . (string) new TranslatableMarkup('Navigate to <a href=":settings-page">/admin/structure/webform</a> and click "Build" on the webform you want add metatags for', [':settings-page' => '/admin/structure/webform']) . '</li>';
+    $output .= '<li>' . (string) new TranslatableMarkup('Go to "Settings" primary tab, then "Metatags" secondary tab') . '</li>';
+    $output .= '<li>' . (string) new TranslatableMarkup('Add metatags for the webform and click "Save"') . '</li>';
+    $output .= '<li>' . (string) new TranslatableMarkup('Rebuild site\'s cache at <a href=":performance-page">Configuration » Development » Performance</a> and click "Build" on the webform you want add metatags for', [':performance-page' => '/admin/config/development/performance']) . '</li>';
+    $output .= '</ul>';
+    $output .= '<p>' . (string) new TranslatableMarkup('Visit the <a href=":project_link">project page</a> on Drupal.org for more information.', [
+      ':project_link' => 'https://www.drupal.org/project/metatag_webform',
+    ]);
+
+    return $output;
+  }
+}
+
+/**
+ * Implements hook_metatags_alter().
+ */
+function metatag_webform_metatags_alter(array &$metatags, array &$context): void {
+  if (!metatag_is_current_route_supported()) {
+    return;
+  }
+
+  $current_route_match = \Drupal::routeMatch();
+
+  if (!$current_route_match->getRouteName() == 'entity.webform.canonical') {
+    return;
+  }
+
+  $webform_id = $current_route_match->getRawParameter('webform');
+
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $metatag_defaults_storage */
+  $metatag_defaults_storage = \Drupal::entityTypeManager()->getStorage('metatag_defaults');
+  $metatag_defaults_ids = $metatag_defaults_storage->getQuery()
+    ->condition('status', TRUE)
+    ->condition('id', implode('.', [
+      'webform', $webform_id,
+    ]))->execute();
+
+  if (!empty($metatag_defaults_ids)) {
+    /** @var \Drupal\metatag\Entity\MetatagDefaults $metatag_defaults */
+    $metatag_defaults = $metatag_defaults_storage->load(reset($metatag_defaults_ids));
+    $tags = $metatag_defaults->get('tags');
+
+    $metatags = array_merge($metatags, $tags);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function metatag_webform_entity_delete(EntityInterface $entity): void {
+  if ($entity instanceof WebformInterface) {
+    /** @var \Drupal\metatag\MetatagDefaultsInterface $metatag_defaults */
+    $metatag_defaults = \Drupal::entityTypeManager()->getStorage('metatag_defaults')
+      ->load(implode('.', [
+        'webform', $entity->id(),
+      ]));
+
+    if (!is_null($metatag_defaults)) {
+      $metatag_defaults->delete();
+    }
+  }
+}

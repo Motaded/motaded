@@ -1,0 +1,13 @@
+name: Metatag Webform
+description: Provides the ability to add metatags for webforms
+type: module
+core_version_requirement: ^9 || ^10 || ^11
+package: SEO
+dependencies:
+  - metatag:metatag
+  - webform:webform
+
+# Information added by Drupal.org packaging script on 2024-03-24
+version: '1.0.5'
+project: 'metatag_webform'
+datestamp: 1711305846
