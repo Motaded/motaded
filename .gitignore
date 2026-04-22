@@ -55,6 +55,7 @@ motaded.com.sa/
 error_log
 composer-setup.php
 composer.phar
+block_contents.html
 .htaccess
 
 .history/
