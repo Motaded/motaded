@@ -1,0 +1,7 @@
+popup_info:
+  value: '<h2>نستخدم ملفات تعريف الارتباط</h2><p>بمتابعتك استخدام هذا الموقع، فإنك تقرّ باطلاعك على <a href="/cookie-policy">سياسة ملفات تعريف الارتباط</a>.</p>'
+  format: full_html
+mobile_popup_info:
+  value: '<h2>نستخدم ملفات تعريف الارتباط</h2><p>بمتابعتك استخدام هذا الموقع، فإنك تقرّ باطلاعك على <a href="/cookie-policy">سياسة ملفات تعريف الارتباط</a>.</p>'
+  format: full_html
+popup_agree_button_message: اطلعت

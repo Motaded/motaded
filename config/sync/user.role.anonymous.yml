@@ -7,6 +7,7 @@ dependencies:
   module:
     - comment
     - contact
+    - eu_cookie_compliance
     - filter
     - media
     - system
@@ -20,6 +21,7 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
+  - 'display eu cookie compliance popup'
   - 'post comments'
   - 'use text format restricted_html'
   - 'view media'

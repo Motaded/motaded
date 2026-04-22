@@ -78,27 +78,31 @@
 %}
 {{ attach_library('motaded_theme/node') }}
 <article{{ attributes.addClass(classes) }}>
-
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
-
-  {# {% if display_submitted %}
-    <footer class="node__meta">
-      {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
+  {% set has_body = node.hasField('body') and not node.get('body').isEmpty() %}
+  {% set has_paragraphs = content.field_paragraphs['#items'] is defined and content.field_paragraphs['#items'] is not empty %}
+  {% if has_body and not has_paragraphs %}
+    <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+      {{ title_prefix }}
+      {% if page and label %}
+        <header class="page-basic-hero mx-auto w-full max-w-[52rem] pt-8 text-center sm:pt-12">
+          <h1{{ title_attributes.addClass('page-basic-hero__title', 'm-0', 'font-extrabold', 'text-gray-900') }}>{{ label }}</h1>
+        </header>
+      {% endif %}
+      {{ title_suffix }}
+      <div{{ content_attributes.addClass('page-basic-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none', 'mx-auto', 'mt-10', 'w-full', 'max-w-[52rem]', 'text-left', 'sm:mt-12') }}>
+        {{ content|without('field_paragraphs', 'addtoany') }}
       </div>
-    </footer>
-  {% endif %} #}
-
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content }}
-  </div>
-
+    </div>
+  {% else %}
+    {{ title_prefix }}
+    {% if label and not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
+    <div{{ content_attributes.addClass('node__content') }}>
+      {{ content|without('addtoany') }}
+    </div>
+  {% endif %}
 </article>
