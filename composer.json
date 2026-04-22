@@ -119,7 +119,7 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "modules/contrib/webform/composer.libraries.json"
+                "web/modules/contrib/webform/composer.libraries.json"
             ]
         },
         "composer-exit-on-patch-failure": false,

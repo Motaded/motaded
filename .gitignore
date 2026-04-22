@@ -58,6 +58,7 @@ block_contents.html
 .htaccess
 
 .history/
+/private/
 
 # Ignore sql files
 *.sql

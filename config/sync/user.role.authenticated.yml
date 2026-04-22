@@ -3,8 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.basic_html
-    - filter.format.webform_default
+    - filter.format.restricted_html
   module:
     - comment
     - contact
@@ -27,6 +26,5 @@ permissions:
   - 'delete own files'
   - 'post comments'
   - 'skip comment approval'
-  - 'use text format basic_html'
-  - 'use text format webform_default'
+  - 'use text format restricted_html'
   - 'view media'

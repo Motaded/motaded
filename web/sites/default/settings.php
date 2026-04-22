@@ -917,8 +917,9 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
 }
 
 // Private file system (private://) for Webform and other protected uploads.
+// Keep outside web docroot to prevent direct URL access bypass.
 // See https://www.drupal.org/psa-2016-003
-$settings['file_private_path'] = $app_root . '/sites/default/files/private';
+$settings['file_private_path'] = dirname($app_root) . '/private';
 
 $settings['simple_sitemap_engines.index_now.key'] = 'c4755d75-1a26-46e7-aad9-7a819eb4f020'; 
 
