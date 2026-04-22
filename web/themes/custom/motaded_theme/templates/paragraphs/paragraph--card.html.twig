@@ -59,15 +59,15 @@
         <div class="grid place-items-center h-16 w-16 rounded-xl bg-primary-50 ring-1 ring-primary-200">
           {{ content.field_media }}
         </div>
-        <h2 class="text-lg font-semibold text-gray-900">
+        <h3 class="text-lg font-semibold text-gray-900">
           {{ content.field_title.0 }}
-        </h2>
+        </h3>
         <div class="text-gray-700 leading-relaxed">
           {{ content.field_body.0 }}
         </div>
         <a href="{{ content.field_link.0['#url'] }}" class="mt-2 inline-flex items-center gap-1 text-primary-600 font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 rounded">
           {{ content.field_link.0['#title'] }}
-          <img alt="" width="16" height="16" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" class="-rotate-90 rtl:rotate-90"/>
+          <img alt="Arrow icon" width="16" height="16" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" class="-rotate-90 rtl:rotate-90"/>
         </a>
       </div>
 

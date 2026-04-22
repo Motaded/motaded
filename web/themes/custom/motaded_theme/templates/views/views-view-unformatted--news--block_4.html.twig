@@ -35,11 +35,11 @@ rows.
 								</p>
 							</div>
 						</div>
-						<div class="flex-shrink-0 w-[151px] h-[120px]">
+						<div class="flex-shrink-0 w-[151px] aspect-[151/120] rounded-lg overflow-hidden">
 							{% if row.image.srcset %}
-								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 100vw, 151px" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover rounded-lg"/>
+								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 100vw, 151px" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover"/>
 							{% else %}
-								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover rounded-lg" src="{{ row.image.src }}"/>
+								<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover" src="{{ row.image.src }}"/>
 							{% endif %}
 						</div>
 					</div>
@@ -54,7 +54,7 @@ rows.
 		<a href="{{ row.url }}" class="block h-full">
 			<div class="bg-white rounded-xl p-4 h-full w-full border border-transparent hover:border-primary-600 shadow-sm transition">
 				<div
-					class="relative w-full h-full rounded-lg overflow-hidden">
+					class="relative w-full h-full rounded-lg overflow-hidden aspect-[16/9]">
 					<!-- image -->
 					{% if row.image.srcset %}
 						<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="(max-width: 767px) 100vw, (min-width: 768px) min(50vw, 640px)" width="{{ row.image.width }}" height="{{ row.image.height }}" class="absolute inset-0 w-full h-full object-cover"/>
@@ -86,11 +86,11 @@ rows.
 				<a href="{{ row.url }}" class="block min-h-72" x-show="current === {{ key }}" x-transition.opacity x-cloak>
 					<div class="bg-white rounded-xl p-4 h-full border border-transparent hover:border-primary-600 shadow-sm transition">
 						<div class="flex flex-col justify-between h-full">
-							<div class="relative w-full">
+							<div class="relative w-full rounded-lg overflow-hidden aspect-[16/9]">
 								{% if row.image.srcset %}
-									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="100vw" width="{{ row.image.width }}" height="{{ row.image.height }}" class="rounded-lg w-full h-[210px] object-cover"/>
+									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" src="{{ row.image.src }}" srcset="{{ row.image.srcset }}" sizes="100vw" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover"/>
 								{% else %}
-									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="rounded-lg w-full h-[210px] object-cover" src="{{ row.image.src }}"/>
+									<img loading="lazy" decoding="async" alt="{{ row.image.alt }}" width="{{ row.image.width }}" height="{{ row.image.height }}" class="w-full h-full object-cover" src="{{ row.image.src }}"/>
 								{% endif %}
 							</div>
 							<div class="mt-5 flex flex-col justify-between flex-1">

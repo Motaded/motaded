@@ -4,11 +4,12 @@
 #}
 {% set variant = variant|default('default') %}
 {% if variant == 'snapshot' %}
+  {% set icon_alt = title|default('Service icon') %}
   <article class="icon-card icon-card--snapshot">
     <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
       <img
         src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
-        alt=""
+        alt="{{ icon_alt }}"
         class="icon-card__iconImg"
         loading="lazy"
         decoding="async"
@@ -24,11 +25,12 @@
 
 {% elseif variant == 'objectives' %}
   {% set objectives_split = objectives_card_title is defined and objectives_card_title is not empty %}
+  {% set icon_alt = objectives_split ? objectives_card_title|default('Objective icon') : 'Objective icon' %}
   <article class="icon-card icon-card--objectives">
     <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
       <img
         src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
-        alt=""
+        alt="{{ icon_alt }}"
         class="icon-card__iconImg"
         loading="lazy"
         decoding="async"
@@ -45,11 +47,12 @@
   </article>
 
 {% elseif variant == 'service_icon_row' %}
+  {% set icon_alt = title|default('Service icon') %}
   <article class="icon-card icon-card--service-row">
     <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
       <img
         src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
-        alt=""
+        alt="{{ icon_alt }}"
         class="icon-card__iconImg"
         loading="lazy"
         decoding="async"
