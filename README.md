@@ -12,3 +12,4 @@
 - Composer root: project root (`composer.json`).
 - Drupal docroot: `web/`.
 - Config sync directory: `config/sync`.
+- DDEV config: `.ddev/config.yaml` (`docroot: web`).
