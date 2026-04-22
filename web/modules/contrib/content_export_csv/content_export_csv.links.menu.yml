@@ -1,6 +1,0 @@
-content_export_csv.export:
-  title: Content export
-  description: 'Content of any type can be exported.'
-  route_name: content_export_csv.export
-  parent: system.admin_content
-  weight: 100

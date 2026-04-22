@@ -1,6 +1,0 @@
-services:
-  node_view_redirect.default:
-    class: Drupal\node_view_redirect\EventSubscriber\DefaultSubscriber
-    arguments: ['@config.factory', '@current_route_match', '@language_manager', '@current_user', '@router.no_access_checks', '@path.validator']
-    tags:
-      - { name: event_subscriber }

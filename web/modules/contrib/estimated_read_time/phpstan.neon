@@ -1,8 +1,0 @@
-parameters:
-  level: 1
-  reportUnmatchedIgnoredErrors: false
-  ignoreErrors:
-    - identifier: missingType.generics
-    - identifier: missingType.iterableValue
-    # new static() is a best practice in Drupal.
-    - "#^Unsafe usage of new static#"

@@ -1,7 +1,0 @@
-page_specific_class.settings:
-  path: '/admin/config/page-class/settings'
-  defaults:
-    _form: '\Drupal\page_specific_class\Form\PageSpecificClassSettingsForm'
-    _title: 'Page Specific Class SettingsForm'
-  requirements:
-    _permission: 'administer site configuration'

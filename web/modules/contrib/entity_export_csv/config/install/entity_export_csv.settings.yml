@@ -1,7 +1,0 @@
-entity_types:
-  node:
-    enable: true
-    limit_per_bundle: {}
-    bundles: {}
-multiple:
-  columns: '3'
