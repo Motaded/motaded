@@ -260,11 +260,6 @@ function motaded_theme_preprocess_page(&$variables) {
     // Never render sidebar in page.html.twig for this layout (node template owns it).
     unset($variables['page']['sidebar_second']);
 
-    // Related articles/news (same band as article & news full pages).
-    $more_on_topic = motaded_theme_more_on_topic_build($route_node);
-    if ($more_on_topic !== NULL) {
-      $variables['page']['below_content']['more_on_topic_related'] = $more_on_topic;
-    }
   }
 
   // Article / News full node: same "More on this topic" band (reuses helper + view + CSS).
