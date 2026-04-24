@@ -48,6 +48,7 @@ module:
   help: 0
   history: 0
   honeypot: 0
+  http_status_code: 0
   image: 0
   image_captcha: 0
   imageapi_optimize: 0
@@ -83,6 +84,7 @@ module:
   recaptcha: 0
   recreate_block_content: 0
   redirect: 0
+  redirect_410: 0
   redirect_regex: 0
   responsive_image: 0
   robotstxt: 0
