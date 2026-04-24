@@ -60,6 +60,7 @@
         "drupal/formdazzle": "^4.0",
         "drupal/gin": "^5.0",
         "drupal/honeypot": "^2.2",
+        "drupal/http_status_code": "^2.0@dev",
         "drupal/imageapi_optimize": "^4.1",
         "drupal/imageapi_optimize_webp": "^2.1",
         "drupal/inline_responsive_images": "^4.0",
@@ -74,6 +75,7 @@
         "drupal/recaptcha": "^3.4",
         "drupal/recreate_block_content": "^3.0",
         "drupal/redirect": "^1.12",
+        "drupal/redirect_410": "dev-1.0.x",
         "drupal/redirect_regex": "^1.0@alpha",
         "drupal/robotstxt": "^1.6",
         "drupal/schema_metatag": "^3.0",
@@ -153,6 +155,9 @@
                 "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff",
                 "redirect_404: safe logger.factory->get() when channel omitted": "patches/redirect_404-logger-factory-get-default.patch"
             },
+            "drupal/redirect_410": {
+                "Drupal 11 compatibility and status code hardening": "patches/redirect_410-drupal-11-compat-and-hardening.patch"
+            },
             "drupal/imageapi_optimize_webp": {
                 "Drupal 11: use GDToolkit::getImage() (getResource removed)": "patches/imageapi_optimize_webp-drupal-11-gd-getimage.patch",
                 "Native .webp only: do not rewrite file query to extensionless URI": "patches/imageapi_optimize_webp-native-webp-source.patch"
@@ -221,7 +226,7 @@
             ]
         },
         "drupal-lenient": {
-            "allowed-list": ["drupal/tus", "drupal/like_dislike", "drupal/ckeditor5_font", "drupal/ckeditor_templates_ui"]
+            "allowed-list": ["drupal/tus", "drupal/like_dislike", "drupal/ckeditor5_font", "drupal/ckeditor_templates_ui", "drupal/redirect_410"]
         }
     }
 }
