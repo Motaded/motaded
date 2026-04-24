@@ -1,0 +1,121 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{% set variant = variant|default('default') %}
+{% if variant == 'snapshot' %}
+  {% set icon_alt = title|default('Service icon') %}
+  <article class="icon-card icon-card--snapshot">
+    <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
+      <img
+        src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
+        alt="{{ icon_alt }}"
+        class="icon-card__iconImg"
+        loading="lazy"
+        decoding="async"
+        width="24"
+        height="24"
+      />
+    </div>
+    {% if title %}
+      <h3 class="icon-card__label">{{ title }}</h3>
+    {% endif %}
+    <div class="icon-card__value">{{ desc }}</div>
+  </article>
+
+{% elseif variant == 'objectives' %}
+  {% set objectives_split = objectives_card_title is defined and objectives_card_title is not empty %}
+  {% set icon_alt = objectives_split ? objectives_card_title|default('Objective icon') : 'Objective icon' %}
+  <article class="icon-card icon-card--objectives">
+    <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
+      <img
+        src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
+        alt="{{ icon_alt }}"
+        class="icon-card__iconImg"
+        loading="lazy"
+        decoding="async"
+        width="24"
+        height="24"
+      />
+    </div>
+    {% if objectives_split %}
+      <h3 class="icon-card__title">{{ objectives_card_title|e }}</h3>
+      <div class="icon-card__desc">{{ objectives_card_body|default('')|e|nl2br }}</div>
+    {% else %}
+      <div class="icon-card__body">{{ desc }}</div>
+    {% endif %}
+  </article>
+
+{% elseif variant == 'service_icon_row' %}
+  {% set icon_alt = title|default('Service icon') %}
+  <article class="icon-card icon-card--service-row">
+    <div class="icon-card__iconWrap icon-wrapper" aria-hidden="true">
+      <img
+        src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
+        alt="{{ icon_alt }}"
+        class="icon-card__iconImg"
+        loading="lazy"
+        decoding="async"
+        width="22"
+        height="22"
+      />
+    </div>
+    <div class="icon-card__textCol">
+      {% if title %}
+        <h3 class="icon-card__rowTitle">{{ title }}</h3>
+      {% endif %}
+      <div class="icon-card__rowBody">
+        {% if areas_lead_label %}
+          <p class="icon-card__rowBodyPara">
+            <strong class="icon-card__rowLead">{{ areas_lead_label|e }}:</strong>{% if areas_rest_safe %} {{ areas_rest_safe }}{% endif %}
+          </p>
+        {% else %}
+          {{ desc }}
+        {% endif %}
+      </div>
+    </div>
+  </article>
+
+{% else %}
+  <article class="icon-card flex gap-4 rounded-2xl border border-gray-200 bg-white p-6 {{ icon_position == 'topLeft' ? 'flex-col' : '' }}">
+    <div class="icon-wrapper flex h-12 {{ icon_position == 'topLeft' ? 'w-12' : 'w-[12px]' }} items-center justify-center rounded-full bg-emerald-50">
+      <img
+        src="{{ icon_url ? icon_url : '/themes/custom/motaded_theme/img/icon-target.svg' }}"
+        alt="{{ title }}"
+        class="{{ icon_position == 'topLeft' ? 'h-6' : '' }} w-6"
+      />
+    </div>
+    <div class="flex flex-col flex-1 gap-2">
+      {% if title %}
+        <h3 class="text-lg font-semibold leading-7 text-neutral-900">
+          {{ title }}
+        </h3>
+      {% endif %}
+      <p class="{{ title ? 'text-sm leading-5 text-gray-700' : 'text-base leading-6 text-neutral-900' }}">{{ desc }}</p>
+
+      {% if tags %}
+        <div class="flex flex-wrap gap-2 mb-4">
+          {% for tag in tags %}
+            {% if tag %}
+              <span class="border px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-700 border-gray-200">{{ tag }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if cta1 or cta2 %}
+        <div class="mt-auto flex gap-2">
+          {% if cta1 %}
+            <a href="{{ cta1.url }}" class="px-4 py-2 rounded-md border border-gray-300 text-sm text-gray-700 hover:bg-gray-100">
+              {{ cta1.title|t }}
+            </a>
+          {% endif %}
+          {% if cta2 %}
+            <a href="{{ cta2.url }}" class="px-4 py-2 rounded-md bg-primary-600 text-white text-sm hover:bg-primary-700">
+              {{ cta2.title|t }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </article>
+{% endif %}

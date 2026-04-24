@@ -1,0 +1,131 @@
+#ddev-generated
+# If you remove the ddev-generated line above you
+# are responsible for maintaining this file. DDEV will not then
+# update it, for example if you add `additional_hostnames`, etc.
+
+http:
+  routers:
+    old-version-backup-xhgui-80-http:
+      entrypoints:
+        - http-8143
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-xhgui-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "old-version-backup-redirectHttps"
+    old-version-backup-phpmyadmin-80-http:
+      entrypoints:
+        - http-8036
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-phpmyadmin-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "old-version-backup-redirectHttps"
+    old-version-backup-web-80-http:
+      entrypoints:
+        - http-80
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-web-80"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "old-version-backup-redirectHttps"
+    old-version-backup-web-8025-http:
+      entrypoints:
+        - http-8025
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-web-8025"
+      ruleSyntax: v3
+      tls: false
+      # middlewares:
+      #   - "old-version-backup-redirectHttps"
+    
+    
+    old-version-backup-xhgui-80-https:
+      entrypoints:
+        - http-8142
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-xhgui-80"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+    old-version-backup-phpmyadmin-80-https:
+      entrypoints:
+        - http-8037
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-phpmyadmin-80"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+    
+    old-version-backup-web-80-https:
+      entrypoints:
+        - http-443
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-web-80"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    old-version-backup-web-8025-https:
+      entrypoints:
+        - http-8026
+      rule: HostRegexp(`^old-version-backup\.ddev\.site$`)
+      
+      service: "old-version-backup-web-8025"
+      ruleSyntax: v3
+      
+      tls: true
+      
+    
+
+  middlewares:
+    old-version-backup-redirectHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    old-version-backup-xhgui-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-old-version-backup-xhgui:80
+        
+    
+    old-version-backup-phpmyadmin-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-old-version-backup-phpmyadmin:80
+        
+    
+    old-version-backup-web-80:
+      loadbalancer:
+        servers:
+          - url: http://ddev-old-version-backup-web:80
+        
+    old-version-backup-web-8025:
+      loadbalancer:
+        servers:
+          - url: http://ddev-old-version-backup-web:8025
+        
+    
+    
+    
+
+tls:
+  certificates:
+    - certFile: /mnt/ddev-global-cache/traefik/certs/old-version-backup.crt
+      keyFile: /mnt/ddev-global-cache/traefik/certs/old-version-backup.key

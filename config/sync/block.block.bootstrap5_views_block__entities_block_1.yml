@@ -1,6 +1,6 @@
 uuid: 22c4c96f-9920-40c8-8b9d-8042d050f164
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.entities
@@ -10,7 +10,7 @@ dependencies:
     - bootstrap5
 id: bootstrap5_views_block__entities_block_1
 theme: bootstrap5
-region: homepage
+region: header
 weight: -12
 provider: null
 plugin: 'views_block:entities-block_1'

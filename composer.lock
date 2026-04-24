@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1df4d0f8632a0f0a2879ad541af97745",
+    "content-hash": "4831da7a6ab9f74a1dd7891a280adcc4",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -2592,16 +2592,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.3.7",
+            "version": "11.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "bb36d7d09b0132185bd33be730ec2e6d35c2d627"
+                "reference": "d40f45fa436fb089cd54029d2dab387c3040fc2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/bb36d7d09b0132185bd33be730ec2e6d35c2d627",
-                "reference": "bb36d7d09b0132185bd33be730ec2e6d35c2d627",
+                "url": "https://api.github.com/repos/drupal/core/zipball/d40f45fa436fb089cd54029d2dab387c3040fc2c",
+                "reference": "d40f45fa436fb089cd54029d2dab387c3040fc2c",
                 "shasum": ""
             },
             "require": {
@@ -2759,13 +2759,13 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/11.3.7"
+                "source": "https://github.com/drupal/core/tree/11.3.8"
             },
-            "time": "2026-04-15T15:47:32+00:00"
+            "time": "2026-04-20T07:33:20+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "11.3.7",
+            "version": "11.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -2809,13 +2809,13 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/11.3.7"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/11.3.8"
             },
             "time": "2026-02-10T11:39:53+00:00"
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.3.7",
+            "version": "11.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-project-message.git",
@@ -2850,29 +2850,29 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-project-message/tree/11.3.7"
+                "source": "https://github.com/drupal/core-project-message/tree/11.3.8"
             },
             "time": "2025-02-03T10:59:29+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "11.3.7",
+            "version": "11.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "fb5d6475f4f564d5fa8a8846e4b5e1b97cdfeb94"
+                "reference": "9c1fa4615a7542504be882eed0c6763b445fb852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/fb5d6475f4f564d5fa8a8846e4b5e1b97cdfeb94",
-                "reference": "fb5d6475f4f564d5fa8a8846e4b5e1b97cdfeb94",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/9c1fa4615a7542504be882eed0c6763b445fb852",
+                "reference": "9c1fa4615a7542504be882eed0c6763b445fb852",
                 "shasum": ""
             },
             "require": {
                 "asm89/stack-cors": "~v2.3.0",
                 "composer/semver": "~3.4.4",
                 "doctrine/lexer": "~3.0.1",
-                "drupal/core": "11.3.7",
+                "drupal/core": "11.3.8",
                 "egulias/email-validator": "~4.0.4",
                 "guzzlehttp/guzzle": "~7.10.0",
                 "guzzlehttp/promises": "~2.3.0",
@@ -2934,9 +2934,9 @@
             ],
             "description": "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/11.3.7"
+                "source": "https://github.com/drupal/core-recommended/tree/11.3.8"
             },
-            "time": "2026-04-15T15:47:32+00:00"
+            "time": "2026-04-20T07:33:20+00:00"
         },
         {
             "name": "drupal/core-vendor-hardening",
@@ -3448,6 +3448,134 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/estimated_read_time",
                 "issues": "https://www.drupal.org/project/issues/estimated_read_time"
+            }
+        },
+        {
+            "name": "drupal/eu_cookie_compliance",
+            "version": "1.29.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/eu-cookie-compliance.git",
+                "reference": "8.x-1.29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/eu_cookie_compliance-8.x-1.29.zip",
+                "reference": "8.x-1.29",
+                "shasum": "c10aca3e4b4107e0ca804804f0deb98d20a78251"
+            },
+            "require": {
+                "drupal/core": "^8.9 || ^9 || ^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.29",
+                    "datestamp": "1760671053",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Marcin Pajdzik",
+                    "homepage": "https://www.drupal.org/u/marcin-pajdzik",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Sven Berg Ryen",
+                    "homepage": "https://www.drupal.org/u/svenryen",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Neslee Canil Pinto",
+                    "homepage": "https://www.drupal.org/u/neslee-canil-pinto",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "See other contributors",
+                    "homepage": "https://www.drupal.org/node/1538032/committers"
+                }
+            ],
+            "description": "This module aims at making the website compliant with the new EU cookie regulation.",
+            "homepage": "https://drupal.org/project/eu_cookie_compliance",
+            "keywords": [
+                "Cookie",
+                "CookieCompliance",
+                "Drupal",
+                "GDPR"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/eu-cookie-compliance",
+                "docs": "https://www.drupal.org/docs/contributed-modules/eu-cookie-compliance",
+                "forum": "https://drupal.stackexchange.com/search?q=eu+cookie+compliance",
+                "issues": "https://www.drupal.org/project/issues/eu_cookie_compliance?version=8.x",
+                "slack": "https://app.slack.com/client/T06GX3JTS/C012XBTH81E"
+            }
+        },
+        {
+            "name": "drupal/faqfield",
+            "version": "8.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/faqfield.git",
+                "reference": "8.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/faqfield-8.0.1.zip",
+                "reference": "8.0.1",
+                "shasum": "f022566e51a1f9db0a43da81a33819fd6924d77a"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10 || ^11",
+                "drupal/jquery_ui_accordion": "^2.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.0.1",
+                    "datestamp": "1767285977",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Drotleff (patrickd)",
+                    "homepage": "https://www.drupal.org/u/patrickd",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Kevin Quillen (kevinquillen)",
+                    "homepage": "https://www.drupal.org/u/kevinquillen",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "pifagor",
+                    "homepage": "https://www.drupal.org/user/2375692"
+                }
+            ],
+            "description": "This module provides a field for frequently asked questions.",
+            "homepage": "http://drupal.org/project/faqfield",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/faqfield",
+                "issues": "http://drupal.org/project/issues/faqfield"
             }
         },
         {
@@ -3996,6 +4124,159 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/inline_responsive_images",
                 "issues": "https://www.drupal.org/project/issues/inline_responsive_images"
+            }
+        },
+        {
+            "name": "drupal/jquery_ui",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jquery_ui.git",
+                "reference": "8.x-1.8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jquery_ui-8.x-1.8.zip",
+                "reference": "8.x-1.8",
+                "shasum": "a53e99216a81d1e35fa357885656a2cf420f1a6a"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.8",
+                    "datestamp": "1758954737",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bnjmnm",
+                    "homepage": "https://www.drupal.org/user/2369194"
+                },
+                {
+                    "name": "jjeff",
+                    "homepage": "https://www.drupal.org/user/17190"
+                },
+                {
+                    "name": "lauriii",
+                    "homepage": "https://www.drupal.org/user/1078742"
+                },
+                {
+                    "name": "litwol",
+                    "homepage": "https://www.drupal.org/user/78134"
+                },
+                {
+                    "name": "mfb",
+                    "homepage": "https://www.drupal.org/user/12302"
+                },
+                {
+                    "name": "mfer",
+                    "homepage": "https://www.drupal.org/user/25701"
+                },
+                {
+                    "name": "mikelutz",
+                    "homepage": "https://www.drupal.org/user/2972409"
+                },
+                {
+                    "name": "nod_",
+                    "homepage": "https://www.drupal.org/user/598310"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "rajeshreeputra",
+                    "homepage": "https://www.drupal.org/user/3418561"
+                },
+                {
+                    "name": "robloach",
+                    "homepage": "https://www.drupal.org/user/61114"
+                },
+                {
+                    "name": "sun",
+                    "homepage": "https://www.drupal.org/user/54136"
+                },
+                {
+                    "name": "webchick",
+                    "homepage": "https://www.drupal.org/user/24967"
+                },
+                {
+                    "name": "wim leers",
+                    "homepage": "https://www.drupal.org/user/99777"
+                },
+                {
+                    "name": "zrpnr",
+                    "homepage": "https://www.drupal.org/user/1448368"
+                }
+            ],
+            "description": "Provides jQuery UI library.",
+            "homepage": "https://www.drupal.org/project/jquery_ui",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jquery_ui"
+            }
+        },
+        {
+            "name": "drupal/jquery_ui_accordion",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jquery_ui_accordion.git",
+                "reference": "2.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jquery_ui_accordion-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "f52cfc83f302a54b9c71a038e9ac1ce496f47edd"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10 || ^11",
+                "drupal/jquery_ui": "^1.7"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.1.0",
+                    "datestamp": "1717015495",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "bnjmnm",
+                    "homepage": "https://www.drupal.org/user/2369194"
+                },
+                {
+                    "name": "lauriii",
+                    "homepage": "https://www.drupal.org/user/1078742"
+                },
+                {
+                    "name": "zrpnr",
+                    "homepage": "https://www.drupal.org/user/1448368"
+                }
+            ],
+            "description": "Provides jQuery UI Accordion library.",
+            "homepage": "https://www.drupal.org/project/jquery_ui_accordion",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jquery_ui_accordion"
             }
         },
         {
@@ -5720,17 +6001,17 @@
         },
         {
             "name": "drupal/twig_tweak",
-            "version": "3.4.1",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/twig_tweak.git",
-                "reference": "3.4.1"
+                "reference": "3.4.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/twig_tweak-3.4.1.zip",
-                "reference": "3.4.1",
-                "shasum": "ceaa5ea8f357ce8827c728f22871265f0f7cd74f"
+                "url": "https://ftp.drupal.org/files/projects/twig_tweak-3.4.2.zip",
+                "reference": "3.4.2",
+                "shasum": "c31272a550c05981ca21b1eacc37abfe62cf2598"
             },
             "require": {
                 "drupal/core": "^10.3 || ^11.0",
@@ -5744,8 +6025,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.4.1",
-                    "datestamp": "1748530577",
+                    "version": "3.4.2",
+                    "datestamp": "1776781834",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5849,17 +6130,17 @@
         },
         {
             "name": "drupal/viewsreference",
-            "version": "2.0.0-beta11",
+            "version": "2.0.0-beta12",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/viewsreference.git",
-                "reference": "8.x-2.0-beta11"
+                "reference": "8.x-2.0-beta12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-2.0-beta11.zip",
-                "reference": "8.x-2.0-beta11",
-                "shasum": "c6594716fd0867f38f5c19a3c39763c1b5aaa7ee"
+                "url": "https://ftp.drupal.org/files/projects/viewsreference-8.x-2.0-beta12.zip",
+                "reference": "8.x-2.0-beta12",
+                "shasum": "643eefb27c3f415a50eec75eccbbc287bcc7156a"
             },
             "require": {
                 "drupal/core": "^10 || ^11 || ^12"
@@ -5873,8 +6154,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta11",
-                    "datestamp": "1776403330",
+                    "version": "8.x-2.0-beta12",
+                    "datestamp": "1776760483",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -7038,16 +7319,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.3.16",
+            "version": "v0.3.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "11e7d5f93803a2190b00e145142cb00a33d17ad2"
+                "reference": "6a82ac19a28b916ae0885828795dbd4c59d9a818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/11e7d5f93803a2190b00e145142cb00a33d17ad2",
-                "reference": "11e7d5f93803a2190b00e145142cb00a33d17ad2",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/6a82ac19a28b916ae0885828795dbd4c59d9a818",
+                "reference": "6a82ac19a28b916ae0885828795dbd4c59d9a818",
                 "shasum": ""
             },
             "require": {
@@ -7091,9 +7372,9 @@
             "description": "Add beautiful and user-friendly forms to your command-line applications.",
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/v0.3.16"
+                "source": "https://github.com/laravel/prompts/tree/v0.3.17"
             },
-            "time": "2026-03-23T14:35:33+00:00"
+            "time": "2026-04-20T16:07:33+00:00"
         },
         {
             "name": "league/container",

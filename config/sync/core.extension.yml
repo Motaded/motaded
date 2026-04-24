@@ -37,6 +37,7 @@ module:
   entity_export_csv: 0
   entity_reference_revisions: 0
   estimated_read_time: 0
+  faqfield: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -52,6 +53,8 @@ module:
   imageapi_optimize: 0
   imageapi_optimize_webp: 0
   inline_responsive_images: 0
+  jquery_ui: 0
+  jquery_ui_accordion: 0
   lang_dropdown: 0
   language: 0
   like_dislike: 0
@@ -123,6 +126,7 @@ module:
   content_translation: 10
   formdazzle: 10
   views: 10
+  eu_cookie_compliance: 11
   paragraphs: 11
   standard: 1000
 theme:

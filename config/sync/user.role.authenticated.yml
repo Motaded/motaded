@@ -3,11 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.basic_html
-    - filter.format.webform_default
+    - filter.format.restricted_html
   module:
     - comment
     - contact
+    - eu_cookie_compliance
     - file
     - filter
     - media
@@ -25,8 +25,8 @@ permissions:
   - 'access shortcuts'
   - 'access site-wide contact form'
   - 'delete own files'
+  - 'display eu cookie compliance popup'
   - 'post comments'
   - 'skip comment approval'
-  - 'use text format basic_html'
-  - 'use text format webform_default'
+  - 'use text format restricted_html'
   - 'view media'
