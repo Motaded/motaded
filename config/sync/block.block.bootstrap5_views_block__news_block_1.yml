@@ -1,6 +1,6 @@
 uuid: 6b6a3ccf-90f5-4620-8f69-94b4d40056cd
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.news
@@ -10,7 +10,7 @@ dependencies:
     - bootstrap5
 id: bootstrap5_views_block__news_block_1
 theme: bootstrap5
-region: homepage
+region: header
 weight: -6
 provider: null
 plugin: 'views_block:news-block_1'

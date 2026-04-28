@@ -386,8 +386,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
@@ -595,7 +596,10 @@ display:
           empty: false
           content: 'Displaying @start - @end of @total'
       footer: {  }
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -604,6 +608,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags: {  }
   embed_administer:
     id: embed_administer
@@ -1535,6 +1540,7 @@ display:
         - url
         - url.query_args
         - user
+        - user.permissions
       tags: {  }
   embed_manage:
     id: embed_manage

@@ -1,6 +1,6 @@
 uuid: 7c94b0b3-8c7a-4bc5-bd26-81ed4c7619e8
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:business_activity:471652ac-99b0-4136-8e6c-b4e3addfd0a2'
@@ -11,7 +11,7 @@ dependencies:
     - bootstrap5
 id: bootstrap5_businessactivity
 theme: bootstrap5
-region: homepage
+region: header
 weight: -13
 provider: null
 plugin: 'block_content:471652ac-99b0-4136-8e6c-b4e3addfd0a2'

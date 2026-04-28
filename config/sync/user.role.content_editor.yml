@@ -23,6 +23,7 @@ dependencies:
     - conditional_fields
     - content_translation
     - contextual
+    - eu_cookie_compliance
     - field_ui
     - file
     - image
@@ -90,6 +91,7 @@ permissions:
   - 'delete own image media'
   - 'delete own page content'
   - 'delete page revisions'
+  - 'display eu cookie compliance popup'
   - 'edit any article content'
   - 'edit any basic block content'
   - 'edit any business_activity block content'

@@ -1,0 +1,8 @@
+uuid: bca65c58-4a55-4b68-a789-208832d7be7f
+langcode: en
+status: true
+dependencies: {  }
+id: ufc
+label: UFC
+url: /blog/ufc
+status_code: '410'

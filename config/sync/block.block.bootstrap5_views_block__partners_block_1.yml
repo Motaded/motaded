@@ -1,6 +1,6 @@
 uuid: 67eb567b-5f3e-49ee-af4e-0aa6a929d324
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - views.view.partners
@@ -10,7 +10,7 @@ dependencies:
     - bootstrap5
 id: bootstrap5_views_block__partners_block_1
 theme: bootstrap5
-region: homepage
+region: header
 weight: -8
 provider: null
 plugin: 'views_block:partners-block_1'

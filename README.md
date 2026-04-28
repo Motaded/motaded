@@ -1,13 +1,15 @@
-## Steps for local setup
+## Local setup (DDEV, Drupal 11)
 
-1. Install DDEV.
+1. Install and start DDEV.
+2. From project root run `ddev start`.
+3. Install dependencies: `ddev composer install`.
+4. Import database: `ddev import-db --file=<dumpfile.sql.gz>`.
+5. Rebuild caches: `ddev drush cr`.
+6. Open site: `ddev launch`.
 
-2. Run ddev config (Select drupal in project type)
+## Project structure
 
-3. Run ddev start
-
-4. Run ddev composer install
-
-5. Run ddev import-db --file=dumpfile.sql.gz
-
-6. ddev laubch
+- Composer root: project root (`composer.json`).
+- Drupal docroot: `web/`.
+- Config sync directory: `config/sync`.
+- DDEV config: `.ddev/config.yaml` (`docroot: web`).

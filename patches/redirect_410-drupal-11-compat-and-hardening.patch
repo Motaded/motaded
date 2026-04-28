@@ -1,0 +1,60 @@
+diff -ruN redirect_410.info.yml redirect_410.info.yml
+--- redirect_410.info.yml
++++ redirect_410.info.yml
+@@ -1,7 +1,7 @@
+ name: Redirect 410
+ type: module
+ description: Extend module http_status_code and provider page for redirect.
+-core_version_requirement: ^9.2 || ^10
++core_version_requirement: ^10 || ^11
+ 
+ dependencies:
+   - redirect:redirect
+diff -ruN src/EventSubscriber/RedirectRequestSubscriber.php src/EventSubscriber/RedirectRequestSubscriber.php
+--- src/EventSubscriber/RedirectRequestSubscriber.php
++++ src/EventSubscriber/RedirectRequestSubscriber.php
+@@ -5,11 +5,13 @@
+ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+ use Drupal\Core\Cache\CacheableResponse;
++use Drupal\Core\Entity\FieldableEntityInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+ use Drupal\Core\StringTranslation\StringTranslationTrait;
+ use Drupal\redirect\RedirectChecker;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Component\HttpKernel\Event\RequestEvent;
+ use Symfony\Component\HttpKernel\KernelEvents;
+ 
+@@ -59,23 +61,23 @@
+     try {
+       $storageHttpStatusEntity = $this->entityTypeManager->getStorage('http_status_entity');
+     }
+-    catch (InvalidPluginDefinitionException $e) {
++    catch (InvalidPluginDefinitionException | PluginNotFoundException) {
+       return;
+     }
+-    catch (PluginNotFoundException $e) {
+-      return;
+-    }
+ 
+     $entities = $storageHttpStatusEntity->loadByProperties(['url' => $path]);
+     if (!$httpStatus = \reset($entities)) {
+       return;
+     }
+-    $statusCode = $httpStatus->status_code;
+-    if ($statusCode !== '410') {
++    if (!$httpStatus instanceof FieldableEntityInterface || !$httpStatus->hasField('status_code')) {
++      return;
++    }
++    $statusCode = (int) $httpStatus->get('status_code')->value;
++    if ($statusCode !== Response::HTTP_GONE) {
+       return;
+     }
+ 
+-    $content = $this->t('<h1>Gone</h1><p>The requested resource is no longer available on this server and there is no forwarding address.Please remove all references to this resource.</p>');
++    $content = $this->t('<h1>Gone</h1><p>The requested resource is no longer available on this server and there is no forwarding address. Please remove all references to this resource.</p>');
+     $response = new CacheableResponse($content, $statusCode);
+     $response->addCacheableDependency($httpStatus);
+     $event->setResponse($response);

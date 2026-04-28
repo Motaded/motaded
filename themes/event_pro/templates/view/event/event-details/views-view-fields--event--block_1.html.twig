@@ -1,9 +1,0 @@
-<!-- Event Schedule -->
-{% if fields.counter.content == "1" %}
-<a class="nav-link show active events-ch" id="tab-{{ fields.field_start_date.content }}" data-bs-toggle="tab" data-bs-target="#Tab-2-{{ fields.counter.content }}" role="tab" aria-controls="tab-1-4" aria-selected="true">
-{% else %}
-<a class="nav-link show events-ch" id="tab-{{ fields.field_start_date.content }}" data-bs-toggle="tab" data-bs-target="#Tab-2-{{ fields.counter.content }}" role="tab" aria-controls="tab-1-4" aria-selected="true">
-{% endif %}
-    <h3>DAY {{ fields.counter.content }}</h3>
-    <span>{{ fields.field_start_date_1.content }}</span>
-</a>

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.search_index
+    - field.field.node.landing_page.body
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
     - node.type.landing_page
@@ -38,5 +39,7 @@ content:
     weight: 0
     region: content
 hidden:
+  addtoany: true
+  body: true
   langcode: true
   search_api_excerpt: true
