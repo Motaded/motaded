@@ -51,25 +51,6 @@
 							<div{{item.attributes.addClass(classes)}} {% if item.below %} @click="openMenu = '{{ title }}'" data-mega {% endif %}>
 							{% endif %}
 							{% if item.below %}
-								{% set parent_link_classes = [
-            'flex',
-            'items-center',
-            'gap-0',
-            'px-2',
-            'py-2',
-            'w-fit',
-            'rounded-md',
-            'relative',
-            'text-xs',
-            'font-semibold',
-            'transition',
-            'h-10',
-            'focus-visible:outline',
-            'focus-visible:outline-2',
-            'focus-visible:outline-gray-800',
-            'whitespace-nowrap',
-            'text-gray-900'
-          ]%}
 								<button type="button" class="flex items-center gap-0 px-2 py-2 w-fit rounded-md relative text-xs font-semibold transition h-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800 whitespace-nowrap text-gray-900" :class="openMenu==='{{ title }}' && 'bg-primary-600 text-white after:content-[\'\'] after:absolute after:bottom-0 after:w-[80%] after:h-[4px] after:left-1/2 after:-translate-x-1/2 after:bg-primary-200 after:rounded-full'" aria-haspopup="true" :aria-expanded="openMenu==='{{ title }}'" @click="openMenu = openMenu==='{{ title }}' ? null : '{{ title }}'">
 									<span class="flex gap-2 px-1 items-center">
 										{{ item.title }}
@@ -109,6 +90,7 @@
             ]
           %}
 									{% set mega_hub_classes = [
+              'menu-main-mega-hub-cta',
               'inline-flex',
               'items-center',
               'justify-center',
@@ -135,7 +117,7 @@
 									{% set link_attributes = menu_level == 0
               ? create_attribute({'class': link_classes})
               : (is_services_hub
-                ? create_attribute({'class': mega_hub_classes, 'style': 'min-width: 180px;'})
+                ? create_attribute({'class': mega_hub_classes})
                 : create_attribute({'class': mega_default_classes}))
             %}
 									{{ link(link_text, item.url, link_attributes) }}

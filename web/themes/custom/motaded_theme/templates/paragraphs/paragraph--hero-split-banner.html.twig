@@ -1,0 +1,108 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/hero_split_banner') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'hero-split-banner',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  <div class="hero-split-banner__layout">
+    <div class="hero-split-banner__copy-col">
+      <div class="hero-split-banner__copy">
+        {% if content.field_hero_split_eyebrow %}
+          <div class="hero-split-banner__eyebrow">
+            {{ content.field_hero_split_eyebrow }}
+          </div>
+        {% endif %}
+
+        {% if hero_split_headline_prefix or hero_split_headline_accent %}
+          <h1 id="{{ hero_split_banner_heading_id }}" class="hero-split-banner__title">
+            {% if hero_split_headline_prefix %}
+              <span class="hero-split-banner__title-line">{{ hero_split_headline_prefix }}</span>
+            {% endif %}
+            {% if hero_split_headline_accent %}
+              <span class="hero-split-banner__title-accent">{{ hero_split_headline_accent }}</span>
+            {% endif %}
+          </h1>
+        {% endif %}
+
+        {% if content.field_body %}
+          <div class="hero-split-banner__intro">{{ content.field_body }}</div>
+        {% endif %}
+
+        {% if hero_split_cta is not empty %}
+          <div class="hero-split-banner__actions">
+            <a href="{{ hero_split_cta.url }}" class="hero-split-banner__cta">
+              {{ hero_split_cta.title }}
+              <svg class="hero-split-banner__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        {% endif %}
+
+        {% if hero_split_trust %}
+          <p class="hero-split-banner__trust">
+            <span class="hero-split-banner__trust-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>{{ hero_split_trust }}</span>
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hero-split-banner__visual">
+        {% if hero_split_media is not empty %}
+          <div class="hero-split-banner__media">
+            <div class="hero-split-banner__media-fade" aria-hidden="true"></div>
+            {{ hero_split_media }}
+          </div>
+        {% endif %}
+
+        {% if hero_split_stats is not empty %}
+          <div class="hero-split-banner__stats" role="group" aria-label="{{ 'Key figures'|t }}">
+            {% for stat in hero_split_stats %}
+              <div class="hero-split-banner__stat{% if not loop.last %} hero-split-banner__stat--divider{% endif %}">
+                <div class="hero-split-banner__stat-icon" aria-hidden="true">
+                  {% if stat.icon == 'shield' %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                      <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% elseif stat.icon == 'users' %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                      <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                  {% else %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
+                      <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% endif %}
+                </div>
+                {% if stat.value %}
+                  <p class="hero-split-banner__stat-value">{{ stat.value }}</p>
+                {% endif %}
+                {% if stat.label %}
+                  <p class="hero-split-banner__stat-label">{{ stat.label }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+  </div>
+</section>

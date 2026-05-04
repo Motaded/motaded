@@ -1,0 +1,23 @@
+uuid: f2222222-2222-4222-8222-222222222211
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hero_stat_icon
+    - paragraphs.paragraphs_type.hero_stat
+  module:
+    - options
+id: paragraph.hero_stat.field_hero_stat_icon
+field_name: field_hero_stat_icon
+entity_type: paragraph
+bundle: hero_stat
+label: Icon
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: clock
+default_value_callback: ''
+settings: {  }
+field_type: list_string

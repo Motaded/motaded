@@ -1,0 +1,23 @@
+uuid: b1111111-1111-4111-8111-111111111034
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_link
+    - paragraphs.paragraphs_type.business_setup_card
+  module:
+    - link
+id: paragraph.business_setup_card.field_link
+field_name: field_link
+entity_type: paragraph
+bundle: business_setup_card
+label: Link
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

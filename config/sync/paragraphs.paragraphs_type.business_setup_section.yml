@@ -1,0 +1,10 @@
+uuid: b1111111-1111-4111-8111-111111111001
+langcode: en
+status: true
+dependencies: {  }
+id: business_setup_section
+label: 'Business setup options'
+icon_uuid: null
+icon_default: null
+description: 'Eyebrow, title, intro, three image cards with optional “Most popular” badge, trust banner.'
+behavior_plugins: {  }

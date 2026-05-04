@@ -31,7 +31,7 @@
 					class="flex gap-1.5 lg:gap-2 text-xs">
 					<!-- Search -->
 					<div class="relative flex items-center">
-						<a type="button" class="inline-flex items-center justify-center font-medium transition rounded-sm text-black text-xs size-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search" href="{{ search_url|replace({'//s': '/s'}) }}">
+						<a class="inline-flex items-center justify-center font-medium transition rounded-sm text-black text-xs size-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search" href="{{ search_url|replace({'//s': '/s'}) }}">
 							<img alt="search" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
 						</a>
 						<p class="text-xs font-medium leading-[1.6] hidden xl:block ml-1 mb-0">
@@ -63,7 +63,7 @@
 			class="max-w-[1320px] mx-auto px-4 relative flex items-center justify-between py-2">
 			<!-- Left: Search + Lang -->
 			<div class="flex items-center gap-2">
-				<a type="button" class="inline-flex items-center justify-center transition text-black text-sm size-10 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search" href="{{ search_url|replace({'//s': '/s'}) }}">
+				<a class="inline-flex items-center justify-center transition text-black text-sm size-10 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search" href="{{ search_url|replace({'//s': '/s'}) }}">
 					<img alt="search" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
 				</a>
 
@@ -71,7 +71,7 @@
 					<div class="flex gap-1.5 items-center">
 						{{ page.secondary_menu }}
 					</div>
-				</a>
+				</span>
 			</div>
 
 			<!-- Right: Burger -->
@@ -103,23 +103,21 @@
 				{{ page.menu_mobile }}
 			</div>
 
-			<!-- Drawer CTA (above footer, fixed) -->
 			{% if page.drawer_cta %}
 			<div class="drawer-cta shrink-0 py-3 pl-4 pr-4 border-t border-gray-200">
 				{{ page.drawer_cta }}
 			</div>
 			{% endif %}
 
-			<!-- Drawer footer (optional) -->
 			<div class="mt-auto px-4 py-3 border-t border-gray-200">
 				<div class="flex items-center gap-2">
-					<a href="{{ search_url|replace({'//s': '/s'}) }}" type="button" class="inline-flex items-center justify-center font-medium transition text-black text-sm px-3 py-2 rounded-md hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search">
+					<a href="{{ search_url|replace({'//s': '/s'}) }}" class="inline-flex items-center justify-center font-medium transition text-black text-sm px-3 py-2 rounded-md hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search">
 						<img alt="search" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
 						<span class="ml-2">{{ "Search"|t }}</span>
 					</a>
 					<span class="inline-flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100">
 						{{ page.secondary_menu }}
-					</a>
+					</span>
 				</div>
 			</div>
 

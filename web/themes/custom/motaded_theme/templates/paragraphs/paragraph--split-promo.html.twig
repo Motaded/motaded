@@ -1,0 +1,46 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/split_promo') }}
+{%
+  set classes = [
+    'split-promo',
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if split_promo_headline %} aria-labelledby="{{ split_promo_heading_id }}"{% endif %}>
+  <div class="split-promo__inner">
+    <div class="split-promo__content">
+      {% if split_promo_headline %}
+        <h2 id="{{ split_promo_heading_id }}" class="split-promo__headline">{{ split_promo_headline }}</h2>
+      {% endif %}
+      {% if split_promo_sub %}
+        <p class="split-promo__sub">{{ split_promo_sub }}</p>
+      {% endif %}
+      {% if split_promo_bullets is not empty %}
+        <ul class="split-promo__bullets">
+          {% for line in split_promo_bullets %}
+            <li class="split-promo__bullet">{{ line }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if content.field_link is defined and content.field_link|render|trim is not empty %}
+        <div class="split-promo__actions">
+          {{ content.field_link }}
+        </div>
+      {% endif %}
+      {% if split_promo_trust %}
+        <p class="split-promo__trust">{{ split_promo_trust }}</p>
+      {% endif %}
+    </div>
+    {% if split_promo_media is not empty %}
+      <div class="split-promo__media">
+        {{ split_promo_media }}
+      </div>
+    {% endif %}
+  </div>
+</section>

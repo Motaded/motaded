@@ -1,0 +1,26 @@
+uuid: b060cb39-69a6-4f8b-98a4-bcadedb967c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.promo_split
+  module:
+    - text
+id: paragraph.promo_split.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: promo_split
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - plain_text
+field_type: text_long

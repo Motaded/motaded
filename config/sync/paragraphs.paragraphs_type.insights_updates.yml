@@ -1,0 +1,10 @@
+uuid: 74c79d72-f28c-4793-8825-4f5732fb884a
+langcode: en
+status: true
+dependencies: {  }
+id: insights_updates
+label: 'Insights & updates'
+icon_uuid: null
+icon_default: null
+description: 'Two columns: curated blog articles (insights) and news, each with its own “view all” link.'
+behavior_plugins: {  }

@@ -1,0 +1,41 @@
+uuid: 923acbce-482d-43c4-a7f7-b215c39eeb6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.media_lead.field_body
+    - field.field.paragraph.media_lead.field_link
+    - field.field.paragraph.media_lead.field_media
+    - field.field.paragraph.media_lead.field_title
+    - paragraphs.paragraphs_type.media_lead
+  module:
+    - link
+    - text
+id: paragraph.media_lead.default
+targetEntityType: paragraph
+bundle: media_lead
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_media: true
+  field_title: true
+  search_api_excerpt: true

@@ -1,0 +1,142 @@
+uuid: a1111111-1111-4111-8111-111111110026
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_why_features
+    - paragraphs.paragraphs_type.why_feature_card
+    - paragraphs.paragraphs_type.why_opportunities
+  module:
+    - entity_reference_revisions
+id: paragraph.why_opportunities.field_why_features
+field_name: field_why_features
+entity_type: paragraph
+bundle: why_opportunities
+label: 'Feature cards'
+description: 'Typically three cards in a row.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      why_feature_card: why_feature_card
+    negate: 0
+    target_bundles_drag_drop:
+      accordion:
+        weight: 25
+        enabled: false
+      accordions:
+        weight: 26
+        enabled: false
+      advantages:
+        weight: -31
+        enabled: false
+      areas_of_work:
+        weight: -30
+        enabled: false
+      banner:
+        weight: -27
+        enabled: false
+      banner_sm:
+        weight: 25
+        enabled: false
+      business_activity:
+        weight: -29
+        enabled: false
+      card:
+        weight: 27
+        enabled: false
+      cards:
+        weight: 33
+        enabled: false
+      counter:
+        weight: -26
+        enabled: false
+      cta:
+        weight: 38
+        enabled: false
+      ctas:
+        weight: 39
+        enabled: false
+      featured_card:
+        weight: -25
+        enabled: false
+      featured_contents:
+        weight: 30
+        enabled: false
+      hero_split_banner:
+        weight: 1
+        enabled: false
+      hero_stat:
+        weight: 0
+        enabled: false
+      hero_two_cols:
+        weight: 43
+        enabled: false
+      investor_journey:
+        weight: 21
+        enabled: false
+      itc_card:
+        weight: -24
+        enabled: false
+      journey_step:
+        weight: 44
+        enabled: false
+      media_lead:
+        weight: 23
+        enabled: false
+      notes:
+        weight: 39
+        enabled: false
+      objectives:
+        weight: -23
+        enabled: false
+      pricing:
+        weight: -22
+        enabled: false
+      promo_split:
+        weight: 22
+        enabled: false
+      requirements:
+        weight: -21
+        enabled: false
+      section:
+        weight: -28
+        enabled: false
+      sectors:
+        weight: -20
+        enabled: false
+      split_promo:
+        weight: 24
+        enabled: false
+      step:
+        weight: 37
+        enabled: false
+      steps:
+        weight: 38
+        enabled: false
+      steps_to_obtain:
+        weight: -19
+        enabled: false
+      top_information:
+        weight: -18
+        enabled: false
+      view_block:
+        weight: 41
+        enabled: false
+      work_tracks:
+        weight: -17
+        enabled: false
+      why_feature_card:
+        weight: -2
+        enabled: true
+      why_opportunities:
+        weight: -1
+        enabled: false
+      why_stat_item:
+        weight: -3
+        enabled: false
+field_type: entity_reference_revisions

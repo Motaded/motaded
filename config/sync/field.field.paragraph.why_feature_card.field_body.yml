@@ -1,0 +1,26 @@
+uuid: a1111111-1111-4111-8111-111111110032
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.why_feature_card
+  module:
+    - text
+id: paragraph.why_feature_card.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: why_feature_card
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+field_type: text_long

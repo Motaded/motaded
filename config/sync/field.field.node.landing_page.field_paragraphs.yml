@@ -11,9 +11,17 @@ dependencies:
     - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.hero_two_cols
+    - paragraphs.paragraphs_type.hero_split_banner
+    - paragraphs.paragraphs_type.insights_updates
+    - paragraphs.paragraphs_type.investor_journey
     - paragraphs.paragraphs_type.section
+    - paragraphs.paragraphs_type.media_lead
+    - paragraphs.paragraphs_type.promo_split
+    - paragraphs.paragraphs_type.split_promo
     - paragraphs.paragraphs_type.steps
     - paragraphs.paragraphs_type.view_block
+    - paragraphs.paragraphs_type.why_opportunities
+    - paragraphs.paragraphs_type.business_setup_section
   module:
     - entity_reference_revisions
 id: node.landing_page.field_paragraphs
@@ -33,12 +41,20 @@ settings:
       section: section
       banner: banner
       banner_sm: banner_sm
+      business_setup_section: business_setup_section
+      media_lead: media_lead
+      promo_split: promo_split
+      split_promo: split_promo
       accordions: accordions
       featured_contents: featured_contents
       cards: cards
       steps: steps
       view_block: view_block
+      why_opportunities: why_opportunities
       hero_two_cols: hero_two_cols
+      hero_split_banner: hero_split_banner
+      insights_updates: insights_updates
+      investor_journey: investor_journey
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -62,6 +78,12 @@ settings:
       business_activity:
         weight: -29
         enabled: false
+      business_setup_card:
+        weight: 49
+        enabled: false
+      business_setup_section:
+        weight: 50
+        enabled: true
       card:
         weight: 27
         enabled: false
@@ -83,12 +105,30 @@ settings:
       featured_contents:
         weight: 30
         enabled: true
+      hero_split_banner:
+        weight: 18
+        enabled: true
+      hero_stat:
+        weight: 45
+        enabled: false
       hero_two_cols:
         weight: 43
+        enabled: true
+      insights_updates:
+        weight: 20
+        enabled: true
+      investor_journey:
+        weight: 21
         enabled: true
       itc_card:
         weight: -24
         enabled: false
+      journey_step:
+        weight: 44
+        enabled: false
+      media_lead:
+        weight: 23
+        enabled: true
       notes:
         weight: 39
         enabled: false
@@ -98,6 +138,9 @@ settings:
       pricing:
         weight: -22
         enabled: false
+      promo_split:
+        weight: 22
+        enabled: true
       requirements:
         weight: -21
         enabled: false
@@ -107,6 +150,9 @@ settings:
       sectors:
         weight: -20
         enabled: false
+      split_promo:
+        weight: 24
+        enabled: true
       step:
         weight: 37
         enabled: false
@@ -122,6 +168,15 @@ settings:
       view_block:
         weight: 41
         enabled: true
+      why_feature_card:
+        weight: 46
+        enabled: false
+      why_opportunities:
+        weight: 47
+        enabled: true
+      why_stat_item:
+        weight: 48
+        enabled: false
       work_tracks:
         weight: -17
         enabled: false

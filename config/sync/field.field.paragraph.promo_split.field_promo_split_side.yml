@@ -1,0 +1,23 @@
+uuid: b909158c-be9f-4e9e-8d7e-7aa9fc81150b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_promo_split_side
+    - paragraphs.paragraphs_type.promo_split
+  module:
+    - options
+id: paragraph.promo_split.field_promo_split_side
+field_name: field_promo_split_side
+entity_type: paragraph
+bundle: promo_split
+label: 'Image side'
+description: 'Desktop layout: which side the image appears on.'
+required: true
+translatable: false
+default_value:
+  -
+    value: image_right
+default_value_callback: ''
+settings: {  }
+field_type: list_string

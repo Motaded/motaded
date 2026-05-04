@@ -1,0 +1,10 @@
+uuid: 54520a31-93e7-467f-bf04-2254e60bc4b0
+langcode: en
+status: true
+dependencies: {  }
+id: media_lead
+label: 'Media lead'
+icon_uuid: null
+icon_default: null
+description: 'Image on the left, optional mint icon, headline, rich text, and CTA on a white card.'
+behavior_plugins: {  }

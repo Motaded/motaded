@@ -1,0 +1,23 @@
+uuid: ba0a158d-ce9f-4e9e-8d7e-7aa9fc81150c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_promo_split_list_style
+    - paragraphs.paragraphs_type.promo_split
+  module:
+    - options
+id: paragraph.promo_split.field_promo_split_list_style
+field_name: field_promo_split_list_style
+entity_type: paragraph
+bundle: promo_split
+label: 'Feature list style'
+description: 'How optional feature lines are displayed.'
+required: true
+translatable: false
+default_value:
+  -
+    value: icons_row
+default_value_callback: ''
+settings: {  }
+field_type: list_string

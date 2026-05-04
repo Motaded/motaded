@@ -1,0 +1,19 @@
+uuid: e1111111-1111-4111-8111-1111111111ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_sub_title
+    - paragraphs.paragraphs_type.investor_journey
+id: paragraph.investor_journey.field_sub_title
+field_name: field_sub_title
+entity_type: paragraph
+bundle: investor_journey
+label: Subtitle
+description: 'Supporting line under the title.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
