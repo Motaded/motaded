@@ -1,0 +1,19 @@
+uuid: f2222222-2222-4222-8222-222222222214
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hero_split_eyebrow
+    - paragraphs.paragraphs_type.hero_split_banner
+id: paragraph.hero_split_banner.field_hero_split_eyebrow
+field_name: field_hero_split_eyebrow
+entity_type: paragraph
+bundle: hero_split_banner
+label: Eyebrow
+description: 'Short line with green bar (e.g. Your partner in Saudi Arabia).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

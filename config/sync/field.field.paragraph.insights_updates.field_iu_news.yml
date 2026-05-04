@@ -1,0 +1,29 @@
+uuid: 97dcbdf9-8476-4d80-b759-2b5d0a84cc15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_iu_news
+    - node.type.news
+    - paragraphs.paragraphs_type.insights_updates
+id: paragraph.insights_updates.field_iu_news
+field_name: field_iu_news
+entity_type: paragraph
+bundle: insights_updates
+label: 'Latest news'
+description: 'Up to 3 news items.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      news: news
+    sort:
+      field: created
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

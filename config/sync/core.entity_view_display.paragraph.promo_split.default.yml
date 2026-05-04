@@ -1,0 +1,44 @@
+uuid: c1000002-0002-4002-8002-000000000002
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.promo_split.field_body
+    - field.field.paragraph.promo_split.field_link
+    - field.field.paragraph.promo_split.field_media
+    - field.field.paragraph.promo_split.field_promo_split_item
+    - field.field.paragraph.promo_split.field_promo_split_list_style
+    - field.field.paragraph.promo_split.field_promo_split_logo
+    - field.field.paragraph.promo_split.field_promo_split_side
+    - field.field.paragraph.promo_split.field_title
+    - paragraphs.paragraphs_type.promo_split
+  module:
+    - text
+id: paragraph.promo_split.default
+targetEntityType: paragraph
+bundle: promo_split
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_link: true
+  field_media: true
+  field_promo_split_item: true
+  field_promo_split_list_style: true
+  field_promo_split_logo: true
+  field_promo_split_side: true
+  search_api_excerpt: true

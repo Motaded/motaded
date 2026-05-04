@@ -1,0 +1,29 @@
+uuid: 5a36b197-098d-4ecf-9869-33a5c64db6b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_iu_insights
+    - node.type.article
+    - paragraphs.paragraphs_type.insights_updates
+id: paragraph.insights_updates.field_iu_insights
+field_name: field_iu_insights
+entity_type: paragraph
+bundle: insights_updates
+label: 'Insights (articles)'
+description: 'Up to 3 blog articles (thought leadership).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+    sort:
+      field: created
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

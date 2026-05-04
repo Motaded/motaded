@@ -1,0 +1,33 @@
+uuid: e1111111-1111-4111-8111-111111111104
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_journey_icon
+field_name: field_journey_icon
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: document
+      label: 'Document / license'
+    -
+      value: building
+      label: 'Building / company'
+    -
+      value: bank
+      label: Bank
+    -
+      value: briefcase
+      label: 'Briefcase / operations'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

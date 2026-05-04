@@ -1,0 +1,10 @@
+uuid: f2222222-2222-4222-8222-222222222201
+langcode: en
+status: true
+dependencies: {  }
+id: hero_stat
+label: 'Hero stat'
+icon_uuid: null
+icon_default: null
+description: 'Single stat for Hero split banner (nested only).'
+behavior_plugins: {  }

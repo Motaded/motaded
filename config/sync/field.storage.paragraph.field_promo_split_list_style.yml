@@ -1,0 +1,27 @@
+uuid: e28f9a88-5a1e-4b2d-9c0f-8e7d6c5b4a34
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_promo_split_list_style
+field_name: field_promo_split_list_style
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: icons_row
+      label: 'Icon row (3 items with icons)'
+    -
+      value: checklist
+      label: 'Checklist grid'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

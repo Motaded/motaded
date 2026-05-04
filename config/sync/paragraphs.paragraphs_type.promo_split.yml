@@ -1,0 +1,10 @@
+uuid: c08f9a88-5a1e-4b2d-9c0f-8e7d6c5b4a32
+langcode: en
+status: true
+dependencies: {  }
+id: promo_split
+label: 'Promo split'
+icon_uuid: null
+icon_default: null
+description: 'Split banner: text + optional feature list, image with optional logo overlay, CTA.'
+behavior_plugins: {  }

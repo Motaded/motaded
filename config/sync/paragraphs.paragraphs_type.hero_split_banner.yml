@@ -1,0 +1,10 @@
+uuid: f2222222-2222-4222-8222-222222222202
+langcode: en
+status: true
+dependencies: {  }
+id: hero_split_banner
+label: 'Hero split banner'
+icon_uuid: null
+icon_default: null
+description: 'Hero with text left, image right, fade, and optional stat row.'
+behavior_plugins: {  }

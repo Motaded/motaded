@@ -1,0 +1,19 @@
+uuid: b1111111-1111-4111-8111-111111111020
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_business_setup_eyebrow
+    - paragraphs.paragraphs_type.business_setup_section
+id: paragraph.business_setup_section.field_business_setup_eyebrow
+field_name: field_business_setup_eyebrow
+entity_type: paragraph
+bundle: business_setup_section
+label: Eyebrow
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

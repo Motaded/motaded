@@ -1,0 +1,19 @@
+uuid: 835a0670-33a7-4409-ab86-b3e86549819c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_sub_title
+    - paragraphs.paragraphs_type.split_promo
+id: paragraph.split_promo.field_sub_title
+field_name: field_sub_title
+entity_type: paragraph
+bundle: split_promo
+label: Subheadline
+description: 'One supporting line under the headline.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

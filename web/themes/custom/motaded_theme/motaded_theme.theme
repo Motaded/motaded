@@ -464,6 +464,501 @@ function motaded_theme_preprocess_paragraph(array &$variables): void {
 }
 
 /**
+ * Split promo: plain copy + media render (banner_sm / responsive image) for Twig.
+ */
+function motaded_theme_preprocess_paragraph__split_promo(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['split_promo_heading_id'] = Html::getUniqueId('split-promo-heading-' . $paragraph->id());
+
+  $variables['split_promo_headline'] = '';
+  if ($paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['split_promo_headline'] = trim((string) $paragraph->get('field_title')->value);
+  }
+
+  $variables['split_promo_sub'] = '';
+  if ($paragraph->get('field_sub_title')->access('view') && !$paragraph->get('field_sub_title')->isEmpty()) {
+    $variables['split_promo_sub'] = trim((string) $paragraph->get('field_sub_title')->value);
+  }
+
+  $bullets = [];
+  $bullet_field = $paragraph->get('field_promo_bullet');
+  if ($bullet_field->access('view')) {
+    foreach ($bullet_field as $item) {
+      $line = trim((string) $item->value);
+      if ($line !== '') {
+        $bullets[] = $line;
+      }
+    }
+  }
+  $variables['split_promo_bullets'] = $bullets;
+
+  $variables['split_promo_trust'] = '';
+  if ($paragraph->get('field_promo_trust')->access('view') && !$paragraph->get('field_promo_trust')->isEmpty()) {
+    $variables['split_promo_trust'] = trim((string) $paragraph->get('field_promo_trust')->value);
+  }
+
+  $variables['split_promo_media'] = [];
+  if ($paragraph->get('field_media')->access('view') && !$paragraph->get('field_media')->isEmpty()) {
+    $media = $paragraph->get('field_media')->entity;
+    if ($media) {
+      $variables['split_promo_media'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($media, 'banner_sm');
+    }
+  }
+}
+
+/**
+ * Promo split: features, media (banner_sm), optional logo overlay for Twig.
+ */
+function motaded_theme_preprocess_paragraph__promo_split(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['promo_split_heading_id'] = Html::getUniqueId('promo-split-heading-' . $paragraph->id());
+
+  $variables['promo_split_media_side'] = 'image_right';
+  if ($paragraph->get('field_promo_split_side')->access('view') && !$paragraph->get('field_promo_split_side')->isEmpty()) {
+    $variables['promo_split_media_side'] = (string) $paragraph->get('field_promo_split_side')->value;
+  }
+
+  $variables['promo_split_list_style'] = 'icons_row';
+  if ($paragraph->get('field_promo_split_list_style')->access('view') && !$paragraph->get('field_promo_split_list_style')->isEmpty()) {
+    $variables['promo_split_list_style'] = (string) $paragraph->get('field_promo_split_list_style')->value;
+  }
+
+  $features = [];
+  $item_field = $paragraph->get('field_promo_split_item');
+  if ($item_field->access('view')) {
+    foreach ($item_field as $item) {
+      $line = trim((string) $item->value);
+      if ($line !== '') {
+        $features[] = $line;
+      }
+    }
+  }
+  $variables['promo_split_features'] = $features;
+
+  $icon_cycle = ['user', 'shield', 'globe'];
+  $variables['promo_split_icon_keys'] = [];
+  foreach (array_keys($features) as $i) {
+    $variables['promo_split_icon_keys'][$i] = $icon_cycle[$i % 3];
+  }
+
+  $variables['promo_split_media'] = [];
+  if ($paragraph->get('field_media')->access('view') && !$paragraph->get('field_media')->isEmpty()) {
+    $media = $paragraph->get('field_media')->entity;
+    if ($media) {
+      $variables['promo_split_media'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($media, 'banner_sm');
+    }
+  }
+
+  $variables['promo_split_logo'] = [];
+  if ($paragraph->get('field_promo_split_logo')->access('view') && !$paragraph->get('field_promo_split_logo')->isEmpty()) {
+    $logo = $paragraph->get('field_promo_split_logo')->entity;
+    if ($logo) {
+      $variables['promo_split_logo'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($logo, 'default');
+    }
+  }
+
+  $variables['promo_split_cta'] = [];
+  $link = $paragraph->get('field_link');
+  if ($link->access('view') && !$link->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $item */
+    $item = $link->first();
+    if ($item) {
+      $url = $item->getUrl();
+      if ($url) {
+        $title = $item->getTitle();
+        $variables['promo_split_cta'] = [
+          'url' => $url->toString(),
+          'title' => $title !== '' && $title !== NULL ? $title : (string) t('Learn more'),
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Investor journey: nested journey_step rows for timeline Twig.
+ */
+function motaded_theme_preprocess_paragraph__investor_journey(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['investor_journey_heading_id'] = Html::getUniqueId('investor-journey-heading-' . $paragraph->id());
+
+  $steps = [];
+  $field = $paragraph->get('field_investor_journey_steps');
+  if ($field->access('view')) {
+    foreach ($field as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'journey_step') {
+        continue;
+      }
+      $icon = (string) ($sub->get('field_journey_icon')->value ?: 'document');
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $row = [
+        'title' => $title,
+        'icon' => $icon,
+      ];
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $value = (string) $sub->get('field_body')->value;
+        $format = (string) ($sub->get('field_body')->format ?: 'plain_text');
+        $body_markup = check_markup($value, $format);
+        if ($body_markup !== '') {
+          $row['body'] = Markup::create($body_markup);
+        }
+      }
+      $steps[] = $row;
+    }
+  }
+  $variables['investor_journey_steps'] = $steps;
+
+  $variables['investor_journey_cta'] = [];
+  $link = $paragraph->get('field_link');
+  if ($link->access('view') && !$link->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $item */
+    $item = $link->first();
+    if ($item) {
+      $url = $item->getUrl();
+      if ($url) {
+        $title = $item->getTitle();
+        $variables['investor_journey_cta'] = [
+          'url' => $url->toString(),
+          'title' => $title !== '' && $title !== NULL ? $title : (string) t('Learn more'),
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Hero split banner: hero image + stats for Twig.
+ */
+function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/hero_split_banner';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['hero_split_banner_heading_id'] = Html::getUniqueId('hero-split-banner-heading-' . $paragraph->id());
+
+  $variables['hero_split_headline_prefix'] = '';
+  if ($paragraph->get('field_hero_split_headline_prefix')->access('view') && !$paragraph->get('field_hero_split_headline_prefix')->isEmpty()) {
+    $variables['hero_split_headline_prefix'] = trim((string) $paragraph->get('field_hero_split_headline_prefix')->value);
+  }
+  $variables['hero_split_headline_accent'] = '';
+  if ($paragraph->get('field_hero_split_headline_accent')->access('view') && !$paragraph->get('field_hero_split_headline_accent')->isEmpty()) {
+    $variables['hero_split_headline_accent'] = trim((string) $paragraph->get('field_hero_split_headline_accent')->value);
+  }
+
+  $variables['hero_split_trust'] = '';
+  if ($paragraph->get('field_hero_split_trust')->access('view') && !$paragraph->get('field_hero_split_trust')->isEmpty()) {
+    $variables['hero_split_trust'] = trim((string) $paragraph->get('field_hero_split_trust')->value);
+  }
+
+  $stats = [];
+  $stat_field = $paragraph->get('field_hero_split_stats');
+  if ($stat_field->access('view')) {
+    foreach ($stat_field as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'hero_stat') {
+        continue;
+      }
+      $icon = (string) ($sub->get('field_hero_stat_icon')->value ?: 'clock');
+      $value = '';
+      if ($sub->get('field_hero_stat_value')->access('view') && !$sub->get('field_hero_stat_value')->isEmpty()) {
+        $value = trim((string) $sub->get('field_hero_stat_value')->value);
+      }
+      $label = '';
+      if ($sub->get('field_hero_stat_label')->access('view') && !$sub->get('field_hero_stat_label')->isEmpty()) {
+        $label = trim((string) $sub->get('field_hero_stat_label')->value);
+      }
+      $stats[] = [
+        'icon' => $icon,
+        'value' => $value,
+        'label' => $label,
+      ];
+    }
+  }
+  $variables['hero_split_stats'] = $stats;
+
+  $variables['hero_split_media'] = [];
+  if ($paragraph->get('field_media')->access('view') && !$paragraph->get('field_media')->isEmpty()) {
+    $media = $paragraph->get('field_media')->entity;
+    if ($media) {
+      $variables['hero_split_media'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($media, 'hero_banner');
+    }
+  }
+
+  $variables['hero_split_cta'] = [];
+  $link = $paragraph->get('field_link');
+  if ($link->access('view') && !$link->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $item */
+    $item = $link->first();
+    if ($item) {
+      $url = $item->getUrl();
+      if ($url) {
+        $title = $item->getTitle();
+        $variables['hero_split_cta'] = [
+          'url' => $url->toString(),
+          'title' => $title !== '' && $title !== NULL ? $title : (string) t('Learn more'),
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Why opportunities: feature cards, stat bar items, trust line.
+ */
+function motaded_theme_preprocess_paragraph__why_opportunities(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/why_opportunities';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['why_opportunities_heading_id'] = Html::getUniqueId('why-opportunities-heading-' . $paragraph->id());
+
+  $variables['why_opportunities_trust'] = '';
+  if ($paragraph->get('field_why_trust_line')->access('view') && !$paragraph->get('field_why_trust_line')->isEmpty()) {
+    $variables['why_opportunities_trust'] = trim((string) $paragraph->get('field_why_trust_line')->value);
+  }
+
+  $features = [];
+  $feature_field = $paragraph->get('field_why_features');
+  if ($feature_field->access('view')) {
+    foreach ($feature_field as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+        continue;
+      }
+      $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'people');
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      // If editors left default "people" on cards that are not team-focused, map by title (EN).
+      if ($icon === 'people' && $title !== '') {
+        $lower = function_exists('mb_strtolower') ? mb_strtolower($title) : strtolower($title);
+        if (str_contains($lower, 'strategic') || str_contains($lower, 'gateway')) {
+          $icon = 'globe';
+        }
+        elseif (str_contains($lower, 'growth') || str_contains($lower, 'sector')) {
+          $icon = 'trend';
+        }
+        elseif (str_contains($lower, 'vision') || str_contains($lower, 'reform')) {
+          $icon = 'clock';
+        }
+      }
+      $body = [];
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = $sub->get('field_body')->view([
+          'type' => 'text_default',
+          'label' => 'hidden',
+        ]);
+      }
+      $link = [];
+      $link_field = $sub->get('field_link');
+      if ($link_field->access('view') && !$link_field->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $link_item */
+        $link_item = $link_field->first();
+        if ($link_item) {
+          $url = $link_item->getUrl();
+          if ($url) {
+            $ltitle = $link_item->getTitle();
+            $link = [
+              'url' => $url->toString(),
+              'title' => $ltitle !== '' && $ltitle !== NULL ? $ltitle : (string) t('Learn more'),
+            ];
+          }
+        }
+      }
+      $features[] = [
+        'icon' => $icon,
+        'title' => $title,
+        'body' => $body,
+        'link' => $link,
+      ];
+    }
+  }
+  $variables['why_opportunities_features'] = $features;
+
+  $stats = [];
+  $stat_field = $paragraph->get('field_why_stat_items');
+  if ($stat_field->access('view')) {
+    foreach ($stat_field as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_stat_item') {
+        continue;
+      }
+      $icon = (string) ($sub->get('field_why_stat_icon')->value ?: 'globe');
+      $value = '';
+      if ($sub->get('field_why_stat_value')->access('view') && !$sub->get('field_why_stat_value')->isEmpty()) {
+        $value = trim((string) $sub->get('field_why_stat_value')->value);
+      }
+      $label = '';
+      if ($sub->get('field_why_stat_label')->access('view') && !$sub->get('field_why_stat_label')->isEmpty()) {
+        $label = trim((string) $sub->get('field_why_stat_label')->value);
+      }
+      $stats[] = [
+        'icon' => $icon,
+        'value' => $value,
+        'label' => $label,
+      ];
+    }
+  }
+  $variables['why_opportunities_stats'] = $stats;
+}
+
+/**
+ * Business setup options: image cards + bottom trust banner.
+ */
+function motaded_theme_preprocess_paragraph__business_setup_section(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['business_setup_heading_id'] = Html::getUniqueId('business-setup-heading-' . $paragraph->id());
+
+  $variables['business_setup_banner_line1'] = '';
+  if ($paragraph->get('field_setup_banner_line1')->access('view') && !$paragraph->get('field_setup_banner_line1')->isEmpty()) {
+    $variables['business_setup_banner_line1'] = trim((string) $paragraph->get('field_setup_banner_line1')->value);
+  }
+  $variables['business_setup_banner_line2'] = '';
+  if ($paragraph->get('field_setup_banner_line2')->access('view') && !$paragraph->get('field_setup_banner_line2')->isEmpty()) {
+    $variables['business_setup_banner_line2'] = trim((string) $paragraph->get('field_setup_banner_line2')->value);
+  }
+
+  $cards = [];
+  $card_field = $paragraph->get('field_business_setup_cards');
+  if ($card_field->access('view')) {
+    foreach ($card_field as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'business_setup_card') {
+        continue;
+      }
+      $icon = (string) ($sub->get('field_business_setup_icon')->value ?: 'city');
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = [];
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = $sub->get('field_body')->view([
+          'type' => 'text_default',
+          'label' => 'hidden',
+        ]);
+      }
+      $link = [];
+      $link_field = $sub->get('field_link');
+      if ($link_field->access('view') && !$link_field->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $link_item */
+        $link_item = $link_field->first();
+        if ($link_item) {
+          $url = $link_item->getUrl();
+          if ($url) {
+            $ltitle = $link_item->getTitle();
+            $link = [
+              'url' => $url->toString(),
+              'title' => $ltitle !== '' && $ltitle !== NULL ? $ltitle : (string) t('Learn more'),
+            ];
+          }
+        }
+      }
+      $media = [];
+      if ($sub->get('field_media')->access('view') && !$sub->get('field_media')->isEmpty()) {
+        $media_entity = $sub->get('field_media')->entity;
+        if ($media_entity) {
+          $media = \Drupal::entityTypeManager()
+            ->getViewBuilder('media')
+            ->view($media_entity, 'default');
+        }
+      }
+      $popular = FALSE;
+      if ($sub->hasField('field_business_setup_popular') && $sub->get('field_business_setup_popular')->access('view') && !$sub->get('field_business_setup_popular')->isEmpty()) {
+        $popular = (bool) $sub->get('field_business_setup_popular')->value;
+      }
+      $cards[] = [
+        'icon' => $icon,
+        'title' => $title,
+        'body' => $body,
+        'link' => $link,
+        'media' => $media,
+        'popular' => $popular,
+      ];
+    }
+  }
+  $variables['business_setup_cards'] = $cards;
+}
+
+/**
+ * View block paragraph: flag when embedded view is news / block_4 (compact list layout).
+ */
+function motaded_theme_preprocess_paragraph__view_block(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['view_block_news_latest'] = FALSE;
+  $variables['view_block_services_home'] = FALSE;
+  if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
+    return;
+  }
+  foreach ($paragraph->get('field_view_block')->getValue() as $item) {
+    $target = $item['target_id'] ?? '';
+    $display = $item['display_id'] ?? '';
+    if ($target === 'news' && $display === 'block_4') {
+      $variables['view_block_news_latest'] = TRUE;
+      return;
+    }
+    if ($target === 'services' && $display === 'block_2') {
+      $variables['view_block_services_home'] = TRUE;
+      return;
+    }
+    if (!empty($item['data']) && is_string($item['data'])) {
+      $decoded = json_decode($item['data'], TRUE);
+      if (!is_array($decoded)) {
+        continue;
+      }
+      $tid = $decoded['target_id'] ?? '';
+      $did = $decoded['display_id'] ?? '';
+      if ($tid === 'news' && $did === 'block_4') {
+        $variables['view_block_news_latest'] = TRUE;
+        return;
+      }
+      if ($tid === 'services' && $did === 'block_2') {
+        $variables['view_block_services_home'] = TRUE;
+        return;
+      }
+    }
+  }
+}
+
+/**
+ * Media lead: image left, icon + headline + body + CTA (Twig + responsive media).
+ */
+function motaded_theme_preprocess_paragraph__media_lead(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['media_lead_heading_id'] = Html::getUniqueId('media-lead-heading-' . $paragraph->id());
+  $variables['media_lead_headline'] = '';
+  if ($paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['media_lead_headline'] = trim((string) $paragraph->get('field_title')->value);
+  }
+  $variables['media_lead_media'] = [];
+  if ($paragraph->get('field_media')->access('view') && !$paragraph->get('field_media')->isEmpty()) {
+    $media = $paragraph->get('field_media')->entity;
+    if ($media) {
+      $variables['media_lead_media'] = \Drupal::entityTypeManager()
+        ->getViewBuilder('media')
+        ->view($media, 'banner_sm');
+    }
+  }
+}
+
+/**
  * Plain title + image alt from media (fallback to title) for article-card output.
  */
 function motaded_theme_preprocess_paragraph__business_activity(array &$variables): void {
@@ -621,6 +1116,82 @@ function motaded_theme_preprocess_paragraph__featured_contents(array &$variables
 }
 
 /**
+ * Implements hook_preprocess_paragraph__insights_updates().
+ */
+function motaded_theme_preprocess_paragraph__insights_updates(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/insights-updates';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $variables['iu_card_images'] = [];
+  $variables['iu_item_dates'] = [];
+  $variables['iu_item_dates_iso'] = [];
+  $variables['iu_insight_nodes'] = [];
+  $variables['iu_news_nodes'] = [];
+
+  $route_url = static function (string $route_name, string $path): string {
+    try {
+      return Url::fromRoute($route_name)->toString();
+    }
+    catch (\Throwable $e) {
+      return Url::fromUserInput($path)->toString();
+    }
+  };
+
+  $variables['iu_insights_list_url'] = $route_url('view.news.page_1', '/blog');
+  $variables['iu_news_list_url'] = $route_url('view.news.page_2', '/news');
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+
+  $collect_meta = function (array $nodes) use (&$variables): void {
+    foreach ($nodes as $node) {
+      if (!$node instanceof NodeInterface) {
+        continue;
+      }
+      $nid = (int) $node->id();
+      $extracted = motaded_theme_entity_field_media_image_uri_and_alt($node, $node->label());
+      $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+      $meta['alt'] = $extracted['alt'];
+      $variables['iu_card_images'][$nid] = $meta;
+      $ts = (int) $node->getCreatedTime();
+      $variables['iu_item_dates'][$nid] = $ts
+        ? \Drupal::service('date.formatter')->format($ts, 'custom', 'j M Y')
+        : '';
+      $variables['iu_item_dates_iso'][$nid] = $ts
+        ? \Drupal::service('date.formatter')->format($ts, 'html_datetime')
+        : '';
+    }
+  };
+
+  if ($paragraph->hasField('field_iu_insights') && !$paragraph->get('field_iu_insights')->isEmpty()) {
+    foreach ($paragraph->get('field_iu_insights')->referencedEntities() as $node) {
+      if ($node instanceof NodeInterface) {
+        if ($node->hasTranslation($langcode)) {
+          $node = $node->getTranslation($langcode);
+        }
+        $variables['iu_insight_nodes'][] = $node;
+      }
+    }
+  }
+  if ($paragraph->hasField('field_iu_news') && !$paragraph->get('field_iu_news')->isEmpty()) {
+    foreach ($paragraph->get('field_iu_news')->referencedEntities() as $node) {
+      if ($node instanceof NodeInterface) {
+        if ($node->hasTranslation($langcode)) {
+          $node = $node->getTranslation($langcode);
+        }
+        $variables['iu_news_nodes'][] = $node;
+      }
+    }
+  }
+
+  // Homepage layout: one hero (left) + rest in sidebar with news (up to 4 total insights).
+  $variables['iu_insight_nodes'] = array_slice($variables['iu_insight_nodes'], 0, 4);
+  $variables['iu_news_nodes'] = array_slice($variables['iu_news_nodes'], 0, 5);
+
+  $collect_meta($variables['iu_insight_nodes']);
+  $collect_meta($variables['iu_news_nodes']);
+}
+
+/**
  * Preprocess for News View block (unformatted).
  */
 function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variables) {
@@ -646,12 +1217,17 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
 
       $row['title'] = $entity->label();
       $row['url'] = $entity->toUrl()->toString();
-      $row['created'] = $entity->getCreatedTime() ? \Drupal::service('date.formatter')->format($entity->getCreatedTime(), 'custom', 'Y-m-d') : '';
+      $created_ts = (int) $entity->getCreatedTime();
+      $row['created'] = $created_ts
+        ? \Drupal::service('date.formatter')->format($created_ts, 'custom', 'F j, Y')
+        : '';
+      $row['created_iso'] = $created_ts ? gmdate('c', $created_ts) : '';
     }
     else {
       $row['title'] = '';
       $row['url'] = '';
       $row['created'] = '';
+      $row['created_iso'] = '';
     }
 
     $row['image']['alt'] = $img_alt;

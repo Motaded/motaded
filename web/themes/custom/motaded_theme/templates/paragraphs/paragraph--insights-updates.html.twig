@@ -1,0 +1,181 @@
+{#
+/**
+ * @file
+ * Split: hero (left) + more insights + latest news (two side columns); “View all insights” under more insights.
+ * Split (1 insight): hero + news only. Single: stacked as before.
+ */
+#}
+{{ attach_library('motaded_theme/insights-updates') }}
+{% set iu_hid = 'iu-heading-' ~ (paragraph.id() ?: 'new') %}
+{% set has_insights = iu_insight_nodes|length > 0 %}
+{% set has_news = iu_news_nodes|length > 0 %}
+{% set iu_split = has_insights and has_news %}
+{% set iu_show_insights = has_insights or not has_news %}
+{% set iu_show_news = has_news or not has_insights %}
+{% set iu_more_insights = iu_split and iu_insight_nodes|length > 1 ? iu_insight_nodes|slice(1) : [] %}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'insights-updates',
+  ]
+%}
+<section{{ attributes.addClass(classes) }} aria-labelledby="{{ iu_hid }}">
+  <div class="insights-updates__inner">
+    <header class="insights-updates__masthead">
+      <h2 id="{{ iu_hid }}" class="insights-updates__title">
+        {{ 'Insights & updates'|t }}
+      </h2>
+      {% if paragraph.field_body is not empty %}
+        <div class="insights-updates__intro">
+          {{ content.field_body }}
+        </div>
+      {% endif %}
+    </header>
+
+    <div class="insights-updates__columns{{ iu_split ? ' insights-updates__columns--split' : ' insights-updates__columns--single' }}{{ iu_split and iu_more_insights is not empty ? ' insights-updates__columns--split-3' : (iu_split ? ' insights-updates__columns--split-2' : '') }}">
+      {% if iu_show_insights %}
+        <div class="insights-updates__col insights-updates__col--insights">
+          {% if not iu_split %}
+            <div class="insights-updates__col-head insights-updates__col-head--single">
+              <h3 class="insights-updates__heading-plain">{{ 'Insights & articles'|t }}</h3>
+              <a href="{{ iu_insights_list_url }}" class="insights-updates__text-cta">{{ 'View all insights'|t }}<span aria-hidden="true"> →</span></a>
+            </div>
+          {% endif %}
+          <div class="insights-updates__cards">
+            {% if iu_split %}
+              {% set hero = iu_insight_nodes|first %}
+              {% if hero %}
+                {% set nid = hero.id %}
+                {% set card_img = iu_card_images[nid] ?? {} %}
+                {% set trunc = 140 %}
+                <a href="{{ path('entity.node.canonical', {'node': nid}) }}" class="insights-updates__card-link insights-updates__card-link--hero">
+                  <article class="insights-updates__card insights-updates__card--hero">
+                    <div class="insights-updates__card-media">
+                      {% if card_img.src %}
+                        {% if card_img.srcset %}
+                          <img loading="eager" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="(max-width: 1023px) 100vw, min(640px, 65vw)" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                        {% else %}
+                          <img loading="eager" decoding="async" src="{{ card_img.src }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                    <div class="insights-updates__card-body">
+                      <h3 class="insights-updates__card-title">{{ hero.label }}</h3>
+                      <p class="insights-updates__card-excerpt">
+                        {% if hero.body.summary %}
+                          {{ hero.body.summary|striptags|truncate(trunc, true) }}
+                        {% elseif hero.body.value %}
+                          {{ hero.body.value|striptags|truncate(trunc, true) }}
+                        {% endif %}
+                      </p>
+                      <span class="insights-updates__readmore">{{ 'Read more'|t }}<span class="insights-updates__readmore-arrow" aria-hidden="true"> →</span></span>
+                    </div>
+                  </article>
+                </a>
+              {% endif %}
+            {% else %}
+              {% for node in iu_insight_nodes %}
+                {% set nid = node.id %}
+                {% set card_img = iu_card_images[nid] ?? {} %}
+                {% set is_hero = loop.first %}
+                <a href="{{ path('entity.node.canonical', {'node': nid}) }}" class="insights-updates__card-link{{ is_hero ? ' insights-updates__card-link--hero' : ' insights-updates__card-link--compact' }}">
+                  <article class="insights-updates__card{{ is_hero ? ' insights-updates__card--hero' : ' insights-updates__card--compact' }}">
+                    <div class="insights-updates__card-media">
+                      {% if card_img.src %}
+                        {% if card_img.srcset %}
+                          <img loading="{{ is_hero ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="{{ is_hero ? '(max-width: 1023px) 100vw, min(720px, 58vw)' : '(max-width: 639px) 100vw, 200px' }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                        {% else %}
+                          <img loading="{{ is_hero ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                    <div class="insights-updates__card-body">
+                      {% if is_hero %}
+                        <h3 class="insights-updates__card-title">{{ node.label }}</h3>
+                      {% else %}
+                        <h4 class="insights-updates__card-title">{{ node.label }}</h4>
+                      {% endif %}
+                      <p class="insights-updates__card-excerpt">
+                        {% if node.body.summary %}
+                          {{ node.body.summary|striptags|truncate(is_hero ? 200 : 100, true) }}
+                        {% elseif node.body.value %}
+                          {{ node.body.value|striptags|truncate(is_hero ? 200 : 100, true) }}
+                        {% endif %}
+                      </p>
+                      <span class="insights-updates__readmore">{{ 'Read more'|t }}<span class="insights-updates__readmore-arrow" aria-hidden="true"> →</span></span>
+                    </div>
+                  </article>
+                </a>
+              {% else %}
+                <p class="insights-updates__empty">{{ 'No articles selected yet.'|t }}</p>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% if iu_split and has_insights and iu_more_insights is empty %}
+            <a href="{{ iu_insights_list_url }}" class="insights-updates__footer-link">{{ 'View all insights'|t }}<span aria-hidden="true"> →</span></a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if iu_split and iu_more_insights is not empty %}
+        <div class="insights-updates__col insights-updates__col--more-insights" aria-label="{{ 'More insights'|t }}">
+          <p class="insights-updates__kicker">{{ 'More insights'|t }}</p>
+          <div class="insights-updates__sidebar-insights">
+            {% for node in iu_more_insights %}
+              {% set nid = node.id %}
+              {% set card_img = iu_card_images[nid] ?? {} %}
+              <a href="{{ path('entity.node.canonical', {'node': nid}) }}" class="insights-updates__sidebar-insight-link">
+                {% if card_img.src %}
+                  <div class="insights-updates__sidebar-insight-media">
+                    <img loading="lazy" decoding="async" src="{{ card_img.src }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                  </div>
+                {% endif %}
+                <span class="insights-updates__sidebar-insight-title">{{ node.label }}</span>
+                <span class="insights-updates__sidebar-insight-more">{{ 'Read more'|t }}<span aria-hidden="true"> →</span></span>
+              </a>
+            {% endfor %}
+          </div>
+          {% if has_insights %}
+            <a href="{{ iu_insights_list_url }}" class="insights-updates__footer-link insights-updates__footer-link--insights">{{ 'View all insights'|t }}<span aria-hidden="true"> →</span></a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if iu_show_news %}
+        <aside class="insights-updates__col insights-updates__col--news" aria-label="{{ 'Latest news'|t }}">
+          {% if iu_split %}
+            <p class="insights-updates__kicker">{{ 'Latest news'|t }}</p>
+          {% else %}
+            <div class="insights-updates__col-head insights-updates__col-head--single">
+              <h3 class="insights-updates__heading-plain">{{ 'Latest news'|t }}</h3>
+              <a href="{{ iu_news_list_url }}" class="insights-updates__text-cta">{{ 'View all news'|t }}<span aria-hidden="true"> →</span></a>
+            </div>
+          {% endif %}
+          <ul class="insights-updates__news-list">
+            {% for node in iu_news_nodes %}
+              {% set nid = node.id %}
+              <li class="insights-updates__news-item">
+                <a href="{{ path('entity.node.canonical', {'node': nid}) }}" class="insights-updates__news-link">
+                  <div class="insights-updates__news-body">
+                    <span class="insights-updates__news-title">{{ node.label }}</span>
+                    <time class="insights-updates__news-date" datetime="{{ iu_item_dates_iso[nid] ?? '' }}">{{ iu_item_dates[nid] ?? '' }}</time>
+                  </div>
+                </a>
+              </li>
+            {% else %}
+              <li class="insights-updates__news-item">
+                <p class="insights-updates__empty">{{ 'No news items selected yet.'|t }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if iu_split and has_news %}
+            <a href="{{ iu_news_list_url }}" class="insights-updates__footer-link insights-updates__footer-link--news">{{ 'View all news'|t }}<span aria-hidden="true"> →</span></a>
+          {% endif %}
+        </aside>
+      {% endif %}
+    </div>
+  </div>
+</section>

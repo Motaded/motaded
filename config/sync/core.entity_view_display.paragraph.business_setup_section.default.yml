@@ -1,0 +1,47 @@
+uuid: b1111111-1111-4111-8111-111111111041
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_setup_section.field_body
+    - field.field.paragraph.business_setup_section.field_setup_banner_line1
+    - field.field.paragraph.business_setup_section.field_setup_banner_line2
+    - field.field.paragraph.business_setup_section.field_business_setup_cards
+    - field.field.paragraph.business_setup_section.field_business_setup_eyebrow
+    - field.field.paragraph.business_setup_section.field_title
+    - paragraphs.paragraphs_type.business_setup_section
+  module:
+    - text
+id: paragraph.business_setup_section.default
+targetEntityType: paragraph
+bundle: business_setup_section
+mode: default
+content:
+  field_business_setup_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_setup_banner_line1: true
+  field_setup_banner_line2: true
+  field_business_setup_cards: true
+  search_api_excerpt: true

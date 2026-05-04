@@ -1,0 +1,10 @@
+uuid: e1111111-1111-4111-8111-111111111101
+langcode: en
+status: true
+dependencies: {  }
+id: journey_step
+label: 'Journey step'
+icon_uuid: null
+icon_default: null
+description: 'Single step for Investor journey (nested only).'
+behavior_plugins: {  }

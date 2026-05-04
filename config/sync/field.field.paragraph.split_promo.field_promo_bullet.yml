@@ -1,0 +1,19 @@
+uuid: 4c2ae9c4-cd8b-4122-b2f2-6dab14cc712c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_promo_bullet
+    - paragraphs.paragraphs_type.split_promo
+id: paragraph.split_promo.field_promo_bullet
+field_name: field_promo_bullet
+entity_type: paragraph
+bundle: split_promo
+label: 'Bullet points'
+description: 'Short lines (e.g. benefits). Leave empty rows out on save.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,78 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/investor_journey') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'investor-journey',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if content.field_title %} aria-labelledby="{{ investor_journey_heading_id }}"{% endif %}>
+  <header class="investor-journey__header">
+    {% if content.field_investor_journey_eyebrow %}
+      <div class="investor-journey__eyebrow-wrap">
+        {{ content.field_investor_journey_eyebrow }}
+      </div>
+    {% endif %}
+    {% if content.field_title %}
+      <h2 id="{{ investor_journey_heading_id }}" class="investor-journey__title">{{ content.field_title }}</h2>
+    {% endif %}
+    {% if content.field_sub_title %}
+      <p class="investor-journey__subtitle">{{ content.field_sub_title }}</p>
+    {% endif %}
+  </header>
+
+  {% if investor_journey_steps is not empty %}
+    <div class="investor-journey__track">
+      <div class="investor-journey__rail" aria-hidden="true"></div>
+      <div class="investor-journey__steps">
+        {% for step in investor_journey_steps %}
+          <div class="investor-journey__step">
+            <div class="investor-journey__icon-wrap">
+              <div class="investor-journey__icon" aria-hidden="true">
+                {% if step.icon == 'building' %}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                    <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9v12M15 9v12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elseif step.icon == 'bank' %}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                    <path d="M3 10h18M5 10V8l7-4 7 4v2M6 10v10M10 10v10M14 10v10M18 10v10M4 22h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 14h8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                {% elseif step.icon == 'briefcase' %}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M4 9h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 12v3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                {% else %}
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 2v6h6M8 13h8M8 17h8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                {% endif %}
+              </div>
+              <span class="investor-journey__num">{{ loop.index }}</span>
+            </div>
+            {% if step.title %}
+              <h3 class="investor-journey__step-title">{{ step.title }}</h3>
+            {% endif %}
+            {% if step.body %}
+              <div class="investor-journey__step-body">{{ step.body }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if investor_journey_cta is not empty %}
+    <div class="investor-journey__footer">
+      <a href="{{ investor_journey_cta.url }}" class="investor-journey__cta">{{ investor_journey_cta.title }}</a>
+    </div>
+  {% endif %}
+</section>

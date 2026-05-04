@@ -2266,7 +2266,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 4
+          items_per_page: 3
       exposed_form:
         type: bef
         options:

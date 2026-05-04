@@ -1,0 +1,21 @@
+uuid: f38f9a88-5a1e-4b2d-9c0f-8e7d6c5b4a35
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_promo_split_item
+field_name: field_promo_split_item
+entity_type: paragraph
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

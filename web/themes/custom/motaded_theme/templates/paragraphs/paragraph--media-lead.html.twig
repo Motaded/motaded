@@ -1,0 +1,39 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/media_lead') }}
+{%
+  set classes = [
+    'media-lead',
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if media_lead_headline %} aria-labelledby="{{ media_lead_heading_id }}"{% endif %}>
+  <div class="media-lead__inner">
+    {% if media_lead_media is not empty %}
+      <div class="media-lead__media">
+        {{ media_lead_media }}
+      </div>
+    {% endif %}
+    <div class="media-lead__content">
+      <span class="media-lead__kicker" aria-hidden="true"></span>
+      {% if media_lead_headline %}
+        <h2 id="{{ media_lead_heading_id }}" class="media-lead__headline">{{ media_lead_headline }}</h2>
+      {% endif %}
+      {% if content.field_body is defined and content.field_body|render|trim is not empty %}
+        <div class="media-lead__body">
+          {{ content.field_body }}
+        </div>
+      {% endif %}
+      {% if content.field_link is defined and content.field_link|render|trim is not empty %}
+        <div class="media-lead__actions">
+          {{ content.field_link }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

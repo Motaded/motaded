@@ -62,6 +62,8 @@ base:
         weight: -10
       css/components/pager.css:
         weight: -10
+      css/components/partners-showcase.css:
+        weight: -10
       css/components/tabledrag.css:
         weight: -10
       css/components/tableselect.css:
@@ -209,6 +211,80 @@ news-carousel:
   dependencies:
     - motaded_theme/alpine
 
+latest_news_block:
+  version: VERSION
+  css:
+    component:
+      css/components/latest-news-block.css:
+        weight: -9
+
+services_home_block:
+  version: VERSION
+  css:
+    component:
+      css/components/services-home-block.css:
+        weight: 50
+
+media_lead:
+  version: VERSION
+  css:
+    component:
+      css/components/media-lead.css:
+        weight: -9
+
+split_promo:
+  version: VERSION
+  css:
+    component:
+      css/components/split-promo.css:
+        weight: -9
+
+promo_split:
+  version: VERSION
+  css:
+    component:
+      css/components/promo-split.css:
+        weight: -9
+
+investor_journey:
+  version: VERSION
+  css:
+    component:
+      css/components/investor-journey.css:
+        weight: -9
+
+hero_split_banner:
+  version: VERSION
+  css:
+    component:
+      css/components/hero-split-banner.css:
+        weight: -9
+
+why_opportunities:
+  version: VERSION
+  css:
+    component:
+      css/components/why-opportunities.css:
+        weight: -9
+
+business_setup_section:
+  version: VERSION
+  css:
+    component:
+      css/components/business-setup-section.css:
+        weight: -9
+
 featured-contents:
+  css:
+    component:
+      css/components/featured-contents.css:
+        weight: -9
   dependencies:
     - motaded_theme/alpine
+
+insights-updates:
+  version: VERSION
+  css:
+    component:
+      css/components/insights-updates.css:
+        weight: -9

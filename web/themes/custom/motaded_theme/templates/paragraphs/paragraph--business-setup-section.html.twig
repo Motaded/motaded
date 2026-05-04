@@ -1,0 +1,84 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/business_setup_section') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'business-setup-section',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  <div class="business-setup-section__inner">
+    <header class="business-setup-section__header">
+      {% if content.field_business_setup_eyebrow %}
+        <div class="business-setup-section__eyebrow-wrap">{{ content.field_business_setup_eyebrow }}</div>
+      {% endif %}
+      {% if content.field_title %}
+        <h2 id="{{ business_setup_heading_id }}" class="business-setup-section__title">{{ content.field_title }}</h2>
+      {% endif %}
+      {% if content.field_body %}
+        <div class="business-setup-section__intro">{{ content.field_body }}</div>
+      {% endif %}
+    </header>
+
+    {% if business_setup_cards is not empty %}
+      <div class="business-setup-section__grid">
+        {% for card in business_setup_cards %}
+          <article class="business-setup-section__card{{ card.popular ? ' business-setup-section__card--popular' : '' }}">
+            <div class="business-setup-section__media">
+              {% if card.popular %}
+                <div class="business-setup-section__badge">
+                  <svg class="business-setup-section__badge-star" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2l2.9 7.3h7.6l-6.1 4.7 2.3 7.4L12 17.8 5.3 21.4l2.3-7.4L1.5 9.3h7.6z"/>
+                  </svg>
+                  {{ 'Most popular'|t }}
+                </div>
+              {% endif %}
+              {% if card.media is not empty %}
+                <div class="business-setup-section__media-inner">
+                  {{ card.media }}
+                </div>
+              {% endif %}
+            </div>
+            {% if card.title %}
+              <h3 class="business-setup-section__card-title">{{ card.title }}</h3>
+            {% endif %}
+            {% if card.body is not empty %}
+              <div class="business-setup-section__card-body">{{ card.body }}</div>
+            {% endif %}
+            {% if card.link is not empty %}
+              <a href="{{ card.link.url }}" class="business-setup-section__card-link">
+                {{ card.link.title }}
+                <span class="business-setup-section__card-link-arrow" aria-hidden="true">→</span>
+              </a>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if business_setup_banner_line1 or business_setup_banner_line2 %}
+      <div class="business-setup-section__banner" role="note">
+        <div class="business-setup-section__banner-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="business-setup-section__banner-copy">
+          {% if business_setup_banner_line1 %}
+            <p class="business-setup-section__banner-line1">{{ business_setup_banner_line1 }}</p>
+          {% endif %}
+          {% if business_setup_banner_line2 %}
+            <p class="business-setup-section__banner-line2">{{ business_setup_banner_line2 }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
