@@ -4,6 +4,6 @@ status: true
 dependencies: {  }
 name: Sector
 vid: sector
-description: 'Industry sectors for market insights (Tech, Tourism, etc.).'
+description: 'Industry sectors (market insights, sector landing pages).'
 weight: 0
 new_revision: false

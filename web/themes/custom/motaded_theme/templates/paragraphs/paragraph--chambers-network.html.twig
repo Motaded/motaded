@@ -1,0 +1,78 @@
+{#
+/**
+ * @file
+ * Business Network & Chambers (paragraph: chambers_network).
+ */
+#}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'chambers-network',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="chambers-network__inner">
+    <header class="chambers-network__masthead">
+      <div class="chambers-network__masthead-copy">
+        {# Той самий патерн eyebrow, що й «EXPLORE SAUDI ARABIA» (hero-split-banner). #}
+        {% if content.field_cnb_eyebrow is not empty %}
+          <div class="chambers-network__eyebrow">
+            {{ content.field_cnb_eyebrow }}
+          </div>
+        {% endif %}
+        {% if content.field_title is not empty %}
+          <h2 class="chambers-network__title">{{ content.field_title }}</h2>
+        {% endif %}
+        {% if content.field_body is not empty %}
+          <div class="chambers-network__intro">{{ content.field_body }}</div>
+        {% endif %}
+      </div>
+      <div class="chambers-network__masthead-decor" aria-hidden="true">
+        <div class="chambers-network__decor-rings"></div>
+        <svg class="chambers-network__map" viewBox="0 0 320 340" focusable="false">
+          {# Punktирні контури — легкий фон як на макеті. #}
+          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke-width="1.1" stroke-dasharray="4 8" opacity="0.42" d="M52 48c52-34 118-26 164 14 42 36 54 104 26 154-28 54-94 82-154 74-62-9-114-62-126-126-12-72 38-146 112-174 22-9 46-13 68-14"/>
+            <path stroke-width="1" stroke-dasharray="3 7" opacity="0.32" d="M188 72c56 8 98 62 94 118-5 72-74 126-146 118"/>
+            <path stroke-width="0.9" stroke-dasharray="2 6" opacity="0.28" d="M96 200c52 28 118 26 174-14"/>
+          </g>
+        </svg>
+      </div>
+    </header>
+
+    {# Grid: View chambers / homepage (embed). Optional NIDs from field_cnb_chambers. #}
+    {% if cnb_chambers_view is not empty %}
+      <div class="chambers-network__view-mount">
+        {{ cnb_chambers_view }}
+      </div>
+    {% endif %}
+
+    {% if content.field_cnb_footer_title is not empty or content.field_cnb_footer_body is not empty or content.field_cnb_footer_link is not empty %}
+      <div class="chambers-network__footer-banner" aria-label="{{ 'Chambers and councils'|t }}">
+        <div class="chambers-network__footer-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="chambers-network__footer-copy">
+          {% if content.field_cnb_footer_title is not empty %}
+            <p class="chambers-network__footer-title">{{ content.field_cnb_footer_title }}</p>
+          {% endif %}
+          {% if content.field_cnb_footer_body is not empty %}
+            <div class="chambers-network__footer-body">{{ content.field_cnb_footer_body }}</div>
+          {% endif %}
+        </div>
+        {% if content.field_cnb_footer_link is not empty %}
+          <div class="chambers-network__footer-cta">{{ content.field_cnb_footer_link }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>

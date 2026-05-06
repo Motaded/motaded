@@ -1,0 +1,28 @@
+uuid: a3c15959-b674-46b6-acfb-6df65c5443ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - node.type.sector_page
+  module:
+    - text
+id: node.sector_page.body
+field_name: body
+entity_type: node
+bundle: sector_page
+label: Overview
+description: 'Sector overview and narrative (ports, railways, strategy, etc.).'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats:
+    - full_html
+    - basic_html
+field_type: text_with_summary

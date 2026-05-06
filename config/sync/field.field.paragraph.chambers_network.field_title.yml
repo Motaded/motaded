@@ -1,0 +1,19 @@
+uuid: 2c384c84-5db4-43b0-9f25-e0c35feedf58
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.chambers_network
+id: paragraph.chambers_network.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: chambers_network
+label: Title
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

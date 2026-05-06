@@ -1,0 +1,19 @@
+uuid: b016eece-6230-4f6d-9e6e-6a3e9f720b6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ksb_eyebrow
+    - paragraphs.paragraphs_type.key_sectors
+id: paragraph.key_sectors.field_ksb_eyebrow
+field_name: field_ksb_eyebrow
+entity_type: paragraph
+bundle: key_sectors
+label: Eyebrow
+description: 'Uppercase label (e.g. KEY SECTORS).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

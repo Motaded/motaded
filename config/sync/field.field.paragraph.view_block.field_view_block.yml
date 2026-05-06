@@ -25,11 +25,13 @@ settings:
   plugin_types:
     block: block
   preselect_views:
+    chambers: chambers
     events: events
     news: news
     partners: partners
     related_similar: related_similar
     services: services
+    sectors_card_strip: sectors_card_strip
   enabled_settings:
     argument: argument
     header: header

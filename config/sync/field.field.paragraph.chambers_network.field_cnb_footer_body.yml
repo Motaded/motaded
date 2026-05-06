@@ -1,0 +1,22 @@
+uuid: d8cb7e42-d182-43f8-b5d4-bfd3d4333c12
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cnb_footer_body
+    - paragraphs.paragraphs_type.chambers_network
+  module:
+    - text
+id: paragraph.chambers_network.field_cnb_footer_body
+field_name: field_cnb_footer_body
+entity_type: paragraph
+bundle: chambers_network
+label: 'Footer body'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

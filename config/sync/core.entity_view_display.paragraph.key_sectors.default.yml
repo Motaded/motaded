@@ -1,0 +1,46 @@
+uuid: 54986ad2-da14-4cfe-b490-281304353589
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.key_sectors.field_body
+    - field.field.paragraph.key_sectors.field_ksb_eyebrow
+    - field.field.paragraph.key_sectors.field_ksb_footer_body
+    - field.field.paragraph.key_sectors.field_ksb_footer_title
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_body
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_icon
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_title
+    - field.field.paragraph.key_sectors.field_link
+    - field.field.paragraph.key_sectors.field_title
+    - field.field.paragraph.key_sectors.field_view_block
+    - paragraphs.paragraphs_type.key_sectors
+  module:
+    - link
+    - text
+    - views
+    - viewsreference
+id: paragraph.key_sectors.default
+targetEntityType: paragraph
+bundle: key_sectors
+mode: default
+content:
+  field_view_block:
+    type: viewsreference_formatter
+    label: hidden
+    settings:
+      plugin_types:
+        - block
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_body: true
+  field_ksb_eyebrow: true
+  field_ksb_footer_body: true
+  field_ksb_footer_title: true
+  field_ksb_sidebar_body: true
+  field_ksb_sidebar_icon: true
+  field_ksb_sidebar_title: true
+  field_link: true
+  field_title: true
+  search_api_excerpt: true

@@ -144,6 +144,31 @@ platform_node:
     - motaded_theme/base
     - motaded_theme/node
 
+sector_page:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+
+sector_card:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-card.css: {}
+  dependencies:
+    - motaded_theme/base
+
+key_sectors:
+  version: VERSION
+  css:
+    component:
+      css/components/key-sectors.css: {}
+  dependencies:
+    - motaded_theme/base
+
 blog_listing:
   version: VERSION
   css:
@@ -400,6 +425,15 @@ platforms_systems:
   css:
     component:
       css/components/platforms-systems.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+chambers_network:
+  version: VERSION
+  css:
+    component:
+      css/components/chambers-network.css:
         weight: -9
   dependencies:
     - motaded_theme/base

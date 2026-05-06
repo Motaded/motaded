@@ -1,0 +1,19 @@
+uuid: 14abd76e-9f4c-4805-9d6e-04a0c03ffc38
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_ksb_footer_body
+field_name: field_ksb_footer_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

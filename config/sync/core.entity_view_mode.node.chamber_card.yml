@@ -1,0 +1,11 @@
+uuid: 56961b74-5d84-4dd7-b6b0-9b66fd988793
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.chamber_card
+label: 'Chamber card'
+description: 'Card for chamber listings (homepage block and /chambers directory).'
+targetEntityType: node
+cache: true

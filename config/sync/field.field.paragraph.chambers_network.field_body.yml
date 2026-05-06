@@ -1,0 +1,22 @@
+uuid: 06e2ac4b-3f70-4292-becd-a3974ebbf18f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - paragraphs.paragraphs_type.chambers_network
+  module:
+    - text
+id: paragraph.chambers_network.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: chambers_network
+label: Introduction
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

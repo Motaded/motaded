@@ -1,0 +1,24 @@
+uuid: f174857c-4b9f-49b7-abdd-fc116e72f197
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector_highlights
+    - node.type.sector_page
+  module:
+    - text
+id: node.sector_page.field_sector_highlights
+field_name: field_sector_highlights
+entity_type: node
+bundle: sector_page
+label: 'Key highlights'
+description: 'Use a bullet list in the editor (strategic points).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - full_html
+    - basic_html
+field_type: text_long

@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Sector page — teaser card for homepage grids (Key sectors view).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <div class="sector-card">
+    <div class="sector-card__top">
+      <div class="sector-card__icon" aria-hidden="true">
+        {% if sector_card_has_custom_icon %}
+          <span class="sector-card__icon-custom">{{ sector_card_icon_custom }}</span>
+        {% else %}
+          {{ sector_card_icon_markup }}
+        {% endif %}
+      </div>
+      <h3 class="sector-card__title">{{ label }}</h3>
+      {% if content.field_short_description|render|trim is not empty %}
+        <div class="sector-card__teaser">{{ content.field_short_description }}</div>
+      {% endif %}
+    </div>
+
+    {% if content.field_media|render|trim is not empty %}
+      <div class="sector-card__media">{{ content.field_media }}</div>
+    {% endif %}
+
+    {% if sector_card_kpis is not empty %}
+      <div class="sector-card__kpis" role="group" aria-label="{{ 'Key statistics'|t }}">
+        {% for row in sector_card_kpis|slice(0, 3) %}
+          <div class="sector-card__kpi">
+            <div class="sector-card__kpi-icon" aria-hidden="true">{{ row.icon_markup }}</div>
+            <div>
+              {% if row.value %}<p class="sector-card__kpi-val">{{ row.value }}</p>{% endif %}
+              {% if row.label %}<p class="sector-card__kpi-lbl">{{ row.label }}</p>{% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="sector-card__foot">
+      <a class="sector-card__link" href="{{ sector_card_url }}">
+        {{ 'Explore Sector'|t }}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</article>

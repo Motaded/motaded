@@ -8,6 +8,7 @@ dependencies:
     - paragraphs.paragraphs_type.accordions
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.chambers_network
     - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.hero_two_cols
@@ -19,6 +20,7 @@ dependencies:
     - paragraphs.paragraphs_type.system_masthead
     - paragraphs.paragraphs_type.insights_updates
     - paragraphs.paragraphs_type.investor_journey
+    - paragraphs.paragraphs_type.key_sectors
     - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.media_lead
     - paragraphs.paragraphs_type.promo_split
@@ -47,6 +49,7 @@ settings:
       banner: banner
       banner_sm: banner_sm
       business_setup_section: business_setup_section
+      chambers_network: chambers_network
       media_lead: media_lead
       promo_split: promo_split
       split_promo: split_promo
@@ -65,6 +68,7 @@ settings:
       system_masthead: system_masthead
       insights_updates: insights_updates
       investor_journey: investor_journey
+      key_sectors: key_sectors
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -97,6 +101,9 @@ settings:
       card:
         weight: 27
         enabled: false
+      chambers_network:
+        weight: 20
+        enabled: true
       cards:
         weight: 33
         enabled: true
@@ -135,6 +142,9 @@ settings:
         enabled: true
       investor_journey:
         weight: 24
+        enabled: true
+      key_sectors:
+        weight: 17
         enabled: true
       itc_card:
         weight: -24

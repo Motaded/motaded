@@ -1,0 +1,10 @@
+uuid: 08c61acc-d83d-4c2d-8826-3c4e2abf01e1
+langcode: en
+status: true
+dependencies: {  }
+id: chambers_network
+label: 'Business Network & Chambers'
+icon_uuid: null
+icon_default: null
+description: 'Eyebrow, intro and grid of Chamber nodes with footer banner CTA.'
+behavior_plugins: {  }

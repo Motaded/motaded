@@ -1,0 +1,30 @@
+uuid: 57ef7b65-ba68-4e7c-8f02-8394fce4494e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_media
+    - media.type.image
+    - node.type.sector_page
+  module:
+    - media
+id: node.sector_page.field_media
+field_name: field_media
+entity_type: node
+bundle: sector_page
+label: 'Card image'
+description: 'Photo for homepage / listing sector tiles (16:10 or wider).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: default:media
+  handler_settings:
+    target_bundle: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

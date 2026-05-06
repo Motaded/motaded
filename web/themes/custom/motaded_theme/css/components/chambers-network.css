@@ -1,0 +1,460 @@
+/* Business Network & Chambers (paragraph: chambers_network). */
+
+:root {
+  --cnb-green: #0f766e;
+  --cnb-green-strong: #0d5f59;
+  --cnb-green-soft: rgba(15, 118, 110, 0.12);
+}
+
+.chambers-network {
+  position: relative;
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(15, 118, 110, 0.04), transparent 52%),
+    linear-gradient(180deg, #f5f8f7 0%, #ffffff 52%);
+}
+
+.chambers-network__inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.chambers-network__masthead {
+  display: grid;
+  gap: 1rem 2rem;
+  align-items: start;
+  position: relative;
+  margin-bottom: clamp(1.85rem, 4vw, 2.65rem);
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .chambers-network__masthead {
+    grid-template-columns: minmax(0, 1fr) minmax(160px, 280px);
+  }
+}
+
+.chambers-network__masthead-copy {
+  max-width: 42rem;
+}
+
+/* Eyebrow: як .hero-split-banner__eyebrow («EXPLORE SAUDI ARABIA»). */
+.chambers-network__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 1rem;
+}
+
+.chambers-network__eyebrow::before {
+  content: '';
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 3px;
+  border-radius: 2px;
+  background: #0f766e;
+}
+
+.chambers-network__eyebrow .field {
+  margin: 0;
+}
+
+.chambers-network__eyebrow .field__item {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.chambers-network__eyebrow p {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.chambers-network__title {
+  margin: 0 0 1.125rem;
+  font-size: clamp(1.875rem, 4.2vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  color: #0f172a;
+}
+
+.chambers-network__intro {
+  margin: 0 0 1.5rem;
+  max-width: 36rem;
+  color: #64748b;
+  line-height: 1.62;
+  font-size: 1.0625rem;
+}
+
+.chambers-network__intro p {
+  margin: 0;
+}
+
+/* Декор: два пунктирні кола + легкий «картографічний» шар справа. */
+.chambers-network__masthead-decor {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 280px);
+  height: min(220px, 28vw);
+  min-height: 160px;
+  color: rgba(15, 118, 110, 0.38);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .chambers-network__masthead-decor {
+    position: absolute;
+    right: 0;
+    top: -0.5rem;
+    width: min(200px, 55vw);
+    height: 140px;
+    min-height: 120px;
+    opacity: 0.85;
+  }
+}
+
+.chambers-network__decor-rings {
+  position: absolute;
+  inset: 0;
+}
+
+.chambers-network__decor-rings::before,
+.chambers-network__decor-rings::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+}
+
+.chambers-network__decor-rings::before {
+  width: 86%;
+  height: 86%;
+  right: 0;
+  top: 0;
+}
+
+.chambers-network__decor-rings::after {
+  width: 58%;
+  height: 58%;
+  right: 18%;
+  bottom: 4%;
+  border-color: rgba(148, 163, 184, 0.38);
+}
+
+.chambers-network__map {
+  position: absolute;
+  inset: 6% -4% 2% -6%;
+  display: block;
+  width: calc(100% + 12%);
+  height: auto;
+}
+
+/* Embedded chambers View (homepage). */
+.chambers-network__view-mount {
+  margin-top: clamp(0.25rem, 1.2vw, 0.75rem);
+}
+
+.chambers-network__view-mount .views-element-container {
+  margin: 0;
+}
+
+.chambers-network__grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 680px) {
+  .chambers-network__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .chambers-network__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Картки chamber (VIEW + directory). */
+.cnb-card {
+  height: 100%;
+  margin: 0;
+  border-radius: 12px;
+  border: 1px solid #e8ecf0;
+  background: #ffffff;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 28px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+}
+
+.cnb-card:hover,
+.cnb-card:focus-within {
+  transform: translateY(-3px);
+  border-color: rgba(15, 118, 110, 0.18);
+  box-shadow:
+    0 4px 8px rgba(15, 23, 42, 0.04),
+    0 14px 40px rgba(15, 118, 110, 0.08);
+}
+
+.cnb-card__top {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cnb-card__logo-wrap {
+  flex: 0 0 76px;
+  width: 76px;
+  height: 76px;
+  border-radius: 11px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: #f4f6f5;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.cnb-card__logo-wrap .field {
+  margin: 0;
+  display: contents;
+}
+
+.cnb-card__logo-wrap .field__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.cnb-card__logo-wrap img,
+.cnb-card__logo-wrap picture img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.cnb-card__logo-fallback {
+  color: rgba(15, 118, 110, 0.45);
+  display: grid;
+  place-items: center;
+}
+
+.cnb-card__text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cnb-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.28;
+}
+
+.cnb-card__title-link {
+  color: #101828;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.cnb-card__title-link:hover,
+.cnb-card__title-link:focus-visible {
+  color: var(--cnb-green);
+}
+
+.cnb-card__summary {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #64748b;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cnb-card__cta {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cnb-green);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 160ms ease, gap 160ms ease;
+}
+
+.cnb-card__cta:hover,
+.cnb-card__cta:focus-visible {
+  color: var(--cnb-green-strong);
+  gap: 0.55rem;
+}
+
+.cnb-card__cta span[aria-hidden='true'] {
+  transition: transform 160ms ease;
+}
+
+.cnb-card__cta:hover span[aria-hidden='true'],
+.cnb-card__cta:focus-visible span[aria-hidden='true'] {
+  transform: translateX(4px);
+}
+
+.chambers-network__footer-banner {
+  margin-top: clamp(2rem, 4.5vw, 2.75rem);
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  background:
+    radial-gradient(720px 200px at 92% 40%, rgba(15, 118, 110, 0.07), transparent 62%),
+    linear-gradient(180deg, rgba(241, 245, 243, 0.98), rgba(250, 251, 251, 0.99));
+  padding: 1.2rem 1.35rem;
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .chambers-network__footer-banner {
+    grid-template-columns: auto 1fr auto;
+    gap: 1.1rem 1.35rem;
+    padding: 1.3rem 1.45rem;
+  }
+}
+
+.chambers-network__footer-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--cnb-green-soft);
+  color: var(--cnb-green);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.12);
+}
+
+.chambers-network__footer-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: #101828;
+}
+
+.chambers-network__footer-body {
+  margin: 0.35rem 0 0;
+  color: #5f6b7a;
+  line-height: 1.58;
+  font-size: 0.92rem;
+}
+
+.chambers-network__footer-body p {
+  margin: 0;
+}
+
+.chambers-network__footer-cta a {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(15, 118, 110, 0.32);
+  background: transparent;
+  color: var(--cnb-green-strong);
+  font-weight: 750;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.chambers-network__footer-cta a:hover,
+.chambers-network__footer-cta a:focus-visible {
+  background: rgba(15, 118, 110, 0.06);
+  border-color: rgba(15, 118, 110, 0.45);
+  transform: translateY(-1px);
+}
+
+/* /chambers directory (Views page). */
+.chambers-directory-view {
+  padding: clamp(2rem, 4vw, 3rem) 0;
+  background:
+    radial-gradient(90% 50% at 100% 0%, rgba(15, 118, 110, 0.035), transparent 50%),
+    linear-gradient(180deg, #f5f8f7 0%, #ffffff 45%);
+}
+
+.chambers-directory__inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.chambers-directory__title-wrap {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 0 clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.chambers-directory__title-wrap .view-title,
+.chambers-directory__title-wrap h1 {
+  margin: 0 0 1.35rem;
+  font-size: clamp(1.85rem, 4vw, 2.45rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #101828;
+}
+
+.chambers-directory__grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 680px) {
+  .chambers-directory__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .chambers-directory__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.chambers-directory-view .pager {
+  margin-top: clamp(1.85rem, 4vw, 2.75rem);
+}

@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Sectors card strip — responsive grid wrapping entity rows.
+ */
+#}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+
+<div class="key-sectors__grid" role="list">
+  {% for row in rows %}
+    <div{{ row.attributes.addClass('key-sectors__cell') }} role="listitem">
+      {{- row.content -}}
+    </div>
+  {% endfor %}
+</div>

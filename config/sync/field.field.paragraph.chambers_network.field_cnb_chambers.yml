@@ -1,0 +1,29 @@
+uuid: 6a20ed62-4af8-485b-8808-7bba9d0e23b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cnb_chambers
+    - node.type.chamber
+    - paragraphs.paragraphs_type.chambers_network
+id: paragraph.chambers_network.field_cnb_chambers
+field_name: field_cnb_chambers
+entity_type: paragraph
+bundle: chambers_network
+label: Chambers
+description: 'Optional: restrict the embedded View (chambers / homepage) to up to nine specific chambers (nid argument). Leave empty for automatic listing (featured first, then priority, max nine). Full directory: internal:/chambers.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      chamber: chamber
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
