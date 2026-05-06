@@ -101,11 +101,11 @@ settings:
       card:
         weight: 27
         enabled: false
-      chambers_network:
-        weight: 20
-        enabled: true
       cards:
         weight: 33
+        enabled: true
+      chambers_network:
+        weight: 20
         enabled: true
       counter:
         weight: -26
@@ -143,15 +143,15 @@ settings:
       investor_journey:
         weight: 24
         enabled: true
-      key_sectors:
-        weight: 17
-        enabled: true
       itc_card:
         weight: -24
         enabled: false
       journey_step:
         weight: 44
         enabled: false
+      key_sectors:
+        weight: 17
+        enabled: true
       media_lead:
         weight: 23
         enabled: true

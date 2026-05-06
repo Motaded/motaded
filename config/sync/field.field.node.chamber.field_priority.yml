@@ -14,7 +14,12 @@ description: ''
 required: false
 translatable: false
 default_value:
-  - value: 0
+  -
+    value: 0
 default_value_callback: ''
-settings: {  }
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
 field_type: integer

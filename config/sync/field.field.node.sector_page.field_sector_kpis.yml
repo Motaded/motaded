@@ -19,7 +19,7 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default:paragraph
+  handler: 'default:paragraph'
   handler_settings:
     target_bundles:
       glance_stat_item: glance_stat_item

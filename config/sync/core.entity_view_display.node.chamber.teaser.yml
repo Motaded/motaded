@@ -16,6 +16,13 @@ targetEntityType: node
 bundle: chamber
 mode: teaser
 content:
+  field_country:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_logo:
     type: entity_reference_entity_view
     label: hidden
@@ -39,19 +46,13 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_country:
-    type: list_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
     weight: 100
     region: content
 hidden:
+  addtoany: true
   field_external_link: true
   field_featured: true
   field_priority: true

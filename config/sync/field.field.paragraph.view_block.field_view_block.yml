@@ -27,6 +27,7 @@ settings:
   preselect_views:
     chambers: chambers
     events: events
+    library: library
     news: news
     partners: partners
     related_similar: related_similar

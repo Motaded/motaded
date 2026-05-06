@@ -278,6 +278,145 @@ function _motaded_theme_platforms_directory_category_chips(): array {
 }
 
 /**
+ * Per-category node counts for library sidebar (filtered by active tab’s document types).
+ *
+ * @param int[] $document_type_tids
+ *   Target IDs for field_document_type.
+ */
+function _motaded_theme_library_category_counts(array $document_type_tids): array {
+  if ($document_type_tids === []) {
+    return [];
+  }
+  try {
+    $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('document_category', 0, NULL, TRUE);
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+  $rows = [];
+  foreach ($tree as $term) {
+    if (!$term instanceof TermInterface) {
+      continue;
+    }
+    $tid = (int) $term->id();
+    try {
+      $count = (int) \Drupal::entityQuery('node')
+        ->accessCheck(TRUE)
+        ->condition('type', 'document')
+        ->condition('status', 1)
+        ->condition('field_category', $tid)
+        ->condition('field_document_type', $document_type_tids, 'IN')
+        ->count()
+        ->execute();
+    }
+    catch (\Throwable $e) {
+      $count = 0;
+    }
+    $rows[] = [
+      'tid' => $tid,
+      'label' => $term->label(),
+      'count' => $count,
+    ];
+  }
+  return $rows;
+}
+
+/**
+ * Sets tab state, tab URLs, and category counts for Library view displays.
+ */
+function motaded_theme_preprocess_views_view_library_tabs(array &$variables): void {
+  $request = \Drupal::request();
+  $section = $request->query->get('library_section', 'templates');
+  if (!is_string($section) || !in_array($section, ['templates', 'regulations'], TRUE)) {
+    $section = 'templates';
+  }
+  $variables['library_section'] = $section;
+
+  $query_all = $request->query->all();
+  unset($query_all['library_section'], $query_all['q']);
+  $query_scoped = $query_all + ['library_section' => $section];
+  try {
+    $variables['library_url_templates'] = Url::fromRoute('<current>', [], [
+      'query' => $query_all + ['library_section' => 'templates'],
+    ])->toString();
+    $variables['library_url_regulations'] = Url::fromRoute('<current>', [], [
+      'query' => $query_all + ['library_section' => 'regulations'],
+    ])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_url_templates'] = '';
+    $variables['library_url_regulations'] = '';
+  }
+
+  $type_tids = function_exists('motaded_custom_library_section_document_type_tids')
+    ? motaded_custom_library_section_document_type_tids($section)
+    : [];
+  $variables['library_category_counts'] = _motaded_theme_library_category_counts($type_tids);
+
+  $active_cat = $request->query->get('field_category_target_id');
+  $active_cat = $active_cat !== NULL && $active_cat !== '' ? (string) $active_cat : '';
+
+  $sidebar = [];
+  foreach ($variables['library_category_counts'] as $row) {
+    $tid = (string) $row['tid'];
+    $q_cat = $query_scoped;
+    $q_cat['field_category_target_id'] = $tid;
+    try {
+      $sidebar[] = [
+        'label' => $row['label'],
+        'count' => $row['count'],
+        'active' => $active_cat !== '' && $active_cat === $tid,
+        'url' => Url::fromRoute('<current>', [], ['query' => $q_cat])->toString(),
+      ];
+    }
+    catch (\Throwable $e) {
+      $sidebar[] = [
+        'label' => $row['label'],
+        'count' => $row['count'],
+        'active' => FALSE,
+        'url' => '',
+      ];
+    }
+  }
+  $variables['library_sidebar_links'] = $sidebar;
+
+  try {
+    $q_all = $query_scoped;
+    unset($q_all['field_category_target_id']);
+    $variables['library_category_all_url'] = Url::fromRoute('<current>', [], ['query' => $q_all])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_category_all_url'] = '';
+  }
+  $variables['library_category_all_active'] = $active_cat === '';
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+  $base = base_path() . $theme_path . '/img/';
+  $icons = [
+    'icon-target.svg',
+    'service-cost.svg',
+    'icon-globe.svg',
+    'icon-growth.svg',
+    'icon-checkmark-circle.svg',
+  ];
+  $i = 0;
+  foreach ($variables['library_sidebar_links'] as &$link_row) {
+    $link_row['icon_url'] = $base . ($icons[$i % count($icons)]);
+    $i++;
+  }
+  unset($link_row);
+
+  try {
+    $variables['library_contact_url'] = Url::fromUri('internal:/contact-us')->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_contact_url'] = '/contact-us';
+  }
+
+  $variables['library_sidebar_cta_icon_url'] = $base . 'library-headset.svg';
+}
+
+/**
  * Implements hook_preprocess_views_view().
  */
 function motaded_theme_preprocess_views_view(&$variables): void {
@@ -429,6 +568,19 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     }
     catch (\Throwable $e) {
       $variables['services_home_category_more_url'] = '/services?field_taxonomy_target_id=' . rawurlencode($tid);
+    }
+  }
+
+  if ($view->id() === 'library' && ($display_id === 'block_1' || $display_id === 'page_1')) {
+    motaded_theme_preprocess_views_view_library_tabs($variables);
+    if ($display_id === 'page_1') {
+      $variables['#attached']['library'][] = 'motaded_theme/library_directory';
+      $variables['attributes']['class'][] = 'library-directory-page';
+      $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+      $variables['motaded_library_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    }
+    else {
+      $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
     }
   }
 
@@ -1946,6 +2098,7 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
   $variables['view_block_events_home_list'] = FALSE;
   $variables['view_block_events_home_calendar'] = FALSE;
   $variables['view_block_partners_marquee'] = FALSE;
+  $variables['view_block_library_home'] = FALSE;
   if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
     return;
   }
@@ -1982,11 +2135,17 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
       elseif ($target === 'partners' && $display === 'block_2') {
         $variables['view_block_partners_marquee'] = TRUE;
       }
+      elseif ($target === 'library' && $display === 'block_1') {
+        $variables['view_block_library_home'] = TRUE;
+      }
     }
   }
 
   if ($variables['view_block_events_home_list'] || $variables['view_block_events_home_calendar']) {
     $variables['#attached']['library'][] = 'motaded_theme/events_home';
+  }
+  if ($variables['view_block_library_home']) {
+    $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
   }
 }
 
@@ -3614,6 +3773,41 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
     $form['#after_build'][] = 'motaded_theme_services_views_exposed_form_after_build';
   }
 
+  $lib_forms = ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'];
+  if (in_array(($form['#id'] ?? ''), $lib_forms, TRUE)) {
+    try {
+      $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+    }
+    catch (\Exception $e) {
+      $request = \Drupal::request();
+      $form['#action'] = $request->getBasePath() . $request->getPathInfo();
+    }
+    $form['#attributes']['class'][] = 'library-view__exposed-form';
+    if (isset($form['search']) && is_array($form['search'])) {
+      $form['search']['#attributes']['placeholder'] = (string) t('Search documents, templates, forms, guides…');
+    }
+    $form['#after_build'][] = 'motaded_theme_library_views_exposed_form_after_build';
+  }
+
+}
+
+/**
+ * After-build: Library exposed — primary/secondary buttons; category stays in DOM (hidden via CSS).
+ */
+function motaded_theme_library_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  $fid = $form['#id'] ?? '';
+  if (!in_array($fid, ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'], TRUE)) {
+    return $form;
+  }
+  if (isset($form['actions']['submit']) && is_array($form['actions']['submit'])) {
+    $form['actions']['submit']['#attributes']['class'][] = 'library-exposed__submit';
+    $form['actions']['submit']['#attributes']['class'][] = 'button';
+  }
+  if (isset($form['actions']['reset']) && is_array($form['actions']['reset'])) {
+    $form['actions']['reset']['#attributes']['class'][] = 'library-exposed__reset';
+    $form['actions']['reset']['#attributes']['class'][] = 'button';
+  }
+  return $form;
 }
 
 /**

@@ -18,7 +18,7 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default:view
+  handler: 'default:view'
   handler_settings:
     target_bundles: null
     auto_create: false

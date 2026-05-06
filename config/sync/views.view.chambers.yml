@@ -136,10 +136,10 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: true
+          not: false
           add_table: false
           require_value: false
           reduce_duplicates: false
-          not: false
       filters:
         status:
           id: status
@@ -254,15 +254,14 @@ display:
     position: 2
     display_options:
       title: 'Chambers & Councils'
-      path: chambers
       pager:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 24
           total_pages: null
           id: 0
-          pagination_heading_level: h4
           tags:
             next: ››
             previous: ‹‹
@@ -277,11 +276,12 @@ display:
             offset: false
             offset_label: Offset
           quantity: 5
+      arguments: {  }
       defaults:
         pager: false
         arguments: false
-      arguments: {  }
       display_extenders: {  }
+      path: chambers
     cache_metadata:
       max-age: -1
       contexts:

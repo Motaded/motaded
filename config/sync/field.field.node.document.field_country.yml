@@ -1,0 +1,21 @@
+uuid: a1000002-1105-4000-8000-000000000001
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_country
+    - node.type.document
+id: node.document.field_country
+field_name: field_country
+entity_type: node
+bundle: document
+label: Country
+description: 'Country scope for the document.'
+required: false
+translatable: true
+default_value:
+  -
+    value: saudi_arabia
+default_value_callback: ''
+settings: {  }
+field_type: list_string

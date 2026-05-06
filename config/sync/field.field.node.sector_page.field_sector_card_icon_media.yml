@@ -19,12 +19,12 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default:media
+  handler: 'default:media'
   handler_settings:
-    target_bundle: icon
     sort:
       field: _none
       direction: ASC
     auto_create: false
     auto_create_bundle: ''
+    target_bundle: icon
 field_type: entity_reference

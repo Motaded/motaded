@@ -15,18 +15,19 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar) ? [] : ['bg-white'])|merge(
-    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : ['pb-14', 'pt-28'])
+  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar or view_block_library_home) ? [] : ['bg-white'])|merge(
+    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : (view_block_library_home ? ['pb-14'] : ['pb-14', 'pt-28']))
   )|merge([
     view_block_news_latest ? 'paragraph--view-block--news-latest',
     view_block_services_home ? 'paragraph--view-block--services-home',
+    view_block_library_home ? 'paragraph--view-block--library-home',
     view_block_events_home_list ? 'paragraph--view-block--events-home-list',
     view_block_events_home_calendar ? 'paragraph--view-block--events-home-calendar',
     view_block_events_home_list or view_block_events_home_calendar ? 'events-home-strip',
   ])
 %}
 {% block paragraph %}
-  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : (view_block_events_home_list or view_block_events_home_calendar ? ('Business events'|t) : ('Content block'|t))) }}">
+  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : (view_block_library_home ? ('Library'|t) : (view_block_events_home_list or view_block_events_home_calendar ? ('Business events'|t) : ('Content block'|t)))) }}">
     {% block content %}
       <div class="view-block-shell max-w-[1320px] mx-auto px-4">
         {% if view_block_news_latest %}
@@ -58,6 +59,39 @@
             {% endif %}
             {{ content.field_view_block }}
           </div>
+        {% elseif view_block_library_home %}
+          <header class="library-home-hero">
+            <div class="library-home-hero__grid">
+              <div class="library-home-hero__copy">
+                <p class="library-home-hero__eyebrow">{{ 'Library'|t }}</p>
+                <h2 class="library-home-hero__title">{{ 'Knowledge. Documents. Resources.'|t }}</h2>
+                {% if content.field_body.0 is not empty %}
+                  <div class="library-home-hero__intro text-base leading-relaxed text-slate-700">
+                    {{ content.field_body.0 }}
+                  </div>
+                {% else %}
+                  <p class="library-home-hero__lede">{{ 'Access official templates, forms, guides, and regulations to help your business operate in Saudi Arabia with confidence.'|t }}</p>
+                {% endif %}
+              </div>
+              <aside class="library-home-hero__note" aria-label="{{ 'About this library'|t }}">
+                <div class="library-home-hero__note-badge" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <path d="m9 15 2 2 4-4"/>
+                  </svg>
+                </div>
+                <p class="library-home-hero__note-text">{{ 'Our library is continuously updated to ensure you have the latest documents and references from official sources.'|t }}</p>
+              </aside>
+            </div>
+            {% if content.field_link.0 is not empty %}
+              <div class="library-home-hero__link-row">
+                <a href="{{ content.field_link.0['#url'] }}" class="library-home-hero__view-all">{{ content.field_link.0['#title'] }}</a>
+              </div>
+            {% endif %}
+          </header>
+
+          {{ content.field_view_block.0 }}
         {% elseif view_block_services_home %}
           <div class="services-home-header services-home-header--split flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
             <div class="services-home-header__copy view-block-intro-wrap relative w-full min-w-0 flex-1">

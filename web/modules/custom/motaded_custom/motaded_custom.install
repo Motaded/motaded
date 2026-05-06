@@ -159,3 +159,72 @@ function motaded_custom_update_10004(): void {
     }
   }
 }
+
+/**
+ * Seeds default terms for Document type and Document category vocabularies.
+ */
+function motaded_custom_update_10005(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if ($voc_storage->load('document_type')) {
+    _motaded_custom_install_ensure_taxonomy_terms('document_type', [
+      'Template',
+      'Form',
+      'Guide',
+      'Regulation',
+      'Law',
+      'Policy',
+    ]);
+  }
+
+  if ($voc_storage->load('document_category')) {
+    _motaded_custom_install_ensure_taxonomy_terms('document_category', [
+      'Business Setup',
+      'HR',
+      'Tax',
+      'Compliance',
+      'Licensing',
+    ]);
+  }
+}
+
+/**
+ * Creates taxonomy terms when missing (matches by exact default label).
+ *
+ * @param string $vid
+ *   Vocabulary ID.
+ * @param array<int, string> $names
+ *   Term names in display order (weight).
+ */
+function _motaded_custom_install_ensure_taxonomy_terms(string $vid, array $names): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $weight = 0;
+  foreach ($names as $name) {
+    $name = trim($name);
+    if ($name === '') {
+      continue;
+    }
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if ($ids) {
+      $weight++;
+      continue;
+    }
+
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => $vid,
+      'name' => $name,
+      'weight' => $weight,
+      'langcode' => 'en',
+    ]);
+    $term->save();
+    $weight++;
+  }
+}

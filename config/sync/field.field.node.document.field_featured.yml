@@ -1,16 +1,16 @@
-uuid: 94c8710b-b16b-40ad-b072-70d76c131d39
+uuid: a1000002-1108-4000-8000-000000000001
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_featured
-    - node.type.chamber
-id: node.chamber.field_featured
+    - node.type.document
+id: node.document.field_featured
 field_name: field_featured
 entity_type: node
-bundle: chamber
+bundle: document
 label: Featured
-description: ''
+description: 'Highlight on the homepage or featured listings.'
 required: false
 translatable: false
 default_value:
@@ -18,6 +18,6 @@ default_value:
     value: 0
 default_value_callback: ''
 settings:
-  on_label: 'On'
-  off_label: 'Off'
+  on_label: Featured
+  off_label: 'Not featured'
 field_type: boolean

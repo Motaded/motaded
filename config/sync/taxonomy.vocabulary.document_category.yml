@@ -1,0 +1,9 @@
+uuid: a1000002-1002-4000-8000-000000000001
+langcode: en
+status: true
+dependencies: {  }
+name: 'Document category'
+vid: document_category
+description: 'Topic grouping (Business Setup, HR, Tax, Compliance, Licensing, …).'
+weight: 0
+new_revision: false

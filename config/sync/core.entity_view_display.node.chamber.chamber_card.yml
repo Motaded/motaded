@@ -33,6 +33,7 @@ content:
     weight: 1
     region: content
 hidden:
+  addtoany: true
   field_country: true
   field_external_link: true
   field_featured: true

@@ -357,6 +357,26 @@ insights_directory:
     - motaded_theme/event_page
     - views/views.ajax
 
+library_directory:
+  version: 20260506libfilters
+  css:
+    component:
+      css/components/library-directory.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/event_page
+    - views/views.ajax
+
+library_home_block:
+  version: 20260506libctafix
+  css:
+    component:
+      css/components/library-home-block.css:
+        weight: 50
+  dependencies:
+    - motaded_theme/base
+    - views/views.ajax
+
 platforms_directory:
   version: 20260506ac
   css:
