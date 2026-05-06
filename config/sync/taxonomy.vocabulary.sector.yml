@@ -1,0 +1,9 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000003
+langcode: en
+status: true
+dependencies: {  }
+name: Sector
+vid: sector
+description: 'Industry sectors for market insights (Tech, Tourism, etc.).'
+weight: 0
+new_revision: false

@@ -1,0 +1,29 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000027
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_region
+    - node.type.market_insight
+    - taxonomy.vocabulary.region
+id: node.market_insight.field_region
+field_name: field_region
+entity_type: node
+bundle: market_insight
+label: Region
+description: 'Geography (e.g. Saudi, GCC).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      region: region
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

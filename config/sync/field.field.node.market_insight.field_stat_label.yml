@@ -1,0 +1,19 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000022
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_stat_label
+    - node.type.market_insight
+id: node.market_insight.field_stat_label
+field_name: field_stat_label
+entity_type: node
+bundle: market_insight
+label: 'Stat label'
+description: 'Explains the figure, e.g. GDP growth, Global ranking.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

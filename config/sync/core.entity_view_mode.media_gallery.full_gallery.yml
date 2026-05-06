@@ -1,0 +1,11 @@
+uuid: 6a20c7f5-e4b9-4ae7-af07-ca4a9d7a392e
+langcode: en
+status: true
+dependencies:
+  module:
+    - media_gallery
+id: media_gallery.full_gallery
+label: 'Full gallery'
+description: ''
+targetEntityType: media_gallery
+cache: true

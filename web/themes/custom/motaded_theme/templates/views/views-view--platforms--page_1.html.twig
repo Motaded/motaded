@@ -1,0 +1,117 @@
+{#
+/**
+ * @file
+ * Platforms directory — hero (background + stats + filters), chips row, grid/list.
+ */
+#}
+{{ attach_library('motaded_theme/platforms_directory') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'platforms-directory',
+    'platforms-directory-page',
+    'page-gray',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    {{ title }}
+  {% endif %}
+  {{ title_suffix }}
+
+  {% set hero_bg_url = motaded_platforms_hero_bg_url|default('') %}
+
+  <div class="platforms-directory__hero"{% if hero_bg_url %} style="--platforms-hero-bg: url('{{ hero_bg_url|e('html_attr') }}');"{% endif %}>
+    <div class="platforms-directory__hero-bg" aria-hidden="true"></div>
+    <div class="platforms-directory__hero-gradient" aria-hidden="true"></div>
+
+    <div class="platforms-directory__hero-inner">
+      <div class="platforms-directory__hero-top">
+        <div class="platforms-directory__hero-copy">
+          <header class="platforms-directory__masthead">
+            <h1 class="platforms-directory__title">{{ 'All the platforms you need, in one place'|t }}</h1>
+            <p class="platforms-directory__lede">{{ 'Discover official platforms and digital services in Saudi Arabia. We help you navigate, register, and stay compliant.'|t }}</p>
+          </header>
+        </div>
+
+        {% if motaded_platforms_stats is defined and motaded_platforms_stats is not empty %}
+          <div class="platforms-directory__stats-card" aria-label="{{ 'At a glance'|t }}">
+            <div class="platforms-directory__stats-grid">
+              {% for stat in motaded_platforms_stats %}
+                <div class="platforms-directory__stat-col">
+                  <div class="platforms-directory__stat-icon" aria-hidden="true">
+                    {% if stat.icon == 'grid' %}
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    {% elseif stat.icon == 'layers' %}
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="m12 2 9 5-9 5-9-5 9-5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m3 12 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m3 17 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    {% else %}
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                    {% endif %}
+                  </div>
+                  <p class="platforms-directory__stat-value">{{ stat.value }}</p>
+                  <p class="platforms-directory__stat-label">{{ stat.label }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if exposed %}
+        <div class="platforms-directory__hero-filters view-filters">
+          {{ exposed }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="platforms-directory__shell">
+    {% if motaded_platforms_category_chips is defined and motaded_platforms_category_chips is not empty %}
+      <nav class="platforms-directory__chips" aria-label="{{ 'Platform categories'|t }}">
+        {% for chip in motaded_platforms_category_chips %}
+          <a class="platforms-directory__chip" href="{{ chip.url }}">{{ chip.label }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    <div class="platforms-directory__toolbar" role="toolbar" aria-label="{{ 'Listing display'|t }}">
+      <div class="platforms-directory__toolbar-intro">
+        <h2 class="platforms-directory__grid-heading">{{ 'Explore platforms'|t }}</h2>
+      </div>
+      <div class="platforms-directory__toolbar-controls">
+        <span class="platforms-directory__toolbar-label" id="platforms-dir-toggle-label">{{ 'View as'|t }}</span>
+        <div class="platforms-directory__toggle" role="group" aria-labelledby="platforms-dir-toggle-label">
+          <button type="button" class="platforms-directory__toggle-btn is-active" data-platforms-dir-mode="grid" aria-pressed="true">
+            {{ 'Grid'|t }}
+          </button>
+          <button type="button" class="platforms-directory__toggle-btn" data-platforms-dir-mode="list" aria-pressed="false">
+            {{ 'List'|t }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="platforms-directory__panel" data-platforms-dir-panel="list">
+      {% if rows %}
+        <div class="view-content platforms-directory__grid" data-platforms-dir-grid>
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <div class="view-empty">
+          {{ empty }}
+        </div>
+      {% endif %}
+      {% if pager %}
+        <div class="platforms-directory__pager">
+          {{ pager }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+

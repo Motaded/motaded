@@ -1,0 +1,19 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000028
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_source_text
+    - node.type.market_insight
+id: node.market_insight.field_source_text
+field_name: field_source_text
+entity_type: node
+bundle: market_insight
+label: 'Source name'
+description: 'Attribution label, e.g. World Bank.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -42,3 +42,34 @@ services:
       - '@content_translation.manager'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.market_insight_sample_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MarketInsightSampleCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@language_manager'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.events_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\EventsImportCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@language_manager'
+      - '@file_system'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.market_insight_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MarketInsightImportCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@language_manager'
+      - '@file_system'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.platform_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\PlatformImportCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@language_manager'
+      - '@file_system'
+    tags:
+      - { name: drush.command }

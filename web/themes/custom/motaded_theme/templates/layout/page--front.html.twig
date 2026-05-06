@@ -79,6 +79,14 @@
 
   </main>
 
+  {% if page.below_content %}
+    <div class="below-content-wrapper mt-6">
+      <div class="max-w-[1320px] mx-auto px-4">
+        {{ page.below_content }}
+      </div>
+    </div>
+  {% endif %}
+
   {% if page.pre_footer %}
   <section class="pre-footer-band">
     <div class="pre-footer-band__wrap max-w-[1320px] mx-auto px-4 py-14 lg:py-20">

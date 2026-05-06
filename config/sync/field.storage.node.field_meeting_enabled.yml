@@ -1,0 +1,18 @@
+uuid: a23e5220-9b8f-4e3a-a562-9a155e8a2ec0
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_meeting_enabled
+field_name: field_meeting_enabled
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

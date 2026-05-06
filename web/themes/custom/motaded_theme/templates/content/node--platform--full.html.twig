@@ -1,0 +1,275 @@
+{#
+/**
+ * @file
+ * Platform — full page layout (hero + tabs + main + sidebar), matching design reference.
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'platform-page',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% set has_overview = content.body|render|trim is not empty %}
+  {% set has_key = content.field_how_we_help|render|trim is not empty %}
+  {% set has_process = content.field_process_steps|render|trim is not empty %}
+  {% set has_req = content.field_requirements|render|trim is not empty %}
+  {% set has_trust = content.field_partner_logos|render|trim is not empty %}
+
+  <header class="pf2-hero" aria-labelledby="pf2-hero-title">
+    <div class="pf2-hero__bg" aria-hidden="true">
+      {% if content.field_hero_image|render|trim is not empty %}
+        <div class="pf2-hero__bg-media">{{ content.field_hero_image }}</div>
+      {% endif %}
+      <div class="pf2-hero__bg-gradient"></div>
+    </div>
+    <div class="pf2-hero__inner">
+      <div class="pf2-hero__top">
+        <nav class="pf2-breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol class="pf2-breadcrumb__list">
+            <li class="pf2-breadcrumb__item"><a class="pf2-breadcrumb__link" href="{{ path('<front>') }}">{{ 'Home'|t }}</a></li>
+            <li class="pf2-breadcrumb__sep" aria-hidden="true">/</li>
+            <li class="pf2-breadcrumb__item"><a class="pf2-breadcrumb__link" href="{{ platform_listing_url|default(path('<front>')) }}">{{ 'Platforms'|t }}</a></li>
+            <li class="pf2-breadcrumb__sep" aria-hidden="true">/</li>
+            <li class="pf2-breadcrumb__item pf2-breadcrumb__item--current" aria-current="page">{{ label }}</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="pf2-hero__main">
+        <div class="pf2-hero__logo-card" aria-label="{{ 'Platform logo'|t }}">
+          {% if content.field_logo|render|trim is not empty %}
+            {{ content.field_logo }}
+          {% else %}
+            <div class="pf2-hero__logo-fallback" aria-hidden="true"></div>
+          {% endif %}
+        </div>
+
+        <div class="pf2-hero__copy">
+          {% if page and label %}
+            <h1 id="pf2-hero-title"{{ title_attributes.addClass('pf2-hero__title') }}>{{ label }}</h1>
+          {% endif %}
+          {% if content.field_subtitle|render|trim is not empty %}
+            <div class="pf2-hero__subtitle">{{ content.field_subtitle }}</div>
+          {% endif %}
+          {% if content.field_short_description|render|trim is not empty %}
+            <div class="pf2-hero__lead">{{ content.field_short_description }}</div>
+          {% elseif summary %}
+            <div class="pf2-hero__lead">{{ summary }}</div>
+          {% endif %}
+
+          <div class="pf2-hero__meta-row" aria-label="{{ 'Key information'|t }}">
+            {% if platform_external_url %}
+              <a class="pf2-meta" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>
+                <span class="pf2-meta__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 14a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14 10a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </span>
+                <span class="pf2-meta__label">{{ 'Official website'|t }}</span>
+                <span class="pf2-meta__value">{{ platform_external_label|default('Visit') }}</span>
+              </a>
+            {% endif %}
+
+            {% if content.field_source_text|render|trim is not empty %}
+              <div class="pf2-meta">
+                <span class="pf2-meta__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="pf2-meta__label">{{ 'Governing entity'|t }}</span>
+                <span class="pf2-meta__value">{{ node.field_source_text.value }}</span>
+              </div>
+            {% endif %}
+
+            {% if node.field_category.entity %}
+              <div class="pf2-meta">
+                <span class="pf2-meta__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </span>
+                <span class="pf2-meta__label">{{ 'Platform type'|t }}</span>
+                <span class="pf2-meta__value">{{ node.field_category.entity.label }}</span>
+              </div>
+            {% endif %}
+
+            {% if node.field_region.entity %}
+              <div class="pf2-meta">
+                <span class="pf2-meta__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+                </span>
+                <span class="pf2-meta__label">{{ 'Coverage'|t }}</span>
+                <span class="pf2-meta__value">{{ node.field_region.entity.label }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="pf2-shell">
+    <nav class="pf2-tabs" aria-label="{{ 'Platform navigation'|t }}">
+      <a class="pf2-tabs__link" href="#pf2-overview">{{ 'Overview'|t }}</a>
+      {% if has_key %}<a class="pf2-tabs__link" href="#pf2-key">{{ 'Key services'|t }}</a>{% endif %}
+      {% if has_process %}<a class="pf2-tabs__link" href="#pf2-process">{{ 'How it works'|t }}</a>{% endif %}
+      {% if has_req %}<a class="pf2-tabs__link" href="#pf2-req">{{ 'Requirements'|t }}</a>{% endif %}
+      {% if has_trust %}<a class="pf2-tabs__link" href="#pf2-trust">{{ 'Partners'|t }}</a>{% endif %}
+      <a class="pf2-tabs__link" href="#pf2-resources">{{ 'Resources'|t }}</a>
+    </nav>
+
+    <div class="pf2-layout">
+      <main class="pf2-main" aria-label="{{ 'Platform content'|t }}">
+        <section class="pf2-section" id="pf2-overview" aria-labelledby="pf2-overview-title">
+          <h2 id="pf2-overview-title" class="pf2-section__title">{{ 'Overview'|t }}</h2>
+          {% if has_overview %}
+            <div class="pf2-prose">
+              {{ content.body }}
+            </div>
+          {% else %}
+            <p class="pf2-muted">{{ 'No overview has been added yet.'|t }}</p>
+          {% endif %}
+        </section>
+
+        {% if has_key %}
+          <section class="pf2-section" id="pf2-key" aria-labelledby="pf2-key-title">
+            <h2 id="pf2-key-title" class="pf2-section__title">{{ 'Key services'|t }}</h2>
+            <div class="pf2-cards">
+              {% for key, child in content.field_how_we_help %}
+                {% if key|first != '#' %}
+                  <div class="pf2-card">
+                    {{ child }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% if platform_cta_url %}
+              <div class="pf2-cta-row">
+                <a class="pf2-btn pf2-btn--primary" href="{{ platform_cta_url }}">{{ platform_cta_label }}</a>
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+
+        {% if has_process %}
+          <section class="pf2-section" id="pf2-process" aria-labelledby="pf2-process-title">
+            <h2 id="pf2-process-title" class="pf2-section__title">{{ 'How it works'|t }}</h2>
+            <div class="pf2-steps">
+              {% for key, child in content.field_process_steps %}
+                {% if key|first != '#' %}
+                  <div class="pf2-step">{{ child }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+
+        {% if has_req %}
+          <section class="pf2-section" id="pf2-req" aria-labelledby="pf2-req-title">
+            <h2 id="pf2-req-title" class="pf2-section__title">{{ 'Requirements'|t }}</h2>
+            <div class="pf2-req">
+              {% for key, child in content.field_requirements %}
+                {% if key|first != '#' %}
+                  <div class="pf2-req__item">{{ child }}</div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+
+        {% if has_trust %}
+          <section class="pf2-section" id="pf2-trust" aria-labelledby="pf2-trust-title">
+            <h2 id="pf2-trust-title" class="pf2-section__title">{{ 'Trusted partners'|t }}</h2>
+            <div class="pf2-trust">{{ content.field_partner_logos }}</div>
+          </section>
+        {% endif %}
+
+        <section class="pf2-section" id="pf2-resources" aria-labelledby="pf2-resources-title">
+          <h2 id="pf2-resources-title" class="pf2-section__title">{{ 'Resources'|t }}</h2>
+          <div class="pf2-prose">
+            {% if content.field_source_text|render|trim is not empty %}
+              <p><strong>{{ 'Source'|t }}:</strong> {{ node.field_source_text.value }}</p>
+            {% endif %}
+            {% if content.field_source_link|render|trim is not empty %}
+              <div class="pf2-links">{{ content.field_source_link }}</div>
+            {% endif %}
+            {% if platform_external_url %}
+              <p><a href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>{{ 'Visit official website'|t }}</a></p>
+            {% endif %}
+          </div>
+        </section>
+      </main>
+
+      <aside class="pf2-aside" aria-label="{{ 'Sidebar'|t }}">
+        <section class="pf2-aside-card" aria-label="{{ 'At a glance'|t }}">
+          <h3 class="pf2-aside-card__title">{{ 'At a Glance'|t }}</h3>
+          <ul class="pf2-glance">
+            {% if node.field_category.entity %}
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Platform type'|t }}</span><span class="pf2-glance__value">{{ node.field_category.entity.label }}</span></li>
+            {% endif %}
+            {% if content.field_source_text|render|trim is not empty %}
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Governing entity'|t }}</span><span class="pf2-glance__value">{{ node.field_source_text.value }}</span></li>
+            {% endif %}
+            {% if node.field_region.entity %}
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Coverage'|t }}</span><span class="pf2-glance__value">{{ node.field_region.entity.label }}</span></li>
+            {% endif %}
+            {% if platform_external_url %}
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Website'|t }}</span><span class="pf2-glance__value">{{ platform_external_label|default('Official') }}</span></li>
+            {% endif %}
+          </ul>
+        </section>
+
+        <section class="pf2-aside-card pf2-aside-card--help" aria-label="{{ 'Need help'|t }}">
+          <h3 class="pf2-aside-card__title">{{ 'Need Help?'|t }}</h3>
+          <p class="pf2-aside-card__text">{{ 'Our experts can assist you with setup, documentation, and compliance on this platform.'|t }}</p>
+          <div class="pf2-aside-card__actions">
+            <a class="pf2-btn pf2-btn--primary" href="{{ platform_contact_url }}">{{ 'Talk to an Expert'|t }}</a>
+          </div>
+        </section>
+
+        <section class="pf2-aside-card" aria-label="{{ 'Quick links'|t }}">
+          <h3 class="pf2-aside-card__title">{{ 'Quick Links'|t }}</h3>
+          <ul class="pf2-quicklinks">
+            {% if platform_external_url %}
+              <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>{{ platform_external_label|default('Official website') }}</a></li>
+            {% endif %}
+            <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_listing_url|default('/platforms') }}">{{ 'Browse platforms'|t }}</a></li>
+            <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_contact_url }}">{{ 'Contact us'|t }}</a></li>
+          </ul>
+        </section>
+
+        {% set share_url = url %}
+        <section class="pf2-aside-card" aria-label="{{ 'Share this platform'|t }}">
+          <h3 class="pf2-aside-card__title">{{ 'Share this Platform'|t }}</h3>
+          <div class="pf2-share">
+            <a class="pf2-share__btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank">in</a>
+            <a class="pf2-share__btn" href="https://twitter.com/intent/tweet?url={{ share_url|url_encode }}&text={{ label|url_encode }}" rel="noopener noreferrer" target="_blank">X</a>
+            <a class="pf2-share__btn" href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank">f</a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="pf-contact-strip" aria-labelledby="pf-contact-strip-title">
+    <div class="pf-contact-strip__inner">
+      <h2 id="pf-contact-strip-title" class="pf-contact-strip__title">{{ 'Ready to move forward?'|t }}</h2>
+      <div class="pf-contact-strip__actions">
+        {% if platform_wa_url %}
+          <a class="pf-btn pf-btn--wa" href="{{ platform_wa_url }}" rel="noopener noreferrer" target="_blank">{{ 'WhatsApp'|t }}</a>
+        {% endif %}
+        <a class="pf-btn pf-btn--outline-dark" href="{{ platform_contact_url }}">{{ 'Email'|t }}</a>
+        {% if platform_tel_url %}
+          <a class="pf-btn pf-btn--accent" href="{{ platform_tel_url }}">{{ 'Call now'|t }}</a>
+        {% else %}
+          <a class="pf-btn pf-btn--accent" href="{{ platform_contact_url }}">{{ 'Contact us'|t }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </footer>
+
+  {{ content.links }}
+</article>

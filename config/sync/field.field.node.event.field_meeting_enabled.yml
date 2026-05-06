@@ -1,0 +1,23 @@
+uuid: c1a1a1a1-1111-4111-8111-11111111110d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_meeting_enabled
+    - node.type.event
+id: node.event.field_meeting_enabled
+field_name: field_meeting_enabled
+entity_type: node
+bundle: event
+label: 'Enable meeting'
+description: 'When enabled, show meeting request UI (wire to Webform in theme).'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -48,6 +48,8 @@
  */
 #}
 {% set service_page_full_bleed = service_page_full_bleed|default(false) %}
+{% set platform_page_full_bleed = platform_page_full_bleed|default(false) %}
+{% set use_content_full_bleed = service_page_full_bleed or platform_page_full_bleed %}
 {# Two-column layout + narrow content only when the service sidebar is actually shown (see <aside> below). #}
 {% set show_service_side = false %}
 {% if node and node.bundle == 'page' %}
@@ -62,7 +64,7 @@
   ]
 %}
 
-{% if service_page_full_bleed %}
+{% if use_content_full_bleed %}
   {% set main_classes = [
     'w-full max-w-none pb-10 px-0 flex flex-col gap-0',
   ] %}
@@ -96,7 +98,7 @@
 </div>
 
 {% if page.breadcrumb %}
-  <div class="bread{% if service_page_full_bleed %} bread--service-hero-band{% endif %}">
+  <div class="bread{% if use_content_full_bleed %} bread--service-hero-band{% endif %}">
     {{ page.breadcrumb }}
   </div>
 {% endif %}

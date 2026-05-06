@@ -19,6 +19,13 @@ targetEntityType: paragraph
 bundle: why_opportunities
 mode: default
 content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_why_eyebrow:
     type: string
     label: hidden
@@ -26,14 +33,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 0
-    region: content
-  field_why_title_prefix:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 1
     region: content
   field_why_title_accent:
     type: string
@@ -43,12 +42,13 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_body:
-    type: text_default
+  field_why_title_prefix:
+    type: string
     label: hidden
-    settings: {  }
+    settings:
+      link_to_entity: false
     third_party_settings: {  }
-    weight: 3
+    weight: 1
     region: content
 hidden:
   field_media: true

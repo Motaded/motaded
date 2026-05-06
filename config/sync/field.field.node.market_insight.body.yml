@@ -1,0 +1,28 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000020
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - node.type.market_insight
+  module:
+    - text
+id: node.market_insight.body
+field_name: body
+entity_type: node
+bundle: market_insight
+label: Description
+description: 'Summary = short card text; body = full explanation.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats:
+    - full_html
+    - basic_html
+field_type: text_with_summary

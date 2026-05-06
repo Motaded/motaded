@@ -17,6 +17,13 @@ targetEntityType: paragraph
 bundle: business_setup_section
 mode: default
 content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_business_setup_eyebrow:
     type: string
     label: hidden
@@ -33,15 +40,8 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
 hidden:
+  field_business_setup_cards: true
   field_setup_banner_line1: true
   field_setup_banner_line2: true
-  field_business_setup_cards: true
   search_api_excerpt: true

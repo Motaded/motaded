@@ -1069,3 +1069,76 @@ function _motaded_custom_is_social_host(string $host): bool {
 
   return FALSE;
 }
+
+/**
+ * Implements hook_ajax_render_alter().
+ *
+ * Views AJAX adds ScrollTop whenever pager_element is present (often 0), which
+ * jumps the viewport on exposed-filter updates. Strip it for homepage events blocks.
+ *
+ * @see \Drupal\views\Controller\ViewAjaxController::ajaxView()
+ */
+function motaded_custom_ajax_render_alter(array &$commands): void {
+  if (\Drupal::routeMatch()->getRouteName() !== 'views.ajax') {
+    return;
+  }
+  $request = \Drupal::request();
+  if ($request->get('view_name') !== 'events') {
+    return;
+  }
+  $display_id = $request->get('view_display_id');
+  if (!in_array($display_id, [
+    'block_home',
+    'block_calendar',
+    'page_1',
+    'attachment_page_calendar',
+  ], TRUE)) {
+    return;
+  }
+
+  foreach ($commands as $index => $command) {
+    if (!is_array($command)) {
+      continue;
+    }
+    $cmd = $command['command'] ?? '';
+    if ($cmd === 'scrollTop' || $cmd === 'viewsScrollTop') {
+      unset($commands[$index]);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Events directory (/events): optional motaded_event_date_from / motaded_event_date_to (Y-m-d).
+ */
+function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
+  if (($view->id() ?? '') !== 'events') {
+    return;
+  }
+  $display_id = $view->current_display ?? '';
+  if (!in_array($display_id, ['page_1', 'attachment_page_calendar'], TRUE)) {
+    return;
+  }
+  if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+    return;
+  }
+  $req = \Drupal::request();
+  $from = $req->query->get('motaded_event_date_from');
+  $to = $req->query->get('motaded_event_date_to');
+  if (!is_string($from) && !is_string($to)) {
+    return;
+  }
+  $info = $query->getTableInfo('node__field_event_start');
+  if (empty($info['alias'])) {
+    return;
+  }
+  $alias = $info['alias'];
+  $col = $alias . '.field_event_start_value';
+  if (is_string($from) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $from)) {
+    $query->addWhere(0, $col, $from . 'T00:00:00', '>=');
+  }
+  if (is_string($to) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $to)) {
+    $query->addWhere(0, $col, $to . 'T23:59:59', '<=');
+  }
+}

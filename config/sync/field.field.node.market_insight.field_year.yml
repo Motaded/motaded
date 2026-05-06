@@ -1,0 +1,23 @@
+uuid: 8f31a2b0-cc00-4000-8000-00000000002a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_year
+    - node.type.market_insight
+id: node.market_insight.field_year
+field_name: field_year
+entity_type: node
+bundle: market_insight
+label: Year
+description: 'Reference year for the data.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

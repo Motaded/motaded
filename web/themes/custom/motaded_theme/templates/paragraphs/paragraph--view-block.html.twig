@@ -15,15 +15,18 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-  ]|merge(view_block_services_home ? [] : ['bg-white'])|merge(
-    view_block_services_home ? ['pb-14'] : ['pb-14', 'pt-28']
+  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar) ? [] : ['bg-white'])|merge(
+    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : ['pb-14', 'pt-28'])
   )|merge([
     view_block_news_latest ? 'paragraph--view-block--news-latest',
     view_block_services_home ? 'paragraph--view-block--services-home',
+    view_block_events_home_list ? 'paragraph--view-block--events-home-list',
+    view_block_events_home_calendar ? 'paragraph--view-block--events-home-calendar',
+    view_block_events_home_list or view_block_events_home_calendar ? 'events-home-strip',
   ])
 %}
 {% block paragraph %}
-  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : ('Content block'|t)) }}">
+  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : (view_block_events_home_list or view_block_events_home_calendar ? ('Business events'|t) : ('Content block'|t))) }}">
     {% block content %}
       <div class="view-block-shell max-w-[1320px] mx-auto px-4">
         {% if view_block_news_latest %}
@@ -47,6 +50,14 @@
               </a>
             </div>
           {% endif %}
+        {% elseif view_block_events_home_list or view_block_events_home_calendar %}
+          {% set events_home_combo = view_block_events_home_calendar or view_block_events_home_list %}
+          <div class="events-home-paragraph-inner{{ events_home_combo ? ' events-home events-home__grid' : '' }}">
+            {% if content.field_body.0 is not empty %}
+              <div class="view-block-intro events-home-strip__intro text-base leading-relaxed text-slate-700">{{ content.field_body.0 }}</div>
+            {% endif %}
+            {{ content.field_view_block }}
+          </div>
         {% elseif view_block_services_home %}
           <div class="services-home-header flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div class="view-block-intro-wrap relative w-full min-w-0">

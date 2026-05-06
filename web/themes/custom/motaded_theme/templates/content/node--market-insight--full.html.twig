@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Market Insight — default full view (Page layout = Default).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'market-insight',
+    'market-insight--standard',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'body-bg-white',
+  ]
+%}
+{{ attach_library('motaded_theme/node') }}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <div class="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-12">
+    {% if page and label %}
+      <header class="mb-8">
+        <h1{{ title_attributes.addClass('m-0 text-3xl font-extrabold text-gray-900 sm:text-4xl') }}>{{ label }}</h1>
+      </header>
+    {% endif %}
+    <div{{ content_attributes.addClass('node__content', 'prose prose-neutral max-w-none text-gray-800') }}>
+      {{ content|without('field_insight_shell', 'field_meta', 'addtoany', 'links') }}
+    </div>
+  </div>
+</article>

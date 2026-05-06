@@ -25,6 +25,7 @@ settings:
   plugin_types:
     block: block
   preselect_views:
+    events: events
     news: news
     partners: partners
     related_similar: related_similar

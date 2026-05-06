@@ -1,0 +1,61 @@
+{#
+/**
+ * @file
+ * Event — teaser card (listings, related strip, home events).
+ */
+#}
+{% set has_media = event_teaser_media is not empty %}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'event-teaser',
+    has_media ? 'event-teaser--has-media' : 'event-teaser--no-media',
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  <a href="{{ url }}" class="event-teaser__link" rel="bookmark">
+    <div class="event-teaser__media">
+      {% if event_teaser_type_pill %}
+        <span class="event-teaser__type-pill">{{ event_teaser_type_pill }}</span>
+      {% endif %}
+      {% if has_media %}
+        <div class="event-teaser__media-inner">
+          {{ event_teaser_media }}
+        </div>
+      {% endif %}
+      {% if event_teaser_badge %}
+        <span class="event-teaser__badge">{{ event_teaser_badge }}</span>
+      {% endif %}
+    </div>
+    <div class="event-teaser__body">
+      {% if event_teaser_range %}
+        <div class="event-teaser__date-row">
+          <svg class="event-teaser__date-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span class="event-teaser__date-text">{{ event_teaser_range }}</span>
+        </div>
+      {% endif %}
+      <h3 class="event-teaser__title">{{ label }}</h3>
+      {% if event_teaser_chips is not empty %}
+        <div class="event-teaser__chips" aria-label="{{ 'Event tags'|t }}">
+          {% for chip in event_teaser_chips %}
+            <span class="event-teaser__chip">{{ chip }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if event_teaser_summary is not empty %}
+        <p class="event-teaser__excerpt">{{ event_teaser_summary }}</p>
+      {% endif %}
+      {% if event_teaser_location %}
+        <div class="event-teaser__meta-row">
+          <span class="event-teaser__meta-item">
+            <svg class="event-teaser__meta-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-4.35 7-10a7 7 0 10-14 0c0 5.65 7 10 7 10z"/><circle cx="12" cy="11" r="2.5"/></svg>
+            {{ event_teaser_location }}
+          </span>
+        </div>
+      {% endif %}
+      <span class="event-teaser__more">{{ 'View details'|t }}<span aria-hidden="true"> →</span></span>
+    </div>
+  </a>
+</article>

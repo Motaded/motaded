@@ -1,0 +1,27 @@
+uuid: a1000001-0000-4000-8000-00000000006d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_process_steps
+    - node.type.platform
+    - paragraphs.paragraphs_type.platform_process_step
+  module:
+    - entity_reference_revisions
+id: node.platform.field_process_steps
+field_name: field_process_steps
+entity_type: node
+bundle: platform
+label: Process
+description: 'Optional ordered steps after “How we help”.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      platform_process_step: platform_process_step
+    negate: 0
+field_type: entity_reference_revisions

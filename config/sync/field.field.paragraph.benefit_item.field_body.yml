@@ -1,0 +1,28 @@
+uuid: a1000001-0000-4000-8000-000000000031
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.benefit_item
+  module:
+    - text
+id: paragraph.benefit_item.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: benefit_item
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long

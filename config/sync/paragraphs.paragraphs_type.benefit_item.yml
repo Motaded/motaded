@@ -1,0 +1,10 @@
+uuid: a1000001-0000-4000-8000-000000000020
+langcode: en
+status: true
+dependencies: {  }
+id: benefit_item
+label: 'Benefit item'
+icon_uuid: null
+icon_default: null
+description: 'Title and description for “Why it matters”.'
+behavior_plugins: {  }

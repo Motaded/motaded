@@ -1,0 +1,19 @@
+uuid: c1a1a1a1-1111-4111-8111-111111111109
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cta_text
+    - node.type.event
+id: node.event.field_cta_text
+field_name: field_cta_text
+entity_type: node
+bundle: event
+label: 'CTA text'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

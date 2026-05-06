@@ -3,6 +3,8 @@
 require_once __DIR__ . '/includes/motaded_theme.image.inc';
 
 use Drupal\block\BlockInterface;
+use Drupal\block\Entity\Block;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
@@ -10,10 +12,12 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\views\Plugin\views\field\FieldPluginInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 
@@ -58,6 +62,371 @@ function motaded_theme_preprocess_html(array &$variables): void {
   $variables['motaded_suppress_seo_tracking'] = _motaded_theme_suppress_seo_tracking();
 }
 
+/**
+ * Next published event whose start datetime is today or later (for /events hero).
+ */
+function _motaded_theme_events_directory_next_featured_nid(): ?int {
+  try {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $today = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+    $nids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->condition('field_event_start.value', $today . 'T00:00:00', '>=')
+      ->sort('field_event_start.value', 'ASC')
+      ->range(0, 1)
+      ->execute();
+    if ($nids !== []) {
+      return (int) reset($nids);
+    }
+  }
+  catch (\Exception $e) {
+    return NULL;
+  }
+  return NULL;
+}
+
+/**
+ * Hero stat strip for /events (counts from content + taxonomies).
+ *
+ * @return array<int, array{value: string, label: string, icon: string}>
+ */
+function _motaded_theme_events_directory_stats(): array {
+  try {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $today = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+
+    $upcoming = (int) $node_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->condition('field_event_start.value', $today . 'T00:00:00', '>=')
+      ->count()
+      ->execute();
+
+    $total = (int) $node_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->count()
+      ->execute();
+
+    $region_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'region')
+      ->count()
+      ->execute();
+
+    $industry_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'taxonomy')
+      ->count()
+      ->execute();
+
+    $suffix = static function (int $n): string {
+      return $n > 0 ? (string) $n . '+' : '0';
+    };
+
+    $volume = static function (int $n) use ($suffix): string {
+      if ($n >= 1000) {
+        $k = $n / 1000;
+        $rounded = abs($k - round($k)) < 0.05 ? (string) (int) round($k) : number_format($k, 1, '.', '');
+        return $rounded . 'K+';
+      }
+      return $suffix($n);
+    };
+
+    return [
+      [
+        'value' => $suffix($upcoming),
+        'label' => (string) t('Upcoming events'),
+        'icon' => 'calendar',
+      ],
+      [
+        'value' => $volume($total),
+        'label' => (string) t('Events hosted'),
+        'icon' => 'users',
+      ],
+      [
+        'value' => $suffix($region_count),
+        'label' => (string) t('Cities'),
+        'icon' => 'map',
+      ],
+      [
+        'value' => (string) max(0, $industry_count),
+        'label' => (string) t('Industries'),
+        'icon' => 'document',
+      ],
+    ];
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Hero stat strip for /platforms (counts from content + taxonomies).
+ */
+function _motaded_theme_platforms_directory_stats(): array {
+  try {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'platform')
+      ->condition('status', 1);
+    $platforms_count = (int) $query->count()->execute();
+
+    $cat_count = (int) \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'platform_category')
+      ->count()
+      ->execute();
+
+    $region_count = (int) \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'region')
+      ->count()
+      ->execute();
+
+    return [
+      [
+        'label' => (string) t('Official platforms'),
+        'value' => $platforms_count > 0 ? $platforms_count . '+' : '—',
+        'icon' => 'grid',
+      ],
+      [
+        'label' => (string) t('Categories'),
+        'value' => $cat_count > 0 ? $cat_count . '+' : '—',
+        'icon' => 'layers',
+      ],
+      [
+        'label' => (string) t('Regions'),
+        'value' => $region_count > 0 ? $region_count . '+' : '—',
+        'icon' => 'map',
+      ],
+    ];
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Category chips row for /platforms (quick filter links).
+ */
+function _motaded_theme_platforms_directory_category_chips(): array {
+  try {
+    $t_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $tids = $t_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'platform_category')
+      ->sort('weight', 'ASC')
+      ->sort('name', 'ASC')
+      ->range(0, 8)
+      ->execute();
+    if (!$tids) {
+      return [];
+    }
+    $terms = $t_storage->loadMultiple($tids);
+    $chips = [];
+    foreach ($terms as $term) {
+      if (!$term instanceof TermInterface) {
+        continue;
+      }
+      $chips[] = [
+        'label' => $term->label(),
+        'url' => Url::fromUserInput('/platforms', [
+          'query' => [
+            'field_category_target_id' => (string) $term->id(),
+          ],
+        ])->toString(),
+      ];
+    }
+    return $chips;
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function motaded_theme_preprocess_views_view(&$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  // Listing page (/events) only — home strip uses events_home library via block.
+  $display_id = $view->current_display ?? '';
+  if ($view->id() === 'events' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/events_directory';
+    $variables['attributes']['class'][] = 'events-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $variables['motaded_events_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_events_stats'] = _motaded_theme_events_directory_stats();
+    $featured_nid = _motaded_theme_events_directory_next_featured_nid();
+    \Drupal::request()->attributes->set('motaded_events_featured_nid', $featured_nid);
+    $variables['motaded_events_featured_nid'] = $featured_nid;
+    $variables['motaded_events_featured'] = NULL;
+    if ($featured_nid !== NULL) {
+      $fn = Node::load($featured_nid);
+      if ($fn instanceof NodeInterface && $fn->bundle() === 'event' && $fn->access('view')) {
+        $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($fn, 'teaser');
+        $build['#motaded_featured_teaser'] = TRUE;
+        $variables['motaded_events_featured'] = $build;
+      }
+    }
+
+    // Render the webform signup inside the view template without Twig Tweak helpers.
+    // Twig Tweak's drupal_entity_form() cannot render the Webform entity directly.
+    // Render via the webform_block plugin (same as placing a Webform block).
+    $variables['motaded_event_updates_form'] = [];
+    try {
+      if (\Drupal::moduleHandler()->moduleExists('webform')) {
+        $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+          'webform_id' => 'event_updates',
+          'label_display' => '0',
+          'default_data' => '',
+          'redirect' => FALSE,
+          'lazy' => TRUE,
+        ]);
+        if ($block && $block->access(\Drupal::currentUser())) {
+          $variables['motaded_event_updates_form'] = $block->build();
+        }
+      }
+    }
+    catch (\Throwable $e) {
+      $variables['motaded_event_updates_form'] = [];
+    }
+  }
+
+  if ($view->id() === 'insights' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/insights_directory';
+    $variables['attributes']['class'][] = 'insights-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $variables['motaded_insights_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+
+    $variables['motaded_event_updates_form'] = [];
+    try {
+      if (\Drupal::moduleHandler()->moduleExists('webform')) {
+        $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+          'webform_id' => 'event_updates',
+          'label_display' => '0',
+          'default_data' => '',
+          'redirect' => FALSE,
+          'lazy' => TRUE,
+        ]);
+        if ($block && $block->access(\Drupal::currentUser())) {
+          $variables['motaded_event_updates_form'] = $block->build();
+        }
+      }
+    }
+    catch (\Throwable $e) {
+      $variables['motaded_event_updates_form'] = [];
+    }
+  }
+
+  if ($view->id() === 'platforms' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/platforms_directory';
+    $variables['attributes']['class'][] = 'platforms-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    // Reuse the same hero background asset until a dedicated one is added.
+    $variables['motaded_platforms_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_platforms_stats'] = _motaded_theme_platforms_directory_stats();
+    $variables['motaded_platforms_category_chips'] = _motaded_theme_platforms_directory_category_chips();
+  }
+  // Home list keeps an exposed form in the DOM (visually hidden in CSS) so Views AJAX
+  // can apply the same filter values as the calendar column when we sync in events-home.js.
+}
+
+/**
+ * Events directory: drop the featured row from the grid (page 0) to avoid duplication.
+ */
+function motaded_theme_preprocess_views_view_unformatted__events__page_1(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->getCurrentPage() !== 0) {
+    return;
+  }
+  $featured = \Drupal::request()->attributes->get('motaded_events_featured_nid');
+  if ($featured === NULL || $featured === '') {
+    return;
+  }
+  $featured = (int) $featured;
+  if ($featured < 1) {
+    return;
+  }
+  foreach ($variables['rows'] as $delta => $row) {
+    $content = $row['content'] ?? [];
+    $node = $content['#node'] ?? NULL;
+    if ($node instanceof NodeInterface && (int) $node->id() === $featured) {
+      unset($variables['rows'][$delta]);
+      break;
+    }
+  }
+  $variables['rows'] = array_values($variables['rows']);
+}
+
+/**
+ * Insights directory: remove featured rows from the main list (page 0) to avoid duplication.
+ */
+function motaded_theme_preprocess_views_view_unformatted__insights__page_1(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->getCurrentPage() !== 0) {
+    return;
+  }
+
+  $sub = Views::getView('insights');
+  if (!$sub) {
+    return;
+  }
+  $sub->setDisplay('attachment_featured');
+  $sub->setExposedInput($view->getExposedInput());
+  $sub->execute();
+
+  $featured_nids = [];
+  foreach ($sub->result as $row) {
+    $nid = NULL;
+    if (isset($row->_entity) && $row->_entity instanceof NodeInterface) {
+      $nid = (int) $row->_entity->id();
+    }
+    elseif (!empty($row->nid)) {
+      $nid = (int) $row->nid;
+    }
+    if ($nid) {
+      $featured_nids[] = $nid;
+    }
+  }
+  $featured_nids = array_values(array_unique($featured_nids));
+  if ($featured_nids === []) {
+    return;
+  }
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $content = $row['content'] ?? [];
+    $node = $content['#node'] ?? NULL;
+    if ($node instanceof NodeInterface && in_array((int) $node->id(), $featured_nids, TRUE)) {
+      unset($variables['rows'][$delta]);
+    }
+  }
+  $variables['rows'] = array_values($variables['rows']);
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
 function motaded_theme_preprocess_block(array &$variables) {
   // Services page: hide standalone exposed block; we render it inside the view.
   if (($variables['elements']['#plugin_id'] ?? '') === 'views_exposed_filter_block:services-page_1') {
@@ -248,6 +617,12 @@ function motaded_theme_preprocess_page(&$variables) {
   // Service (Basic page + Display on services): full-width hero; sidebar renders in node template.
   $route_node = \Drupal::routeMatch()->getParameter('node');
   if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'platform'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $variables['platform_page_full_bleed'] = TRUE;
+  }
+
+  if ($route_node instanceof NodeInterface
     && $route_node->bundle() === 'page'
     && $route_node->hasField('field_display_on_services')
     && !$route_node->get('field_display_on_services')->isEmpty()
@@ -271,6 +646,7 @@ function motaded_theme_preprocess_page(&$variables) {
       $variables['page']['below_content']['more_on_topic_related'] = $more_on_topic;
     }
   }
+
 }
 
 /**
@@ -389,6 +765,84 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['news_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
   }
 
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
+    _motaded_theme_preprocess_event_node_full($variables, $node);
+  }
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'teaser') {
+    _motaded_theme_preprocess_event_node_teaser($variables, $node);
+    if (!empty($variables['elements']['#motaded_featured_teaser'])) {
+      $variables['attributes']['class'][] = 'event-teaser--featured-hero';
+    }
+  }
+
+  if ($node->bundle() === 'market_insight' && ($variables['view_mode'] ?? '') === 'teaser') {
+    _motaded_theme_preprocess_market_insight_teaser($variables, $node);
+  }
+
+  // Platform (full): CTA / external URLs + marketing layout library.
+  if ($node->bundle() === 'platform' && ($variables['view_mode'] ?? '') === 'full') {
+    $variables['#attached']['library'][] = 'motaded_theme/platform_node';
+    // Defaults so Twig never misses variables (e.g. partial caches).
+    $variables += [
+      'platform_listing_url' => Url::fromUserInput('/platforms')->toString(),
+      'platform_contact_url' => Url::fromUserInput('/contact-us')->toString(),
+      'platform_cta_url' => NULL,
+      'platform_cta_label' => (string) t('Start your setup'),
+      'platform_external_url' => NULL,
+      'platform_external_label' => (string) t('Visit official website'),
+      'platform_external_new_window' => FALSE,
+      'platform_wa_url' => NULL,
+      'platform_tel_url' => NULL,
+    ];
+    if ($node->hasField('field_cta_text') && !$node->get('field_cta_text')->isEmpty()) {
+      $variables['platform_cta_label'] = trim((string) $node->get('field_cta_text')->value);
+    }
+    if ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+      $link = $node->get('field_cta_link')->first();
+      if ($link && $link->getUrl()) {
+        $variables['platform_cta_url'] = $link->getUrl()->toString();
+      }
+    }
+    if ($node->hasField('field_external_link') && !$node->get('field_external_link')->isEmpty()) {
+      $ext = $node->get('field_external_link')->first();
+      if ($ext && $ext->getUrl()) {
+        $url = $ext->getUrl();
+        $variables['platform_external_url'] = $url->toString();
+        $variables['platform_external_new_window'] = $url->isExternal();
+        $title = trim((string) $ext->title);
+        if ($title !== '') {
+          $variables['platform_external_label'] = $title;
+        }
+      }
+    }
+    $page_url = \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBasePath() . \Drupal::request()->getPathInfo();
+    $variables['platform_wa_url'] = 'https://wa.me/?text=' . rawurlencode($node->getTitle() . ' — ' . $page_url);
+    $variables['platform_tel_url'] = NULL;
+    $tel = Settings::get('motaded_platform_phone', '');
+    if (is_string($tel) && $tel !== '') {
+      $digits = preg_replace('/\D+/', '', $tel);
+      if ($digits !== '') {
+        $variables['platform_tel_url'] = 'tel:' . $digits;
+      }
+    }
+  }
+
+  // Market Insight (platform full): read time for hero meta (breadcrumb uses page region).
+  if ($node->bundle() === 'market_insight'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])
+    && $node->hasField('field_insight_shell')
+    && $node->get('field_insight_shell')->value === 'platform') {
+    $variables['market_insight_read_mins'] = NULL;
+    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+      $plain = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('body')->value)));
+      if ($plain !== '') {
+        $words = count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY));
+        $variables['market_insight_read_mins'] = max(1, (int) ceil($words / 200));
+      }
+    }
+  }
+
   // Service page (Basic page + Display on services): compact hero data.
   if ($node->bundle() === 'page'
     && ($variables['view_mode'] ?? '') === 'full'
@@ -429,12 +883,414 @@ function motaded_theme_preprocess_node(&$variables) {
     }
   }
 
+  // Event (full): hide fields rendered manually in node--event--full.html.twig.
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
+    foreach ([
+      'field_hero_image',
+      'field_featured_image',
+      'field_event_start',
+      'field_event_end',
+      'field_location',
+      'field_event_type',
+      'field_region',
+      'field_category',
+      'field_cta_type',
+      'field_cta_text',
+      'field_cta_link',
+      'field_secondary_cta',
+      'field_featured',
+      'field_meeting_enabled',
+      'body',
+      'field_why_attend',
+      'field_what_we_offer',
+      'field_who_should_attend',
+      'field_agenda',
+      'field_gallery',
+      'field_partner_logos',
+      'field_tags',
+      'field_meta',
+      'addtoany',
+      'links',
+    ] as $hide_field) {
+      unset($variables['content'][$hide_field]);
+    }
+  }
+
   // Add step numbers to field_steps_to_obtain items.
   if ($node->bundle() == 'page' && !empty($variables['content']['field_steps_to_obtain'])) {
     foreach ($variables['content']['field_steps_to_obtain'] as $i => &$item) {
       if (is_numeric($i)) {
         $item['#number'] = $i;
       }
+    }
+  }
+}
+
+/**
+ * Preprocess variables for Event nodes (full page).
+ */
+function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+  $view_builder = $em->getViewBuilder('node');
+  $date_formatter = \Drupal::service('date.formatter');
+  $langcode = $node->language()->getId();
+
+  $variables['event_hero_media'] = [];
+  $media = NULL;
+  if ($node->hasField('field_hero_image') && !$node->get('field_hero_image')->isEmpty()) {
+    $media = $node->get('field_hero_image')->entity;
+  }
+  elseif ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+    $media = $node->get('field_featured_image')->entity;
+  }
+  if ($media) {
+    $variables['event_hero_media'] = $em->getViewBuilder('media')->view($media, 'default');
+  }
+
+  $variables['event_body'] = [];
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $variables['event_body'] = $view_builder->viewField($node->get('body'), [
+      'label' => 'hidden',
+      'type' => 'text_default',
+      'weight' => 0,
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  foreach ([
+    'event_why' => 'field_why_attend',
+    'event_highlights' => 'field_what_we_offer',
+    'event_audience' => 'field_who_should_attend',
+    'event_agenda' => 'field_agenda',
+  ] as $var => $field) {
+    $variables[$var] = [];
+    if ($node->hasField($field) && !$node->get($field)->isEmpty()) {
+      $variables[$var] = $view_builder->viewField($node->get($field), [
+        'label' => 'hidden',
+        'type' => 'entity_reference_revisions_entity_view',
+        'weight' => 0,
+        'settings' => [
+          'view_mode' => 'default',
+          'link' => '',
+        ],
+        'third_party_settings' => [],
+      ]);
+    }
+  }
+
+  $variables['event_gallery'] = [];
+  if ($node->hasField('field_gallery') && !$node->get('field_gallery')->isEmpty()) {
+    $variables['event_gallery'] = $view_builder->viewField($node->get('field_gallery'), [
+      'label' => 'hidden',
+      'type' => 'photoswipe_field_formatter',
+      'weight' => 0,
+      'settings' => [
+        'photoswipe_thumbnail_style_first' => '',
+        'photoswipe_thumbnail_style' => 'media_gallery_image',
+        'photoswipe_image_style' => '',
+        'photoswipe_reference_image_field' => 'field_media_image',
+        'photoswipe_view_mode' => 'default',
+        'image_loading' => [
+          'attribute' => 'lazy',
+        ],
+      ],
+      'third_party_settings' => [],
+    ]);
+  }
+  $variables['event_partners'] = [];
+  if ($node->hasField('field_partner_logos') && !$node->get('field_partner_logos')->isEmpty()) {
+    $variables['event_partners'] = $view_builder->viewField($node->get('field_partner_logos'), [
+      'label' => 'hidden',
+      'type' => 'entity_reference_entity_view',
+      'weight' => 0,
+      'settings' => ['view_mode' => 'default', 'link' => FALSE],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  $variables['event_date_line'] = '';
+  $variables['event_time_line'] = '';
+  $variables['event_datetime_iso_start'] = '';
+  $variables['event_datetime_iso_end'] = '';
+  if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+    $start_ts = strtotime($node->get('field_event_start')->value);
+    if ($start_ts) {
+      $variables['event_date_line'] = $date_formatter->format($start_ts, 'custom', 'l, j F Y', NULL, $langcode);
+      $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode);
+      $variables['event_datetime_iso_start'] = gmdate('c', $start_ts);
+    }
+  }
+  if ($node->hasField('field_event_end') && !$node->get('field_event_end')->isEmpty()) {
+    $end_ts = strtotime($node->get('field_event_end')->value);
+    if ($end_ts) {
+      $variables['event_datetime_iso_end'] = gmdate('c', $end_ts);
+      if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+        $start_ts = strtotime($node->get('field_event_start')->value);
+        if ($start_ts && date('Ymd', $start_ts) === date('Ymd', $end_ts)) {
+          $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode)
+            . ' – ' . $date_formatter->format($end_ts, 'custom', 'g:i a', NULL, $langcode);
+        }
+      }
+    }
+  }
+
+  $variables['event_location_plain'] = '';
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    $variables['event_location_plain'] = trim((string) $node->get('field_location')->value);
+  }
+  $variables['event_maps_url'] = $variables['event_location_plain'] !== ''
+    ? 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($variables['event_location_plain'])
+    : '';
+
+  $variables['event_calendar_url'] = _motaded_theme_event_google_calendar_url($node);
+
+  $variables['event_register_url'] = '';
+  $variables['event_register_title'] = (string) t('Register now');
+  if ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+    $link_item = $node->get('field_cta_link')->first();
+    if ($link_item && $link_item->get('uri') && $link_item->get('uri')->getString() !== '') {
+      try {
+        $variables['event_register_url'] = Url::fromUri($link_item->get('uri')->getString(), ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable $e) {
+        $variables['event_register_url'] = '';
+      }
+      $title = $link_item->get('title')->getString();
+      if (trim($title) !== '') {
+        $variables['event_register_title'] = trim($title);
+      }
+    }
+  }
+
+  $variables['event_secondary_url'] = '';
+  $variables['event_secondary_title'] = (string) t('Add to calendar');
+  if ($node->hasField('field_secondary_cta') && !$node->get('field_secondary_cta')->isEmpty()) {
+    $sec = $node->get('field_secondary_cta')->first();
+    if ($sec && $sec->get('uri') && $sec->get('uri')->getString() !== '') {
+      try {
+        $variables['event_secondary_url'] = Url::fromUri($sec->get('uri')->getString(), ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable $e) {
+        $variables['event_secondary_url'] = '';
+      }
+      $st = $sec->get('title')->getString();
+      if (trim($st) !== '') {
+        $variables['event_secondary_title'] = trim($st);
+      }
+    }
+  }
+  if ($variables['event_secondary_url'] === '' && !empty($variables['event_calendar_url'])) {
+    $variables['event_secondary_url'] = $variables['event_calendar_url'];
+  }
+
+  $variables['event_type_label'] = '';
+  if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
+    $term = $node->get('field_event_type')->entity;
+    if ($term) {
+      $variables['event_type_label'] = $term->label();
+    }
+  }
+
+  $variables['event_region_label'] = '';
+  if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+    $term = $node->get('field_region')->entity;
+    if ($term) {
+      $variables['event_region_label'] = $term->label();
+    }
+  }
+
+  $variables['event_category_label'] = '';
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term) {
+      $variables['event_category_label'] = $term->label();
+    }
+  }
+
+  $variables['event_tags'] = [];
+  if ($node->hasField('field_tags') && !$node->get('field_tags')->isEmpty()) {
+    $variables['event_tags'] = $view_builder->viewField($node->get('field_tags'), [
+      'label' => 'hidden',
+      'type' => 'entity_reference_label',
+      'weight' => 0,
+      'settings' => ['link' => FALSE],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  $variables['event_share_block'] = [];
+  if (!empty($variables['content']['addtoany'])) {
+    $variables['event_share_block'] = $variables['content']['addtoany'];
+  }
+
+  $variables['event_cta_blurb'] = '';
+  if ($node->hasField('field_cta_text') && !$node->get('field_cta_text')->isEmpty()) {
+    $variables['event_cta_blurb'] = trim((string) $node->get('field_cta_text')->value);
+  }
+
+  $variables['event_hero_stats'] = [
+    ['figure' => '500+', 'caption' => (string) t('Attendees')],
+    ['figure' => '45', 'caption' => (string) t('Speakers')],
+    ['figure' => '3', 'caption' => (string) t('Days')],
+  ];
+
+  $variables['event_related'] = [];
+  $nids = $em->getStorage('node')->getQuery()
+    ->condition('type', 'event')
+    ->condition('nid', $node->id(), '<>')
+    ->condition('status', 1)
+    ->sort('field_event_start', 'ASC')
+    ->range(0, 4)
+    ->accessCheck(TRUE)
+    ->execute();
+  if ($nids) {
+    $related = $em->getStorage('node')->loadMultiple($nids);
+    $variables['event_related'] = $view_builder->viewMultiple($related, 'teaser');
+  }
+
+  $variables['event_contact_url'] = Url::fromUserInput('/contact-us')->toString();
+
+  $variables['event_meeting_enabled'] = $node->hasField('field_meeting_enabled')
+    && !$node->get('field_meeting_enabled')->isEmpty()
+    && (bool) $node->get('field_meeting_enabled')->value;
+}
+
+/**
+ * Builds a Google Calendar template URL for an event node.
+ */
+function _motaded_theme_event_google_calendar_url(NodeInterface $node): ?string {
+  if (!$node->hasField('field_event_start') || $node->get('field_event_start')->isEmpty()) {
+    return NULL;
+  }
+  $start_raw = (string) $node->get('field_event_start')->value;
+  $end_raw = (!$node->hasField('field_event_end') || $node->get('field_event_end')->isEmpty())
+    ? $start_raw
+    : (string) $node->get('field_event_end')->value;
+  try {
+    $start = \DateTimeImmutable::createFromFormat(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $start_raw, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+    $end = \DateTimeImmutable::createFromFormat(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $end_raw, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+  }
+  catch (\Throwable $e) {
+    return NULL;
+  }
+  if ($start === FALSE || $end === FALSE) {
+    return NULL;
+  }
+  $fmt = 'Ymd\THis\Z';
+  $text = rawurlencode($node->getTitle());
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' . $text
+    . '&dates=' . $start->setTimezone(new \DateTimeZone('UTC'))->format($fmt)
+    . '/' . $end->setTimezone(new \DateTimeZone('UTC'))->format($fmt);
+}
+
+/**
+ * Preprocess variables for Event teaser (cards, related strip).
+ */
+function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+  $date_formatter = \Drupal::service('date.formatter');
+  $langcode = $node->language()->getId();
+
+  $variables['event_teaser_media'] = [];
+  if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+    $media = $node->get('field_featured_image')->entity;
+    if ($media) {
+      // Responsive image styles (WebP pipeline) instead of fixed `large` default.
+      $view_mode = $media->bundle() === 'image' ? 'banner_sm' : 'default';
+      $variables['event_teaser_media'] = $em->getViewBuilder('media')->view($media, $view_mode);
+    }
+  }
+
+  $variables['event_teaser_badge'] = '';
+  $variables['event_teaser_range'] = '';
+  if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+    $ts = strtotime($node->get('field_event_start')->value);
+    if ($ts) {
+      $variables['event_teaser_badge'] = strtoupper($date_formatter->format($ts, 'custom', 'M j', NULL, $langcode));
+      $variables['event_teaser_range'] = $date_formatter->format($ts, 'custom', 'j M Y', NULL, $langcode);
+    }
+  }
+  if ($node->hasField('field_event_end') && !$node->get('field_event_end')->isEmpty()) {
+    $end_ts = strtotime($node->get('field_event_end')->value);
+    $start_ts = $node->get('field_event_start')->isEmpty() ? NULL : strtotime($node->get('field_event_start')->value);
+    if ($end_ts && $start_ts) {
+      $variables['event_teaser_range'] = $date_formatter->format($start_ts, 'custom', 'j M', NULL, $langcode)
+        . ' – ' . $date_formatter->format($end_ts, 'custom', 'j M Y', NULL, $langcode);
+    }
+  }
+
+  $variables['event_teaser_location'] = '';
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    $variables['event_teaser_location'] = trim((string) $node->get('field_location')->value);
+  }
+
+  $variables['event_teaser_chips'] = [];
+  $variables['event_teaser_type_pill'] = '';
+  if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
+    $term = $node->get('field_event_type')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['event_teaser_type_pill'] = mb_strtoupper($term->getName());
+    }
+  }
+  if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+    $term = $node->get('field_region')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['event_teaser_chips'][] = $term->getName();
+    }
+  }
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface && !in_array($term->getName(), $variables['event_teaser_chips'], TRUE)) {
+      $variables['event_teaser_chips'][] = $term->getName();
+    }
+  }
+
+  $variables['event_teaser_summary'] = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $raw = (string) $node->get('body')->value;
+    $variables['event_teaser_summary'] = motaded_theme_plain_text_truncate($raw, 176);
+  }
+}
+
+/**
+ * Preprocess variables for Market insight teaser (directory cards + list).
+ */
+function _motaded_theme_preprocess_market_insight_teaser(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+
+  $variables['insight_teaser_media'] = [];
+  if ($node->hasField('field_insight_thumbnail') && !$node->get('field_insight_thumbnail')->isEmpty()) {
+    $media = $node->get('field_insight_thumbnail')->entity;
+    if ($media) {
+      $variables['insight_teaser_media'] = $em->getViewBuilder('media')->view($media, 'news');
+    }
+  }
+
+  $variables['insight_teaser_category'] = '';
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['insight_teaser_category'] = $term->getName();
+    }
+  }
+
+  $variables['insight_teaser_year'] = '';
+  if ($node->hasField('field_year') && !$node->get('field_year')->isEmpty()) {
+    $variables['insight_teaser_year'] = (string) $node->get('field_year')->value;
+  }
+
+  $variables['insight_teaser_excerpt'] = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $item = $node->get('body')->first();
+    $summary = trim((string) $item->summary);
+    $value = (string) $item->value;
+    $raw = $summary !== '' ? $summary : $value;
+    if ($raw !== '') {
+      $variables['insight_teaser_excerpt'] = motaded_theme_plain_text_truncate($raw, 200);
     }
   }
 }
@@ -903,36 +1759,46 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
   $paragraph = $variables['paragraph'];
   $variables['view_block_news_latest'] = FALSE;
   $variables['view_block_services_home'] = FALSE;
+  $variables['view_block_events_home_list'] = FALSE;
+  $variables['view_block_events_home_calendar'] = FALSE;
   if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
     return;
   }
   foreach ($paragraph->get('field_view_block')->getValue() as $item) {
-    $target = $item['target_id'] ?? '';
-    $display = $item['display_id'] ?? '';
-    if ($target === 'news' && $display === 'block_4') {
-      $variables['view_block_news_latest'] = TRUE;
-      return;
+    $pairs = [];
+    $tid_row = $item['target_id'] ?? '';
+    $did_row = $item['display_id'] ?? '';
+    if ($tid_row !== '' && $did_row !== '') {
+      $pairs[] = [$tid_row, $did_row];
     }
-    if ($target === 'services' && $display === 'block_2') {
-      $variables['view_block_services_home'] = TRUE;
-      return;
-    }
-    if (!empty($item['data']) && is_string($item['data'])) {
+    elseif (!empty($item['data']) && is_string($item['data'])) {
       $decoded = json_decode($item['data'], TRUE);
-      if (!is_array($decoded)) {
-        continue;
-      }
-      $tid = $decoded['target_id'] ?? '';
-      $did = $decoded['display_id'] ?? '';
-      if ($tid === 'news' && $did === 'block_4') {
-        $variables['view_block_news_latest'] = TRUE;
-        return;
-      }
-      if ($tid === 'services' && $did === 'block_2') {
-        $variables['view_block_services_home'] = TRUE;
-        return;
+      if (is_array($decoded)) {
+        $t = $decoded['target_id'] ?? '';
+        $d = $decoded['display_id'] ?? '';
+        if ($t !== '' && $d !== '') {
+          $pairs[] = [$t, $d];
+        }
       }
     }
+    foreach ($pairs as [$target, $display]) {
+      if ($target === 'events' && $display === 'block_home') {
+        $variables['view_block_events_home_list'] = TRUE;
+      }
+      elseif ($target === 'events' && $display === 'block_calendar') {
+        $variables['view_block_events_home_calendar'] = TRUE;
+      }
+      elseif ($target === 'news' && $display === 'block_4') {
+        $variables['view_block_news_latest'] = TRUE;
+      }
+      elseif ($target === 'services' && $display === 'block_2') {
+        $variables['view_block_services_home'] = TRUE;
+      }
+    }
+  }
+
+  if ($variables['view_block_events_home_list'] || $variables['view_block_events_home_calendar']) {
+    $variables['#attached']['library'][] = 'motaded_theme/events_home';
   }
 }
 
@@ -1613,6 +2479,164 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
 }
 
 /**
+ * First taxonomy term plain label from a node's entity reference field, or ''.
+ */
+function _motaded_theme_node_first_taxonomy_label(NodeInterface $node, string $field_name, string $langcode): string {
+  if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+    return '';
+  }
+  $referenced = $node->get($field_name)->entity;
+  if (!$referenced instanceof TermInterface) {
+    return '';
+  }
+
+  return motaded_theme_taxonomy_term_translated_label($referenced, $langcode !== '' ? $langcode : 'en');
+}
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ *
+ * Builds a richer FullCalendar row title field (month view) with taxonomy meta;
+ * separators only between non-empty fragments.
+ */
+function motaded_theme_preprocess_views_view_field(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->id() !== 'events' || !in_array($view->current_display, ['block_calendar', 'attachment_page_calendar'], TRUE)) {
+    return;
+  }
+
+  $handler = $variables['field'] ?? NULL;
+  if (!$handler instanceof FieldPluginInterface) {
+    return;
+  }
+  $fname = ($handler->definition['field_name'] ?? '');
+  if ($fname !== 'title') {
+    return;
+  }
+
+  $row = $variables['row'] ?? NULL;
+  if (!is_object($row) || !isset($row->_entity)) {
+    return;
+  }
+
+  $node = $row->_entity;
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'event') {
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  try {
+    $display_node = ($langcode !== '' && $node->hasTranslation($langcode))
+      ? $node->getTranslation($langcode)
+      : $node;
+  }
+  catch (\Exception $e) {
+    $display_node = $node;
+  }
+
+  $href = Html::escape($display_node->toUrl()->toString());
+  $title_text = Html::escape($display_node->label());
+
+  $type_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_event_type', $langcode);
+  $region_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_region', $langcode);
+
+  $meta_segments = [];
+  if ($type_plain !== '') {
+    $meta_segments[] = Html::escape($type_plain);
+  }
+  if ($region_plain !== '') {
+    $meta_segments[] = Html::escape($region_plain);
+  }
+
+  $html = '<div class="fc-event-card"><div class="fc-event-card__title"><a class="fc-event-card__title-link" href="' . $href . '">' . $title_text . '</a></div>';
+  if ($meta_segments !== []) {
+    $html .= '<div class="fc-event-card__meta">' . implode(' · ', $meta_segments) . '</div>';
+  }
+  $html .= '</div>';
+
+  $variables['output'] = [
+    '#markup' => Markup::create($html),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views_view_fullcalendar.
+ *
+ * Adds extendedProps (event type + region) per event for JS eventContent —
+ * Contrib Xss::filter on titles can strip markup from preprocess_views_view_field.
+ */
+function motaded_theme_preprocess_views_view_fullcalendar(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->id() !== 'events' || !in_array($view->current_display, ['block_calendar', 'attachment_page_calendar'], TRUE)) {
+    return;
+  }
+  if (empty($variables['#attached']['drupalSettings']['fullCalendarView'])) {
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  foreach (array_keys($variables['#attached']['drupalSettings']['fullCalendarView']) as $view_index) {
+    $settings = &$variables['#attached']['drupalSettings']['fullCalendarView'][$view_index];
+    if (empty($settings['calendar_options']) || !is_string($settings['calendar_options'])) {
+      continue;
+    }
+    $decoded = Json::decode($settings['calendar_options']);
+    if (!is_array($decoded) || empty($decoded['events']) || !is_array($decoded['events'])) {
+      continue;
+    }
+    $nids = [];
+    foreach ($decoded['events'] as $ev) {
+      if (!empty($ev['eid'])) {
+        $nids[(int) $ev['eid']] = (int) $ev['eid'];
+      }
+    }
+    if ($nids === []) {
+      unset($settings);
+      continue;
+    }
+    $nodes = Node::loadMultiple($nids);
+    foreach ($decoded['events'] as $i => $event) {
+      $nid = isset($event['eid']) ? (int) $event['eid'] : 0;
+      if ($nid < 1 || !isset($nodes[$nid])) {
+        continue;
+      }
+      $node = $nodes[$nid];
+      if (!$node instanceof NodeInterface || $node->bundle() !== 'event') {
+        continue;
+      }
+      try {
+        $display_node = ($langcode !== '' && $node->hasTranslation($langcode))
+          ? $node->getTranslation($langcode)
+          : $node;
+      }
+      catch (\Exception $e) {
+        $display_node = $node;
+      }
+      $type_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_event_type', $langcode);
+      $region_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_region', $langcode);
+      $meta_parts = array_filter([$type_plain, $region_plain]);
+      $existing = [];
+      if (!empty($event['extendedProps']) && is_array($event['extendedProps'])) {
+        $existing = $event['extendedProps'];
+      }
+      $decoded['events'][$i]['extendedProps'] = array_merge($existing, [
+        'motaded_type' => $type_plain,
+        'motaded_region' => $region_plain,
+        'motaded_meta_line' => $meta_parts === [] ? '' : implode(' · ', $meta_parts),
+      ]);
+    }
+    $settings['calendar_options'] = Json::encode($decoded);
+    unset($settings);
+  }
+}
+
+/**
  * Returns a taxonomy term label for a requested langcode when available.
  */
 function motaded_theme_taxonomy_term_translated_label(TermInterface $term, string $langcode): string {
@@ -1662,9 +2686,159 @@ function motaded_theme_services_attach_form_attribute_recursive(array &$element,
 }
 
 /**
+ * After-build: “All categories / sectors / regions” labels on Insights directory filters.
+ */
+function motaded_theme_insights_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-insights-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_category_target_id' => (string) t('All categories'),
+    'field_sector_target_id' => (string) t('All sectors'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
+ * After-build: “All types / industries / regions” labels on Events directory filters.
+ */
+function motaded_theme_events_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-events-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_event_type_target_id' => (string) t('All types'),
+    'field_category_target_id' => (string) t('All industries'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
+ * After-build: “All categories / regions” labels on Platforms directory filters.
+ */
+function motaded_theme_platforms_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-platforms-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_category_target_id' => (string) t('All categories'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\FormStateInterface $form_state) {
+  // ViewsExposedForm uses the view page URL as #action whenever the view has a path
+  // (/events); these block displays still need to POST/GET against the current page.
+  $view = $form_state->get('view');
+  if (
+    $view instanceof ViewExecutable
+    && $view->storage->id() === 'events'
+    && ($view->current_display ?? '') === 'block_calendar'
+  ) {
+    try {
+      $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+    }
+    catch (\Exception $e) {
+      $request = \Drupal::request();
+      $form['#action'] = $request->getBasePath() . $request->getPathInfo();
+    }
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-events-page-1') {
+    $form['#attributes']['class'][] = 'events-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search events, topics, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+
+    // Views-exposed date filters (From/To): force native HTML5 date picker.
+    // The filters live in Views config, but we normalize the widget here.
+    foreach ([
+      'motaded_event_date_from' => (string) t('From'),
+      'motaded_event_date_to' => (string) t('To'),
+    ] as $key => $label) {
+      if (!isset($form[$key]) || !is_array($form[$key])) {
+        continue;
+      }
+
+      // Some views filters use a nested 'value' element; support both shapes.
+      $target =& $form[$key];
+      if (isset($form[$key]['value']) && is_array($form[$key]['value'])) {
+        $target =& $form[$key]['value'];
+      }
+
+      // Force an actual HTML5 date input (native date picker).
+      $target['#type'] = 'date';
+      $target['#title'] = $label;
+      $target['#attributes']['type'] = 'date';
+      $target['#attributes']['class'][] = 'form-date';
+      // Ensure date picker UI (no datetime widget JS).
+      $target['#date_date_format'] = 'Y-m-d';
+      $target['#date_time_format'] = '';
+      $target['#date_timezone'] = date_default_timezone_get();
+      // Some widget builds keep #type textfield + form-date class; override explicitly.
+      if (($target['#type'] ?? '') === 'textfield') {
+        $target['#type'] = 'date';
+      }
+      // Also set on wrapper element in case the view uses the parent element.
+      $form[$key]['#type'] = 'date';
+      $form[$key]['#attributes']['type'] = 'date';
+      $form[$key]['#attributes']['class'][] = 'form-date';
+      // Ensure our hero CSS hooks apply.
+      $form[$key]['#wrapper_attributes']['class'][] = 'form-item-' . str_replace('_', '-', $key);
+    }
+
+    $form['#after_build'][] = 'motaded_theme_events_directory_views_exposed_form_after_build';
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-insights-page-1') {
+    $form['#attributes']['class'][] = 'insights-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search insights, topics, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+    $form['#after_build'][] = 'motaded_theme_insights_directory_views_exposed_form_after_build';
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-platforms-page-1') {
+    $form['#attributes']['class'][] = 'platforms-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search platforms, services, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+    $form['#after_build'][] = 'motaded_theme_platforms_directory_views_exposed_form_after_build';
+  }
+
   if ($form['#id'] == 'views-exposed-form-services-block-2') {
     if (!isset($form['field_taxonomy_target_id'])) {
       return;
@@ -1816,6 +2990,23 @@ function motaded_theme_preprocess_page__webform__contact__confirmation(&$variabl
   $id = is_string($raw) ? trim($raw) : '';
   if ($id !== '' && ctype_digit($id)) {
     $variables['linkedin_contact_lead_conversion_id'] = (int) $id;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_node_alter().
+ */
+function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
+  $node = $variables['elements']['#node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() !== 'market_insight' || ($variables['elements']['#view_mode'] ?? '') !== 'full') {
+    return;
+  }
+  if ($node->hasField('field_insight_shell') && $node->get('field_insight_shell')->value === 'platform') {
+    // Appended last so after array_reverse() it is tried first (most specific).
+    $suggestions[] = 'node__market_insight__platform';
   }
 }
 

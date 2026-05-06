@@ -1,0 +1,23 @@
+uuid: 8f31a2b0-0c00-4000-8000-00000000002c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_highlight
+    - node.type.market_insight
+id: node.market_insight.field_highlight
+field_name: field_highlight
+entity_type: node
+bundle: market_insight
+label: Highlight
+description: 'Larger card treatment when displayed in lists.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Highlighted
+  off_label: 'Not highlighted'
+field_type: boolean

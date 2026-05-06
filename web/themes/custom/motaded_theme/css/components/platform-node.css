@@ -1,0 +1,1336 @@
+/**
+ * @file
+ * Platform content type (node.type.platform) — marketing / explainer layout.
+ */
+.node--type-platform.node--view-mode-full {
+  --pf-text: #1a1a1a;
+  --pf-muted: #4a5568;
+  --pf-surface-muted: #f4f7f6;
+  --pf-card-shadow: 0 8px 28px rgb(15 23 42 / 7%);
+  --pf-surface: #ffffff;
+  --pf-border: rgba(226, 232, 240, 0.95);
+  --pf-shadow-md: 0 10px 32px rgba(15, 23, 42, 0.08);
+  --pf-shadow-lg: 0 18px 52px rgba(15, 23, 42, 0.12);
+  --pf-brand: var(--color-primary-800, #065f46);
+  --pf-brand-900: var(--color-primary-900, #064e3b);
+  --pf-brand-soft: color-mix(in oklab, var(--pf-brand) 10%, #ffffff);
+  /* Match main site content rail (page.html.twig max-w-[1320px]). */
+  --pf-content-max: 1320px;
+  color: var(--pf-text);
+}
+
+.node--type-platform.node--view-mode-full {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.node--type-platform.node--view-mode-full .node__content {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- New layout (pf2-*) — reference-like architecture --- */
+.node--type-platform.node--view-mode-full .pf2-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+  border-bottom: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  background: radial-gradient(1400px 420px at 22% 24%, rgba(6, 95, 70, 0.08) 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(165deg, var(--pf-brand-soft, rgba(6, 95, 70, 0.08)) 0%, #fff 42%, #fafcfb 100%);
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__bg-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__bg-media :where(img, picture, .media, figure) {
+  width: 100%;
+  height: 100%;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__bg-media img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  opacity: 0.92;
+  filter: saturate(0.95) contrast(0.98);
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__bg-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    92deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.98) 38%,
+    rgba(255, 255, 255, 0.58) 60%,
+    rgba(248, 250, 252, 0.18) 100%
+  );
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--pf-content-max, 1320px);
+  width: 100%;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 2.75rem) max(1rem, 4vw) clamp(1.5rem, 4.5vw, 2.5rem);
+}
+
+@media (min-width: 768px) {
+  .node--type-platform.node--view-mode-full .pf2-hero__inner {
+    padding-inline: 1.5rem;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb__link {
+  color: #475569;
+  text-decoration: none;
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb__link:hover {
+  color: var(--color-primary-800, #065f46);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb__sep {
+  color: #cbd5e1;
+  padding: 0 0.15rem;
+  user-select: none;
+}
+
+.node--type-platform.node--view-mode-full .pf2-breadcrumb__item--current {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .node--type-platform.node--view-mode-full .pf2-hero__main {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 1.5rem 2rem;
+    align-items: center;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__logo-card {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  box-shadow: var(--pf-shadow-md, 0 10px 32px rgba(15, 23, 42, 0.08));
+  padding: 1.1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 118px;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__logo-fallback {
+  width: 92px;
+  height: 92px;
+  border-radius: 18px;
+  background: radial-gradient(80px 80px at 35% 30%, rgba(6, 95, 70, 0.18) 0%, rgba(6, 95, 70, 0.06) 60%, rgba(241, 245, 249, 0) 100%),
+    linear-gradient(180deg, #f8fafc, #ffffff);
+  border: 1px dashed rgba(148, 163, 184, 0.7);
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__logo-card img {
+  max-width: 100%;
+  max-height: 96px;
+  object-fit: contain;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.9rem, 4vw, 2.75rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  line-height: 1.12;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__subtitle {
+  margin: 0 0 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  opacity: 0.75;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__lead {
+  margin: 0 0 1.1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 46rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-hero__meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-meta {
+  display: inline-grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.05rem 0.5rem;
+  align-items: start;
+  text-decoration: none;
+  color: inherit;
+  min-width: 14rem;
+  padding: 0.35rem 0.25rem;
+  border-radius: 12px;
+}
+
+.node--type-platform.node--view-mode-full a.pf2-meta:hover {
+  background: rgba(241, 245, 249, 0.75);
+}
+
+.node--type-platform.node--view-mode-full a.pf2-meta:focus-visible {
+  outline: 2px solid rgba(6, 95, 70, 0.35);
+  outline-offset: 2px;
+}
+
+.node--type-platform.node--view-mode-full .pf2-meta__icon {
+  grid-row: 1 / span 2;
+  color: #0f172a;
+  opacity: 0.65;
+  margin-top: 0.1rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-meta__label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.node--type-platform.node--view-mode-full .pf2-meta__value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-shell {
+  max-width: var(--pf-content-max, 1320px);
+  margin-inline: auto;
+  padding: 0 max(1rem, 4vw) 2.75rem;
+}
+
+@media (min-width: 768px) {
+  .node--type-platform.node--view-mode-full .pf2-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.85rem 0.25rem;
+  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  backdrop-filter: saturate(1.2) blur(10px);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+}
+
+.node--type-platform.node--view-mode-full .pf2-tabs__link {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.node--type-platform.node--view-mode-full .pf2-tabs__link:hover {
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, #f8fafc);
+  border-color: color-mix(in oklab, var(--pf-brand, #065f46) 25%, rgba(226, 232, 240, 0.9));
+  color: var(--pf-brand-900, #064e3b);
+}
+
+.node--type-platform.node--view-mode-full .pf2-tabs__link:focus-visible {
+  outline: 2px solid rgba(6, 95, 70, 0.35);
+  outline-offset: 2px;
+}
+
+.node--type-platform.node--view-mode-full .pf2-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .node--type-platform.node--view-mode-full .pf2-layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 2.25rem;
+    align-items: start;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-section {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.node--type-platform.node--view-mode-full .pf2-section:first-child {
+  padding-top: 0.25rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-section:last-child {
+  border-bottom: none;
+}
+
+.node--type-platform.node--view-mode-full .pf2-section__title {
+  margin: 0 0 0.85rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-prose {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.node--type-platform.node--view-mode-full .pf2-cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 620px) {
+  .node--type-platform.node--view-mode-full .pf2-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-card {
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  padding: 1.05rem 1.1rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.node--type-platform.node--view-mode-full .pf2-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 44px rgba(15, 23, 42, 0.1);
+  border-color: color-mix(in oklab, var(--pf-brand, #065f46) 18%, rgba(226, 232, 240, 0.95));
+}
+
+.node--type-platform.node--view-mode-full .pf2-steps,
+.node--type-platform.node--view-mode-full .pf2-req {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-step,
+.node--type-platform.node--view-mode-full .pf2-req__item {
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  padding: 0.9rem 1rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-aside {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .node--type-platform.node--view-mode-full .pf2-aside {
+    position: sticky;
+    top: 4.25rem;
+    align-self: start;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf2-aside-card {
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.07);
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-aside-card__title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-aside-card__text {
+  margin: 0 0 0.85rem;
+  color: #475569;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-glance {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-glance__item {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-glance__label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.node--type-platform.node--view-mode-full .pf2-glance__value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-quicklinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-quicklinks__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 700;
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.node--type-platform.node--view-mode-full .pf2-quicklinks__link:hover {
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 8%, #f8fafc);
+  border-color: color-mix(in oklab, var(--pf-brand, #065f46) 20%, rgba(226, 232, 240, 0.92));
+}
+
+.node--type-platform.node--view-mode-full .pf2-share {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-share__btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 900;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.node--type-platform.node--view-mode-full .pf2-share__btn:hover {
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, #e2e8f0);
+  border-color: color-mix(in oklab, var(--pf-brand, #065f46) 22%, rgba(226, 232, 240, 0.95));
+}
+
+.node--type-platform.node--view-mode-full .pf2-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.node--type-platform.node--view-mode-full .pf2-btn--primary {
+  background: var(--pf-brand, var(--color-primary-800, #065f46));
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(6, 95, 70, 0.22);
+}
+
+.node--type-platform.node--view-mode-full .pf2-btn--primary:hover {
+  background: var(--pf-brand-900, var(--color-primary-900, #064e3b));
+  color: #fff;
+}
+
+/* Breadcrumb + chips: plain CSS (Tailwind in Twig is often not in the bundle). */
+.node--type-platform.node--view-mode-full .pf-breadcrumb {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.node--type-platform.node--view-mode-full .pf-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf-breadcrumb__link {
+  color: #475569;
+  text-decoration: none;
+}
+
+.node--type-platform.node--view-mode-full .pf-breadcrumb__link:hover {
+  color: var(--color-primary-800, #065f46);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.node--type-platform.node--view-mode-full .pf-breadcrumb__sep {
+  color: #cbd5e1;
+  padding: 0 0.15rem;
+  user-select: none;
+}
+
+.node--type-platform.node--view-mode-full .pf-breadcrumb__item--current {
+  color: #0f172a;
+  font-weight: 600;
+  max-width: min(12rem, 40vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .node--type-platform.node--view-mode-full .pf-breadcrumb__item--current {
+    max-width: none;
+    white-space: normal;
+  }
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.65rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.92);
+  color: #334155;
+  border: 0;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 6%);
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__chip-text {
+  font-weight: 700;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__copy {
+  min-width: 0;
+}
+
+/* Hero media: Drupal/core often floats images — keep inside the card column. */
+.node--type-platform.node--view-mode-full .pf-hero__card .contextual-region,
+.node--type-platform.node--view-mode-full .pf-hero__card .field,
+.node--type-platform.node--view-mode-full .pf-hero__card .field__item {
+  float: none !important;
+  max-width: 100%;
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__card figure,
+.node--type-platform.node--view-mode-full .pf-hero__card .media,
+.node--type-platform.node--view-mode-full .pf-hero__card picture {
+  float: none !important;
+  margin: 0 auto !important;
+  display: block;
+  max-width: 100%;
+}
+
+.node--type-platform.node--view-mode-full .pf-hero__card img {
+  display: block;
+  margin-inline: auto;
+}
+
+.node--type-platform.node--view-mode-full .pf-official__extra {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.node--type-platform.node--view-mode-full .pf-official__extra .field {
+  margin: 0;
+}
+
+/* First section after hero: tighter top padding */
+.node--type-platform.node--view-mode-full .pf-hero + section .pf-section {
+  padding-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+.pf-hero__subtitle .field,
+.pf-hero__lead .field {
+  margin: 0;
+}
+
+.pf-hero__subtitle .field__item,
+.pf-hero__lead .field__item {
+  display: block;
+}
+
+/* --- Teaser card (listing) --- */
+.pf-teaser {
+  height: 100%;
+}
+
+.pf-teaser__link {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow: 0 2px 16px rgb(15 23 42 / 6%);
+  border: 1px solid rgb(226 232 240 / 0.85);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pf-teaser__link:hover {
+  box-shadow: 0 10px 32px rgb(15 23 42 / 10%);
+  border-color: color-mix(in oklab, var(--color-primary-500, #10b981) 28%, #e2e8f0);
+  transform: translateY(-2px);
+}
+
+.pf-teaser__inner {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem 1.35rem;
+}
+
+.pf-teaser__logo {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-teaser__logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pf-teaser__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+  line-height: 1.25;
+}
+
+.pf-teaser__desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--pf-muted);
+}
+
+.pf-teaser__desc .field {
+  margin: 0;
+}
+
+.pf-teaser__meta {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary-700, #047857);
+}
+
+.pf-teaser__meta .field {
+  margin: 0;
+}
+
+.pf-teaser__cta {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-primary-700, #047857);
+}
+
+/* --- Hero --- */
+.pf-hero {
+  background: linear-gradient(
+    165deg,
+    var(--color-primary-50, #ecfdf5) 0%,
+    #fff 42%,
+    #fafcfb 100%
+  );
+  border-bottom: 1px solid color-mix(in oklab, var(--color-primary-600, #047857) 8%, transparent);
+}
+
+.pf-hero__inner {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+  align-items: center;
+  max-width: var(--pf-content-max, 1320px);
+  width: 100%;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 4vw, 2.75rem) max(1rem, 4vw) clamp(2rem, 5vw, 3.25rem);
+}
+
+@media (min-width: 768px) {
+  .pf-hero__inner {
+    grid-template-columns: minmax(0, 1.12fr) minmax(220px, 0.88fr);
+    gap: 2rem 2.5rem;
+    padding-inline: 1.5rem;
+  }
+}
+
+.pf-hero__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary-700, #047857);
+}
+
+.pf-hero__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-hero__subtitle {
+  margin: 0 0 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--pf-muted);
+}
+
+.pf-hero__lead {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--pf-muted);
+  max-width: 38rem;
+}
+
+.pf-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.pf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.pf-btn--primary {
+  background: var(--color-primary-800, #065f46);
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--color-primary-800, #065f46) 35%, transparent);
+}
+
+.pf-btn--primary:hover {
+  background: var(--color-primary-900, #064e3b);
+  color: #fff;
+}
+
+.pf-btn--ghost {
+  background: #fff;
+  color: var(--color-primary-800, #065f46);
+  border-color: color-mix(in oklab, var(--color-primary-600, #059669) 45%, #fff);
+}
+
+.pf-btn--ghost:hover {
+  border-color: var(--color-primary-700, #047857);
+  background: var(--color-primary-50, #ecfdf5);
+}
+
+.pf-hero__card {
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: var(--pf-card-shadow);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.pf-hero__card .field--name-field-logo,
+.pf-hero__card .field--name-field-logo .field__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-hero__card img {
+  max-width: 100%;
+  height: auto;
+  max-height: 140px;
+  object-fit: contain;
+}
+
+.pf-hero__card--empty {
+  color: var(--pf-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* --- Section shell --- */
+.pf-section {
+  max-width: var(--pf-content-max, 1320px);
+  width: 100%;
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 4rem) max(1rem, 4vw);
+}
+
+@media (min-width: 768px) {
+  .pf-section {
+    padding-inline: 1.5rem;
+  }
+}
+
+.pf-section__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-section__intro {
+  margin: 0 0 1.5rem;
+  max-width: 40rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--pf-muted);
+}
+
+/* --- What is (body) --- */
+.pf-what {
+  background: #fff;
+}
+
+.pf-what__prose {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--pf-text);
+}
+
+.pf-what__prose > *:first-child {
+  margin-top: 0;
+}
+
+.pf-what__prose h2,
+.pf-what__prose h3 {
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-what__prose p {
+  margin: 0 0 1rem;
+}
+
+.pf-what__prose ul,
+.pf-what__prose ol {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.pf-what__prose a {
+  color: var(--color-primary-700, #047857);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pf-what__prose a:hover {
+  color: var(--color-primary-900, #064e3b);
+}
+
+/* --- Why it matters --- */
+.pf-why {
+  background: #fff;
+}
+
+.pf-why__grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .pf-why__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+.pf-why__item {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+}
+
+.pf-why__icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--color-primary-500, #10b981) 12%, #fff);
+  color: var(--color-primary-700, #047857);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-why__item .paragraph {
+  flex: 1;
+  min-width: 0;
+}
+
+.pf-why__item .field--name-field-title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-why__item .field--name-field-body {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--pf-muted);
+}
+
+.node--type-platform.node--view-mode-full .pf-why__body .field,
+.node--type-platform.node--view-mode-full .pf-why__body .field__item {
+  float: none !important;
+  margin: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf-why__body .field--name-field-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+}
+
+/* --- How we help (band + cards) --- */
+.pf-help {
+  background: var(--pf-surface-muted);
+  border-block: 1px solid rgb(226 232 240 / 0.6);
+}
+
+.pf-help__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .pf-help__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.pf-help__card {
+  background: #fff;
+  border-radius: 0.875rem;
+  padding: 1.35rem 1.25rem;
+  box-shadow: 0 2px 12px rgb(15 23 42 / 5%);
+  height: 100%;
+}
+
+.pf-help__card .field--name-field-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-help__card .field--name-field-body {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--pf-muted);
+}
+
+.node--type-platform.node--view-mode-full .pf-help__card .paragraph,
+.node--type-platform.node--view-mode-full .pf-why__body .paragraph,
+.node--type-platform.node--view-mode-full .pf-process__item .paragraph {
+  margin: 0;
+}
+
+.node--type-platform.node--view-mode-full .pf-help__card .field,
+.node--type-platform.node--view-mode-full .pf-help__card .field__item {
+  float: none !important;
+}
+
+.pf-req__item .paragraph {
+  margin: 0;
+  display: block;
+}
+
+.pf-help__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--color-primary-600, #059669) 14%, #fff);
+  color: var(--color-primary-800, #065f46);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.pf-help__cta-bar {
+  margin-top: 2rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow: var(--pf-card-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pf-help__cta-copy {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  max-width: 36rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--pf-muted);
+}
+
+.pf-help__cta-copy svg {
+  flex-shrink: 0;
+  color: var(--color-primary-700, #047857);
+}
+
+/* --- Three columns: process | requirements | official --- */
+.pf-triple {
+  background: #fff;
+}
+
+.pf-triple__grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 960px) {
+  .pf-triple__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+
+.pf-triple__col-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+}
+
+/* Process stepper */
+.pf-process {
+  counter-reset: pfstep;
+}
+
+.pf-process__item {
+  position: relative;
+  padding-left: 3rem;
+  padding-bottom: 1.5rem;
+}
+
+.pf-process__item:last-child {
+  padding-bottom: 0;
+}
+
+.pf-process__item::before {
+  counter-increment: pfstep;
+  content: counter(pfstep);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--color-primary-500, #10b981) 18%, #fff);
+  color: var(--color-primary-800, #065f46);
+  font-weight: 800;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid color-mix(in oklab, var(--color-primary-600, #059669) 35%, #fff);
+}
+
+.pf-process__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0.9375rem;
+  top: 2.25rem;
+  bottom: 0.25rem;
+  width: 0;
+  border-left: 2px dotted color-mix(in oklab, var(--color-primary-500, #10b981) 40%, #cbd5e1);
+}
+
+.pf-process__item .field--name-field-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-process__item .field--name-field-body {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--pf-muted);
+}
+
+/* Requirements checklist */
+.pf-req__item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgb(226 232 240 / 0.85);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--pf-text);
+}
+
+.pf-req__item:last-child {
+  border-bottom: 0;
+}
+
+.pf-req__item::before {
+  content: "✓";
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  border-radius: 9999px;
+  background: var(--color-primary-600, #059669);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1.35rem;
+  text-align: center;
+}
+
+.pf-official__text {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--pf-muted);
+}
+
+/* --- Partner logos --- */
+.pf-trust {
+  background: #fff;
+  border-top: 1px solid rgb(226 232 240 / 0.7);
+}
+
+.pf-trust__title {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pf-muted);
+}
+
+.pf-trust__logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  align-items: center;
+}
+
+.pf-trust__logos .field__item {
+  opacity: 0.85;
+  max-height: 48px;
+}
+
+.pf-trust__logos img {
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* --- Bottom contact strip --- */
+.pf-contact-strip {
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--color-primary-100, #d1fae5) 85%, #fff) 0%,
+    #f8faf8 50%,
+    color-mix(in oklab, #d4af37 12%, #f8faf8) 100%
+  );
+  border-top: 1px solid rgb(226 232 240 / 0.6);
+}
+
+.pf-contact-strip__inner {
+  max-width: var(--pf-content-max, 1320px);
+  width: 100%;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 4vw, 2.5rem) max(1rem, 4vw);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pf-contact-strip__title {
+  margin: 0;
+  font-size: clamp(1.125rem, 2.2vw, 1.35rem);
+  font-weight: 800;
+  color: var(--color-primary-900, #064e3b);
+  max-width: 22rem;
+}
+
+.pf-contact-strip__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.pf-btn--wa {
+  background: #128c7e;
+  color: #fff;
+}
+
+.pf-btn--wa:hover {
+  background: #0e7a6f;
+  color: #fff;
+}
+
+.pf-btn--outline-dark {
+  background: transparent;
+  border-color: var(--color-primary-800, #065f46);
+  color: var(--color-primary-900, #064e3b);
+}
+
+.pf-btn--outline-dark:hover {
+  background: #fff;
+}
+
+.pf-btn--accent {
+  background: #a67c52;
+  color: #fff;
+  border-color: #8f6844;
+}
+
+.pf-btn--accent:hover {
+  background: #8f6844;
+  color: #fff;
+}
+
+.pf-sr-hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
