@@ -1,0 +1,27 @@
+uuid: c1a1a1a1-1111-4111-8111-111111111111
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_why_attend
+    - node.type.event
+    - paragraphs.paragraphs_type.event_content_item
+  module:
+    - entity_reference_revisions
+id: node.event.field_why_attend
+field_name: field_why_attend
+entity_type: node
+bundle: event
+label: 'Why attend'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      event_content_item: event_content_item
+    negate: 0
+field_type: entity_reference_revisions

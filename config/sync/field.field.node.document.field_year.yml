@@ -1,0 +1,23 @@
+uuid: a1000002-1107-4000-8000-000000000001
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_year
+    - node.type.document
+id: node.document.field_year
+field_name: field_year
+entity_type: node
+bundle: document
+label: 'Publication year'
+description: 'Year of publication or last amendment (especially for laws and policies).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

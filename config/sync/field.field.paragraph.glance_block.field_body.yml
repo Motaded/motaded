@@ -1,0 +1,22 @@
+uuid: 5e8d6b0a-15d7-4a5e-9f65-2c44bcf519f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - paragraphs.paragraphs_type.glance_block
+  module:
+    - text
+id: paragraph.glance_block.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: glance_block
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

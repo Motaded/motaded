@@ -1,0 +1,9 @@
+uuid: 3ab89cc8-a557-4525-8dc4-477d57363cbd
+langcode: en
+status: true
+dependencies: {  }
+name: Region
+vid: region
+description: 'Geographic region for event filters.'
+weight: 0
+new_revision: false

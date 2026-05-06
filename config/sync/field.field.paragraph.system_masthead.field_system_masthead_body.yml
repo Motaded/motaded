@@ -1,0 +1,22 @@
+uuid: 65b95a2e-0e12-4852-8df3-94f951d91f64
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_system_masthead_body
+    - paragraphs.paragraphs_type.system_masthead
+  module:
+    - text
+id: paragraph.system_masthead.field_system_masthead_body
+field_name: field_system_masthead_body
+entity_type: paragraph
+bundle: system_masthead
+label: Subtitle
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

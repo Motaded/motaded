@@ -1,0 +1,263 @@
+{#
+/**
+ * @file
+ * Market Insight — immersive platform layout (hero + two columns + data source).
+ */
+#}
+{% set mi_src_link = content.field_source_link.0 ?? null %}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'market-insight',
+    'market-insight--platform',
+    'platform-page',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{{ attach_library('motaded_theme/platform_page') }}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="mi-hero">
+    {% if content.field_media|render|trim is not empty %}
+      <div class="mi-hero__photo" aria-hidden="true">
+        {{ content.field_media }}
+      </div>
+    {% endif %}
+    <div class="mi-hero__bg" aria-hidden="true"></div>
+    <div class="mi-hero__overlay" aria-hidden="true"></div>
+    <div class="mi-hero__content mi-hero__content--valign mx-auto max-w-6xl w-full px-4 py-10 md:py-14">
+      <div class="mi-hero__main">
+        <p class="mi-hero__badge">{{ 'Market insight'|t }}</p>
+        {% if page and label %}
+          <h1{{ title_attributes.addClass('mi-hero__title') }}>{{ label }}</h1>
+        {% endif %}
+        {% if summary %}
+          <div class="mi-hero__summary">{{ summary }}</div>
+        {% endif %}
+
+        <ul class="mi-hero__meta" role="list">
+          {% if not node.field_year.isEmpty %}
+            <li class="mi-hero__meta-item">
+              <span class="mi-hero__meta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="mi-hero__meta-text">{{ node.field_year.value }}</span>
+            </li>
+          {% endif %}
+          {% if node.field_category.entity %}
+            <li class="mi-hero__meta-item">
+              <span class="mi-hero__meta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 3h6l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/><path d="M13 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="mi-hero__meta-text">{{ node.field_category.entity.label }}</span>
+            </li>
+          {% endif %}
+          {% if node.field_region.entity %}
+            <li class="mi-hero__meta-item">
+              <span class="mi-hero__meta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+              <span class="mi-hero__meta-text">{{ node.field_region.entity.label }}</span>
+            </li>
+          {% endif %}
+          {% if node.field_sector.entity %}
+            <li class="mi-hero__meta-item">
+              <span class="mi-hero__meta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="mi-hero__meta-text">{{ node.field_sector.entity.label }}</span>
+            </li>
+          {% endif %}
+          {% if market_insight_read_mins %}
+            <li class="mi-hero__meta-item">
+              <span class="mi-hero__meta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="mi-hero__meta-text">{{ market_insight_read_mins }} {{ 'min read'|t }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    {# Bottom-right over the photo (mockup); positioned relative to .mi-hero — see platform-page.css #}
+    <aside class="mi-stat-card mi-stat-card--floating" aria-labelledby="mi-stat-heading">
+      <p id="mi-stat-heading" class="mi-stat-card__label">{{ node.field_stat_label.value|default('') }}</p>
+      <div class="mi-stat-card__row">
+        <div class="mi-stat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="m4 14 4-4 4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="mi-stat-card__value">
+          <span class="mi-stat-card__value-inner">
+            {% if node.field_stat_prefix.value %}<span class="mi-stat-card__prefix">{{ node.field_stat_prefix.value }}</span>{% endif %}
+            {% if node.field_stat_value.value %}<span class="mi-stat-card__num">{{ node.field_stat_value.value }}</span>{% endif %}
+            {% if node.field_stat_suffix.value %}<span class="mi-stat-card__suffix">{{ node.field_stat_suffix.value }}</span>{% endif %}
+          </span>
+        </p>
+      </div>
+    </aside>
+  </header>
+
+  <div class="mi-body-wrap bg-white">
+    <div class="mi-layout mi-layout--split mx-auto grid max-w-6xl grid-cols-1 gap-y-10 gap-x-8 px-4 py-12 md:grid-cols-[minmax(0,1.65fr)_minmax(240px,1fr)] md:items-start md:gap-x-10 md:gap-y-8 md:py-14 lg:grid-cols-[minmax(0,1.85fr)_minmax(280px,1fr)] lg:gap-x-14 lg:gap-y-10 lg:py-16">
+      <main class="mi-main">
+        <div{{ content_attributes.addClass('node__content', 'mi-prose', 'mi-article', 'prose', 'prose-neutral', 'max-w-none', 'text-gray-800') }}>
+          {{ content.body }}
+          {% if content.field_key_takeaways|render|trim is not empty %}
+            <section class="mi-takeaways" aria-labelledby="mi-takeaways-heading">
+              <h2 id="mi-takeaways-heading" class="mi-takeaways__title">{{ 'Key takeaways'|t }}</h2>
+              <div class="mi-takeaways__body prose prose-neutral max-w-none text-gray-800">
+                {{ content.field_key_takeaways }}
+              </div>
+            </section>
+          {% endif %}
+        </div>
+      </main>
+      <aside class="mi-aside" aria-label="{{ 'Insight details'|t }}">
+        <div class="mi-aside-card">
+          <h2 class="mi-aside-card__title">{{ 'Details'|t }}</h2>
+          <dl class="mi-aside-dl">
+            {% if node.field_category.entity %}
+              <div class="mi-aside-dl__row">
+                <span class="mi-aside-dl__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 3h6l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/><path d="M13 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                </span>
+                <div class="mi-aside-dl__text">
+                  <dt>{{ 'Category'|t }}</dt>
+                  <dd>{{ node.field_category.entity.label }}</dd>
+                </div>
+              </div>
+            {% endif %}
+            {% if node.field_sector.entity %}
+              <div class="mi-aside-dl__row">
+                <span class="mi-aside-dl__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <div class="mi-aside-dl__text">
+                  <dt>{{ 'Sector'|t }}</dt>
+                  <dd>{{ node.field_sector.entity.label }}</dd>
+                </div>
+              </div>
+            {% endif %}
+            {% if node.field_region.entity %}
+              <div class="mi-aside-dl__row">
+                <span class="mi-aside-dl__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <div class="mi-aside-dl__text">
+                  <dt>{{ 'Region'|t }}</dt>
+                  <dd>{{ node.field_region.entity.label }}</dd>
+                </div>
+              </div>
+            {% endif %}
+            {% if not node.field_year.isEmpty %}
+              <div class="mi-aside-dl__row">
+                <span class="mi-aside-dl__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <div class="mi-aside-dl__text">
+                  <dt>{{ 'Year'|t }}</dt>
+                  <dd>{{ node.field_year.value }}</dd>
+                </div>
+              </div>
+            {% endif %}
+            {% set source_name = node.field_source_text.value|default('')|trim %}
+            {% if source_name or (mi_src_link is not empty and mi_src_link['#url'] is defined) %}
+              <div class="mi-aside-dl__row">
+                <span class="mi-aside-dl__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.07.07l2.12-2.12a5 5 0 0 0-7.07-7.07l-1.41 1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.07-.07L4.81 13.05a5 5 0 0 0 7.07 7.07l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <div class="mi-aside-dl__text">
+                  <dt>{{ 'Source'|t }}</dt>
+                  <dd>
+                    {% if mi_src_link is not empty and mi_src_link['#url'] is defined %}
+                      {% set src_url = mi_src_link['#url'] %}
+                      {% if source_name %}
+                        <a class="mi-aside-source" href="{{ src_url }}" rel="noopener noreferrer">{{ source_name }}<span class="mi-aside-source__ext" aria-hidden="true"> ↗</span></a>
+                      {% else %}
+                        <a class="mi-aside-source" href="{{ src_url }}" rel="noopener noreferrer">{{ 'View source'|t }}<span class="mi-aside-source__ext" aria-hidden="true"> ↗</span></a>
+                      {% endif %}
+                    {% else %}
+                      {{ source_name }}
+                    {% endif %}
+                  </dd>
+                </div>
+              </div>
+            {% endif %}
+          </dl>
+          {% if content.addtoany|render|trim is not empty %}
+            <div class="mi-aside-share">
+              <h3 class="mi-aside-share__title">{{ 'Share this insight'|t }}</h3>
+              {{ content.addtoany }}
+            </div>
+          {% endif %}
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  {% set source_name = node.field_source_text.value|default('')|trim %}
+  {% if source_name or (mi_src_link is not empty and mi_src_link['#url'] is defined) %}
+    <section class="mi-datasource" aria-labelledby="mi-datasource-heading">
+      <div class="mi-datasource__shell mx-auto max-w-6xl px-4 py-10 md:py-14">
+        <h2 id="mi-datasource-heading" class="mi-datasource__section-heading">{{ 'Data source'|t }}</h2>
+        <div class="mi-datasource__card">
+          <div class="mi-datasource__cluster">
+            <div class="mi-datasource__logo-badge" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h2.5M18.5 12H21M12 3v2.5M12 18.5V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="mi-datasource__cluster-text">
+              <p class="mi-datasource__cluster-name">{{ source_name|default('Source'|t) }}</p>
+              <p class="mi-datasource__cluster-sub">{{ 'Official indicators and publications'|t }}</p>
+            </div>
+          </div>
+          <div class="mi-datasource__rule" role="presentation"></div>
+          <div class="mi-datasource__detail">
+            <p class="mi-datasource__detail-name">{{ source_name|default('Source'|t) }}</p>
+            <p class="mi-datasource__detail-sub">{{ 'World Development Indicators and official statistical releases.'|t }}</p>
+            {% if mi_src_link is not empty and mi_src_link['#url'] is defined %}
+              <a class="mi-datasource__text-link" href="{{ mi_src_link['#url'] }}" rel="noopener noreferrer">{{ 'View source'|t }}<span class="mi-datasource__text-link-icon" aria-hidden="true"> ↗</span></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="mi-related" aria-labelledby="mi-related-heading">
+    <div class="mi-related__inner mx-auto max-w-6xl px-4 pb-12 pt-2 md:pb-16">
+      <div class="mi-related__head">
+        <h2 id="mi-related-heading" class="mi-related__title">{{ 'Related insights'|t }}</h2>
+        <a href="/insights" class="mi-related__all">{{ 'View all insights'|t }}<span class="mi-related__chev" aria-hidden="true" aria-label="">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  {{ content|without(
+    'field_insight_shell',
+    'field_category',
+    'field_sector',
+    'field_stat_prefix',
+    'field_stat_value',
+    'field_stat_suffix',
+    'field_stat_label',
+    'body',
+    'field_key_takeaways',
+    'field_media',
+    'field_insight_thumbnail',
+    'field_region',
+    'field_year',
+    'field_source_text',
+    'field_source_link',
+    'addtoany',
+    'field_meta',
+    'links',
+    'field_featured',
+    'field_highlight',
+    'field_order'
+  ) }}
+</article>

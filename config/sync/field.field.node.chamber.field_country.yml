@@ -1,0 +1,21 @@
+uuid: e940be31-7e34-440b-b367-a608b569b6ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_country
+    - node.type.chamber
+  module:
+    - options
+id: node.chamber.field_country
+field_name: field_country
+entity_type: node
+bundle: chamber
+label: Country
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

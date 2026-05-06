@@ -3,10 +3,10 @@
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
 {% set service_url = fields.view_node.content|striptags|trim %}
-<article class="services-home-card">
-  <div class="services-home-card__icon" aria-hidden="true">
+<div class="services-home-row">
+  <div class="services-home-row__icon" aria-hidden="true">
     <img
-      src="/themes/custom/motaded_theme/img/icon-target.svg"
+      src="{{ services_home_row_icon_url }}"
       alt=""
       width="22"
       height="22"
@@ -14,10 +14,12 @@
       decoding="async"
     />
   </div>
-  <h3 class="services-home-card__title">{{ fields.title.content }}</h3>
-  <p class="services-home-card__body">{{ fields.body.content }}</p>
-  <hr class="services-home-card__rule" />
-  <a href="{{ service_url }}" class="services-home-card__cta">
-    {{ 'Get started'|t }}
+  <div class="services-home-row__main">
+    <h4 class="services-home-row__title">{{ fields.title.content }}</h4>
+    <div class="services-home-row__body">{{ fields.body.content }}</div>
+  </div>
+  <a href="{{ service_url }}" class="services-home-row__cta">
+    {{ 'View details'|t }}
+    <span class="services-home-row__cta-arrow" aria-hidden="true">→</span>
   </a>
-</article>
+</div>

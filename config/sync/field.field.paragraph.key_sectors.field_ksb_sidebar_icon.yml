@@ -1,0 +1,23 @@
+uuid: 36d7321d-0562-4ecb-8aa9-02525e62bd5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ksb_sidebar_icon
+    - paragraphs.paragraphs_type.key_sectors
+  module:
+    - options
+id: paragraph.key_sectors.field_ksb_sidebar_icon
+field_name: field_ksb_sidebar_icon
+entity_type: paragraph
+bundle: key_sectors
+label: 'Sidebar icon'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: chart_up
+default_value_callback: ''
+settings: {  }
+field_type: list_string

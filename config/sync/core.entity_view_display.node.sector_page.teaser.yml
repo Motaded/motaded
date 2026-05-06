@@ -1,0 +1,56 @@
+uuid: 656b309a-b8e8-4da4-876a-ca53603ba4b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.sector_page.field_sector
+    - field.field.node.sector_page.field_sector_eyebrow
+    - field.field.node.sector_page.field_short_description
+    - node.type.sector_page
+  module:
+    - user
+id: node.sector_page.teaser
+targetEntityType: node
+bundle: sector_page
+mode: teaser
+content:
+  field_sector:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_sector_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_short_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  body: true
+  field_media: true
+  field_sector_card_icon: true
+  field_sector_card_icon_media: true
+  field_sector_highlights: true
+  field_sector_kpis: true
+  field_sector_stats: true
+  langcode: true
+  search_api_excerpt: true

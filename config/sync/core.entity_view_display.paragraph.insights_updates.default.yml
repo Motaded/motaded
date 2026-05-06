@@ -24,3 +24,4 @@ content:
 hidden:
   field_iu_insights: true
   field_iu_news: true
+  search_api_excerpt: true

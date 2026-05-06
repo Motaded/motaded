@@ -998,7 +998,7 @@ display:
                   field_classes: ''
                 select_all_none: false
                 select_all_none_nested: false
-                display_inline: true
+                display_inline: false
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
@@ -2021,7 +2021,7 @@ display:
                   field_classes: services-directory__taxonomy
                 select_all_none: false
                 select_all_none_nested: true
-                display_inline: false
+                display_inline: true
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'

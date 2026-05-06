@@ -5,6 +5,8 @@ package: Custom
 core_version_requirement: ^9 || ^10 || ^11
 weight: 10
 dependencies:
+  - drupal:views
+  - fullcalendar_view:fullcalendar_view
   - drupal:node
   - drupal:path_alias
   - drupal:redirect

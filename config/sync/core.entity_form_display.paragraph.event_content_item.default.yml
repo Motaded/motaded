@@ -1,0 +1,39 @@
+uuid: 6aa2a6a0-92e5-4a8d-82ab-3336e4171760
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.event_content_item.field_body
+    - field.field.paragraph.event_content_item.field_title
+    - paragraphs.paragraphs_type.event_content_item
+  module:
+    - text
+id: paragraph.event_content_item.default
+targetEntityType: paragraph
+bundle: event_content_item
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

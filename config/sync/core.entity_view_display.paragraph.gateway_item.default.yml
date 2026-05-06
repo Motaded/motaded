@@ -1,0 +1,25 @@
+uuid: b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.gateway_item.field_body
+    - field.field.paragraph.gateway_item.field_gateway_icon
+    - field.field.paragraph.gateway_item.field_link
+    - field.field.paragraph.gateway_item.field_title
+    - paragraphs.paragraphs_type.gateway_item
+  module:
+    - link
+    - options
+    - text
+id: paragraph.gateway_item.default
+targetEntityType: paragraph
+bundle: gateway_item
+mode: default
+content: {  }
+hidden:
+  field_body: true
+  field_gateway_icon: true
+  field_link: true
+  field_title: true
+  search_api_excerpt: true

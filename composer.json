@@ -29,6 +29,7 @@
     "require": {
         "composer/installers": "^2.0",
         "cweagans/composer-patches": "^1.7",
+        "drupal/address": "^2.0",
         "drupal/addtoany": "^2.0",
         "drupal/admin_toolbar": "^3.6",
         "drupal/backup_migrate": "^5.1",
@@ -58,6 +59,7 @@
         "drupal/field_group": "^4.0",
         "drupal/flood_control": "^3.0",
         "drupal/formdazzle": "^4.0",
+        "drupal/fullcalendar_view": "^5.2",
         "drupal/gin": "^5.0",
         "drupal/honeypot": "^2.2",
         "drupal/http_status_code": "^2.0@dev",
@@ -66,6 +68,7 @@
         "drupal/inline_responsive_images": "^4.0",
         "drupal/lang_dropdown": "^2.4",
         "drupal/like_dislike": "^2.4",
+        "drupal/media_gallery": "^3.2",
         "drupal/metatag": "^2.2",
         "drupal/metatag_webform": "^1.0",
         "drupal/node_view_redirect": "^1.2",

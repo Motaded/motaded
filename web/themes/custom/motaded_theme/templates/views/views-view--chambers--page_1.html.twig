@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Chambers directory page (/chambers).
+ */
+#}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'chambers-directory-view',
+    'chambers-directory-page',
+    'page-gray',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    <div class="chambers-directory__title-wrap">
+      {{ title }}
+    </div>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div class="chambers-directory__inner">
+    {{ exposed }}
+    {{ attachment_before }}
+
+    {% if rows -%}
+      {{ rows }}
+    {% elseif empty -%}
+      {{ empty }}
+    {% endif %}
+    {{ pager }}
+
+    {{ attachment_after }}
+    {{ more }}
+  </div>
+</div>

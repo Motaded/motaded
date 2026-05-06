@@ -1,0 +1,85 @@
+{#
+/**
+ * @file
+ * Sector page — full view (hero, overview, highlights & stats).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'sector-page',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% set has_highlights = content.field_sector_highlights|render|trim is not empty %}
+  {% set has_stats = content.field_sector_stats|render|trim is not empty %}
+  {% set has_overview = content.body|render|trim is not empty %}
+
+  <header class="sector-page__hero">
+    <div class="sector-page__hero-inner">
+      <nav class="sector-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol>
+          <li><a href="{{ path('<front>') }}">{{ 'Home'|t }}</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="{{ sector_listing_url|default('/sectors') }}">{{ 'Sectors'|t }}</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page">{{ label }}</li>
+        </ol>
+      </nav>
+
+      {% if content.field_sector_eyebrow|render|trim is not empty %}
+        <div class="sector-page__eyebrow">{{ content.field_sector_eyebrow }}</div>
+      {% endif %}
+
+      {% if content.field_sector|render|trim is not empty %}
+        <div class="sector-page__sector">{{ content.field_sector }}</div>
+      {% endif %}
+
+      {% if page and label %}
+        <h1{{ title_attributes.addClass('sector-page__title') }}>{{ label }}</h1>
+      {% endif %}
+
+      {% if content.field_short_description|render|trim is not empty %}
+        <p class="sector-page__lede">{{ content.field_short_description }}</p>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if has_overview or has_highlights or has_stats %}
+    <div class="sector-page__main">
+      {% if has_overview %}
+        <section class="sector-page__overview prose prose-neutral max-w-none" aria-labelledby="sector-overview-heading">
+          <h2 id="sector-overview-heading">{{ 'Overview'|t }}</h2>
+          {{ content.body }}
+        </section>
+      {% endif %}
+
+      {% if has_highlights or has_stats %}
+        <div class="sector-page__grid">
+          {% if has_highlights %}
+            <section class="sector-page__panel" aria-labelledby="sector-highlights-heading">
+              <h2 id="sector-highlights-heading">{{ 'Key highlights'|t }}</h2>
+              {{ content.field_sector_highlights }}
+            </section>
+          {% endif %}
+          {% if has_stats %}
+            <section class="sector-page__panel" aria-labelledby="sector-stats-heading">
+              <h2 id="sector-stats-heading">{{ 'Key stats'|t }}</h2>
+              {{ content.field_sector_stats }}
+            </section>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if content.links %}
+    <footer class="sector-page__links">{{ content.links }}</footer>
+  {% endif %}
+</article>

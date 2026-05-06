@@ -127,9 +127,6 @@ settings:
       view_block:
         weight: 41
         enabled: false
-      work_tracks:
-        weight: -17
-        enabled: false
       why_feature_card:
         weight: -2
         enabled: true
@@ -138,5 +135,8 @@ settings:
         enabled: false
       why_stat_item:
         weight: -3
+        enabled: false
+      work_tracks:
+        weight: -17
         enabled: false
 field_type: entity_reference_revisions

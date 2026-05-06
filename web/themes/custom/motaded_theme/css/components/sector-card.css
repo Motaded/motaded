@@ -1,0 +1,206 @@
+/**
+ * Sector page — sector cards (Key sectors grid), aligned to marketing reference.
+ */
+
+.node--type-sector-page.node--view-mode-sector-card {
+  --sc-brand: var(--color-primary-800, #065f46);
+  --sc-brand-ring: rgba(6, 95, 70, 0.35);
+  --sc-text: #0b1220;
+  --sc-muted: #64748b;
+  --sc-border: #e2e8f0;
+  --sc-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.08);
+  height: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  background: #ffffff;
+  border: 1px solid var(--sc-border);
+  border-radius: 20px;
+  box-shadow: var(--sc-shadow);
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card:hover,
+.node--type-sector-page.node--view-mode-sector-card .sector-card:focus-within {
+  border-color: color-mix(in oklab, var(--sc-brand) 22%, var(--sc-border));
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 18px 44px rgba(15, 23, 42, 0.12);
+  transform: translateY(-3px);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.15rem 1.2rem 0.65rem;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--sc-brand);
+  background: #ffffff;
+  border: 1.5px solid var(--sc-brand-ring);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom .media,
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom .field {
+  margin: 0;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom :where(img, svg) {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.28;
+  color: var(--sc-text);
+  letter-spacing: -0.02em;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__title .field {
+  display: block;
+  margin: 0;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__teaser {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.52;
+  color: var(--sc-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__teaser .field,
+.node--type-sector-page.node--view-mode-sector-card .sector-card__teaser .field__item {
+  margin: 0;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__media {
+  flex-shrink: 0;
+  margin: 0.35rem 1rem 0;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(145deg, #f1f5f9 0%, #e8eef4 100%);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__media :where(figure, .media, .field--name-field-media) {
+  margin: 0;
+  height: 100%;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpis {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.95rem 1.2rem 0.15rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+  background: #ffffff;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpi {
+  display: grid;
+  grid-template-columns: 1.35rem 1fr;
+  gap: 0.55rem;
+  align-items: start;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpi-icon {
+  margin-top: 0.1rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--sc-brand);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpi-icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpi-val {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--sc-text);
+  line-height: 1.28;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__kpi-lbl {
+  margin: 0.12rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.38;
+  color: var(--sc-muted);
+  font-weight: 500;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__foot {
+  margin-top: auto;
+  padding: 0.85rem 1.2rem 1.15rem;
+  border-top: none;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--sc-brand);
+  text-decoration: none;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__link:hover,
+.node--type-sector-page.node--view-mode-sector-card .sector-card__link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}

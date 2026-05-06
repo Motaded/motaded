@@ -1,0 +1,34 @@
+uuid: a1000001-0000-4000-8000-000000000044
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.platform_process_step.field_body
+    - field.field.paragraph.platform_process_step.field_title
+    - paragraphs.paragraphs_type.platform_process_step
+  module:
+    - text
+id: paragraph.platform_process_step.default
+targetEntityType: paragraph
+bundle: platform_process_step
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

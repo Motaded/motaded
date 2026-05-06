@@ -1,0 +1,29 @@
+uuid: 3b4c5d6e-7f80-4a91-8b2c-3d4e5f6a7b8c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_platforms
+    - node.type.platform
+    - paragraphs.paragraphs_type.gateway_hub_block
+id: paragraph.gateway_hub_block.field_gateway_platforms
+field_name: field_gateway_platforms
+entity_type: paragraph
+bundle: gateway_hub_block
+label: 'Popular platforms'
+description: 'Select 3 platforms.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      platform: platform
+    sort:
+      field: created
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

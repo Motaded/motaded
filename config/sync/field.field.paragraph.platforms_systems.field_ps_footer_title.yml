@@ -1,0 +1,19 @@
+uuid: a15f0105-4fa4-4c5f-9b3f-47135addcae5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ps_footer_title
+    - paragraphs.paragraphs_type.platforms_systems
+id: paragraph.platforms_systems.field_ps_footer_title
+field_name: field_ps_footer_title
+entity_type: paragraph
+bundle: platforms_systems
+label: 'Footer title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

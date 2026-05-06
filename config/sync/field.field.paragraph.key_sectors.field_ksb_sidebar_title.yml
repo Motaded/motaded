@@ -1,0 +1,19 @@
+uuid: 20bff62c-840c-498f-808e-84456cfba4c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ksb_sidebar_title
+    - paragraphs.paragraphs_type.key_sectors
+id: paragraph.key_sectors.field_ksb_sidebar_title
+field_name: field_ksb_sidebar_title
+entity_type: paragraph
+bundle: key_sectors
+label: 'Sidebar heading'
+description: 'Right-hand insight panel title.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

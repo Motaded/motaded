@@ -8,9 +8,7 @@ id: paragraph.field_business_setup_popular
 field_name: field_business_setup_popular
 entity_type: paragraph
 type: boolean
-settings:
-  on_label: 'Most popular'
-  off_label: 'Standard'
+settings: {  }
 module: core
 locked: false
 cardinality: 1

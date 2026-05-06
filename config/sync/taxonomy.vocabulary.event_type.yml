@@ -1,0 +1,9 @@
+uuid: 1469d905-346d-4433-877a-65aaa40836bc
+langcode: en
+status: true
+dependencies: {  }
+name: 'Event type'
+vid: event_type
+description: 'Type of event (webinar, conference, etc.) for filters.'
+weight: 0
+new_revision: false

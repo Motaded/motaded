@@ -1,0 +1,28 @@
+uuid: a63f9fba-3782-4072-a2dd-5910d9009f16
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_psg_items
+    - node.type.platform
+    - paragraphs.paragraphs_type.platforms_system_group
+id: paragraph.platforms_system_group.field_psg_items
+field_name: field_psg_items
+entity_type: paragraph
+bundle: platforms_system_group
+label: Platforms
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      platform: platform
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

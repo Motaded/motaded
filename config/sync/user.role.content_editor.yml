@@ -16,6 +16,7 @@ dependencies:
     - media.type.image
     - node.type.article
     - node.type.page
+    - node.type.sector_page
     - taxonomy.vocabulary.tags
   module:
     - block_content
@@ -61,6 +62,7 @@ permissions:
   - 'create page_title_description block content'
   - 'create paragraphs block content'
   - 'create pro_gro_services block content'
+  - 'create sector_page content'
   - 'create sectors block content'
   - 'create terms in tags'
   - 'create url aliases'
@@ -90,6 +92,7 @@ permissions:
   - 'delete own files'
   - 'delete own image media'
   - 'delete own page content'
+  - 'delete own sector_page content'
   - 'delete page revisions'
   - 'display eu cookie compliance popup'
   - 'edit any article content'
@@ -101,6 +104,7 @@ permissions:
   - 'edit any page_title_description block content'
   - 'edit any paragraphs block content'
   - 'edit any pro_gro_services block content'
+  - 'edit any sector_page content'
   - 'edit any sectors block content'
   - 'edit any why_saudi_arabia block content'
   - 'edit conditional fields'
@@ -108,6 +112,7 @@ permissions:
   - 'edit own comments'
   - 'edit own image media'
   - 'edit own page content'
+  - 'edit own sector_page content'
   - 'edit terms in tags'
   - 'revert all revisions'
   - 'revert any basic block content revisions'

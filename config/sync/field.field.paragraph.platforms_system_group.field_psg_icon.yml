@@ -1,0 +1,21 @@
+uuid: fb897f52-f272-4c8b-9876-e886129d7efe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_psg_icon
+    - paragraphs.paragraphs_type.platforms_system_group
+  module:
+    - options
+id: paragraph.platforms_system_group.field_psg_icon
+field_name: field_psg_icon
+entity_type: paragraph
+bundle: platforms_system_group
+label: Icon
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

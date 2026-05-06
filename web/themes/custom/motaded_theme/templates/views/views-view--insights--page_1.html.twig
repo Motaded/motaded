@@ -1,0 +1,109 @@
+{#
+/**
+ * @file
+ * Market insights directory — hero, filters, featured grid, latest list, signup.
+ */
+#}
+{{ attach_library('motaded_theme/insights_directory') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'insights-directory',
+    'insights-directory-page',
+    'page-gray',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    {{ title }}
+  {% endif %}
+  {{ title_suffix }}
+
+  {% set hero_bg_url = motaded_insights_hero_bg_url|default('') %}
+
+  <div class="insights-directory__hero"{% if hero_bg_url %} style="--insights-hero-bg: url('{{ hero_bg_url|e('html_attr') }}');"{% endif %}>
+    <div class="insights-directory__hero-bg" aria-hidden="true"></div>
+    <div class="insights-directory__hero-gradient" aria-hidden="true"></div>
+
+    <div class="insights-directory__hero-inner">
+      <div class="insights-directory__hero-top">
+        <div class="insights-directory__hero-copy">
+          <header class="insights-directory__masthead">
+            <h1 class="insights-directory__title">{{ 'Market insights'|t }}</h1>
+            <p class="insights-directory__lede">{{ 'Data, analysis, and sector briefings to help you understand opportunities in Saudi Arabia and the region.'|t }}</p>
+          </header>
+        </div>
+      </div>
+
+      {% if exposed %}
+        <div class="insights-directory__hero-filters view-filters">
+          {{ exposed }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="insights-directory__shell">
+
+    {% if attachment_before %}
+      <section class="insights-directory__featured-wrap" aria-labelledby="insights-directory-featured-heading">
+        <h2 id="insights-directory-featured-heading" class="insights-directory__section-title">{{ 'Featured insights'|t }}</h2>
+        <div class="insights-directory__featured insights-directory__featured-grid">
+          {{ attachment_before }}
+        </div>
+      </section>
+    {% endif %}
+
+    <div class="insights-directory__toolbar">
+      <div class="insights-directory__toolbar-intro">
+        <h2 class="insights-directory__grid-heading">{{ 'Latest insights'|t }}</h2>
+        <p class="insights-directory__grid-lede">{{ 'Browse the full library — filter by category, sector, or region.'|t }}</p>
+      </div>
+    </div>
+
+    <div class="insights-directory__panel insights-directory__panel--list">
+      {% if rows %}
+        <div class="view-content insights-directory__latest">
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <div class="view-empty">
+          {{ empty }}
+        </div>
+      {% endif %}
+      {% if pager %}
+        <div class="insights-directory__pager">
+          {{ pager }}
+        </div>
+      {% endif %}
+    </div>
+
+    <section class="insights-directory__newsletter" aria-label="{{ 'Subscribe'|t }}">
+      <div class="insights-directory__newsletter-inner">
+        <div class="insights-directory__newsletter-copy">
+          <h2 class="insights-directory__newsletter-title">{{ 'Stay updated'|t }}</h2>
+          <p class="insights-directory__newsletter-lede">{{ 'Get event and market updates — we only send what is relevant to you.'|t }}</p>
+        </div>
+        <div class="insights-directory__newsletter-form" aria-label="{{ 'Insights signup'|t }}">
+          {{ motaded_event_updates_form }}
+        </div>
+      </div>
+    </section>
+
+    {% if attachment_after %}
+      <div class="attachment attachment-after">
+        {{ attachment_after }}
+      </div>
+    {% endif %}
+    {% if footer %}
+      <div class="view-footer">
+        {{ footer }}
+      </div>
+    {% endif %}
+  </div>
+</div>

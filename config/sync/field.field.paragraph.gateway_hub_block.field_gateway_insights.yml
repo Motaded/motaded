@@ -1,0 +1,29 @@
+uuid: 6e7f8091-a2b3-4c5d-8e0f-1a2b3c4d5e6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_insights
+    - node.type.market_insight
+    - paragraphs.paragraphs_type.gateway_hub_block
+id: paragraph.gateway_hub_block.field_gateway_insights
+field_name: field_gateway_insights
+entity_type: paragraph
+bundle: gateway_hub_block
+label: 'Latest insights'
+description: 'Select 3 market insights.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      market_insight: market_insight
+    sort:
+      field: created
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

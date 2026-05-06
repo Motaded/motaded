@@ -1,0 +1,10 @@
+uuid: 9d2b39b1-3a2d-4a2e-9b6b-7f6d9b1a2c3d
+langcode: en
+status: true
+dependencies: {  }
+id: gateway_hub_block
+label: 'Gateway hub block'
+icon_uuid: null
+icon_default: null
+description: 'Centered header + 4 rich cards (platforms/sectors/events/insights) + support strip.'
+behavior_plugins: {  }

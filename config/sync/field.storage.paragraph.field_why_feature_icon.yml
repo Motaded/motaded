@@ -15,6 +15,15 @@ settings:
       value: people
       label: People
     -
+      value: medal
+      label: 'Medal / expertise'
+    -
+      value: arrows
+      label: 'Arrows / end-to-end'
+    -
+      value: shield_check
+      label: 'Shield check / compliance'
+    -
       value: clock
       label: Clock
     -

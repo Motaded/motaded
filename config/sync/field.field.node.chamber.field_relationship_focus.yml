@@ -1,0 +1,19 @@
+uuid: 428183d0-9811-474b-a856-0c56ad1454ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_relationship_focus
+    - node.type.chamber
+id: node.chamber.field_relationship_focus
+field_name: field_relationship_focus
+entity_type: node
+bundle: chamber
+label: 'Relationship focus'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

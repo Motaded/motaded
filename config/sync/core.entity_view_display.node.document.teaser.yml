@@ -1,0 +1,61 @@
+uuid: a1000002-2003-4000-8000-000000000001
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.document.field_category
+    - field.field.node.document.field_country
+    - field.field.node.document.field_document
+    - field.field.node.document.field_document_type
+    - field.field.node.document.field_featured
+    - field.field.node.document.field_short_description
+    - field.field.node.document.field_source_link
+    - field.field.node.document.field_year
+    - node.type.document
+  module:
+    - media
+    - options
+    - user
+id: node.document.teaser
+targetEntityType: node
+bundle: document
+mode: teaser
+content:
+  field_category:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_document_type:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_short_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  field_country: true
+  field_document: true
+  field_featured: true
+  field_source_link: true
+  field_year: true
+  langcode: true
+  search_api_excerpt: true

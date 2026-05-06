@@ -1,0 +1,10 @@
+uuid: 2a0c6a53-2c5e-4e62-9ad2-5a9a6c1d2c4b
+langcode: en
+status: true
+dependencies: {  }
+id: gateway_item
+label: 'Gateway item'
+icon_uuid: null
+icon_default: null
+description: 'Icon + title + body + link.'
+behavior_plugins: {  }

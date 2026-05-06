@@ -1,0 +1,10 @@
+uuid: ad55866b-5447-4cf6-b18d-87e1d4aeb411
+langcode: en
+status: true
+dependencies: {  }
+id: event_content_item
+label: 'Event content item'
+icon_uuid: null
+icon_default: null
+description: 'Title + body block for Why attend, What we offer, Who should attend, Agenda sections.'
+behavior_plugins: {  }

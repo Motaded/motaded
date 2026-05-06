@@ -1,0 +1,19 @@
+uuid: a1000001-0000-4000-8000-000000000067
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_subtitle
+    - node.type.platform
+id: node.platform.field_subtitle
+field_name: field_subtitle
+entity_type: node
+bundle: platform
+label: Subtitle
+description: 'Supporting line under the title in the hero.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

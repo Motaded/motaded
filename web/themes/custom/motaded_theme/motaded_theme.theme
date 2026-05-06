@@ -3,6 +3,8 @@
 require_once __DIR__ . '/includes/motaded_theme.image.inc';
 
 use Drupal\block\BlockInterface;
+use Drupal\block\Entity\Block;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
@@ -10,12 +12,36 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\views\Plugin\views\field\FieldPluginInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
+
+/**
+ * Inline SVG icon for sector / stats presets (matches Glance block set).
+ */
+function motaded_theme_glance_icon_markup(?string $key): Markup {
+  $key = ($key !== NULL && $key !== '') ? $key : 'chart_up';
+  $svg = match ($key) {
+    'money' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16v10H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 7V5h10v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'users' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'pie' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v10h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.4 14a9.5 9.5 0 1 1-11.4-11.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'building' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 7h2M9 11h2M9 15h2M13 7h2M13 11h2M13 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'chart_up' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'layers' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 3.5 8.2 12 13.4 20.5 8.2 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.5 12.1 12 17.3 20.5 12.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'globe' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'leaf' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 4s-8 0-12 4-4 12-4 12 8 0 12-4 4-12 4-12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 16c2-2 6-6 12-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'handshake' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 12l2-2a3 3 0 0 1 4 0l2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12l5-5 4 4-5 5H3v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M21 12l-5-5-4 4 5 5h4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'target' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'flag' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 22V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 4h10l-1.5 3L15 10H5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    default => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  };
+  return Markup::create($svg);
+}
 
 /**
  * LCP: fetchpriority=high for responsive hero banner images.
@@ -58,6 +84,591 @@ function motaded_theme_preprocess_html(array &$variables): void {
   $variables['motaded_suppress_seo_tracking'] = _motaded_theme_suppress_seo_tracking();
 }
 
+/**
+ * Next published event whose start datetime is today or later (for /events hero).
+ */
+function _motaded_theme_events_directory_next_featured_nid(): ?int {
+  try {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $today = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+    $nids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->condition('field_event_start.value', $today . 'T00:00:00', '>=')
+      ->sort('field_event_start.value', 'ASC')
+      ->range(0, 1)
+      ->execute();
+    if ($nids !== []) {
+      return (int) reset($nids);
+    }
+  }
+  catch (\Exception $e) {
+    return NULL;
+  }
+  return NULL;
+}
+
+/**
+ * Hero stat strip for /events (counts from content + taxonomies).
+ *
+ * @return array<int, array{value: string, label: string, icon: string}>
+ */
+function _motaded_theme_events_directory_stats(): array {
+  try {
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $today = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+
+    $upcoming = (int) $node_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->condition('field_event_start.value', $today . 'T00:00:00', '>=')
+      ->count()
+      ->execute();
+
+    $total = (int) $node_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'event')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->count()
+      ->execute();
+
+    $region_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'region')
+      ->count()
+      ->execute();
+
+    $industry_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'taxonomy')
+      ->count()
+      ->execute();
+
+    $suffix = static function (int $n): string {
+      return $n > 0 ? (string) $n . '+' : '0';
+    };
+
+    $volume = static function (int $n) use ($suffix): string {
+      if ($n >= 1000) {
+        $k = $n / 1000;
+        $rounded = abs($k - round($k)) < 0.05 ? (string) (int) round($k) : number_format($k, 1, '.', '');
+        return $rounded . 'K+';
+      }
+      return $suffix($n);
+    };
+
+    return [
+      [
+        'value' => $suffix($upcoming),
+        'label' => (string) t('Upcoming events'),
+        'icon' => 'calendar',
+      ],
+      [
+        'value' => $volume($total),
+        'label' => (string) t('Events hosted'),
+        'icon' => 'users',
+      ],
+      [
+        'value' => $suffix($region_count),
+        'label' => (string) t('Cities'),
+        'icon' => 'map',
+      ],
+      [
+        'value' => (string) max(0, $industry_count),
+        'label' => (string) t('Industries'),
+        'icon' => 'document',
+      ],
+    ];
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Hero stat strip for /platforms (counts from content + taxonomies).
+ */
+function _motaded_theme_platforms_directory_stats(): array {
+  try {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'platform')
+      ->condition('status', 1);
+    $platforms_count = (int) $query->count()->execute();
+
+    $cat_count = (int) \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'platform_category')
+      ->count()
+      ->execute();
+
+    $region_count = (int) \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'region')
+      ->count()
+      ->execute();
+
+    return [
+      [
+        'label' => (string) t('Official platforms'),
+        'value' => $platforms_count > 0 ? $platforms_count . '+' : '—',
+        'icon' => 'grid',
+      ],
+      [
+        'label' => (string) t('Categories'),
+        'value' => $cat_count > 0 ? $cat_count . '+' : '—',
+        'icon' => 'layers',
+      ],
+      [
+        'label' => (string) t('Regions'),
+        'value' => $region_count > 0 ? $region_count . '+' : '—',
+        'icon' => 'map',
+      ],
+    ];
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Category chips row for /platforms (quick filter links).
+ */
+function _motaded_theme_platforms_directory_category_chips(): array {
+  try {
+    $t_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $tids = $t_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'platform_category')
+      ->sort('weight', 'ASC')
+      ->sort('name', 'ASC')
+      ->range(0, 8)
+      ->execute();
+    if (!$tids) {
+      return [];
+    }
+    $terms = $t_storage->loadMultiple($tids);
+    $chips = [];
+    foreach ($terms as $term) {
+      if (!$term instanceof TermInterface) {
+        continue;
+      }
+      $chips[] = [
+        'label' => $term->label(),
+        'url' => Url::fromUserInput('/platforms', [
+          'query' => [
+            'field_category_target_id' => (string) $term->id(),
+          ],
+        ])->toString(),
+      ];
+    }
+    return $chips;
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+}
+
+/**
+ * Per-category node counts for library sidebar (filtered by active tab’s document types).
+ *
+ * @param int[] $document_type_tids
+ *   Target IDs for field_document_type.
+ */
+function _motaded_theme_library_category_counts(array $document_type_tids): array {
+  if ($document_type_tids === []) {
+    return [];
+  }
+  try {
+    $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('document_category', 0, NULL, TRUE);
+  }
+  catch (\Throwable $e) {
+    return [];
+  }
+  $rows = [];
+  foreach ($tree as $term) {
+    if (!$term instanceof TermInterface) {
+      continue;
+    }
+    $tid = (int) $term->id();
+    try {
+      $count = (int) \Drupal::entityQuery('node')
+        ->accessCheck(TRUE)
+        ->condition('type', 'document')
+        ->condition('status', 1)
+        ->condition('field_category', $tid)
+        ->condition('field_document_type', $document_type_tids, 'IN')
+        ->count()
+        ->execute();
+    }
+    catch (\Throwable $e) {
+      $count = 0;
+    }
+    $rows[] = [
+      'tid' => $tid,
+      'label' => $term->label(),
+      'count' => $count,
+    ];
+  }
+  return $rows;
+}
+
+/**
+ * Sets tab state, tab URLs, and category counts for Library view displays.
+ */
+function motaded_theme_preprocess_views_view_library_tabs(array &$variables): void {
+  $request = \Drupal::request();
+  $section = $request->query->get('library_section', 'templates');
+  if (!is_string($section) || !in_array($section, ['templates', 'regulations'], TRUE)) {
+    $section = 'templates';
+  }
+  $variables['library_section'] = $section;
+
+  $query_all = $request->query->all();
+  unset($query_all['library_section'], $query_all['q']);
+  $query_scoped = $query_all + ['library_section' => $section];
+  try {
+    $variables['library_url_templates'] = Url::fromRoute('<current>', [], [
+      'query' => $query_all + ['library_section' => 'templates'],
+    ])->toString();
+    $variables['library_url_regulations'] = Url::fromRoute('<current>', [], [
+      'query' => $query_all + ['library_section' => 'regulations'],
+    ])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_url_templates'] = '';
+    $variables['library_url_regulations'] = '';
+  }
+
+  $type_tids = function_exists('motaded_custom_library_section_document_type_tids')
+    ? motaded_custom_library_section_document_type_tids($section)
+    : [];
+  $variables['library_category_counts'] = _motaded_theme_library_category_counts($type_tids);
+
+  $active_cat = $request->query->get('field_category_target_id');
+  $active_cat = $active_cat !== NULL && $active_cat !== '' ? (string) $active_cat : '';
+
+  $sidebar = [];
+  foreach ($variables['library_category_counts'] as $row) {
+    $tid = (string) $row['tid'];
+    $q_cat = $query_scoped;
+    $q_cat['field_category_target_id'] = $tid;
+    try {
+      $sidebar[] = [
+        'label' => $row['label'],
+        'count' => $row['count'],
+        'active' => $active_cat !== '' && $active_cat === $tid,
+        'url' => Url::fromRoute('<current>', [], ['query' => $q_cat])->toString(),
+      ];
+    }
+    catch (\Throwable $e) {
+      $sidebar[] = [
+        'label' => $row['label'],
+        'count' => $row['count'],
+        'active' => FALSE,
+        'url' => '',
+      ];
+    }
+  }
+  $variables['library_sidebar_links'] = $sidebar;
+
+  try {
+    $q_all = $query_scoped;
+    unset($q_all['field_category_target_id']);
+    $variables['library_category_all_url'] = Url::fromRoute('<current>', [], ['query' => $q_all])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_category_all_url'] = '';
+  }
+  $variables['library_category_all_active'] = $active_cat === '';
+
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+  $base = base_path() . $theme_path . '/img/';
+  $icons = [
+    'icon-target.svg',
+    'service-cost.svg',
+    'icon-globe.svg',
+    'icon-growth.svg',
+    'icon-checkmark-circle.svg',
+  ];
+  $i = 0;
+  foreach ($variables['library_sidebar_links'] as &$link_row) {
+    $link_row['icon_url'] = $base . ($icons[$i % count($icons)]);
+    $i++;
+  }
+  unset($link_row);
+
+  try {
+    $variables['library_contact_url'] = Url::fromUri('internal:/contact-us')->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['library_contact_url'] = '/contact-us';
+  }
+
+  $variables['library_sidebar_cta_icon_url'] = $base . 'library-headset.svg';
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function motaded_theme_preprocess_views_view(&$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  // Listing page (/events) only — home strip uses events_home library via block.
+  $display_id = $view->current_display ?? '';
+  if ($view->id() === 'events' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/events_directory';
+    $variables['attributes']['class'][] = 'events-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $variables['motaded_events_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_events_stats'] = _motaded_theme_events_directory_stats();
+    $featured_nid = _motaded_theme_events_directory_next_featured_nid();
+    \Drupal::request()->attributes->set('motaded_events_featured_nid', $featured_nid);
+    $variables['motaded_events_featured_nid'] = $featured_nid;
+    $variables['motaded_events_featured'] = NULL;
+    if ($featured_nid !== NULL) {
+      $fn = Node::load($featured_nid);
+      if ($fn instanceof NodeInterface && $fn->bundle() === 'event' && $fn->access('view')) {
+        $build = \Drupal::entityTypeManager()->getViewBuilder('node')->view($fn, 'teaser');
+        $build['#motaded_featured_teaser'] = TRUE;
+        $variables['motaded_events_featured'] = $build;
+      }
+    }
+
+    // Render the webform signup inside the view template without Twig Tweak helpers.
+    // Twig Tweak's drupal_entity_form() cannot render the Webform entity directly.
+    // Render via the webform_block plugin (same as placing a Webform block).
+    $variables['motaded_event_updates_form'] = [];
+    try {
+      if (\Drupal::moduleHandler()->moduleExists('webform')) {
+        $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+          'webform_id' => 'event_updates',
+          'label_display' => '0',
+          'default_data' => '',
+          'redirect' => FALSE,
+          'lazy' => TRUE,
+        ]);
+        if ($block && $block->access(\Drupal::currentUser())) {
+          $variables['motaded_event_updates_form'] = $block->build();
+        }
+      }
+    }
+    catch (\Throwable $e) {
+      $variables['motaded_event_updates_form'] = [];
+    }
+  }
+
+  if ($view->id() === 'insights' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/insights_directory';
+    $variables['attributes']['class'][] = 'insights-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $variables['motaded_insights_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+
+    $variables['motaded_event_updates_form'] = [];
+    try {
+      if (\Drupal::moduleHandler()->moduleExists('webform')) {
+        $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+          'webform_id' => 'event_updates',
+          'label_display' => '0',
+          'default_data' => '',
+          'redirect' => FALSE,
+          'lazy' => TRUE,
+        ]);
+        if ($block && $block->access(\Drupal::currentUser())) {
+          $variables['motaded_event_updates_form'] = $block->build();
+        }
+      }
+    }
+    catch (\Throwable $e) {
+      $variables['motaded_event_updates_form'] = [];
+    }
+  }
+
+  if ($view->id() === 'platforms' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/platforms_directory';
+    $variables['attributes']['class'][] = 'platforms-directory-page';
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    // Reuse the same hero background asset until a dedicated one is added.
+    $variables['motaded_platforms_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_platforms_stats'] = _motaded_theme_platforms_directory_stats();
+    $variables['motaded_platforms_category_chips'] = _motaded_theme_platforms_directory_category_chips();
+  }
+
+  if ($view->id() === 'chambers' && $display_id === 'page_1') {
+    $variables['#attached']['library'][] = 'motaded_theme/chambers_network';
+  }
+
+  if ($view->id() === 'services' && $display_id === 'block_2') {
+    $variables['#attached']['library'][] = 'motaded_theme/services_home_block';
+
+    $input = $view->getExposedInput();
+    $tid = $input['field_taxonomy_target_id'] ?? NULL;
+    if ($tid === NULL || $tid === '' || $tid === 'All') {
+      $tid = \Drupal::request()->query->get('field_taxonomy_target_id');
+    }
+    $tid = $tid !== NULL && $tid !== '' ? (string) $tid : '';
+
+    $filter_plugin = $view->display_handler->getHandler('filter', 'field_taxonomy_target_id');
+    $allowed = [];
+    if ($filter_plugin && isset($filter_plugin->options['value']) && is_array($filter_plugin->options['value'])) {
+      foreach ($filter_plugin->options['value'] as $key => $enabled) {
+        if ($enabled) {
+          $allowed[] = (string) $key;
+        }
+      }
+    }
+    if ($allowed !== [] && ($tid === '' || !in_array($tid, $allowed, TRUE))) {
+      $tid = $allowed[0];
+    }
+    elseif ($tid === '') {
+      $tid = '152';
+    }
+
+    $variables['services_home_active_tid'] = $tid;
+    $variables['services_home_term_name'] = '';
+    $variables['services_home_term_description'] = [];
+
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $term = $term_storage->load($tid);
+    if ($term instanceof TermInterface) {
+      $variables['services_home_term_name'] = $term->label();
+      if ($term->hasField('description') && !$term->get('description')->isEmpty()) {
+        $format = $term->get('description')->format ?: filter_fallback_format();
+        $variables['services_home_term_description'] = [
+          '#type' => 'processed_text',
+          '#text' => $term->get('description')->value,
+          '#format' => $format,
+        ];
+      }
+    }
+
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $map = [
+      '152' => 'service-cost.svg',
+      '154' => 'icon-globe.svg',
+      '156' => 'icon-growth.svg',
+    ];
+    $icon_file = $map[$tid] ?? 'icon-target.svg';
+    $variables['services_home_category_icon_url'] = base_path() . $theme_path . '/img/' . $icon_file;
+
+    try {
+      $variables['services_home_category_more_url'] = Url::fromUri('internal:/services', [
+        'query' => ['field_taxonomy_target_id' => $tid],
+      ])->toString();
+    }
+    catch (\Throwable $e) {
+      $variables['services_home_category_more_url'] = '/services?field_taxonomy_target_id=' . rawurlencode($tid);
+    }
+  }
+
+  if ($view->id() === 'library' && ($display_id === 'block_1' || $display_id === 'page_1')) {
+    motaded_theme_preprocess_views_view_library_tabs($variables);
+    if ($display_id === 'page_1') {
+      $variables['#attached']['library'][] = 'motaded_theme/library_directory';
+      $variables['attributes']['class'][] = 'library-directory-page';
+      $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+      $variables['motaded_library_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    }
+    else {
+      $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
+    }
+  }
+
+  // Home list keeps an exposed form in the DOM (visually hidden in CSS) so Views AJAX
+  // can apply the same filter values as the calendar column when we sync in events-home.js.
+}
+
+/**
+ * Events directory: drop the featured row from the grid (page 0) to avoid duplication.
+ */
+function motaded_theme_preprocess_views_view_unformatted__events__page_1(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->getCurrentPage() !== 0) {
+    return;
+  }
+  $featured = \Drupal::request()->attributes->get('motaded_events_featured_nid');
+  if ($featured === NULL || $featured === '') {
+    return;
+  }
+  $featured = (int) $featured;
+  if ($featured < 1) {
+    return;
+  }
+  foreach ($variables['rows'] as $delta => $row) {
+    $content = $row['content'] ?? [];
+    $node = $content['#node'] ?? NULL;
+    if ($node instanceof NodeInterface && (int) $node->id() === $featured) {
+      unset($variables['rows'][$delta]);
+      break;
+    }
+  }
+  $variables['rows'] = array_values($variables['rows']);
+}
+
+/**
+ * Insights directory: remove featured rows from the main list (page 0) to avoid duplication.
+ */
+function motaded_theme_preprocess_views_view_unformatted__insights__page_1(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->getCurrentPage() !== 0) {
+    return;
+  }
+
+  $sub = Views::getView('insights');
+  if (!$sub) {
+    return;
+  }
+  $sub->setDisplay('attachment_featured');
+  $sub->setExposedInput($view->getExposedInput());
+  $sub->execute();
+
+  $featured_nids = [];
+  foreach ($sub->result as $row) {
+    $nid = NULL;
+    if (isset($row->_entity) && $row->_entity instanceof NodeInterface) {
+      $nid = (int) $row->_entity->id();
+    }
+    elseif (!empty($row->nid)) {
+      $nid = (int) $row->nid;
+    }
+    if ($nid) {
+      $featured_nids[] = $nid;
+    }
+  }
+  $featured_nids = array_values(array_unique($featured_nids));
+  if ($featured_nids === []) {
+    return;
+  }
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $content = $row['content'] ?? [];
+    $node = $content['#node'] ?? NULL;
+    if ($node instanceof NodeInterface && in_array((int) $node->id(), $featured_nids, TRUE)) {
+      unset($variables['rows'][$delta]);
+    }
+  }
+  $variables['rows'] = array_values($variables['rows']);
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
 function motaded_theme_preprocess_block(array &$variables) {
   // Services page: hide standalone exposed block; we render it inside the view.
   if (($variables['elements']['#plugin_id'] ?? '') === 'views_exposed_filter_block:services-page_1') {
@@ -248,6 +859,12 @@ function motaded_theme_preprocess_page(&$variables) {
   // Service (Basic page + Display on services): full-width hero; sidebar renders in node template.
   $route_node = \Drupal::routeMatch()->getParameter('node');
   if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'platform'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $variables['platform_page_full_bleed'] = TRUE;
+  }
+
+  if ($route_node instanceof NodeInterface
     && $route_node->bundle() === 'page'
     && $route_node->hasField('field_display_on_services')
     && !$route_node->get('field_display_on_services')->isEmpty()
@@ -271,11 +888,9 @@ function motaded_theme_preprocess_page(&$variables) {
       $variables['page']['below_content']['more_on_topic_related'] = $more_on_topic;
     }
   }
+
 }
 
-/**
- * Truncates HTML to a plain-text string for hero intro fallback.
- */
 /**
  * Builds a render array for the active theme's sidebar_second region.
  *
@@ -303,6 +918,9 @@ function motaded_theme_build_sidebar_second_region(): array {
   return $build;
 }
 
+/**
+ * Truncates HTML to a plain-text string for hero intro fallback.
+ */
 function motaded_theme_plain_text_truncate(string $html, int $max_length): string {
   $text = trim(preg_replace('/\s+/u', ' ', strip_tags($html)));
   if ($text === '') {
@@ -389,6 +1007,131 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['news_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
   }
 
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
+    _motaded_theme_preprocess_event_node_full($variables, $node);
+  }
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'teaser') {
+    _motaded_theme_preprocess_event_node_teaser($variables, $node);
+    if (!empty($variables['elements']['#motaded_featured_teaser'])) {
+      $variables['attributes']['class'][] = 'event-teaser--featured-hero';
+    }
+  }
+
+  if ($node->bundle() === 'market_insight' && ($variables['view_mode'] ?? '') === 'teaser') {
+    _motaded_theme_preprocess_market_insight_teaser($variables, $node);
+  }
+
+  // Platform (full): CTA / external URLs + marketing layout library.
+  if ($node->bundle() === 'platform' && ($variables['view_mode'] ?? '') === 'full') {
+    $variables['#attached']['library'][] = 'motaded_theme/platform_node';
+    // Defaults so Twig never misses variables (e.g. partial caches).
+    $variables += [
+      'platform_listing_url' => Url::fromUserInput('/platforms')->toString(),
+      'platform_contact_url' => Url::fromUserInput('/contact-us')->toString(),
+      'platform_cta_url' => NULL,
+      'platform_cta_label' => (string) t('Start your setup'),
+      'platform_external_url' => NULL,
+      'platform_external_label' => (string) t('Visit official website'),
+      'platform_external_new_window' => FALSE,
+      'platform_wa_url' => NULL,
+      'platform_tel_url' => NULL,
+    ];
+    if ($node->hasField('field_cta_text') && !$node->get('field_cta_text')->isEmpty()) {
+      $variables['platform_cta_label'] = trim((string) $node->get('field_cta_text')->value);
+    }
+    if ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+      $link = $node->get('field_cta_link')->first();
+      if ($link && $link->getUrl()) {
+        $variables['platform_cta_url'] = $link->getUrl()->toString();
+      }
+    }
+    if ($node->hasField('field_external_link') && !$node->get('field_external_link')->isEmpty()) {
+      $ext = $node->get('field_external_link')->first();
+      if ($ext && $ext->getUrl()) {
+        $url = $ext->getUrl();
+        $variables['platform_external_url'] = $url->toString();
+        $variables['platform_external_new_window'] = $url->isExternal();
+        $title = trim((string) $ext->title);
+        if ($title !== '') {
+          $variables['platform_external_label'] = $title;
+        }
+      }
+    }
+    $page_url = \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBasePath() . \Drupal::request()->getPathInfo();
+    $variables['platform_wa_url'] = 'https://wa.me/?text=' . rawurlencode($node->getTitle() . ' — ' . $page_url);
+    $variables['platform_tel_url'] = NULL;
+    $tel = Settings::get('motaded_platform_phone', '');
+    if (is_string($tel) && $tel !== '') {
+      $digits = preg_replace('/\D+/', '', $tel);
+      if ($digits !== '') {
+        $variables['platform_tel_url'] = 'tel:' . $digits;
+      }
+    }
+  }
+
+  // Sector page (full): layout + listing URL for breadcrumb (hub links to /sectors).
+  if ($node->bundle() === 'sector_page'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])) {
+    $variables['#attached']['library'][] = 'motaded_theme/sector_page';
+    $variables['sector_listing_url'] = Url::fromUserInput('/sectors')->toString();
+  }
+
+  // Sector_page (sector_card): tile for homepage Views / key sectors block.
+  if ($node->bundle() === 'sector_page' && ($variables['view_mode'] ?? '') === 'sector_card') {
+    $variables['#attached']['library'][] = 'motaded_theme/sector_card';
+    $variables['sector_card_has_custom_icon'] = FALSE;
+    $variables['sector_card_icon_custom'] = [];
+    if ($node->hasField('field_sector_card_icon_media') && !$node->get('field_sector_card_icon_media')->isEmpty()) {
+      $media = $node->get('field_sector_card_icon_media')->entity;
+      if ($media) {
+        $variables['sector_card_icon_custom'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($media, 'default');
+        $variables['sector_card_has_custom_icon'] = TRUE;
+      }
+    }
+    $icon_key = '';
+    if (!$variables['sector_card_has_custom_icon']
+      && $node->hasField('field_sector_card_icon')
+      && !$node->get('field_sector_card_icon')->isEmpty()) {
+      $icon_key = (string) $node->get('field_sector_card_icon')->value;
+    }
+    $variables['sector_card_icon_markup'] = motaded_theme_glance_icon_markup($icon_key);
+    $kpis = [];
+    if ($node->hasField('field_sector_kpis')) {
+      foreach ($node->get('field_sector_kpis') as $item) {
+        $sub = $item->entity;
+        if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+          $gk = !$sub->get('field_glance_icon')->isEmpty() ? (string) $sub->get('field_glance_icon')->value : '';
+          $kpis[] = [
+            'icon_markup' => motaded_theme_glance_icon_markup($gk),
+            'value' => !$sub->get('field_glance_value')->isEmpty() ? trim((string) $sub->get('field_glance_value')->value) : '',
+            'label' => !$sub->get('field_glance_title')->isEmpty() ? trim((string) $sub->get('field_glance_title')->value) : '',
+          ];
+        }
+      }
+    }
+    $variables['sector_card_kpis'] = $kpis;
+    $variables['sector_card_url'] = $node->toUrl()->toString();
+  }
+
+  // Market Insight (platform full): read time for hero meta (breadcrumb uses page region).
+  if ($node->bundle() === 'market_insight'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])
+    && $node->hasField('field_insight_shell')
+    && $node->get('field_insight_shell')->value === 'platform') {
+    $variables['market_insight_read_mins'] = NULL;
+    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+      $plain = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('body')->value)));
+      if ($plain !== '') {
+        $words = count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY));
+        $variables['market_insight_read_mins'] = max(1, (int) ceil($words / 200));
+      }
+    }
+  }
+
   // Service page (Basic page + Display on services): compact hero data.
   if ($node->bundle() === 'page'
     && ($variables['view_mode'] ?? '') === 'full'
@@ -429,12 +1172,414 @@ function motaded_theme_preprocess_node(&$variables) {
     }
   }
 
+  // Event (full): hide fields rendered manually in node--event--full.html.twig.
+  if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
+    foreach ([
+      'field_hero_image',
+      'field_featured_image',
+      'field_event_start',
+      'field_event_end',
+      'field_location',
+      'field_event_type',
+      'field_region',
+      'field_category',
+      'field_cta_type',
+      'field_cta_text',
+      'field_cta_link',
+      'field_secondary_cta',
+      'field_featured',
+      'field_meeting_enabled',
+      'body',
+      'field_why_attend',
+      'field_what_we_offer',
+      'field_who_should_attend',
+      'field_agenda',
+      'field_gallery',
+      'field_partner_logos',
+      'field_tags',
+      'field_meta',
+      'addtoany',
+      'links',
+    ] as $hide_field) {
+      unset($variables['content'][$hide_field]);
+    }
+  }
+
   // Add step numbers to field_steps_to_obtain items.
   if ($node->bundle() == 'page' && !empty($variables['content']['field_steps_to_obtain'])) {
     foreach ($variables['content']['field_steps_to_obtain'] as $i => &$item) {
       if (is_numeric($i)) {
         $item['#number'] = $i;
       }
+    }
+  }
+}
+
+/**
+ * Preprocess variables for Event nodes (full page).
+ */
+function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+  $view_builder = $em->getViewBuilder('node');
+  $date_formatter = \Drupal::service('date.formatter');
+  $langcode = $node->language()->getId();
+
+  $variables['event_hero_media'] = [];
+  $media = NULL;
+  if ($node->hasField('field_hero_image') && !$node->get('field_hero_image')->isEmpty()) {
+    $media = $node->get('field_hero_image')->entity;
+  }
+  elseif ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+    $media = $node->get('field_featured_image')->entity;
+  }
+  if ($media) {
+    $variables['event_hero_media'] = $em->getViewBuilder('media')->view($media, 'default');
+  }
+
+  $variables['event_body'] = [];
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $variables['event_body'] = $view_builder->viewField($node->get('body'), [
+      'label' => 'hidden',
+      'type' => 'text_default',
+      'weight' => 0,
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  foreach ([
+    'event_why' => 'field_why_attend',
+    'event_highlights' => 'field_what_we_offer',
+    'event_audience' => 'field_who_should_attend',
+    'event_agenda' => 'field_agenda',
+  ] as $var => $field) {
+    $variables[$var] = [];
+    if ($node->hasField($field) && !$node->get($field)->isEmpty()) {
+      $variables[$var] = $view_builder->viewField($node->get($field), [
+        'label' => 'hidden',
+        'type' => 'entity_reference_revisions_entity_view',
+        'weight' => 0,
+        'settings' => [
+          'view_mode' => 'default',
+          'link' => '',
+        ],
+        'third_party_settings' => [],
+      ]);
+    }
+  }
+
+  $variables['event_gallery'] = [];
+  if ($node->hasField('field_gallery') && !$node->get('field_gallery')->isEmpty()) {
+    $variables['event_gallery'] = $view_builder->viewField($node->get('field_gallery'), [
+      'label' => 'hidden',
+      'type' => 'photoswipe_field_formatter',
+      'weight' => 0,
+      'settings' => [
+        'photoswipe_thumbnail_style_first' => '',
+        'photoswipe_thumbnail_style' => 'media_gallery_image',
+        'photoswipe_image_style' => '',
+        'photoswipe_reference_image_field' => 'field_media_image',
+        'photoswipe_view_mode' => 'default',
+        'image_loading' => [
+          'attribute' => 'lazy',
+        ],
+      ],
+      'third_party_settings' => [],
+    ]);
+  }
+  $variables['event_partners'] = [];
+  if ($node->hasField('field_partner_logos') && !$node->get('field_partner_logos')->isEmpty()) {
+    $variables['event_partners'] = $view_builder->viewField($node->get('field_partner_logos'), [
+      'label' => 'hidden',
+      'type' => 'entity_reference_entity_view',
+      'weight' => 0,
+      'settings' => ['view_mode' => 'default', 'link' => FALSE],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  $variables['event_date_line'] = '';
+  $variables['event_time_line'] = '';
+  $variables['event_datetime_iso_start'] = '';
+  $variables['event_datetime_iso_end'] = '';
+  if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+    $start_ts = strtotime($node->get('field_event_start')->value);
+    if ($start_ts) {
+      $variables['event_date_line'] = $date_formatter->format($start_ts, 'custom', 'l, j F Y', NULL, $langcode);
+      $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode);
+      $variables['event_datetime_iso_start'] = gmdate('c', $start_ts);
+    }
+  }
+  if ($node->hasField('field_event_end') && !$node->get('field_event_end')->isEmpty()) {
+    $end_ts = strtotime($node->get('field_event_end')->value);
+    if ($end_ts) {
+      $variables['event_datetime_iso_end'] = gmdate('c', $end_ts);
+      if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+        $start_ts = strtotime($node->get('field_event_start')->value);
+        if ($start_ts && date('Ymd', $start_ts) === date('Ymd', $end_ts)) {
+          $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode)
+            . ' – ' . $date_formatter->format($end_ts, 'custom', 'g:i a', NULL, $langcode);
+        }
+      }
+    }
+  }
+
+  $variables['event_location_plain'] = '';
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    $variables['event_location_plain'] = trim((string) $node->get('field_location')->value);
+  }
+  $variables['event_maps_url'] = $variables['event_location_plain'] !== ''
+    ? 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($variables['event_location_plain'])
+    : '';
+
+  $variables['event_calendar_url'] = _motaded_theme_event_google_calendar_url($node);
+
+  $variables['event_register_url'] = '';
+  $variables['event_register_title'] = (string) t('Register now');
+  if ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+    $link_item = $node->get('field_cta_link')->first();
+    if ($link_item && $link_item->get('uri') && $link_item->get('uri')->getString() !== '') {
+      try {
+        $variables['event_register_url'] = Url::fromUri($link_item->get('uri')->getString(), ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable $e) {
+        $variables['event_register_url'] = '';
+      }
+      $title = $link_item->get('title')->getString();
+      if (trim($title) !== '') {
+        $variables['event_register_title'] = trim($title);
+      }
+    }
+  }
+
+  $variables['event_secondary_url'] = '';
+  $variables['event_secondary_title'] = (string) t('Add to calendar');
+  if ($node->hasField('field_secondary_cta') && !$node->get('field_secondary_cta')->isEmpty()) {
+    $sec = $node->get('field_secondary_cta')->first();
+    if ($sec && $sec->get('uri') && $sec->get('uri')->getString() !== '') {
+      try {
+        $variables['event_secondary_url'] = Url::fromUri($sec->get('uri')->getString(), ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable $e) {
+        $variables['event_secondary_url'] = '';
+      }
+      $st = $sec->get('title')->getString();
+      if (trim($st) !== '') {
+        $variables['event_secondary_title'] = trim($st);
+      }
+    }
+  }
+  if ($variables['event_secondary_url'] === '' && !empty($variables['event_calendar_url'])) {
+    $variables['event_secondary_url'] = $variables['event_calendar_url'];
+  }
+
+  $variables['event_type_label'] = '';
+  if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
+    $term = $node->get('field_event_type')->entity;
+    if ($term) {
+      $variables['event_type_label'] = $term->label();
+    }
+  }
+
+  $variables['event_region_label'] = '';
+  if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+    $term = $node->get('field_region')->entity;
+    if ($term) {
+      $variables['event_region_label'] = $term->label();
+    }
+  }
+
+  $variables['event_category_label'] = '';
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term) {
+      $variables['event_category_label'] = $term->label();
+    }
+  }
+
+  $variables['event_tags'] = [];
+  if ($node->hasField('field_tags') && !$node->get('field_tags')->isEmpty()) {
+    $variables['event_tags'] = $view_builder->viewField($node->get('field_tags'), [
+      'label' => 'hidden',
+      'type' => 'entity_reference_label',
+      'weight' => 0,
+      'settings' => ['link' => FALSE],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  $variables['event_share_block'] = [];
+  if (!empty($variables['content']['addtoany'])) {
+    $variables['event_share_block'] = $variables['content']['addtoany'];
+  }
+
+  $variables['event_cta_blurb'] = '';
+  if ($node->hasField('field_cta_text') && !$node->get('field_cta_text')->isEmpty()) {
+    $variables['event_cta_blurb'] = trim((string) $node->get('field_cta_text')->value);
+  }
+
+  $variables['event_hero_stats'] = [
+    ['figure' => '500+', 'caption' => (string) t('Attendees')],
+    ['figure' => '45', 'caption' => (string) t('Speakers')],
+    ['figure' => '3', 'caption' => (string) t('Days')],
+  ];
+
+  $variables['event_related'] = [];
+  $nids = $em->getStorage('node')->getQuery()
+    ->condition('type', 'event')
+    ->condition('nid', $node->id(), '<>')
+    ->condition('status', 1)
+    ->sort('field_event_start', 'ASC')
+    ->range(0, 4)
+    ->accessCheck(TRUE)
+    ->execute();
+  if ($nids) {
+    $related = $em->getStorage('node')->loadMultiple($nids);
+    $variables['event_related'] = $view_builder->viewMultiple($related, 'teaser');
+  }
+
+  $variables['event_contact_url'] = Url::fromUserInput('/contact-us')->toString();
+
+  $variables['event_meeting_enabled'] = $node->hasField('field_meeting_enabled')
+    && !$node->get('field_meeting_enabled')->isEmpty()
+    && (bool) $node->get('field_meeting_enabled')->value;
+}
+
+/**
+ * Builds a Google Calendar template URL for an event node.
+ */
+function _motaded_theme_event_google_calendar_url(NodeInterface $node): ?string {
+  if (!$node->hasField('field_event_start') || $node->get('field_event_start')->isEmpty()) {
+    return NULL;
+  }
+  $start_raw = (string) $node->get('field_event_start')->value;
+  $end_raw = (!$node->hasField('field_event_end') || $node->get('field_event_end')->isEmpty())
+    ? $start_raw
+    : (string) $node->get('field_event_end')->value;
+  try {
+    $start = \DateTimeImmutable::createFromFormat(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $start_raw, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+    $end = \DateTimeImmutable::createFromFormat(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $end_raw, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+  }
+  catch (\Throwable $e) {
+    return NULL;
+  }
+  if ($start === FALSE || $end === FALSE) {
+    return NULL;
+  }
+  $fmt = 'Ymd\THis\Z';
+  $text = rawurlencode($node->getTitle());
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' . $text
+    . '&dates=' . $start->setTimezone(new \DateTimeZone('UTC'))->format($fmt)
+    . '/' . $end->setTimezone(new \DateTimeZone('UTC'))->format($fmt);
+}
+
+/**
+ * Preprocess variables for Event teaser (cards, related strip).
+ */
+function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+  $date_formatter = \Drupal::service('date.formatter');
+  $langcode = $node->language()->getId();
+
+  $variables['event_teaser_media'] = [];
+  if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+    $media = $node->get('field_featured_image')->entity;
+    if ($media) {
+      // Responsive image styles (WebP pipeline) instead of fixed `large` default.
+      $view_mode = $media->bundle() === 'image' ? 'banner_sm' : 'default';
+      $variables['event_teaser_media'] = $em->getViewBuilder('media')->view($media, $view_mode);
+    }
+  }
+
+  $variables['event_teaser_badge'] = '';
+  $variables['event_teaser_range'] = '';
+  if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
+    $ts = strtotime($node->get('field_event_start')->value);
+    if ($ts) {
+      $variables['event_teaser_badge'] = strtoupper($date_formatter->format($ts, 'custom', 'M j', NULL, $langcode));
+      $variables['event_teaser_range'] = $date_formatter->format($ts, 'custom', 'j M Y', NULL, $langcode);
+    }
+  }
+  if ($node->hasField('field_event_end') && !$node->get('field_event_end')->isEmpty()) {
+    $end_ts = strtotime($node->get('field_event_end')->value);
+    $start_ts = $node->get('field_event_start')->isEmpty() ? NULL : strtotime($node->get('field_event_start')->value);
+    if ($end_ts && $start_ts) {
+      $variables['event_teaser_range'] = $date_formatter->format($start_ts, 'custom', 'j M', NULL, $langcode)
+        . ' – ' . $date_formatter->format($end_ts, 'custom', 'j M Y', NULL, $langcode);
+    }
+  }
+
+  $variables['event_teaser_location'] = '';
+  if ($node->hasField('field_location') && !$node->get('field_location')->isEmpty()) {
+    $variables['event_teaser_location'] = trim((string) $node->get('field_location')->value);
+  }
+
+  $variables['event_teaser_chips'] = [];
+  $variables['event_teaser_type_pill'] = '';
+  if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
+    $term = $node->get('field_event_type')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['event_teaser_type_pill'] = mb_strtoupper($term->getName());
+    }
+  }
+  if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+    $term = $node->get('field_region')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['event_teaser_chips'][] = $term->getName();
+    }
+  }
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface && !in_array($term->getName(), $variables['event_teaser_chips'], TRUE)) {
+      $variables['event_teaser_chips'][] = $term->getName();
+    }
+  }
+
+  $variables['event_teaser_summary'] = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $raw = (string) $node->get('body')->value;
+    $variables['event_teaser_summary'] = motaded_theme_plain_text_truncate($raw, 176);
+  }
+}
+
+/**
+ * Preprocess variables for Market insight teaser (directory cards + list).
+ */
+function _motaded_theme_preprocess_market_insight_teaser(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/event_page';
+  $em = \Drupal::entityTypeManager();
+
+  $variables['insight_teaser_media'] = [];
+  if ($node->hasField('field_insight_thumbnail') && !$node->get('field_insight_thumbnail')->isEmpty()) {
+    $media = $node->get('field_insight_thumbnail')->entity;
+    if ($media) {
+      $variables['insight_teaser_media'] = $em->getViewBuilder('media')->view($media, 'news');
+    }
+  }
+
+  $variables['insight_teaser_category'] = '';
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['insight_teaser_category'] = $term->getName();
+    }
+  }
+
+  $variables['insight_teaser_year'] = '';
+  if ($node->hasField('field_year') && !$node->get('field_year')->isEmpty()) {
+    $variables['insight_teaser_year'] = (string) $node->get('field_year')->value;
+  }
+
+  $variables['insight_teaser_excerpt'] = '';
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $item = $node->get('body')->first();
+    $summary = trim((string) $item->summary);
+    $value = (string) $item->value;
+    $raw = $summary !== '' ? $summary : $value;
+    if ($raw !== '') {
+      $variables['insight_teaser_excerpt'] = motaded_theme_plain_text_truncate($raw, 200);
     }
   }
 }
@@ -714,6 +1859,53 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
       }
     }
   }
+
+  $variables['hero_split_cta_secondary'] = [];
+  if ($paragraph->hasField('field_link_secondary')) {
+    $link2 = $paragraph->get('field_link_secondary');
+    if ($link2->access('view') && !$link2->isEmpty()) {
+      /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $item */
+      $item = $link2->first();
+      if ($item) {
+        $url = $item->getUrl();
+        if ($url) {
+          $title = $item->getTitle();
+          $variables['hero_split_cta_secondary'] = [
+            'url' => $url->toString(),
+            'title' => $title !== '' && $title !== NULL ? $title : (string) t('Explore'),
+          ];
+        }
+      }
+    }
+  }
+
+  $features = [];
+  if ($paragraph->hasField('field_hero_split_features')) {
+    $feature_field = $paragraph->get('field_hero_split_features');
+    if ($feature_field->access('view')) {
+      foreach ($feature_field as $item) {
+        $sub = $item->entity;
+        if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+          continue;
+        }
+        $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'people');
+        $title = '';
+        if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+          $title = trim((string) $sub->get('field_title')->value);
+        }
+        $body = '';
+        if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+          $body = trim((string) $sub->get('field_body')->value);
+        }
+        $features[] = [
+          'icon' => $icon,
+          'title' => $title,
+          'body' => $body,
+        ];
+      }
+    }
+  }
+  $variables['hero_split_features'] = $features;
 }
 
 /**
@@ -903,36 +2095,57 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
   $paragraph = $variables['paragraph'];
   $variables['view_block_news_latest'] = FALSE;
   $variables['view_block_services_home'] = FALSE;
+  $variables['view_block_events_home_list'] = FALSE;
+  $variables['view_block_events_home_calendar'] = FALSE;
+  $variables['view_block_partners_marquee'] = FALSE;
+  $variables['view_block_library_home'] = FALSE;
   if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
     return;
   }
   foreach ($paragraph->get('field_view_block')->getValue() as $item) {
-    $target = $item['target_id'] ?? '';
-    $display = $item['display_id'] ?? '';
-    if ($target === 'news' && $display === 'block_4') {
-      $variables['view_block_news_latest'] = TRUE;
-      return;
+    $pairs = [];
+    $tid_row = $item['target_id'] ?? '';
+    $did_row = $item['display_id'] ?? '';
+    if ($tid_row !== '' && $did_row !== '') {
+      $pairs[] = [$tid_row, $did_row];
     }
-    if ($target === 'services' && $display === 'block_2') {
-      $variables['view_block_services_home'] = TRUE;
-      return;
-    }
-    if (!empty($item['data']) && is_string($item['data'])) {
+    elseif (!empty($item['data']) && is_string($item['data'])) {
       $decoded = json_decode($item['data'], TRUE);
-      if (!is_array($decoded)) {
-        continue;
-      }
-      $tid = $decoded['target_id'] ?? '';
-      $did = $decoded['display_id'] ?? '';
-      if ($tid === 'news' && $did === 'block_4') {
-        $variables['view_block_news_latest'] = TRUE;
-        return;
-      }
-      if ($tid === 'services' && $did === 'block_2') {
-        $variables['view_block_services_home'] = TRUE;
-        return;
+      if (is_array($decoded)) {
+        $t = $decoded['target_id'] ?? '';
+        $d = $decoded['display_id'] ?? '';
+        if ($t !== '' && $d !== '') {
+          $pairs[] = [$t, $d];
+        }
       }
     }
+    foreach ($pairs as [$target, $display]) {
+      if ($target === 'events' && $display === 'block_home') {
+        $variables['view_block_events_home_list'] = TRUE;
+      }
+      elseif ($target === 'events' && $display === 'block_calendar') {
+        $variables['view_block_events_home_calendar'] = TRUE;
+      }
+      elseif ($target === 'news' && $display === 'block_4') {
+        $variables['view_block_news_latest'] = TRUE;
+      }
+      elseif ($target === 'services' && $display === 'block_2') {
+        $variables['view_block_services_home'] = TRUE;
+      }
+      elseif ($target === 'partners' && $display === 'block_2') {
+        $variables['view_block_partners_marquee'] = TRUE;
+      }
+      elseif ($target === 'library' && $display === 'block_1') {
+        $variables['view_block_library_home'] = TRUE;
+      }
+    }
+  }
+
+  if ($variables['view_block_events_home_list'] || $variables['view_block_events_home_calendar']) {
+    $variables['#attached']['library'][] = 'motaded_theme/events_home';
+  }
+  if ($variables['view_block_library_home']) {
+    $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
   }
 }
 
@@ -1189,6 +2402,537 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
 
   $collect_meta($variables['iu_insight_nodes']);
   $collect_meta($variables['iu_news_nodes']);
+}
+
+/**
+ * Implements hook_preprocess_paragraph__glance_block().
+ */
+function motaded_theme_preprocess_paragraph__glance_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/glance_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['glance_eyebrow'] = '';
+  if ($paragraph->hasField('field_glance_eyebrow') && $paragraph->get('field_glance_eyebrow')->access('view') && !$paragraph->get('field_glance_eyebrow')->isEmpty()) {
+    $variables['glance_eyebrow'] = trim((string) $paragraph->get('field_glance_eyebrow')->value);
+  }
+  $variables['glance_title'] = '';
+  if ($paragraph->hasField('field_glance_title') && $paragraph->get('field_glance_title')->access('view') && !$paragraph->get('field_glance_title')->isEmpty()) {
+    $variables['glance_title'] = trim((string) $paragraph->get('field_glance_title')->value);
+  }
+  $variables['glance_title_accent'] = '';
+  if ($paragraph->hasField('field_glance_title_accent') && $paragraph->get('field_glance_title_accent')->access('view') && !$paragraph->get('field_glance_title_accent')->isEmpty()) {
+    $variables['glance_title_accent'] = trim((string) $paragraph->get('field_glance_title_accent')->value);
+  }
+
+  $icon_svg = static function (string $key) {
+    // Keep SVGs tiny and consistent with site icons.
+    $svg = match ($key) {
+      'money' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16v10H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 7V5h10v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+      'users' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'pie' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v10h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.4 14a9.5 9.5 0 1 1-11.4-11.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'building' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 7h2M9 11h2M9 15h2M13 7h2M13 11h2M13 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'chart_up' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      'layers' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3 3.5 8.2 12 13.4 20.5 8.2 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.5 12.1 12 17.3 20.5 12.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'globe' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'leaf' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 4s-8 0-12 4-4 12-4 12 8 0 12-4 4-12 4-12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 16c2-2 6-6 12-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'handshake' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 12l2-2a3 3 0 0 1 4 0l2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12l5-5 4 4-5 5H3v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M21 12l-5-5-4 4 5 5h4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'target' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'flag' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 22V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 4h10l-1.5 3L15 10H5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      default => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return \Drupal\Core\Render\Markup::create($svg);
+  };
+
+  $read_stat = static function (\Drupal\paragraphs\Entity\Paragraph $p) use ($icon_svg): array {
+    $icon = $p->hasField('field_glance_icon') ? (string) ($p->get('field_glance_icon')->value ?: '') : '';
+    $value = $p->hasField('field_glance_value') ? trim((string) ($p->get('field_glance_value')->value ?? '')) : '';
+    $title = $p->hasField('field_glance_title') ? trim((string) ($p->get('field_glance_title')->value ?? '')) : '';
+    $body = '';
+    if ($p->hasField('field_glance_body') && !$p->get('field_glance_body')->isEmpty()) {
+      $body = trim((string) $p->get('field_glance_body')->value);
+    }
+    $source = $p->hasField('field_glance_source') ? trim((string) ($p->get('field_glance_source')->value ?? '')) : '';
+    return [
+      'icon' => $icon,
+      'icon_svg' => $icon_svg($icon),
+      'value' => $value,
+      'title' => $title,
+      'body' => $body,
+      'source' => $source,
+      // Optional; used for highlight kicker.
+      'kicker' => $title,
+    ];
+  };
+
+  $variables['glance_highlight'] = [];
+  if ($paragraph->hasField('field_glance_highlight') && $paragraph->get('field_glance_highlight')->access('view') && !$paragraph->get('field_glance_highlight')->isEmpty()) {
+    $sub = $paragraph->get('field_glance_highlight')->entity;
+    if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+      $variables['glance_highlight'] = $read_stat($sub);
+      // Highlight uses a separate kicker convention.
+      $variables['glance_highlight']['kicker'] = $variables['glance_highlight']['title'];
+    }
+  }
+
+  $variables['glance_stats'] = [];
+  if ($paragraph->hasField('field_glance_stats') && $paragraph->get('field_glance_stats')->access('view') && !$paragraph->get('field_glance_stats')->isEmpty()) {
+    foreach ($paragraph->get('field_glance_stats') as $item) {
+      $sub = $item->entity;
+      if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+        $variables['glance_stats'][] = $read_stat($sub);
+      }
+    }
+  }
+
+  $variables['glance_features'] = [];
+  if ($paragraph->hasField('field_glance_features') && $paragraph->get('field_glance_features')->access('view') && !$paragraph->get('field_glance_features')->isEmpty()) {
+    foreach ($paragraph->get('field_glance_features') as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+        continue;
+      }
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = '';
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = trim((string) $sub->get('field_body')->value);
+      }
+      $link_url = '';
+      $link_title = '';
+      if ($sub->hasField('field_link') && $sub->get('field_link')->access('view') && !$sub->get('field_link')->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+        $li = $sub->get('field_link')->first();
+        if ($li && $li->getUrl()) {
+          $link_url = $li->getUrl()->toString();
+          $link_title = (string) ($li->getTitle() ?: '');
+        }
+      }
+      $variables['glance_features'][] = [
+        'title' => $title,
+        'body' => $body ? strip_tags($body) : '',
+        'link_url' => $link_url,
+        'link_title' => $link_title,
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__gateway_block().
+ */
+function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/gateway_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['gateway_eyebrow'] = '';
+  if ($paragraph->hasField('field_gateway_eyebrow') && $paragraph->get('field_gateway_eyebrow')->access('view') && !$paragraph->get('field_gateway_eyebrow')->isEmpty()) {
+    $variables['gateway_eyebrow'] = trim((string) $paragraph->get('field_gateway_eyebrow')->value);
+  }
+  $variables['gateway_title'] = '';
+  if ($paragraph->hasField('field_title') && $paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['gateway_title'] = trim((string) $paragraph->get('field_title')->value);
+  }
+
+  $icon_svg = static function (string $key) {
+    $svg = match ($key) {
+      'platforms' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v10H4z" stroke="currentColor" stroke-width="1.6"/><path d="M8 19h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'sectors' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'events' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'insights' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return \Drupal\Core\Render\Markup::create($svg);
+  };
+
+  $variables['gateway_items'] = [];
+  if ($paragraph->hasField('field_gateway_items') && $paragraph->get('field_gateway_items')->access('view') && !$paragraph->get('field_gateway_items')->isEmpty()) {
+    foreach ($paragraph->get('field_gateway_items') as $ref) {
+      $sub = $ref->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'gateway_item') {
+        continue;
+      }
+      $icon_key = (string) ($sub->get('field_gateway_icon')->value ?? '');
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = '';
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = trim((string) $sub->get('field_body')->value);
+      }
+      $link_url = '';
+      $link_title = '';
+      if ($sub->hasField('field_link') && $sub->get('field_link')->access('view') && !$sub->get('field_link')->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+        $li = $sub->get('field_link')->first();
+        if ($li && $li->getUrl()) {
+          $link_url = $li->getUrl()->toString();
+          $link_title = (string) ($li->getTitle() ?: '');
+        }
+      }
+      $variables['gateway_items'][] = [
+        'icon' => $icon_key,
+        'icon_svg' => $icon_svg($icon_key),
+        'title' => $title,
+        'body' => $body ? strip_tags($body) : '',
+        'link_url' => $link_url,
+        'link_title' => $link_title,
+      ];
+    }
+  }
+
+  $variables['gateway_footer_title'] = '';
+  if ($paragraph->hasField('field_gateway_footer_title') && $paragraph->get('field_gateway_footer_title')->access('view') && !$paragraph->get('field_gateway_footer_title')->isEmpty()) {
+    $variables['gateway_footer_title'] = trim((string) $paragraph->get('field_gateway_footer_title')->value);
+  }
+  $variables['gateway_footer_body'] = '';
+  if ($paragraph->hasField('field_gateway_footer_body') && $paragraph->get('field_gateway_footer_body')->access('view') && !$paragraph->get('field_gateway_footer_body')->isEmpty()) {
+    $variables['gateway_footer_body'] = trim((string) $paragraph->get('field_gateway_footer_body')->value);
+  }
+  $variables['gateway_footer_link_url'] = '';
+  $variables['gateway_footer_link_title'] = '';
+  if ($paragraph->hasField('field_gateway_footer_link') && $paragraph->get('field_gateway_footer_link')->access('view') && !$paragraph->get('field_gateway_footer_link')->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+    $li = $paragraph->get('field_gateway_footer_link')->first();
+    if ($li && $li->getUrl()) {
+      $variables['gateway_footer_link_url'] = $li->getUrl()->toString();
+      $variables['gateway_footer_link_title'] = (string) ($li->getTitle() ?: '');
+    }
+  }
+
+  $variables['gateway_footer_icon_svg'] = \Drupal\Core\Render\Markup::create(
+    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+  );
+}
+
+/**
+ * Implements hook_preprocess_paragraph__gateway_hub_block().
+ */
+function motaded_theme_preprocess_paragraph__gateway_hub_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/gateway_hub_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['hub_eyebrow'] = '';
+  if ($paragraph->hasField('field_gateway_eyebrow') && $paragraph->get('field_gateway_eyebrow')->access('view') && !$paragraph->get('field_gateway_eyebrow')->isEmpty()) {
+    $variables['hub_eyebrow'] = trim((string) $paragraph->get('field_gateway_eyebrow')->value);
+  }
+  $variables['hub_title'] = '';
+  if ($paragraph->hasField('field_title') && $paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['hub_title'] = trim((string) $paragraph->get('field_title')->value);
+  }
+
+  $mk_svg = static fn (string $svg) => \Drupal\Core\Render\Markup::create($svg);
+  $variables['hub_icons'] = [
+    'sectors' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'),
+    'events' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
+    'insights' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
+  ];
+
+  $variables['hub_platforms'] = [];
+  if ($paragraph->hasField('field_gateway_platforms') && $paragraph->get('field_gateway_platforms')->access('view') && !$paragraph->get('field_gateway_platforms')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $platforms */
+    $platforms = $paragraph->get('field_gateway_platforms');
+    foreach ($platforms->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_platforms'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_sectors'] = [];
+  if ($paragraph->hasField('field_gateway_sectors') && $paragraph->get('field_gateway_sectors')->access('view') && !$paragraph->get('field_gateway_sectors')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $sectors */
+    $sectors = $paragraph->get('field_gateway_sectors');
+    foreach ($sectors->referencedEntities() as $term) {
+      if ($term instanceof \Drupal\taxonomy\TermInterface) {
+        $variables['hub_sectors'][] = [
+          'title' => $term->label(),
+          'url' => $term->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_events'] = [];
+  if ($paragraph->hasField('field_gateway_events') && $paragraph->get('field_gateway_events')->access('view') && !$paragraph->get('field_gateway_events')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $events */
+    $events = $paragraph->get('field_gateway_events');
+    foreach ($events->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_events'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_insights'] = [];
+  if ($paragraph->hasField('field_gateway_insights') && $paragraph->get('field_gateway_insights')->access('view') && !$paragraph->get('field_gateway_insights')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $insights */
+    $insights = $paragraph->get('field_gateway_insights');
+    foreach ($insights->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_insights'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  // Support badges (small highlight items in the footer strip).
+  $variables['hub_support_badges'] = [];
+  if ($paragraph->hasField('field_gateway_support_items') && $paragraph->get('field_gateway_support_items')->access('view') && !$paragraph->get('field_gateway_support_items')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $support_items */
+    $support_items = $paragraph->get('field_gateway_support_items');
+    foreach ($support_items->referencedEntities() as $item) {
+      if ($item instanceof \Drupal\paragraphs\ParagraphInterface) {
+        $title = '';
+        $body = '';
+        if ($item->hasField('field_title') && !$item->get('field_title')->isEmpty()) {
+          $title = trim((string) $item->get('field_title')->value);
+        }
+        if ($item->hasField('field_body') && !$item->get('field_body')->isEmpty()) {
+          $body = trim((string) $item->get('field_body')->value);
+        }
+        if ($title !== '' || $body !== '') {
+          $variables['hub_support_badges'][] = [
+            'title' => $title,
+            'body' => $body,
+          ];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__key_sectors().
+ *
+ * Homepage “Key sectors” band: headings, sidebar, embedded View, footer CTA.
+ */
+function motaded_theme_preprocess_paragraph__key_sectors(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/key_sectors';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $get_plain = static function (\Drupal\paragraphs\Entity\Paragraph $p, string $field): string {
+    return $p->hasField($field) && !$p->get($field)->isEmpty()
+      ? trim((string) $p->get($field)->value) : '';
+  };
+  $variables['ksb_eyebrow'] = $get_plain($paragraph, 'field_ksb_eyebrow');
+  $variables['ksb_heading'] = '';
+  if ($paragraph->hasField('field_title') && $paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['ksb_heading'] = trim((string) $paragraph->get('field_title')->value);
+  }
+  $variables['ksb_sidebar_title'] = $get_plain($paragraph, 'field_ksb_sidebar_title');
+  $sk = '';
+  if ($paragraph->hasField('field_ksb_sidebar_icon') && !$paragraph->get('field_ksb_sidebar_icon')->isEmpty()) {
+    $sk = (string) $paragraph->get('field_ksb_sidebar_icon')->value;
+  }
+  $variables['ksb_sidebar_icon_markup'] = motaded_theme_glance_icon_markup($sk !== '' ? $sk : 'chart_up');
+  $variables['ksb_footer_title'] = $get_plain($paragraph, 'field_ksb_footer_title');
+  $variables['ksb_intro'] = [];
+  if ($paragraph->hasField('field_body') && $paragraph->get('field_body')->access('view') && !$paragraph->get('field_body')->isEmpty()) {
+    $variables['ksb_intro'] = $paragraph->get('field_body')->view([
+      'type' => 'text_default',
+      'label' => 'hidden',
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+  }
+  $variables['ksb_sidebar_body'] = [];
+  if ($paragraph->hasField('field_ksb_sidebar_body') && $paragraph->get('field_ksb_sidebar_body')->access('view') && !$paragraph->get('field_ksb_sidebar_body')->isEmpty()) {
+    $variables['ksb_sidebar_body'] = $paragraph->get('field_ksb_sidebar_body')->view([
+      'type' => 'text_default',
+      'label' => 'hidden',
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+  }
+  $variables['ksb_footer_body'] = [];
+  if ($paragraph->hasField('field_ksb_footer_body') && $paragraph->get('field_ksb_footer_body')->access('view') && !$paragraph->get('field_ksb_footer_body')->isEmpty()) {
+    $variables['ksb_footer_body'] = $paragraph->get('field_ksb_footer_body')->view([
+      'type' => 'text_default',
+      'label' => 'hidden',
+      'settings' => [],
+      'third_party_settings' => [],
+    ]);
+  }
+  $variables['ksb_cta_url'] = '';
+  $variables['ksb_cta_label'] = (string) t('View all sectors');
+  if ($paragraph->hasField('field_link') && !$paragraph->get('field_link')->isEmpty() && $paragraph->get('field_link')->access('view')) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+    $li = $paragraph->get('field_link')->first();
+    if ($li && method_exists($li, 'getUrl')) {
+      $url = $li->getUrl();
+      if ($url) {
+        $variables['ksb_cta_url'] = $url->toString();
+      }
+      $lt = trim((string) ($li->getTitle() ?: ''));
+      if ($lt !== '') {
+        $variables['ksb_cta_label'] = $lt;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__platforms_systems().
+ */
+function motaded_theme_preprocess_paragraph__platforms_systems(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/platforms_systems';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $mk_svg = static fn (string $svg) => \Drupal\Core\Render\Markup::create($svg);
+  $icon_for = static function (string $key) use ($mk_svg) {
+    $svg = match ($key) {
+      'licensing' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12h8M8 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'workforce' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'tax' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h8M8 13h8M8 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'operations' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 21h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 21V7l7-4 7 4v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'compliance' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 9.4-8 10-4.5-.6-8-5-8-10V6l8-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return $mk_svg($svg);
+  };
+
+  $variables['ps_groups'] = [];
+  if ($paragraph->hasField('field_ps_groups') && $paragraph->get('field_ps_groups')->access('view') && !$paragraph->get('field_ps_groups')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $groups */
+    $groups = $paragraph->get('field_ps_groups');
+    foreach ($groups->referencedEntities() as $group) {
+      if (!$group instanceof \Drupal\paragraphs\ParagraphInterface) {
+        continue;
+      }
+
+      $title = $group->hasField('field_title') && !$group->get('field_title')->isEmpty()
+        ? trim((string) $group->get('field_title')->value)
+        : '';
+
+      $body = $group->hasField('field_psg_body') && !$group->get('field_psg_body')->isEmpty()
+        ? trim((string) $group->get('field_psg_body')->value)
+        : '';
+
+      $icon_key = $group->hasField('field_psg_icon') && !$group->get('field_psg_icon')->isEmpty()
+        ? (string) $group->get('field_psg_icon')->value
+        : '';
+
+      $items = [];
+      if ($group->hasField('field_psg_items') && !$group->get('field_psg_items')->isEmpty()) {
+        /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $refs */
+        $refs = $group->get('field_psg_items');
+        foreach ($refs->referencedEntities() as $node) {
+          if ($node instanceof \Drupal\node\NodeInterface) {
+            $logo = [
+              'src' => '',
+              'srcset' => '',
+              'width' => 0,
+              'height' => 0,
+              'alt' => '',
+            ];
+            if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+              $media = $node->get('field_logo')->entity;
+              $fallback_alt = (string) t('@name logo', ['@name' => $node->label()]);
+              $extracted = motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
+              $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+              $logo = [
+                'src' => $meta['src'],
+                'srcset' => $meta['srcset'],
+                'width' => $meta['width'],
+                'height' => $meta['height'],
+                'alt' => $extracted['alt'],
+              ];
+            }
+            $items[] = [
+              'title' => $node->label(),
+              'url' => $node->toUrl()->toString(),
+              'logo' => $logo,
+            ];
+          }
+        }
+      }
+
+      $view_all_url = '';
+      $view_all_title = '';
+      if ($group->hasField('field_psg_view_all') && !$group->get('field_psg_view_all')->isEmpty()) {
+        $link_item = $group->get('field_psg_view_all')->first();
+        $uri = $link_item && !$link_item->isEmpty() ? $link_item->get('uri')->getString() : '';
+        if ($uri !== '') {
+          try {
+            $view_all_url = \Drupal\Core\Url::fromUri($uri)->toString();
+          }
+          catch (\Throwable $e) {
+            $view_all_url = $uri;
+          }
+        }
+        $view_all_title = $link_item ? trim((string) $link_item->get('title')->getString()) : '';
+      }
+
+      $variables['ps_groups'][] = [
+        'title' => $title,
+        'body' => $body,
+        'icon' => $icon_for($icon_key),
+        'items' => $items,
+        'view_all_url' => $view_all_url,
+        'view_all_title' => $view_all_title,
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__chambers_network().
+ */
+function motaded_theme_preprocess_paragraph__chambers_network(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/chambers_network';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $nid_args = '';
+  $parts = [];
+  if ($paragraph->hasField('field_cnb_chambers')
+    && $paragraph->get('field_cnb_chambers')->access('view')
+    && !$paragraph->get('field_cnb_chambers')->isEmpty()) {
+    foreach ($paragraph->get('field_cnb_chambers')->referencedEntities() as $entity) {
+      if (!$entity instanceof NodeInterface || $entity->bundle() !== 'chamber' || !$entity->access('view')) {
+        continue;
+      }
+      $parts[] = (string) ((int) $entity->id());
+      if (count($parts) >= 9) {
+        break;
+      }
+    }
+  }
+  if ($parts !== []) {
+    $nid_args = implode('+', $parts);
+  }
+
+  $build = [];
+  try {
+    if ($nid_args !== '') {
+      $build = views_embed_view('chambers', 'homepage', $nid_args);
+    }
+    else {
+      $build = views_embed_view('chambers', 'homepage');
+    }
+  }
+  catch (\Throwable $e) {
+    $build = [];
+  }
+  $variables['cnb_chambers_view'] = is_array($build) ? $build : [];
 }
 
 /**
@@ -1554,6 +3298,30 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
     return;
   }
   $display_id = $variables['display_id'] ?? $view->current_display ?? '';
+
+  if ($view->id() === 'services' && $display_id === 'block_2') {
+    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+    $base = base_path() . $theme_path . '/img/';
+    $icons = [
+      'icon-growth.svg',
+      'icon-globe.svg',
+      'icon-checkmark-circle.svg',
+      'service-cost.svg',
+      'icon-target.svg',
+      'service-channels.svg',
+      'service-duration.svg',
+      'icon-calender.svg',
+    ];
+    $nid = 0;
+    $row = $variables['row'] ?? NULL;
+    if (is_object($row) && isset($row->_entity) && $row->_entity instanceof NodeInterface) {
+      $nid = (int) $row->_entity->id();
+    }
+    $pick = $nid > 0 ? ($nid % count($icons)) : 0;
+    $variables['services_home_row_icon_url'] = $base . $icons[$pick];
+    return;
+  }
+
   if ($view->id() !== 'services' || $display_id !== 'page_1') {
     return;
   }
@@ -1613,6 +3381,164 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
 }
 
 /**
+ * First taxonomy term plain label from a node's entity reference field, or ''.
+ */
+function _motaded_theme_node_first_taxonomy_label(NodeInterface $node, string $field_name, string $langcode): string {
+  if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+    return '';
+  }
+  $referenced = $node->get($field_name)->entity;
+  if (!$referenced instanceof TermInterface) {
+    return '';
+  }
+
+  return motaded_theme_taxonomy_term_translated_label($referenced, $langcode !== '' ? $langcode : 'en');
+}
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ *
+ * Builds a richer FullCalendar row title field (month view) with taxonomy meta;
+ * separators only between non-empty fragments.
+ */
+function motaded_theme_preprocess_views_view_field(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->id() !== 'events' || !in_array($view->current_display, ['block_calendar', 'attachment_page_calendar'], TRUE)) {
+    return;
+  }
+
+  $handler = $variables['field'] ?? NULL;
+  if (!$handler instanceof FieldPluginInterface) {
+    return;
+  }
+  $fname = ($handler->definition['field_name'] ?? '');
+  if ($fname !== 'title') {
+    return;
+  }
+
+  $row = $variables['row'] ?? NULL;
+  if (!is_object($row) || !isset($row->_entity)) {
+    return;
+  }
+
+  $node = $row->_entity;
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'event') {
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  try {
+    $display_node = ($langcode !== '' && $node->hasTranslation($langcode))
+      ? $node->getTranslation($langcode)
+      : $node;
+  }
+  catch (\Exception $e) {
+    $display_node = $node;
+  }
+
+  $href = Html::escape($display_node->toUrl()->toString());
+  $title_text = Html::escape($display_node->label());
+
+  $type_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_event_type', $langcode);
+  $region_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_region', $langcode);
+
+  $meta_segments = [];
+  if ($type_plain !== '') {
+    $meta_segments[] = Html::escape($type_plain);
+  }
+  if ($region_plain !== '') {
+    $meta_segments[] = Html::escape($region_plain);
+  }
+
+  $html = '<div class="fc-event-card"><div class="fc-event-card__title"><a class="fc-event-card__title-link" href="' . $href . '">' . $title_text . '</a></div>';
+  if ($meta_segments !== []) {
+    $html .= '<div class="fc-event-card__meta">' . implode(' · ', $meta_segments) . '</div>';
+  }
+  $html .= '</div>';
+
+  $variables['output'] = [
+    '#markup' => Markup::create($html),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for views_view_fullcalendar.
+ *
+ * Adds extendedProps (event type + region) per event for JS eventContent —
+ * Contrib Xss::filter on titles can strip markup from preprocess_views_view_field.
+ */
+function motaded_theme_preprocess_views_view_fullcalendar(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->id() !== 'events' || !in_array($view->current_display, ['block_calendar', 'attachment_page_calendar'], TRUE)) {
+    return;
+  }
+  if (empty($variables['#attached']['drupalSettings']['fullCalendarView'])) {
+    return;
+  }
+
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  foreach (array_keys($variables['#attached']['drupalSettings']['fullCalendarView']) as $view_index) {
+    $settings = &$variables['#attached']['drupalSettings']['fullCalendarView'][$view_index];
+    if (empty($settings['calendar_options']) || !is_string($settings['calendar_options'])) {
+      continue;
+    }
+    $decoded = Json::decode($settings['calendar_options']);
+    if (!is_array($decoded) || empty($decoded['events']) || !is_array($decoded['events'])) {
+      continue;
+    }
+    $nids = [];
+    foreach ($decoded['events'] as $ev) {
+      if (!empty($ev['eid'])) {
+        $nids[(int) $ev['eid']] = (int) $ev['eid'];
+      }
+    }
+    if ($nids === []) {
+      unset($settings);
+      continue;
+    }
+    $nodes = Node::loadMultiple($nids);
+    foreach ($decoded['events'] as $i => $event) {
+      $nid = isset($event['eid']) ? (int) $event['eid'] : 0;
+      if ($nid < 1 || !isset($nodes[$nid])) {
+        continue;
+      }
+      $node = $nodes[$nid];
+      if (!$node instanceof NodeInterface || $node->bundle() !== 'event') {
+        continue;
+      }
+      try {
+        $display_node = ($langcode !== '' && $node->hasTranslation($langcode))
+          ? $node->getTranslation($langcode)
+          : $node;
+      }
+      catch (\Exception $e) {
+        $display_node = $node;
+      }
+      $type_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_event_type', $langcode);
+      $region_plain = _motaded_theme_node_first_taxonomy_label($display_node, 'field_region', $langcode);
+      $meta_parts = array_filter([$type_plain, $region_plain]);
+      $existing = [];
+      if (!empty($event['extendedProps']) && is_array($event['extendedProps'])) {
+        $existing = $event['extendedProps'];
+      }
+      $decoded['events'][$i]['extendedProps'] = array_merge($existing, [
+        'motaded_type' => $type_plain,
+        'motaded_region' => $region_plain,
+        'motaded_meta_line' => $meta_parts === [] ? '' : implode(' · ', $meta_parts),
+      ]);
+    }
+    $settings['calendar_options'] = Json::encode($decoded);
+    unset($settings);
+  }
+}
+
+/**
  * Returns a taxonomy term label for a requested langcode when available.
  */
 function motaded_theme_taxonomy_term_translated_label(TermInterface $term, string $langcode): string {
@@ -1662,9 +3588,159 @@ function motaded_theme_services_attach_form_attribute_recursive(array &$element,
 }
 
 /**
+ * After-build: “All categories / sectors / regions” labels on Insights directory filters.
+ */
+function motaded_theme_insights_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-insights-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_category_target_id' => (string) t('All categories'),
+    'field_sector_target_id' => (string) t('All sectors'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
+ * After-build: “All types / industries / regions” labels on Events directory filters.
+ */
+function motaded_theme_events_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-events-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_event_type_target_id' => (string) t('All types'),
+    'field_category_target_id' => (string) t('All industries'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
+ * After-build: “All categories / regions” labels on Platforms directory filters.
+ */
+function motaded_theme_platforms_directory_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-platforms-page-1') {
+    return $form;
+  }
+  $pairs = [
+    'field_category_target_id' => (string) t('All categories'),
+    'field_region_target_id' => (string) t('All regions'),
+  ];
+  foreach ($pairs as $key => $all_label) {
+    if (empty($form[$key]['#options']) || !is_array($form[$key]['#options'])) {
+      continue;
+    }
+    if (isset($form[$key]['#options']['All'])) {
+      $form[$key]['#options']['All'] = $all_label;
+    }
+  }
+  return $form;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\FormStateInterface $form_state) {
+  // ViewsExposedForm uses the view page URL as #action whenever the view has a path
+  // (/events); these block displays still need to POST/GET against the current page.
+  $view = $form_state->get('view');
+  if (
+    $view instanceof ViewExecutable
+    && $view->storage->id() === 'events'
+    && ($view->current_display ?? '') === 'block_calendar'
+  ) {
+    try {
+      $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+    }
+    catch (\Exception $e) {
+      $request = \Drupal::request();
+      $form['#action'] = $request->getBasePath() . $request->getPathInfo();
+    }
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-events-page-1') {
+    $form['#attributes']['class'][] = 'events-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search events, topics, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+
+    // Views-exposed date filters (From/To): force native HTML5 date picker.
+    // The filters live in Views config, but we normalize the widget here.
+    foreach ([
+      'motaded_event_date_from' => (string) t('From'),
+      'motaded_event_date_to' => (string) t('To'),
+    ] as $key => $label) {
+      if (!isset($form[$key]) || !is_array($form[$key])) {
+        continue;
+      }
+
+      // Some views filters use a nested 'value' element; support both shapes.
+      $target =& $form[$key];
+      if (isset($form[$key]['value']) && is_array($form[$key]['value'])) {
+        $target =& $form[$key]['value'];
+      }
+
+      // Force an actual HTML5 date input (native date picker).
+      $target['#type'] = 'date';
+      $target['#title'] = $label;
+      $target['#attributes']['type'] = 'date';
+      $target['#attributes']['class'][] = 'form-date';
+      // Ensure date picker UI (no datetime widget JS).
+      $target['#date_date_format'] = 'Y-m-d';
+      $target['#date_time_format'] = '';
+      $target['#date_timezone'] = date_default_timezone_get();
+      // Some widget builds keep #type textfield + form-date class; override explicitly.
+      if (($target['#type'] ?? '') === 'textfield') {
+        $target['#type'] = 'date';
+      }
+      // Also set on wrapper element in case the view uses the parent element.
+      $form[$key]['#type'] = 'date';
+      $form[$key]['#attributes']['type'] = 'date';
+      $form[$key]['#attributes']['class'][] = 'form-date';
+      // Ensure our hero CSS hooks apply.
+      $form[$key]['#wrapper_attributes']['class'][] = 'form-item-' . str_replace('_', '-', $key);
+    }
+
+    $form['#after_build'][] = 'motaded_theme_events_directory_views_exposed_form_after_build';
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-insights-page-1') {
+    $form['#attributes']['class'][] = 'insights-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search insights, topics, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+    $form['#after_build'][] = 'motaded_theme_insights_directory_views_exposed_form_after_build';
+  }
+
+  if (($form['#id'] ?? '') === 'views-exposed-form-platforms-page-1') {
+    $form['#attributes']['class'][] = 'platforms-directory__hero-exposed';
+    if (isset($form['title']) && is_array($form['title'])) {
+      $form['title']['#attributes']['placeholder'] = (string) t('Search platforms, services, or keywords…');
+      $form['title']['#weight'] = -20;
+    }
+    $form['#after_build'][] = 'motaded_theme_platforms_directory_views_exposed_form_after_build';
+  }
+
   if ($form['#id'] == 'views-exposed-form-services-block-2') {
     if (!isset($form['field_taxonomy_target_id'])) {
       return;
@@ -1685,6 +3761,8 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
       $input['field_taxonomy_target_id'] = $first;
       $form_state->setUserInput($input);
     }
+
+    $form['#after_build'][] = 'motaded_theme_services_home_block_exposed_after_build';
   }
 
   if (($form['#id'] ?? '') === 'views-exposed-form-services-page-1') {
@@ -1695,6 +3773,81 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
     $form['#after_build'][] = 'motaded_theme_services_views_exposed_form_after_build';
   }
 
+  $lib_forms = ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'];
+  if (in_array(($form['#id'] ?? ''), $lib_forms, TRUE)) {
+    try {
+      $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+    }
+    catch (\Exception $e) {
+      $request = \Drupal::request();
+      $form['#action'] = $request->getBasePath() . $request->getPathInfo();
+    }
+    $form['#attributes']['class'][] = 'library-view__exposed-form';
+    if (isset($form['search']) && is_array($form['search'])) {
+      $form['search']['#attributes']['placeholder'] = (string) t('Search documents, templates, forms, guides…');
+    }
+    $form['#after_build'][] = 'motaded_theme_library_views_exposed_form_after_build';
+  }
+
+}
+
+/**
+ * After-build: Library exposed — primary/secondary buttons; category stays in DOM (hidden via CSS).
+ */
+function motaded_theme_library_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
+  $fid = $form['#id'] ?? '';
+  if (!in_array($fid, ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'], TRUE)) {
+    return $form;
+  }
+  if (isset($form['actions']['submit']) && is_array($form['actions']['submit'])) {
+    $form['actions']['submit']['#attributes']['class'][] = 'library-exposed__submit';
+    $form['actions']['submit']['#attributes']['class'][] = 'button';
+  }
+  if (isset($form['actions']['reset']) && is_array($form['actions']['reset'])) {
+    $form['actions']['reset']['#attributes']['class'][] = 'library-exposed__reset';
+    $form['actions']['reset']['#attributes']['class'][] = 'button';
+  }
+  return $form;
+}
+
+/**
+ * After-build: prepend sidebar icons to category radios (services home block).
+ */
+function motaded_theme_services_home_block_exposed_after_build(array $form, FormStateInterface $form_state): array {
+  if (($form['#id'] ?? '') !== 'views-exposed-form-services-block-2') {
+    return $form;
+  }
+  if (empty($form['field_taxonomy_target_id']) || !is_array($form['field_taxonomy_target_id'])) {
+    return $form;
+  }
+
+  $element = &$form['field_taxonomy_target_id'];
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+  $base = base_path() . $theme_path . '/img/';
+  $map = [
+    '152' => 'service-cost.svg',
+    '154' => 'icon-globe.svg',
+    '156' => 'icon-growth.svg',
+  ];
+  $fallback = ['icon-target.svg', 'icon-checkmark-circle.svg', 'service-channels.svg'];
+  $i = 0;
+
+  foreach (Element::children($element) as $key) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+    if (!isset($element[$key]) || !is_array($element[$key])) {
+      continue;
+    }
+    $tid = (string) $key;
+    $file = $map[$tid] ?? $fallback[$i % count($fallback)];
+    $i++;
+    $src = $base . $file;
+    $icon_markup = '<span class="services-home-sidebar-radio__icon" aria-hidden="true"><img src="' . Html::escape($src) . '" alt="" width="22" height="22" loading="lazy" decoding="async" /></span>';
+    $element[$key]['#prefix'] = ($element[$key]['#prefix'] ?? '') . Markup::create($icon_markup);
+  }
+
+  return $form;
 }
 
 /**
@@ -1816,6 +3969,23 @@ function motaded_theme_preprocess_page__webform__contact__confirmation(&$variabl
   $id = is_string($raw) ? trim($raw) : '';
   if ($id !== '' && ctype_digit($id)) {
     $variables['linkedin_contact_lead_conversion_id'] = (int) $id;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_node_alter().
+ */
+function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
+  $node = $variables['elements']['#node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() !== 'market_insight' || ($variables['elements']['#view_mode'] ?? '') !== 'full') {
+    return;
+  }
+  if ($node->hasField('field_insight_shell') && $node->get('field_insight_shell')->value === 'platform') {
+    // Appended last so after array_reverse() it is tried first (most specific).
+    $suggestions[] = 'node__market_insight__platform';
   }
 }
 

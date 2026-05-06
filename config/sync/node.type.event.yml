@@ -1,0 +1,17 @@
+uuid: 7a85de59-bec4-4813-be2f-b33335cbc411
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Event
+type: event
+description: 'Business events and opportunities (Drupal listing + full page).'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

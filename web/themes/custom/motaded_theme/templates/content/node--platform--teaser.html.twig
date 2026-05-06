@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Platform — card teaser for listings (/platforms).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'pf-teaser',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+{{ attach_library('motaded_theme/platform_node') }}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <a href="{{ url }}" class="pf-teaser__link" rel="bookmark">
+    <div class="pf-teaser__inner">
+      {% if content.field_logo|render|trim is not empty %}
+        <div class="pf-teaser__logo">{{ content.field_logo }}</div>
+      {% endif %}
+      <div class="pf-teaser__body">
+        <h3{{ title_attributes.addClass('pf-teaser__title') }}>{{ label }}</h3>
+        {% if content.field_short_description|render|trim is not empty %}
+          <div class="pf-teaser__desc">{{ content.field_short_description }}</div>
+        {% endif %}
+        {% if content.field_category|render|trim is not empty %}
+          <div class="pf-teaser__meta">{{ content.field_category }}</div>
+        {% endif %}
+        <span class="pf-teaser__cta">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></span>
+      </div>
+    </div>
+  </a>
+</article>

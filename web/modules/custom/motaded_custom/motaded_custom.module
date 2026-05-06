@@ -1069,3 +1069,172 @@ function _motaded_custom_is_social_host(string $host): bool {
 
   return FALSE;
 }
+
+/**
+ * Implements hook_ajax_render_alter().
+ *
+ * Views AJAX adds ScrollTop whenever pager_element is present (often 0), which
+ * jumps the viewport on exposed-filter updates. Strip it for homepage events blocks.
+ *
+ * @see \Drupal\views\Controller\ViewAjaxController::ajaxView()
+ */
+function motaded_custom_ajax_render_alter(array &$commands): void {
+  if (\Drupal::routeMatch()->getRouteName() !== 'views.ajax') {
+    return;
+  }
+  $request = \Drupal::request();
+  if ($request->get('view_name') !== 'events') {
+    return;
+  }
+  $display_id = $request->get('view_display_id');
+  if (!in_array($display_id, [
+    'block_home',
+    'block_calendar',
+    'page_1',
+    'attachment_page_calendar',
+  ], TRUE)) {
+    return;
+  }
+
+  foreach ($commands as $index => $command) {
+    if (!is_array($command)) {
+      continue;
+    }
+    $cmd = $command['command'] ?? '';
+    if ($cmd === 'scrollTop' || $cmd === 'viewsScrollTop') {
+      unset($commands[$index]);
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Events directory (/events): optional motaded_event_date_from / motaded_event_date_to (Y-m-d).
+ *
+ * Library view: optional library_section (templates|regulations) filters document types.
+ */
+function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
+  $view_id = $view->id() ?? '';
+
+  if ($view_id === 'events') {
+    $display_id = $view->current_display ?? '';
+    if (!in_array($display_id, ['page_1', 'attachment_page_calendar'], TRUE)) {
+      return;
+    }
+    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+      return;
+    }
+    $req = \Drupal::request();
+    $from = $req->query->get('motaded_event_date_from');
+    $to = $req->query->get('motaded_event_date_to');
+    if (!is_string($from) && !is_string($to)) {
+      return;
+    }
+    $info = $query->getTableInfo('node__field_event_start');
+    if (empty($info['alias'])) {
+      return;
+    }
+    $alias = $info['alias'];
+    $col = $alias . '.field_event_start_value';
+    if (is_string($from) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $from)) {
+      $query->addWhere(0, $col, $from . 'T00:00:00', '>=');
+    }
+    if (is_string($to) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $to)) {
+      $query->addWhere(0, $col, $to . 'T23:59:59', '<=');
+    }
+    return;
+  }
+
+  if ($view_id === 'library') {
+    $display_id = $view->current_display ?? '';
+    if (!in_array($display_id, ['page_1', 'block_1'], TRUE)) {
+      return;
+    }
+    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+      return;
+    }
+
+    $req = \Drupal::request();
+    $section = $req->query->get('library_section', 'templates');
+    if (!is_string($section) || !in_array($section, ['templates', 'regulations'], TRUE)) {
+      $section = 'templates';
+    }
+
+    $tids = motaded_custom_library_section_document_type_tids($section);
+    if ($tids === []) {
+      $query->addWhereExpression(0, '1 = 0');
+      return;
+    }
+
+    if (!$query->getTableInfo('node__field_document_type')) {
+      $join_manager = \Drupal::service('plugin.manager.views.join');
+      $configuration = [
+        'table' => 'node__field_document_type',
+        'field' => 'entity_id',
+        'left_table' => 'node_field_data',
+        'left_field' => 'nid',
+        'extra' => [
+          ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+        ],
+      ];
+      $join = $join_manager->createInstance('standard', $configuration);
+      $query->addRelationship('node__field_document_type', $join, 'node_field_data');
+    }
+
+    $info = $query->getTableInfo('node__field_document_type');
+    $alias = $info['alias'] ?? 'node__field_document_type';
+    $query->addWhere(0, "$alias.field_document_type_target_id", $tids, 'IN');
+  }
+}
+
+/**
+ * Document type term IDs for a library section tab (names from motaded_custom_update_10005).
+ *
+ * @return int[]
+ */
+function motaded_custom_library_section_document_type_tids(string $section): array {
+  $names = $section === 'regulations'
+    ? ['Regulation', 'Law', 'Policy']
+    : ['Template', 'Form', 'Guide'];
+  return motaded_custom_taxonomy_tids_by_exact_names('document_type', $names);
+}
+
+/**
+ * Taxonomy term IDs by vocabulary and exact default labels.
+ *
+ * @return int[]
+ */
+function motaded_custom_taxonomy_tids_by_exact_names(string $vid, array $names): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $tids = [];
+  foreach ($names as $name) {
+    $name = trim((string) $name);
+    if ($name === '') {
+      continue;
+    }
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if ($ids) {
+      $tids[] = (int) reset($ids);
+    }
+  }
+  return array_values(array_unique($tids));
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function motaded_custom_views_pre_render(\Drupal\views\ViewExecutable $view): void {
+  if (($view->id() ?? '') !== 'library') {
+    return;
+  }
+  if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+    return;
+  }
+  $view->element['#cache']['contexts'][] = 'url.query_args:library_section';
+}

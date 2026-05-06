@@ -1,0 +1,19 @@
+uuid: 97c6a1b2-3c4d-4e5f-9a0b-1c2d3e4f5a6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.gateway_block
+id: paragraph.gateway_block.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: gateway_block
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

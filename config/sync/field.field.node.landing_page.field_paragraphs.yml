@@ -8,12 +8,19 @@ dependencies:
     - paragraphs.paragraphs_type.accordions
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.chambers_network
     - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
     - paragraphs.paragraphs_type.hero_two_cols
     - paragraphs.paragraphs_type.hero_split_banner
+    - paragraphs.paragraphs_type.glance_block
+    - paragraphs.paragraphs_type.gateway_block
+    - paragraphs.paragraphs_type.gateway_hub_block
+    - paragraphs.paragraphs_type.platforms_systems
+    - paragraphs.paragraphs_type.system_masthead
     - paragraphs.paragraphs_type.insights_updates
     - paragraphs.paragraphs_type.investor_journey
+    - paragraphs.paragraphs_type.key_sectors
     - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.media_lead
     - paragraphs.paragraphs_type.promo_split
@@ -42,6 +49,7 @@ settings:
       banner: banner
       banner_sm: banner_sm
       business_setup_section: business_setup_section
+      chambers_network: chambers_network
       media_lead: media_lead
       promo_split: promo_split
       split_promo: split_promo
@@ -53,8 +61,14 @@ settings:
       why_opportunities: why_opportunities
       hero_two_cols: hero_two_cols
       hero_split_banner: hero_split_banner
+      glance_block: glance_block
+      gateway_block: gateway_block
+      gateway_hub_block: gateway_hub_block
+      platforms_systems: platforms_systems
+      system_masthead: system_masthead
       insights_updates: insights_updates
       investor_journey: investor_journey
+      key_sectors: key_sectors
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -90,6 +104,9 @@ settings:
       cards:
         weight: 33
         enabled: true
+      chambers_network:
+        weight: 20
+        enabled: true
       counter:
         weight: -26
         enabled: false
@@ -105,6 +122,12 @@ settings:
       featured_contents:
         weight: 30
         enabled: true
+      gateway_block:
+        weight: 20
+        enabled: true
+      glance_block:
+        weight: 19
+        enabled: true
       hero_split_banner:
         weight: 18
         enabled: true
@@ -115,10 +138,10 @@ settings:
         weight: 43
         enabled: true
       insights_updates:
-        weight: 20
+        weight: 23
         enabled: true
       investor_journey:
-        weight: 21
+        weight: 24
         enabled: true
       itc_card:
         weight: -24
@@ -126,6 +149,9 @@ settings:
       journey_step:
         weight: 44
         enabled: false
+      key_sectors:
+        weight: 17
+        enabled: true
       media_lead:
         weight: 23
         enabled: true
@@ -135,6 +161,9 @@ settings:
       objectives:
         weight: -23
         enabled: false
+      platforms_systems:
+        weight: 21
+        enabled: true
       pricing:
         weight: -22
         enabled: false
@@ -162,6 +191,9 @@ settings:
       steps_to_obtain:
         weight: -19
         enabled: false
+      system_masthead:
+        weight: 22
+        enabled: true
       top_information:
         weight: -18
         enabled: false

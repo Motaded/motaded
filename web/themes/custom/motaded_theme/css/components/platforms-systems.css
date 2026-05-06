@@ -1,0 +1,316 @@
+/* Platforms systems (paragraph: platforms_systems). */
+
+.platforms-systems {
+  position: relative;
+  padding: clamp(2.25rem, 5vw, 4rem) 0;
+}
+
+.platforms-systems__inner {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.platforms-systems__masthead {
+  text-align: center;
+  max-width: 60rem;
+  margin: 0 auto 1.4rem;
+}
+
+.platforms-systems__eyebrow {
+  margin: 0 0 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(15, 118, 110, 0.9);
+}
+
+.platforms-systems__title {
+  margin: 0;
+  font-size: clamp(1.65rem, 3.4vw, 2.35rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.platforms-systems__subtitle {
+  margin: 0.55rem auto 0;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 1rem;
+  max-width: 46rem;
+}
+
+.platforms-systems__subtitle p {
+  margin: 0;
+}
+
+.platforms-systems__grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.3rem;
+}
+
+@media (min-width: 900px) {
+  .platforms-systems__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+}
+
+.platforms-systems__grid > .ps-card {
+  grid-column: span 3;
+}
+
+@media (min-width: 900px) {
+  .platforms-systems__grid > .ps-card:nth-child(n + 3) {
+    grid-column: span 2;
+  }
+}
+
+.ps-card {
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.82);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055);
+  padding: 1.15rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.ps-card__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.ps-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(6, 95, 70, 0.06);
+  color: rgba(15, 118, 110, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.12);
+}
+
+.ps-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.ps-card__body {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.ps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(226, 232, 240, 0.82);
+  background: rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+}
+
+.ps-list__item {
+  border-top: 1px solid rgba(226, 232, 240, 0.72);
+}
+
+.ps-list__item:first-child {
+  border-top: none;
+}
+
+.ps-list__link {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 160ms ease;
+}
+
+.ps-list__mini {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: rgba(15, 118, 110, 0.85);
+  background: rgba(6, 95, 70, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.12);
+  overflow: hidden;
+}
+
+.ps-list__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 5px;
+}
+
+.ps-list__mini svg {
+  display: block;
+}
+
+.ps-list__label {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.ps-list__arrow {
+  color: rgba(15, 118, 110, 0.9);
+  transition: transform 160ms ease;
+}
+
+.ps-list__link:hover {
+  background: rgba(236, 253, 245, 0.8);
+}
+
+.ps-list__link:hover .ps-list__arrow {
+  transform: translateX(3px);
+}
+
+.ps-card__cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: #0f766e;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.ps-card__cta span[aria-hidden="true"] {
+  transition: transform 160ms ease;
+}
+
+.ps-card__cta:hover span[aria-hidden="true"] {
+  transform: translateX(3px);
+}
+
+.platforms-systems__footer {
+  margin-top: 1.25rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.82);
+  background:
+    radial-gradient(820px 220px at 90% 50%, rgba(6, 95, 70, 0.10), transparent 65%),
+    linear-gradient(180deg, rgba(248, 250, 249, 0.95), rgba(255, 255, 255, 0.86));
+  padding: 1.15rem 1.15rem;
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .platforms-systems__footer {
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem 1.25rem;
+    padding: 1.25rem 1.35rem;
+  }
+}
+
+.platforms-systems__footer-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(6, 95, 70, 0.06);
+  color: rgba(15, 118, 110, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(15, 118, 110, 0.12);
+}
+
+.platforms-systems__footer-title {
+  margin: 0;
+  font-weight: 850;
+  color: #0f172a;
+}
+
+.platforms-systems__footer-body {
+  margin: 0.25rem 0 0;
+  color: #64748b;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.platforms-systems__footer-body p {
+  margin: 0;
+}
+
+.platforms-systems__footer-cta a {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.05rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  background: rgba(6, 95, 70, 0.10);
+  color: #0f766e;
+  font-weight: 750;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.platforms-systems__footer-cta a:hover {
+  background: rgba(6, 95, 70, 0.14);
+  border-color: rgba(15, 118, 110, 0.26);
+  transform: translateY(-1px);
+}
+
+.platforms-systems__footer-decor {
+  position: absolute;
+  right: clamp(0.75rem, 2vw, 1.25rem);
+  bottom: clamp(0.65rem, 2vw, 1.1rem);
+  width: 240px;
+  height: 160px;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(15, 118, 110, 0.25), transparent 45%),
+    radial-gradient(circle at 70% 60%, rgba(15, 118, 110, 0.18), transparent 55%),
+    radial-gradient(circle at 40% 80%, rgba(15, 118, 110, 0.15), transparent 55%);
+  filter: blur(0.2px);
+  pointer-events: none;
+}
+
+.platforms-systems__cue {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: rgba(15, 118, 110, 0.9);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 10px 24px rgba(15, 23, 42, 0.06),
+    inset 0 0 0 1px rgba(226, 232, 240, 0.9);
+  z-index: 2;
+}
+

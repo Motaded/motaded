@@ -1,0 +1,27 @@
+uuid: e9b8c7a6-3333-4222-8333-444455556701
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_insight_shell
+field_name: field_insight_shell
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: standard
+      label: Default
+    -
+      value: platform
+      label: 'Platform (MISA-style)'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

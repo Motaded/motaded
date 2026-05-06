@@ -1,0 +1,101 @@
+uuid: c5f4a0e3-6d7f-5a8c-b1e2-3f4a5b6c7d8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.event.body
+    - field.field.node.event.field_agenda
+    - field.field.node.event.field_category
+    - field.field.node.event.field_cta_link
+    - field.field.node.event.field_cta_text
+    - field.field.node.event.field_cta_type
+    - field.field.node.event.field_event_end
+    - field.field.node.event.field_event_start
+    - field.field.node.event.field_event_type
+    - field.field.node.event.field_featured
+    - field.field.node.event.field_featured_image
+    - field.field.node.event.field_gallery
+    - field.field.node.event.field_hero_image
+    - field.field.node.event.field_location
+    - field.field.node.event.field_meeting_enabled
+    - field.field.node.event.field_meta
+    - field.field.node.event.field_partner_logos
+    - field.field.node.event.field_region
+    - field.field.node.event.field_secondary_cta
+    - field.field.node.event.field_tags
+    - field.field.node.event.field_what_we_offer
+    - field.field.node.event.field_who_should_attend
+    - field.field.node.event.field_why_attend
+    - node.type.event
+  module:
+    - datetime
+    - text
+    - user
+id: node.event.teaser
+targetEntityType: node
+bundle: event
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 300
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_event_start:
+    type: datetime_default
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_event_type:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_featured_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  field_agenda: true
+  field_category: true
+  field_cta_link: true
+  field_cta_text: true
+  field_cta_type: true
+  field_event_end: true
+  field_featured: true
+  field_gallery: true
+  field_hero_image: true
+  field_location: true
+  field_meeting_enabled: true
+  field_meta: true
+  field_partner_logos: true
+  field_region: true
+  field_secondary_cta: true
+  field_tags: true
+  field_what_we_offer: true
+  field_who_should_attend: true
+  field_why_attend: true
+  langcode: true
+  search_api_excerpt: true

@@ -1,0 +1,34 @@
+uuid: a1000001-0000-4000-8000-000000000043
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.help_item.field_body
+    - field.field.paragraph.help_item.field_title
+    - paragraphs.paragraphs_type.help_item
+  module:
+    - text
+id: paragraph.help_item.default
+targetEntityType: paragraph
+bundle: help_item
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  search_api_excerpt: true
+  status: true

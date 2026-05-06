@@ -1,0 +1,30 @@
+uuid: effcf914-b1b7-47be-b912-3bdb41d079ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector_card_icon_media
+    - media.type.icon
+    - node.type.sector_page
+  module:
+    - media
+id: node.sector_page.field_sector_card_icon_media
+field_name: field_sector_card_icon_media
+entity_type: node
+bundle: sector_page
+label: 'Custom card icon (SVG)'
+description: 'Upload a line SVG via Media library (type Icon). Shown on homepage sector tiles instead of the preset below when provided.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+    target_bundle: icon
+field_type: entity_reference

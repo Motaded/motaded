@@ -1,0 +1,78 @@
+{#
+/**
+ * @file
+ * Homepage key sectors layout: headline, sidebar insight, Views grid, CTA footer.
+ */
+#}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'key-sectors',
+  ]
+%}
+{% set ksb_hid = 'ksb-heading-' ~ (paragraph.id() ?: 'draft') %}
+<section{{ attributes.addClass(classes) }} role="region"{% if ksb_heading %} aria-labelledby="{{ ksb_hid }}"{% endif %}>
+  {{ title_prefix }}
+  <div class="key-sectors__shell">
+    <div class="key-sectors__hero">
+      <div class="key-sectors__main">
+        {% if ksb_eyebrow %}
+          <p class="key-sectors__eyebrow">{{ ksb_eyebrow }}</p>
+        {% endif %}
+        {% if ksb_heading %}
+          <h2 id="{{ ksb_hid }}" class="key-sectors__heading">{{ ksb_heading }}</h2>
+        {% endif %}
+        {% if ksb_intro %}
+          <div class="key-sectors__intro">{{ ksb_intro }}</div>
+        {% endif %}
+      </div>
+
+      {% if ksb_sidebar_title or ksb_sidebar_body %}
+        <aside class="key-sectors__aside" aria-label="{{ 'Highlights'|t }}">
+          <div class="key-sectors__aside-icon" aria-hidden="true">{{ ksb_sidebar_icon_markup }}</div>
+          <div class="key-sectors__aside-copy">
+            {% if ksb_sidebar_title %}
+              <p class="key-sectors__aside-title">{{ ksb_sidebar_title }}</p>
+            {% endif %}
+            {% if ksb_sidebar_body %}
+              <div class="key-sectors__aside-body">{{ ksb_sidebar_body }}</div>
+            {% endif %}
+          </div>
+        </aside>
+      {% endif %}
+    </div>
+
+    {{ content.field_view_block }}
+  </div>
+
+  {% if ksb_footer_title or ksb_footer_body or ksb_cta_url %}
+    <div class="key-sectors__shell">
+      <div class="key-sectors__footer">
+        <div class="key-sectors__footer-visual" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M12 3.8v16.4M12 12l6.6-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="key-sectors__footer-copy">
+          {% if ksb_footer_title %}
+            <p class="key-sectors__footer-title">{{ ksb_footer_title }}</p>
+          {% endif %}
+          {% if ksb_footer_body %}
+            <div class="key-sectors__footer-desc">{{ ksb_footer_body }}</div>
+          {% endif %}
+        </div>
+        {% if ksb_cta_url %}
+          <div class="key-sectors__footer-cta">
+            <a class="button" href="{{ ksb_cta_url }}">{{ ksb_cta_label }}</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ title_suffix }}
+</section>

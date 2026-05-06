@@ -1,102 +1,36 @@
-/* Homepage: paragraph + view services / block_2.
- * Weight in libraries.yml > main.css — must override Tailwind + main.css .exposed-filter-tabs. */
+/* Homepage services block: paragraph + view services / block_2.
+ * Weight in libraries.yml > main.css — overrides Tailwind + main.css where needed. */
 
 .paragraph--view-block--services-home {
-  background: #f8fafc;
-  /* Top spacing (paragraph has no Tailwind pt-* for this variant — see paragraph--view-block.html.twig). */
+  background: #ffffff;
   padding-top: clamp(3.75rem, 9vw, 6rem);
   padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
 
 /* -------------------------------------------------------------------------
-   Undo main.css `.exposed-filter-tabs` (BEF radios): nested @apply + ::after
-   fights label-only tab styling. Scoped to this paragraph only.
+   Header: intro + team aside
    ------------------------------------------------------------------------- */
-.paragraph--view-block--services-home .exposed-filter-tabs .bef-exposed-form.form--inline,
-.paragraph--view-block--services-home .exposed-filter-tabs form.form--inline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  width: 100%;
-  gap: 0;
+.services-home-header--split {
+  margin-bottom: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form--inline fieldset,
-.paragraph--view-block--services-home .exposed-filter-tabs .form--inline > .form-wrapper,
-.paragraph--view-block--services-home .exposed-filter-tabs .form--inline .form-item {
-  float: none !important;
-  clear: none !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  width: auto;
-  max-width: 100%;
+.services-home-header-actions {
+  margin-top: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form--inline fieldset {
-  flex: 1 1 auto;
-  min-width: 0;
+.services-home-team-badge {
+  flex-shrink: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline {
-  position: relative;
-  display: flex !important;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.25rem !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  overflow: visible !important;
+.services-home-team-badge svg {
+  display: block;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline::after {
-  content: none !important;
-  display: none !important;
+.services-home-team-text {
+  max-width: 36ch;
 }
 
-/* main.css hides radios — restore visually-hidden so :focus-visible + label still work */
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline input.form-radio {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-  opacity: 0 !important;
-  display: block !important;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline .form-type-radio {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  color: inherit !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline .form-type-radio:hover {
-  background: transparent !important;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline .form-type-radio:has(input:checked) {
-  background: transparent !important;
-  color: inherit !important;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline .form-type-radio:has(input:checked)::after {
-  content: none !important;
-  display: none !important;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline .form-type-radio > div {
-  display: revert !important;
-}
-
-/* Header: eyebrow + title + body */
+/* Intro typography (field_body: eyebrow, title, subtitle) */
 .services-home-header {
   margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
 }
@@ -105,7 +39,6 @@
   padding-left: 0;
 }
 
-/* Eyebrow: pill badge (aligned with why-opportunities / investor-journey). */
 .paragraph--view-block--services-home .services-home-intro > p:nth-of-type(1) {
   display: inline-flex !important;
   align-items: center;
@@ -120,10 +53,9 @@
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
   line-height: 1.35 !important;
-  color: #475569 !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 1px 2px rgb(15 23 42 / 4%) !important;
+  color: #0f766e !important;
+  background: rgb(236 253 245 / 85%) !important;
+  border: 1px solid rgb(167 243 208 / 85%) !important;
 }
 
 .paragraph--view-block--services-home .services-home-intro > p:nth-of-type(2) {
@@ -157,7 +89,6 @@
   width: fit-content;
   max-width: 100%;
   box-sizing: border-box;
-  align-self: flex-start;
   padding: 0.55rem 1.2rem;
   border-radius: 9999px;
   border: 1px solid #0f766e;
@@ -170,12 +101,6 @@
     background-color 0.15s ease,
     border-color 0.15s ease,
     color 0.15s ease;
-}
-
-@media (min-width: 640px) {
-  .services-home-view-all {
-    align-self: auto;
-  }
 }
 
 .services-home-view-all:hover {
@@ -195,21 +120,37 @@
   line-height: 1;
 }
 
-/* Tabs row + labels (only inside this paragraph’s view) */
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .view-filters,
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block-2 .view-filters {
-  margin-bottom: 1.35rem;
+/* -------------------------------------------------------------------------
+   View shell: sidebar + detail
+   ------------------------------------------------------------------------- */
+.paragraph--view-block--services-home .view-display-id-block_2 .services-home-shell {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+  align-items: start;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .view-filters fieldset,
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block-2 .view-filters fieldset {
+@media (min-width: 1024px) {
+  .paragraph--view-block--services-home .view-display-id-block_2 .services-home-shell {
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    gap: 2rem 2.5rem;
+  }
+}
+
+.paragraph--view-block--services-home .services-home-sidebar__filters {
+  margin: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .bef-exposed-form {
+  margin: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar fieldset {
   margin: 0;
   padding: 0;
   border: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .view-filters .fieldset-legend,
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block-2 .view-filters .fieldset-legend {
+.paragraph--view-block--services-home .services-home-sidebar .fieldset-legend {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -221,166 +162,337 @@
   border: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .view-filters .fieldset-wrapper,
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block-2 .view-filters .fieldset-wrapper {
+.paragraph--view-block--services-home .services-home-sidebar .fieldset-wrapper {
   padding: 0;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios.form--inline,
-.paragraph--view-block--services-home .exposed-filter-tabs .form-radios > .form--inline {
+/*
+ * Sidebar radios: BEF outputs icon #prefix as a sibling BEFORE each .form-type-radio
+ * (span.services-home-sidebar-radio__icon + div.form-type-radio). Use a 2-col grid.
+ * Also undo main.css .exposed-filter-tabs tab pills (hidden input, label colours, child div).
+ */
+.paragraph--view-block--services-home .services-home-sidebar fieldset .form-radios:not(.form--inline) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline {
+  display: grid !important;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0 !important;
+  padding: 0 !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* main.css hides radios — restore focusable clipping so keyboard works */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline input.form-radio {
+  display: block !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  opacity: 0 !important;
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio > div {
+  display: revert !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon {
+  grid-column: 1;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding: 0.75rem 0 0.75rem 0.85rem;
   border-bottom: 1px solid #e2e8f0;
+  background: #fff;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio {
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon img {
+  width: 1.375rem;
+  height: 1.375rem;
+  object-fit: contain;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio {
   position: relative;
-  margin: 0;
+  grid-column: 2;
+  display: flex !important;
+  align-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.15s ease;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio label.option {
-  display: block;
-  margin: 0;
-  padding: 0.65rem 1rem 0.72rem;
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:last-of-type {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:last-of-type {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio label.option {
+  flex: 1 1 auto;
+  margin: 0 !important;
+  padding: 0.85rem 1rem 0.85rem 0 !important;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #475569;
-  background: transparent;
-  border-radius: 0.5rem 0.5rem 0 0;
-  border: 1px solid transparent;
-  border-bottom: none;
+  color: #334155 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
   transition:
     color 0.12s ease,
     background-color 0.12s ease;
 }
 
-@media (min-width: 640px) {
-  .paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio label.option {
-    padding-inline: 1.2rem;
-  }
+/* Undo main.css pill + white-on-green checked label */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio:hover {
+  background: rgb(248 250 252 / 95%);
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio label.option:hover {
-  color: #0f172a;
-  background: rgb(241 245 249 / 70%);
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio:hover) {
+  background: rgb(248 250 252 / 95%);
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio input:checked + label.option {
-  position: relative;
-  z-index: 1;
-  margin-bottom: -1px;
-  color: #fff !important;
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:hover label.option {
+  color: #0f172a !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked),
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio input:checked) {
+  background: rgb(236 253 245 / 72%) !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) {
+  border-bottom: 3px solid #0f766e;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio input:checked) {
+  border-bottom: 3px solid #0f766e;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) label.option {
+  color: #0f172a !important;
   font-weight: 600;
-  background: #0f766e;
-  border-color: #0f766e;
-  border-bottom: 1px solid #0f766e;
-  padding-bottom: 0.72rem;
+  background: transparent !important;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio input:focus-visible + label.option {
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio:has(input:checked)::after {
+  content: none !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio input:focus-visible + label.option {
   outline: 2px solid #0d9488;
   outline-offset: 2px;
-  z-index: 1;
+  border-radius: 0.25rem;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs .form-type-radio input:checked:focus-visible + label.option {
-  outline-color: #fff;
-  outline-offset: 3px;
-}
-
-.paragraph--view-block--services-home .exposed-filter-tabs .view-filters #edit-actions {
+.paragraph--view-block--services-home .services-home-sidebar .view-filters #edit-actions {
   display: none;
 }
 
-/* Cards grid */
-.paragraph--view-block--services-home .exposed-filter-tabs .view-content {
-  align-items: stretch;
-}
-
-.paragraph--view-block--services-home .services-home-card {
+/* Detail column */
+.paragraph--view-block--services-home .services-home-category-intro {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  padding: 1.5rem 1.75rem;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.875rem;
-  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.75rem;
 }
 
-.paragraph--view-block--services-home .services-home-card:hover {
-  border-color: rgb(13 148 136 / 28%);
-  box-shadow: 0 10px 28px rgb(15 23 42 / 8%);
-}
-
-.paragraph--view-block--services-home .services-home-card__icon {
-  width: 3rem;
-  height: 3rem;
+.paragraph--view-block--services-home .services-home-category-intro__icon {
+  flex-shrink: 0;
+  width: 4.25rem;
+  height: 4.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: #ecfdf5;
-  margin-bottom: 1rem;
+  background: rgb(236 253 245 / 90%);
+  border: 1px solid rgb(167 243 208 / 60%);
 }
 
-.paragraph--view-block--services-home .services-home-card__icon img {
-  width: 1.4rem;
-  height: 1.4rem;
+.paragraph--view-block--services-home .services-home-category-intro__icon img {
+  width: 2.35rem;
+  height: 2.35rem;
   object-fit: contain;
 }
 
-.paragraph--view-block--services-home .services-home-card__title {
+.paragraph--view-block--services-home .services-home-category-intro__title {
   margin: 0 0 0.5rem;
-  font-size: 1.0625rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description p {
+  margin: 0 0 0.5rem;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description p:last-child {
+  margin-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-offer-heading {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0f766e;
+}
+
+.paragraph--view-block--services-home .services-home-offer-list {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  background: #fff;
+  overflow: hidden;
+}
+
+.paragraph--view-block--services-home .services-home-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 1.25rem;
+  align-items: center;
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.paragraph--view-block--services-home .services-home-row:last-child {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-row__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(236 253 245 / 85%);
+}
+
+.paragraph--view-block--services-home .services-home-row__icon img {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.paragraph--view-block--services-home .services-home-row__title {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1.3;
   color: #0f172a;
 }
 
-.paragraph--view-block--services-home .services-home-card__body {
+.paragraph--view-block--services-home .services-home-row__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.paragraph--view-block--services-home .services-home-row__body {
   margin: 0;
-  flex: 1 1 auto;
   font-size: 0.875rem;
   line-height: 1.55;
   color: #64748b;
 }
 
-.paragraph--view-block--services-home .services-home-card__rule {
-  margin: 1.1rem 0 0.9rem;
-  border: 0;
-  border-top: 1px solid #e2e8f0;
+.paragraph--view-block--services-home .services-home-row__body p {
+  margin: 0;
 }
 
-.paragraph--view-block--services-home .services-home-card__cta {
+.paragraph--view-block--services-home .services-home-row__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  margin-top: auto;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #0f766e;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.paragraph--view-block--services-home .services-home-row__cta:hover {
+  color: #0d9488;
+}
+
+.paragraph--view-block--services-home .services-home-category-more-wrap {
+  margin: 1.35rem 0 0;
+}
+
+.paragraph--view-block--services-home .services-home-category-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.875rem;
   font-weight: 600;
   color: #0f766e;
   text-decoration: none;
-  width: fit-content;
-  transition: color 0.15s ease;
 }
 
-.paragraph--view-block--services-home .services-home-card__cta:hover {
+.paragraph--view-block--services-home .services-home-category-more:hover {
   color: #0d9488;
 }
 
-.paragraph--view-block--services-home .services-home-card__cta::after {
-  content: "→";
-  transition: transform 0.18s ease;
+.paragraph--view-block--services-home .services-home-empty {
+  padding: 1.5rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  color: #64748b;
+  font-size: 0.9375rem;
 }
 
-.paragraph--view-block--services-home .services-home-card:hover .services-home-card__cta::after {
-  transform: translateX(0.15rem);
+@media (max-width: 767px) {
+  .paragraph--view-block--services-home .services-home-row {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .paragraph--view-block--services-home .services-home-row__icon {
+    grid-row: 1 / span 2;
+  }
+
+  .paragraph--view-block--services-home .services-home-row__cta {
+    grid-column: 1 / -1;
+    justify-self: flex-start;
+    padding-inline-start: calc(2.75rem + 1.25rem);
+  }
 }
 
-[dir="rtl"] .paragraph--view-block--services-home .services-home-card:hover .services-home-card__cta::after {
-  transform: translateX(-0.15rem);
+[dir="rtl"] .paragraph--view-block--services-home .services-home-row__cta-arrow,
+[dir="rtl"] .paragraph--view-block--services-home .services-home-category-more__arrow {
+  display: inline-block;
+  transform: scaleX(-1);
 }

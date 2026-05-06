@@ -1,0 +1,33 @@
+uuid: 9d68d132-1c28-4a9d-9e1c-0df1e34a7a4c
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_gateway_icon
+field_name: field_gateway_icon
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: platforms
+      label: Platforms
+    -
+      value: sectors
+      label: Sectors
+    -
+      value: events
+      label: Events
+    -
+      value: insights
+      label: Insights
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

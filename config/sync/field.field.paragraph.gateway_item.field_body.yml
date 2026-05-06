@@ -1,0 +1,22 @@
+uuid: 9b6f1a2c-4f6d-4e8a-9b43-0f1d2c3b4a5e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - paragraphs.paragraphs_type.gateway_item
+  module:
+    - text
+id: paragraph.gateway_item.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: gateway_item
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

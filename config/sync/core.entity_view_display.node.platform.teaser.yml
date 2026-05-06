@@ -1,0 +1,65 @@
+uuid: a1000001-0000-4000-8000-000000000082
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.platform.field_category
+    - field.field.node.platform.field_logo
+    - field.field.node.platform.field_short_description
+    - node.type.platform
+  module:
+    - user
+id: node.platform.teaser
+targetEntityType: node
+bundle: platform
+mode: teaser
+content:
+  field_category:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_logo:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_short_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  body: true
+  field_cta_link: true
+  field_cta_text: true
+  field_external_link: true
+  field_featured: true
+  field_hero_image: true
+  field_how_we_help: true
+  field_partner_logos: true
+  field_process_steps: true
+  field_region: true
+  field_requirements: true
+  field_source_link: true
+  field_source_text: true
+  field_subtitle: true
+  field_why_matters: true
+  langcode: true
+  search_api_excerpt: true

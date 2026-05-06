@@ -1,0 +1,27 @@
+uuid: a1000001-0000-4000-8000-00000000006e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_requirements
+    - node.type.platform
+    - paragraphs.paragraphs_type.requirements
+  module:
+    - entity_reference_revisions
+id: node.platform.field_requirements
+field_name: field_requirements
+entity_type: node
+bundle: platform
+label: Requirements
+description: 'Documents, approvals, or checklist rows (reuse Requirements paragraph).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      requirements: requirements
+    negate: 0
+field_type: entity_reference_revisions

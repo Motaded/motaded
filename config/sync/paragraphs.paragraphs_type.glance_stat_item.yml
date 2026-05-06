@@ -1,0 +1,10 @@
+uuid: 01b0c7fa-21f3-4b51-83b8-3c0b9673e5b9
+langcode: en
+status: true
+dependencies: {  }
+id: glance_stat_item
+label: 'Glance stat item'
+icon_uuid: null
+icon_default: null
+description: 'Icon + value + title + description + source.'
+behavior_plugins: {  }

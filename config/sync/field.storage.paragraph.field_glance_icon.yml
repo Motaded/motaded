@@ -1,0 +1,54 @@
+uuid: 3eab1f06-6c85-4adf-9f07-3f39a327b74f
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_glance_icon
+field_name: field_glance_icon
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: money
+      label: Money
+    -
+      value: users
+      label: People
+    -
+      value: pie
+      label: 'Pie chart'
+    -
+      value: building
+      label: Building
+    -
+      value: chart_up
+      label: 'Growth / trend'
+    -
+      value: layers
+      label: Layers
+    -
+      value: globe
+      label: Globe
+    -
+      value: leaf
+      label: Leaf
+    -
+      value: handshake
+      label: Handshake
+    -
+      value: target
+      label: Target
+    -
+      value: flag
+      label: Flag
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

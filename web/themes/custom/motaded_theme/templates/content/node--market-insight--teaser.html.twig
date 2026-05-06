@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Market insight — teaser (insights directory featured grid + latest list).
+ */
+#}
+{% set has_media = insight_teaser_media is not empty %}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'insight-teaser',
+    has_media ? 'insight-teaser--has-media' : 'insight-teaser--no-media',
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  <a href="{{ url }}" class="insight-teaser__link" rel="bookmark">
+    <div class="insight-teaser__media">
+      {% if insight_teaser_category %}
+        <span class="insight-teaser__pill">{{ insight_teaser_category }}</span>
+      {% endif %}
+      {% if has_media %}
+        <div class="insight-teaser__media-inner">
+          {{ insight_teaser_media }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="insight-teaser__body">
+      {% if insight_teaser_year %}
+        <p class="insight-teaser__meta">{{ insight_teaser_year }}</p>
+      {% endif %}
+      <h3 class="insight-teaser__title">{{ label }}</h3>
+      {% if insight_teaser_excerpt %}
+        <p class="insight-teaser__excerpt">{{ insight_teaser_excerpt }}</p>
+      {% endif %}
+      <span class="insight-teaser__more">{{ 'Read insight'|t }}<span aria-hidden="true"> →</span></span>
+    </div>
+  </a>
+</article>

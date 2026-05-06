@@ -1,0 +1,31 @@
+uuid: 8d644c4b-5f84-4b5b-84c9-1b541ad341c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_glance_highlight
+    - paragraphs.paragraphs_type.glance_block
+    - paragraphs.paragraphs_type.glance_stat_item
+  module:
+    - entity_reference_revisions
+id: paragraph.glance_block.field_glance_highlight
+field_name: field_glance_highlight
+entity_type: paragraph
+bundle: glance_block
+label: 'Highlight stat'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      glance_stat_item: glance_stat_item
+    negate: 0
+    target_bundles_drag_drop:
+      glance_stat_item:
+        weight: 1
+        enabled: true
+field_type: entity_reference_revisions

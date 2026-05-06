@@ -1,0 +1,19 @@
+uuid: 5cf6d561-1821-4c10-a404-1dec9f7af2a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_short_description
+    - node.type.chamber
+id: node.chamber.field_short_description
+field_name: field_short_description
+entity_type: node
+bundle: chamber
+label: 'Short description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

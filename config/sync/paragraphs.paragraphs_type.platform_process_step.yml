@@ -1,0 +1,10 @@
+uuid: a1000001-0000-4000-8000-000000000022
+langcode: en
+status: true
+dependencies: {  }
+id: platform_process_step
+label: 'Platform process step'
+icon_uuid: null
+icon_default: null
+description: 'Optional ordered step (title + description).'
+behavior_plugins: {  }

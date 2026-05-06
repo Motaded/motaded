@@ -1,0 +1,785 @@
+/*
+ * Home page events strip (list + calendar column).
+ * Prefer one view reference: events/block_calendar (list is a View attachment).
+ * Legacy: two refs — events/block_home + events/block_calendar.
+ */
+
+/* Full section (paragraph) — soft panel like design reference */
+.events-home-strip {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f4 50%, #f8fafc 100%);
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.view-block-shell .events-home-strip__intro {
+  margin-bottom: 1.25rem;
+  max-width: 42rem;
+}
+
+/* Two-column grid needs display:contents on .field AND .field__items; otherwise grid
+ * places .field__label in column 1 and stacks both views in narrow column 2.
+ * Paragraph display: hide field_view_block label (config + section aria-label). */
+@media (min-width: 1024px) {
+  .events-home-paragraph-inner.events-home__grid {
+    display: grid;
+    /* List column 40% : calendar column 60% (2fr / 5fr shares). */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 2rem 2.5rem;
+    align-items: start;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field--name-field-view-block {
+    display: contents;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field--name-field-view-block .field__items {
+    display: contents;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field__item {
+    min-width: 0;
+  }
+
+  /* List = wide column, calendar = narrow — regardless of ref order in the paragraph. */
+  .events-home-paragraph-inner.events-home__grid .field__item:has(.view-display-id-block_home) {
+    grid-column: 1;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field__item:has(.view-display-id-block_calendar) {
+    grid-column: 2;
+  }
+
+  /* One view block = combined calendar + attachment list (recommended). */
+  .events-home-paragraph-inner.events-home__grid
+    .field--name-field-view-block
+    > .field__item:only-child {
+    grid-column: 1 / -1;
+  }
+
+  .events-home-paragraph-inner.events-home__grid > .view-block-intro {
+    grid-column: 1 / -1;
+  }
+}
+
+.events-home {
+  margin-block: 2rem 3rem;
+}
+
+.events-home__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 2rem 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .events-home__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .events-home-paragraph-inner.events-home__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field--name-field-view-block,
+  .events-home-paragraph-inner.events-home__grid .field__items {
+    display: contents;
+  }
+
+  .events-home-paragraph-inner.events-home__grid > .view-block-intro {
+    order: -1;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field__item:has(.view-display-id-block_home) {
+    order: 1;
+  }
+
+  .events-home-paragraph-inner.events-home__grid .field__item:has(.view-display-id-block_calendar) {
+    order: 2;
+  }
+}
+
+.events-home__intro {
+  margin-bottom: 1.25rem;
+}
+
+.events-home__eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--event-brand, #00473f);
+  margin: 0 0 0.5rem;
+}
+
+.events-home__title {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0f172a;
+  margin: 0 0 0.75rem;
+}
+
+.events-home__lede {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0;
+  max-width: 42rem;
+}
+
+/* Toolbar: exposed Event type / Region as native selects (BEF plugin default) */
+.events-home__list-view .views-exposed-form,
+.events-home__calendar-shell .views-exposed-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.events-home__list-view .views-exposed-form {
+  justify-content: flex-end;
+}
+
+.events-home__calendar-shell .views-exposed-form {
+  margin-bottom: 0.85rem;
+}
+
+.events-home__list-view .views-exposed-form .form--inline,
+.events-home__calendar-shell .views-exposed-form .form--inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem 1rem;
+}
+
+.events-home__list-view .views-exposed-form .form--inline .form-actions,
+.events-home__calendar-shell .views-exposed-form .form--inline .form-actions {
+  clear: none;
+}
+
+/* Avoid classy float layout breaking chip groups */
+.events-home__list-view .views-exposed-form .form--inline .form-item,
+.events-home__calendar-shell .views-exposed-form .form--inline .form-item {
+  float: none;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.events-home__list-view .fieldset,
+.events-home__calendar-shell .fieldset {
+  margin: 0 !important;
+  padding: 0.4rem 0.65rem 0.65rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.04);
+  flex: 1 1 auto;
+  min-width: min(100%, 11rem);
+}
+
+.events-home__calendar-shell .fieldset {
+  background: #fafbfb !important;
+  border-color: #e8ecf0 !important;
+  box-shadow: none;
+}
+
+.events-home__list-view .fieldset .fieldset-legend,
+.events-home__calendar-shell .fieldset .fieldset-legend {
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em !important;
+  color: #64748b !important;
+}
+
+.events-home__list-view .fieldset .fieldset-wrapper,
+.events-home__calendar-shell .fieldset .fieldset-wrapper {
+  padding-top: 0.35rem !important;
+}
+
+.events-home__list-view .views-exposed-form .form-type-select,
+.events-home__calendar-shell .views-exposed-form .form-type-select {
+  margin: 0 !important;
+}
+
+.events-home__list-view .views-exposed-form .form-type-select label,
+.events-home__calendar-shell .views-exposed-form .form-type-select label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.events-home__list-view .views-exposed-form select,
+.events-home__calendar-shell .views-exposed-form select {
+  appearance: auto;
+  min-width: 10rem;
+  max-width: 100%;
+  padding: 0.45rem 2rem 0.45rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #0f172a;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.events-home__calendar-shell .views-exposed-form select {
+  background-color: #fafbfb;
+  border-color: #e8ecf0;
+}
+
+.events-home__list-view .views-exposed-form select:hover,
+.events-home__calendar-shell .views-exposed-form select:hover {
+  border-color: rgba(0, 71, 63, 0.35);
+}
+
+.events-home__list-view .views-exposed-form select:focus-visible,
+.events-home__calendar-shell .views-exposed-form select:focus-visible {
+  outline: none;
+  border-color: var(--event-brand, #00473f);
+  box-shadow: 0 0 0 2px rgba(0, 71, 63, 0.2);
+}
+
+.events-home__list-view .views-exposed-form .form-actions,
+.events-home__calendar-shell .views-exposed-form .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  flex-basis: 100%;
+}
+
+.events-home__list-view .views-exposed-form input[name="reset"],
+.events-home__calendar-shell .views-exposed-form input[name="reset"] {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.events-home__list-view .views-exposed-form input[name="reset"]:hover,
+.events-home__list-view .views-exposed-form input[name="reset"]:focus-visible,
+.events-home__calendar-shell .views-exposed-form input[name="reset"]:hover,
+.events-home__calendar-shell .views-exposed-form input[name="reset"]:focus-visible {
+  border-color: var(--event-brand, #00473f);
+  color: var(--event-brand, #00473f);
+  background: rgba(0, 71, 63, 0.06);
+}
+
+.events-home__list-view {
+  position: relative;
+}
+
+/* Mirror calendar filters into this form via JS; hide duplicate UI (see events-home.js). */
+.events-home__list-view > .view-filters {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  contain: content;
+}
+
+.events-home__list-view > .view-filters * {
+  pointer-events: none;
+}
+
+.events-home__list-view .view-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/*
+ * Home list: horizontal event cards (thumbnail left, copy right).
+ */
+@media (min-width: 640px) {
+  .events-home__list-view .event-teaser__link {
+    flex-direction: row;
+    align-items: stretch;
+    border-radius: 16px;
+    box-shadow: 0 2px 14px rgba(15, 23, 42, 0.06);
+    border-color: rgba(226, 232, 240, 0.95);
+  }
+
+  /* Let row height drive the thumb so image can cover full column (no short crop band). */
+  .events-home__list-view .event-teaser__media {
+    position: relative;
+    flex: 0 0 clamp(152px, 30vw, 184px);
+    width: clamp(152px, 30vw, 184px);
+    max-width: 38%;
+    align-self: stretch;
+    aspect-ratio: unset;
+    min-height: 9.5rem;
+  }
+
+  .events-home__list-view .event-teaser--no-media .event-teaser__media {
+    min-height: 9.75rem;
+  }
+
+  /* Ensure responsive-image wrappers fill the thumb column */
+  .events-home__list-view .event-teaser__media-inner .responsive-image-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .events-home__list-view .event-teaser__body {
+    padding: 0.9rem 1.05rem;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .events-home__list-view .event-teaser__title {
+    font-size: 0.975rem;
+    line-height: 1.33;
+  }
+
+  .events-home__list-view .event-teaser__excerpt {
+    -webkit-line-clamp: 2;
+    font-size: 0.815rem;
+    line-height: 1.5;
+    color: #64748b;
+  }
+
+  .events-home__list-view .event-teaser__date-row {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+}
+
+.events-home__footer-more {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.events-home__view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--event-brand, #00473f);
+  text-decoration: none;
+  border: 2px solid rgba(0, 71, 63, 0.35);
+  padding: 0.75rem 1.35rem;
+  border-radius: 14px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.events-home__view-all:hover,
+.events-home__view-all:focus-visible {
+  border-color: var(--event-brand, #00473f);
+  background: rgba(0, 71, 63, 0.06);
+}
+
+/*
+ * Combined home block (block_calendar + attachment list): one .view root splits
+ * list (attachment-before) vs filters + FC + footer (right column card stack).
+ */
+.events-home__calendar-shell {
+  position: relative;
+  min-width: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+@media (min-width: 1024px) {
+  .events-home__calendar-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 0 2.5rem;
+    align-items: start;
+    grid-template-areas:
+      'list-col filters-slot'
+      'list-col calendar-slot'
+      'list-col footer-slot';
+  }
+
+  .events-home__calendar-shell > .attachment.attachment-before {
+    grid-area: list-col;
+  }
+
+  .events-home__calendar-shell > .view-filters {
+    grid-area: filters-slot;
+    margin-bottom: 0;
+  }
+
+  .events-home__calendar-shell > .view-content {
+    grid-area: calendar-slot;
+    margin-top: 0 !important;
+  }
+
+  .events-home__calendar-shell > .view-footer {
+    grid-area: footer-slot;
+  }
+}
+
+/* Right column chrome (formerly single “aside” card). */
+.events-home__calendar-shell > .view-filters {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  border: 1px solid #e2e8f0;
+  border-bottom-color: transparent;
+  padding: 0.85rem 0.95rem 1rem;
+  box-shadow:
+    0 4px 18px rgba(15, 23, 42, 0.04),
+    0 14px 32px rgba(15, 23, 42, 0.04);
+}
+
+.events-home__calendar-shell > .view-content {
+  background: #fff;
+  margin-top: -1px !important;
+  border: 1px solid #e2e8f0;
+  border-top-width: 0;
+  padding: 0 0.95rem;
+  margin-bottom: 0;
+}
+
+.events-home__calendar-shell > .view-footer {
+  background: #fff;
+  margin-top: -1px;
+  padding: 0 0.95rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-top-width: 0;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.05);
+}
+
+@media (max-width: 1023px) {
+  .events-home__calendar-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Match legacy order: teaser list → filters + calendar. */
+  .events-home__calendar-shell > .attachment.attachment-before {
+    order: 1;
+    margin-bottom: 0;
+  }
+
+  .events-home__calendar-shell > .view-filters {
+    order: 2;
+  }
+
+  .events-home__calendar-shell > .view-content {
+    order: 3;
+  }
+
+  .events-home__calendar-shell > .view-footer {
+    order: 4;
+  }
+
+  .events-home__calendar-shell > .view-filters,
+  .events-home__calendar-shell > .view-content,
+  .events-home__calendar-shell > .view-footer {
+    border-radius: 16px;
+    border-bottom-color: #e2e8f0;
+    border-top-width: 1px !important;
+    margin-top: 0 !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    margin-block: 0 !important;
+  }
+
+  .events-home__calendar-shell > .attachment.attachment-before {
+    margin-bottom: 0;
+  }
+}
+
+.events-home__calendar-shell .view-filters + .view-content {
+  padding-top: 0.75rem !important;
+}
+
+/* FullCalendar header: outline nav, solid “today”, title right, hide view toggle */
+.events-home__calendar-shell .fc-toolbar.fc-header-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.15rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid #e8edf2;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-right {
+  display: none !important;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-left {
+  flex: 0 0 auto;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-center {
+  flex: 1 1 auto;
+  margin-inline-start: auto;
+  text-align: right;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-center h2 {
+  margin: 0;
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--event-brand, #00473f);
+  line-height: 1.25;
+  background: rgba(0, 71, 63, 0.07);
+  border: 1px solid rgba(0, 71, 63, 0.18);
+  border-radius: 999px;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-button-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border: 0;
+  border-radius: 12px;
+  background: #f1f5f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  vertical-align: middle;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-button-group > .fc-button {
+  margin: 0 !important;
+  border-radius: 9px !important;
+  padding: 0.42rem 0.78rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  border-width: 1px !important;
+  text-transform: capitalize;
+  box-shadow: none !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-prev-button,
+.events-home__calendar-shell .fc-header-toolbar .fc-next-button {
+  padding-left: 0.48rem !important;
+  padding-right: 0.48rem !important;
+  min-width: 2.4rem;
+  background: #fff !important;
+  color: var(--event-brand, #00473f) !important;
+  border-color: rgba(0, 71, 63, 0.28) !important;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-prev-button:hover,
+.events-home__calendar-shell .fc-header-toolbar .fc-prev-button:focus-visible,
+.events-home__calendar-shell .fc-header-toolbar .fc-next-button:hover,
+.events-home__calendar-shell .fc-header-toolbar .fc-next-button:focus-visible {
+  background: #fff !important;
+  border-color: var(--event-brand, #00473f) !important;
+  color: var(--event-brand, #00473f) !important;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-today-button {
+  background: var(--event-brand, #00473f) !important;
+  border-color: var(--event-brand, #00473f) !important;
+  color: #fff !important;
+}
+
+.events-home__calendar-shell .fc-header-toolbar .fc-today-button:hover,
+.events-home__calendar-shell .fc-header-toolbar .fc-today-button:focus-visible {
+  filter: brightness(1.08);
+}
+
+.events-home__calendar-shell .fc-button-primary {
+  background: var(--event-brand, #00473f);
+  border-color: var(--event-brand, #00473f);
+}
+
+.events-home__calendar-shell .js-drupal-fullcalendar {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0;
+}
+
+/* Calendar events: allow richer multi-line content */
+.events-home__calendar-shell .fc .fc-daygrid-event {
+  white-space: normal;
+  align-items: stretch;
+}
+
+.events-home__calendar-shell .fc .fc-daygrid-event .fc-event-time {
+  font-weight: 800;
+  margin-right: 0.35rem;
+}
+
+.events-home__calendar-shell .fc .fc-daygrid-event .fc-event-title {
+  white-space: normal;
+}
+
+.events-home__calendar-shell .fc-event-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.events-home__calendar-shell .fc-event-card__title {
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.events-home__calendar-shell .fc-event-card__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.events-home__calendar-shell .fc-event-card__title-link:hover,
+.events-home__calendar-shell .fc-event-card__title-link:focus-visible {
+  text-decoration: underline;
+}
+
+.events-home__calendar-shell .fc-event-card__meta {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.92;
+  line-height: 1.2;
+}
+
+.events-home-calendar-tooltip {
+  position: fixed;
+  z-index: 10000;
+  max-width: min(20rem, calc(100vw - 1.5rem));
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+}
+
+.events-home-calendar-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.events-home-calendar-tooltip__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.events-home-calendar-tooltip__time {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.events-home-cta {
+  margin-top: 1.25rem;
+  padding: 1.2rem 1.35rem;
+  border-radius: 16px;
+  background: rgba(0, 71, 63, 0.07);
+  border: 1px solid rgba(0, 71, 63, 0.16);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.events-home-cta__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--event-brand, #00473f);
+  color: #fff;
+}
+
+.events-home-cta__icon svg {
+  display: block;
+}
+
+.events-home-cta__text {
+  flex: 1;
+  min-width: min(220px, 100%);
+}
+
+.events-home-cta__title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+  color: #0f172a;
+}
+
+.events-home-cta__body {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+  margin: 0;
+}
+
+.events-home-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.65rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  background: var(--event-brand, #00473f);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.events-home-cta__btn:hover,
+.events-home-cta__btn:focus-visible {
+  filter: brightness(1.08);
+}

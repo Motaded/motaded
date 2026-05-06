@@ -1,0 +1,23 @@
+uuid: 4b67afbf-42a8-4b8f-a6f8-f68d5b0f042a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_glance_icon
+    - paragraphs.paragraphs_type.glance_stat_item
+  module:
+    - options
+id: paragraph.glance_stat_item.field_glance_icon
+field_name: field_glance_icon
+entity_type: paragraph
+bundle: glance_stat_item
+label: Icon
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: chart_up
+default_value_callback: ''
+settings: {  }
+field_type: list_string

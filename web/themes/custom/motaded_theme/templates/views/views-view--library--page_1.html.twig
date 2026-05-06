@@ -1,0 +1,134 @@
+{#
+/**
+ * Full Library page: hero, section tabs, sidebar counts, filters, document rows.
+ */
+#}
+{{ attach_library('motaded_theme/library_directory') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'library-directory',
+    'library-directory-page',
+    'page-gray',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    {{ title }}
+  {% endif %}
+  {{ title_suffix }}
+
+  {% set hero_bg_url = motaded_library_hero_bg_url|default('') %}
+
+  <div class="library-directory__hero"{% if hero_bg_url %} style="--library-hero-bg: url('{{ hero_bg_url|e('html_attr') }}');"{% endif %}>
+    <div class="library-directory__hero-bg" aria-hidden="true"></div>
+    <div class="library-directory__hero-gradient" aria-hidden="true"></div>
+    <div class="library-directory__hero-inner max-w-[1320px] mx-auto px-4">
+      <header class="library-directory__masthead max-w-3xl">
+        <h1 class="library-directory__title">{{ 'Library'|t }}</h1>
+        <p class="library-directory__lede">{{ 'Templates, forms, guides, and legal references for doing business in Saudi Arabia.'|t }}</p>
+      </header>
+    </div>
+  </div>
+
+  <div class="library-directory__shell max-w-[1320px] mx-auto px-4 pb-16 pt-8">
+    <nav class="library-directory__tab-cards" aria-label="{{ 'Library sections'|t }}">
+      <a href="{{ library_url_templates|default('#') }}"
+         class="library-tab-card {{ library_section|default('templates') == 'templates' ? 'library-tab-card--active' : '' }}">
+        <span class="library-tab-card__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+          </svg>
+        </span>
+        <span class="library-tab-card__text">
+          <span class="library-tab-card__title">{{ 'Document templates & forms'|t }}</span>
+          <span class="library-tab-card__desc">{{ 'Contracts, checklists, and downloadable guides for day-to-day operations.'|t }}</span>
+        </span>
+      </a>
+      <a href="{{ library_url_regulations|default('#') }}"
+         class="library-tab-card {{ library_section|default('templates') == 'regulations' ? 'library-tab-card--active' : '' }}">
+        <span class="library-tab-card__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </span>
+        <span class="library-tab-card__text">
+          <span class="library-tab-card__title">{{ 'Regulations & laws'|t }}</span>
+          <span class="library-tab-card__desc">{{ 'Official instruments, policies, and regulatory references.'|t }}</span>
+        </span>
+      </a>
+    </nav>
+
+    <div class="library-directory__layout">
+      <aside class="library-directory__sidebar mb-8 lg:mb-0" aria-label="{{ 'Categories'|t }}">
+        {% if library_category_all_url %}
+          <a href="{{ library_category_all_url }}"
+             class="library-directory__sidebar-all mb-3 block rounded-lg border px-3 py-2 text-sm font-medium transition {{ library_category_all_active|default(true) ? 'is-active border-primary-500 bg-primary-50 text-primary-900' : 'border-slate-200 bg-white text-slate-800 hover:border-primary-200' }}">
+            {{ 'All categories'|t }}
+          </a>
+        {% endif %}
+        <ul class="library-directory__sidebar-list m-0 list-none space-y-1 p-0">
+          {% for item in library_sidebar_links|default([]) %}
+            <li>
+              <a href="{{ item.url }}"
+                 class="library-directory__sidebar-link flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition {{ item.active ? 'is-active border-primary-500 bg-primary-50 text-primary-900' : 'border-transparent bg-slate-50 text-slate-800 hover:border-primary-200' }}">
+                <span class="library-sidebar-link-inner min-w-0">
+                  {% if item.icon_url is defined and item.icon_url %}
+                    <img src="{{ item.icon_url }}" width="20" height="20" alt="" loading="lazy" decoding="async" />
+                  {% endif %}
+                  <span>{{ item.label }}</span>
+                </span>
+                <span class="library-directory__sidebar-count rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold text-slate-600">{{ item.count }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </aside>
+
+      <div class="library-directory__main min-w-0">
+        {% if exposed %}
+          <div class="library-directory__filters view-filters mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            {{ exposed }}
+          </div>
+        {% endif %}
+
+        {% if header %}
+          <div class="view-header library-directory__summary">
+            {{ header }}
+          </div>
+        {% endif %}
+
+        {% if rows %}
+          <div class="library-directory__list view-content space-y-4">
+            {{ rows }}
+          </div>
+        {% elseif empty %}
+          <div class="view-empty rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            {{ empty }}
+          </div>
+        {% endif %}
+
+        {% if pager %}
+          <div class="library-directory__pager mt-8">
+            {{ pager }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if footer %}
+      <div class="view-footer mt-10">
+        {{ footer }}
+      </div>
+    {% endif %}
+  </div>
+</div>

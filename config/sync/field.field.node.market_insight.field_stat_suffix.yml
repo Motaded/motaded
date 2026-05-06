@@ -1,0 +1,19 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000024
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_stat_suffix
+    - node.type.market_insight
+id: node.market_insight.field_stat_suffix
+field_name: field_stat_suffix
+entity_type: node
+bundle: market_insight
+label: Suffix
+description: 'Optional text after the value, e.g. %, B.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

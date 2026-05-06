@@ -1,0 +1,31 @@
+uuid: 728c3901-2ad3-4aa4-b8c8-12ec53246038
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector_kpis
+    - node.type.sector_page
+    - paragraphs.paragraphs_type.glance_stat_item
+  module:
+    - entity_reference_revisions
+id: node.sector_page.field_sector_kpis
+field_name: field_sector_kpis
+entity_type: node
+bundle: sector_page
+label: 'Card KPIs'
+description: 'Up to three “Glance stat” items: preset icon + value + title (shown as KPI label).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      glance_stat_item: glance_stat_item
+    negate: 0
+    target_bundles_drag_drop:
+      glance_stat_item:
+        weight: 0
+        enabled: true
+field_type: entity_reference_revisions

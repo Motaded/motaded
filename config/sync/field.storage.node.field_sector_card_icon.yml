@@ -1,0 +1,54 @@
+uuid: b1197c32-2981-4406-ad12-aa27df2b0bd7
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_sector_card_icon
+field_name: field_sector_card_icon
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: money
+      label: Money
+    -
+      value: users
+      label: People
+    -
+      value: pie
+      label: 'Pie chart'
+    -
+      value: building
+      label: Building
+    -
+      value: chart_up
+      label: 'Growth / trend'
+    -
+      value: layers
+      label: Layers
+    -
+      value: globe
+      label: Globe
+    -
+      value: leaf
+      label: Leaf
+    -
+      value: handshake
+      label: Handshake
+    -
+      value: target
+      label: Target
+    -
+      value: flag
+      label: Flag
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

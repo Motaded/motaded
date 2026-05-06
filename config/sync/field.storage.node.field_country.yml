@@ -1,0 +1,72 @@
+uuid: b452bffc-c624-42a1-820f-eeb085b395f3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_country
+field_name: field_country
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: saudi_arabia
+      label: 'Saudi Arabia'
+    -
+      value: uk
+      label: 'United Kingdom'
+    -
+      value: usa
+      label: USA
+    -
+      value: germany
+      label: Germany
+    -
+      value: france
+      label: France
+    -
+      value: uae
+      label: UAE
+    -
+      value: bahrain
+      label: Bahrain
+    -
+      value: india
+      label: India
+    -
+      value: canada
+      label: Canada
+    -
+      value: australia
+      label: Australia
+    -
+      value: italy
+      label: Italy
+    -
+      value: spain
+      label: Spain
+    -
+      value: japan
+      label: Japan
+    -
+      value: south_korea
+      label: 'South Korea'
+    -
+      value: china
+      label: China
+    -
+      value: switzerland
+      label: Switzerland
+    -
+      value: netherlands
+      label: Netherlands
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

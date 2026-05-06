@@ -1,0 +1,190 @@
+uuid: 5aa87e00-7beb-4fed-b618-a07084e6ce9c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ps_groups
+    - paragraphs.paragraphs_type.platforms_system_group
+    - paragraphs.paragraphs_type.platforms_systems
+  module:
+    - entity_reference_revisions
+id: paragraph.platforms_systems.field_ps_groups
+field_name: field_ps_groups
+entity_type: paragraph
+bundle: platforms_systems
+label: Groups
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      platforms_system_group: platforms_system_group
+    negate: 0
+    target_bundles_drag_drop:
+      accordion:
+        weight: 55
+        enabled: false
+      accordions:
+        weight: 56
+        enabled: false
+      advantages:
+        weight: 57
+        enabled: false
+      areas_of_work:
+        weight: 58
+        enabled: false
+      banner:
+        weight: 59
+        enabled: false
+      banner_sm:
+        weight: 60
+        enabled: false
+      benefit_item:
+        weight: 61
+        enabled: false
+      business_activity:
+        weight: 62
+        enabled: false
+      business_setup_card:
+        weight: 63
+        enabled: false
+      business_setup_section:
+        weight: 64
+        enabled: false
+      card:
+        weight: 65
+        enabled: false
+      cards:
+        weight: 66
+        enabled: false
+      counter:
+        weight: 67
+        enabled: false
+      cta:
+        weight: 68
+        enabled: false
+      ctas:
+        weight: 69
+        enabled: false
+      event_content_item:
+        weight: 70
+        enabled: false
+      featured_card:
+        weight: 71
+        enabled: false
+      featured_contents:
+        weight: 72
+        enabled: false
+      gateway_block:
+        weight: 73
+        enabled: false
+      gateway_hub_block:
+        weight: 74
+        enabled: false
+      gateway_item:
+        weight: 75
+        enabled: false
+      glance_block:
+        weight: 76
+        enabled: false
+      glance_stat_item:
+        weight: 77
+        enabled: false
+      help_item:
+        weight: 78
+        enabled: false
+      hero_split_banner:
+        weight: 79
+        enabled: false
+      hero_stat:
+        weight: 80
+        enabled: false
+      hero_two_cols:
+        weight: 81
+        enabled: false
+      insights_updates:
+        weight: 82
+        enabled: false
+      investor_journey:
+        weight: 83
+        enabled: false
+      itc_card:
+        weight: 84
+        enabled: false
+      journey_step:
+        weight: 85
+        enabled: false
+      media_lead:
+        weight: 86
+        enabled: false
+      notes:
+        weight: 87
+        enabled: false
+      objectives:
+        weight: 88
+        enabled: false
+      platform_process_step:
+        weight: 89
+        enabled: false
+      platforms_system_group:
+        weight: 90
+        enabled: true
+      platforms_systems:
+        weight: 91
+        enabled: false
+      pricing:
+        weight: 92
+        enabled: false
+      promo_split:
+        weight: 93
+        enabled: false
+      requirements:
+        weight: 94
+        enabled: false
+      section:
+        weight: 95
+        enabled: false
+      sectors:
+        weight: 96
+        enabled: false
+      split_promo:
+        weight: 97
+        enabled: false
+      step:
+        weight: 98
+        enabled: false
+      steps:
+        weight: 99
+        enabled: false
+      steps_to_obtain:
+        weight: 100
+        enabled: false
+      system_masthead:
+        weight: 101
+        enabled: false
+      top_information:
+        weight: 102
+        enabled: false
+      view_block:
+        weight: 103
+        enabled: false
+      webform:
+        weight: 104
+        enabled: false
+      why_feature_card:
+        weight: 105
+        enabled: false
+      why_opportunities:
+        weight: 106
+        enabled: false
+      why_stat_item:
+        weight: 107
+        enabled: false
+      work_tracks:
+        weight: 108
+        enabled: false
+field_type: entity_reference_revisions
