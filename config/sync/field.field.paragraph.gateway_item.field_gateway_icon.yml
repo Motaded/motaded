@@ -1,0 +1,23 @@
+uuid: 44bb73e2-2b9a-4c1c-9f7e-7b8a2f1d0c3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_icon
+    - paragraphs.paragraphs_type.gateway_item
+  module:
+    - options
+id: paragraph.gateway_item.field_gateway_icon
+field_name: field_gateway_icon
+entity_type: paragraph
+bundle: gateway_item
+label: Icon
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: platforms
+default_value_callback: ''
+settings: {  }
+field_type: list_string

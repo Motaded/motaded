@@ -20,6 +20,30 @@ settings:
     -
       value: users
       label: People
+    -
+      value: briefcase
+      label: Briefcase
+    -
+      value: building
+      label: Building
+    -
+      value: globe
+      label: Globe
+    -
+      value: chart
+      label: Chart
+    -
+      value: shield_check
+      label: 'Shield check / compliance'
+    -
+      value: layers
+      label: 'Layers / sectors'
+    -
+      value: handshake
+      label: 'Handshake / partnerships'
+    -
+      value: headset
+      label: 'Headset / support'
   allowed_values_function: ''
 module: options
 locked: false

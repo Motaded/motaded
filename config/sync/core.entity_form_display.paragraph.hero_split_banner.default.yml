@@ -4,12 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hero_split_banner.field_body
+    - field.field.paragraph.hero_split_banner.field_hero_split_features
     - field.field.paragraph.hero_split_banner.field_hero_split_eyebrow
     - field.field.paragraph.hero_split_banner.field_hero_split_headline_accent
     - field.field.paragraph.hero_split_banner.field_hero_split_headline_prefix
     - field.field.paragraph.hero_split_banner.field_hero_split_stats
     - field.field.paragraph.hero_split_banner.field_hero_split_trust
     - field.field.paragraph.hero_split_banner.field_link
+    - field.field.paragraph.hero_split_banner.field_link_secondary
     - field.field.paragraph.hero_split_banner.field_media
     - paragraphs.paragraphs_type.hero_split_banner
   module:
@@ -38,6 +40,26 @@ content:
       size: 80
       placeholder: ''
     third_party_settings: {  }
+  field_hero_split_features:
+    type: paragraphs
+    weight: 8
+    region: content
+    settings:
+      title: Feature
+      title_plural: Features
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: why_feature_card
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
   field_hero_split_headline_accent:
     type: string_textfield
     weight: 2
@@ -56,7 +78,7 @@ content:
     third_party_settings: {  }
   field_hero_split_stats:
     type: paragraphs
-    weight: 7
+    weight: 9
     region: content
     settings:
       title: Stat
@@ -90,9 +112,17 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+  field_link_secondary:
+    type: link_default
+    weight: 6
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_media:
     type: media_library_widget
-    weight: 6
+    weight: 7
     region: content
     settings:
       media_types: {  }

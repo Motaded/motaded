@@ -1,0 +1,69 @@
+{#
+/**
+ * @file
+ * Gateway to opportunities: centered header + 4 cards + footer strip CTA.
+ */
+#}
+{{ attach_library('motaded_theme/gateway_block') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'gateway-block',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="gateway-block__inner">
+    <div class="gateway-block__shell">
+      <header class="gateway-block__masthead">
+        {% if gateway_eyebrow %}
+          <p class="gateway-block__eyebrow">{{ gateway_eyebrow }}</p>
+        {% endif %}
+        {% if gateway_title %}
+          <h2 class="gateway-block__title">{{ gateway_title }}</h2>
+        {% endif %}
+        {% if content.field_body is not empty %}
+          <div class="gateway-block__lede">{{ content.field_body }}</div>
+        {% endif %}
+      </header>
+
+      {% if gateway_items is not empty %}
+        <div class="gateway-block__cards" aria-label="{{ 'Explore'|t }}">
+          {% for item in gateway_items|slice(0, 4) %}
+            <article class="gateway-card">
+              <div class="gateway-card__icon" aria-hidden="true">{{ item.icon_svg }}</div>
+              <h3 class="gateway-card__title">{{ item.title }}</h3>
+              {% if item.body %}<p class="gateway-card__body">{{ item.body }}</p>{% endif %}
+              {% if item.link_url %}
+                <a class="gateway-card__link" href="{{ item.link_url }}">
+                  {{ item.link_title|default('Explore') }}
+                  <span class="gateway-card__link-arrow" aria-hidden="true">→</span>
+                </a>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="gateway-block__footer" aria-label="{{ 'Support'|t }}">
+        <div class="gateway-block__footer-icon" aria-hidden="true">
+          {{ gateway_footer_icon_svg }}
+        </div>
+        <div>
+          {% if gateway_footer_title %}<p class="gateway-block__footer-title">{{ gateway_footer_title }}</p>{% endif %}
+          {% if gateway_footer_body %}<p class="gateway-block__footer-body">{{ gateway_footer_body }}</p>{% endif %}
+        </div>
+        {% if gateway_footer_link_url %}
+          <a class="gateway-block__footer-cta" href="{{ gateway_footer_link_url }}">
+            {{ gateway_footer_link_title|default('Learn more') }}
+            <span class="gateway-block__footer-cta-arrow" aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+

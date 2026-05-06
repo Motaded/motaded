@@ -1,0 +1,52 @@
+uuid: adb125c3-9b28-4790-bab5-9bdd9f653268
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.system_masthead.field_system_masthead_body
+    - field.field.paragraph.system_masthead.field_system_masthead_eyebrow
+    - field.field.paragraph.system_masthead.field_masthead_scroll
+    - field.field.paragraph.system_masthead.field_title
+    - paragraphs.paragraphs_type.system_masthead
+  module:
+    - text
+id: paragraph.system_masthead.default
+targetEntityType: paragraph
+bundle: system_masthead
+mode: default
+content:
+  field_masthead_scroll:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_system_masthead_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_system_masthead_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

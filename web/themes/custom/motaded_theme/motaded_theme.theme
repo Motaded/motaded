@@ -1570,6 +1570,53 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
       }
     }
   }
+
+  $variables['hero_split_cta_secondary'] = [];
+  if ($paragraph->hasField('field_link_secondary')) {
+    $link2 = $paragraph->get('field_link_secondary');
+    if ($link2->access('view') && !$link2->isEmpty()) {
+      /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $item */
+      $item = $link2->first();
+      if ($item) {
+        $url = $item->getUrl();
+        if ($url) {
+          $title = $item->getTitle();
+          $variables['hero_split_cta_secondary'] = [
+            'url' => $url->toString(),
+            'title' => $title !== '' && $title !== NULL ? $title : (string) t('Explore'),
+          ];
+        }
+      }
+    }
+  }
+
+  $features = [];
+  if ($paragraph->hasField('field_hero_split_features')) {
+    $feature_field = $paragraph->get('field_hero_split_features');
+    if ($feature_field->access('view')) {
+      foreach ($feature_field as $item) {
+        $sub = $item->entity;
+        if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+          continue;
+        }
+        $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'people');
+        $title = '';
+        if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+          $title = trim((string) $sub->get('field_title')->value);
+        }
+        $body = '';
+        if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+          $body = trim((string) $sub->get('field_body')->value);
+        }
+        $features[] = [
+          'icon' => $icon,
+          'title' => $title,
+          'body' => $body,
+        ];
+      }
+    }
+  }
+  $variables['hero_split_features'] = $features;
 }
 
 /**
@@ -1761,6 +1808,7 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
   $variables['view_block_services_home'] = FALSE;
   $variables['view_block_events_home_list'] = FALSE;
   $variables['view_block_events_home_calendar'] = FALSE;
+  $variables['view_block_partners_marquee'] = FALSE;
   if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
     return;
   }
@@ -1793,6 +1841,9 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
       }
       elseif ($target === 'services' && $display === 'block_2') {
         $variables['view_block_services_home'] = TRUE;
+      }
+      elseif ($target === 'partners' && $display === 'block_2') {
+        $variables['view_block_partners_marquee'] = TRUE;
       }
     }
   }
@@ -2055,6 +2106,425 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
 
   $collect_meta($variables['iu_insight_nodes']);
   $collect_meta($variables['iu_news_nodes']);
+}
+
+/**
+ * Implements hook_preprocess_paragraph__glance_block().
+ */
+function motaded_theme_preprocess_paragraph__glance_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/glance_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['glance_eyebrow'] = '';
+  if ($paragraph->hasField('field_glance_eyebrow') && $paragraph->get('field_glance_eyebrow')->access('view') && !$paragraph->get('field_glance_eyebrow')->isEmpty()) {
+    $variables['glance_eyebrow'] = trim((string) $paragraph->get('field_glance_eyebrow')->value);
+  }
+  $variables['glance_title'] = '';
+  if ($paragraph->hasField('field_glance_title') && $paragraph->get('field_glance_title')->access('view') && !$paragraph->get('field_glance_title')->isEmpty()) {
+    $variables['glance_title'] = trim((string) $paragraph->get('field_glance_title')->value);
+  }
+  $variables['glance_title_accent'] = '';
+  if ($paragraph->hasField('field_glance_title_accent') && $paragraph->get('field_glance_title_accent')->access('view') && !$paragraph->get('field_glance_title_accent')->isEmpty()) {
+    $variables['glance_title_accent'] = trim((string) $paragraph->get('field_glance_title_accent')->value);
+  }
+
+  $icon_svg = static function (string $key) {
+    // Keep SVGs tiny and consistent with site icons.
+    $svg = match ($key) {
+      'money' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16v10H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 7V5h10v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+      'users' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'pie' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v10h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.4 14a9.5 9.5 0 1 1-11.4-11.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'building' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 7h2M9 11h2M9 15h2M13 7h2M13 11h2M13 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'chart_up' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      'layers' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3 3.5 8.2 12 13.4 20.5 8.2 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.5 12.1 12 17.3 20.5 12.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'globe' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'leaf' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 4s-8 0-12 4-4 12-4 12 8 0 12-4 4-12 4-12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 16c2-2 6-6 12-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'handshake' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 12l2-2a3 3 0 0 1 4 0l2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12l5-5 4 4-5 5H3v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M21 12l-5-5-4 4 5 5h4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'target' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'flag' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 22V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 4h10l-1.5 3L15 10H5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      default => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return \Drupal\Core\Render\Markup::create($svg);
+  };
+
+  $read_stat = static function (\Drupal\paragraphs\Entity\Paragraph $p) use ($icon_svg): array {
+    $icon = $p->hasField('field_glance_icon') ? (string) ($p->get('field_glance_icon')->value ?: '') : '';
+    $value = $p->hasField('field_glance_value') ? trim((string) ($p->get('field_glance_value')->value ?? '')) : '';
+    $title = $p->hasField('field_glance_title') ? trim((string) ($p->get('field_glance_title')->value ?? '')) : '';
+    $body = '';
+    if ($p->hasField('field_glance_body') && !$p->get('field_glance_body')->isEmpty()) {
+      $body = trim((string) $p->get('field_glance_body')->value);
+    }
+    $source = $p->hasField('field_glance_source') ? trim((string) ($p->get('field_glance_source')->value ?? '')) : '';
+    return [
+      'icon' => $icon,
+      'icon_svg' => $icon_svg($icon),
+      'value' => $value,
+      'title' => $title,
+      'body' => $body,
+      'source' => $source,
+      // Optional; used for highlight kicker.
+      'kicker' => $title,
+    ];
+  };
+
+  $variables['glance_highlight'] = [];
+  if ($paragraph->hasField('field_glance_highlight') && $paragraph->get('field_glance_highlight')->access('view') && !$paragraph->get('field_glance_highlight')->isEmpty()) {
+    $sub = $paragraph->get('field_glance_highlight')->entity;
+    if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+      $variables['glance_highlight'] = $read_stat($sub);
+      // Highlight uses a separate kicker convention.
+      $variables['glance_highlight']['kicker'] = $variables['glance_highlight']['title'];
+    }
+  }
+
+  $variables['glance_stats'] = [];
+  if ($paragraph->hasField('field_glance_stats') && $paragraph->get('field_glance_stats')->access('view') && !$paragraph->get('field_glance_stats')->isEmpty()) {
+    foreach ($paragraph->get('field_glance_stats') as $item) {
+      $sub = $item->entity;
+      if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+        $variables['glance_stats'][] = $read_stat($sub);
+      }
+    }
+  }
+
+  $variables['glance_features'] = [];
+  if ($paragraph->hasField('field_glance_features') && $paragraph->get('field_glance_features')->access('view') && !$paragraph->get('field_glance_features')->isEmpty()) {
+    foreach ($paragraph->get('field_glance_features') as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+        continue;
+      }
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = '';
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = trim((string) $sub->get('field_body')->value);
+      }
+      $link_url = '';
+      $link_title = '';
+      if ($sub->hasField('field_link') && $sub->get('field_link')->access('view') && !$sub->get('field_link')->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+        $li = $sub->get('field_link')->first();
+        if ($li && $li->getUrl()) {
+          $link_url = $li->getUrl()->toString();
+          $link_title = (string) ($li->getTitle() ?: '');
+        }
+      }
+      $variables['glance_features'][] = [
+        'title' => $title,
+        'body' => $body ? strip_tags($body) : '',
+        'link_url' => $link_url,
+        'link_title' => $link_title,
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__gateway_block().
+ */
+function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/gateway_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['gateway_eyebrow'] = '';
+  if ($paragraph->hasField('field_gateway_eyebrow') && $paragraph->get('field_gateway_eyebrow')->access('view') && !$paragraph->get('field_gateway_eyebrow')->isEmpty()) {
+    $variables['gateway_eyebrow'] = trim((string) $paragraph->get('field_gateway_eyebrow')->value);
+  }
+  $variables['gateway_title'] = '';
+  if ($paragraph->hasField('field_title') && $paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['gateway_title'] = trim((string) $paragraph->get('field_title')->value);
+  }
+
+  $icon_svg = static function (string $key) {
+    $svg = match ($key) {
+      'platforms' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v10H4z" stroke="currentColor" stroke-width="1.6"/><path d="M8 19h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'sectors' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'events' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'insights' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return \Drupal\Core\Render\Markup::create($svg);
+  };
+
+  $variables['gateway_items'] = [];
+  if ($paragraph->hasField('field_gateway_items') && $paragraph->get('field_gateway_items')->access('view') && !$paragraph->get('field_gateway_items')->isEmpty()) {
+    foreach ($paragraph->get('field_gateway_items') as $ref) {
+      $sub = $ref->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'gateway_item') {
+        continue;
+      }
+      $icon_key = (string) ($sub->get('field_gateway_icon')->value ?? '');
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = '';
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = trim((string) $sub->get('field_body')->value);
+      }
+      $link_url = '';
+      $link_title = '';
+      if ($sub->hasField('field_link') && $sub->get('field_link')->access('view') && !$sub->get('field_link')->isEmpty()) {
+        /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+        $li = $sub->get('field_link')->first();
+        if ($li && $li->getUrl()) {
+          $link_url = $li->getUrl()->toString();
+          $link_title = (string) ($li->getTitle() ?: '');
+        }
+      }
+      $variables['gateway_items'][] = [
+        'icon' => $icon_key,
+        'icon_svg' => $icon_svg($icon_key),
+        'title' => $title,
+        'body' => $body ? strip_tags($body) : '',
+        'link_url' => $link_url,
+        'link_title' => $link_title,
+      ];
+    }
+  }
+
+  $variables['gateway_footer_title'] = '';
+  if ($paragraph->hasField('field_gateway_footer_title') && $paragraph->get('field_gateway_footer_title')->access('view') && !$paragraph->get('field_gateway_footer_title')->isEmpty()) {
+    $variables['gateway_footer_title'] = trim((string) $paragraph->get('field_gateway_footer_title')->value);
+  }
+  $variables['gateway_footer_body'] = '';
+  if ($paragraph->hasField('field_gateway_footer_body') && $paragraph->get('field_gateway_footer_body')->access('view') && !$paragraph->get('field_gateway_footer_body')->isEmpty()) {
+    $variables['gateway_footer_body'] = trim((string) $paragraph->get('field_gateway_footer_body')->value);
+  }
+  $variables['gateway_footer_link_url'] = '';
+  $variables['gateway_footer_link_title'] = '';
+  if ($paragraph->hasField('field_gateway_footer_link') && $paragraph->get('field_gateway_footer_link')->access('view') && !$paragraph->get('field_gateway_footer_link')->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $li */
+    $li = $paragraph->get('field_gateway_footer_link')->first();
+    if ($li && $li->getUrl()) {
+      $variables['gateway_footer_link_url'] = $li->getUrl()->toString();
+      $variables['gateway_footer_link_title'] = (string) ($li->getTitle() ?: '');
+    }
+  }
+
+  $variables['gateway_footer_icon_svg'] = \Drupal\Core\Render\Markup::create(
+    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+  );
+}
+
+/**
+ * Implements hook_preprocess_paragraph__gateway_hub_block().
+ */
+function motaded_theme_preprocess_paragraph__gateway_hub_block(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/gateway_hub_block';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $variables['hub_eyebrow'] = '';
+  if ($paragraph->hasField('field_gateway_eyebrow') && $paragraph->get('field_gateway_eyebrow')->access('view') && !$paragraph->get('field_gateway_eyebrow')->isEmpty()) {
+    $variables['hub_eyebrow'] = trim((string) $paragraph->get('field_gateway_eyebrow')->value);
+  }
+  $variables['hub_title'] = '';
+  if ($paragraph->hasField('field_title') && $paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['hub_title'] = trim((string) $paragraph->get('field_title')->value);
+  }
+
+  $mk_svg = static fn (string $svg) => \Drupal\Core\Render\Markup::create($svg);
+  $variables['hub_icons'] = [
+    'sectors' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'),
+    'events' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
+    'insights' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
+  ];
+
+  $variables['hub_platforms'] = [];
+  if ($paragraph->hasField('field_gateway_platforms') && $paragraph->get('field_gateway_platforms')->access('view') && !$paragraph->get('field_gateway_platforms')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $platforms */
+    $platforms = $paragraph->get('field_gateway_platforms');
+    foreach ($platforms->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_platforms'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_sectors'] = [];
+  if ($paragraph->hasField('field_gateway_sectors') && $paragraph->get('field_gateway_sectors')->access('view') && !$paragraph->get('field_gateway_sectors')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $sectors */
+    $sectors = $paragraph->get('field_gateway_sectors');
+    foreach ($sectors->referencedEntities() as $term) {
+      if ($term instanceof \Drupal\taxonomy\TermInterface) {
+        $variables['hub_sectors'][] = [
+          'title' => $term->label(),
+          'url' => $term->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_events'] = [];
+  if ($paragraph->hasField('field_gateway_events') && $paragraph->get('field_gateway_events')->access('view') && !$paragraph->get('field_gateway_events')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $events */
+    $events = $paragraph->get('field_gateway_events');
+    foreach ($events->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_events'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['hub_insights'] = [];
+  if ($paragraph->hasField('field_gateway_insights') && $paragraph->get('field_gateway_insights')->access('view') && !$paragraph->get('field_gateway_insights')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $insights */
+    $insights = $paragraph->get('field_gateway_insights');
+    foreach ($insights->referencedEntities() as $node) {
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        $variables['hub_insights'][] = [
+          'title' => $node->label(),
+          'meta' => '',
+          'url' => $node->toUrl()->toString(),
+        ];
+      }
+    }
+  }
+
+  // Support badges (small highlight items in the footer strip).
+  $variables['hub_support_badges'] = [];
+  if ($paragraph->hasField('field_gateway_support_items') && $paragraph->get('field_gateway_support_items')->access('view') && !$paragraph->get('field_gateway_support_items')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $support_items */
+    $support_items = $paragraph->get('field_gateway_support_items');
+    foreach ($support_items->referencedEntities() as $item) {
+      if ($item instanceof \Drupal\paragraphs\ParagraphInterface) {
+        $title = '';
+        $body = '';
+        if ($item->hasField('field_title') && !$item->get('field_title')->isEmpty()) {
+          $title = trim((string) $item->get('field_title')->value);
+        }
+        if ($item->hasField('field_body') && !$item->get('field_body')->isEmpty()) {
+          $body = trim((string) $item->get('field_body')->value);
+        }
+        if ($title !== '' || $body !== '') {
+          $variables['hub_support_badges'][] = [
+            'title' => $title,
+            'body' => $body,
+          ];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__platforms_systems().
+ */
+function motaded_theme_preprocess_paragraph__platforms_systems(array &$variables): void {
+  $variables['#attached']['library'][] = 'motaded_theme/platforms_systems';
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $mk_svg = static fn (string $svg) => \Drupal\Core\Render\Markup::create($svg);
+  $icon_for = static function (string $key) use ($mk_svg) {
+    $svg = match ($key) {
+      'licensing' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12h8M8 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'workforce' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'tax' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h8M8 13h8M8 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'operations' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 21h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 21V7l7-4 7 4v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      'compliance' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 9.4-8 10-4.5-.6-8-5-8-10V6l8-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    };
+    return $mk_svg($svg);
+  };
+
+  $variables['ps_groups'] = [];
+  if ($paragraph->hasField('field_ps_groups') && $paragraph->get('field_ps_groups')->access('view') && !$paragraph->get('field_ps_groups')->isEmpty()) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $groups */
+    $groups = $paragraph->get('field_ps_groups');
+    foreach ($groups->referencedEntities() as $group) {
+      if (!$group instanceof \Drupal\paragraphs\ParagraphInterface) {
+        continue;
+      }
+
+      $title = $group->hasField('field_title') && !$group->get('field_title')->isEmpty()
+        ? trim((string) $group->get('field_title')->value)
+        : '';
+
+      $body = $group->hasField('field_psg_body') && !$group->get('field_psg_body')->isEmpty()
+        ? trim((string) $group->get('field_psg_body')->value)
+        : '';
+
+      $icon_key = $group->hasField('field_psg_icon') && !$group->get('field_psg_icon')->isEmpty()
+        ? (string) $group->get('field_psg_icon')->value
+        : '';
+
+      $items = [];
+      if ($group->hasField('field_psg_items') && !$group->get('field_psg_items')->isEmpty()) {
+        /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $refs */
+        $refs = $group->get('field_psg_items');
+        foreach ($refs->referencedEntities() as $node) {
+          if ($node instanceof \Drupal\node\NodeInterface) {
+            $logo = [
+              'src' => '',
+              'srcset' => '',
+              'width' => 0,
+              'height' => 0,
+              'alt' => '',
+            ];
+            if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+              $media = $node->get('field_logo')->entity;
+              $fallback_alt = (string) t('@name logo', ['@name' => $node->label()]);
+              $extracted = motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
+              $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+              $logo = [
+                'src' => $meta['src'],
+                'srcset' => $meta['srcset'],
+                'width' => $meta['width'],
+                'height' => $meta['height'],
+                'alt' => $extracted['alt'],
+              ];
+            }
+            $items[] = [
+              'title' => $node->label(),
+              'url' => $node->toUrl()->toString(),
+              'logo' => $logo,
+            ];
+          }
+        }
+      }
+
+      $view_all_url = '';
+      $view_all_title = '';
+      if ($group->hasField('field_psg_view_all') && !$group->get('field_psg_view_all')->isEmpty()) {
+        $link_item = $group->get('field_psg_view_all')->first();
+        $uri = $link_item && !$link_item->isEmpty() ? $link_item->get('uri')->getString() : '';
+        if ($uri !== '') {
+          try {
+            $view_all_url = \Drupal\Core\Url::fromUri($uri)->toString();
+          }
+          catch (\Throwable $e) {
+            $view_all_url = $uri;
+          }
+        }
+        $view_all_title = $link_item ? trim((string) $link_item->get('title')->getString()) : '';
+      }
+
+      $variables['ps_groups'][] = [
+        'title' => $title,
+        'body' => $body,
+        'icon' => $icon_for($icon_key),
+        'items' => $items,
+        'view_all_url' => $view_all_url,
+        'view_all_title' => $view_all_title,
+      ];
+    }
+  }
 }
 
 /**

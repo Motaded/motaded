@@ -1,0 +1,22 @@
+uuid: 2e3f4a5b-6c7d-4e8f-9a0b-1c2d3e4f5a6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_footer_body
+    - paragraphs.paragraphs_type.gateway_block
+  module:
+    - text
+id: paragraph.gateway_block.field_gateway_footer_body
+field_name: field_gateway_footer_body
+entity_type: paragraph
+bundle: gateway_block
+label: 'Footer body'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

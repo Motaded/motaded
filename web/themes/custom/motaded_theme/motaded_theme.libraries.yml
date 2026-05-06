@@ -364,3 +364,42 @@ insights-updates:
     component:
       css/components/insights-updates.css:
         weight: -9
+
+glance_block:
+  version: VERSION
+  css:
+    component:
+      css/components/glance-block.css:
+        weight: -9
+
+gateway_block:
+  version: VERSION
+  css:
+    component:
+      css/components/gateway-block.css:
+        weight: -9
+
+gateway_hub_block:
+  version: VERSION
+  css:
+    component:
+      css/components/gateway-hub-block.css:
+        weight: -9
+
+system_masthead:
+  version: VERSION
+  css:
+    component:
+      css/components/system-masthead.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+platforms_systems:
+  version: VERSION
+  css:
+    component:
+      css/components/platforms-systems.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base

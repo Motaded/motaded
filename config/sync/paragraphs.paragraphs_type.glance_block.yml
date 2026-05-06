@@ -1,0 +1,10 @@
+uuid: 9e3d8dc3-7c07-4c88-9a0f-20c2fe8dcb22
+langcode: en
+status: true
+dependencies: {  }
+id: glance_block
+label: 'Saudi at a glance'
+icon_uuid: null
+icon_default: null
+description: 'Two-column intro + highlight stat + stat cards + feature row.'
+behavior_plugins: {  }

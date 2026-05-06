@@ -1,0 +1,25 @@
+uuid: 90a2e68e-1a9b-4c2b-9b67-3f9e0d7e8c23
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.glance_stat_item.field_glance_body
+    - field.field.paragraph.glance_stat_item.field_glance_icon
+    - field.field.paragraph.glance_stat_item.field_glance_source
+    - field.field.paragraph.glance_stat_item.field_glance_title
+    - field.field.paragraph.glance_stat_item.field_glance_value
+    - paragraphs.paragraphs_type.glance_stat_item
+  module:
+    - text
+id: paragraph.glance_stat_item.default
+targetEntityType: paragraph
+bundle: glance_stat_item
+mode: default
+content: {  }
+hidden:
+  field_glance_body: true
+  field_glance_icon: true
+  field_glance_source: true
+  field_glance_title: true
+  field_glance_value: true
+  search_api_excerpt: true

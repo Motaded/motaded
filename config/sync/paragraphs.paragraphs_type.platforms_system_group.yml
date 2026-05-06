@@ -1,0 +1,10 @@
+uuid: 55bb52ac-3a4f-4b01-b848-7f8ec64c67ea
+langcode: en
+status: true
+dependencies: {  }
+id: platforms_system_group
+label: 'Platform system group'
+icon_uuid: null
+icon_default: null
+description: 'One category card: icon, title, body, list of platforms, view-all link.'
+behavior_plugins: {  }

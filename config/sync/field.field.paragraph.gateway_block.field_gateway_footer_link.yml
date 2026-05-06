@@ -1,0 +1,23 @@
+uuid: 8b9a0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_footer_link
+    - paragraphs.paragraphs_type.gateway_block
+  module:
+    - link
+id: paragraph.gateway_block.field_gateway_footer_link
+field_name: field_gateway_footer_link
+entity_type: paragraph
+bundle: gateway_block
+label: 'Footer CTA'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

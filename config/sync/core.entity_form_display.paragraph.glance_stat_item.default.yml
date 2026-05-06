@@ -1,0 +1,64 @@
+uuid: 0c5c0e07-0b58-4d25-8b0d-1b9f5e9f8e6a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.glance_stat_item.field_glance_body
+    - field.field.paragraph.glance_stat_item.field_glance_icon
+    - field.field.paragraph.glance_stat_item.field_glance_source
+    - field.field.paragraph.glance_stat_item.field_glance_title
+    - field.field.paragraph.glance_stat_item.field_glance_value
+    - paragraphs.paragraphs_type.glance_stat_item
+  module:
+    - text
+id: paragraph.glance_stat_item.default
+targetEntityType: paragraph
+bundle: glance_stat_item
+mode: default
+content:
+  field_glance_body:
+    type: text_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_glance_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_glance_source:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_glance_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_glance_value:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

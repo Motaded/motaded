@@ -1,0 +1,114 @@
+{#
+/**
+ * @file
+ * Saudi at a glance: intro + highlight stat + stat cards + feature row.
+ */
+#}
+{{ attach_library('motaded_theme/glance_block') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'glance-block',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="glance-block__inner">
+    <div class="glance-block__top">
+      <div class="glance-block__copy">
+        {% if glance_eyebrow %}
+          <p class="glance-block__eyebrow">{{ glance_eyebrow }}</p>
+        {% endif %}
+
+        <h2 class="glance-block__title">
+          <span>{{ glance_title }}</span>
+          {% if glance_title_accent %}
+            <span class="glance-block__title-accent"><br/>{{ glance_title_accent }}</span>
+          {% endif %}
+        </h2>
+
+        {% if content.field_body is not empty %}
+          <div class="glance-block__lede">{{ content.field_body }}</div>
+        {% endif %}
+      </div>
+
+      {% if glance_highlight is not empty %}
+        <aside class="glance-block__highlight" aria-label="{{ 'Key highlight'|t }}">
+          <div class="glance-block__highlight-head">
+            <div>
+              {% if glance_highlight.kicker %}
+                <p class="glance-block__highlight-kicker">{{ glance_highlight.kicker }}</p>
+              {% endif %}
+              {% if glance_highlight.value %}
+                <p class="glance-block__highlight-value">{{ glance_highlight.value }}</p>
+              {% endif %}
+            </div>
+            <div class="glance-block__highlight-icon" aria-hidden="true">
+              {{ glance_highlight.icon_svg }}
+            </div>
+          </div>
+          <div class="glance-block__highlight-body">
+            {% if glance_highlight.title %}
+              <p class="glance-block__highlight-title">{{ glance_highlight.title }}</p>
+            {% endif %}
+            {% if glance_highlight.body %}
+              <p class="glance-block__highlight-desc">{{ glance_highlight.body }}</p>
+            {% endif %}
+            {% if glance_highlight.source %}
+              <p class="glance-block__source">{{ 'Source:'|t }} {{ glance_highlight.source }}</p>
+            {% endif %}
+          </div>
+        </aside>
+      {% endif %}
+    </div>
+
+    {% if glance_stats is not empty %}
+      <div class="glance-block__stats" aria-label="{{ 'Key statistics'|t }}">
+        {% for s in glance_stats|slice(0, 4) %}
+          <article class="glance-block__stat">
+            <div class="glance-block__stat-top">
+              <div class="glance-block__stat-icon" aria-hidden="true">{{ s.icon_svg }}</div>
+              <div>
+                {% if s.value %}<p class="glance-block__stat-value">{{ s.value }}</p>{% endif %}
+                {% if s.title %}<p class="glance-block__stat-title">{{ s.title }}</p>{% endif %}
+              </div>
+            </div>
+            {% if s.body %}<p class="glance-block__stat-desc">{{ s.body }}</p>{% endif %}
+            {% if s.source %}<p class="glance-block__source">{{ 'Source:'|t }} {{ s.source }}</p>{% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if glance_features is not empty %}
+      <div class="glance-block__features" aria-label="{{ 'Highlights'|t }}">
+        {% set big = glance_features|first %}
+        {% if big %}
+          <div class="glance-block__feature-big">
+            {% if big.link_url %}
+              <a href="{{ big.link_url }}">
+                <p class="glance-block__feature-big-title">{{ big.title }}</p>
+                {% if big.body %}<p class="glance-block__feature-big-desc">{{ big.body }}</p>{% endif %}
+                <span class="glance-block__feature-big-cta">{{ big.link_title|default('Learn more') }} <span aria-hidden="true">→</span></span>
+              </a>
+            {% else %}
+              <p class="glance-block__feature-big-title">{{ big.title }}</p>
+              {% if big.body %}<p class="glance-block__feature-big-desc">{{ big.body }}</p>{% endif %}
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% for f in glance_features|slice(1, 4) %}
+          <div class="glance-block__feature-small">
+            <p class="glance-block__feature-small-title">{{ f.title }}</p>
+            {% if f.body %}<p class="glance-block__feature-small-desc">{{ f.body }}</p>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

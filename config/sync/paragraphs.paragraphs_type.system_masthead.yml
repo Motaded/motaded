@@ -1,0 +1,10 @@
+uuid: 55495ccb-1b65-4090-add6-aad9268fbdf6
+langcode: en
+status: true
+dependencies: {  }
+id: system_masthead
+label: 'Section masthead'
+icon_uuid: null
+icon_default: null
+description: 'Centered eyebrow + title + subtitle with divider lines and optional scroll cue.'
+behavior_plugins: {  }

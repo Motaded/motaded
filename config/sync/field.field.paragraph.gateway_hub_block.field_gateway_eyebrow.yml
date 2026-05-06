@@ -1,0 +1,19 @@
+uuid: 1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_eyebrow
+    - paragraphs.paragraphs_type.gateway_hub_block
+id: paragraph.gateway_hub_block.field_gateway_eyebrow
+field_name: field_gateway_eyebrow
+entity_type: paragraph
+bundle: gateway_hub_block
+label: Eyebrow
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

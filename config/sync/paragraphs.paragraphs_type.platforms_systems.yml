@@ -1,0 +1,10 @@
+uuid: 006ca9dc-39d8-40d6-8045-2ba5d6155e64
+langcode: en
+status: true
+dependencies: {  }
+id: platforms_systems
+label: 'Platforms systems block'
+icon_uuid: null
+icon_default: null
+description: 'Grid of government system categories with platform links + footer CTA.'
+behavior_plugins: {  }

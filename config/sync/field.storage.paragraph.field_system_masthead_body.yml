@@ -1,0 +1,19 @@
+uuid: ca7266a7-7790-4290-9ef0-832e8a0c1954
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_system_masthead_body
+field_name: field_system_masthead_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

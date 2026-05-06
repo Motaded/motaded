@@ -1,0 +1,64 @@
+uuid: 9c9361df-4f5a-4490-a221-00b42d425056
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.platforms_system_group.field_psg_body
+    - field.field.paragraph.platforms_system_group.field_psg_icon
+    - field.field.paragraph.platforms_system_group.field_psg_items
+    - field.field.paragraph.platforms_system_group.field_psg_view_all
+    - field.field.paragraph.platforms_system_group.field_title
+    - paragraphs.paragraphs_type.platforms_system_group
+  module:
+    - link
+    - options
+    - text
+id: paragraph.platforms_system_group.default
+targetEntityType: paragraph
+bundle: platforms_system_group
+mode: default
+content:
+  field_psg_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_psg_icon:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_psg_items:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_psg_view_all:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

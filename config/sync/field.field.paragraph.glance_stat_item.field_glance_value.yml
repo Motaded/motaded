@@ -1,0 +1,19 @@
+uuid: 2a0bb65a-7c02-47ed-a687-c8b0d84d2dc0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_glance_value
+    - paragraphs.paragraphs_type.glance_stat_item
+id: paragraph.glance_stat_item.field_glance_value
+field_name: field_glance_value
+entity_type: paragraph
+bundle: glance_stat_item
+label: Value
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

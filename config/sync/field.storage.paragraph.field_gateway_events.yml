@@ -1,0 +1,20 @@
+uuid: 3e4f5a6b-7c8d-4e9f-8a0b-1c2d3e4f5a6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - paragraphs
+id: paragraph.field_gateway_events
+field_name: field_gateway_events
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 3
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

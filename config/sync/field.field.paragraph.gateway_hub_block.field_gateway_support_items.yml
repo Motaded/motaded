@@ -1,0 +1,31 @@
+uuid: 8e9f0a1b-2c3d-4e5f-9a0b-1c2d3e4f5a6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_support_items
+    - paragraphs.paragraphs_type.gateway_hub_block
+    - paragraphs.paragraphs_type.why_feature_card
+  module:
+    - entity_reference_revisions
+id: paragraph.gateway_hub_block.field_gateway_support_items
+field_name: field_gateway_support_items
+entity_type: paragraph
+bundle: gateway_hub_block
+label: 'Support badges'
+description: '3 items recommended.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      why_feature_card: why_feature_card
+    negate: 0
+    target_bundles_drag_drop:
+      why_feature_card:
+        weight: 1
+        enabled: true
+field_type: entity_reference_revisions

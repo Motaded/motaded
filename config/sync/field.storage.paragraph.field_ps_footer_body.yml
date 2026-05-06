@@ -1,0 +1,19 @@
+uuid: 386eae6f-b342-45d1-8b07-e06748e8047b
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_ps_footer_body
+field_name: field_ps_footer_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

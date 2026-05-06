@@ -1,0 +1,10 @@
+uuid: 7a1d2aa2-2d9f-4c6b-8c03-b7b82a7c17a1
+langcode: en
+status: true
+dependencies: {  }
+id: gateway_block
+label: 'Gateway block'
+icon_uuid: null
+icon_default: null
+description: 'Centered header + 4 gateway cards + footer CTA strip.'
+behavior_plugins: {  }

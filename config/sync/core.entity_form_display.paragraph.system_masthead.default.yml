@@ -1,0 +1,51 @@
+uuid: a62c455f-f560-4334-8c6b-c4f0453a2fef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.system_masthead.field_system_masthead_body
+    - field.field.paragraph.system_masthead.field_system_masthead_eyebrow
+    - field.field.paragraph.system_masthead.field_masthead_scroll
+    - field.field.paragraph.system_masthead.field_title
+    - paragraphs.paragraphs_type.system_masthead
+  module:
+    - text
+id: paragraph.system_masthead.default
+targetEntityType: paragraph
+bundle: system_masthead
+mode: default
+content:
+  field_masthead_scroll:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_system_masthead_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_system_masthead_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

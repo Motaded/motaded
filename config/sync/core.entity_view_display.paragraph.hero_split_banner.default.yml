@@ -4,12 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hero_split_banner.field_body
+    - field.field.paragraph.hero_split_banner.field_hero_split_features
     - field.field.paragraph.hero_split_banner.field_hero_split_eyebrow
     - field.field.paragraph.hero_split_banner.field_hero_split_headline_accent
     - field.field.paragraph.hero_split_banner.field_hero_split_headline_prefix
     - field.field.paragraph.hero_split_banner.field_hero_split_stats
     - field.field.paragraph.hero_split_banner.field_hero_split_trust
     - field.field.paragraph.hero_split_banner.field_link
+    - field.field.paragraph.hero_split_banner.field_link_secondary
     - field.field.paragraph.hero_split_banner.field_media
     - paragraphs.paragraphs_type.hero_split_banner
   module:
@@ -51,8 +53,10 @@ content:
     weight: 1
     region: content
 hidden:
+  field_hero_split_features: true
   field_hero_split_stats: true
   field_hero_split_trust: true
   field_link: true
+  field_link_secondary: true
   field_media: true
   search_api_excerpt: true
