@@ -106,7 +106,7 @@ main:has(.insights-directory.insights-directory-page),
   margin-bottom: calc(-1 * var(--idb-filter-straddle, 3rem));
 }
 
-.insights-directory-page .insights-directory > .insights-directory__shell {
+.insights-directory-page.insights-directory > .insights-directory__shell {
   padding-top: calc(var(--idb-filter-straddle, 3rem) + clamp(0.75rem, 2vw, 1.25rem));
 }
 
@@ -146,9 +146,9 @@ main:has(.insights-directory.insights-directory-page),
 .insights-directory__hero-filters .views-exposed-form {
   --idb-control-h: 2.6875rem;
   --idb-gap: 0.75rem;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(260px, 2.2fr) repeat(3, minmax(148px, 1fr)) minmax(190px, max-content);
+  align-items: end;
   gap: var(--idb-gap);
   margin-bottom: 0;
   padding: 1.05rem 1.25rem 1.1rem;
@@ -160,34 +160,33 @@ main:has(.insights-directory.insights-directory-page),
 }
 
 .insights-directory__hero-filters .views-exposed-form .form-item-title {
-  flex: 3 1 220px;
-  min-width: 200px;
+  min-width: 0;
   overflow: visible !important;
 }
 
 @media (min-width: 1200px) {
   .insights-directory__hero-filters .views-exposed-form .form-item-title {
-    min-width: min(340px, 32vw);
+    min-width: 0;
   }
 }
 
 .insights-directory__hero-filters .views-exposed-form .form-item-field-category-target-id,
 .insights-directory__hero-filters .views-exposed-form .form-item-field-sector-target-id,
 .insights-directory__hero-filters .views-exposed-form .form-item-field-region-target-id {
-  flex: 0 1 132px;
-  min-width: 6.75rem;
-  max-width: 11rem;
+  min-width: 0;
+  max-width: none;
 }
 
 .insights-directory__hero-filters .views-exposed-form .form-actions {
   display: inline-flex !important;
-  flex: 0 0 auto;
-  flex-flow: row nowrap;
   align-items: center;
   gap: 0.5rem;
   margin: 0 !important;
   padding: 0 !important;
   white-space: nowrap;
+  justify-content: flex-end;
+  justify-self: end;
+  align-self: end;
 }
 
 .insights-directory__hero-filters .views-exposed-form .form-actions input.button,
@@ -197,6 +196,51 @@ main:has(.insights-directory.insights-directory-page),
   padding-block: 0.45rem;
   padding-inline: 1rem;
   font-size: 0.835rem;
+}
+
+.insights-directory__hero-filters .views-exposed-form .form-actions input.button {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.65);
+  background: #fff;
+  color: #0f172a;
+  font-weight: 800;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-submit-insights {
+  background: var(--event-brand, #00473f);
+  border-color: var(--event-brand, #00473f);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(0, 71, 63, 0.16);
+}
+
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-reset-insights {
+  background: #fff;
+}
+
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-reset-insights:hover,
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-reset-insights:focus-visible {
+  background: #f8fafc;
+  border-color: rgba(0, 71, 63, 0.35);
+}
+
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-submit-insights:hover,
+.insights-directory__hero-filters .views-exposed-form .form-actions input#edit-submit-insights:focus-visible {
+  background: var(--event-brand-hover, #003630);
+  border-color: var(--event-brand-hover, #003630);
+  box-shadow: 0 14px 28px rgba(0, 71, 63, 0.22);
+  transform: translateY(-1px);
+}
+
+/* Ensure the 3 selects stay aligned and don't collapse. */
+.insights-directory__hero-filters .views-exposed-form .form-item-field-category-target-id,
+.insights-directory__hero-filters .views-exposed-form .form-item-field-sector-target-id,
+.insights-directory__hero-filters .views-exposed-form .form-item-field-region-target-id {
+  justify-self: stretch;
+}
+
+.insights-directory-page .insights-directory__hero-filters .views-exposed-form select {
+  width: 100%;
 }
 
 .insights-directory__hero-filters .form-item.form-item-title {
@@ -221,19 +265,35 @@ main:has(.insights-directory.insights-directory-page),
   display: block !important;
 }
 
+/* Hide search icon inside the title filter (cleaner UI). */
+.insights-directory__hero-filters .form-item-title img {
+  display: none !important;
+}
+
 @media (max-width: 1100px) {
   .insights-directory__hero-filters .views-exposed-form {
-    flex-flow: row wrap;
+    grid-template-columns: 1fr 1fr;
   }
 
   .insights-directory__hero-filters .views-exposed-form .form-item-title {
-    flex: 1 1 100%;
-    min-width: 100%;
+    grid-column: 1 / -1;
   }
 
   .insights-directory__hero-filters .views-exposed-form .form-actions {
-    flex: 1 1 100%;
+    grid-column: 1 / -1;
     justify-content: flex-end;
+  }
+}
+
+@media (max-width: 620px) {
+  .insights-directory__hero-filters .views-exposed-form {
+    grid-template-columns: 1fr;
+  }
+  .insights-directory__hero-filters .views-exposed-form .form-actions {
+    justify-content: stretch;
+  }
+  .insights-directory__hero-filters .views-exposed-form .form-actions input.button {
+    width: 100%;
   }
 }
 
@@ -431,11 +491,24 @@ main:has(.insights-directory.insights-directory-page),
 .insights-directory__latest .views-row {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #e8eef3;
+  border-bottom: none;
 }
 
 .insights-directory__latest .views-row:last-child {
   border-bottom: none;
+}
+
+.insights-directory__latest {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .insights-directory__latest {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
 }
 
 /* Latest list: horizontal */
@@ -443,10 +516,21 @@ main:has(.insights-directory.insights-directory-page),
   display: grid;
   grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
   gap: 1rem 1.25rem;
-  padding: 1.15rem 0;
+  padding: 1.05rem 1.05rem;
   align-items: center;
   text-decoration: none;
   color: inherit;
+  border: 1px solid #e8eef3;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.insights-directory__latest .insight-teaser__link:hover {
+  border-color: rgba(0, 71, 63, 0.22);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 720px) {
@@ -581,6 +665,13 @@ main:has(.insights-directory.insights-directory-page),
   max-width: none !important;
 }
 
+/* Some utility classes force fixed label width (w-80); override. */
+.insights-directory__newsletter-form .webform-submission-form label,
+.insights-directory__newsletter-form .webform-submission-form .option {
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .insights-directory__newsletter-form .webform-submission-form .form-item-email,
 .insights-directory__newsletter-form .webform-submission-form .form-item-consent {
   align-items: stretch !important;
@@ -594,6 +685,12 @@ main:has(.insights-directory.insights-directory-page),
   height: 2.75rem !important;
   min-height: 2.75rem !important;
   padding-inline: 0.65rem !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-email .form-el-wrapper:focus-within {
+  border-color: rgba(0, 71, 63, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(0, 71, 63, 0.12);
 }
 
 .insights-directory__newsletter-form .webform-submission-form .form-item-email input[type="email"] {
@@ -610,6 +707,8 @@ main:has(.insights-directory.insights-directory-page),
   grid-template-columns: 0.95rem minmax(0, 1fr);
   gap: 0.35rem 0.55rem !important;
   align-items: center !important;
+  width: 100% !important;
+  justify-self: stretch !important;
 }
 
 .insights-directory__newsletter-form .webform-submission-form .form-item-consent input[type="checkbox"] {
@@ -651,6 +750,27 @@ main:has(.insights-directory.insights-directory-page),
   border-radius: 12px;
   border: 2px solid transparent;
   cursor: pointer;
+  box-shadow: 0 10px 22px rgba(0, 71, 63, 0.16);
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.insights-directory__newsletter-form .webform-submission-form input[type="submit"]:hover,
+.insights-directory__newsletter-form .webform-submission-form button[type="submit"]:hover,
+.insights-directory__newsletter-form .webform-submission-form input[type="submit"]:focus-visible,
+.insights-directory__newsletter-form .webform-submission-form button[type="submit"]:focus-visible {
+  background: var(--event-brand-hover, #003630);
+  box-shadow: 0 14px 28px rgba(0, 71, 63, 0.22);
+  transform: translateY(-1px);
+}
+
+/* Override utility classes injected on webform button. */
+.insights-directory__newsletter-form .webform-submission-form .webform-button--submit.button {
+  padding: 0.62rem 1.15rem !important;
+  height: auto !important;
+  min-height: 2.75rem !important;
+  border-radius: 12px !important;
+  background: var(--event-brand, #00473f) !important;
+  border-color: transparent !important;
 }
 
 @media (min-width: 980px) {
@@ -660,11 +780,12 @@ main:has(.insights-directory.insights-directory-page),
   }
 
   .insights-directory__newsletter-form .webform-submission-form {
-    grid-template-columns: minmax(0, 1fr) 11.5rem;
+    grid-template-columns: minmax(0, 1fr) 10.25rem;
     grid-template-areas:
       "email submit"
       "consent consent";
-    align-items: end;
+    align-items: start;
+    gap: 0.75rem 0.75rem;
   }
 
   .insights-directory__newsletter-form .webform-submission-form .form-item-email {
@@ -673,6 +794,9 @@ main:has(.insights-directory.insights-directory-page),
 
   .insights-directory__newsletter-form .webform-submission-form .form-item-consent {
     grid-area: consent;
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-self: stretch;
   }
 
   .insights-directory__newsletter-form .webform-submission-form .form-actions {
@@ -680,10 +804,25 @@ main:has(.insights-directory.insights-directory-page),
     grid-column: 2;
     margin: 0;
     padding: 0;
+    align-self: start;
   }
 
   .insights-directory__newsletter-form .webform-submission-form input[type="submit"],
   .insights-directory__newsletter-form .webform-submission-form button[type="submit"] {
     width: auto;
   }
+}
+
+/* Clean, compact alignment for the embedded signup. */
+.insights-directory__newsletter-form .webform-submission-form .form-item-email label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-consent {
+  margin-top: 0.1rem;
 }

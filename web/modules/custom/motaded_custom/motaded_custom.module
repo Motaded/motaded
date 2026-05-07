@@ -1084,16 +1084,27 @@ function motaded_custom_ajax_render_alter(array &$commands): void {
     return;
   }
   $request = \Drupal::request();
-  if ($request->get('view_name') !== 'events') {
-    return;
-  }
-  $display_id = $request->get('view_display_id');
-  if (!in_array($display_id, [
+  $view_name = (string) ($request->get('view_name') ?? '');
+  $display_id = (string) ($request->get('view_display_id') ?? '');
+
+  $should_strip_scroll = FALSE;
+
+  // Events: homepage blocks + directory/calendar.
+  if ($view_name === 'events' && in_array($display_id, [
     'block_home',
     'block_calendar',
     'page_1',
     'attachment_page_calendar',
   ], TRUE)) {
+    $should_strip_scroll = TRUE;
+  }
+
+  // Library: homepage Library block exposed filters should not jump the viewport.
+  if ($view_name === 'library' && $display_id === 'block_1') {
+    $should_strip_scroll = TRUE;
+  }
+
+  if (!$should_strip_scroll) {
     return;
   }
 

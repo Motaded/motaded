@@ -234,6 +234,13 @@
         <h2 id="mi-related-heading" class="mi-related__title">{{ 'Related insights'|t }}</h2>
         <a href="/insights" class="mi-related__all">{{ 'View all insights'|t }}<span class="mi-related__chev" aria-hidden="true" aria-label="">→</span></a>
       </div>
+      {% if market_insight_related is not empty %}
+        <div class="mi-related__grid">
+          {{ market_insight_related }}
+        </div>
+      {% else %}
+        <p class="mi-related__empty">{{ 'No related insights found.'|t }}</p>
+      {% endif %}
     </div>
   </section>
 

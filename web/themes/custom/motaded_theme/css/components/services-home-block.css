@@ -177,7 +177,10 @@
   width: 100%;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline {
+/* BEF output can be either `.form-radios.form--inline` OR `.form-radios > .form-radios` (nested wrapper).
+ * Target both to avoid broken styling. */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios {
   display: grid !important;
   grid-template-columns: 2.75rem minmax(0, 1fr);
   align-items: stretch;
@@ -190,13 +193,15 @@
   background: #fff;
 }
 
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline::after {
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline::after,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios::after {
   content: none !important;
   display: none !important;
 }
 
 /* main.css hides radios — restore focusable clipping so keyboard works */
-.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline input.form-radio {
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline input.form-radio,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios input.form-radio {
   display: block !important;
   position: absolute !important;
   width: 1px !important;
@@ -243,6 +248,19 @@
   transition: background-color 0.15s ease;
 }
 
+/* Rounded corners for the first/last pair (icon + radio). */
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:first-child,
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:first-child + .form-type-radio {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar fieldset .form-type-radio:last-child,
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:has(+ .form-type-radio:last-child) {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
 .paragraph--view-block--services-home .services-home-sidebar .form-type-radio:last-of-type {
   border-bottom: 0;
 }
@@ -286,11 +304,11 @@
 }
 
 .paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) {
-  border-bottom: 3px solid #0f766e;
+  border-bottom: 2px solid #0f766e;
 }
 
 .paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio input:checked) {
-  border-bottom: 3px solid #0f766e;
+  border-bottom: 2px solid #0f766e;
 }
 
 .paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) label.option {

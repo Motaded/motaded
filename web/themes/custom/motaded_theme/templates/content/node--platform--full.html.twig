@@ -254,22 +254,5 @@
     </div>
   </div>
 
-  <footer class="pf-contact-strip" aria-labelledby="pf-contact-strip-title">
-    <div class="pf-contact-strip__inner">
-      <h2 id="pf-contact-strip-title" class="pf-contact-strip__title">{{ 'Ready to move forward?'|t }}</h2>
-      <div class="pf-contact-strip__actions">
-        {% if platform_wa_url %}
-          <a class="pf-btn pf-btn--wa" href="{{ platform_wa_url }}" rel="noopener noreferrer" target="_blank">{{ 'WhatsApp'|t }}</a>
-        {% endif %}
-        <a class="pf-btn pf-btn--outline-dark" href="{{ platform_contact_url }}">{{ 'Email'|t }}</a>
-        {% if platform_tel_url %}
-          <a class="pf-btn pf-btn--accent" href="{{ platform_tel_url }}">{{ 'Call now'|t }}</a>
-        {% else %}
-          <a class="pf-btn pf-btn--accent" href="{{ platform_contact_url }}">{{ 'Contact us'|t }}</a>
-        {% endif %}
-      </div>
-    </div>
-  </footer>
-
   {{ content.links }}
 </article>
