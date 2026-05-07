@@ -6,11 +6,17 @@ dependencies:
     - field.field.node.event.body
     - field.field.node.event.field_agenda
     - field.field.node.event.field_category
+    - field.field.node.event.field_city
+    - field.field.node.event.field_country
+    - field.field.node.event.field_attendance_type
     - field.field.node.event.field_cta_link
     - field.field.node.event.field_cta_text
     - field.field.node.event.field_cta_type
+    - field.field.node.event.field_documents
+    - field.field.node.event.field_event_format
     - field.field.node.event.field_event_end
     - field.field.node.event.field_event_start
+    - field.field.node.event.field_event_status
     - field.field.node.event.field_event_type
     - field.field.node.event.field_featured
     - field.field.node.event.field_featured_image
@@ -19,8 +25,12 @@ dependencies:
     - field.field.node.event.field_location
     - field.field.node.event.field_meeting_enabled
     - field.field.node.event.field_meta
+    - field.field.node.event.field_official_website
+    - field.field.node.event.field_organizer
     - field.field.node.event.field_partner_logos
+    - field.field.node.event.field_price_range
     - field.field.node.event.field_region
+    - field.field.node.event.field_sector_pages
     - field.field.node.event.field_secondary_cta
     - field.field.node.event.field_tags
     - field.field.node.event.field_what_we_offer
@@ -58,13 +68,28 @@ content:
     third_party_settings: {  }
     weight: 12
     region: content
-  field_category:
+  field_attendance_type:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_city:
     type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 5
+    region: content
+  field_country:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
     region: content
   field_cta_link:
     type: link
@@ -93,6 +118,15 @@ content:
     third_party_settings: {  }
     weight: 14
     region: content
+  field_documents:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 13
+    region: content
   field_event_end:
     type: datetime_default
     label: inline
@@ -102,6 +136,13 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_event_format:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
   field_event_start:
     type: datetime_default
     label: inline
@@ -110,6 +151,13 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_event_status:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
     region: content
   field_event_type:
     type: entity_reference_label
@@ -185,6 +233,26 @@ content:
     third_party_settings: {  }
     weight: 21
     region: content
+  field_official_website:
+    type: link
+    label: inline
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_organizer:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
   field_partner_logos:
     type: entity_reference_entity_view
     label: above
@@ -193,6 +261,13 @@ content:
       link: false
     third_party_settings: {  }
     weight: 18
+    region: content
+  field_price_range:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_region:
     type: entity_reference_label
@@ -213,6 +288,14 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 17
+    region: content
+  field_sector_pages:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
     region: content
   field_tags:
     type: entity_reference_label
@@ -256,5 +339,6 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_category: true
   langcode: true
   search_api_excerpt: true

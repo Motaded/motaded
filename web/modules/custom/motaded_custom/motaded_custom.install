@@ -192,6 +192,30 @@ function motaded_custom_update_10005(): void {
 }
 
 /**
+ * Seeds default terms for City and Country vocabularies (events UX filters).
+ */
+function motaded_custom_update_10006(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if ($voc_storage->load('city')) {
+    _motaded_custom_install_ensure_taxonomy_terms('city', [
+      'Riyadh',
+      'Jeddah',
+      'Dammam',
+      'Dubai',
+    ]);
+  }
+  if ($voc_storage->load('country')) {
+    _motaded_custom_install_ensure_taxonomy_terms('country', [
+      'Saudi Arabia',
+      'United Arab Emirates',
+    ]);
+  }
+}
+
+/**
  * Creates taxonomy terms when missing (matches by exact default label).
  *
  * @param string $vid

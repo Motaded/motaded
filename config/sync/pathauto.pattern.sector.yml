@@ -1,0 +1,22 @@
+uuid: 01ded924-0ef0-4b22-83f6-3a41a86febfe
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: sector
+label: Sector
+type: 'canonical_entities:node'
+pattern: '/sectors/[node:title]'
+selection_criteria:
+  7b4fd269-fd7b-42f7-bd68-189784f1b1af:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 7b4fd269-fd7b-42f7-bd68-189784f1b1af
+    context_mapping:
+      node: node
+    bundles:
+      sector_page: sector_page
+selection_logic: and
+weight: -5
+relationships: {  }

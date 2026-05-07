@@ -1,12 +1,12 @@
-uuid: b3b3b3b3-3333-4333-8333-333333333337
+uuid: b3b3b3b3-3333-4333-8333-333333333335
 langcode: en
 status: true
 dependencies:
   module:
     - node
     - taxonomy
-id: node.field_country
-field_name: field_country
+id: node.field_city
+field_name: field_city
 entity_type: node
 type: entity_reference
 settings:

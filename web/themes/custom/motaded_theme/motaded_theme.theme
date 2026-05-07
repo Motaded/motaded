@@ -941,12 +941,21 @@ function motaded_theme_plain_text_truncate(string $html, int $max_length): strin
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
   $variables['summary'] = NULL;
+  $variables['motaded_body_excerpt'] = '';
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
     $body_item = $node->get('body')->first();
     if ($body_item) {
       $summary_text = trim((string) $body_item->summary);
       if ($summary_text !== '') {
         $variables['summary'] = ['#markup' => nl2br(Html::escape($summary_text))];
+      }
+      // Fallback excerpt for hero when summary is empty.
+      if ($variables['summary'] === NULL) {
+        $raw = (string) $body_item->value;
+        $plain = trim(Html::decodeEntities(strip_tags($raw)));
+        if ($plain !== '') {
+          $variables['motaded_body_excerpt'] = motaded_theme_plain_text_truncate($plain, 220);
+        }
       }
     }
   }
@@ -1197,6 +1206,17 @@ function motaded_theme_preprocess_node(&$variables) {
       'field_gallery',
       'field_partner_logos',
       'field_tags',
+      // These are shown via the custom "Event facts" block, not raw {{ content }}.
+      'field_city',
+      'field_country',
+      'field_sector_pages',
+      'field_event_format',
+      'field_event_status',
+      'field_price_range',
+      'field_attendance_type',
+      'field_official_website',
+      'field_organizer',
+      'field_documents',
       'field_meta',
       'addtoany',
       'links',
@@ -1224,6 +1244,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   $view_builder = $em->getViewBuilder('node');
   $date_formatter = \Drupal::service('date.formatter');
   $langcode = $node->language()->getId();
+  $request = \Drupal::request();
 
   $variables['event_hero_media'] = [];
   $media = NULL;
@@ -1267,6 +1288,45 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
         'third_party_settings' => [],
       ]);
     }
+  }
+
+  $variables['event_documents'] = [];
+  if ($node->hasField('field_documents') && !$node->get('field_documents')->isEmpty()) {
+    $variables['event_documents'] = $view_builder->viewField($node->get('field_documents'), [
+      'label' => 'hidden',
+      'type' => 'entity_reference_revisions_entity_view',
+      'weight' => 0,
+      'settings' => [
+        'view_mode' => 'default',
+        'link' => '',
+      ],
+      'third_party_settings' => [],
+    ]);
+  }
+
+  // Event registration help webform (embedded before related events).
+  $variables['event_registration_help_form'] = [];
+  try {
+    if (\Drupal::moduleHandler()->moduleExists('webform')) {
+      $default_data = implode("\n", [
+        'event_nid: ' . (string) $node->id(),
+        'event_title: ' . str_replace("\n", ' ', $node->label()),
+        'event_url: ' . $request->getSchemeAndHttpHost() . $request->getRequestUri(),
+      ]);
+      $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+        'webform_id' => 'event_registration_help',
+        'label_display' => '0',
+        'default_data' => $default_data,
+        'redirect' => FALSE,
+        'lazy' => TRUE,
+      ]);
+      if ($block && $block->access(\Drupal::currentUser())) {
+        $variables['event_registration_help_form'] = $block->build();
+      }
+    }
+  }
+  catch (\Throwable $e) {
+    $variables['event_registration_help_form'] = [];
   }
 
   $variables['event_gallery'] = [];
@@ -1317,9 +1377,16 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
       $variables['event_datetime_iso_end'] = gmdate('c', $end_ts);
       if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
         $start_ts = strtotime($node->get('field_event_start')->value);
-        if ($start_ts && date('Ymd', $start_ts) === date('Ymd', $end_ts)) {
-          $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode)
-            . ' – ' . $date_formatter->format($end_ts, 'custom', 'g:i a', NULL, $langcode);
+        if ($start_ts) {
+          if (date('Ymd', $start_ts) === date('Ymd', $end_ts)) {
+            $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode)
+              . ' – ' . $date_formatter->format($end_ts, 'custom', 'g:i a', NULL, $langcode);
+          }
+          else {
+            // Multi-day event: show a date range.
+            $variables['event_date_line'] = $date_formatter->format($start_ts, 'custom', 'l, j F Y', NULL, $langcode)
+              . ' – ' . $date_formatter->format($end_ts, 'custom', 'l, j F Y', NULL, $langcode);
+          }
         }
       }
     }
@@ -1337,6 +1404,10 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
 
   $variables['event_register_url'] = '';
   $variables['event_register_title'] = (string) t('Register now');
+  $variables['event_register_kind'] = 'register';
+  if ($node->hasField('field_cta_type') && !$node->get('field_cta_type')->isEmpty()) {
+    $variables['event_register_kind'] = (string) $node->get('field_cta_type')->value ?: 'register';
+  }
   if ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
     $link_item = $node->get('field_cta_link')->first();
     if ($link_item && $link_item->get('uri') && $link_item->get('uri')->getString() !== '') {
@@ -1419,24 +1490,264 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
     $variables['event_cta_blurb'] = trim((string) $node->get('field_cta_text')->value);
   }
 
-  $variables['event_hero_stats'] = [
-    ['figure' => '500+', 'caption' => (string) t('Attendees')],
-    ['figure' => '45', 'caption' => (string) t('Speakers')],
-    ['figure' => '3', 'caption' => (string) t('Days')],
-  ];
+  // Hero chips: show most important facts immediately.
+  $variables['event_hero_chips'] = [];
+  $add_chip = static function (array &$chips, string $value, string $url = ''): void {
+    $value = trim($value);
+    if ($value === '') {
+      return;
+    }
+    $chips[] = ['value' => $value, 'url' => $url];
+  };
+
+  $list_label = static function (NodeInterface $n, string $field_name): string {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return '';
+    }
+    $raw = (string) $n->get($field_name)->value;
+    if ($raw === '') {
+      return '';
+    }
+    $allowed = $n->getFieldDefinition($field_name)->getSetting('allowed_values') ?? [];
+    return isset($allowed[$raw]) ? (string) $allowed[$raw] : $raw;
+  };
+  $term_label = static function (NodeInterface $n, string $field_name): string {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return '';
+    }
+    $term = $n->get($field_name)->entity;
+    return $term ? (string) $term->label() : '';
+  };
+  $first_ref_label = static function (NodeInterface $n, string $field_name): string {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return '';
+    }
+    $ent = $n->get($field_name)->first()?->entity;
+    return $ent ? (string) $ent->label() : '';
+  };
+  $official_host = static function (NodeInterface $n): string {
+    if (!$n->hasField('field_official_website') || $n->get('field_official_website')->isEmpty()) {
+      return '';
+    }
+    $uri = (string) ($n->get('field_official_website')->first()?->uri ?? '');
+    if ($uri === '') {
+      return '';
+    }
+    $parts = @parse_url($uri);
+    return is_array($parts) && !empty($parts['host']) ? (string) $parts['host'] : $uri;
+  };
+
+  $stats = [];
+  $push_stat = static function (array &$out, string $caption, string $value): void {
+    $value = trim($value);
+    if ($value === '') {
+      return;
+    }
+    $out[] = ['figure' => $value, 'caption' => $caption];
+  };
+
+  // Event facts (real fields) for sidebar display.
+  $allowed_label = static function (NodeInterface $n, string $field_name): string {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return '';
+    }
+    $raw = (string) $n->get($field_name)->value;
+    if ($raw === '') {
+      return '';
+    }
+    $allowed = $n->getFieldDefinition($field_name)->getSetting('allowed_values') ?? [];
+    return isset($allowed[$raw]) ? (string) $allowed[$raw] : $raw;
+  };
+  $term_label = static function (NodeInterface $n, string $field_name): string {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return '';
+    }
+    $term = $n->get($field_name)->entity;
+    return $term ? (string) $term->label() : '';
+  };
+  $terms_list = static function (NodeInterface $n, string $field_name, int $limit = 3): array {
+    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
+      return [];
+    }
+    $out = [];
+    foreach ($n->get($field_name) as $item) {
+      $label = $item->entity?->label();
+      if ($label) {
+        $out[] = (string) $label;
+      }
+      if (count($out) >= $limit) {
+        break;
+      }
+    }
+    return $out;
+  };
+
+  // Build chips after helpers are available.
+  // Only show Sector as a single linked chip (Format/Status already shown in stats).
+  if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
+    $sector = $node->get('field_sector_pages')->first()?->entity;
+    if ($sector) {
+      $add_chip($variables['event_hero_chips'], (string) $sector->label(), $sector->toUrl()->toString());
+    }
+  }
+
+  $variables['event_facts'] = [];
+  $add_fact = static function (array &$facts, string $label, string $value, string $url = ''): void {
+    $value = trim($value);
+    if ($value === '') {
+      return;
+    }
+    $facts[] = ['label' => $label, 'value' => $value, 'url' => $url];
+  };
+
+  $add_fact($variables['event_facts'], (string) t('City'), $term_label($node, 'field_city'));
+  $add_fact($variables['event_facts'], (string) t('Country'), $term_label($node, 'field_country'));
+  $sectors = $terms_list($node, 'field_sector_pages', 3);
+  if ($sectors !== []) {
+    $add_fact($variables['event_facts'], (string) t('Sector'), implode(', ', $sectors));
+  }
+  $add_fact($variables['event_facts'], (string) t('Event format'), $allowed_label($node, 'field_event_format'));
+  $add_fact($variables['event_facts'], (string) t('Price range'), $allowed_label($node, 'field_price_range'));
+  $add_fact($variables['event_facts'], (string) t('Attendance type'), $allowed_label($node, 'field_attendance_type'));
+  $add_fact($variables['event_facts'], (string) t('Event status'), $allowed_label($node, 'field_event_status'));
+  if ($node->hasField('field_official_website') && !$node->get('field_official_website')->isEmpty()) {
+    $uri = (string) $node->get('field_official_website')->first()->uri;
+    $title = trim((string) $node->get('field_official_website')->first()->title);
+    $add_fact($variables['event_facts'], (string) t('Official website'), $title !== '' ? $title : (string) t('Official website'), $uri);
+  }
+
+  // Prioritize the most useful “real” fields for the hero.
+  $push_stat($stats, (string) t('Status'), $list_label($node, 'field_event_status'));
+  $push_stat($stats, (string) t('Format'), $list_label($node, 'field_event_format'));
+  $push_stat($stats, (string) t('City'), $term_label($node, 'field_city'));
+  $push_stat($stats, (string) t('Country'), $term_label($node, 'field_country'));
+  $push_stat($stats, (string) t('Sector'), $first_ref_label($node, 'field_sector_pages'));
+  $push_stat($stats, (string) t('Price'), $list_label($node, 'field_price_range'));
+  $push_stat($stats, (string) t('Attendance'), $list_label($node, 'field_attendance_type'));
+  $push_stat($stats, (string) t('Website'), $official_host($node));
+
+  $variables['event_hero_stats'] = array_slice($stats, 0, 3);
 
   $variables['event_related'] = [];
-  $nids = $em->getStorage('node')->getQuery()
+  // Connected to this event (Related events + relevant sectors + insights).
+  $variables['connected_market_label'] = (string) t('Market context');
+  $variables['connected_market_subtitle'] = (string) t('Explore related events, key sectors, and curated insights to stay informed and make the most of your participation.');
+  $variables['connected_all_events_url'] = Url::fromUserInput('/events')->toString();
+  $variables['connected_all_insights_url'] = Url::fromUserInput('/insights')->toString();
+  $variables['connected_all_sectors_url'] = Url::fromUserInput('/sectors')->toString();
+
+  // Collect sector_page links and sector taxonomy ids for cross-content linking.
+  $sector_page_nids = [];
+  $sector_term_ids = [];
+  $variables['connected_sectors'] = [];
+  if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
+    foreach ($node->get('field_sector_pages')->referencedEntities() as $sector_page) {
+      if (!$sector_page instanceof NodeInterface) {
+        continue;
+      }
+      if ($sector_page->bundle() !== 'sector_page' || !$sector_page->access('view')) {
+        continue;
+      }
+      $sector_page_nids[] = (int) $sector_page->id();
+      $variables['connected_sectors'][] = [
+        'title' => (string) $sector_page->label(),
+        'url' => $sector_page->toUrl()->toString(),
+      ];
+      if ($sector_page->hasField('field_sector') && !$sector_page->get('field_sector')->isEmpty()) {
+        $term = $sector_page->get('field_sector')->entity;
+        if ($term instanceof TermInterface) {
+          $sector_term_ids[] = (int) $term->id();
+        }
+      }
+    }
+  }
+  $sector_page_nids = array_values(array_unique(array_filter($sector_page_nids)));
+  $sector_term_ids = array_values(array_unique(array_filter($sector_term_ids)));
+
+  // Related events: prioritize matching sector_page links, fallback to upcoming by date.
+  $related_q = $em->getStorage('node')->getQuery()
     ->condition('type', 'event')
     ->condition('nid', $node->id(), '<>')
     ->condition('status', 1)
     ->sort('field_event_start', 'ASC')
-    ->range(0, 4)
-    ->accessCheck(TRUE)
-    ->execute();
+    ->range(0, 3)
+    ->accessCheck(TRUE);
+  if ($sector_page_nids !== []) {
+    $related_q->condition('field_sector_pages.target_id', $sector_page_nids, 'IN');
+  }
+  $nids = $related_q->execute();
+  if (!$nids) {
+    $nids = $em->getStorage('node')->getQuery()
+      ->condition('type', 'event')
+      ->condition('nid', $node->id(), '<>')
+      ->condition('status', 1)
+      ->sort('field_event_start', 'ASC')
+      ->range(0, 3)
+      ->accessCheck(TRUE)
+      ->execute();
+  }
+  $variables['connected_related_events'] = [];
   if ($nids) {
     $related = $em->getStorage('node')->loadMultiple($nids);
-    $variables['event_related'] = $view_builder->viewMultiple($related, 'teaser');
+    foreach ($related as $rn) {
+      if (!$rn instanceof NodeInterface || $rn->bundle() !== 'event' || !$rn->access('view')) {
+        continue;
+      }
+      $start_ts = $rn->hasField('field_event_start') && !$rn->get('field_event_start')->isEmpty()
+        ? strtotime((string) $rn->get('field_event_start')->value)
+        : 0;
+      $when = $start_ts ? $date_formatter->format($start_ts, 'custom', 'M Y', NULL, $langcode) : '';
+      $city = $term_label($rn, 'field_city');
+      $country = $term_label($rn, 'field_country');
+      $place = trim(implode(' • ', array_values(array_filter([$city, $country]))));
+      if ($place === '' && $rn->hasField('field_location') && !$rn->get('field_location')->isEmpty()) {
+        $place = trim((string) $rn->get('field_location')->value);
+      }
+      $sector = $first_ref_label($rn, 'field_sector_pages');
+      $variables['connected_related_events'][] = [
+        'title' => (string) $rn->label(),
+        'url' => $rn->toUrl()->toString(),
+        'meta' => trim(implode(' • ', array_values(array_filter([$place, $when])))),
+        'sector' => $sector,
+      ];
+    }
+  }
+
+  // Insights: match by sector taxonomy term ids (from sector_page.field_sector).
+  $variables['connected_insights'] = [];
+  if ($sector_term_ids !== []) {
+    $iids = $em->getStorage('node')->getQuery()
+      ->condition('type', 'market_insight')
+      ->condition('status', 1)
+      ->condition('field_sector.target_id', $sector_term_ids, 'IN')
+      ->sort('field_year', 'DESC')
+      ->sort('changed', 'DESC')
+      ->range(0, 3)
+      ->accessCheck(TRUE)
+      ->execute();
+    if ($iids) {
+      $insights = $em->getStorage('node')->loadMultiple($iids);
+      foreach ($insights as $in) {
+        if (!$in instanceof NodeInterface || $in->bundle() !== 'market_insight' || !$in->access('view')) {
+          continue;
+        }
+        $excerpt = '';
+        if ($in->hasField('body') && !$in->get('body')->isEmpty()) {
+          $item = $in->get('body')->first();
+          $summary = $item ? trim((string) $item->summary) : '';
+          $raw = $summary !== '' ? $summary : (string) ($item?->value ?? '');
+          $plain = trim(Html::decodeEntities(strip_tags($raw)));
+          if ($plain !== '') {
+            $excerpt = motaded_theme_plain_text_truncate($plain, 92);
+          }
+        }
+        $variables['connected_insights'][] = [
+          'title' => (string) $in->label(),
+          'url' => $in->toUrl()->toString(),
+          'excerpt' => $excerpt,
+        ];
+      }
+    }
   }
 
   $variables['event_contact_url'] = Url::fromUserInput('/contact-us')->toString();

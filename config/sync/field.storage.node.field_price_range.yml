@@ -1,0 +1,30 @@
+uuid: b3b3b3b3-3333-4333-8333-33333333333b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_price_range
+field_name: field_price_range
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: free
+      label: Free
+    -
+      value: paid
+      label: Paid
+    -
+      value: invite_only
+      label: 'Invite only'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

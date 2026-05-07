@@ -1,0 +1,9 @@
+uuid: b3b3b3b3-3333-4333-8333-333333333330
+langcode: en
+status: true
+dependencies: {  }
+name: City
+vid: city
+description: 'Event city (Riyadh, Jeddah, etc.) for filters and SEO.'
+weight: 0
+new_revision: false

@@ -1,0 +1,36 @@
+uuid: b2b2b2b2-2222-4222-8222-222222222225
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.event_document_item.field_documents_media
+    - field.field.paragraph.event_document_item.field_title
+    - paragraphs.paragraphs_type.event_document_item
+  module:
+    - media
+id: paragraph.event_document_item.default
+targetEntityType: paragraph
+bundle: event_document_item
+mode: default
+content:
+  field_documents_media:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  search_api_excerpt: true
+  status: true
