@@ -1132,12 +1132,51 @@ function motaded_theme_preprocess_node(&$variables) {
     && $node->hasField('field_insight_shell')
     && $node->get('field_insight_shell')->value === 'platform') {
     $variables['market_insight_read_mins'] = NULL;
+    $variables['market_insight_related'] = [];
     if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
       $plain = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('body')->value)));
       if ($plain !== '') {
         $words = count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY));
         $variables['market_insight_read_mins'] = max(1, (int) ceil($words / 200));
       }
+    }
+
+    // Related insights: same sector when available, else latest insights.
+    try {
+      $em = \Drupal::entityTypeManager();
+      $q = $em->getStorage('node')->getQuery()
+        ->condition('type', 'market_insight')
+        ->condition('status', 1)
+        ->condition('nid', $node->id(), '<>')
+        ->sort('field_year', 'DESC')
+        ->sort('changed', 'DESC')
+        ->range(0, 3)
+        ->accessCheck(TRUE);
+      if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+        $tid = (int) $node->get('field_sector')->target_id;
+        if ($tid > 0) {
+          $q->condition('field_sector.target_id', $tid);
+        }
+      }
+      $nids = $q->execute();
+      if (!$nids) {
+        $nids = $em->getStorage('node')->getQuery()
+          ->condition('type', 'market_insight')
+          ->condition('status', 1)
+          ->condition('nid', $node->id(), '<>')
+          ->sort('field_year', 'DESC')
+          ->sort('changed', 'DESC')
+          ->range(0, 3)
+          ->accessCheck(TRUE)
+          ->execute();
+      }
+      if ($nids) {
+        $nodes = $em->getStorage('node')->loadMultiple($nids);
+        $variables['market_insight_related'] = $em->getViewBuilder('node')->viewMultiple($nodes, 'teaser');
+      }
+    }
+    catch (\Throwable $e) {
+      $variables['market_insight_related'] = [];
     }
   }
 
@@ -4078,6 +4117,35 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 
   if (($form['#id'] ?? '') === 'views-exposed-form-services-page-1') {
     $form['#attributes']['class'][] = 'services-directory__exposed-form';
+
+    // Defensive: normalize deep-linked query params for taxonomy filters.
+    // If BEF renders this filter as checkboxes, the expected input is an array:
+    // field_taxonomy_target_id[156]=156. Some links use scalar (?field_taxonomy_target_id=156),
+    // which breaks FormBuilder input handling.
+    if (!empty($form['field_taxonomy_target_id']) && is_array($form['field_taxonomy_target_id'])) {
+      $el =& $form['field_taxonomy_target_id'];
+      $input = $form_state->getUserInput();
+      $raw = $input['field_taxonomy_target_id'] ?? \Drupal::request()->query->get('field_taxonomy_target_id');
+
+      $type = (string) ($el['#type'] ?? '');
+      $is_multiple = !empty($el['#multiple']) || $type === 'checkboxes';
+
+      if ($is_multiple && is_scalar($raw)) {
+        $tid = (string) $raw;
+        if ($tid !== '' && ctype_digit($tid)) {
+          $input['field_taxonomy_target_id'] = [$tid => $tid];
+          $form_state->setUserInput($input);
+        }
+      }
+      elseif (!$is_multiple && is_array($raw)) {
+        $tid = (string) reset($raw);
+        if ($tid !== '' && ctype_digit($tid)) {
+          $input['field_taxonomy_target_id'] = $tid;
+          $form_state->setUserInput($input);
+        }
+      }
+    }
+
     // Better Exposed Filters can build some option labels after generic form alters.
     // Ensure Arabic labels for the "All" option and submit/reset strings are applied
     // on the final render array.
@@ -4086,6 +4154,30 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 
   $lib_forms = ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'];
   if (in_array(($form['#id'] ?? ''), $lib_forms, TRUE)) {
+    // Views taxonomy exposed filters can be configured to only list terms "in use".
+    // When we deep-link from sidebar (query string), the selected TID may be absent
+    // from #options, which triggers "submitted value is not allowed".
+    if (!empty($form['field_category_target_id']) && is_array($form['field_category_target_id'])) {
+      $element =& $form['field_category_target_id'];
+      if (!empty($element['#options']) && is_array($element['#options'])) {
+        $input = $form_state->getUserInput();
+        $raw = $input['field_category_target_id'] ?? \Drupal::request()->query->get('field_category_target_id');
+        $tid = is_array($raw) ? (string) reset($raw) : (is_scalar($raw) ? (string) $raw : '');
+        if ($tid !== '' && ctype_digit($tid) && !isset($element['#options'][$tid])) {
+          try {
+            $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load((int) $tid);
+            if ($term && method_exists($term, 'label')) {
+              $element['#options'][$tid] = $term->label();
+              // Ensure the element is set to the provided value.
+              $element['#default_value'] = $tid;
+            }
+          }
+          catch (\Throwable $e) {
+            // Ignore invalid IDs; keep default validation behavior.
+          }
+        }
+      }
+    }
     try {
       $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
     }

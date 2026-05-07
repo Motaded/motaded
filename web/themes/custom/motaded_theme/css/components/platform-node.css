@@ -19,6 +19,11 @@
   color: var(--pf-text);
 }
 
+/* Avoid duplicate breadcrumbs: platform template renders its own breadcrumb. */
+body.page-node-type-platform .bread {
+  display: none;
+}
+
 .node--type-platform.node--view-mode-full {
   width: 100%;
   max-width: none;
@@ -267,7 +272,7 @@
 
 .node--type-platform.node--view-mode-full .pf2-tabs {
   position: sticky;
-  top: 0;
+  top: max(0px, var(--drupal-displace-offset-top, 0px));
   z-index: 5;
   display: flex;
   gap: 0.5rem;
@@ -289,6 +294,7 @@
   color: #0f172a;
   background: #f1f5f9;
   border: 1px solid rgba(226, 232, 240, 0.9);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .node--type-platform.node--view-mode-full .pf2-tabs__link:hover {
@@ -320,6 +326,7 @@
 .node--type-platform.node--view-mode-full .pf2-section {
   padding: 1.25rem 0;
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  scroll-margin-top: calc(72px + max(0px, var(--drupal-displace-offset-top, 0px)));
 }
 
 .node--type-platform.node--view-mode-full .pf2-section:first-child {
@@ -382,6 +389,86 @@
   background: #fff;
   border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
   padding: 0.9rem 1rem;
+}
+
+/* Normalize Drupal field wrappers inside pf2 blocks. */
+.node--type-platform.node--view-mode-full :where(.pf2-card, .pf2-step, .pf2-req__item) :where(.contextual-region, .field, .field__item) {
+  float: none !important;
+  margin: 0 !important;
+  max-width: 100%;
+}
+
+.node--type-platform.node--view-mode-full :where(.pf2-card, .pf2-step, .pf2-req__item) :where(.field__label, .field--label-inline .field__label) {
+  display: none !important;
+}
+
+/* Paragraph typography inside cards/steps/requirements. */
+.node--type-platform.node--view-mode-full :where(.pf2-card, .pf2-step) :where(.field--name-field-title, .field--name-field-step-title) {
+  margin: 0 0 0.35rem !important;
+  font-size: 0.98rem;
+  font-weight: 850;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full :where(.pf2-card, .pf2-step) :where(.field--name-field-body, .field--name-field-description, .field--name-field-step-description) {
+  margin: 0 !important;
+  font-size: 0.925rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.node--type-platform.node--view-mode-full .pf2-req__item {
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.node--type-platform.node--view-mode-full .pf2-req__item::before {
+  content: "✓";
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  border-radius: 9999px;
+  background: var(--color-primary-600, #059669);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 900;
+  line-height: 1.35rem;
+  text-align: center;
+}
+
+.node--type-platform.node--view-mode-full .pf2-req__item :where(.field--name-field-requirement, .field--name-field-body, .field--name-field-description) {
+  margin: 0 !important;
+  font-size: 0.925rem;
+  line-height: 1.5;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-cta-row {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.node--type-platform.node--view-mode-full .pf2-links a {
+  color: var(--color-primary-700, #047857);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.node--type-platform.node--view-mode-full .pf2-links a:hover {
+  color: var(--color-primary-900, #064e3b);
+}
+
+/* Reduce meta tile minimum width on small screens to avoid awkward wrapping. */
+@media (max-width: 520px) {
+  .node--type-platform.node--view-mode-full .pf2-meta {
+    min-width: 11.5rem;
+  }
 }
 
 .node--type-platform.node--view-mode-full .pf2-aside {

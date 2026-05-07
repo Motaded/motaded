@@ -402,18 +402,18 @@ main:has(.platforms-directory.platforms-directory-page),
 }
 
 .platforms-directory__grid[data-platforms-dir-mode="grid"] {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 @media (max-width: 1180px) {
   .platforms-directory__grid[data-platforms-dir-mode="grid"] {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 720px) {
   .platforms-directory__grid[data-platforms-dir-mode="grid"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -429,6 +429,84 @@ main:has(.platforms-directory.platforms-directory-page),
 
 .platforms-directory__grid[data-platforms-dir-mode="list"] .views-row .pf-teaser__inner {
   align-items: center;
+}
+
+/* Card polish for /platforms listing (grid + list). */
+.platforms-directory__grid .pf-teaser__link {
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 2px 16px rgba(15, 23, 42, 0.05);
+}
+
+.platforms-directory__grid .pf-teaser__link:hover,
+.platforms-directory__grid .pf-teaser__link:focus-visible {
+  border-color: color-mix(in oklab, rgba(6, 95, 70, 0.9) 18%, rgba(226, 232, 240, 0.95));
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px);
+}
+
+.platforms-directory__grid .pf-teaser__inner {
+  padding: 1.25rem 1.25rem;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.platforms-directory__grid[data-platforms-dir-mode="grid"] .pf-teaser__inner {
+  flex-direction: column;
+}
+
+.platforms-directory__grid[data-platforms-dir-mode="grid"] .pf-teaser__logo {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.platforms-directory__grid[data-platforms-dir-mode="grid"] .pf-teaser__logo :where(img, picture) {
+  max-width: 70%;
+  max-height: 70%;
+}
+
+.platforms-directory__grid .pf-teaser__title {
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.platforms-directory__grid .pf-teaser__desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.platforms-directory__grid .pf-teaser__meta {
+  margin-top: 0.25rem;
+  font-size: 0;
+}
+
+/* Turn category field into a pill. */
+.platforms-directory__grid .pf-teaser__meta .field__item,
+.platforms-directory__grid .pf-teaser__meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  text-decoration: none;
+}
+
+.platforms-directory__grid .pf-teaser__cta {
+  margin-top: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 850;
 }
 
 .platforms-directory__pager {

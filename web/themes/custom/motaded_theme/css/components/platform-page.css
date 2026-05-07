@@ -707,6 +707,125 @@
   font-weight: 800;
 }
 
+.market-insight--platform .mi-related__grid {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .market-insight--platform .mi-related__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .market-insight--platform .mi-related__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.market-insight--platform .mi-related__empty {
+  margin: 1rem 0 0;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+/* Related insights cards (reuse teaser markup, restyle for platform page). */
+.market-insight--platform .mi-related__grid .insight-teaser {
+  margin: 0;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1rem 1.05rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  min-height: 100%;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__link:hover,
+.market-insight--platform .mi-related__grid .insight-teaser__link:focus-visible {
+  border-color: rgba(0, 71, 63, 0.22);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Remove empty media block, keep category pill in flow. */
+.market-insight--platform .mi-related__grid .insight-teaser__media {
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__pill {
+  position: static;
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  color: #0b1f2a;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__meta {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #0b1f2a;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__excerpt {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.market-insight--platform .mi-related__grid .insight-teaser__more {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-primary-600);
+}
+
 /* Hero (hero_two_cols): layout only — colors come from Tailwind primary-* */
 .platform-page .hero-two-cols {
   background: linear-gradient(165deg, var(--color-primary-50) 0%, #fff 55%, #f3f6f5 100%);

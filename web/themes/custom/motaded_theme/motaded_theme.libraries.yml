@@ -374,8 +374,12 @@ library_home_block:
     component:
       css/components/library-home-block.css:
         weight: 50
+  js:
+    js/library-home-scroll.js: {}
   dependencies:
     - motaded_theme/base
+    - core/drupal
+    - core/once
     - views/views.ajax
 
 platforms_directory:
