@@ -1,0 +1,22 @@
+uuid: 108ab692-030e-434d-98dd-9bc008eec041
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: platform
+label: Platform
+type: 'canonical_entities:node'
+pattern: '/platforms/[node:title]'
+selection_criteria:
+  97bc659f-06c6-4470-b18b-07fa93f47342:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 97bc659f-06c6-4470-b18b-07fa93f47342
+    context_mapping:
+      node: node
+    bundles:
+      platform: platform
+selection_logic: and
+weight: -5
+relationships: {  }

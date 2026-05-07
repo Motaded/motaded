@@ -1,0 +1,21 @@
+uuid: b3b3b3b3-3333-4333-8333-33333333333c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_price_range
+    - node.type.event
+  module:
+    - options
+id: node.event.field_price_range
+field_name: field_price_range
+entity_type: node
+bundle: event
+label: 'Price range'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

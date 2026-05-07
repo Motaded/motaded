@@ -1,17 +1,16 @@
-uuid: b3b3b3b3-3333-4333-8333-333333333337
+uuid: b3b3b3b3-3333-4333-8333-33333333333f
 langcode: en
 status: true
 dependencies:
   module:
+    - link
     - node
-    - taxonomy
-id: node.field_country
-field_name: field_country
+id: node.field_official_website
+field_name: field_official_website
 entity_type: node
-type: entity_reference
-settings:
-  target_type: taxonomy_term
-module: core
+type: link
+settings: {  }
+module: link
 locked: false
 cardinality: 1
 translatable: true

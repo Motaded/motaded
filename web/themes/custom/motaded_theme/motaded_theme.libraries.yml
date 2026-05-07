@@ -78,6 +78,7 @@ base:
         weight: -8
   js:
     js/lang-switcher.js: {}
+    js/external-links.js: {}
   dependencies:
     - core/drupal
     - core/once

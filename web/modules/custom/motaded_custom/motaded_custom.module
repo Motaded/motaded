@@ -8,6 +8,7 @@ use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeInterface;
 use Drupal\webform\Entity\WebformOptions;
 
@@ -1104,6 +1105,56 @@ function motaded_custom_ajax_render_alter(array &$commands): void {
     if ($cmd === 'scrollTop' || $cmd === 'viewsScrollTop') {
       unset($commands[$index]);
     }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Auto-compute Event status (upcoming/ongoing/past) from start/end datetimes.
+ */
+function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $entity): void {
+  if (!$entity instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+  if ($entity->bundle() !== 'event') {
+    return;
+  }
+  if (!$entity->hasField('field_event_status') || !$entity->hasField('field_event_start') || !$entity->hasField('field_event_end')) {
+    return;
+  }
+  if ($entity->get('field_event_start')->isEmpty() || $entity->get('field_event_end')->isEmpty()) {
+    return;
+  }
+
+  $start_raw = (string) ($entity->get('field_event_start')->value ?? '');
+  $end_raw = (string) ($entity->get('field_event_end')->value ?? '');
+  if ($start_raw === '' || $end_raw === '') {
+    return;
+  }
+
+  try {
+    $start = new DrupalDateTime($start_raw, new \DateTimeZone('UTC'));
+    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
+    $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+    $start_ts = $start->getTimestamp();
+    $end_ts = $end->getTimestamp();
+    $now_ts = $now->getTimestamp();
+
+    $status = 'upcoming';
+    if ($now_ts < $start_ts) {
+      $status = 'upcoming';
+    }
+    elseif ($now_ts > $end_ts) {
+      $status = 'past';
+    }
+    else {
+      $status = 'ongoing';
+    }
+    $entity->set('field_event_status', $status);
+  }
+  catch (\Throwable $e) {
+    // Keep editor-provided value if parsing fails.
   }
 }
 

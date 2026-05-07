@@ -1,0 +1,39 @@
+uuid: b2b2b2b2-2222-4222-8222-222222222224
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.event_document_item.field_documents_media
+    - field.field.paragraph.event_document_item.field_title
+    - paragraphs.paragraphs_type.event_document_item
+  module:
+    - media_library
+id: paragraph.event_document_item.default
+targetEntityType: paragraph
+bundle: event_document_item
+mode: default
+content:
+  field_documents_media:
+    type: media_library_widget
+    weight: 1
+    region: content
+    settings:
+      media_types:
+        - document
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
