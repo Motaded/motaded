@@ -9,7 +9,11 @@ dependencies:
     - field.field.node.document.field_document
     - field.field.node.document.field_document_type
     - field.field.node.document.field_featured
+    - field.field.node.document.field_platforms
+    - field.field.node.document.field_sector
+    - field.field.node.document.field_sector_pages
     - field.field.node.document.field_short_description
+    - field.field.node.document.field_taxonomy
     - field.field.node.document.field_source_link
     - field.field.node.document.field_year
     - node.type.document
@@ -55,7 +59,11 @@ hidden:
   field_country: true
   field_document: true
   field_featured: true
+  field_platforms: true
+  field_sector: true
+  field_sector_pages: true
   field_source_link: true
+  field_taxonomy: true
   field_year: true
   langcode: true
   search_api_excerpt: true

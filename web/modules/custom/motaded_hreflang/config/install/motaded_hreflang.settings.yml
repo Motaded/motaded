@@ -1,0 +1,5 @@
+policy: per_language
+strip_if_redirect: true
+strip_if_missing_translation: true
+parse_htaccess_redirects: true
+overrides: []

@@ -1,0 +1,99 @@
+{#
+/**
+ * @file
+ * Single row for sector hub lists (Invest Saudi row pattern).
+ */
+#}
+{% if row.type == 'event' %}
+  <li class="sector-hub-row sector-hub-row--event">
+    <a href="{{ row.url }}" class="sector-hub-row__link">
+      <span class="sector-hub-row__icon sector-hub-row__icon--calendar" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </span>
+      <span class="sector-hub-row__main">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        {% if row.meta %}
+          <span class="sector-hub-row__meta">{{ row.meta }}</span>
+        {% endif %}
+      </span>
+      <span class="sector-hub-row__chevron" aria-hidden="true">→</span>
+    </a>
+  </li>
+{% elseif row.type == 'insight' %}
+  <li class="sector-hub-row sector-hub-row--insight">
+    <a href="{{ row.url }}" class="sector-hub-row__link sector-hub-row__link--insight">
+      {% if row.thumbnail %}
+        <span class="sector-hub-row__thumb">{{ row.thumbnail }}</span>
+      {% else %}
+        <span class="sector-hub-row__icon sector-hub-row__icon--doc" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </span>
+      {% endif %}
+      <span class="sector-hub-row__body">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        {% if row.excerpt %}
+          <span class="sector-hub-row__excerpt">{{ row.excerpt }}</span>
+        {% endif %}
+        <span class="sector-hub-row__cta">{{ 'Read more'|t }}<span aria-hidden="true"> →</span></span>
+      </span>
+    </a>
+  </li>
+{% elseif row.type == 'platform' %}
+  <li class="sector-hub-row sector-hub-row--platform">
+    <a href="{{ row.url }}" class="sector-hub-row__link sector-hub-row__link--platform">
+      {% if row.logo %}
+        <span class="sector-hub-row__logo">{{ row.logo }}</span>
+      {% endif %}
+      <span class="sector-hub-row__body">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        <span class="sector-hub-row__cta">{{ 'Visit platform'|t }}<span aria-hidden="true"> →</span></span>
+      </span>
+    </a>
+  </li>
+{% elseif row.type == 'service' %}
+  <li class="sector-hub-row sector-hub-row--service">
+    <a href="{{ row.url }}" class="sector-hub-row__link">
+      <span class="sector-hub-row__icon sector-hub-row__icon--gear" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </span>
+      <span class="sector-hub-row__main">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        {% if row.excerpt %}
+          <span class="sector-hub-row__excerpt">{{ row.excerpt }}</span>
+        {% endif %}
+      </span>
+      <span class="sector-hub-row__chevron" aria-hidden="true">→</span>
+    </a>
+  </li>
+{% elseif row.type == 'document' %}
+  <li class="sector-hub-row sector-hub-row--document">
+    <a href="{{ row.url }}" class="sector-hub-row__link sector-hub-row__link--document">
+      <span class="sector-hub-row__icon sector-hub-row__icon--pdf" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+      </span>
+      <span class="sector-hub-row__main">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        {% if row.meta %}
+          <span class="sector-hub-row__meta">{{ row.meta }}</span>
+        {% endif %}
+      </span>
+      <span class="sector-hub-row__download" aria-hidden="true" title="{{ 'Download or view'|t }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg>
+      </span>
+    </a>
+  </li>
+{% elseif row.type == 'news' %}
+  <li class="sector-hub-row sector-hub-row--news">
+    <a href="{{ row.url }}" class="sector-hub-row__link sector-hub-row__link--news">
+      <time class="sector-hub-row__date" datetime="">{{ row.date }}</time>
+      <span class="sector-hub-row__divider" aria-hidden="true"></span>
+      <span class="sector-hub-row__news-main">
+        <span class="sector-hub-row__title">{{ row.title }}</span>
+        {% if row.excerpt %}
+          <span class="sector-hub-row__excerpt">{{ row.excerpt }}</span>
+        {% endif %}
+      </span>
+      <span class="sector-hub-row__chevron" aria-hidden="true">→</span>
+    </a>
+  </li>
+{% endif %}

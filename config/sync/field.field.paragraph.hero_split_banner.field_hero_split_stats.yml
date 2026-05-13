@@ -13,7 +13,7 @@ field_name: field_hero_split_stats
 entity_type: paragraph
 bundle: hero_split_banner
 label: Stats
-description: 'Up to three stat chips shown on the image.'
+description: 'Stat bar (icon, value, label). Up to four items recommended for the bottom band.'
 required: false
 translatable: true
 default_value: {  }

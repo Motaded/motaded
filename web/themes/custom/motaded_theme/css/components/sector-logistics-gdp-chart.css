@@ -1,0 +1,113 @@
+/**
+ * @file
+ * Logistics GASTAT GDP growth bar chart (YoY %).
+ */
+
+.sector-page__gdp-chart-wrap {
+  width: 100%;
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+  padding-block: 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.node--type-sector-page.node--view-mode-full .sector-gdp-chart {
+  background: var(--mot-surface, #fff);
+  border: 1px solid var(--mot-border, #e2e8f0);
+  border-radius: var(--mot-radius-lg, 12px);
+  box-shadow: var(--mot-shadow-card, 0 1px 2px rgb(15 23 42 / 4%), 0 10px 28px rgb(15 23 42 / 7%));
+  color: var(--mot-text, #0f172a);
+}
+
+.sector-gdp-chart__inner {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.sector-gdp-chart__head {
+  margin-bottom: 1.25rem;
+}
+
+.sector-gdp-chart__title {
+  margin: 0;
+  font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+  font-weight: 700;
+  color: var(--mot-text-heading, #1e293b);
+  letter-spacing: -0.02em;
+  max-width: min(100%, 42rem);
+}
+
+.sector-gdp-chart__panel {
+  width: 100%;
+}
+
+.sector-gdp-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 20rem;
+}
+
+.sector-gdp-chart__grid {
+  stroke: rgba(148, 163, 184, 0.35);
+  stroke-width: 1;
+}
+
+.sector-gdp-chart__zero {
+  stroke: rgba(15, 23, 42, 0.45);
+  stroke-width: 1.25;
+}
+
+.sector-gdp-chart__axis {
+  fill: var(--mot-text-muted, #64748b);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.sector-gdp-chart__axis--x {
+  font-size: 11px;
+}
+
+.sector-gdp-chart__bar {
+  fill: var(--mot-brand-hover, #065f46);
+}
+
+.sector-gdp-chart__bar--negative {
+  fill: #b45309;
+}
+
+.sector-gdp-chart__value {
+  fill: var(--mot-text-heading, #1e293b);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sector-gdp-chart__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mot-border, #e2e8f0);
+}
+
+.sector-gdp-chart__source {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.sector-gdp-chart__method {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+}
+
+.sector-gdp-chart__method:hover,
+.sector-gdp-chart__method:focus-visible {
+  text-decoration: underline;
+  color: var(--mot-brand-hover, #065f46);
+  outline: none;
+}

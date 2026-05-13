@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.investor_journey.field_investor_journey_eyebrow
+    - field.field.paragraph.investor_journey.field_investor_journey_note
     - field.field.paragraph.investor_journey.field_investor_journey_steps
     - field.field.paragraph.investor_journey.field_link
     - field.field.paragraph.investor_journey.field_sub_title
@@ -39,6 +40,7 @@ content:
     weight: 1
     region: content
 hidden:
+  field_investor_journey_note: true
   field_investor_journey_steps: true
   field_link: true
   search_api_excerpt: true

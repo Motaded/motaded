@@ -26,7 +26,11 @@
   {{ title_suffix }}
 
   <div class="chambers-directory__inner">
-    {{ exposed }}
+    {% if exposed %}
+      <div class="chambers-directory__filters" role="search" aria-label="{{ 'Filter chambers'|t }}">
+        {{ exposed }}
+      </div>
+    {% endif %}
     {{ attachment_before }}
 
     {% if rows -%}

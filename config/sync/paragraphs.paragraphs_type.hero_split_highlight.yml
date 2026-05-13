@@ -1,0 +1,10 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345601
+langcode: en
+status: true
+dependencies: {  }
+id: hero_split_highlight
+label: 'Hero split highlight line'
+icon_uuid: null
+icon_default: null
+description: 'Icon + short label for the hero value row (under intro).'
+behavior_plugins: {  }

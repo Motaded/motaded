@@ -1,8 +1,7 @@
 {#
 /**
  * @file
- * Chamber card (view mode: chamber_card) — used by View chambers.
- * Logo + short description з ноди; заголовок і «Learn more» → canonical URL ноди.
+ * Chamber card — directory grid (/chambers) and any non-homepage chambers View.
  */
 #}
 {%
@@ -17,7 +16,6 @@
 <article{{ attributes.addClass(classes) }} role="listitem">
   {{ title_prefix }}
   {{ title_suffix }}
-
   <div class="cnb-card__top">
     <div class="cnb-card__logo-wrap">
       {% if content.field_logo|render|trim is not empty %}
@@ -31,18 +29,14 @@
         </span>
       {% endif %}
     </div>
-
     <div class="cnb-card__text">
       <h3 class="cnb-card__title">
-        <a href="{{ url }}" class="cnb-card__title-link" rel="bookmark">{{ label }}</a>
+        <a class="cnb-card__title-link" href="{{ url }}" rel="bookmark">{{ label }}</a>
       </h3>
       {% if content.field_short_description|render|trim is not empty %}
         <div class="cnb-card__summary">{{ content.field_short_description }}</div>
       {% endif %}
     </div>
   </div>
-
-  <a class="cnb-card__cta" href="{{ url }}" rel="bookmark">
-    {{ 'Learn more'|t }} <span aria-hidden="true">→</span>
-  </a>
+  <a href="{{ url }}" class="cnb-card__cta" rel="bookmark">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></a>
 </article>

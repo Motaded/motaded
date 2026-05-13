@@ -1,28 +1,34 @@
 {#
 /**
- * Library directory row: title, summary, category, updated, download/media.
+ * Library row: title + badge, then description and document CTA on one row.
  */
 #}
-<article class="library-row rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-primary-200 hover:shadow-md md:flex md:gap-6 md:items-start">
-  <div class="library-row__main min-w-0 flex-1">
-    <div class="library-row__heading flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <h3 class="library-row__title m-0 text-lg font-semibold leading-snug text-slate-900">
+<article class="library-row rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary-200 hover:shadow-md">
+  <div class="library-row__main min-w-0">
+    <div class="library-row__heading flex flex-wrap items-baseline gap-x-2 gap-y-1">
+      <h3 class="library-row__title m-0 text-base font-semibold leading-snug text-slate-900">
         {{ fields.title.content }}
       </h3>
       {% if fields.field_category.content %}
-        <span class="library-row__badge inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-900">{{ fields.field_category.content }}</span>
+        <span class="library-row__badge inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-900">{{ fields.field_category.content }}</span>
       {% endif %}
     </div>
-    {% if fields.field_short_description.content %}
-      <p class="library-row__summary mt-2 text-sm leading-relaxed text-slate-600">{{ fields.field_short_description.content }}</p>
-    {% endif %}
-    {% if fields.changed.content %}
-      <p class="library-row__meta mt-3 text-xs text-slate-500">{{ 'Updated'|t }} {{ fields.changed.content }}</p>
+
+    {% if fields.field_short_description.content or library_row_file_url or fields.field_document.content %}
+      <div class="library-row__summary-row">
+        {% if fields.field_short_description.content %}
+          <div class="library-row__summary text-sm leading-snug text-slate-600">{{ fields.field_short_description.content }}</div>
+        {% endif %}
+        {% if library_row_file_url %}
+          <div class="library-row__asset">
+            <a href="{{ library_row_file_url|e('html_attr') }}" class="library-row__file-link" target="_blank" rel="noopener noreferrer">{{ library_row_file_label }}</a>
+          </div>
+        {% elseif fields.field_document.content %}
+          <div class="library-row__asset">
+            {{ fields.field_document.content }}
+          </div>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
-  {% if fields.field_document.content %}
-    <div class="library-row__asset mt-4 shrink-0 md:mt-0 md:w-52 md:text-right">
-      {{ fields.field_document.content }}
-    </div>
-  {% endif %}
 </article>

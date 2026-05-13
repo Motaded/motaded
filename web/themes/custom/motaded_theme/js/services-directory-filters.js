@@ -1,12 +1,16 @@
 (function (Drupal, once) {
   'use strict';
 
+  /**
+   * Services directory: select “placeholder” styling when value is All/empty.
+   * Exposed filters stay inside the form (see preprocess_views_exposed_form);
+   * BEF autosubmit handles filter changes.
+   */
   Drupal.behaviors.servicesDirectorySidebarFilters = {
     attach: function (context) {
-      // Make "All" option look like placeholder for select filters.
       once(
         'services-directory-select-placeholder',
-        'select[name="field_beneficiaries_target_id"], select[name="field_tags_target_id"]',
+        '#services-directory-filters select[name="field_beneficiaries_target_id"], #services-directory-filters select[name="field_sector_target_id"], #services-directory-filters select[name="field_tags_target_id"]',
         context
       ).forEach(function (select) {
         var togglePlaceholder = function () {
@@ -17,30 +21,6 @@
         togglePlaceholder();
         select.addEventListener('change', togglePlaceholder);
       });
-
-      once(
-        'services-directory-sidebar-filters',
-        '.services-filters-sidebar input[type="checkbox"][name^="field_taxonomy_target_id["]',
-        context
-      ).forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-          var formId = checkbox.getAttribute('form') || 'views-exposed-form-services-page-1';
-          var form = document.getElementById(formId);
-          if (!form) {
-            return;
-          }
-          var ajaxSubmit = form.querySelector('[data-bef-auto-submit-click], input.js-form-submit[type="submit"], button.js-form-submit[type="submit"]');
-          if (ajaxSubmit) {
-            ajaxSubmit.click();
-            return;
-          }
-          if (typeof form.requestSubmit === 'function') {
-            form.requestSubmit();
-            return;
-          }
-          form.submit();
-        });
-      });
-    }
+    },
   };
 })(Drupal, once);

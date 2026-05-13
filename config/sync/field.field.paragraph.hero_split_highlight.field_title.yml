@@ -1,0 +1,19 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345604
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.hero_split_highlight
+id: paragraph.hero_split_highlight.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: hero_split_highlight
+label: Label
+description: 'Single line (e.g. “Transparent regulations and procedures”).'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

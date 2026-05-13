@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * API-driven Key stats (Logistics): World Bank + GASTAT.
+ */
+#}
+<div class="sector-page__api-stats">
+  <ul class="sector-page__api-stats-list" role="list">
+    {% for row in sector_api_key_stats %}
+      <li class="sector-page__api-stats-row" role="listitem">
+        <span class="sector-page__api-stats-label">{{ row.label }}</span>
+        <span class="sector-page__api-stats-value">{{ row.value }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% if sector_api_key_stats_more_url %}
+    <p class="sector-page__api-stats-foot">
+      <a href="{{ sector_api_key_stats_more_url }}" class="sector-page__api-stats-more" rel="noopener noreferrer" target="_blank">
+        {{ 'View all statistics'|t }}<span class="sector-page__api-stats-more-arrow" aria-hidden="true">→</span>
+      </a>
+    </p>
+  {% endif %}
+</div>

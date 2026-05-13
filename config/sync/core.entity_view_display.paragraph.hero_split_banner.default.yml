@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hero_split_banner.field_body
+    - field.field.paragraph.hero_split_banner.field_hero_split_highlights
     - field.field.paragraph.hero_split_banner.field_hero_split_features
     - field.field.paragraph.hero_split_banner.field_hero_split_eyebrow
     - field.field.paragraph.hero_split_banner.field_hero_split_headline_accent
@@ -14,6 +15,7 @@ dependencies:
     - field.field.paragraph.hero_split_banner.field_link_secondary
     - field.field.paragraph.hero_split_banner.field_media
     - paragraphs.paragraphs_type.hero_split_banner
+    - paragraphs.paragraphs_type.hero_split_highlight
   module:
     - text
 id: paragraph.hero_split_banner.default
@@ -54,6 +56,7 @@ content:
     region: content
 hidden:
   field_hero_split_features: true
+  field_hero_split_highlights: true
   field_hero_split_stats: true
   field_hero_split_trust: true
   field_link: true

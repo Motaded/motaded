@@ -1,0 +1,23 @@
+uuid: e3f4a5b6-5050-4505-8505-505050505050
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_cost_max
+    - paragraphs.paragraphs_type.business_cost_estimation
+id: paragraph.business_cost_estimation.field_bce_cost_max
+field_name: field_bce_cost_max
+entity_type: paragraph
+bundle: business_cost_estimation
+label: 'Total maximum'
+description: 'High end of the headline range.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

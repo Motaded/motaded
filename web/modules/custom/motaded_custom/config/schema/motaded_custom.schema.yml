@@ -48,3 +48,37 @@ motaded_custom.tasheer_visa:
         no_options:
           type: string
           label: 'No options available message'
+
+motaded_custom.market_indicators:
+  type: config_object
+  label: 'Market indicators (manual fallbacks)'
+  mapping:
+    manual_indicators:
+      type: mapping
+      label: 'Manual indicator rows'
+      mapping:
+        non_oil_gdp_growth:
+          type: mapping
+          label: 'Non-oil GDP Growth (manual)'
+          mapping:
+            enabled:
+              type: boolean
+              label: 'Enabled'
+            label:
+              type: label
+              label: 'Table label'
+            value_raw:
+              type: ignore
+              label: 'Numeric value (e.g. percent as 4.4)'
+            value_display:
+              type: label
+              label: 'Display string (optional if value_raw set)'
+            year:
+              type: ignore
+              label: 'Reference year'
+            source_name:
+              type: label
+              label: 'Source name'
+            source_url:
+              type: uri
+              label: 'Source URL'

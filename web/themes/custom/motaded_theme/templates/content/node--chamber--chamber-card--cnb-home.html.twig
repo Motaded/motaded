@@ -1,0 +1,119 @@
+{#
+/**
+ * @file
+ * Chamber card — Business Network paragraph (chambers / homepage embed only).
+ * Featured wide card or row list (see node--chamber--chamber-card.html.twig for directory grid).
+ */
+#}
+{% set featured = cnb_is_featured|default(false) %}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    featured ? 'cnb-card--featured' : 'cnb-card--row',
+    'cnb-card',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+<article{{ attributes.addClass(classes) }} role="listitem">
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% if featured %}
+    <a class="cnb-card__link-hit" href="{{ url }}" rel="bookmark" aria-label="{{ (label|render|striptags ~ ' — ' ~ ('Learn more'|t))|e('html_attr') }}">
+      <div class="cnb-card__featured-grid">
+        <div class="cnb-card__featured-main">
+          <div class="cnb-card__logo-wrap">
+            {% if content.field_logo|render|trim is not empty %}
+              {{ content.field_logo }}
+            {% else %}
+              <span class="cnb-card__logo-fallback" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+            {% endif %}
+          </div>
+          <div class="cnb-card__text">
+            <h3 class="cnb-card__title">{{ label }}</h3>
+            {% if content.field_short_description|render|trim is not empty %}
+              <div class="cnb-card__summary">{{ content.field_short_description }}</div>
+            {% endif %}
+            <div class="cnb-card__row-meta cnb-card__featured-meta">
+              <div class="cnb-card__meta">
+                <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
+                <span class="cnb-card__meta-text">
+                  {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
+                </span>
+              </div>
+              <div class="cnb-card__meta">
+                <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
+                <span class="cnb-card__meta-text">
+                  {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if cnb_featured_stats is not empty %}
+          <div class="cnb-card__featured-stats" role="group" aria-label="{{ 'Key facts'|t }}">
+            {% for stat in cnb_featured_stats %}
+              {% set stat_text = stat.text|default('')|trim %}
+              <div class="cnb-card__featured-stat">
+                {% if stat.icon_markup %}
+                  <span class="cnb-card__featured-stat-icon" aria-hidden="true">{{ stat.icon_markup }}</span>
+                {% endif %}
+                {% if stat_text != '' %}
+                  <p class="cnb-card__featured-stat-text">{{ stat.text }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <span class="cnb-card__featured-cta">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></span>
+      </div>
+    </a>
+  {% else %}
+    <a class="cnb-card__link-hit cnb-card__link-hit--row" href="{{ url }}" rel="bookmark" aria-label="{{ (label|render|striptags ~ ' — ' ~ ('Learn more'|t))|e('html_attr') }}">
+      <div class="cnb-card__row-grid">
+        <div class="cnb-card__row-brand">
+          <div class="cnb-card__logo-wrap cnb-card__logo-wrap--sm">
+            {% if content.field_logo|render|trim is not empty %}
+              {{ content.field_logo }}
+            {% else %}
+              <span class="cnb-card__logo-fallback" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+            {% endif %}
+          </div>
+          <div class="cnb-card__text">
+            <h3 class="cnb-card__title cnb-card__title-plain">{{ label }}</h3>
+            {% if content.field_short_description|render|trim is not empty %}
+              <div class="cnb-card__summary">{{ content.field_short_description }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="cnb-card__row-meta">
+          <div class="cnb-card__meta">
+            <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
+            <span class="cnb-card__meta-text">
+              {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
+            </span>
+          </div>
+          <div class="cnb-card__meta">
+            <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
+            <span class="cnb-card__meta-text">
+              {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}
+            </span>
+          </div>
+        </div>
+        <span class="cnb-card__row-cta">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></span>
+      </div>
+    </a>
+  {% endif %}
+</article>

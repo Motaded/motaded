@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.journey_step.field_body
     - field.field.paragraph.journey_step.field_journey_icon
+    - field.field.paragraph.journey_step.field_journey_platforms
     - field.field.paragraph.journey_step.field_title
     - paragraphs.paragraphs_type.journey_step
   module:
@@ -27,6 +28,16 @@ content:
     weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_journey_platforms:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_title:
     type: string_textfield

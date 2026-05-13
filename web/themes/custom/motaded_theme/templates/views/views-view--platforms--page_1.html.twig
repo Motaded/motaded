@@ -1,7 +1,9 @@
 {#
 /**
  * @file
- * Platforms directory — hero (background + stats + filters), chips row, grid/list.
+ * Platforms directory: hero (same split-banner language as /services and
+ * /sectors, with platforms-bg.png on the visual side), exposed filters band,
+ * category chips, and grid/list toggle.
  */
 #}
 {{ attach_library('motaded_theme/platforms_directory') }}
@@ -12,106 +14,146 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
-    'platforms-directory',
-    'platforms-directory-page',
     'page-gray',
+    'services-directory',
+    'services-directory--page-redesign',
+    'platforms-directory',
+    'platforms-directory--page',
+    'platforms-directory-page',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
   {{ title_suffix }}
 
-  {% set hero_bg_url = motaded_platforms_hero_bg_url|default('') %}
-
-  <div class="platforms-directory__hero"{% if hero_bg_url %} style="--platforms-hero-bg: url('{{ hero_bg_url|e('html_attr') }}');"{% endif %}>
-    <div class="platforms-directory__hero-bg" aria-hidden="true"></div>
-    <div class="platforms-directory__hero-gradient" aria-hidden="true"></div>
-
-    <div class="platforms-directory__hero-inner">
-      <div class="platforms-directory__hero-top">
-        <div class="platforms-directory__hero-copy">
-          <header class="platforms-directory__masthead">
-            <h1 class="platforms-directory__title">{{ 'All the platforms you need, in one place'|t }}</h1>
-            <p class="platforms-directory__lede">{{ 'Discover official platforms and digital services in Saudi Arabia. We help you navigate, register, and stay compliant.'|t }}</p>
-          </header>
+  <header class="services-page-hero services-page-hero--split-banner platforms-directory__hero">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo platforms-directory__hero-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'All the platforms you need, in one place'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'Discover official platforms and digital services in Saudi Arabia. We help you navigate, register, and stay compliant — filter by category or search by name.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip services-page-hero__stats-strip--three" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="{{ platforms_hero_url_listings|default('#platforms-directory-listings') }}" aria-label="{{ 'Official platforms (@count)'|t({'@count': platforms_hero_stat_platforms|default(0)}) }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value">{% set _p = platforms_hero_stat_platforms|default(0) %}{{ _p }}{% if _p > 0 %}+{% endif %}</span>
+              <span class="services-page-hero__stat-label">{{ 'Official platforms'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ platforms_hero_url_services|default('/services') }}" aria-label="{{ 'Government-aligned services'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h10M10 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Services'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Browse all'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ platforms_sidebar_contact_url|default('/contact-us') }}" aria-label="{{ 'Contact us — speak to our team'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m4 8 8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Contact us'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Expert support'|t }}</span>
+            </a>
+          </nav>
         </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
 
-        {% if motaded_platforms_stats is defined and motaded_platforms_stats is not empty %}
-          <div class="platforms-directory__stats-card" aria-label="{{ 'At a glance'|t }}">
-            <div class="platforms-directory__stats-grid">
-              {% for stat in motaded_platforms_stats %}
-                <div class="platforms-directory__stat-col">
-                  <div class="platforms-directory__stat-icon" aria-hidden="true">
-                    {% if stat.icon == 'grid' %}
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-                    {% elseif stat.icon == 'layers' %}
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="m12 2 9 5-9 5-9-5 9-5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m3 12 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m3 17 9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-                    {% else %}
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
-                    {% endif %}
-                  </div>
-                  <p class="platforms-directory__stat-value">{{ stat.value }}</p>
-                  <p class="platforms-directory__stat-label">{{ stat.label }}</p>
-                </div>
-              {% endfor %}
-            </div>
+  {% if attachment_before %}
+    <div class="attachment attachment-before">
+      {{ attachment_before }}
+    </div>
+  {% endif %}
+
+  <div class="w-full py-6">
+    <div class="services-directory__page platforms-directory__page-inner">
+      <div class="services-directory__main services-directory__main--integrated-exposed platforms-directory__main">
+
+        {% if exposed %}
+          <div class="services-directory__exposed-top platforms-directory__exposed-wrap" id="platforms-directory-filters">
+            {{ exposed }}
           </div>
         {% endif %}
-      </div>
 
-      {% if exposed %}
-        <div class="platforms-directory__hero-filters view-filters">
-          {{ exposed }}
+        {% if motaded_platforms_category_chips is defined and motaded_platforms_category_chips is not empty %}
+          <nav class="platforms-directory__chips" aria-label="{{ 'Platform categories'|t }}">
+            {% for chip in motaded_platforms_category_chips %}
+              <a class="platforms-directory__chip" href="{{ chip.url }}">{{ chip.label }}</a>
+            {% endfor %}
+          </nav>
+        {% endif %}
+
+        <div class="services-directory__results-column platforms-directory__results" id="platforms-directory-listings">
+          <div class="platforms-directory__toolbar" role="toolbar" aria-label="{{ 'Listing display'|t }}">
+            <div class="platforms-directory__toolbar-intro">
+              <h2 class="platforms-directory__grid-heading">{{ 'Explore platforms'|t }}</h2>
+              {% if header %}
+                <p class="services-directory__results-count text-sm text-gray-600">{{ header }}</p>
+              {% endif %}
+            </div>
+            <div class="platforms-directory__toolbar-controls">
+              <span class="platforms-directory__toolbar-label" id="platforms-dir-toggle-label">{{ 'View as'|t }}</span>
+              <div class="platforms-directory__toggle" role="group" aria-labelledby="platforms-dir-toggle-label">
+                <button type="button" class="platforms-directory__toggle-btn is-active" data-platforms-dir-mode="grid" aria-pressed="true">
+                  {{ 'Grid'|t }}
+                </button>
+                <button type="button" class="platforms-directory__toggle-btn" data-platforms-dir-mode="list" aria-pressed="false">
+                  {{ 'List'|t }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="services-directory__results-body platforms-directory__panel" data-platforms-dir-panel="list">
+            {% if rows %}
+              <div class="view-content platforms-directory__grid" data-platforms-dir-grid>
+                {{ rows }}
+              </div>
+            {% elseif empty %}
+              <div class="view-empty">
+                {{ empty }}
+              </div>
+            {% endif %}
+            {% if pager %}
+              <div class="services-directory__pager platforms-directory__pager mt-8">
+                {{ pager }}
+              </div>
+            {% endif %}
+          </div>
         </div>
-      {% endif %}
+
+      </div>
     </div>
   </div>
 
-  <div class="platforms-directory__shell">
-    {% if motaded_platforms_category_chips is defined and motaded_platforms_category_chips is not empty %}
-      <nav class="platforms-directory__chips" aria-label="{{ 'Platform categories'|t }}">
-        {% for chip in motaded_platforms_category_chips %}
-          <a class="platforms-directory__chip" href="{{ chip.url }}">{{ chip.label }}</a>
-        {% endfor %}
-      </nav>
-    {% endif %}
-
-    <div class="platforms-directory__toolbar" role="toolbar" aria-label="{{ 'Listing display'|t }}">
-      <div class="platforms-directory__toolbar-intro">
-        <h2 class="platforms-directory__grid-heading">{{ 'Explore platforms'|t }}</h2>
-      </div>
-      <div class="platforms-directory__toolbar-controls">
-        <span class="platforms-directory__toolbar-label" id="platforms-dir-toggle-label">{{ 'View as'|t }}</span>
-        <div class="platforms-directory__toggle" role="group" aria-labelledby="platforms-dir-toggle-label">
-          <button type="button" class="platforms-directory__toggle-btn is-active" data-platforms-dir-mode="grid" aria-pressed="true">
-            {{ 'Grid'|t }}
-          </button>
-          <button type="button" class="platforms-directory__toggle-btn" data-platforms-dir-mode="list" aria-pressed="false">
-            {{ 'List'|t }}
-          </button>
-        </div>
-      </div>
+  {% if attachment_after %}
+    <div class="attachment attachment-after">
+      {{ attachment_after }}
     </div>
-
-    <div class="platforms-directory__panel" data-platforms-dir-panel="list">
-      {% if rows %}
-        <div class="view-content platforms-directory__grid" data-platforms-dir-grid>
-          {{ rows }}
-        </div>
-      {% elseif empty %}
-        <div class="view-empty">
-          {{ empty }}
-        </div>
-      {% endif %}
-      {% if pager %}
-        <div class="platforms-directory__pager">
-          {{ pager }}
-        </div>
-      {% endif %}
+  {% endif %}
+  {% if more %}
+    {{ more }}
+  {% endif %}
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
     </div>
-  </div>
+  {% endif %}
+  {% if feed_icons %}
+    <div class="feed-icons">
+      {{ feed_icons }}
+    </div>
+  {% endif %}
 </div>
-

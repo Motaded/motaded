@@ -2,6 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
@@ -1174,7 +1175,7 @@ function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
  *
  * Events directory (/events): optional motaded_event_date_from / motaded_event_date_to (Y-m-d).
  *
- * Library view: optional library_section (templates|regulations) filters document types.
+ * Library view: section filter is an exposed Views filter on library_section terms.
  */
 function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
   $view_id = $view->id() ?? '';
@@ -1207,59 +1208,99 @@ function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \D
     }
     return;
   }
-
-  if ($view_id === 'library') {
-    $display_id = $view->current_display ?? '';
-    if (!in_array($display_id, ['page_1', 'block_1'], TRUE)) {
-      return;
-    }
-    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
-      return;
-    }
-
-    $req = \Drupal::request();
-    $section = $req->query->get('library_section', 'templates');
-    if (!is_string($section) || !in_array($section, ['templates', 'regulations'], TRUE)) {
-      $section = 'templates';
-    }
-
-    $tids = motaded_custom_library_section_document_type_tids($section);
-    if ($tids === []) {
-      $query->addWhereExpression(0, '1 = 0');
-      return;
-    }
-
-    if (!$query->getTableInfo('node__field_document_type')) {
-      $join_manager = \Drupal::service('plugin.manager.views.join');
-      $configuration = [
-        'table' => 'node__field_document_type',
-        'field' => 'entity_id',
-        'left_table' => 'node_field_data',
-        'left_field' => 'nid',
-        'extra' => [
-          ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
-        ],
-      ];
-      $join = $join_manager->createInstance('standard', $configuration);
-      $query->addRelationship('node__field_document_type', $join, 'node_field_data');
-    }
-
-    $info = $query->getTableInfo('node__field_document_type');
-    $alias = $info['alias'] ?? 'node__field_document_type';
-    $query->addWhere(0, "$alias.field_document_type_target_id", $tids, 'IN');
-  }
 }
 
 /**
- * Document type term IDs for a library section tab (names from motaded_custom_update_10005).
+ * Returns taxonomy term ID in vocabulary library_section by exact name.
+ */
+function motaded_custom_library_section_group_tid_by_name(string $name): ?int {
+  $name = trim($name);
+  if ($name === '') {
+    return NULL;
+  }
+  $ids = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'library_section')
+    ->condition('name', $name)
+    ->range(0, 1)
+    ->execute();
+  if (!$ids) {
+    return NULL;
+  }
+  return (int) reset($ids);
+}
+
+/**
+ * Document type term IDs assigned to a library section group term.
+ *
+ * @return int[]
+ */
+function motaded_custom_document_type_tids_for_library_section_tid(int $section_tid): array {
+  if ($section_tid < 1) {
+    return [];
+  }
+  $ids = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'document_type')
+    ->condition('field_library_section', $section_tid)
+    ->execute();
+  if (!is_array($ids) || $ids === []) {
+    return [];
+  }
+  return array_values(array_map('intval', $ids));
+}
+
+/**
+ * Legacy slug → group term ID (for old bookmarks).
+ */
+function motaded_custom_library_section_tid_from_slug(string $slug, int $templates_tid, int $regulations_tid): int {
+  return $slug === 'regulations' ? $regulations_tid : $templates_tid;
+}
+
+/**
+ * Normalizes exposed library_section (tid or legacy slug) to a valid group tid.
+ */
+function motaded_custom_library_section_normalize_input(mixed $raw, int $templates_tid, int $regulations_tid): int {
+  if (is_string($raw)) {
+    $raw = trim($raw);
+    if ($raw === 'templates' || $raw === 'regulations') {
+      return motaded_custom_library_section_tid_from_slug($raw, $templates_tid, $regulations_tid);
+    }
+    if ($raw !== '' && ctype_digit($raw)) {
+      $tid = (int) $raw;
+      if ($tid === $templates_tid || $tid === $regulations_tid) {
+        return $tid;
+      }
+    }
+  }
+  elseif (is_int($raw) || is_float($raw)) {
+    $tid = (int) $raw;
+    if ($tid === $templates_tid || $tid === $regulations_tid) {
+      return $tid;
+    }
+  }
+  elseif (is_array($raw)) {
+    $first = reset($raw);
+    return motaded_custom_library_section_normalize_input($first, $templates_tid, $regulations_tid);
+  }
+  return $templates_tid;
+}
+
+/**
+ * Document type term IDs for a library section tab (legacy slug API for theme).
  *
  * @return int[]
  */
 function motaded_custom_library_section_document_type_tids(string $section): array {
-  $names = $section === 'regulations'
-    ? ['Regulation', 'Law', 'Policy']
-    : ['Template', 'Form', 'Guide'];
-  return motaded_custom_taxonomy_tids_by_exact_names('document_type', $names);
+  $templates_tid = motaded_custom_library_section_group_tid_by_name('Templates');
+  $regulations_tid = motaded_custom_library_section_group_tid_by_name('Regulations');
+  if ($templates_tid === NULL || $regulations_tid === NULL) {
+    return motaded_custom_taxonomy_tids_by_exact_names('document_type', $section === 'regulations'
+      ? ['Regulation', 'Law', 'Policy']
+      : ['Template', 'Form', 'Guide']);
+  }
+  $group_tid = $section === 'regulations' ? $regulations_tid : $templates_tid;
+  return motaded_custom_document_type_tids_for_library_section_tid($group_tid);
 }
 
 /**
@@ -1289,6 +1330,43 @@ function motaded_custom_taxonomy_tids_by_exact_names(string $vid, array $names):
 }
 
 /**
+ * Implements hook_views_pre_build().
+ *
+ * Ensures Library block/page always get Views AJAX settings even if active
+ * config drifted from exported defaults (use_ajax).
+ */
+function motaded_custom_views_pre_build(\Drupal\views\ViewExecutable $view): void {
+  if (($view->id() ?? '') !== 'library') {
+    return;
+  }
+  if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+    return;
+  }
+  if (empty($view->is_attachment) && empty($view->live_preview)) {
+    $view->setAjaxEnabled(TRUE);
+  }
+
+  $templates_tid = motaded_custom_library_section_group_tid_by_name('Templates');
+  $regulations_tid = motaded_custom_library_section_group_tid_by_name('Regulations');
+  if ($templates_tid === NULL || $regulations_tid === NULL) {
+    return;
+  }
+
+  $req = \Drupal::request();
+  $input = $view->getExposedInput();
+  $raw = $input['library_section'] ?? NULL;
+  if ($raw === NULL || $raw === '') {
+    $raw = $req->query->get('library_section');
+  }
+  if ($raw === NULL || $raw === '') {
+    $raw = $req->request->get('library_section');
+  }
+  $tid = motaded_custom_library_section_normalize_input($raw, $templates_tid, $regulations_tid);
+  $input['library_section'] = (string) $tid;
+  $view->setExposedInput($input);
+}
+
+/**
  * Implements hook_views_pre_render().
  */
 function motaded_custom_views_pre_render(\Drupal\views\ViewExecutable $view): void {
@@ -1299,4 +1377,275 @@ function motaded_custom_views_pre_render(\Drupal\views\ViewExecutable $view): vo
     return;
   }
   $view->element['#cache']['contexts'][] = 'url.query_args:library_section';
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Queues a daily World Bank import (processed by queue worker; see
+ * MarketIndicatorsImportQueueWorker).
+ */
+function motaded_custom_cron(): void {
+  $day = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+  $state = \Drupal::state();
+  if ($state->get('motaded_custom.market_indicators_queue_day') !== $day) {
+    $queue = \Drupal::queue('market_indicators_import');
+    if ($queue->numberOfItems() === 0) {
+      $queue->createItem([]);
+      $state->set('motaded_custom.market_indicators_queue_day', $day);
+    }
+  }
+  if ($state->get('motaded_custom.sector_indicators_queue_day') !== $day) {
+    $queue_sector = \Drupal::queue('sector_indicators_import');
+    if ($queue_sector->numberOfItems() === 0) {
+      $queue_sector->createItem([]);
+      $state->set('motaded_custom.sector_indicators_queue_day', $day);
+    }
+  }
+}
+
+/**
+ * Returns market indicator rows for the v1 homepage table order.
+ *
+ * @return list<array<string, mixed>>
+ *   Rows from {market_indicators}, keys ordered for display.
+ */
+function motaded_custom_market_indicators_table_rows(): array {
+  $keys = [
+    'gdp_growth',
+    'population',
+    'fdi_inflow',
+    'non_oil_gdp_growth',
+    'inflation',
+    'unemployment',
+  ];
+  return \Drupal::service('motaded_custom.market_indicator_repository')->loadLatestRowsOrdered($keys);
+}
+
+/**
+ * GDP growth series for chart (last 6 calendar years, local DB only).
+ *
+ * @return list<array{year: int, value: float}>
+ */
+function motaded_custom_market_indicators_gdp_growth_series(): array {
+  $current_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+  $year_min = $current_year - 5;
+  return \Drupal::service('motaded_custom.market_indicator_repository')->loadSeries('gdp_growth', $year_min, $current_year);
+}
+
+/**
+ * Homepage sector cards from {sector_indicator_points} (headline KPI + sparkline data).
+ *
+ * @return list<array<string, mixed>>
+ *   Each card: sector_key, sector_title, kpi_label, value_display, year,
+ *   explore_url, explore_label, icon_key, sparkline_points (list of year/value).
+ */
+function motaded_custom_sector_homepage_cards(): array {
+  if (!\Drupal::hasService('motaded_custom.sector_indicator_repository')) {
+    return [];
+  }
+  /** @var \Drupal\motaded_custom\SectorIndicators\SectorIndicatorRepository $repo */
+  $repo = \Drupal::service('motaded_custom.sector_indicator_repository');
+  $calendar_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+
+  $cards = [];
+  foreach (\Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::headlineRows() as $def) {
+    $latest = $repo->loadLatest($def['sector_key'], $def['indicator_key']);
+    if ($latest === NULL) {
+      continue;
+    }
+    $value_display = isset($latest['value_display']) ? trim((string) $latest['value_display']) : '';
+    if ($value_display === '') {
+      continue;
+    }
+    [$year_min, $year_max] = _motaded_custom_sector_sparkline_year_bounds((int) ($latest['year'] ?? 0), $calendar_year);
+    $series = $repo->loadSeries($def['sector_key'], $def['indicator_key'], $year_min, $year_max);
+    $kpi_card = trim((string) ($def['card_kpi_label'] ?? ''));
+    if ($kpi_card === '') {
+      $kpi_card = trim((string) ($def['kpi_label'] ?? ''));
+    }
+    $cards[] = [
+      'sector_key' => $def['sector_key'],
+      'sector_title' => $def['sector_label'],
+      'kpi_label' => $kpi_card,
+      'value_display' => $value_display,
+      'year' => (int) ($latest['year'] ?? 0),
+      'explore_url' => Url::fromUri('internal:/sectors')->toString(),
+      'explore_label' => (string) t('Explore sector'),
+      'icon_key' => (string) ($def['icon_key'] ?? $def['sector_key']),
+      'sparkline_points' => $series,
+    ];
+  }
+  return $cards;
+}
+
+/**
+ * Maps a sector_page node title / sector term to a canonical sector_key (WB definitions).
+ */
+function _motaded_custom_sector_key_from_sector_page(NodeInterface $node): ?string {
+  if ($node->bundle() !== 'sector_page') {
+    return NULL;
+  }
+  $candidates = [trim($node->getTitle())];
+  if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+    $term = $node->get('field_sector')->entity;
+    if ($term instanceof \Drupal\taxonomy\TermInterface) {
+      $candidates[] = trim($term->label());
+    }
+  }
+  static $map = [
+    'Tourism' => 'tourism',
+    'Energy' => 'energy',
+    'Manufacturing' => 'manufacturing',
+    'Technology' => 'technology',
+    'Finance & Fintech' => 'finance',
+    'Finance and Fintech' => 'finance',
+    'Logistics & Transport' => 'logistics',
+    'Logistics Transport' => 'logistics',
+    'Healthcare' => 'healthcare',
+    'Construction & Infrastructure' => 'construction',
+    'Construction and Infrastructure' => 'construction',
+  ];
+  foreach ($candidates as $c) {
+    if ($c !== '' && isset($map[$c])) {
+      return $map[$c];
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Sparkline loads up to 6 years ending at the headline year (not “calendar last 6 years”).
+ *
+ * @return array{0: int, 1: int}
+ *   Tuple year_min, year_max for DB BETWEEN.
+ */
+function _motaded_custom_sector_sparkline_year_bounds(int $latest_row_year, int $calendar_year): array {
+  if ($latest_row_year < 1960) {
+    $latest_row_year = $calendar_year;
+  }
+  $year_max = min($calendar_year, $latest_row_year);
+  $year_min = max(1960, $year_max - 5);
+  return [$year_min, $year_max];
+}
+
+/**
+ * World Bank headline KPI + series for homepage sector cards (when DB has data).
+ *
+ * @return array<string, mixed>|null
+ *   Keys: sector_key, value_display, year, kpi_label, icon_key, sparkline_points.
+ */
+function motaded_custom_sector_wb_overlay_for_node(NodeInterface $node): ?array {
+  $sector_key = _motaded_custom_sector_key_from_sector_page($node);
+  if ($sector_key === NULL || !\Drupal::hasService('motaded_custom.sector_indicator_repository')) {
+    return NULL;
+  }
+  $def = \Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::headlineForSectorKey($sector_key);
+  if ($def === NULL) {
+    return NULL;
+  }
+  /** @var \Drupal\motaded_custom\SectorIndicators\SectorIndicatorRepository $repo */
+  $repo = \Drupal::service('motaded_custom.sector_indicator_repository');
+  $latest = $repo->loadLatest($sector_key, $def['indicator_key']);
+  if ($latest === NULL) {
+    return NULL;
+  }
+  $value_display = isset($latest['value_display']) ? trim((string) $latest['value_display']) : '';
+  if ($value_display === '') {
+    return NULL;
+  }
+  $calendar_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+  [$year_min, $year_max] = _motaded_custom_sector_sparkline_year_bounds((int) ($latest['year'] ?? 0), $calendar_year);
+  $series = $repo->loadSeries($sector_key, $def['indicator_key'], $year_min, $year_max);
+  $kpi_card = trim((string) ($def['card_kpi_label'] ?? ''));
+  if ($kpi_card === '') {
+    $kpi_card = trim((string) ($def['kpi_label'] ?? ''));
+  }
+  return [
+    'sector_key' => $sector_key,
+    'value_display' => $value_display,
+    'year' => (int) ($latest['year'] ?? 0),
+    'kpi_label' => $kpi_card,
+    'icon_key' => (string) ($def['icon_key'] ?? $sector_key),
+    'sparkline_points' => $series,
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ *
+ * sector_page (full): Key stats (WB + GASTAT), trade volume chart, GASTAT activity growth chart.
+ */
+function motaded_custom_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() !== 'sector_page' || ($variables['view_mode'] ?? '') !== 'full' || empty($variables['page'])) {
+    return;
+  }
+  $sector_key = _motaded_custom_sector_key_from_sector_page($node);
+  if ($sector_key === NULL) {
+    return;
+  }
+  $allowed = \Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::sectorPageKeys();
+  if (!in_array($sector_key, $allowed, TRUE)) {
+    return;
+  }
+  $variables['#cache']['tags'][] = 'node:' . $node->id();
+  $api_max_age = 43200;
+  $has_api_layer = FALSE;
+
+  if (\Drupal::hasService('motaded_custom.sector_page_key_stats_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\SectorPageKeyStatsBuilder $builder */
+    $builder = \Drupal::service('motaded_custom.sector_page_key_stats_builder');
+    $rows = $builder->build($sector_key);
+    if ($rows !== []) {
+      $years = array_filter(array_map(
+        static fn(array $r): int => (int) ($r['year'] ?? 0),
+        $rows
+      ));
+      $title_year = $years !== [] ? max($years) : (int) gmdate('Y', \Drupal::time()->getRequestTime());
+      $variables['sector_api_key_stats'] = $rows;
+      $variables['sector_api_key_stats_year'] = $title_year;
+      $variables['sector_api_key_stats_more_url'] = 'https://data.worldbank.org/country/saudi-arabia';
+      $has_api_layer = TRUE;
+    }
+  }
+
+  if (\Drupal::hasService('motaded_custom.logistics_trade_volume_chart_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\TradeVolumeChartBuilder $chartBuilder */
+    $chartBuilder = \Drupal::service('motaded_custom.logistics_trade_volume_chart_builder');
+    $chart = $chartBuilder->build($sector_key, 'trade_volume_chart');
+    if ($chart !== NULL) {
+      $chart['gradient_id'] = 'stc-fill-' . $node->id();
+      $variables['sector_trade_volume_chart'] = $chart;
+      $has_api_layer = TRUE;
+      $api_max_age = min($api_max_age, (int) ($chart['cache_max_age'] ?? $api_max_age));
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $chart['cache_tags'] ?? []);
+    }
+  }
+
+  if (\Drupal::hasService('motaded_custom.sector_gastat_activity_chart_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\SectorGastatActivityGrowthChartBuilder $gdpChart */
+    $gdpChart = \Drupal::service('motaded_custom.sector_gastat_activity_chart_builder');
+    $gdp = $gdpChart->build($sector_key);
+    if ($gdp !== NULL) {
+      $gdp['chart_uid'] = 'sgastat-' . $node->id();
+      $variables['sector_logistics_gdp_chart'] = $gdp;
+      $has_api_layer = TRUE;
+      $api_max_age = min($api_max_age, (int) ($gdp['cache_max_age'] ?? $api_max_age));
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $gdp['cache_tags'] ?? []);
+    }
+  }
+
+  if ($has_api_layer) {
+    $prev_max = $variables['#cache']['max-age'] ?? NULL;
+    if ($prev_max === NULL || $prev_max === Cache::PERMANENT) {
+      $variables['#cache']['max-age'] = $api_max_age;
+    }
+    else {
+      $variables['#cache']['max-age'] = min((int) $prev_max, $api_max_age);
+    }
+  }
 }

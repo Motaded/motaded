@@ -1,0 +1,20 @@
+uuid: c8e3f1a2-9b0d-4e7c-8a6f-50123456789a
+langcode: en
+status: true
+dependencies: {  }
+id: logistics_gastat_gdp_share_chart
+label: 'Logistics — GASTAT GDP share (sector / total)'
+description: "GASTAT DPV_NA_ISIC_Y_EFNA0201: year-on-year GDP growth (%) for transport, storage & communication. Optional API URL override; leave empty for default."
+weight: 0
+sector_key: logistics
+usage_key: logistics_gdp_share_chart
+provider: gastat
+wb_country_iso3: SAU
+wb_indicator_primary: ''
+wb_indicator_secondary: ''
+wb_api_base_url: ''
+merge_mode: none
+value_scale: none
+max_years: 24
+cache_max_age: 43200
+gastat_api_url: ''

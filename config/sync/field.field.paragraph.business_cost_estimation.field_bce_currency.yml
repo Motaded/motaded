@@ -1,0 +1,21 @@
+uuid: c1d2e3f4-3030-4303-8303-303030303030
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_currency
+    - paragraphs.paragraphs_type.business_cost_estimation
+id: paragraph.business_cost_estimation.field_bce_currency
+field_name: field_bce_currency
+entity_type: paragraph
+bundle: business_cost_estimation
+label: Currency
+description: 'Prefix for amounts (e.g. SAR).'
+required: false
+translatable: true
+default_value:
+  -
+    value: SAR
+default_value_callback: ''
+settings: {  }
+field_type: string

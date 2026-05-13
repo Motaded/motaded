@@ -59,7 +59,7 @@
   <div{{attributes.addClass(classes)}}>
     {% block content %}
       <!-- Header -->
-      <div class="max-w-[1320px] mx-auto px-4 mb-8">
+      <div class="mot-shell mb-8">
         <div class="featured-contents__header">
           <div class="featured-contents__intro text-base md:w-2/3">
             {{ content.field_body.0 }}
@@ -74,7 +74,7 @@
 
       <!-- Content -->
       <div
-        class="max-w-[1320px] mx-auto px-4" x-data="articlesCarousel" data-articles-length="{{ fc_count }}">
+        class="mot-shell" x-data="articlesCarousel" data-articles-length="{{ fc_count }}">
         <!-- Desktop / Tablet grid -->
         <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5">
           {% for key, item in paragraph.field_contents %}

@@ -6,6 +6,200 @@
  */
 
 /**
+ * Defines tables for normalized market indicators (World Bank + manual).
+ */
+function motaded_custom_schema(): array {
+  $schema['market_indicators'] = [
+    'description' => 'Latest normalized values per indicator and year.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'label' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'value_raw' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => FALSE,
+      ],
+      'value_display' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'period' => [
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+      ],
+      'period_type' => [
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => 'annual',
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'source_url' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'provider' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'indicator_year' => ['indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'indicator_key' => ['indicator_key'],
+    ],
+  ];
+
+  $schema['market_indicator_series'] = [
+    'description' => 'Time series points for charts (e.g. GDP growth).',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'value' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'indicator_series_year' => ['indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'indicator_key' => ['indicator_key'],
+    ],
+  ];
+
+  $schema['sector_indicator_points'] = [
+    'description' => 'World Bank (and future manual) time series per sector and indicator.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'sector_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'wb_code' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'value_raw' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => FALSE,
+      ],
+      'value_display' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'source_url' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'provider' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'sector_indicator_year' => ['sector_key', 'indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'sector_indicator' => ['sector_key', 'indicator_key'],
+      'sector_key' => ['sector_key'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
  * Adds Arabic translations for taxonomy terms in the "beneficiaries" vocabulary.
  *
  * Terms are content (not config-exportable by default). Keeping translations in
@@ -251,4 +445,178 @@ function _motaded_custom_install_ensure_taxonomy_terms(string $vid, array $names
     $term->save();
     $weight++;
   }
+}
+
+/**
+ * Creates market indicator tables and default config for World Bank import (v1).
+ */
+function motaded_custom_update_10007(): void {
+  $db_schema = \Drupal::database()->schema();
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'install');
+  if (!function_exists('motaded_custom_schema')) {
+    return;
+  }
+  $schema = motaded_custom_schema();
+  foreach (['market_indicators', 'market_indicator_series'] as $table) {
+    if (!$db_schema->tableExists($table)) {
+      $db_schema->createTable($table, $schema[$table]);
+    }
+  }
+
+  $config = \Drupal::configFactory()->get('motaded_custom.market_indicators');
+  if ($config->isNew()) {
+    $module_path = \Drupal::service('extension.list.module')->getPath('motaded_custom');
+    $path = $module_path . '/config/install/motaded_custom.market_indicators.yml';
+    if (is_readable($path)) {
+      $raw = file_get_contents($path);
+      if ($raw !== FALSE) {
+        $data = \Drupal\Component\Serialization\Yaml::decode($raw);
+        if (is_array($data)) {
+          \Drupal::configFactory()->getEditable('motaded_custom.market_indicators')->setData($data)->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Creates sector_indicator_points table for World Bank sector card import (v1).
+ */
+function motaded_custom_update_10008(): void {
+  $db_schema = \Drupal::database()->schema();
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'install');
+  if (!function_exists('motaded_custom_schema')) {
+    return;
+  }
+  $schema = motaded_custom_schema();
+  $table = 'sector_indicator_points';
+  if (!$db_schema->tableExists($table) && isset($schema[$table])) {
+    $db_schema->createTable($table, $schema[$table]);
+  }
+}
+
+/**
+ * Seeds library_section terms and field_library_section on document_type terms.
+ *
+ * Nodes do not store this value: they reference document_type, which now points
+ * to a library_section term (Templates vs Regulations).
+ */
+function motaded_custom_update_10009(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if (!$voc_storage->load('library_section') || !$voc_storage->load('document_type')) {
+    return;
+  }
+
+  _motaded_custom_install_ensure_taxonomy_terms('library_section', [
+    'Templates',
+    'Regulations',
+  ]);
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $tid_by_name = static function (string $vid, string $name) use ($term_storage): ?int {
+    $name = trim($name);
+    if ($name === '') {
+      return NULL;
+    }
+    $ids = $term_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if (!$ids) {
+      return NULL;
+    }
+    return (int) reset($ids);
+  };
+
+  $templates_section_tid = $tid_by_name('library_section', 'Templates');
+  $regulations_section_tid = $tid_by_name('library_section', 'Regulations');
+  if ($templates_section_tid === NULL || $regulations_section_tid === NULL) {
+    return;
+  }
+
+  $map_templates = ['Template', 'Form', 'Guide'];
+  $map_regulations = ['Regulation', 'Law', 'Policy'];
+
+  foreach ($map_templates as $type_name) {
+    $tid = $tid_by_name('document_type', $type_name);
+    if ($tid === NULL) {
+      continue;
+    }
+    $term = $term_storage->load($tid);
+    if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+      continue;
+    }
+    $term->set('field_library_section', $templates_section_tid);
+    $term->setNewRevision(FALSE);
+    $term->save();
+  }
+
+  foreach ($map_regulations as $type_name) {
+    $tid = $tid_by_name('document_type', $type_name);
+    if ($tid === NULL) {
+      continue;
+    }
+    $term = $term_storage->load($tid);
+    if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+      continue;
+    }
+    $term->set('field_library_section', $regulations_section_tid);
+    $term->setNewRevision(FALSE);
+    $term->save();
+  }
+
+  $all_doc_type_ids = $term_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'document_type')
+    ->execute();
+  if (is_array($all_doc_type_ids)) {
+    foreach ($term_storage->loadMultiple($all_doc_type_ids) as $term) {
+      if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+        continue;
+      }
+      if (!$term->get('field_library_section')->isEmpty()) {
+        continue;
+      }
+      $term->set('field_library_section', $templates_section_tid);
+      $term->setNewRevision(FALSE);
+      $term->save();
+    }
+  }
+}
+
+/**
+ * Seeds main navigation (Services mega groups, Sectors, Resources, etc.).
+ *
+ * Re-run manually: drush state:del motaded_custom.main_menu_seed_v3 && drush updb -y
+ */
+function motaded_custom_update_10010(): void {
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'inc', 'motaded_custom.menu_seed');
+  if (!function_exists('motaded_custom_seed_main_navigation')) {
+    return;
+  }
+  motaded_custom_seed_main_navigation();
+}
+
+/**
+ * Backfills field_menu_icon on Services category groups (v4 of main menu seed).
+ *
+ * Requires field.storage.menu_link_content.field_menu_icon and the matching
+ * field.field config to be imported first (drush cim).
+ *
+ * Re-run manually: drush state:del motaded_custom.main_menu_seed_v4 && drush updb -y
+ */
+function motaded_custom_update_10011(): void {
+  // Clear the v3 / v4 state so the seeder re-runs and updates icons in place.
+  \Drupal::state()->delete('motaded_custom.main_menu_seed_v3');
+  \Drupal::state()->delete('motaded_custom.main_menu_seed_v4');
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'inc', 'motaded_custom.menu_seed');
+  if (!function_exists('motaded_custom_seed_main_navigation')) {
+    return;
+  }
+  motaded_custom_seed_main_navigation();
 }

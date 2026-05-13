@@ -20,12 +20,23 @@
       var url = new URL(link.href, window.location.href);
       return (
         url.searchParams.has('library_section') ||
+        url.searchParams.has('library_category') ||
         url.searchParams.has('field_category_target_id') ||
         url.searchParams.has('search')
       );
     } catch (e) {
       return false;
     }
+  }
+
+  function hasLibraryPageParams() {
+    var params = new URLSearchParams(window.location.search || '');
+    return (
+      params.has('library_section') ||
+      params.has('library_category') ||
+      params.has('field_category_target_id') ||
+      params.has('search')
+    );
   }
 
   function saveScroll() {
@@ -37,11 +48,25 @@
   }
 
   function restoreScrollIfNeeded() {
-    // Only restore when Library params are present; avoids surprising scroll jumps.
-    var params = new URLSearchParams(window.location.search || '');
-    if (!params.has('library_section') && !params.has('field_category_target_id') && !params.has('search')) {
+    if (!hasLibraryPageParams()) {
       return;
     }
+
+    var hub = document.getElementById('library-home');
+    if (hub) {
+      try {
+        window.sessionStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        // Ignore.
+      }
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          hub.scrollIntoView({ behavior: 'auto', block: 'start' });
+        });
+      });
+      return;
+    }
+
     var raw = null;
     try {
       raw = window.sessionStorage.getItem(STORAGE_KEY);
@@ -61,7 +86,6 @@
       // Ignore.
     }
 
-    // After layout settles (fonts/images), then scroll.
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
         window.scrollTo(0, y);
@@ -87,7 +111,11 @@
           saveScroll();
         });
       });
+      once('library-home-scroll-save-form', '.library-view__exposed-form', context).forEach(function (form) {
+        form.addEventListener('submit', function () {
+          saveScroll();
+        });
+      });
     }
   };
 })(Drupal, once);
-

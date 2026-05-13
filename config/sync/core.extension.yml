@@ -75,6 +75,8 @@ module:
   metatag_views: 0
   metatag_webform: 0
   motaded_custom: 0
+  motaded_hreflang: 0
+  motaded_sector_data: 0
   mysql: 0
   node: 0
   node_view_redirect: 0

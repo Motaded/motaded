@@ -1,0 +1,39 @@
+uuid: 37a0ae11-2a81-4de3-878e-a5857822edad
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.sector_directory_card
+    - field.field.node.sector_page.body
+    - field.field.node.sector_page.field_media
+    - field.field.node.sector_page.field_sector
+    - field.field.node.sector_page.field_sector_card_icon
+    - field.field.node.sector_page.field_sector_card_icon_media
+    - field.field.node.sector_page.field_sector_eyebrow
+    - field.field.node.sector_page.field_sector_highlights
+    - field.field.node.sector_page.field_sector_kpis
+    - field.field.node.sector_page.field_sector_stats
+    - field.field.node.sector_page.field_short_description
+    - node.type.sector_page
+  module:
+    - user
+id: node.sector_page.sector_directory_card
+targetEntityType: node
+bundle: sector_page
+mode: sector_directory_card
+content: {  }
+hidden:
+  addtoany: true
+  body: true
+  field_media: true
+  field_sector: true
+  field_sector_card_icon: true
+  field_sector_card_icon_media: true
+  field_sector_eyebrow: true
+  field_sector_highlights: true
+  field_sector_kpis: true
+  field_sector_stats: true
+  field_short_description: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

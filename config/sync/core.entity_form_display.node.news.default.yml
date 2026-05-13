@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.news.field_media
     - field.field.node.news.field_meta
     - field.field.node.news.field_requirement
+    - field.field.node.news.field_sector
     - field.field.node.news.field_source_scope
     - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
@@ -83,6 +84,16 @@ content:
     region: content
     settings:
       rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_sector:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_source_scope:

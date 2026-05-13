@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.journey_step.field_body
     - field.field.paragraph.journey_step.field_journey_icon
+    - field.field.paragraph.journey_step.field_journey_platforms
     - field.field.paragraph.journey_step.field_title
     - paragraphs.paragraphs_type.journey_step
   module:
@@ -17,5 +18,6 @@ content: {  }
 hidden:
   field_body: true
   field_journey_icon: true
+  field_journey_platforms: true
   field_title: true
   search_api_excerpt: true

@@ -22,6 +22,24 @@ fontawesome_async:
   dependencies:
     - core/drupal
 
+global_cta:
+  version: 20260511eyebrow
+  css:
+    component:
+      css/components/global-cta-card.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+menu_main_nav:
+  version: 20260513nav
+  css:
+    component:
+      css/components/menu-main-nav.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
 base:
   version: VERSION
   css:
@@ -30,6 +48,10 @@ base:
         weight: -11
      css/language-switcher.css: {}
     component:
+      css/components/mot-design-tokens.css:
+        weight: -12
+      css/components/mot-ui-primitives.css:
+        weight: -11
       css/components/action-links.css:
         weight: -10
       css/components/breadcrumb.css:
@@ -128,6 +150,18 @@ node:
     - core/drupal
     - core/once
 
+service_page_detail:
+  version: VERSION
+  css:
+    component:
+      css/components/service-page-detail.css: {}
+  js:
+    js/service-page-detail-tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - motaded_theme/node
+
 platform_page:
   version: VERSION
   css:
@@ -154,6 +188,37 @@ sector_page:
     - motaded_theme/base
     - motaded_theme/node
 
+sector_trade_volume_chart:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-trade-volume-chart.css: {}
+  js:
+    js/sector-trade-volume-chart.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+sector_logistics_gdp_chart:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-logistics-gdp-chart.css: {}
+  js:
+    js/sector-logistics-gdp-chart.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+document_page:
+  version: VERSION
+  css:
+    component:
+      css/components/document-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+
 sector_card:
   version: VERSION
   css:
@@ -161,6 +226,15 @@ sector_card:
       css/components/sector-card.css: {}
   dependencies:
     - motaded_theme/base
+
+chamber_page:
+  version: VERSION
+  css:
+    component:
+      css/components/chamber-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
 
 key_sectors:
   version: VERSION
@@ -224,7 +298,7 @@ search-page:
   js:
     js/content-search.js: {}
 services-directory:
-  version: VERSION
+  version: 20260512servicesradios
   css:
     component:
       css/components/services-directory.css:
@@ -233,6 +307,20 @@ services-directory:
     js/services-directory-filters.js: {}
   dependencies:
     - motaded_theme/base
+    - motaded_theme/hero_split_banner
+    - core/drupal
+    - core/once
+
+sectors-directory:
+  version: 20260513sectorskpilabel
+  css:
+    component:
+      css/components/sectors-directory.css:
+        weight: -8
+  js:
+    js/sectors-directory-filters.js: {}
+  dependencies:
+    - motaded_theme/services-directory
     - core/drupal
     - core/once
 
@@ -240,6 +328,10 @@ quick-links:
   js:
     js/quick-links.js: {}
 steps:
+  version: VERSION
+  css:
+    component:
+      css/components/steps-section.css: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
@@ -267,6 +359,11 @@ services_home_block:
     component:
       css/components/services-home-block.css:
         weight: 50
+  js:
+    js/services-home-exposed.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 media_lead:
   version: VERSION
@@ -282,6 +379,15 @@ split_promo:
       css/components/split-promo.css:
         weight: -9
 
+business_cost_estimation:
+  version: 20260512h
+  css:
+    component:
+      css/components/business-cost-estimation.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
 promo_split:
   version: VERSION
   css:
@@ -295,6 +401,11 @@ investor_journey:
     component:
       css/components/investor-journey.css:
         weight: -9
+  js:
+    js/investor-journey.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 hero_split_banner:
   version: VERSION
@@ -359,38 +470,57 @@ insights_directory:
     - views/views.ajax
 
 library_directory:
-  version: 20260506libfilters
+  version: 20260511librow
   css:
     component:
       css/components/library-directory.css:
         weight: -9
+  js:
+    js/library-exposed-ajax-submit-bridge.js: {}
+    js/library-home-ajax-links.js: {}
   dependencies:
     - motaded_theme/event_page
     - views/views.ajax
+    - core/drupal
+    - core/once
+
+homepage_ui_system:
+  version: 20260511ui
+  css:
+    component:
+      css/components/homepage-ui-system.css:
+        weight: -6
+  dependencies:
+    - motaded_theme/base
 
 library_home_block:
-  version: 20260506libctafix
+  version: 20260511librow
   css:
     component:
       css/components/library-home-block.css:
         weight: 50
   js:
+    js/library-exposed-ajax-submit-bridge.js: {}
     js/library-home-scroll.js: {}
+    js/library-home-ajax-links.js: {}
   dependencies:
     - motaded_theme/base
     - core/drupal
     - core/once
+    - core/jquery
     - views/views.ajax
 
 platforms_directory:
-  version: 20260506ac
+  version: 20260513platformsfilters
   css:
     component:
       css/components/platforms-directory.css:
-        weight: -9
+        weight: -8
   js:
     js/platforms-directory.js: {}
   dependencies:
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner
     - core/drupal
     - core/once
     - motaded_theme/event_page
@@ -409,11 +539,16 @@ events_home:
     - views/views.ajax
 
 insights-updates:
-  version: VERSION
+  version: 20260511iu
   css:
     component:
       css/components/insights-updates.css:
         weight: -9
+  js:
+    js/insights-updates-tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 glance_block:
   version: VERSION

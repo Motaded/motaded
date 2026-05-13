@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.news.field_media
     - field.field.node.news.field_meta
     - field.field.node.news.field_requirement
+    - field.field.node.news.field_sector
     - field.field.node.news.field_source_scope
     - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
@@ -52,6 +53,7 @@ hidden:
   field_media: true
   field_meta: true
   field_requirement: true
+  field_sector: true
   field_source_scope: true
   field_taxonomy: true
   langcode: true

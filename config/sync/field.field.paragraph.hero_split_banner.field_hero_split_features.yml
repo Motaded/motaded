@@ -13,7 +13,7 @@ field_name: field_hero_split_features
 entity_type: paragraph
 bundle: hero_split_banner
 label: 'Feature cards'
-description: 'Up to three cards shown on the hero image.'
+description: 'Up to three linked rows in the floating panel (icon, title, body, link URL).'
 required: false
 translatable: true
 default_value: {  }

@@ -1,0 +1,62 @@
+{#
+/**
+ * @file
+ * Sector page — directory card (/sectors): KPIs from Card KPIs field, tags from taxonomy + highlights.
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <a href="{{ sector_directory_url }}" class="sectors-dir-card" aria-label="{{ (node.label() ~ ' — ' ~ ('View sector'|t))|e('html_attr') }}">
+    <div class="sectors-dir-card__head">
+      <div class="sectors-dir-card__icon" aria-hidden="true">
+        {% if sector_directory_has_custom_icon %}
+          <span class="sectors-dir-card__icon-custom">{{ sector_directory_icon_custom }}</span>
+        {% else %}
+          {{ sector_directory_icon_markup }}
+        {% endif %}
+      </div>
+      <div class="sectors-dir-card__head-text">
+        <h2 class="sectors-dir-card__title">{{ label|render }}</h2>
+        {% if sector_directory_summary %}
+          <p class="sectors-dir-card__summary">{{ sector_directory_summary }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if sector_directory_kpis is not empty %}
+      <div class="sectors-dir-card__kpis" role="group" aria-label="{{ 'Key figures'|t }}">
+        {% for row in sector_directory_kpis %}
+          <div class="sectors-dir-card__kpi">
+            {% if row.label %}
+              <p class="sectors-dir-card__kpi-label">{{ row.label|render }}</p>
+            {% endif %}
+            {% if row.value %}
+              <p class="sectors-dir-card__kpi-value">{{ row.value|render }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if sector_directory_tags is not empty %}
+      <div class="sectors-dir-card__tags" aria-label="{{ 'Themes'|t }}">
+        {% for tag in sector_directory_tags %}
+          <span class="sectors-dir-card__tag">{{ tag|render|striptags|trim }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="sectors-dir-card__foot">
+      <span class="sectors-dir-card__link-text">{{ 'View sector'|t }}<span aria-hidden="true"> →</span></span>
+    </div>
+  </a>
+</article>

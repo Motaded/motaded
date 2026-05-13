@@ -6,9 +6,9 @@
 
 /* Full section (paragraph) — soft panel like design reference */
 .events-home-strip {
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f4 50%, #f8fafc 100%);
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, var(--mot-surface-muted, #f8fafc) 0%, #f1f5f4 50%, var(--mot-surface-muted, #f8fafc) 100%);
+  border-top: 1px solid var(--mot-border, #e2e8f0);
+  border-bottom: 1px solid var(--mot-border, #e2e8f0);
 }
 
 .view-block-shell .events-home-strip__intro {
@@ -105,28 +105,20 @@
   margin-bottom: 1.25rem;
 }
 
-.events-home__eyebrow {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--event-brand, #00473f);
-  margin: 0 0 0.5rem;
-}
+/* Eyebrow: `.mot-eyebrow` (markup in Views header) */
 
 .events-home__title {
   font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
   font-weight: 800;
   line-height: 1.2;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   margin: 0 0 0.75rem;
 }
 
 .events-home__lede {
   font-size: 1rem;
   line-height: 1.55;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   margin: 0;
   max-width: 42rem;
 }
@@ -177,17 +169,17 @@
 .events-home__calendar-shell .fieldset {
   margin: 0 !important;
   padding: 0.4rem 0.65rem 0.65rem !important;
-  border: 1px solid #e2e8f0 !important;
+  border: 1px solid var(--mot-border, #e2e8f0) !important;
   border-radius: 10px !important;
-  background: #fff !important;
+  background: var(--mot-surface, #fff) !important;
   box-shadow: 0 1px 6px rgba(15, 23, 42, 0.04);
   flex: 1 1 auto;
   min-width: min(100%, 11rem);
 }
 
 .events-home__calendar-shell .fieldset {
-  background: #fafbfb !important;
-  border-color: #e8ecf0 !important;
+  background: var(--mot-surface-muted, #fafbfb) !important;
+  border-color: var(--mot-border, #e8ecf0) !important;
   box-shadow: none;
 }
 
@@ -197,7 +189,7 @@
   font-weight: 700 !important;
   text-transform: uppercase;
   letter-spacing: 0.06em !important;
-  color: #64748b !important;
+  color: var(--mot-text-muted, #64748b) !important;
 }
 
 .events-home__list-view .fieldset .fieldset-wrapper,
@@ -216,7 +208,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
   margin-bottom: 0.25rem;
 }
 
@@ -229,9 +221,9 @@
   font-size: 0.8125rem;
   font-weight: 600;
   line-height: 1.35;
-  color: #0f172a;
-  background-color: #fff;
-  border: 1px solid #e2e8f0;
+  color: var(--mot-text, #0f172a);
+  background-color: var(--mot-surface, #fff);
+  border: 1px solid var(--mot-border, #e2e8f0);
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
   cursor: pointer;
@@ -241,8 +233,8 @@
 }
 
 .events-home__calendar-shell .views-exposed-form select {
-  background-color: #fafbfb;
-  border-color: #e8ecf0;
+  background-color: var(--mot-surface-muted, #fafbfb);
+  border-color: var(--mot-border, #e8ecf0);
 }
 
 .events-home__list-view .views-exposed-form select:hover,
@@ -272,8 +264,8 @@
 .events-home__list-view .views-exposed-form input[name="reset"],
 .events-home__calendar-shell .views-exposed-form input[name="reset"] {
   background: transparent;
-  border: 1px solid #cbd5e1;
-  color: #64748b;
+  border: 1px solid var(--mot-border, #cbd5e1);
+  color: var(--mot-text-muted, #64748b);
   font-weight: 600;
   font-size: 0.75rem;
   padding: 0.4rem 0.95rem;
@@ -370,19 +362,19 @@
     -webkit-line-clamp: 2;
     font-size: 0.815rem;
     line-height: 1.5;
-    color: #64748b;
+    color: var(--mot-text-muted, #64748b);
   }
 
   .events-home__list-view .event-teaser__date-row {
     font-size: 0.7rem;
-    color: #64748b;
+    color: var(--mot-text-muted, #64748b);
   }
 }
 
 .events-home__footer-more {
   margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--mot-border, #e2e8f0);
 }
 
 .events-home__view-all {
@@ -454,9 +446,9 @@
 
 /* Right column chrome (formerly single “aside” card). */
 .events-home__calendar-shell > .view-filters {
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border-radius: 16px 16px 0 0;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--mot-border, #e2e8f0);
   border-bottom-color: transparent;
   padding: 0.85rem 0.95rem 1rem;
   box-shadow:
@@ -465,19 +457,19 @@
 }
 
 .events-home__calendar-shell > .view-content {
-  background: #fff;
+  background: var(--mot-surface, #fff);
   margin-top: -1px !important;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--mot-border, #e2e8f0);
   border-top-width: 0;
   padding: 0 0.95rem;
   margin-bottom: 0;
 }
 
 .events-home__calendar-shell > .view-footer {
-  background: #fff;
+  background: var(--mot-surface, #fff);
   margin-top: -1px;
   padding: 0 0.95rem 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--mot-border, #e2e8f0);
   border-top-width: 0;
   border-radius: 0 0 16px 16px;
   box-shadow: 0 12px 22px rgba(15, 23, 42, 0.05);
@@ -512,7 +504,7 @@
   .events-home__calendar-shell > .view-content,
   .events-home__calendar-shell > .view-footer {
     border-radius: 16px;
-    border-bottom-color: #e2e8f0;
+    border-bottom-color: var(--mot-border, #e2e8f0);
     border-top-width: 1px !important;
     margin-top: 0 !important;
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
@@ -537,7 +529,7 @@
   gap: 0.75rem 1.15rem;
   margin-bottom: 0.65rem;
   padding-bottom: 0.55rem;
-  border-bottom: 1px solid #e8edf2;
+  border-bottom: 1px solid var(--mot-border, #e8edf2);
 }
 
 .events-home__calendar-shell .fc-header-toolbar .fc-right {
@@ -578,7 +570,7 @@
   padding: 0.2rem;
   border: 0;
   border-radius: 12px;
-  background: #f1f5f9;
+  background: var(--mot-surface-muted, #f1f5f9);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
   vertical-align: middle;
 }
@@ -604,7 +596,7 @@
   padding-left: 0.48rem !important;
   padding-right: 0.48rem !important;
   min-width: 2.4rem;
-  background: #fff !important;
+  background: var(--mot-surface, #fff) !important;
   color: var(--event-brand, #00473f) !important;
   border-color: rgba(0, 71, 63, 0.28) !important;
 }
@@ -613,7 +605,7 @@
 .events-home__calendar-shell .fc-header-toolbar .fc-prev-button:focus-visible,
 .events-home__calendar-shell .fc-header-toolbar .fc-next-button:hover,
 .events-home__calendar-shell .fc-header-toolbar .fc-next-button:focus-visible {
-  background: #fff !important;
+  background: var(--mot-surface, #fff) !important;
   border-color: var(--event-brand, #00473f) !important;
   color: var(--event-brand, #00473f) !important;
 }
@@ -621,7 +613,7 @@
 .events-home__calendar-shell .fc-header-toolbar .fc-today-button {
   background: var(--event-brand, #00473f) !important;
   border-color: var(--event-brand, #00473f) !important;
-  color: #fff !important;
+  color: var(--mot-surface, #fff) !important;
 }
 
 .events-home__calendar-shell .fc-header-toolbar .fc-today-button:hover,
@@ -691,8 +683,8 @@
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.12s ease, transform 0.12s ease;
-  background: #0f172a;
-  color: #fff;
+  background: var(--mot-text, #0f172a);
+  color: var(--mot-surface, #fff);
   border-radius: 10px;
   padding: 0.55rem 0.65rem;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
@@ -738,7 +730,7 @@
   height: 3rem;
   border-radius: 999px;
   background: var(--event-brand, #00473f);
-  color: #fff;
+  color: var(--mot-surface, #fff);
 }
 
 .events-home-cta__icon svg {
@@ -754,13 +746,13 @@
   font-size: 1.05rem;
   font-weight: 800;
   margin: 0 0 0.35rem;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .events-home-cta__body {
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   margin: 0;
 }
 
@@ -773,7 +765,7 @@
   font-size: 0.9rem;
   border-radius: 12px;
   background: var(--event-brand, #00473f);
-  color: #fff;
+  color: var(--mot-surface, #fff);
   text-decoration: none;
   white-space: nowrap;
   margin-left: auto;

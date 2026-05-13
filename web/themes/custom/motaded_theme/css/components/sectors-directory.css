@@ -1,0 +1,363 @@
+/**
+ * @file
+ * /sectors directory: two-column cards + toolbar layout (extends services-directory).
+ */
+
+/* Hero visual: dedicated sectors artwork (overrides services-bg on this view). */
+.sectors-directory.sectors-directory--page .services-page-hero__visual-photo.sectors-directory__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/sectors-bg.png') no-repeat center right / cover;
+}
+
+[dir='rtl'] .sectors-directory.sectors-directory--page .services-page-hero__visual-photo.sectors-directory__hero-photo {
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/sectors-bg.png') no-repeat center left / cover;
+}
+
+/* Full-width rail: override services directory max-width + sidebar grid. */
+.sectors-directory.sectors-directory--page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.sectors-directory__page-inner {
+  width: 100%;
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 2.5rem);
+  padding-right: clamp(1rem, 3vw, 2.5rem);
+  box-sizing: border-box;
+}
+
+/* Kill “sidebar | content” grid from /services when #services-directory-filters is absent. */
+@media (min-width: 1024px) {
+  .sectors-directory.sectors-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+  }
+
+  .sectors-directory.sectors-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed
+    .services-directory__toolbar-inner.services-exposed-top,
+  .sectors-directory.sectors-directory--page
+    .sectors-directory__exposed-wrap,
+  .sectors-directory.sectors-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed
+    > .services-directory__results-column {
+    grid-column: unset !important;
+    grid-row: unset !important;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.sectors-directory.sectors-directory--page .sectors-directory__exposed-wrap,
+.sectors-directory.sectors-directory--page .sectors-directory__exposed-wrap form {
+  width: 100%;
+  max-width: none;
+}
+
+.sectors-directory.sectors-directory--page .sectors-directory__results,
+.sectors-directory.sectors-directory--page .sectors-directory__grid {
+  width: 100%;
+  max-width: none;
+}
+
+/* Hero stat strip: three columns on wide screens. */
+@media (min-width: 720px) {
+  .sectors-directory .services-page-hero__stats-strip--three .services-page-hero__stat {
+    flex: 1 1 33.333%;
+  }
+}
+
+.sectors-directory__exposed-wrap {
+  margin-bottom: 1.5rem;
+}
+
+/* Toolbar: override /services flex-end + “search only” flex rules (sectors use form-item-title). */
+.sectors-directory.sectors-directory--page .views-exposed-form {
+  width: 100%;
+  max-width: none;
+}
+
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters.services-exposed-top.services-directory__toolbar-inner {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start !important;
+  gap: 0.75rem 1rem;
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box;
+}
+
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-item-title {
+  flex: 1 1 18rem;
+  min-width: min(100%, 12rem);
+  max-width: 100%;
+  margin: 0;
+}
+
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-item-title
+  input.form-text {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-item-field-sector-target-id,
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-item-sort-by,
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-item-sort-order {
+  flex: 0 1 13rem;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > [data-drupal-selector^='edit-actions'],
+.sectors-directory.sectors-directory--page
+  #sectors-directory-filters
+  > .form-actions {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 0.5rem;
+  width: auto !important;
+  margin: 0 !important;
+  margin-inline-start: auto;
+}
+
+@media (max-width: 47.99rem) {
+  .sectors-directory.sectors-directory--page
+    #sectors-directory-filters
+    > [data-drupal-selector^='edit-actions'],
+  .sectors-directory.sectors-directory--page
+    #sectors-directory-filters
+    > .form-actions {
+    margin-inline-start: 0;
+    flex: 1 1 100%;
+    justify-content: flex-start !important;
+  }
+}
+
+.sectors-directory__toolbar.form-wrapper,
+.sectors-directory .sectors-directory__toolbar {
+  width: 100%;
+}
+
+#sectors-directory-filters .form-item-sort-by > label,
+#sectors-directory-filters .form-item-sort-order > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Card grid: two per row. */
+.sectors-directory__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 52rem) {
+  .sectors-directory__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+.sectors-directory__grid > .views-row {
+  min-width: 0;
+}
+
+/* Card (matches design: white panel, mint icon well, green accents). */
+.sectors-dir-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.35rem 1.35rem 1.15rem;
+  background: #fff;
+  border: 1px solid #e8ece9;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sectors-dir-card:hover,
+.sectors-dir-card:focus-visible {
+  border-color: #c5ddcf;
+  box-shadow: 0 8px 28px rgba(15, 118, 110, 0.08);
+}
+
+.sectors-dir-card__head {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.1rem;
+}
+
+.sectors-dir-card__icon {
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #e8f7ef;
+  color: #0f5132;
+}
+
+.sectors-dir-card__icon svg {
+  display: block;
+}
+
+.sectors-dir-card__icon-custom img,
+.sectors-dir-card__icon-custom picture img {
+  max-width: 2rem;
+  max-height: 2rem;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.sectors-dir-card__head-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.sectors-dir-card__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.sectors-dir-card__summary {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.sectors-dir-card__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem 0.75rem;
+  margin-bottom: 1rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #f1f5f4;
+}
+
+.sectors-dir-card__kpi {
+  min-width: 0;
+  text-align: left;
+}
+
+.sectors-dir-card__kpi-label {
+  margin: 0 0 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  line-height: 1.25;
+}
+
+.sectors-dir-card__kpi-value {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.sectors-dir-card__kpi:nth-child(1) .sectors-dir-card__kpi-value,
+.sectors-dir-card__kpi:nth-child(3) .sectors-dir-card__kpi-value {
+  color: #15803d;
+}
+
+.sectors-dir-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+
+.sectors-dir-card__tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #14532d;
+  background: #e8f7ef;
+  border-radius: 999px;
+  line-height: 1.35;
+}
+
+.sectors-dir-card__foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.sectors-dir-card__link-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #166534;
+}
+
+.sectors-dir-card:hover .sectors-dir-card__link-text,
+.sectors-dir-card:focus-visible .sectors-dir-card__link-text {
+  text-decoration: underline;
+}
+
+.sectors-directory__empty {
+  margin: 0;
+  color: #64748b;
+}
+
+[dir="rtl"] .sectors-dir-card__foot {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .sectors-dir-card__kpi {
+  text-align: right;
+}

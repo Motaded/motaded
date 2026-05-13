@@ -1,11 +1,7 @@
-{# 
-  Theme: Muin (Custom Licensed Version)
-  © Banafsijy.com – Single Project License – Do Not Redistribute
-#}
 {#
 /**
  * @file
- * Services: exposed (top filters) + .services-directory__main (categories aside + results).
+ * Services directory page: hero, stats, exposed form (sidebar + toolbar in one form), list cards.
  */
 #}
 {{ attach_library('motaded_theme/services-directory') }}
@@ -18,14 +14,64 @@
     dom_id ? 'js-view-dom-id-' ~ dom_id,
     'page-gray',
     'services-directory',
+    'services-directory--page-redesign',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
   {{ title_suffix }}
+
+  <header class="services-page-hero services-page-hero--split-banner">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'Government-aligned services for every step of your business journey'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'From registration to operations and compliance, we provide integrated solutions aligned with Saudi systems to help you start, operate and grow with confidence.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="{{ services_hero_url_listings|default('#services-directory-listings') }}" aria-label="{{ 'Browse all services in this directory'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M17 16l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Browse'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'All services'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ services_hero_url_platforms|default('/platforms') }}" aria-label="{{ 'Browse government platforms (@count)'|t({'@count': services_hero_stat_platforms|default(0)}) }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21V8l8-5 8 5v13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value">{% set _p = services_hero_stat_platforms|default(0) %}{{ _p }}{% if _p > 0 %}+{% endif %}</span>
+              <span class="services-page-hero__stat-label">{{ 'Government platforms'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ services_hero_url_filters|default('#services-directory-filters') }}" aria-label="{{ 'Open filters to narrow results by type, sector, and tags'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="6" r="2" fill="currentColor"/><circle cx="8" cy="12" r="2" fill="currentColor"/><circle cx="13" cy="18" r="2" fill="currentColor"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Filters'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Type, sector & tags'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ services_sidebar_contact_url|default('/contact-us') }}" aria-label="{{ 'Contact us — speak to our team'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m4 8 8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Contact us'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Expert support'|t }}</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
 
   {% if attachment_before %}
     <div class="attachment attachment-before">
@@ -36,24 +82,19 @@
   <div class="w-full py-6">
     {% if exposed %}
       <div class="services-directory__page">
-        {{ exposed }}
-        <div class="services-directory__main">
-          {% if services_categories_sidebar %}
-            <aside class="services-filters-sidebar" role="group" aria-label="{{ services_categories_aria_label|default('Categories'|t) }}">
-              {{ services_categories_sidebar }}
-            </aside>
-          {% endif %}
-          <div class="services-directory__results-column">
+        <div class="services-directory__main services-directory__main--integrated-exposed">
+          {{ exposed }}
+          <div class="services-directory__results-column" id="services-directory-listings">
             {% if header %}
-              <div class="services-directory__results-meta flex items-center justify-between">
-                <p class="text-sm text-gray-600">
+              <div class="services-directory__results-meta">
+                <p class="services-directory__results-count text-sm text-gray-600">
                   {{ header }}
                 </p>
               </div>
             {% endif %}
             <div class="services-directory__results-body">
               {% if rows %}
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
+                <div class="services-directory__card-list">
                   {{ rows }}
                 </div>
               {% elseif empty %}
@@ -62,7 +103,7 @@
                 </div>
               {% endif %}
               {% if pager %}
-                <div class="mt-8">
+                <div class="services-directory__pager mt-8">
                   {{ pager }}
                 </div>
               {% endif %}
@@ -73,14 +114,14 @@
     {% else %}
       <div class="services-directory__results-body">
         {% if header %}
-          <div class="services-directory__results-meta flex items-center justify-between">
+          <div class="services-directory__results-meta">
             <p class="text-sm text-gray-600">
               {{ header }}
             </p>
           </div>
         {% endif %}
         {% if rows %}
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
+          <div class="services-directory__card-list">
             {{ rows }}
           </div>
         {% elseif empty %}

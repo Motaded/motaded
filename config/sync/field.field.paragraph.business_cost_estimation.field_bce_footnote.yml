@@ -1,0 +1,19 @@
+uuid: f6a7b8c9-d0e1-4234-f567-890123456789
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_footnote
+    - paragraphs.paragraphs_type.business_cost_estimation
+id: paragraph.business_cost_estimation.field_bce_footnote
+field_name: field_bce_footnote
+entity_type: paragraph
+bundle: business_cost_estimation
+label: Footnote
+description: 'Small line under the CTA (e.g. disclaimer about official fees).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

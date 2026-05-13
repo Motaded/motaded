@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.chamber_card
+    - field.field.node.chamber.field_chamber_featured_stats
     - field.field.node.chamber.field_country
     - field.field.node.chamber.field_logo
     - field.field.node.chamber.field_short_description
@@ -34,6 +35,7 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_chamber_featured_stats: true
   field_country: true
   field_external_link: true
   field_featured: true

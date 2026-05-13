@@ -1,0 +1,21 @@
+uuid: 89d0090d-59dd-46fd-8cdf-9bb5c31a5a0c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.menu_link_content.field_menu_icon
+  module:
+    - menu_link_content
+    - options
+id: menu_link_content.menu_link_content.field_menu_icon
+field_name: field_menu_icon
+entity_type: menu_link_content
+bundle: menu_link_content
+label: 'Menu icon'
+description: 'Optional icon shown next to the menu item title (used for header mega menu category headings).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

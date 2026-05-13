@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.chamber.field_chamber_featured_stats
     - field.field.node.chamber.field_country
     - field.field.node.chamber.field_external_link
     - field.field.node.chamber.field_featured
@@ -27,15 +28,23 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_chamber_featured_stats:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 2
+      placeholder: ''
+    third_party_settings: {  }
   field_country:
     type: options_select
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_external_link:
     type: link_default
-    weight: 7
+    weight: 8
     region: content
     settings:
       placeholder_url: ''
@@ -50,7 +59,7 @@ content:
     third_party_settings: {  }
   field_logo:
     type: media_library_widget
-    weight: 2
+    weight: 3
     region: content
     settings:
       media_types: {  }
@@ -64,7 +73,7 @@ content:
     third_party_settings: {  }
   field_relationship_focus:
     type: string_textfield
-    weight: 6
+    weight: 7
     region: content
     settings:
       size: 60
@@ -72,7 +81,7 @@ content:
     third_party_settings: {  }
   field_short_description:
     type: string_textarea
-    weight: 3
+    weight: 4
     region: content
     settings:
       rows: 2
@@ -80,7 +89,7 @@ content:
     third_party_settings: {  }
   field_type:
     type: options_select
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }

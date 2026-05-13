@@ -1,0 +1,23 @@
+uuid: f8a9b0c1-ffff-4fff-8fff-ffffffffff0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_line_min
+    - paragraphs.paragraphs_type.cost_breakdown_line
+id: paragraph.cost_breakdown_line.field_bce_line_min
+field_name: field_bce_line_min
+entity_type: paragraph
+bundle: cost_breakdown_line
+label: Minimum
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

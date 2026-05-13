@@ -1,0 +1,23 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345605
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_why_feature_icon
+    - paragraphs.paragraphs_type.hero_split_highlight
+  module:
+    - options
+id: paragraph.hero_split_highlight.field_why_feature_icon
+field_name: field_why_feature_icon
+entity_type: paragraph
+bundle: hero_split_highlight
+label: Icon
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: shield_check
+default_value_callback: ''
+settings: {  }
+field_type: list_string

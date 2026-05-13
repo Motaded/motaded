@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.platform.field_process_steps
     - field.field.node.platform.field_region
     - field.field.node.platform.field_requirements
+    - field.field.node.platform.field_sector
     - field.field.node.platform.field_short_description
     - field.field.node.platform.field_source_link
     - field.field.node.platform.field_source_text
@@ -174,6 +175,16 @@ content:
       features:
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+    third_party_settings: {  }
+  field_sector:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_short_description:
     type: string_textarea

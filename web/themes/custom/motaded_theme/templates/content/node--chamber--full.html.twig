@@ -1,0 +1,119 @@
+{#
+/**
+ * @file
+ * Chamber organisation — full page (canonical /chambers/...).
+ */
+#}
+{{ attach_library('motaded_theme/chamber_page') }}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'chamber-page',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="chamber-page__hero" aria-labelledby="chamber-page-title">
+    <div class="chamber-page__hero-bg" aria-hidden="true"></div>
+    <div class="chamber-page__hero-inner">
+      <nav class="chamber-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="chamber-page__breadcrumb-list">
+          <li class="chamber-page__breadcrumb-item">
+            <a class="chamber-page__breadcrumb-link" href="{{ path('<front>') }}">{{ 'Home'|t }}</a>
+          </li>
+          <li class="chamber-page__breadcrumb-sep" aria-hidden="true">/</li>
+          <li class="chamber-page__breadcrumb-item">
+            <a class="chamber-page__breadcrumb-link" href="{{ path('view.chambers.page_1') }}">{{ 'Chambers'|t }}</a>
+          </li>
+          <li class="chamber-page__breadcrumb-sep" aria-hidden="true">/</li>
+          <li class="chamber-page__breadcrumb-item chamber-page__breadcrumb-item--current" aria-current="page">{{ label }}</li>
+        </ol>
+      </nav>
+
+      <div class="chamber-page__hero-main">
+        <div class="chamber-page__logo-card" aria-label="{{ 'Organization logo'|t }}">
+          {% if content.field_logo|render|trim is not empty %}
+            {{ content.field_logo }}
+          {% else %}
+            <div class="chamber-page__logo-fallback" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="chamber-page__hero-copy">
+          {% if page and label %}
+            <h1 id="chamber-page-title"{{ title_attributes.addClass('chamber-page__title') }}>{{ label }}</h1>
+          {% endif %}
+
+          {% if content.field_short_description|render|trim is not empty %}
+            <div class="chamber-page__lead">{{ content.field_short_description }}</div>
+          {% endif %}
+
+          {% set has_meta = content.field_type|render|trim is not empty or content.field_country|render|trim is not empty %}
+          {% set has_cta = chamber_external_url is not empty %}
+          {% if has_meta or has_cta %}
+            <div class="chamber-page__hero-actions" aria-label="{{ 'Organization details'|t }}">
+              {% if has_meta %}
+                <div class="chamber-page__hero-actions-meta" role="list">
+                  {% if content.field_type|render|trim is not empty %}
+                    <div class="chamber-page__meta-item chamber-page__meta-item--type" role="listitem">
+                      <span class="chamber-page__meta-label">{{ 'Type'|t }}</span>
+                      <span class="chamber-page__meta-value">{{ content.field_type }}</span>
+                    </div>
+                  {% endif %}
+                  {% if content.field_country|render|trim is not empty %}
+                    <div class="chamber-page__meta-item chamber-page__meta-item--country" role="listitem">
+                      <span class="chamber-page__meta-label">{{ 'Country'|t }}</span>
+                      <span class="chamber-page__meta-value">{{ content.field_country }}</span>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if has_cta %}
+                <div class="chamber-page__hero-actions-cta">
+                  <a href="{{ chamber_external_url }}" rel="noopener noreferrer" target="_blank">{{ chamber_external_label }}</a>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="chamber-page__main">
+    {% if content.field_relationship_focus|render|trim is not empty %}
+      <section class="chamber-page__section chamber-page__section--focus" aria-labelledby="chamber-focus-heading">
+        <div class="chamber-page__panel chamber-page__panel--focus">
+          <h2 id="chamber-focus-heading" class="chamber-page__panel-title">{{ 'Relationship focus'|t }}</h2>
+          <div class="chamber-page__panel-body chamber-page__focus-body chamber-page__prose">
+            {{ content.field_relationship_focus }}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {{ content|without(
+      'field_logo',
+      'field_short_description',
+      'field_type',
+      'field_country',
+      'field_relationship_focus',
+      'field_external_link',
+      'links'
+    ) }}
+
+    {% if content.links %}
+      <footer class="chamber-page__links">{{ content.links }}</footer>
+    {% endif %}
+  </div>
+</article>

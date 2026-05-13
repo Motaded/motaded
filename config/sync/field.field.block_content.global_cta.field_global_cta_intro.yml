@@ -1,0 +1,28 @@
+uuid: 35af3c9f-0f1d-4713-ad92-4567573c3071
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_cta
+    - field.storage.block_content.field_global_cta_intro
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+  module:
+    - text
+id: block_content.global_cta.field_global_cta_intro
+field_name: field_global_cta_intro
+entity_type: block_content
+bundle: global_cta
+label: 'Supporting text'
+description: 'Intro paragraph below the title (card layout).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long

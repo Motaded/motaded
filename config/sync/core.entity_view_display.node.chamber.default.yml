@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.chamber.field_chamber_featured_stats
     - field.field.node.chamber.field_country
     - field.field.node.chamber.field_external_link
     - field.field.node.chamber.field_featured
@@ -21,9 +22,10 @@ bundle: chamber
 mode: default
 content:
   field_country:
-    type: list_default
-    label: above
-    settings: {  }
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
     third_party_settings: {  }
     weight: 3
     region: content
@@ -50,7 +52,7 @@ content:
     region: content
   field_relationship_focus:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -65,7 +67,7 @@ content:
     region: content
   field_type:
     type: list_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 2
@@ -77,6 +79,7 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_chamber_featured_stats: true
   field_featured: true
   field_priority: true
   langcode: true

@@ -8,24 +8,25 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_free_consultation
     - field.storage.node.field_keywords
+    - field.storage.node.field_media
     - field.storage.node.field_service_cost
     - field.storage.node.field_service_duration
     - field.storage.node.field_tags
     - field.storage.node.field_target_audience
+    - image.style.medium
     - node.type.page
     - taxonomy.vocabulary.beneficiaries
+    - taxonomy.vocabulary.sector
     - taxonomy.vocabulary.service_tags
     - taxonomy.vocabulary.taxonomy
   content:
     - 'taxonomy_term:service_tags:1a969291-407e-4ab1-9327-b19644756dac'
     - 'taxonomy_term:service_tags:99e288cb-4711-48a0-8f71-21a88a410e0c'
     - 'taxonomy_term:service_tags:b86fc366-5456-4556-82b0-5fede74ab2a4'
-    - 'taxonomy_term:taxonomy:436c1b11-58d3-4f04-b2d8-580a7191e769'
-    - 'taxonomy_term:taxonomy:bf0f824d-7853-4366-9f1d-903cf72bc288'
-    - 'taxonomy_term:taxonomy:fa8d6750-927d-4287-a754-80ec1ae70774'
   module:
     - better_exposed_filters
     - link
+    - media
     - node
     - taxonomy
     - text
@@ -1002,6 +1003,20 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'No services found for this category yet.'
+            format: plain_text
+          tokenize: false
       sorts:
         title:
           id: title
@@ -1145,10 +1160,7 @@ display:
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value:
-            152: 152
-            156: 156
-            154: 154
+          value: {  }
           group: 1
           exposed: true
           expose:
@@ -1166,7 +1178,7 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: true
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -1203,6 +1215,7 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        empty: false
         css_class: false
         use_ajax: false
         pager: false
@@ -1299,6 +1312,72 @@ display:
             thousand_separator: ''
             prefix_suffix: true
           group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_media:
+          id: field_media
+          table: node__field_media
+          field: field_media
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_link: ''
+            image_style: medium
+            image_loading:
+              attribute: lazy
+          group_column: target_id
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -1749,7 +1828,7 @@ display:
           admin_label: ''
           plugin_id: field
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -1990,13 +2069,13 @@ display:
                   field_classes: search-all
                   sort_options_unsupported: ''
               field_beneficiaries_target_id:
-                plugin_id: default
+                plugin_id: bef
                 advanced:
                   sort_options: false
                   sort_options_method: alphabetical_asc
                   sort_options_natural: true
                   rewrite:
-                    filter_rewrite_values: All|Beneficiaries
+                    filter_rewrite_values: ''
                     filter_rewrite_values_key: true
                   collapsible: false
                   collapsible_disable_automatic_open: false
@@ -2004,6 +2083,12 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: ''
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
+                soft_limit: 0
+                soft_limit_label_less: 'Show less'
+                soft_limit_label_more: 'Show more'
               field_taxonomy_target_id:
                 plugin_id: bef
                 advanced:
@@ -2017,7 +2102,7 @@ display:
                   collapsible_disable_automatic_open: false
                   open_by_default: false
                   is_secondary: false
-                  hide_label: false
+                  hide_label: true
                   field_classes: services-directory__taxonomy
                 select_all_none: false
                 select_all_none_nested: true
@@ -2025,14 +2110,14 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
-              field_tags_target_id:
-                plugin_id: default
+              field_sector_target_id:
+                plugin_id: bef
                 advanced:
                   sort_options: false
                   sort_options_method: alphabetical_asc
                   sort_options_natural: true
                   rewrite:
-                    filter_rewrite_values: All|Tags
+                    filter_rewrite_values: 'All|All sectors'
                     filter_rewrite_values_key: true
                   collapsible: false
                   collapsible_disable_automatic_open: false
@@ -2040,6 +2125,33 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: ''
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
+                soft_limit: 0
+                soft_limit_label_less: 'Show less'
+                soft_limit_label_more: 'Show more'
+              field_tags_target_id:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: 'All|All tags'
+                    filter_rewrite_values_key: true
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: true
+                  field_classes: ''
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: true
+                soft_limit: 0
+                soft_limit_label_less: 'Show less'
+                soft_limit_label_more: 'Show more'
       empty:
         area:
           id: area
@@ -2278,7 +2390,7 @@ display:
           exposed: true
           expose:
             operator_id: field_taxonomy_target_id_op
-            label: Categories
+            label: 'Service type'
             description: ''
             use_operator: false
             operator: field_taxonomy_target_id_op
@@ -2287,7 +2399,7 @@ display:
             identifier: field_taxonomy_target_id
             required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
             reduce: false
@@ -2307,6 +2419,51 @@ display:
           vid: taxonomy
           type: select
           hierarchy: true
+          limit: true
+          error_message: true
+        field_sector_target_id:
+          id: field_sector_target_id
+          table: node__field_sector
+          field: field_sector_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 3
+          exposed: true
+          expose:
+            operator_id: field_sector_target_id_op
+            label: Sector
+            description: ''
+            use_operator: false
+            operator: field_sector_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_sector_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: sector
+          type: select
+          hierarchy: false
           limit: true
           error_message: true
         field_tags_target_id:
@@ -2408,7 +2565,7 @@ display:
         metatag_display_extender:
           metatags:
             title: 'Services | Motaded'
-            description: 'A Digital Mark in Every Service. Comprehensive business solutions designed to support investors, entrepreneurs, and companies entering the Saudi market.'
+            description: 'Government-aligned programmes and platforms for business in Saudi Arabia. Browse services, filter by sector and journey, and explore national channels on Motaded.'
             hreflang_xdefault: '[site:base-url]/services'
             'hreflang_per_language:hreflang_en': '[site:base-url]/services'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/services'
@@ -2430,6 +2587,7 @@ display:
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_keywords'
+        - 'config:field.storage.node.field_media'
         - 'config:field.storage.node.field_service_cost'
         - 'config:field.storage.node.field_service_duration'
         - 'config:field.storage.node.field_tags'

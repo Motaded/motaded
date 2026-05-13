@@ -14,3 +14,7 @@ links:
   -
     path: /services
     priority: '0.5'
+  -
+    path: /sectors
+    priority: '0.5'
+    changefreq: weekly

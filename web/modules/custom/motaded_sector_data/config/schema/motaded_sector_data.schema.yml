@@ -1,0 +1,62 @@
+motaded_sector_data.source.*:
+  type: config_entity
+  label: 'Sector data source'
+  mapping:
+    uuid:
+      type: uuid
+    langcode:
+      type: langcode
+      label: 'Language code'
+    status:
+      type: boolean
+      label: Enabled
+    dependencies:
+      type: config_dependencies
+    id:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: Name
+    description:
+      type: text
+      label: Description
+    weight:
+      type: integer
+      label: Weight
+    sector_key:
+      type: string
+      label: 'Sector key'
+    usage_key:
+      type: string
+      label: 'Usage key'
+    provider:
+      type: string
+      label: Provider
+    wb_country_iso3:
+      type: string
+      label: 'World Bank country ISO3'
+    wb_indicator_primary:
+      type: string
+      label: 'World Bank indicator (primary)'
+    wb_indicator_secondary:
+      type: string
+      label: 'World Bank indicator (secondary)'
+    wb_api_base_url:
+      type: string
+      label: 'World Bank API base URL (optional)'
+    merge_mode:
+      type: string
+      label: 'Merge mode'
+    value_scale:
+      type: string
+      label: 'Value scale'
+    max_years:
+      type: integer
+      label: 'Maximum years on chart'
+    cache_max_age:
+      type: integer
+      label: 'Page cache max-age (seconds)'
+    gastat_api_url:
+      type: string
+      label: 'GASTAT API URL (optional)'

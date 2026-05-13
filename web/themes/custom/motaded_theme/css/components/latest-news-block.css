@@ -1,12 +1,15 @@
-/* Latest news (block_4): white cards on mint band — aligned with media_lead / split_promo tokens. */
+/* Latest news (block_4): same surface language as events-home / library-home (--mot-*). */
 
 .paragraph--view-block--news-latest {
-  --ln-radius: 1rem;
-  --ln-teal: #0d9488;
-  --ln-teal-deep: #0f766e;
-  --ln-shadow: 0 1px 2px rgb(15 23 42 / 4%), 0 10px 28px rgb(15 23 42 / 7%);
-  --ln-shadow-hover: 0 1px 2px rgb(15 23 42 / 5%), 0 12px 32px rgb(15 23 42 / 9%);
-  background: linear-gradient(180deg, #f8fdf9 0%, #f0fdf4 55%, #ecfdf5 100%) !important;
+  --ln-radius: var(--mot-radius-lg, 1rem);
+  --ln-accent: var(--mot-accent-strong, #0d9488);
+  --ln-accent-deep: var(--mot-brand, #0f766e);
+  background: linear-gradient(
+    180deg,
+    var(--mot-emerald-surface, #f8fdf9) 0%,
+    var(--mot-green-50, #f0fdf4) 55%,
+    var(--mot-emerald-50, #ecfdf5) 100%
+  ) !important;
   padding-top: clamp(1.75rem, 4vw, 2.75rem) !important;
   padding-bottom: clamp(1.75rem, 3.5vw, 2.5rem) !important;
 }
@@ -37,10 +40,10 @@
   padding: 0.85rem 1rem;
   text-decoration: none;
   color: inherit;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--mot-surface, #ffffff);
+  border: 1px solid var(--mot-border, #e2e8f0);
   border-radius: var(--ln-radius);
-  box-shadow: var(--ln-shadow);
+  box-shadow: var(--mot-shadow-card);
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
@@ -55,12 +58,12 @@
 }
 
 .latest-news-list__link:hover {
-  border-color: rgb(13 148 136 / 32%);
-  box-shadow: var(--ln-shadow-hover);
+  border-color: color-mix(in oklab, var(--mot-accent-strong, #0d9488) 32%, var(--mot-surface, #fff));
+  box-shadow: var(--mot-shadow-card-hover);
 }
 
 .latest-news-list__link:focus-visible {
-  outline: 2px solid var(--ln-teal);
+  outline: 2px solid var(--ln-accent);
   outline-offset: 2px;
 }
 
@@ -70,7 +73,7 @@
   height: 3.75rem;
   border-radius: 0.5rem;
   overflow: hidden;
-  background: #f1f5f9;
+  background: var(--mot-surface-muted, #f1f5f9);
 }
 
 @media (min-width: 480px) {
@@ -102,7 +105,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ln-teal-deep);
+  color: var(--ln-accent-deep);
   line-height: 1.25;
 }
 
@@ -119,7 +122,7 @@
   font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.3;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   letter-spacing: -0.01em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -131,14 +134,14 @@
   flex: 0 0 auto;
   margin-inline-start: auto;
   margin-top: 0.1em;
-  color: var(--ln-teal-deep);
+  color: var(--ln-accent-deep);
   font-size: 1rem;
   line-height: 1.2;
   transition: transform 0.18s ease, color 0.15s ease;
 }
 
 .latest-news-list__link:hover .latest-news-list__arrow {
-  color: var(--ln-teal);
+  color: var(--ln-accent);
   transform: translateX(0.12rem);
 }
 
@@ -159,7 +162,7 @@
   gap: 0.35rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--ln-teal-deep);
+  color: var(--ln-accent-deep);
   text-decoration: none;
   border-bottom: 1px solid rgb(15 118 110 / 42%);
   padding-bottom: 0.12rem;
@@ -169,12 +172,12 @@
 }
 
 .latest-news-footer__link:hover {
-  color: var(--ln-teal);
+  color: var(--ln-accent);
   border-bottom-color: rgb(13 148 136 / 72%);
 }
 
 .latest-news-footer__link:focus-visible {
-  outline: 2px solid var(--ln-teal);
+  outline: 2px solid var(--ln-accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -202,13 +205,13 @@
   font-weight: 600;
   line-height: 1.28;
   letter-spacing: -0.015em;
-  color: #334155;
+  color: var(--mot-slate-700, #334155);
   text-wrap: balance;
 }
 
 .paragraph--view-block--news-latest .view-block-intro :where(h1, h2, h3).text-primary-600,
 .paragraph--view-block--news-latest .view-block-intro :where(h1, h2, h3)[class*='text-primary'] {
-  color: #334155;
+  color: var(--mot-slate-700, #334155);
 }
 
 .paragraph--view-block--news-latest .view-block-intro p {
@@ -217,7 +220,7 @@
   font-size: 0.9375rem;
   font-weight: 400;
   line-height: 1.55;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .paragraph--view-block--news-latest .view-block-intro p + p {

@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.platform.field_region
     - field.field.node.platform.field_requirements
     - field.field.node.platform.field_short_description
+    - field.field.node.platform.field_sector
     - field.field.node.platform.field_source_link
     - field.field.node.platform.field_source_text
     - field.field.node.platform.field_subtitle
@@ -194,5 +195,6 @@ content:
 hidden:
   addtoany: true
   field_featured: true
+  field_sector: true
   langcode: true
   search_api_excerpt: true

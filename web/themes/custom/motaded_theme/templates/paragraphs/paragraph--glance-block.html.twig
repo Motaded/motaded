@@ -1,7 +1,8 @@
 {#
 /**
  * @file
- * Saudi at a glance: intro + highlight stat + stat cards + feature row.
+ * Market-style layout: intro + KPI strip (highlight + stats, max 4 KPI cells, same rail as title)
+ * + optional World Bank table/chart + feature row.
  */
 #}
 {{ attach_library('motaded_theme/glance_block') }}
@@ -16,11 +17,12 @@
 %}
 
 <section{{ attributes.addClass(classes) }}>
-  <div class="glance-block__inner">
-    <div class="glance-block__top">
+  <div class="glance-block__inner mot-shell">
+    {% set glance_has_kpi = glance_highlight is not empty or glance_stats is not empty %}
+    <div class="glance-block__top{{ glance_has_kpi ? ' glance-block__top--with-kpi' : '' }}">
       <div class="glance-block__copy">
         {% if glance_eyebrow %}
-          <p class="glance-block__eyebrow">{{ glance_eyebrow }}</p>
+          <p class="glance-block__eyebrow mot-eyebrow mot-eyebrow--rail">{{ glance_eyebrow }}</p>
         {% endif %}
 
         <h2 class="glance-block__title">
@@ -35,52 +37,92 @@
         {% endif %}
       </div>
 
-      {% if glance_highlight is not empty %}
-        <aside class="glance-block__highlight" aria-label="{{ 'Key highlight'|t }}">
-          <div class="glance-block__highlight-head">
-            <div>
-              {% if glance_highlight.kicker %}
-                <p class="glance-block__highlight-kicker">{{ glance_highlight.kicker }}</p>
-              {% endif %}
-              {% if glance_highlight.value %}
-                <p class="glance-block__highlight-value">{{ glance_highlight.value }}</p>
-              {% endif %}
-            </div>
-            <div class="glance-block__highlight-icon" aria-hidden="true">
-              {{ glance_highlight.icon_svg }}
-            </div>
-          </div>
-          <div class="glance-block__highlight-body">
-            {% if glance_highlight.title %}
-              <p class="glance-block__highlight-title">{{ glance_highlight.title }}</p>
-            {% endif %}
-            {% if glance_highlight.body %}
-              <p class="glance-block__highlight-desc">{{ glance_highlight.body }}</p>
-            {% endif %}
-            {% if glance_highlight.source %}
-              <p class="glance-block__source">{{ 'Source:'|t }} {{ glance_highlight.source }}</p>
-            {% endif %}
-          </div>
-        </aside>
+      {% if glance_highlight is not empty or glance_stats is not empty %}
+        <div class="glance-block__stats glance-block__stats--kpi-strip" aria-label="{{ 'Key statistics'|t }}">
+          {% if glance_highlight is not empty %}
+            <article class="glance-block__stat">
+              <div class="glance-block__stat-top">
+                <div class="glance-block__stat-icon" aria-hidden="true">{{ glance_highlight.icon_svg }}</div>
+                <div>
+                  {% if glance_highlight.kicker %}
+                    <p class="glance-block__stat-title">{{ glance_highlight.kicker }}</p>
+                  {% elseif glance_highlight.title %}
+                    <p class="glance-block__stat-title">{{ glance_highlight.title }}</p>
+                  {% endif %}
+                  {% if glance_highlight.value %}<p class="glance-block__stat-value">{{ glance_highlight.value }}</p>{% endif %}
+                </div>
+              </div>
+              {% if glance_highlight.body %}<p class="glance-block__stat-desc">{{ glance_highlight.body }}</p>{% endif %}
+              {% if glance_highlight.source %}<p class="glance-block__source">{{ 'Source:'|t }} {{ glance_highlight.source }}</p>{% endif %}
+            </article>
+          {% endif %}
+          {% for s in glance_stats|slice(0, glance_highlight is not empty ? 3 : 4) %}
+            <article class="glance-block__stat">
+              <div class="glance-block__stat-top">
+                <div class="glance-block__stat-icon" aria-hidden="true">{{ s.icon_svg }}</div>
+                <div>
+                  {% if s.value %}<p class="glance-block__stat-value">{{ s.value }}</p>{% endif %}
+                  {% if s.title %}<p class="glance-block__stat-title">{{ s.title }}</p>{% endif %}
+                </div>
+              </div>
+              {% if s.body %}<p class="glance-block__stat-desc">{{ s.body }}</p>{% endif %}
+              {% if s.source %}<p class="glance-block__source">{{ 'Source:'|t }} {{ s.source }}</p>{% endif %}
+            </article>
+          {% endfor %}
+        </div>
       {% endif %}
     </div>
 
-    {% if glance_stats is not empty %}
-      <div class="glance-block__stats" aria-label="{{ 'Key statistics'|t }}">
-        {% for s in glance_stats|slice(0, 4) %}
-          <article class="glance-block__stat">
-            <div class="glance-block__stat-top">
-              <div class="glance-block__stat-icon" aria-hidden="true">{{ s.icon_svg }}</div>
-              <div>
-                {% if s.value %}<p class="glance-block__stat-value">{{ s.value }}</p>{% endif %}
-                {% if s.title %}<p class="glance-block__stat-title">{{ s.title }}</p>{% endif %}
-              </div>
+    {% if market_indicators.show %}
+      <section class="glance-block__market" aria-label="{{ 'Market data'|t }}">
+        <div class="glance-block__market-split">
+          <div class="glance-block__market-col glance-block__market-col--table">
+            <h4 class="glance-block__market-subtitle">{{ 'Key economic indicators'|t }}</h4>
+            <div class="glance-block__market-table-wrap">
+              <table class="glance-block__market-table">
+                <thead>
+                  <tr>
+                    <th scope="col">{{ 'Indicator'|t }}</th>
+                    <th scope="col">{{ 'Value'|t }}</th>
+                    <th scope="col">{{ 'Year'|t }}</th>
+                    <th scope="col">{{ 'Source'|t }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in market_indicators.rows %}
+                    <tr>
+                      <th scope="row" data-label="{{ 'Indicator'|t }}">{{ row.indicator }}</th>
+                      <td data-label="{{ 'Value'|t }}">{{ row.value }}</td>
+                      <td data-label="{{ 'Year'|t }}">{{ row.year }}</td>
+                      <td data-label="{{ 'Source'|t }}">
+                        {% if row.source_url %}
+                          <a href="{{ row.source_url }}" class="glance-block__market-source-link" rel="noopener noreferrer">{{ row.source }}</a>
+                        {% else %}
+                          {{ row.source }}
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
-            {% if s.body %}<p class="glance-block__stat-desc">{{ s.body }}</p>{% endif %}
-            {% if s.source %}<p class="glance-block__source">{{ 'Source:'|t }} {{ s.source }}</p>{% endif %}
-          </article>
-        {% endfor %}
-      </div>
+            <p class="glance-block__market-foot">
+              <a href="{{ market_indicators.more_url }}" class="glance-block__market-more" target="_blank" rel="noopener noreferrer">{{ 'View all indicators'|t }} <span aria-hidden="true">→</span></a>
+            </p>
+          </div>
+          <div class="glance-block__market-col glance-block__market-col--chart">
+            <h4 class="glance-block__market-subtitle">{{ 'GDP growth trend'|t }} ({{ market_indicators.chart_year_min }}–{{ market_indicators.chart_year_max }})</h4>
+            {% if market_indicators.chart_svg %}
+              <figure class="glance-block__market-chart">
+                {{ market_indicators.chart_svg }}
+                <figcaption class="glance-block__market-chart-caption">{{ 'Source: World Bank'|t }}</figcaption>
+              </figure>
+            {% else %}
+              <p class="glance-block__market-chart-empty">{{ 'Chart data is not available yet. It will appear after the next successful import.'|t }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
     {% endif %}
 
     {% if glance_features is not empty %}

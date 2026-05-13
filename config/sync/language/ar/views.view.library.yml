@@ -1,0 +1,18 @@
+display:
+  default:
+    display_options:
+      filters:
+        combine:
+          expose:
+            placeholder: 'البحث في الوثائق…'
+        field_library_section_target_id:
+          expose:
+            label: القسم
+        field_category_target_id:
+          expose:
+            label: الفئة
+      header:
+        result:
+          content: 'عرض @start–@end من أصل @total وثيقة'
+  block_1:
+    display_title: 'المكتبة — الرئيسية'

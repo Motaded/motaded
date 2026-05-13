@@ -1,0 +1,55 @@
+/**
+ * Paragraph `steps` — Investor Journey wizard (Alpine).
+ * Shell + masthead aligned with `platforms-systems`; panel uses `.mot-card`.
+ */
+
+.steps-section {
+  position: relative;
+  padding: clamp(2.25rem, 5vw, 4rem) 0;
+  background: var(--mot-surface, #ffffff);
+}
+
+.steps-section__inner {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, clamp(1rem, 2.5vw, 1.5rem));
+}
+
+.steps-section__masthead {
+  text-align: center;
+  max-width: 60rem;
+  margin: 0 auto 1.4rem;
+}
+
+.steps-section__title {
+  margin: 0;
+  font-size: clamp(1.65rem, 3.4vw, 2.35rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--mot-text, #0f172a);
+}
+
+.steps-section__subtitle {
+  margin: 0.55rem auto 0;
+  max-width: 46rem;
+  color: var(--mot-text-muted, #64748b);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.steps-section__subtitle p {
+  margin: 0;
+}
+
+.steps-section__panel {
+  margin-top: 1.3rem;
+  padding: clamp(1rem, 2.2vw, 1.35rem);
+  border-radius: var(--mot-radius-lg, 12px);
+}
+
+@media (min-width: 640px) {
+  .steps-section__panel {
+    padding: 1.35rem 1.5rem 1.45rem;
+  }
+}

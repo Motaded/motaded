@@ -1,0 +1,20 @@
+uuid: c5d6e7f8-cccc-4ccc-8ccc-cccccccccc0c
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_bce_line_percentage
+field_name: field_bce_line_percentage
+entity_type: paragraph
+type: integer
+settings:
+  unsigned: true
+  size: small
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

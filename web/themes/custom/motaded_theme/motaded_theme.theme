@@ -1,11 +1,14 @@
 <?php
 
 require_once __DIR__ . '/includes/motaded_theme.image.inc';
+require_once __DIR__ . '/includes/motaded_theme.sector_related.inc';
 
 use Drupal\block\BlockInterface;
 use Drupal\block\Entity\Block;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\Cache;
+use Drupal\file\FileInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Language\LanguageInterface;
@@ -15,6 +18,7 @@ use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\Plugin\views\field\FieldPluginInterface;
@@ -39,6 +43,362 @@ function motaded_theme_glance_icon_markup(?string $key): Markup {
     'target' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     'flag' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 22V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 4h10l-1.5 3L15 10H5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
     default => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  };
+  return Markup::create($svg);
+}
+
+/**
+ * Inline SVG icon for header mega menu category headings.
+ *
+ * Keys match the allowed_values of menu_link_content.field_menu_icon.
+ */
+function motaded_theme_menu_icon_markup(?string $key): Markup {
+  $svg = match ($key) {
+    'briefcase' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'building' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 4 8v13h16V8l-8-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 11h2M14 11h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'users' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="17" cy="9" r="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M16 14h1a4.5 4.5 0 0 1 4.5 4.5V20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'lamp' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3h6l3 7H6l3-7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 20h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10 16h4l1 4H9l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'chart' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 17 10 11l4 4 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'star' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.6 5.3 5.9.86-4.25 4.14 1 5.86L12 16.77 6.75 19.16l1-5.86L3.5 9.16l5.9-.86L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    default => '',
+  };
+  return Markup::create($svg);
+}
+
+/**
+ * Chip labels for /sectors cards: primary taxonomy term + &lt;li&gt; text from highlights.
+ *
+ * @return list<string>
+ */
+function _motaded_theme_sector_directory_tag_labels(NodeInterface $node, int $max = 5): array {
+  $tags = [];
+  if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+    $term = $node->get('field_sector')->entity;
+    if ($term instanceof TermInterface) {
+      $tags[] = $term->getName();
+    }
+  }
+  if ($node->hasField('field_sector_highlights') && !$node->get('field_sector_highlights')->isEmpty()) {
+    $html = (string) $node->get('field_sector_highlights')->value;
+    if ($html !== '' && preg_match_all('@<li[^>]*>\s*(.*?)\s*</li>@is', $html, $matches)) {
+      foreach ($matches[1] as $raw) {
+        $text = trim(html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        if ($text === '') {
+          continue;
+        }
+        if (!in_array($text, $tags, TRUE)) {
+          $tags[] = $text;
+        }
+        if (count($tags) >= $max) {
+          break;
+        }
+      }
+    }
+  }
+  return array_slice($tags, 0, $max);
+}
+
+/**
+ * Builds variables for the “Market indicators” strip under Glance KPI cards.
+ */
+function _motaded_theme_glance_market_indicators_variables(): array {
+  $fallback = [
+    'show' => FALSE,
+    'rows' => [],
+    'chart_year_min' => 0,
+    'chart_year_max' => 0,
+    'chart_svg' => NULL,
+    'more_url' => 'https://data.worldbank.org/country/saudi-arabia',
+  ];
+  if (!\Drupal::moduleHandler()->moduleExists('motaded_custom') || !function_exists('motaded_custom_market_indicators_table_rows')) {
+    return $fallback;
+  }
+  $fallback['show'] = TRUE;
+  $order = [
+    'gdp_growth' => (string) t('GDP Growth'),
+    'population' => (string) t('Population'),
+    'fdi_inflow' => (string) t('FDI Inflows'),
+    'non_oil_gdp_growth' => (string) t('Non-oil GDP Growth'),
+    'inflation' => (string) t('Inflation Rate'),
+    'unemployment' => (string) t('Unemployment Rate'),
+  ];
+  $db_rows = motaded_custom_market_indicators_table_rows();
+  $by_key = [];
+  foreach ($db_rows as $r) {
+    if (!empty($r['indicator_key'])) {
+      $by_key[(string) $r['indicator_key']] = $r;
+    }
+  }
+  $rows = [];
+  foreach ($order as $key => $default_label) {
+    $r = $by_key[$key] ?? NULL;
+    $value_display = ($r !== NULL && isset($r['value_display'])) ? trim((string) $r['value_display']) : '';
+    $rows[] = [
+      'indicator' => ($r !== NULL && isset($r['label']) && trim((string) $r['label']) !== '') ? trim((string) $r['label']) : $default_label,
+      'value' => $value_display !== '' ? $value_display : '—',
+      'year' => ($r !== NULL && isset($r['year'])) ? (string) (int) $r['year'] : '—',
+      'source' => ($r !== NULL && isset($r['source_name'])) ? trim((string) $r['source_name']) : '',
+      'source_url' => ($r !== NULL && isset($r['source_url'])) ? trim((string) $r['source_url']) : '',
+    ];
+  }
+  $time = \Drupal::time()->getRequestTime();
+  $current_year = (int) gmdate('Y', $time);
+  $chart_year_min = $current_year - 5;
+  $chart_year_max = $current_year;
+  $series = function_exists('motaded_custom_market_indicators_gdp_growth_series')
+    ? motaded_custom_market_indicators_gdp_growth_series()
+    : [];
+  $fallback['rows'] = $rows;
+  $fallback['chart_year_min'] = $chart_year_min;
+  $fallback['chart_year_max'] = $chart_year_max;
+  $fallback['chart_svg'] = _motaded_theme_glance_market_chart_svg_markup($series, $chart_year_min, $chart_year_max);
+  return $fallback;
+}
+
+/**
+ * SVG line chart for GDP growth (numeric data only in markup).
+ *
+ * @param list<array{year: int, value: float}> $series
+ */
+function _motaded_theme_glance_market_chart_svg_markup(array $series, int $year_min, int $year_max): ?Markup {
+  if ($series === []) {
+    return NULL;
+  }
+  $w = 520;
+  $h = 300;
+  $pl = 52;
+  $pr = 16;
+  $pad_top = 18;
+  $pb = 44;
+  $pw = $w - $pl - $pr;
+  $ph = $h - $pad_top - $pb;
+  $vals = array_column($series, 'value');
+  $y_min = min(array_merge([-2.0], array_map('floatval', $vals)));
+  $y_max = max(array_merge([10.0], array_map('floatval', $vals)));
+  if ($y_max <= $y_min) {
+    $y_max = $y_min + 1.0;
+  }
+  $pad = ($y_max - $y_min) * 0.06;
+  $y_min -= $pad;
+  $y_max += $pad;
+  $year_span = max(1, $year_max - $year_min);
+  $ticks = 5;
+  $parts = [];
+  $circles = [];
+  foreach ($series as $obs) {
+    $year = (int) $obs['year'];
+    $val = (float) $obs['value'];
+    $x = $pl + (($year - $year_min) / $year_span) * $pw;
+    $y = $pad_top + (1.0 - (($val - $y_min) / ($y_max - $y_min))) * $ph;
+    $parts[] = sprintf('%.2f,%.2f', $x, $y);
+    $circles[] = sprintf('<circle cx="%.2f" cy="%.2f" r="5" fill="#fff" stroke="#0d9488" stroke-width="1.5"/>', $x, $y);
+  }
+  $poly = implode(' ', $parts);
+  $grid = '';
+  for ($i = 0; $i <= $ticks; $i++) {
+    $gv = $y_min + ($i / $ticks) * ($y_max - $y_min);
+    $gy = $pad_top + (1.0 - (($gv - $y_min) / ($y_max - $y_min))) * $ph;
+    $grid .= sprintf(
+      '<line class="glance-block__market-chart-grid" x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f"/>',
+      $pl,
+      $gy,
+      $pl + $pw,
+      $gy
+    );
+    $grid .= sprintf(
+      '<text class="glance-block__market-chart-ytick" x="%.2f" y="%.2f">%s</text>',
+      4.0,
+      $gy + 4.0,
+      htmlspecialchars((string) round($gv, 1), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+    );
+  }
+  $xlabels = '';
+  foreach ($series as $obs) {
+    $year = (int) $obs['year'];
+    $x = $pl + (($year - $year_min) / $year_span) * $pw;
+    $xlabels .= sprintf(
+      '<text class="glance-block__market-chart-xlabel" x="%.2f" y="%.2f" text-anchor="middle">%d</text>',
+      $x,
+      $h - 10.0,
+      $year
+    );
+  }
+  $svg = sprintf(
+    '<svg class="glance-block__market-chart-svg" viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-label="%s">%s<polyline class="glance-block__market-chart-line" fill="none" stroke="#0d9488" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="%s"/>%s</svg>',
+    $w,
+    $h,
+    $w,
+    $h,
+    htmlspecialchars((string) t('GDP growth trend chart'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+    $grid,
+    htmlspecialchars($poly, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+    implode('', $circles) . $xlabels
+  );
+  return Markup::create($svg);
+}
+
+/**
+ * Sparkline for sector cards: line, optional area fill, point markers, year range labels.
+ *
+ * @param list<array{year: int, value: float}> $series
+ */
+function _motaded_theme_sector_sparkline_svg_markup(array $series, string $svg_class = 'sector-card__spark-svg', bool $with_area = TRUE): ?Markup {
+  if ($series === []) {
+    return NULL;
+  }
+  $w = 280;
+  $h = 88;
+  $pl = 6.0;
+  $pr = 6.0;
+  $pt = 8.0;
+  $pb = 24.0;
+  $pw = $w - $pl - $pr;
+  $ph = $h - $pt - $pb;
+  $years = array_column($series, 'year');
+  $vals = array_map('floatval', array_column($series, 'value'));
+  $year_min = (int) min($years);
+  $year_max = (int) max($years);
+  $year_time_span = $year_max - $year_min;
+  $v_min = min($vals);
+  $v_max = max($vals);
+  if ($v_max <= $v_min) {
+    $v_max = $v_min + ($v_min === 0.0 ? 1.0 : abs($v_min) * 0.001 + 0.01);
+  }
+  $pad_v = ($v_max - $v_min) * 0.1;
+  $v_min -= $pad_v;
+  $v_max += $pad_v;
+  $coords = [];
+  foreach ($series as $obs) {
+    $year = (int) $obs['year'];
+    $val = (float) $obs['value'];
+    // One year in the window → all x at chart centre (avoids clipping at x=padding).
+    if ($year_time_span < 1) {
+      $x = $pl + $pw / 2;
+    }
+    else {
+      $x = $pl + (($year - $year_min) / $year_time_span) * $pw;
+    }
+    $y = $pt + (1.0 - (($val - $v_min) / ($v_max - $v_min))) * $ph;
+    $coords[] = ['x' => $x, 'y' => $y, 'year' => $year];
+  }
+  $bottom = $pt + $ph;
+  $grad_id = 'scf-' . substr(hash('sha256', serialize($series)), 0, 12);
+  $dots = '';
+  foreach ($coords as $c) {
+    $dots .= sprintf(
+      '<circle class="sector-card__spark-dot" cx="%.2f" cy="%.2f" r="3.25" fill="#ffffff" stroke="#0d9488" stroke-width="1.5"/>',
+      $c['x'],
+      $c['y']
+    );
+  }
+  $n_pts = count($coords);
+  if ($n_pts === 1) {
+    $c = $coords[0];
+    $svg = sprintf(
+      '<svg class="%s" viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-hidden="true" focusable="false">%s<text class="sector-card__spark-xlabel" x="%.2f" y="%.2f" text-anchor="middle">%d</text></svg>',
+      htmlspecialchars($svg_class, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+      $w,
+      $h,
+      $w,
+      $h,
+      $dots,
+      $pl + $pw / 2,
+      (float) $h - 5.0,
+      $c['year']
+    );
+    return Markup::create($svg);
+  }
+  $first = $coords[0];
+  $path_d = sprintf('M %.2f %.2f', $first['x'], $first['y']);
+  $poly_parts = [sprintf('%.2f,%.2f', $first['x'], $first['y'])];
+  for ($i = 1, $n = count($coords); $i < $n; $i++) {
+    $path_d .= sprintf(' L %.2f %.2f', $coords[$i]['x'], $coords[$i]['y']);
+    $poly_parts[] = sprintf('%.2f,%.2f', $coords[$i]['x'], $coords[$i]['y']);
+  }
+  $last = $coords[array_key_last($coords)];
+  $area_d = $path_d . sprintf(' L %.2f %.2f L %.2f %.2f Z', $last['x'], $bottom, $first['x'], $bottom);
+  $poly = implode(' ', $poly_parts);
+  $defs = '';
+  $area_el = '';
+  if ($with_area && $n_pts >= 2) {
+    $defs = sprintf(
+      '<defs><linearGradient id="%s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%%" stop-color="#0d9488" stop-opacity="0.24"/><stop offset="100%%" stop-color="#0d9488" stop-opacity="0"/></linearGradient></defs>',
+      htmlspecialchars($grad_id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+    );
+    $area_el = sprintf(
+      '<path class="sector-card__spark-area" fill="url(#%s)" d="%s"/>',
+      htmlspecialchars($grad_id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+      htmlspecialchars($area_d, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+    );
+  }
+  $x_label_y = (float) $h - 5.0;
+  $x_mid = $pl + $pw / 2;
+  if ($year_min === $year_max) {
+    $labels = sprintf(
+      '<text class="sector-card__spark-xlabel" x="%.2f" y="%.2f" text-anchor="middle">%d</text>',
+      $x_mid,
+      $x_label_y,
+      $year_min
+    );
+  }
+  else {
+    $labels = sprintf(
+      '<text class="sector-card__spark-xlabel" x="%.2f" y="%.2f" text-anchor="start">%d</text><text class="sector-card__spark-xlabel" x="%.2f" y="%.2f" text-anchor="end">%d</text>',
+      $pl,
+      $x_label_y,
+      $year_min,
+      $pl + $pw,
+      $x_label_y,
+      $year_max
+    );
+  }
+  $svg = sprintf(
+    '<svg class="%s" viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-label="%s">%s%s<polyline class="sector-card__spark-line" fill="none" stroke="#0d9488" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="%s"/>%s%s</svg>',
+    htmlspecialchars($svg_class, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+    $w,
+    $h,
+    $w,
+    $h,
+    htmlspecialchars((string) t('Indicator trend'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+    $defs,
+    $area_el,
+    htmlspecialchars($poly, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+    $dots,
+    $labels
+  );
+  return Markup::create($svg);
+}
+
+/**
+ * Small icon for World Bank–driven sector cards.
+ */
+function _motaded_theme_key_sector_wb_icon_markup(string $key): Markup {
+  $svg = match ($key) {
+    'tourism' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M9 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h8M8 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'energy' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-4 5-7 8-7 11a7 7 0 0 0 14 0c0-3-3-6-7-11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'manufacturing' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21V10l4-2 4 2v11" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10h8v11H12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 14h2M9 18h2M15 14h2M15 18h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'technology' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 22h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 16v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'finance' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5h16v14H4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 19V9h8v10" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 12h4M10 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'logistics' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 17h12v-4l3-3h3v7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'healthcare' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21a7 7 0 0 1-7-7c0-3.5 3-6 7-10 4 4 7 6.5 7 10a7 7 0 0 1-7 7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'construction' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 21V10l4-2 2 1 4-4 4 4v11" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 21v-5h4v5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 7V3h3v4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    default => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  };
+  return Markup::create($svg);
+}
+
+/**
+ * Line icons for Business Network / chamber cards (row + featured stats).
+ */
+function _motaded_theme_cnb_icon_markup(string $key): Markup {
+  $svg = match ($key) {
+    'users' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'briefcase' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'shield' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'map_pin' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-5.2 7-10a7 7 0 1 0-14 0c0 4.8 7 10 7 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'target' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
+    'building' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21V8l8-4 8 4v13" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    default => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>',
   };
   return Markup::create($svg);
 }
@@ -82,6 +442,26 @@ function _motaded_theme_suppress_seo_tracking(): bool {
  */
 function motaded_theme_preprocess_html(array &$variables): void {
   $variables['motaded_suppress_seo_tracking'] = _motaded_theme_suppress_seo_tracking();
+
+  $route_node = \Drupal::routeMatch()->getParameter('node');
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'page'
+    && $route_node->hasField('field_display_on_services')
+    && !$route_node->get('field_display_on_services')->isEmpty()
+    && (int) $route_node->get('field_display_on_services')->value === 1) {
+    if (!empty($variables['attributes']) && $variables['attributes'] instanceof \Drupal\Core\Template\Attribute) {
+      $variables['attributes']->addClass('is-service-detail-page');
+    }
+  }
+
+  // Sector page (full node): hide duplicate region breadcrumb; in-hero crumb in node template.
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'sector_page'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    if (!empty($variables['attributes']) && $variables['attributes'] instanceof \Drupal\Core\Template\Attribute) {
+      $variables['attributes']->addClass('is-sector-page');
+    }
+  }
 }
 
 /**
@@ -326,21 +706,54 @@ function _motaded_theme_library_category_counts(array $document_type_tids): arra
  */
 function motaded_theme_preprocess_views_view_library_tabs(array &$variables): void {
   $request = \Drupal::request();
-  $section = $request->query->get('library_section', 'templates');
-  if (!is_string($section) || !in_array($section, ['templates', 'regulations'], TRUE)) {
-    $section = 'templates';
+  $templates_tid = function_exists('motaded_custom_library_section_group_tid_by_name')
+    ? motaded_custom_library_section_group_tid_by_name('Templates')
+    : NULL;
+  $regulations_tid = function_exists('motaded_custom_library_section_group_tid_by_name')
+    ? motaded_custom_library_section_group_tid_by_name('Regulations')
+    : NULL;
+  if ($templates_tid === NULL || $regulations_tid === NULL) {
+    $variables['library_section'] = 'templates';
+    $variables['library_section_active_tid'] = 0;
+    $variables['library_section_templates_tid'] = 0;
+    $variables['library_section_regulations_tid'] = 0;
+    $variables['library_url_templates'] = '';
+    $variables['library_url_regulations'] = '';
+    $variables['library_category_counts'] = [];
+    $variables['library_sidebar_links'] = [];
+    $variables['library_category_all_url'] = '';
+    $variables['library_category_all_active'] = TRUE;
+    return;
   }
+
+  $raw = $request->query->get('library_section');
+  if ($raw === NULL || $raw === '') {
+    $raw = $request->request->get('library_section');
+  }
+  $active_tid = function_exists('motaded_custom_library_section_normalize_input')
+    ? motaded_custom_library_section_normalize_input($raw, $templates_tid, $regulations_tid)
+    : $templates_tid;
+  $section = ($active_tid === $regulations_tid) ? 'regulations' : 'templates';
   $variables['library_section'] = $section;
+  $variables['library_section_active_tid'] = $active_tid;
+  $variables['library_section_templates_tid'] = $templates_tid;
+  $variables['library_section_regulations_tid'] = $regulations_tid;
 
   $query_all = $request->query->all();
+  $url_keys = ['library_category', 'field_category_target_id', 'search', 'library_section'];
+  foreach ($url_keys as $key) {
+    if ((!isset($query_all[$key]) || $query_all[$key] === '' || $query_all[$key] === NULL) && $request->request->has($key)) {
+      $query_all[$key] = $request->request->get($key);
+    }
+  }
   unset($query_all['library_section'], $query_all['q']);
-  $query_scoped = $query_all + ['library_section' => $section];
+  $query_scoped = $query_all + ['library_section' => (string) $active_tid];
   try {
     $variables['library_url_templates'] = Url::fromRoute('<current>', [], [
-      'query' => $query_all + ['library_section' => 'templates'],
+      'query' => $query_all + ['library_section' => (string) $templates_tid],
     ])->toString();
     $variables['library_url_regulations'] = Url::fromRoute('<current>', [], [
-      'query' => $query_all + ['library_section' => 'regulations'],
+      'query' => $query_all + ['library_section' => (string) $regulations_tid],
     ])->toString();
   }
   catch (\Throwable $e) {
@@ -348,19 +761,30 @@ function motaded_theme_preprocess_views_view_library_tabs(array &$variables): vo
     $variables['library_url_regulations'] = '';
   }
 
-  $type_tids = function_exists('motaded_custom_library_section_document_type_tids')
-    ? motaded_custom_library_section_document_type_tids($section)
-    : [];
+  $type_tids = function_exists('motaded_custom_document_type_tids_for_library_section_tid')
+    ? motaded_custom_document_type_tids_for_library_section_tid($active_tid)
+    : (function_exists('motaded_custom_library_section_document_type_tids')
+      ? motaded_custom_library_section_document_type_tids($section)
+      : []);
   $variables['library_category_counts'] = _motaded_theme_library_category_counts($type_tids);
 
-  $active_cat = $request->query->get('field_category_target_id');
+  $active_cat = $request->query->get('library_category');
+  if ($active_cat === NULL || $active_cat === '') {
+    $active_cat = $request->request->get('library_category');
+  }
+  if ($active_cat === NULL || $active_cat === '') {
+    $active_cat = $request->query->get('field_category_target_id');
+  }
+  if ($active_cat === NULL || $active_cat === '') {
+    $active_cat = $request->request->get('field_category_target_id');
+  }
   $active_cat = $active_cat !== NULL && $active_cat !== '' ? (string) $active_cat : '';
 
   $sidebar = [];
   foreach ($variables['library_category_counts'] as $row) {
     $tid = (string) $row['tid'];
     $q_cat = $query_scoped;
-    $q_cat['field_category_target_id'] = $tid;
+    $q_cat['library_category'] = $tid;
     try {
       $sidebar[] = [
         'label' => $row['label'],
@@ -382,7 +806,7 @@ function motaded_theme_preprocess_views_view_library_tabs(array &$variables): vo
 
   try {
     $q_all = $query_scoped;
-    unset($q_all['field_category_target_id']);
+    unset($q_all['library_category'], $q_all['field_category_target_id']);
     $variables['library_category_all_url'] = Url::fromRoute('<current>', [], ['query' => $q_all])->toString();
   }
   catch (\Throwable $e) {
@@ -405,15 +829,6 @@ function motaded_theme_preprocess_views_view_library_tabs(array &$variables): vo
     $i++;
   }
   unset($link_row);
-
-  try {
-    $variables['library_contact_url'] = Url::fromUri('internal:/contact-us')->toString();
-  }
-  catch (\Throwable $e) {
-    $variables['library_contact_url'] = '/contact-us';
-  }
-
-  $variables['library_sidebar_cta_icon_url'] = $base . 'library-headset.svg';
 }
 
 /**
@@ -497,9 +912,6 @@ function motaded_theme_preprocess_views_view(&$variables): void {
   if ($view->id() === 'platforms' && $display_id === 'page_1') {
     $variables['#attached']['library'][] = 'motaded_theme/platforms_directory';
     $variables['attributes']['class'][] = 'platforms-directory-page';
-    $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
-    // Reuse the same hero background asset until a dedicated one is added.
-    $variables['motaded_platforms_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
     $variables['motaded_platforms_stats'] = _motaded_theme_platforms_directory_stats();
     $variables['motaded_platforms_category_chips'] = _motaded_theme_platforms_directory_category_chips();
   }
@@ -527,18 +939,40 @@ function motaded_theme_preprocess_views_view(&$variables): void {
         }
       }
     }
-    if ($allowed !== [] && ($tid === '' || !in_array($tid, $allowed, TRUE))) {
-      $tid = $allowed[0];
+
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $services_category_vid = 'taxonomy';
+
+    if ($allowed !== []) {
+      if ($tid === '' || !in_array($tid, $allowed, TRUE)) {
+        $tid = $allowed[0];
+      }
     }
-    elseif ($tid === '') {
-      $tid = '152';
+    else {
+      if ($tid !== '' && ctype_digit($tid)) {
+        $picked = $term_storage->load((int) $tid);
+        if (!$picked instanceof TermInterface || $picked->bundle() !== $services_category_vid) {
+          $tid = '';
+        }
+      }
+      else {
+        $tid = '';
+      }
+      if ($tid === '') {
+        $first_ids = $term_storage->getQuery()
+          ->condition('vid', $services_category_vid)
+          ->sort('weight')
+          ->accessCheck(TRUE)
+          ->range(0, 1)
+          ->execute();
+        $tid = $first_ids ? (string) reset($first_ids) : '152';
+      }
     }
 
     $variables['services_home_active_tid'] = $tid;
     $variables['services_home_term_name'] = '';
     $variables['services_home_term_description'] = [];
 
-    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $term = $term_storage->load($tid);
     if ($term instanceof TermInterface) {
       $variables['services_home_term_name'] = $term->label();
@@ -569,6 +1003,9 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     catch (\Throwable $e) {
       $variables['services_home_category_more_url'] = '/services?field_taxonomy_target_id=' . rawurlencode($tid);
     }
+
+    // Unformatted output can leave `rows` truthy while rendering nothing; use SQL row count for empty state.
+    $variables['services_home_offer_has_rows'] = ((int) ($view->total_rows ?? 0)) > 0;
   }
 
   if ($view->id() === 'library' && ($display_id === 'block_1' || $display_id === 'page_1')) {
@@ -581,11 +1018,55 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     }
     else {
       $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
+      $section_tid = (int) ($variables['library_section_active_tid'] ?? 0);
+      if ($section_tid < 1 && function_exists('motaded_custom_library_section_group_tid_by_name')) {
+        $fallback = motaded_custom_library_section_group_tid_by_name('Templates');
+        $section_tid = $fallback !== NULL ? $fallback : 0;
+      }
+      try {
+        $variables['library_view_all_url'] = $section_tid > 0
+          ? Url::fromRoute('view.library.page_1', [], [
+            'query' => ['library_section' => (string) $section_tid],
+          ])->toString()
+          : Url::fromRoute('view.library.page_1')->toString();
+      }
+      catch (\Throwable $e) {
+        $variables['library_view_all_url'] = $section_tid > 0
+          ? '/library?' . http_build_query(['library_section' => (string) $section_tid])
+          : '/library';
+      }
     }
   }
 
   // Home list keeps an exposed form in the DOM (visually hidden in CSS) so Views AJAX
   // can apply the same filter values as the calendar column when we sync in events-home.js.
+}
+
+/**
+ * Chambers View: node theme suggestion uses list layout only on the homepage embed.
+ */
+function motaded_theme_preprocess_views_view_unformatted(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view instanceof ViewExecutable) {
+    return;
+  }
+  if ($view->id() !== 'chambers') {
+    return;
+  }
+  $flag = &drupal_static('motaded_cnb_home_chamber_card_layout', FALSE);
+  $flag = ($view->current_display === 'homepage');
+
+  // First row NID: only that chamber may use the wide “stats” featured layout on embed.
+  $first_nid = &drupal_static('motaded_cnb_home_first_chamber_nid', NULL);
+  $first_nid = NULL;
+  if ($view->current_display === 'homepage' && !empty($variables['rows'])) {
+    $first_row = reset($variables['rows']);
+    $content = $first_row['content'] ?? [];
+    $row_node = is_array($content) ? ($content['#node'] ?? NULL) : NULL;
+    if ($row_node instanceof NodeInterface) {
+      $first_nid = (int) $row_node->id();
+    }
+  }
 }
 
 /**
@@ -700,6 +1181,20 @@ function motaded_theme_preprocess_block(array &$variables) {
       if ($block_content->hasField('field_subtitle') && !$block_content->get('field_subtitle')->isEmpty()) {
         $variables['cta_subtitle'] = trim($block_content->get('field_subtitle')->value);
       }
+      // Same Global CTA block type is placed in header (compact icons) and footer/prefooter (card).
+      $variables['global_cta_variant'] = 'card';
+      if (!empty($variables['elements']['#id'])) {
+        $placed_block = Block::load($variables['elements']['#id']);
+        if ($placed_block) {
+          $region = (string) $placed_block->getRegion();
+          if ($region === 'header_cta' || strpos($region, 'header') === 0) {
+            $variables['global_cta_variant'] = 'compact';
+          }
+        }
+      }
+      // Service / blog sidebar: contacts-only strip — no divider, no trust band, compact colored pills.
+      $variables['global_cta_card_minimal'] = !empty($variables['elements']['#id'])
+        && $variables['elements']['#id'] === 'motaded_theme_ctaservicesblog_2';
     }
   }
   // First footer column (Quick Links): pass logo, front page, and footer CTA block.
@@ -736,6 +1231,52 @@ function motaded_theme_theme_suggestions_menu_alter(array &$suggestions, array $
     if ($block) {
       array_push($suggestions, 'menu__' . str_replace('-', '_', $block->getRegion()));
     }
+  }
+}
+
+/**
+ * Recursively decorates main-menu items with their field_menu_icon value.
+ *
+ * Loads the related menu_link_content entity (when the menu plugin is backed
+ * by one) and exposes:
+ *   - item.menu_icon_key   : raw key string (e.g. "briefcase") or NULL
+ *   - item.menu_icon_svg   : pre-rendered inline SVG markup or NULL
+ */
+function _motaded_theme_decorate_menu_items_with_icon(array &$items): void {
+  foreach ($items as &$item) {
+    $icon_key = NULL;
+    if (!empty($item['original_link']) && method_exists($item['original_link'], 'getMetaData')) {
+      $meta = $item['original_link']->getMetaData();
+      $entity_id = $meta['entity_id'] ?? NULL;
+      if ($entity_id) {
+        try {
+          $mlc = \Drupal::entityTypeManager()
+            ->getStorage('menu_link_content')
+            ->load($entity_id);
+          if ($mlc instanceof \Drupal\menu_link_content\Entity\MenuLinkContent
+            && $mlc->hasField('field_menu_icon')
+            && !$mlc->get('field_menu_icon')->isEmpty()) {
+            $icon_key = (string) $mlc->get('field_menu_icon')->value;
+          }
+        }
+        catch (\Throwable $e) {
+        }
+      }
+    }
+    $item['menu_icon_key'] = $icon_key;
+    $item['menu_icon_svg'] = $icon_key ? motaded_theme_menu_icon_markup($icon_key) : NULL;
+    if (!empty($item['below']) && is_array($item['below'])) {
+      _motaded_theme_decorate_menu_items_with_icon($item['below']);
+    }
+  }
+}
+
+/**
+ * Exposes field_menu_icon to twig templates for the main menu.
+ */
+function motaded_theme_preprocess_menu__main(array &$variables): void {
+  if (!empty($variables['items'])) {
+    _motaded_theme_decorate_menu_items_with_icon($variables['items']);
   }
 }
 
@@ -864,6 +1405,20 @@ function motaded_theme_preprocess_page(&$variables) {
     $variables['platform_page_full_bleed'] = TRUE;
   }
 
+  // Chamber full node: full-width hero + breadcrumb in template (reuse layout flag).
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'chamber'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $variables['platform_page_full_bleed'] = TRUE;
+  }
+
+  // Sector page full node: same full-bleed content rail as platform/chamber.
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'sector_page'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $variables['platform_page_full_bleed'] = TRUE;
+  }
+
   if ($route_node instanceof NodeInterface
     && $route_node->bundle() === 'page'
     && $route_node->hasField('field_display_on_services')
@@ -933,6 +1488,127 @@ function motaded_theme_plain_text_truncate(string $html, int $max_length): strin
 }
 
 /**
+ * Resolves [view_id, display_id] pairs from one viewsreference field value row.
+ *
+ * Viewsreference may store display_id in a column or only inside serialized `data`.
+ */
+function _motaded_theme_viewsreference_field_item_pairs(array $item): array {
+  $pairs = [];
+  $tid = isset($item['target_id']) && $item['target_id'] !== '' && $item['target_id'] !== NULL
+    ? (string) $item['target_id']
+    : '';
+  $did = isset($item['display_id']) && $item['display_id'] !== '' && $item['display_id'] !== NULL
+    ? trim((string) $item['display_id'])
+    : '';
+
+  $decoded = [];
+  if (!empty($item['data']) && is_string($item['data'])) {
+    $decoded = json_decode($item['data'], TRUE);
+    if (!is_array($decoded)) {
+      $unserialized = @unserialize($item['data'], ['allowed_classes' => FALSE]);
+      $decoded = is_array($unserialized) ? $unserialized : [];
+    }
+  }
+
+  if ($tid !== '' && $did !== '') {
+    return [[$tid, $did]];
+  }
+  if ($tid !== '' && $did === '' && $decoded !== []) {
+    $d = trim((string) ($decoded['display_id'] ?? $decoded['display'] ?? ''));
+    if ($d !== '') {
+      return [[$tid, $d]];
+    }
+  }
+  if ($decoded !== []) {
+    $t = trim((string) ($decoded['target_id'] ?? ''));
+    $d = trim((string) ($decoded['display_id'] ?? $decoded['display'] ?? ''));
+    if ($t !== '' && $d !== '') {
+      $pairs[] = [$t, $d];
+    }
+  }
+  return $pairs;
+}
+
+/**
+ * Whether a view_block paragraph embeds the partners marquee (partners / block_2).
+ */
+function _motaded_theme_paragraph_is_partners_marquee_view_block(\Drupal\paragraphs\Entity\Paragraph $paragraph): bool {
+  if ($paragraph->bundle() !== 'view_block' || !$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
+    return FALSE;
+  }
+  foreach ($paragraph->get('field_view_block')->getValue() as $item) {
+    foreach (_motaded_theme_viewsreference_field_item_pairs($item) as [$target, $display]) {
+      if ($target === 'partners' && $display === 'block_2') {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Moves the partners marquee paragraph to immediately follow the first hero_split_banner.
+ */
+function _motaded_theme_landing_page_field_paragraphs_move_partners_after_first_hero(array &$field_paragraphs): void {
+  $deltas = Element::children($field_paragraphs);
+  if ($deltas === []) {
+    return;
+  }
+  $hero_key = NULL;
+  $partners_key = NULL;
+  foreach ($deltas as $key) {
+    $element = $field_paragraphs[$key];
+    if (!is_array($element) || !isset($element['#paragraph'])) {
+      continue;
+    }
+    $para = $element['#paragraph'];
+    if (!$para instanceof \Drupal\paragraphs\Entity\Paragraph) {
+      continue;
+    }
+    if ($hero_key === NULL && $para->bundle() === 'hero_split_banner') {
+      $hero_key = $key;
+    }
+    if (_motaded_theme_paragraph_is_partners_marquee_view_block($para)) {
+      $partners_key = $key;
+    }
+  }
+  if ($hero_key === NULL || $partners_key === NULL) {
+    return;
+  }
+  $hero_pos = array_search($hero_key, $deltas, TRUE);
+  $partners_pos = array_search($partners_key, $deltas, TRUE);
+  if ($hero_pos === FALSE || $partners_pos === FALSE) {
+    return;
+  }
+  if ($partners_pos === $hero_pos + 1) {
+    return;
+  }
+  $new_order = [];
+  foreach ($deltas as $key) {
+    if ($key === $partners_key) {
+      continue;
+    }
+    $new_order[] = $key;
+    if ($key === $hero_key) {
+      $new_order[] = $partners_key;
+    }
+  }
+  $saved = [];
+  foreach ($new_order as $key) {
+    $saved[$key] = $field_paragraphs[$key];
+  }
+  foreach ($deltas as $key) {
+    unset($field_paragraphs[$key]);
+  }
+  foreach ($new_order as $weight => $key) {
+    $field_paragraphs[$key] = $saved[$key];
+    if (isset($field_paragraphs[$key]['#weight'])) {
+      $field_paragraphs[$key]['#weight'] = $weight;
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK() for node templates.
  *
  * Preprocesses variables for the node template.
@@ -940,6 +1616,10 @@ function motaded_theme_plain_text_truncate(string $html, int $max_length): strin
  */
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
+  $variables['chamber_external_url'] = NULL;
+  $variables['chamber_external_label'] = NULL;
+  $variables['sector_page_show_eyebrow'] = FALSE;
+  $variables['sector_page_show_sector_pill'] = FALSE;
   $variables['summary'] = NULL;
   $variables['motaded_body_excerpt'] = '';
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
@@ -958,6 +1638,96 @@ function motaded_theme_preprocess_node(&$variables) {
         }
       }
     }
+  }
+
+  // Chamber (full): CTA link text — hide raw URLs; respect editor-set titles otherwise.
+  if ($node->bundle() === 'chamber'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && $node->hasField('field_external_link')
+    && !$node->get('field_external_link')->isEmpty()) {
+    $link_item = $node->get('field_external_link')->first();
+    if ($link_item) {
+      $url = $link_item->getUrl()->toString();
+      $title_raw = trim((string) ($link_item->getTitle() ?? ''));
+      if ($title_raw === ''
+        || preg_match('#^https?://#i', $title_raw)
+        || $title_raw === $url) {
+        $variables['chamber_external_label'] = (string) t('Official website');
+      }
+      else {
+        $variables['chamber_external_label'] = $title_raw;
+      }
+      $variables['chamber_external_url'] = $url;
+    }
+  }
+
+  // Chamber (chamber_card): homepage list + featured card (Business Network paragraph).
+  if ($node->bundle() === 'chamber' && ($variables['view_mode'] ?? '') === 'chamber_card') {
+    $in_cnb_home = drupal_static('motaded_cnb_home_chamber_card_layout', FALSE);
+    $first_slot_nid = drupal_static('motaded_cnb_home_first_chamber_nid', NULL);
+    $is_featured_field = $node->hasField('field_featured')
+      && !$node->get('field_featured')->isEmpty()
+      && (bool) $node->get('field_featured')->value;
+    // On homepage embed, only the first View row may render as the wide stats card.
+    if ($in_cnb_home) {
+      $variables['cnb_is_featured'] = $is_featured_field
+        && $first_slot_nid !== NULL
+        && (int) $node->id() === $first_slot_nid;
+    }
+    else {
+      $variables['cnb_is_featured'] = $is_featured_field;
+    }
+
+    $variables['cnb_focus_line'] = '';
+    if ($node->hasField('field_relationship_focus') && !$node->get('field_relationship_focus')->isEmpty()) {
+      $focus = trim((string) $node->get('field_relationship_focus')->value);
+      if ($focus !== '') {
+        $variables['cnb_focus_line'] = Markup::create((string) t('Focus: @text', ['@text' => $focus]));
+      }
+    }
+
+    $variables['cnb_type_line'] = '';
+    if ($node->hasField('field_type') && !$node->get('field_type')->isEmpty()) {
+      $def = $node->getFieldDefinition('field_type');
+      $allowed = $def->getSetting('allowed_values');
+      $key = (string) $node->get('field_type')->value;
+      $type_label = '';
+      if (is_array($allowed) && isset($allowed[$key])) {
+        $type_label = (string) $allowed[$key];
+      }
+      elseif ($key !== '') {
+        $type_label = $key;
+      }
+      if ($type_label !== '') {
+        $variables['cnb_type_line'] = Markup::create((string) t('Type: @type', ['@type' => $type_label]));
+      }
+    }
+
+    $variables['cnb_featured_stats'] = [];
+    if ($variables['cnb_is_featured']) {
+      $icon_keys = ['users', 'briefcase', 'shield'];
+      $stats = [];
+      if ($node->hasField('field_chamber_featured_stats') && !$node->get('field_chamber_featured_stats')->isEmpty()) {
+        foreach ($node->get('field_chamber_featured_stats') as $delta => $item) {
+          $text = trim((string) $item->value);
+          if ($text === '') {
+            continue;
+          }
+          $icon = $icon_keys[(int) $delta] ?? 'users';
+          $stats[] = [
+            'icon' => $icon,
+            'text' => $text,
+          ];
+        }
+      }
+      foreach ($stats as $i => $row) {
+        $stats[$i]['icon_markup'] = _motaded_theme_cnb_icon_markup($row['icon']);
+      }
+      $variables['cnb_featured_stats'] = $stats;
+    }
+
+    $variables['cnb_icon_focus'] = _motaded_theme_cnb_icon_markup('target');
+    $variables['cnb_icon_type'] = _motaded_theme_cnb_icon_markup('building');
   }
 
   // Article (full page): blog-style hero rail — read time, media, meta for twig.
@@ -1014,6 +1784,20 @@ function motaded_theme_preprocess_node(&$variables) {
       'j F Y'
     );
     $variables['news_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
+  }
+
+  // Document (full): library URL + document page styles.
+  if ($node->bundle() === 'document'
+    && ($variables['view_mode'] ?? '') === 'full'
+    && !empty($variables['page'])) {
+    $variables['#attached']['library'][] = 'motaded_theme/document_page';
+    $variables['document_library_url'] = '/library';
+    try {
+      $variables['document_library_url'] = Url::fromRoute('view.library.page_1')->toString();
+    }
+    catch (\Throwable $e) {
+      // Fallback internal path.
+    }
   }
 
   if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
@@ -1078,12 +1862,80 @@ function motaded_theme_preprocess_node(&$variables) {
     }
   }
 
-  // Sector page (full): layout + listing URL for breadcrumb (hub links to /sectors).
+  // Sector page (full): layout + listing URL; suppress redundant eyebrow/pill vs title.
   if ($node->bundle() === 'sector_page'
     && ($variables['view_mode'] ?? '') === 'full'
     && !empty($variables['page'])) {
     $variables['#attached']['library'][] = 'motaded_theme/sector_page';
     $variables['sector_listing_url'] = Url::fromUserInput('/sectors')->toString();
+
+    $normalize_sector_label = static function (?string $text): string {
+      $text = trim(strip_tags((string) $text));
+      $text = preg_replace('/\s+/u', ' ', $text);
+      return mb_strtolower($text);
+    };
+    $title_norm = $normalize_sector_label($node->getTitle());
+
+    $eyebrow_norm = '';
+    if ($node->hasField('field_sector_eyebrow') && !$node->get('field_sector_eyebrow')->isEmpty()) {
+      $eyebrow_norm = $normalize_sector_label((string) $node->get('field_sector_eyebrow')->value);
+    }
+    $variables['sector_page_show_eyebrow'] = $eyebrow_norm !== '' && $eyebrow_norm !== $title_norm;
+
+    $term_norm = '';
+    if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+      $term = $node->get('field_sector')->entity;
+      if ($term) {
+        $term_norm = $normalize_sector_label($term->getName());
+      }
+    }
+    $variables['sector_page_show_sector_pill'] = $term_norm !== '' && $term_norm !== $title_norm;
+    $variables['sector_term_pill_name'] = '';
+    if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+      $term_entity = $node->get('field_sector')->entity;
+      if ($term_entity instanceof TermInterface) {
+        $variables['sector_term_pill_name'] = $term_entity->getName();
+      }
+    }
+
+    // Optional hero background (card/listing image) + up to three KPI cards from field_sector_kpis.
+    $variables['sector_hero_bg_url'] = '';
+    if ($node->hasField('field_media') && !$node->get('field_media')->isEmpty()) {
+      $hero_media = $node->get('field_media')->entity;
+      if ($hero_media && $hero_media->bundle() === 'image'
+        && $hero_media->hasField('field_media_image') && !$hero_media->get('field_media_image')->isEmpty()) {
+        $img_file = $hero_media->get('field_media_image')->entity;
+        if ($img_file instanceof FileInterface) {
+          $variables['sector_hero_bg_url'] = \Drupal::service('file_url_generator')
+            ->generateAbsoluteString($img_file->getFileUri());
+        }
+      }
+    }
+
+    $variables['sector_hero_quick_cards'] = [];
+    if ($node->hasField('field_sector_kpis')) {
+      foreach ($node->get('field_sector_kpis') as $delta => $item) {
+        if ($delta >= 3) {
+          break;
+        }
+        $p = $item->entity;
+        if (!$p instanceof \Drupal\paragraphs\Entity\Paragraph || $p->bundle() !== 'glance_stat_item') {
+          continue;
+        }
+        $gk = !$p->get('field_glance_icon')->isEmpty() ? (string) $p->get('field_glance_icon')->value : '';
+        $variables['sector_hero_quick_cards'][] = [
+          'icon_markup' => motaded_theme_glance_icon_markup($gk),
+          'label' => !$p->get('field_glance_title')->isEmpty() ? trim((string) $p->get('field_glance_title')->value) : '',
+          'value' => !$p->get('field_glance_value')->isEmpty() ? trim((string) $p->get('field_glance_value')->value) : '',
+        ];
+      }
+    }
+
+    $related = motaded_theme_sector_page_related_build($node);
+    $variables['sector_related_sections'] = $related['sections'];
+    if ($related['cache_tags'] !== []) {
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $related['cache_tags']);
+    }
   }
 
   // Sector_page (sector_card): tile for homepage Views / key sectors block.
@@ -1123,6 +1975,66 @@ function motaded_theme_preprocess_node(&$variables) {
     }
     $variables['sector_card_kpis'] = $kpis;
     $variables['sector_card_url'] = $node->toUrl()->toString();
+
+    $variables['sector_card_wb'] = NULL;
+    if (\Drupal::moduleHandler()->moduleExists('motaded_custom') && function_exists('motaded_custom_sector_wb_overlay_for_node')) {
+      $wb = motaded_custom_sector_wb_overlay_for_node($node);
+      if ($wb !== NULL) {
+        $wb['sparkline_svg'] = _motaded_theme_sector_sparkline_svg_markup($wb['sparkline_points'] ?? [], 'sector-card__spark-svg', TRUE);
+        $wb['icon_markup'] = _motaded_theme_key_sector_wb_icon_markup((string) ($wb['icon_key'] ?? ''));
+        unset($wb['sparkline_points'], $wb['icon_key']);
+        $variables['sector_card_wb'] = $wb;
+        $variables['#cache']['tags'][] = 'sector_indicators';
+      }
+    }
+  }
+
+  // Sector_page (sector_directory_card): /sectors directory grid (KPIs + highlights from content).
+  if ($node->bundle() === 'sector_page' && ($variables['view_mode'] ?? '') === 'sector_directory_card') {
+    $variables['sector_directory_url'] = $node->toUrl()->toString();
+    $summary = '';
+    if ($node->hasField('field_short_description') && !$node->get('field_short_description')->isEmpty()) {
+      $summary = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('field_short_description')->value)));
+    }
+    $variables['sector_directory_summary'] = $summary;
+
+    $kpis = [];
+    if ($node->hasField('field_sector_kpis')) {
+      foreach ($node->get('field_sector_kpis') as $item) {
+        $sub = $item->entity;
+        if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+          $label = !$sub->get('field_glance_title')->isEmpty() ? trim((string) $sub->get('field_glance_title')->value) : '';
+          $value = !$sub->get('field_glance_value')->isEmpty() ? trim((string) $sub->get('field_glance_value')->value) : '';
+          if ($label !== '' || $value !== '') {
+            $kpis[] = ['label' => $label, 'value' => $value];
+          }
+        }
+        if (count($kpis) >= 3) {
+          break;
+        }
+      }
+    }
+    $variables['sector_directory_kpis'] = $kpis;
+    $variables['sector_directory_tags'] = _motaded_theme_sector_directory_tag_labels($node);
+
+    $variables['sector_directory_has_custom_icon'] = FALSE;
+    $variables['sector_directory_icon_custom'] = [];
+    if ($node->hasField('field_sector_card_icon_media') && !$node->get('field_sector_card_icon_media')->isEmpty()) {
+      $media = $node->get('field_sector_card_icon_media')->entity;
+      if ($media) {
+        $variables['sector_directory_icon_custom'] = \Drupal::entityTypeManager()
+          ->getViewBuilder('media')
+          ->view($media, 'default');
+        $variables['sector_directory_has_custom_icon'] = TRUE;
+      }
+    }
+    $icon_key = '';
+    if (!$variables['sector_directory_has_custom_icon']
+      && $node->hasField('field_sector_card_icon')
+      && !$node->get('field_sector_card_icon')->isEmpty()) {
+      $icon_key = (string) $node->get('field_sector_card_icon')->value;
+    }
+    $variables['sector_directory_icon_markup'] = motaded_theme_glance_icon_markup($icon_key);
   }
 
   // Market Insight (platform full): read time for hero meta (breadcrumb uses page region).
@@ -1270,6 +2182,25 @@ function motaded_theme_preprocess_node(&$variables) {
       if (is_numeric($i)) {
         $item['#number'] = $i;
       }
+    }
+  }
+
+  $vm = (string) ($variables['view_mode'] ?? '');
+  if ($node->bundle() === 'landing_page'
+    && ($vm === 'full' || $vm === 'default')
+    && isset($variables['content']['field_paragraphs'])
+    && is_array($variables['content']['field_paragraphs'])) {
+    _motaded_theme_landing_page_field_paragraphs_move_partners_after_first_hero($variables['content']['field_paragraphs']);
+  }
+
+  // Front landing: shared design tokens + primitives (see css/components/homepage-ui-system.css).
+  if ($node->bundle() === 'landing_page'
+    && ($vm === 'full' || $vm === 'default')
+    && !empty($variables['page'])
+    && \Drupal::service('path.matcher')->isFrontPage()) {
+    $variables['#attached']['library'][] = 'motaded_theme/homepage_ui_system';
+    if (!empty($variables['attributes']) && $variables['attributes'] instanceof \Drupal\Core\Template\Attribute) {
+      $variables['attributes']->addClass('mot-home-page');
     }
   }
 }
@@ -1941,6 +2872,9 @@ function _motaded_theme_preprocess_market_insight_teaser(array &$variables, Node
  */
 function motaded_theme_preprocess_paragraph(array &$variables): void {
   $paragraph = $variables['paragraph'];
+  if ($paragraph->bundle() === 'business_cost_estimation') {
+    _motaded_theme_preprocess_paragraph_bce($variables);
+  }
   if ($paragraph->bundle() !== 'objectives') {
     return;
   }
@@ -2111,10 +3045,64 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
           $row['body'] = Markup::create($body_markup);
         }
       }
+
+      $platform_cards = [];
+      if ($sub->hasField('field_journey_platforms') && $sub->get('field_journey_platforms')->access('view') && !$sub->get('field_journey_platforms')->isEmpty()) {
+        foreach ($sub->get('field_journey_platforms')->referencedEntities() as $platform_node) {
+          if (!$platform_node instanceof \Drupal\node\NodeInterface || $platform_node->bundle() !== 'platform') {
+            continue;
+          }
+          $logo = [
+            'src' => '',
+            'srcset' => '',
+            'width' => 0,
+            'height' => 0,
+            'alt' => '',
+          ];
+          if ($platform_node->hasField('field_logo') && !$platform_node->get('field_logo')->isEmpty()) {
+            $media = $platform_node->get('field_logo')->entity;
+            $fallback_alt = (string) t('@name logo', ['@name' => $platform_node->label()]);
+            $extracted = motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
+            $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+            $logo = [
+              'src' => $meta['src'],
+              'srcset' => $meta['srcset'],
+              'width' => $meta['width'],
+              'height' => $meta['height'],
+              'alt' => $extracted['alt'],
+            ];
+          }
+          $desc = '';
+          if ($platform_node->hasField('field_short_description') && !$platform_node->get('field_short_description')->isEmpty()) {
+            $desc = trim((string) $platform_node->get('field_short_description')->value);
+          }
+          $platform_cards[] = [
+            'title' => $platform_node->label(),
+            'url' => $platform_node->toUrl()->toString(),
+            'description' => $desc,
+            'logo' => $logo,
+          ];
+        }
+      }
+      $row['platforms'] = $platform_cards;
+
       $steps[] = $row;
     }
   }
   $variables['investor_journey_steps'] = $steps;
+
+  $variables['investor_journey_has_platforms'] = FALSE;
+  foreach ($steps as $step_row) {
+    if (!empty($step_row['platforms'])) {
+      $variables['investor_journey_has_platforms'] = TRUE;
+      break;
+    }
+  }
+
+  $variables['investor_journey_note'] = '';
+  if ($paragraph->hasField('field_investor_journey_note') && $paragraph->get('field_investor_journey_note')->access('view') && !$paragraph->get('field_investor_journey_note')->isEmpty()) {
+    $variables['investor_journey_note'] = trim((string) $paragraph->get('field_investor_journey_note')->value);
+  }
 
   $variables['investor_journey_cta'] = [];
   $link = $paragraph->get('field_link');
@@ -2135,7 +3123,7 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
 }
 
 /**
- * Hero split banner: hero image + stats for Twig.
+ * Hero split banner: hero image, CTAs, features, highlights for Twig.
  */
 function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables): void {
   $variables['#attached']['library'][] = 'motaded_theme/hero_split_banner';
@@ -2151,37 +3139,6 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
   if ($paragraph->get('field_hero_split_headline_accent')->access('view') && !$paragraph->get('field_hero_split_headline_accent')->isEmpty()) {
     $variables['hero_split_headline_accent'] = trim((string) $paragraph->get('field_hero_split_headline_accent')->value);
   }
-
-  $variables['hero_split_trust'] = '';
-  if ($paragraph->get('field_hero_split_trust')->access('view') && !$paragraph->get('field_hero_split_trust')->isEmpty()) {
-    $variables['hero_split_trust'] = trim((string) $paragraph->get('field_hero_split_trust')->value);
-  }
-
-  $stats = [];
-  $stat_field = $paragraph->get('field_hero_split_stats');
-  if ($stat_field->access('view')) {
-    foreach ($stat_field as $item) {
-      $sub = $item->entity;
-      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'hero_stat') {
-        continue;
-      }
-      $icon = (string) ($sub->get('field_hero_stat_icon')->value ?: 'clock');
-      $value = '';
-      if ($sub->get('field_hero_stat_value')->access('view') && !$sub->get('field_hero_stat_value')->isEmpty()) {
-        $value = trim((string) $sub->get('field_hero_stat_value')->value);
-      }
-      $label = '';
-      if ($sub->get('field_hero_stat_label')->access('view') && !$sub->get('field_hero_stat_label')->isEmpty()) {
-        $label = trim((string) $sub->get('field_hero_stat_label')->value);
-      }
-      $stats[] = [
-        'icon' => $icon,
-        'value' => $value,
-        'label' => $label,
-      ];
-    }
-  }
-  $variables['hero_split_stats'] = $stats;
 
   $variables['hero_split_media'] = [];
   if ($paragraph->get('field_media')->access('view') && !$paragraph->get('field_media')->isEmpty()) {
@@ -2229,6 +3186,10 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
     }
   }
 
+  $allowed_why_icons = [
+    'people', 'medal', 'arrows', 'shield_check', 'clock', 'chart', 'globe', 'trend', 'document', 'monitor',
+  ];
+
   $features = [];
   if ($paragraph->hasField('field_hero_split_features')) {
     $feature_field = $paragraph->get('field_hero_split_features');
@@ -2239,6 +3200,9 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
           continue;
         }
         $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'people');
+        if (!in_array($icon, $allowed_why_icons, TRUE)) {
+          $icon = 'shield_check';
+        }
         $title = '';
         if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
           $title = trim((string) $sub->get('field_title')->value);
@@ -2247,15 +3211,61 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
         if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
           $body = trim((string) $sub->get('field_body')->value);
         }
+        $row_link = ['url' => '', 'title' => ''];
+        $link_field = $sub->get('field_link');
+        if ($link_field->access('view') && !$link_field->isEmpty()) {
+          /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $link_item */
+          $link_item = $link_field->first();
+          if ($link_item) {
+            $url = $link_item->getUrl();
+            if ($url) {
+              $ltitle = $link_item->getTitle();
+              $row_link = [
+                'url' => $url->toString(),
+                'title' => $ltitle !== '' && $ltitle !== NULL ? $ltitle : (string) t('Learn more'),
+              ];
+            }
+          }
+        }
         $features[] = [
           'icon' => $icon,
           'title' => $title,
           'body' => $body,
+          'link' => $row_link,
         ];
       }
     }
   }
   $variables['hero_split_features'] = $features;
+
+  $highlights = [];
+  if ($paragraph->hasField('field_hero_split_highlights')) {
+    $hl_field = $paragraph->get('field_hero_split_highlights');
+    if ($hl_field->access('view')) {
+      foreach ($hl_field as $item) {
+        $sub = $item->entity;
+        if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'hero_split_highlight') {
+          continue;
+        }
+        $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'shield_check');
+        if (!in_array($icon, $allowed_why_icons, TRUE)) {
+          $icon = 'shield_check';
+        }
+        $label = '';
+        if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+          $label = trim((string) $sub->get('field_title')->value);
+        }
+        if ($label === '') {
+          continue;
+        }
+        $highlights[] = [
+          'icon' => $icon,
+          'label' => $label,
+        ];
+      }
+    }
+  }
+  $variables['hero_split_highlights'] = $highlights;
 }
 
 /**
@@ -2438,6 +3448,170 @@ function motaded_theme_preprocess_paragraph__business_setup_section(array &$vari
 }
 
 /**
+ * Business cost estimation: CTA, cost card from fields, highlight rows.
+ *
+ * Invoked from motaded_theme_preprocess_paragraph() so variables exist when
+ * the base paragraph.html.twig is used (bundle-specific twig not selected).
+ */
+function _motaded_theme_preprocess_paragraph_bce(array &$variables): void {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
+  $request = \Drupal::request();
+  // Absolute URL so <img src> / overlays work behind reverse proxies and subdirs.
+  $variables['bce_cost_bg_url'] = $request->getSchemeAndHttpHost() . base_path() . $theme_path . '/images/cost-bg.svg';
+  $variables['bce_heading_id'] = Html::getUniqueId('bce-heading-' . $paragraph->id());
+
+  $fmt_money = static function (int $n): string {
+    return number_format($n, 0, '.', ',');
+  };
+
+  $variables['bce_cta'] = [];
+  $link_field = $paragraph->get('field_link');
+  if ($link_field->access('view') && !$link_field->isEmpty()) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem|null $link_item */
+    $link_item = $link_field->first();
+    if ($link_item) {
+      $url = $link_item->getUrl();
+      if ($url) {
+        $url->setAbsolute(FALSE);
+        $ltitle = $link_item->getTitle();
+        $variables['bce_cta'] = [
+          'url' => $url->toString(),
+          'title' => $ltitle !== '' && $ltitle !== NULL ? $ltitle : (string) t('Learn more'),
+        ];
+      }
+    }
+  }
+
+  $currency = 'SAR';
+  if ($paragraph->get('field_bce_currency')->access('view') && !$paragraph->get('field_bce_currency')->isEmpty()) {
+    $currency = trim((string) $paragraph->get('field_bce_currency')->value) ?: 'SAR';
+  }
+  $min_total = 0;
+  $max_total = 0;
+  if ($paragraph->get('field_bce_cost_min')->access('view') && !$paragraph->get('field_bce_cost_min')->isEmpty()) {
+    $min_total = (int) $paragraph->get('field_bce_cost_min')->value;
+  }
+  if ($paragraph->get('field_bce_cost_max')->access('view') && !$paragraph->get('field_bce_cost_max')->isEmpty()) {
+    $max_total = (int) $paragraph->get('field_bce_cost_max')->value;
+  }
+
+  $icon_for_key = static function (string $key): string {
+    $key = strtolower($key);
+    if (str_contains($key, 'government') || str_contains($key, 'gov') || $key === 'fees') {
+      return 'tag';
+    }
+    if (str_contains($key, 'licens')) {
+      return 'document';
+    }
+    if (str_contains($key, 'operat')) {
+      return 'user';
+    }
+    return 'tag';
+  };
+
+  $rows = [];
+  $bf = $paragraph->get('field_bce_breakdown');
+  if ($bf->access('view')) {
+    foreach ($bf as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'cost_breakdown_line') {
+        continue;
+      }
+      $label = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $label = trim((string) $sub->get('field_title')->value);
+      }
+      $row_key = '';
+      if ($sub->get('field_bce_row_key')->access('view') && !$sub->get('field_bce_row_key')->isEmpty()) {
+        $row_key = trim((string) $sub->get('field_bce_row_key')->value);
+      }
+      $lmin = 0;
+      $lmax = 0;
+      if ($sub->get('field_bce_line_min')->access('view') && !$sub->get('field_bce_line_min')->isEmpty()) {
+        $lmin = (int) $sub->get('field_bce_line_min')->value;
+      }
+      if ($sub->get('field_bce_line_max')->access('view') && !$sub->get('field_bce_line_max')->isEmpty()) {
+        $lmax = (int) $sub->get('field_bce_line_max')->value;
+      }
+      $pct = 0;
+      if ($sub->get('field_bce_line_percentage')->access('view') && !$sub->get('field_bce_line_percentage')->isEmpty()) {
+        $pct = max(0, min(100, (int) $sub->get('field_bce_line_percentage')->value));
+      }
+      $rows[] = [
+        'label' => $label,
+        'key' => $row_key,
+        'icon' => $icon_for_key($row_key !== '' ? $row_key : $label),
+        'min' => $lmin,
+        'max' => $lmax,
+        'min_f' => $fmt_money($lmin),
+        'max_f' => $fmt_money($lmax),
+        'pct' => $pct,
+      ];
+    }
+  }
+
+  $card_note = '';
+  if ($paragraph->get('field_bce_card_note')->access('view') && !$paragraph->get('field_bce_card_note')->isEmpty()) {
+    $card_note = trim((string) $paragraph->get('field_bce_card_note')->value);
+  }
+
+  $variables['bce_cost_card'] = [
+    'currency' => $currency,
+    'min' => $min_total,
+    'max' => $max_total,
+    'min_f' => $fmt_money($min_total),
+    'max_f' => $fmt_money($max_total),
+    'rows' => $rows,
+    'note' => $card_note,
+    'show_range' => $min_total > 0 || $max_total > 0,
+  ];
+
+  $variables['bce_meta'] = [
+    'updated' => '',
+    'source' => '',
+  ];
+  if ($paragraph->get('field_bce_last_updated')->access('view') && !$paragraph->get('field_bce_last_updated')->isEmpty()) {
+    $variables['bce_meta']['updated'] = trim((string) $paragraph->get('field_bce_last_updated')->value);
+  }
+  if ($paragraph->get('field_bce_meta_source')->access('view') && !$paragraph->get('field_bce_meta_source')->isEmpty()) {
+    $variables['bce_meta']['source'] = trim((string) $paragraph->get('field_bce_meta_source')->value);
+  }
+
+  $icon_cycle = ['shield', 'document', 'refresh'];
+  $highlights = [];
+  $hf = $paragraph->get('field_bce_highlights');
+  if ($hf->access('view')) {
+    $i = 0;
+    foreach ($hf as $item) {
+      $sub = $item->entity;
+      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'help_item') {
+        continue;
+      }
+      $title = '';
+      if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
+        $title = trim((string) $sub->get('field_title')->value);
+      }
+      $body = [];
+      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
+        $body = $sub->get('field_body')->view([
+          'type' => 'text_default',
+          'label' => 'hidden',
+        ]);
+      }
+      $highlights[] = [
+        'title' => $title,
+        'body' => $body,
+        'icon' => $icon_cycle[$i % 3],
+      ];
+      $i++;
+    }
+  }
+  $variables['bce_highlights'] = $highlights;
+}
+
+/**
  * View block paragraph: flag when embedded view is news / block_4 (compact list layout).
  */
 function motaded_theme_preprocess_paragraph__view_block(array &$variables): void {
@@ -2453,23 +3627,7 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
     return;
   }
   foreach ($paragraph->get('field_view_block')->getValue() as $item) {
-    $pairs = [];
-    $tid_row = $item['target_id'] ?? '';
-    $did_row = $item['display_id'] ?? '';
-    if ($tid_row !== '' && $did_row !== '') {
-      $pairs[] = [$tid_row, $did_row];
-    }
-    elseif (!empty($item['data']) && is_string($item['data'])) {
-      $decoded = json_decode($item['data'], TRUE);
-      if (is_array($decoded)) {
-        $t = $decoded['target_id'] ?? '';
-        $d = $decoded['display_id'] ?? '';
-        if ($t !== '' && $d !== '') {
-          $pairs[] = [$t, $d];
-        }
-      }
-    }
-    foreach ($pairs as [$target, $display]) {
+    foreach (_motaded_theme_viewsreference_field_item_pairs($item) as [$target, $display]) {
       if ($target === 'events' && $display === 'block_home') {
         $variables['view_block_events_home_list'] = TRUE;
       }
@@ -2682,7 +3840,6 @@ function motaded_theme_preprocess_paragraph__featured_contents(array &$variables
  * Implements hook_preprocess_paragraph__insights_updates().
  */
 function motaded_theme_preprocess_paragraph__insights_updates(array &$variables): void {
-  $variables['#attached']['library'][] = 'motaded_theme/insights-updates';
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $variables['iu_card_images'] = [];
@@ -2746,12 +3903,59 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
     }
   }
 
-  // Homepage layout: one hero (left) + rest in sidebar with news (up to 4 total insights).
-  $variables['iu_insight_nodes'] = array_slice($variables['iu_insight_nodes'], 0, 4);
-  $variables['iu_news_nodes'] = array_slice($variables['iu_news_nodes'], 0, 5);
+  // Curated limits (no pager): enough for a single grid row + featured density.
+  $variables['iu_insight_nodes'] = array_slice($variables['iu_insight_nodes'], 0, 6);
+  $variables['iu_news_nodes'] = array_slice($variables['iu_news_nodes'], 0, 6);
 
   $collect_meta($variables['iu_insight_nodes']);
   $collect_meta($variables['iu_news_nodes']);
+
+  $iu_excerpt = static function (NodeInterface $node): string {
+    if (!$node->hasField('body') || $node->get('body')->isEmpty()) {
+      return '';
+    }
+    $first = $node->get('body')->first();
+    if (!$first) {
+      return '';
+    }
+    $summary = trim((string) ($first->summary ?? ''));
+    $value = (string) ($first->value ?? '');
+    $plain = $summary !== '' ? strip_tags($summary) : strip_tags($value);
+    $plain = preg_replace('/\s+/u', ' ', $plain) ?? $plain;
+    $plain = trim($plain);
+    return $plain !== '' ? \Drupal\Component\Utility\Unicode::truncate($plain, 140, TRUE, TRUE) : '';
+  };
+
+  $grid = [];
+  foreach ($variables['iu_insight_nodes'] as $node) {
+    if ($node instanceof NodeInterface) {
+      $grid[] = [
+        'node' => $node,
+        'kind' => 'blog',
+        'excerpt' => $iu_excerpt($node),
+      ];
+    }
+  }
+  foreach ($variables['iu_news_nodes'] as $node) {
+    if ($node instanceof NodeInterface) {
+      $grid[] = [
+        'node' => $node,
+        'kind' => 'news',
+        'excerpt' => $iu_excerpt($node),
+      ];
+    }
+  }
+  usort($grid, static function (array $a, array $b): int {
+    $na = $a['node'] ?? NULL;
+    $nb = $b['node'] ?? NULL;
+    if (!$na instanceof NodeInterface || !$nb instanceof NodeInterface) {
+      return 0;
+    }
+    return $nb->getCreatedTime() <=> $na->getCreatedTime();
+  });
+  $variables['iu_grid_items'] = $grid;
+  $variables['iu_has_blog'] = $variables['iu_insight_nodes'] !== [];
+  $variables['iu_has_news'] = $variables['iu_news_nodes'] !== [];
 }
 
 /**
@@ -2868,6 +4072,21 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
       ];
     }
   }
+
+  try {
+    $variables['market_indicators'] = _motaded_theme_glance_market_indicators_variables();
+  }
+  catch (\Throwable $e) {
+    $variables['market_indicators'] = [
+      'show' => FALSE,
+      'rows' => [],
+      'chart_year_min' => 0,
+      'chart_year_max' => 0,
+      'chart_svg' => NULL,
+      'more_url' => 'https://data.worldbank.org/country/saudi-arabia',
+    ];
+  }
+  $variables['#cache']['tags'][] = 'market_indicators';
 }
 
 /**
@@ -2893,6 +4112,7 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
       'sectors' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
       'events' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
       'insights' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      'services' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4-2.5 7.5-7 8.5-4.5-1-7-4.5-7-8.5V6l7-3z" stroke="currentColor" stroke-width="1.55" stroke-linejoin="round"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/></svg>',
       default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     };
     return \Drupal\Core\Render\Markup::create($svg);
@@ -2910,9 +4130,15 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
       if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
         $title = trim((string) $sub->get('field_title')->value);
       }
-      $body = '';
+      $body_html = '';
+      $body_has_list = FALSE;
       if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $body = trim((string) $sub->get('field_body')->value);
+        $raw_body = (string) $sub->get('field_body')->value;
+        $format_id = (string) ($sub->get('field_body')->format ?: 'plain_text');
+        if ($raw_body !== '') {
+          $body_html = check_markup($raw_body, $format_id);
+          $body_has_list = (bool) preg_match('/<\s*(ul|ol)\b/i', $raw_body);
+        }
       }
       $link_url = '';
       $link_title = '';
@@ -2928,7 +4154,8 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
         'icon' => $icon_key,
         'icon_svg' => $icon_svg($icon_key),
         'title' => $title,
-        'body' => $body ? strip_tags($body) : '',
+        'body_html' => $body_html !== '' ? Markup::create($body_html) : '',
+        'body_has_list' => $body_has_list,
         'link_url' => $link_url,
         'link_title' => $link_title,
       ];
@@ -2939,10 +4166,33 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
   if ($paragraph->hasField('field_gateway_footer_title') && $paragraph->get('field_gateway_footer_title')->access('view') && !$paragraph->get('field_gateway_footer_title')->isEmpty()) {
     $variables['gateway_footer_title'] = trim((string) $paragraph->get('field_gateway_footer_title')->value);
   }
-  $variables['gateway_footer_body'] = '';
+  $variables['gateway_footer_body_html'] = '';
   if ($paragraph->hasField('field_gateway_footer_body') && $paragraph->get('field_gateway_footer_body')->access('view') && !$paragraph->get('field_gateway_footer_body')->isEmpty()) {
-    $variables['gateway_footer_body'] = trim((string) $paragraph->get('field_gateway_footer_body')->value);
+    $fb_raw = (string) $paragraph->get('field_gateway_footer_body')->value;
+    $fb_fmt = (string) ($paragraph->get('field_gateway_footer_body')->format ?: 'plain_text');
+    if (trim(strip_tags($fb_raw)) !== '') {
+      $variables['gateway_footer_body_html'] = Markup::create(check_markup($fb_raw, $fb_fmt));
+    }
   }
+
+  $mk = static fn (string $svg) => Markup::create($svg);
+  $variables['gateway_footer_pillars'] = [
+    [
+      'icon' => $mk('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v4M12 17v4M4 12h4M16 12h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>'),
+      'title' => (string) t('Expert guidance'),
+      'text' => (string) t('Regulatory and practical answers when you need them.'),
+    ],
+    [
+      'icon' => $mk('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 17V7M12 17v-6M16 17v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
+      'title' => (string) t('Data-led clarity'),
+      'text' => (string) t('Reliable figures and transparent processes.'),
+    ],
+    [
+      'icon' => $mk('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18" stroke="currentColor" stroke-width="1.6"/></svg>'),
+      'title' => (string) t('Sector context'),
+      'text' => (string) t('See how opportunities connect across industries.'),
+    ],
+  ];
   $variables['gateway_footer_link_url'] = '';
   $variables['gateway_footer_link_title'] = '';
   if ($paragraph->hasField('field_gateway_footer_link') && $paragraph->get('field_gateway_footer_link')->access('view') && !$paragraph->get('field_gateway_footer_link')->isEmpty()) {
@@ -2953,10 +4203,6 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
       $variables['gateway_footer_link_title'] = (string) ($li->getTitle() ?: '');
     }
   }
-
-  $variables['gateway_footer_icon_svg'] = \Drupal\Core\Render\Markup::create(
-    '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
-  );
 }
 
 /**
@@ -2978,6 +4224,7 @@ function motaded_theme_preprocess_paragraph__gateway_hub_block(array &$variables
 
   $mk_svg = static fn (string $svg) => \Drupal\Core\Render\Markup::create($svg);
   $variables['hub_icons'] = [
+    'platforms' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v10H4z" stroke="currentColor" stroke-width="1.6"/><path d="M8 19h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
     'sectors' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'),
     'events' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
     'insights' => $mk_svg('<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'),
@@ -3066,6 +4313,22 @@ function motaded_theme_preprocess_paragraph__gateway_hub_block(array &$variables
       }
     }
   }
+  if ($variables['hub_support_badges'] === []) {
+    $variables['hub_support_badges'] = [
+      [
+        'title' => (string) t('Expert guidance'),
+        'body' => (string) t('Local specialists with deep market knowledge.'),
+      ],
+      [
+        'title' => (string) t('End-to-end support'),
+        'body' => (string) t('From setup to growth, we are with you.'),
+      ],
+      [
+        'title' => (string) t('Reliable & official'),
+        'body' => (string) t('Accurate, up-to-date information you can trust.'),
+      ],
+    ];
+  }
 }
 
 /**
@@ -3136,6 +4399,7 @@ function motaded_theme_preprocess_paragraph__key_sectors(array &$variables): voi
       }
     }
   }
+
 }
 
 /**
@@ -3545,14 +4809,14 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
         ];
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }
-    } elseif ($node->bundle() == "news") {
+    } elseif ($node instanceof NodeInterface && $node->bundle() === 'sector_page') {
       if (
         !isset($variables['breadcrumb'][1]) ||
-        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'news')
+        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'sectors')
       ) {
         $list_crumb = [
-          'text' => t('News'),
-          'url' => $prefix . "news",
+          'text' => (string) t('Sectors'),
+          'url' => $prefix . 'sectors',
         ];
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }
@@ -3592,49 +4856,400 @@ function getLanguagePrefix() {
 }
 
 /**
+ * TRUE when the current request carries a non-empty exposed value for this filter key.
+ *
+ * Used to set <details open> only on panels that have an active selection so AJAX
+ * rebuilds do not always re-open the wrong accordion while the user works in another.
+ */
+function _motaded_theme_services_exposed_filter_query_is_active(string $form_key): bool {
+  $q = \Drupal::request()->query;
+  if (!$q->has($form_key)) {
+    return FALSE;
+  }
+  $v = $q->get($form_key);
+  if ($v === NULL || $v === '') {
+    return FALSE;
+  }
+  if (is_array($v)) {
+    foreach ($v as $sub_key => $sub_val) {
+      if ((string) $sub_key === 'All' && (string) $sub_val === 'All') {
+        continue;
+      }
+      if ($sub_val !== NULL && $sub_val !== '' && strcasecmp((string) $sub_val, 'All') !== 0) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+  return strcasecmp((string) $v, 'All') !== 0;
+}
+
+/**
  * Implements hook_preprocess_views_exposed_form().
  *
- * Detaches categories from services page_1 exposed form and stores them for
- * the parent view template where sidebar + results share one container.
+ * Services page_1: groups exposed filters into a sidebar container (accordion
+ * markup) and a toolbar container while keeping everything inside one form so
+ * Better Exposed Filters autosubmit works without custom JS.
  */
 function motaded_theme_preprocess_views_exposed_form(&$variables) {
   $form = &$variables['form'];
-  if (($form['#id'] ?? '') !== 'views-exposed-form-services-page-1') {
+  $form_id = (string) ($form['#id'] ?? '');
+
+  if ($form_id === 'views-exposed-form-sectors-directory-page-1') {
+    $toolbar_children = [];
+    foreach (Element::children($form) as $key) {
+      $toolbar_children[$key] = $form[$key];
+      unset($form[$key]);
+    }
+    if ($toolbar_children !== []) {
+      $is_arabic = \Drupal::languageManager()
+        ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+        ->getId() === 'ar';
+      $filters_aria = $is_arabic ? 'تصفية القطاعات' : (string) t('Filter sectors');
+      $form['sectors_exposed_toolbar'] = [
+        '#type' => 'container',
+        '#weight' => -50,
+        '#attributes' => [
+          'class' => [
+            'services-directory__toolbar',
+            'services-exposed-top',
+            'services-directory__toolbar-inner',
+            'sectors-directory__toolbar',
+          ],
+          'id' => 'sectors-directory-filters',
+          'role' => 'group',
+          'aria-label' => $filters_aria,
+        ],
+      ];
+      foreach ($toolbar_children as $k => $child) {
+        $form['sectors_exposed_toolbar'][$k] = $child;
+      }
+    }
     return;
   }
-  if (empty($form['field_taxonomy_target_id']) || !is_array($form['field_taxonomy_target_id'])) {
+
+  if ($form_id !== 'views-exposed-form-services-page-1') {
     return;
   }
-  $categories = $form['field_taxonomy_target_id'];
-  unset($form['field_taxonomy_target_id']);
-  motaded_theme_services_attach_form_attribute_recursive($categories, (string) $form['#id']);
-  motaded_theme_services_sidebar_categories_store($categories);
+
+  $is_arabic = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId() === 'ar';
+  $filters_aria = $is_arabic ? 'تصفية الخدمات' : (string) t('Filter services');
+
+  $sidebar_keys_ordered = [
+    'field_taxonomy_target_id',
+    'field_beneficiaries_target_id',
+    'field_sector_target_id',
+    'field_tags_target_id',
+  ];
+  $summaries = [
+    'field_taxonomy_target_id' => (string) t('Categories'),
+    'field_sector_target_id' => (string) t('Sector'),
+    'field_beneficiaries_target_id' => (string) t('Beneficiaries'),
+    'field_tags_target_id' => (string) t('Tags'),
+  ];
+
+  $sidebar_children = [];
+  foreach ($sidebar_keys_ordered as $key) {
+    if (empty($form[$key]) || !is_array($form[$key])) {
+      continue;
+    }
+    motaded_theme_services_exposed_filter_suppress_wrapped_titles($form[$key]);
+    $open_attr = _motaded_theme_services_exposed_filter_query_is_active($key) ? ' open' : '';
+    $summary_html = Html::escape($summaries[$key] ?? '');
+    $form[$key]['#prefix'] = '<details class="services-filter-panel"' . $open_attr . '><summary class="services-filter-panel__summary">' . $summary_html . '</summary><div class="services-filter-panel__body">' . ($form[$key]['#prefix'] ?? '');
+    $form[$key]['#suffix'] = ($form[$key]['#suffix'] ?? '') . '</div></details>';
+    $sidebar_children[$key] = $form[$key];
+    unset($form[$key]);
+  }
+
+  $toolbar_keys = ['search', 'combine', 'sort_by', 'sort_order', 'sort_bef_combine'];
+  $toolbar_children = [];
+  foreach ($toolbar_keys as $tk) {
+    if (isset($form[$tk]) && is_array($form[$tk])) {
+      $toolbar_children[$tk] = $form[$tk];
+      unset($form[$tk]);
+    }
+  }
+  if (isset($form['actions']) && is_array($form['actions'])) {
+    $toolbar_children['actions'] = $form['actions'];
+    unset($form['actions']);
+  }
+
+  if ($sidebar_children === [] && $toolbar_children === []) {
+    return;
+  }
+
+  if ($sidebar_children !== []) {
+    $form['services_sidebar_stack'] = [
+      '#type' => 'container',
+      '#weight' => -100,
+      '#attributes' => [
+        'class' => ['services-filters-sidebar', 'services-filters-sidebar--accordion'],
+        'id' => 'services-directory-filters',
+        'role' => 'group',
+        'aria-label' => $filters_aria,
+      ],
+    ];
+    foreach ($sidebar_children as $k => $child) {
+      $form['services_sidebar_stack'][$k] = $child;
+    }
+
+    $contact_url = '/contact-us';
+    try {
+      $contact_url = Url::fromUserInput('/contact-us')->toString();
+    }
+    catch (\Exception $e) {
+      // Intentionally keep $contact_url fallback.
+    }
+    $contact_url_safe = Html::escape($contact_url);
+    $cta_icon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a7 7 0 0 0-7 7v3H4a2 2 0 0 0-2 2v4h18v-4a2 2 0 0 0-2-2h-1v-3a7 7 0 0 0-7-7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 18v1a3 3 0 0 0 6 0v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    $cta_markup = '<div class="services-sidebar-cta">'
+      . '<div class="services-sidebar-cta__icon" aria-hidden="true">' . $cta_icon . '</div>'
+      . '<p class="services-sidebar-cta__text">' . Html::escape((string) t('Need guidance? Speak with our experts about the right services for your setup.')) . '</p>'
+      . '<a href="' . $contact_url_safe . '" class="services-sidebar-cta__link">'
+      . Html::escape((string) t('Contact an expert')) . '<span aria-hidden="true"> →</span></a></div>';
+
+    $form['services_sidebar_stack']['services_sidebar_cta'] = [
+      '#type' => 'markup',
+      '#markup' => Markup::create($cta_markup),
+      '#weight' => 100,
+    ];
+  }
+
+  if ($toolbar_children !== []) {
+    $form['services_exposed_toolbar'] = [
+      '#type' => 'container',
+      '#weight' => -50,
+      '#attributes' => [
+        'class' => [
+          'services-directory__toolbar',
+          'services-exposed-top',
+          'services-directory__toolbar-inner',
+        ],
+      ],
+    ];
+    foreach ($toolbar_children as $k => $child) {
+      $form['services_exposed_toolbar'][$k] = $child;
+    }
+  }
+}
+
+/**
+ * Published counts for the Services directory hero (matches view filters).
+ *
+ * @return array{services: int, platforms: int, sectors: int, service_types: int}
+ */
+function _motaded_theme_services_directory_hero_stats(string $langcode): array {
+  $nids = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'page')
+    ->condition('status', 1)
+    ->condition('field_display_on_services', 1)
+    ->condition('langcode', $langcode)
+    ->execute();
+  $nids = is_array($nids) ? array_values(array_map('intval', $nids)) : [];
+  $service_count = count($nids);
+
+  $platform_count = (int) \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'platform')
+    ->condition('status', 1)
+    ->condition('langcode', $langcode)
+    ->count()
+    ->execute();
+
+  $sector_distinct = 0;
+  $type_distinct = 0;
+  if ($nids !== []) {
+    $db = \Drupal::database();
+    // Sector / service type values often live on the default translation row only;
+    // do not filter field tables by interface langcode or DISTINCT returns 0.
+    $q1 = $db->select('node__field_sector', 'fs');
+    $q1->addExpression('COUNT(DISTINCT fs.field_sector_target_id)', 'cnt');
+    $q1->condition('fs.entity_id', $nids, 'IN');
+    $q1->condition('fs.deleted', 0);
+    $sector_distinct = (int) $q1->execute()->fetchField();
+
+    $q2 = $db->select('node__field_taxonomy', 'ft');
+    $q2->addExpression('COUNT(DISTINCT ft.field_taxonomy_target_id)', 'cnt');
+    $q2->condition('ft.entity_id', $nids, 'IN');
+    $q2->condition('ft.deleted', 0);
+    $type_distinct = (int) $q2->execute()->fetchField();
+  }
+
+  return [
+    'services' => $service_count,
+    'platforms' => $platform_count,
+    'sectors' => $sector_distinct,
+    'service_types' => $type_distinct,
+  ];
 }
 
 /**
  * Implements hook_preprocess_views_view__services__page_1().
  */
 function motaded_theme_preprocess_views_view__services__page_1(&$variables) {
-  $sidebar = motaded_theme_services_sidebar_categories_store();
-  if ($sidebar === NULL && !empty($variables['view']) && $variables['view'] instanceof ViewExecutable) {
-    $exposed_plugin = $variables['view']->display_handler
-      ? $variables['view']->display_handler->getPlugin('exposed_form')
-      : NULL;
-    if ($exposed_plugin && method_exists($exposed_plugin, 'renderExposedForm')) {
-      $built_form = $exposed_plugin->renderExposedForm(FALSE);
-      if (is_array($built_form) && !empty($built_form['field_taxonomy_target_id']) && is_array($built_form['field_taxonomy_target_id'])) {
-        $sidebar = $built_form['field_taxonomy_target_id'];
-        motaded_theme_services_attach_form_attribute_recursive($sidebar, 'views-exposed-form-services-page-1');
-      }
-    }
+  try {
+    $variables['services_sidebar_contact_url'] = Url::fromUserInput('/contact-us')->toString();
   }
-  $variables['services_categories_sidebar'] = $sidebar;
-  $is_arabic = \Drupal::languageManager()
+  catch (\Exception $e) {
+    $variables['services_sidebar_contact_url'] = '/contact-us';
+  }
+
+  $langcode = \Drupal::languageManager()
     ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
-    ->getId() === 'ar';
-  $variables['services_categories_aria_label'] = $is_arabic
-    ? 'الفئات'
-    : (string) t('Categories');
+    ->getId();
+  $stats = _motaded_theme_services_directory_hero_stats($langcode);
+  $variables['services_hero_stat_services'] = $stats['services'];
+  $variables['services_hero_stat_platforms'] = $stats['platforms'];
+  $variables['services_hero_stat_sectors'] = $stats['sectors'];
+  $variables['services_hero_stat_service_types'] = $stats['service_types'];
+
+  $language = \Drupal::languageManager()->getLanguage($langcode);
+  $url_options = $language ? ['language' => $language] : [];
+  try {
+    $variables['services_hero_url_listings'] = Url::fromRoute('view.services.page_1', [], $url_options + ['fragment' => 'services-directory-listings'])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['services_hero_url_listings'] = '/services#services-directory-listings';
+  }
+  try {
+    $variables['services_hero_url_filters'] = Url::fromRoute('view.services.page_1', [], $url_options + ['fragment' => 'services-directory-filters'])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['services_hero_url_filters'] = '/services#services-directory-filters';
+  }
+  try {
+    $variables['services_hero_url_platforms'] = Url::fromRoute('view.platforms.page_1', [], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['services_hero_url_platforms'] = '/platforms';
+  }
+
+  $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], ['languages:language_interface']);
+  $node_list_tags = \Drupal::entityTypeManager()->getDefinition('node')->getListCacheTags();
+  $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $node_list_tags);
+}
+
+/**
+ * Implements hook_preprocess_views_view__platforms__page_1().
+ *
+ * Provides stat counts and quick-link URLs for the split-banner hero, matching
+ * the visual language of /services and /sectors.
+ */
+function motaded_theme_preprocess_views_view__platforms__page_1(array &$variables): void {
+  try {
+    $variables['platforms_sidebar_contact_url'] = Url::fromUserInput('/contact-us')->toString();
+  }
+  catch (\Exception $e) {
+    $variables['platforms_sidebar_contact_url'] = '/contact-us';
+  }
+
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId();
+
+  $platforms_count = (int) \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'platform')
+    ->condition('status', 1)
+    ->condition('langcode', $langcode)
+    ->count()
+    ->execute();
+
+  $categories_count = 0;
+  $regions_count = 0;
+  try {
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $categories_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'platform_category')
+      ->count()
+      ->execute();
+    $regions_count = (int) $term_storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('vid', 'region')
+      ->count()
+      ->execute();
+  }
+  catch (\Throwable $e) {
+    // Leave zeros — hero renders an em-dash on zero values.
+  }
+
+  $variables['platforms_hero_stat_platforms'] = $platforms_count;
+  $variables['platforms_hero_stat_categories'] = $categories_count;
+  $variables['platforms_hero_stat_regions'] = $regions_count;
+
+  $language = \Drupal::languageManager()->getLanguage($langcode);
+  $url_options = $language ? ['language' => $language] : [];
+  try {
+    $variables['platforms_hero_url_services'] = Url::fromRoute('view.services.page_1', [], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['platforms_hero_url_services'] = '/services';
+  }
+  try {
+    $variables['platforms_hero_url_sectors'] = Url::fromRoute('view.sectors_directory.page_1', [], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['platforms_hero_url_sectors'] = '/sectors';
+  }
+  try {
+    $variables['platforms_hero_url_filters'] = Url::fromRoute('view.platforms.page_1', [], $url_options + ['fragment' => 'platforms-directory-filters'])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['platforms_hero_url_filters'] = '/platforms#platforms-directory-filters';
+  }
+  try {
+    $variables['platforms_hero_url_listings'] = Url::fromRoute('view.platforms.page_1', [], $url_options + ['fragment' => 'platforms-directory-listings'])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['platforms_hero_url_listings'] = '/platforms#platforms-directory-listings';
+  }
+
+  $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], ['languages:language_interface']);
+  $node_list_tags = \Drupal::entityTypeManager()->getDefinition('node')->getListCacheTags();
+  $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $node_list_tags);
+}
+
+/**
+ * Implements hook_preprocess_views_view__sectors_directory__page_1().
+ */
+function motaded_theme_preprocess_views_view__sectors_directory__page_1(&$variables): void {
+  try {
+    $variables['sectors_sidebar_contact_url'] = Url::fromUserInput('/contact-us')->toString();
+  }
+  catch (\Exception $e) {
+    $variables['sectors_sidebar_contact_url'] = '/contact-us';
+  }
+
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId();
+  $stats = _motaded_theme_services_directory_hero_stats($langcode);
+  $variables['sectors_hero_stat_services'] = $stats['services'];
+  $variables['sectors_hero_stat_platforms'] = $stats['platforms'];
+
+  $language = \Drupal::languageManager()->getLanguage($langcode);
+  $url_options = $language ? ['language' => $language] : [];
+  try {
+    $variables['sectors_hero_url_services'] = Url::fromRoute('view.services.page_1', [], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['sectors_hero_url_services'] = '/services';
+  }
+  try {
+    $variables['sectors_hero_url_platforms'] = Url::fromRoute('view.platforms.page_1', [], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['sectors_hero_url_platforms'] = '/platforms';
+  }
+
+  $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], ['languages:language_interface']);
+  $node_list_tags = \Drupal::entityTypeManager()->getDefinition('node')->getListCacheTags();
+  $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $node_list_tags);
 }
 
 /**
@@ -3675,6 +5290,8 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
   if ($view->id() !== 'services' || $display_id !== 'page_1') {
     return;
   }
+
+  $variables['services_card_eyebrow'] = '';
 
   $langcode = \Drupal::languageManager()
     ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
@@ -3728,6 +5345,18 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
       }
     }
   }
+
+  $eyebrow = '';
+  if ($variables['services_category_labels'] !== []) {
+    $eyebrow = mb_strtoupper((string) reset($variables['services_category_labels']));
+  }
+  elseif ($variables['services_beneficiary_labels'] !== []) {
+    $eyebrow = mb_strtoupper((string) reset($variables['services_beneficiary_labels']));
+  }
+  elseif ($variables['services_tag_labels'] !== []) {
+    $eyebrow = mb_strtoupper((string) reset($variables['services_tag_labels']));
+  }
+  $variables['services_card_eyebrow'] = $eyebrow;
 }
 
 /**
@@ -3899,42 +5528,13 @@ function motaded_theme_taxonomy_term_translated_label(TermInterface $term, strin
 }
 
 /**
- * Stores/retrieves detached categories for current request.
+ * Hides only the root exposed filter title (accordion <summary> replaces it).
  */
-function motaded_theme_services_sidebar_categories_store(?array $set = NULL): ?array {
-  static $stored = NULL;
-  if ($set !== NULL) {
-    $stored = $set;
+function motaded_theme_services_exposed_filter_suppress_wrapped_titles(array &$element): void {
+  if (isset($element['#title'])) {
+    $element['#title'] = '';
   }
-  return $stored;
-}
-
-/**
- * Sets form="" on form controls (sidebar fields associated with main exposed form).
- */
-function motaded_theme_services_attach_form_attribute_recursive(array &$element, string $form_html_id): void {
-  $input_types = [
-    'textfield', 'search', 'tel', 'email', 'url', 'password', 'textarea',
-    'number', 'hidden', 'checkbox', 'radio', 'select', 'file', 'button',
-    'submit', 'image_button', 'color', 'range', 'date', 'datetime',
-    'entity_autocomplete', 'machine_name', 'weight', 'managed_file',
-  ];
-  if (isset($element['#type']) && in_array($element['#type'], $input_types, TRUE)) {
-    if (!isset($element['#attributes'])) {
-      $element['#attributes'] = [];
-    }
-    if ($element['#attributes'] instanceof \Drupal\Core\Template\Attribute) {
-      $element['#attributes']->setAttribute('form', $form_html_id);
-    }
-    else {
-      $element['#attributes']['form'] = $form_html_id;
-    }
-  }
-  foreach (Element::children($element) as $child_key) {
-    if (isset($element[$child_key]) && is_array($element[$child_key])) {
-      motaded_theme_services_attach_form_attribute_recursive($element[$child_key], $form_html_id);
-    }
-  }
+  $element['#title_display'] = 'invisible';
 }
 
 /**
@@ -4117,6 +5717,7 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 
   if (($form['#id'] ?? '') === 'views-exposed-form-services-page-1') {
     $form['#attributes']['class'][] = 'services-directory__exposed-form';
+    $form['#attributes']['class'][] = 'services-directory__exposed-form--contents';
 
     // Defensive: normalize deep-linked query params for taxonomy filters.
     // If BEF renders this filter as checkboxes, the expected input is an array:
@@ -4154,14 +5755,38 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 
   $lib_forms = ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'];
   if (in_array(($form['#id'] ?? ''), $lib_forms, TRUE)) {
+    unset($form['library_section_hidden']);
+
+    $nav_class = ($form['#id'] ?? '') === 'views-exposed-form-library-page-1'
+      ? 'library-directory__tab-cards'
+      : 'library-home-view__tab-cards';
+    $section_key = NULL;
+    foreach (Element::children($form) as $child_key) {
+      if ($child_key === 'library_section' || $child_key === 'field_library_section_target_id' || str_contains($child_key, 'library_section')) {
+        $section_key = $child_key;
+        break;
+      }
+    }
+    if ($section_key !== NULL && !empty($form[$section_key]) && is_array($form[$section_key])) {
+      $form[$section_key]['#weight'] = -100;
+      $aria = Html::escape((string) t('Library sections'));
+      $form[$section_key]['#prefix'] = '<nav class="' . Html::escape($nav_class) . '" aria-label="' . $aria . '">'
+        . ($form[$section_key]['#prefix'] ?? '');
+      $form[$section_key]['#suffix'] = ($form[$section_key]['#suffix'] ?? '') . '</nav>';
+    }
+
     // Views taxonomy exposed filters can be configured to only list terms "in use".
     // When we deep-link from sidebar (query string), the selected TID may be absent
     // from #options, which triggers "submitted value is not allowed".
-    if (!empty($form['field_category_target_id']) && is_array($form['field_category_target_id'])) {
-      $element =& $form['field_category_target_id'];
+    // Filter URL identifier is `library_category` (not field_category_target_id) to avoid
+    // colliding with other homepage Views (e.g. events) that share the global query string.
+    $cat_key = !empty($form['library_category']) ? 'library_category' : 'field_category_target_id';
+    if (!empty($form[$cat_key]) && is_array($form[$cat_key])) {
+      $element =& $form[$cat_key];
       if (!empty($element['#options']) && is_array($element['#options'])) {
         $input = $form_state->getUserInput();
-        $raw = $input['field_category_target_id'] ?? \Drupal::request()->query->get('field_category_target_id');
+        $req = \Drupal::request();
+        $raw = $input[$cat_key] ?? $req->query->get('library_category') ?? $req->query->get('field_category_target_id');
         $tid = is_array($raw) ? (string) reset($raw) : (is_scalar($raw) ? (string) $raw : '');
         if ($tid !== '' && ctype_digit($tid) && !isset($element['#options'][$tid])) {
           try {
@@ -4178,14 +5803,41 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
         }
       }
     }
-    try {
-      $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
-    }
-    catch (\Exception $e) {
-      $request = \Drupal::request();
-      $form['#action'] = $request->getBasePath() . $request->getPathInfo();
+    // Library block is linked to the page display (/library), so core sets exposed
+    // #action to that path. On /front (viewsreference, etc.) that breaks Views AJAX and
+    // causes a full jump to /library. Mirror events block_calendar: submit against current
+    // path only when not building the form on the views.ajax route.
+    $library_view = $form_state->get('view');
+    if (
+      $library_view instanceof ViewExecutable
+      && $library_view->storage->id() === 'library'
+      && ($library_view->current_display ?? '') === 'block_1'
+      && \Drupal::routeMatch()->getRouteName() !== 'views.ajax'
+    ) {
+      try {
+        $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+      }
+      catch (\Exception $e) {
+        $req_action = \Drupal::request();
+        $form['#action'] = $req_action->getBasePath() . $req_action->getPathInfo();
+      }
     }
     $form['#attributes']['class'][] = 'library-view__exposed-form';
+    foreach (['library_category', 'field_category_target_id'] as $cat_hide_key) {
+      if (!empty($form[$cat_hide_key]) && is_array($form[$cat_hide_key])) {
+        $form[$cat_hide_key]['#title'] = '';
+        $form[$cat_hide_key]['#title_display'] = 'invisible';
+        $form[$cat_hide_key]['#attributes']['class'][] = 'library-exposed__category--inline';
+      }
+    }
+    if (($form['#id'] ?? '') === 'views-exposed-form-library-block-1') {
+      if (isset($form['sort_by']) && is_array($form['sort_by'])) {
+        $form['sort_by']['#access'] = FALSE;
+      }
+      if (isset($form['sort_order']) && is_array($form['sort_order'])) {
+        $form['sort_order']['#access'] = FALSE;
+      }
+    }
     if (isset($form['search']) && is_array($form['search'])) {
       $form['search']['#attributes']['placeholder'] = (string) t('Search documents, templates, forms, guides…');
     }
@@ -4195,7 +5847,7 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
 }
 
 /**
- * After-build: Library exposed — primary/secondary buttons; category stays in DOM (hidden via CSS).
+ * After-build: Library exposed — Apply/Reset button classes.
  */
 function motaded_theme_library_views_exposed_form_after_build(array $form, FormStateInterface $form_state): array {
   $fid = $form['#id'] ?? '';
@@ -4211,6 +5863,36 @@ function motaded_theme_library_views_exposed_form_after_build(array $form, FormS
     $form['actions']['reset']['#attributes']['class'][] = 'button';
   }
   return $form;
+}
+
+/**
+ * Preprocesses Library view row fields: file URL + human link label for the template.
+ */
+function motaded_theme_preprocess_views_view_fields__library(array &$variables): void {
+  $variables['library_row_file_url'] = '';
+  $variables['library_row_file_label'] = '';
+
+  $row = $variables['row'] ?? NULL;
+  if (!is_object($row) || !isset($row->_entity)) {
+    return;
+  }
+  $entity = $row->_entity;
+  if (!$entity instanceof NodeInterface || !$entity->hasField('field_document') || $entity->get('field_document')->isEmpty()) {
+    return;
+  }
+  $media = $entity->get('field_document')->entity;
+  if (!$media instanceof MediaInterface) {
+    return;
+  }
+  if (!$media->hasField('field_media_document') || $media->get('field_media_document')->isEmpty()) {
+    return;
+  }
+  $file = $media->get('field_media_document')->entity;
+  if (!$file instanceof FileInterface) {
+    return;
+  }
+  $variables['library_row_file_url'] = \Drupal::service('file_url_generator')->generateString($file->getFileUri());
+  $variables['library_row_file_label'] = (string) t('Open document');
 }
 
 /**
@@ -4250,6 +5932,18 @@ function motaded_theme_services_home_block_exposed_after_build(array $form, Form
     $element[$key]['#prefix'] = ($element[$key]['#prefix'] ?? '') . Markup::create($icon_markup);
   }
 
+  // Always show every category: disable BEF soft-limit JS (non-zero soft_limit loads
+  // bef_soft_limit.js which hides radios past the limit — misconfigured limit shows ~3).
+  if (!empty($form['#attached']['library']) && is_array($form['#attached']['library'])) {
+    $form['#attached']['library'] = array_values(array_filter(
+      $form['#attached']['library'],
+      static fn ($lib) => $lib !== 'better_exposed_filters/soft_limit'
+    ));
+  }
+  if (isset($form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit'])) {
+    unset($form['#attached']['drupalSettings']['better_exposed_filters']['soft_limit']);
+  }
+
   return $form;
 }
 
@@ -4273,15 +5967,18 @@ function motaded_theme_services_views_exposed_form_after_build(array $form, Form
     $form['actions']['reset']['#value'] = 'إعادة تعيين المرشحات';
   }
 
-  foreach (['field_beneficiaries_target_id', 'field_tags_target_id'] as $key) {
+  foreach (['field_beneficiaries_target_id', 'field_sector_target_id', 'field_tags_target_id'] as $key) {
     if (empty($form[$key]) || !is_array($form[$key])) {
       continue;
     }
     if ($key === 'field_beneficiaries_target_id') {
-      motaded_theme_services_rewrite_all_option_label($form[$key], ['beneficiaries', 'المستفيدون'], 'الكل');
+      motaded_theme_services_rewrite_all_option_label($form[$key], ['beneficiaries', 'المستفيدون', 'All stages', 'Business journey', 'Beneficiaries', 'جميع المراحل'], 'الكل');
+    }
+    elseif ($key === 'field_sector_target_id') {
+      motaded_theme_services_rewrite_all_option_label($form[$key], ['All sectors', 'Sector', 'جميع القطاعات', 'القطاع'], 'الكل');
     }
     else {
-      motaded_theme_services_rewrite_all_option_label($form[$key], ['tags', 'الوسوم'], 'الكل');
+      motaded_theme_services_rewrite_all_option_label($form[$key], ['tags', 'الوسوم', 'All types', 'All tags', 'Business type', 'جميع الأنواع', 'جميع الوسوم'], 'الكل');
     }
   }
 
@@ -4381,6 +6078,13 @@ function motaded_theme_preprocess_page__webform__contact__confirmation(&$variabl
 function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
   $node = $variables['elements']['#node'] ?? NULL;
   if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() === 'chamber' && ($variables['elements']['#view_mode'] ?? '') === 'chamber_card') {
+    if (drupal_static('motaded_cnb_home_chamber_card_layout', FALSE)) {
+      // Appended last so after array_reverse() it is tried first (most specific).
+      $suggestions[] = 'node__chamber__chamber_card__cnb_home';
+    }
     return;
   }
   if ($node->bundle() !== 'market_insight' || ($variables['elements']['#view_mode'] ?? '') !== 'full') {
