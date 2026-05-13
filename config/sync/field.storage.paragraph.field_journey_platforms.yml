@@ -1,0 +1,19 @@
+uuid: b7c4e8f1-2a9d-4c3e-8f11-0a1b2c3d4e5f
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_journey_platforms
+field_name: field_journey_platforms
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

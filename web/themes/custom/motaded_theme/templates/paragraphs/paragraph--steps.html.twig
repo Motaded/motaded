@@ -49,25 +49,24 @@
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'steps-section',
   ]
 %}
 {% block paragraph %}
-  <div{{attributes.addClass(classes)}}>
+  <section{{ attributes.addClass(classes) }}>
     {% block content %}
-      <!-- Investor Journey Timeline -->
-      <div class="py-14 bg-gray-100">
-        <div
-          class="max-w-[1320px] mx-auto px-4">
-          <!-- Heading / CTA -->
-          <div class="flex justify-between items-center flex-wrap gap-2">
-            <div class="section-title">
-              <h2 class="text-[1.625rem] font-bold text-primary-600 max-sm:text-2xl leading-tight">{{ content.field_title.0 }}</h2>
-              {{ content.field_body.0 }}
-            </div>
-          </div>
+      <div class="steps-section__inner mot-shell">
+        <header class="steps-section__masthead">
+          {% if content.field_title %}
+            <h2 class="steps-section__title">{{ content.field_title }}</h2>
+          {% endif %}
+          {% if content.field_body %}
+            <div class="steps-section__subtitle">{{ content.field_body }}</div>
+          {% endif %}
+        </header>
 
-          <div class="bg-white rounded-xl p-4 max-sm:px-1 sm:p-6 mt-5" x-data="investorTimeline">
+        <div class="steps-section__panel mot-card mot-card--quiet" x-data="investorTimeline">
             <div
               class="flex flex-row items-start gap-2">
               <!-- Prev -->
@@ -169,7 +168,6 @@
             </div>
           </div>
         </div>
-      </div>
     {% endblock %}
-  </div>
+  </section>
 {% endblock paragraph %}

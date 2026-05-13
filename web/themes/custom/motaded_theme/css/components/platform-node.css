@@ -3,19 +3,19 @@
  * Platform content type (node.type.platform) — marketing / explainer layout.
  */
 .node--type-platform.node--view-mode-full {
-  --pf-text: #1a1a1a;
-  --pf-muted: #4a5568;
-  --pf-surface-muted: #f4f7f6;
+  --pf-text: var(--mot-text, #1a1a1a);
+  --pf-muted: var(--mot-text-secondary, #4a5568);
+  --pf-surface-muted: var(--mot-emerald-surface, #f4f7f6);
   --pf-card-shadow: 0 8px 28px rgb(15 23 42 / 7%);
-  --pf-surface: #ffffff;
-  --pf-border: rgba(226, 232, 240, 0.95);
+  --pf-surface: var(--mot-surface, #ffffff);
+  --pf-border: var(--mot-border, #e2e8f0);
   --pf-shadow-md: 0 10px 32px rgba(15, 23, 42, 0.08);
   --pf-shadow-lg: 0 18px 52px rgba(15, 23, 42, 0.12);
-  --pf-brand: var(--color-primary-800, #065f46);
-  --pf-brand-900: var(--color-primary-900, #064e3b);
-  --pf-brand-soft: color-mix(in oklab, var(--pf-brand) 10%, #ffffff);
+  --pf-brand: var(--mot-brand, #065f46);
+  --pf-brand-900: var(--mot-brand-hover, #064e3b);
+  --pf-brand-soft: color-mix(in oklab, var(--pf-brand) 10%, var(--mot-surface, #ffffff));
   /* Match main site content rail (page.html.twig max-w-[1320px]). */
-  --pf-content-max: 1320px;
+  --pf-content-max: var(--mot-home-max, 1320px);
   color: var(--pf-text);
 }
 
@@ -47,7 +47,7 @@ body.page-node-type-platform .bread {
   overflow: hidden;
   border-bottom: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
   background: radial-gradient(1400px 420px at 22% 24%, rgba(6, 95, 70, 0.08) 0%, rgba(255, 255, 255, 0) 60%),
-    linear-gradient(165deg, var(--pf-brand-soft, rgba(6, 95, 70, 0.08)) 0%, #fff 42%, #fafcfb 100%);
+    linear-gradient(165deg, var(--pf-brand-soft, rgba(6, 95, 70, 0.08)) 0%, var(--mot-surface, #fff) 42%, var(--mot-emerald-surface, #fafcfb) 100%);
 }
 
 .node--type-platform.node--view-mode-full .pf2-hero__bg {
@@ -81,7 +81,7 @@ body.page-node-type-platform .bread {
   z-index: 1;
   background: linear-gradient(
     92deg,
-    #ffffff 0%,
+    var(--mot-surface, #ffffff) 0%,
     rgba(255, 255, 255, 0.98) 38%,
     rgba(255, 255, 255, 0.58) 60%,
     rgba(248, 250, 252, 0.18) 100%
@@ -106,7 +106,7 @@ body.page-node-type-platform .bread {
 .node--type-platform.node--view-mode-full .pf2-breadcrumb {
   margin-bottom: 1rem;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .node--type-platform.node--view-mode-full .pf2-breadcrumb__list {
@@ -120,24 +120,24 @@ body.page-node-type-platform .bread {
 }
 
 .node--type-platform.node--view-mode-full .pf2-breadcrumb__link {
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   text-decoration: none;
 }
 
 .node--type-platform.node--view-mode-full .pf2-breadcrumb__link:hover {
-  color: var(--color-primary-800, #065f46);
+  color: var(--mot-brand, #065f46);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .node--type-platform.node--view-mode-full .pf2-breadcrumb__sep {
-  color: #cbd5e1;
+  color: var(--mot-icon-muted, #cbd5e1);
   padding: 0 0.15rem;
   user-select: none;
 }
 
 .node--type-platform.node--view-mode-full .pf2-breadcrumb__item--current {
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   font-weight: 700;
 }
 
@@ -175,7 +175,7 @@ body.page-node-type-platform .bread {
   height: 92px;
   border-radius: 18px;
   background: radial-gradient(80px 80px at 35% 30%, rgba(6, 95, 70, 0.18) 0%, rgba(6, 95, 70, 0.06) 60%, rgba(241, 245, 249, 0) 100%),
-    linear-gradient(180deg, #f8fafc, #ffffff);
+    linear-gradient(180deg, var(--mot-surface-muted, #f8fafc), var(--mot-surface, #ffffff));
   border: 1px dashed rgba(148, 163, 184, 0.7);
 }
 
@@ -190,7 +190,7 @@ body.page-node-type-platform .bread {
   font-size: clamp(1.9rem, 4vw, 2.75rem);
   font-weight: 900;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   line-height: 1.12;
 }
 
@@ -198,7 +198,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.65rem;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   opacity: 0.75;
 }
 
@@ -206,7 +206,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 1.1rem;
   font-size: 1rem;
   line-height: 1.6;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   max-width: 46rem;
 }
 
@@ -239,7 +239,7 @@ body.page-node-type-platform .bread {
 
 .node--type-platform.node--view-mode-full .pf2-meta__icon {
   grid-row: 1 / span 2;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   opacity: 0.65;
   margin-top: 0.1rem;
 }
@@ -249,13 +249,13 @@ body.page-node-type-platform .bread {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .node--type-platform.node--view-mode-full .pf2-meta__value {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full .pf2-shell {
@@ -291,14 +291,14 @@ body.page-node-type-platform .bread {
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 800;
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--mot-text, #0f172a);
+  background: var(--mot-surface-muted, #f1f5f9);
   border: 1px solid rgba(226, 232, 240, 0.9);
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .node--type-platform.node--view-mode-full .pf2-tabs__link:hover {
-  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, #f8fafc);
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, var(--mot-surface-muted, #f8fafc));
   border-color: color-mix(in oklab, var(--pf-brand, #065f46) 25%, rgba(226, 232, 240, 0.9));
   color: var(--pf-brand-900, #064e3b);
 }
@@ -341,13 +341,13 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.85rem;
   font-size: 1.15rem;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full .pf2-prose {
   font-size: 1rem;
   line-height: 1.7;
-  color: #334155;
+  color: var(--mot-slate-700, #334155);
 }
 
 .node--type-platform.node--view-mode-full .pf2-cards {
@@ -364,7 +364,7 @@ body.page-node-type-platform .bread {
 
 .node--type-platform.node--view-mode-full .pf2-card {
   border-radius: 14px;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
   padding: 1.05rem 1.1rem;
@@ -386,7 +386,7 @@ body.page-node-type-platform .bread {
 .node--type-platform.node--view-mode-full .pf2-step,
 .node--type-platform.node--view-mode-full .pf2-req__item {
   border-radius: 14px;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
   padding: 0.9rem 1rem;
 }
@@ -409,14 +409,14 @@ body.page-node-type-platform .bread {
   font-weight: 850;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full :where(.pf2-card, .pf2-step) :where(.field--name-field-body, .field--name-field-description, .field--name-field-step-description) {
   margin: 0 !important;
   font-size: 0.925rem;
   line-height: 1.55;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
 }
 
 .node--type-platform.node--view-mode-full .pf2-req__item {
@@ -432,8 +432,8 @@ body.page-node-type-platform .bread {
   height: 1.35rem;
   margin-top: 0.1rem;
   border-radius: 9999px;
-  background: var(--color-primary-600, #059669);
-  color: #fff;
+  background: var(--mot-accent, #059669);
+  color: var(--mot-surface, #fff);
   font-size: 0.65rem;
   font-weight: 900;
   line-height: 1.35rem;
@@ -444,7 +444,7 @@ body.page-node-type-platform .bread {
   margin: 0 !important;
   font-size: 0.925rem;
   line-height: 1.5;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full .pf2-cta-row {
@@ -455,13 +455,13 @@ body.page-node-type-platform .bread {
 }
 
 .node--type-platform.node--view-mode-full .pf2-links a {
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .node--type-platform.node--view-mode-full .pf2-links a:hover {
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 /* Reduce meta tile minimum width on small screens to avoid awkward wrapping. */
@@ -485,7 +485,7 @@ body.page-node-type-platform .bread {
 
 .node--type-platform.node--view-mode-full .pf2-aside-card {
   border-radius: 16px;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border: 1px solid var(--pf-border, rgba(226, 232, 240, 0.95));
   box-shadow: 0 12px 34px rgba(15, 23, 42, 0.07);
   padding: 1rem 1rem;
@@ -496,12 +496,12 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.75rem;
   font-size: 1rem;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full .pf2-aside-card__text {
   margin: 0 0 0.85rem;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   line-height: 1.55;
   font-size: 0.95rem;
 }
@@ -524,13 +524,13 @@ body.page-node-type-platform .bread {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .node--type-platform.node--view-mode-full .pf2-glance__value {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .node--type-platform.node--view-mode-full .pf2-quicklinks {
@@ -549,14 +549,14 @@ body.page-node-type-platform .bread {
   padding: 0.6rem 0.7rem;
   border-radius: 12px;
   text-decoration: none;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   font-weight: 700;
-  background: #f8fafc;
+  background: var(--mot-surface-muted, #f8fafc);
   border: 1px solid rgba(226, 232, 240, 0.92);
 }
 
 .node--type-platform.node--view-mode-full .pf2-quicklinks__link:hover {
-  background: color-mix(in oklab, var(--pf-brand, #065f46) 8%, #f8fafc);
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 8%, var(--mot-surface-muted, #f8fafc));
   border-color: color-mix(in oklab, var(--pf-brand, #065f46) 20%, rgba(226, 232, 240, 0.92));
 }
 
@@ -574,13 +574,13 @@ body.page-node-type-platform .bread {
   justify-content: center;
   text-decoration: none;
   font-weight: 900;
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--mot-text, #0f172a);
+  background: var(--mot-surface-muted, #f1f5f9);
   border: 1px solid rgba(226, 232, 240, 0.95);
 }
 
 .node--type-platform.node--view-mode-full .pf2-share__btn:hover {
-  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, #e2e8f0);
+  background: color-mix(in oklab, var(--pf-brand, #065f46) 10%, var(--mot-border, #e2e8f0));
   border-color: color-mix(in oklab, var(--pf-brand, #065f46) 22%, rgba(226, 232, 240, 0.95));
 }
 
@@ -598,21 +598,21 @@ body.page-node-type-platform .bread {
 }
 
 .node--type-platform.node--view-mode-full .pf2-btn--primary {
-  background: var(--pf-brand, var(--color-primary-800, #065f46));
-  color: #fff;
+  background: var(--pf-brand, var(--mot-brand, #065f46));
+  color: var(--mot-surface, #fff);
   box-shadow: 0 10px 28px rgba(6, 95, 70, 0.22);
 }
 
 .node--type-platform.node--view-mode-full .pf2-btn--primary:hover {
-  background: var(--pf-brand-900, var(--color-primary-900, #064e3b));
-  color: #fff;
+  background: var(--pf-brand-900, var(--mot-brand-hover, #064e3b));
+  color: var(--mot-surface, #fff);
 }
 
 /* Breadcrumb + chips: plain CSS (Tailwind in Twig is often not in the bundle). */
 .node--type-platform.node--view-mode-full .pf-breadcrumb {
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .node--type-platform.node--view-mode-full .pf-breadcrumb__list {
@@ -626,24 +626,24 @@ body.page-node-type-platform .bread {
 }
 
 .node--type-platform.node--view-mode-full .pf-breadcrumb__link {
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   text-decoration: none;
 }
 
 .node--type-platform.node--view-mode-full .pf-breadcrumb__link:hover {
-  color: var(--color-primary-800, #065f46);
+  color: var(--mot-brand, #065f46);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .node--type-platform.node--view-mode-full .pf-breadcrumb__sep {
-  color: #cbd5e1;
+  color: var(--mot-icon-muted, #cbd5e1);
   padding: 0 0.15rem;
   user-select: none;
 }
 
 .node--type-platform.node--view-mode-full .pf-breadcrumb__item--current {
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   font-weight: 600;
   max-width: min(12rem, 40vw);
   overflow: hidden;
@@ -672,14 +672,14 @@ body.page-node-type-platform .bread {
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   background: rgb(255 255 255 / 0.92);
-  color: #334155;
+  color: var(--mot-slate-700, #334155);
   border: 0;
   box-shadow: 0 1px 2px rgb(15 23 42 / 6%);
 }
 
 .node--type-platform.node--view-mode-full .pf-hero__chip-text {
   font-weight: 700;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .node--type-platform.node--view-mode-full .pf-hero__copy {
@@ -743,7 +743,7 @@ body.page-node-type-platform .bread {
   text-decoration: none;
   color: inherit;
   border-radius: 0.875rem;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   box-shadow: 0 2px 16px rgb(15 23 42 / 6%);
   border: 1px solid rgb(226 232 240 / 0.85);
   transition:
@@ -754,7 +754,7 @@ body.page-node-type-platform .bread {
 
 .pf-teaser__link:hover {
   box-shadow: 0 10px 32px rgb(15 23 42 / 10%);
-  border-color: color-mix(in oklab, var(--color-primary-500, #10b981) 28%, #e2e8f0);
+  border-color: color-mix(in oklab, var(--mot-accent, #10b981) 28%, var(--mot-border, #e2e8f0));
   transform: translateY(-2px);
 }
 
@@ -784,7 +784,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.35rem;
   font-size: 1.0625rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
   line-height: 1.25;
 }
 
@@ -803,7 +803,7 @@ body.page-node-type-platform .bread {
   margin-top: 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
 }
 
 .pf-teaser__meta .field {
@@ -813,18 +813,18 @@ body.page-node-type-platform .bread {
 .pf-teaser__cta {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
 }
 
 /* --- Hero --- */
 .pf-hero {
   background: linear-gradient(
     165deg,
-    var(--color-primary-50, #ecfdf5) 0%,
-    #fff 42%,
-    #fafcfb 100%
+    var(--mot-emerald-50, #ecfdf5) 0%,
+    var(--mot-surface, #fff) 42%,
+    var(--mot-emerald-surface, #fafcfb) 100%
   );
-  border-bottom: 1px solid color-mix(in oklab, var(--color-primary-600, #047857) 8%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--mot-accent-strong, #047857) 8%, transparent);
 }
 
 .pf-hero__inner {
@@ -851,7 +851,7 @@ body.page-node-type-platform .bread {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
 }
 
 .pf-hero__title {
@@ -860,7 +860,7 @@ body.page-node-type-platform .bread {
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.12;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-hero__subtitle {
@@ -904,30 +904,30 @@ body.page-node-type-platform .bread {
 }
 
 .pf-btn--primary {
-  background: var(--color-primary-800, #065f46);
-  color: #fff;
-  box-shadow: 0 4px 14px color-mix(in oklab, var(--color-primary-800, #065f46) 35%, transparent);
+  background: var(--mot-brand, #065f46);
+  color: var(--mot-surface, #fff);
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--mot-brand, #065f46) 35%, transparent);
 }
 
 .pf-btn--primary:hover {
-  background: var(--color-primary-900, #064e3b);
-  color: #fff;
+  background: var(--mot-brand-hover, #064e3b);
+  color: var(--mot-surface, #fff);
 }
 
 .pf-btn--ghost {
-  background: #fff;
-  color: var(--color-primary-800, #065f46);
-  border-color: color-mix(in oklab, var(--color-primary-600, #059669) 45%, #fff);
+  background: var(--mot-surface, #fff);
+  color: var(--mot-brand, #065f46);
+  border-color: color-mix(in oklab, var(--mot-accent, #059669) 45%, var(--mot-surface, #fff));
 }
 
 .pf-btn--ghost:hover {
-  border-color: var(--color-primary-700, #047857);
-  background: var(--color-primary-50, #ecfdf5);
+  border-color: var(--mot-accent-strong, #047857);
+  background: var(--mot-emerald-50, #ecfdf5);
 }
 
 .pf-hero__card {
   border-radius: 1rem;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   box-shadow: var(--pf-card-shadow);
   padding: clamp(1.5rem, 4vw, 2.25rem);
   display: flex;
@@ -977,7 +977,7 @@ body.page-node-type-platform .bread {
   font-size: clamp(1.35rem, 2.8vw, 1.75rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-section__intro {
@@ -990,7 +990,7 @@ body.page-node-type-platform .bread {
 
 /* --- What is (body) --- */
 .pf-what {
-  background: #fff;
+  background: var(--mot-surface, #fff);
 }
 
 .pf-what__prose {
@@ -1005,7 +1005,7 @@ body.page-node-type-platform .bread {
 
 .pf-what__prose h2,
 .pf-what__prose h3 {
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-what__prose p {
@@ -1019,18 +1019,18 @@ body.page-node-type-platform .bread {
 }
 
 .pf-what__prose a {
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .pf-what__prose a:hover {
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 /* --- Why it matters --- */
 .pf-why {
-  background: #fff;
+  background: var(--mot-surface, #fff);
 }
 
 .pf-why__grid {
@@ -1056,8 +1056,8 @@ body.page-node-type-platform .bread {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.5rem;
-  background: color-mix(in oklab, var(--color-primary-500, #10b981) 12%, #fff);
-  color: var(--color-primary-700, #047857);
+  background: color-mix(in oklab, var(--mot-accent, #10b981) 12%, var(--mot-surface, #fff));
+  color: var(--mot-accent-strong, #047857);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1072,7 +1072,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.35rem;
   font-size: 1rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-why__item .field--name-field-body {
@@ -1091,7 +1091,7 @@ body.page-node-type-platform .bread {
 .node--type-platform.node--view-mode-full .pf-why__body .field--name-field-title {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 /* --- How we help (band + cards) --- */
@@ -1112,7 +1112,7 @@ body.page-node-type-platform .bread {
 }
 
 .pf-help__card {
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border-radius: 0.875rem;
   padding: 1.35rem 1.25rem;
   box-shadow: 0 2px 12px rgb(15 23 42 / 5%);
@@ -1123,7 +1123,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 0.5rem;
   font-size: 1.0625rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-help__card .field--name-field-body {
@@ -1153,8 +1153,8 @@ body.page-node-type-platform .bread {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 9999px;
-  background: color-mix(in oklab, var(--color-primary-600, #059669) 14%, #fff);
-  color: var(--color-primary-800, #065f46);
+  background: color-mix(in oklab, var(--mot-accent, #059669) 14%, var(--mot-surface, #fff));
+  color: var(--mot-brand, #065f46);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1165,7 +1165,7 @@ body.page-node-type-platform .bread {
   margin-top: 2rem;
   padding: 1.25rem 1.35rem;
   border-radius: 0.875rem;
-  background: #fff;
+  background: var(--mot-surface, #fff);
   box-shadow: var(--pf-card-shadow);
   display: flex;
   flex-wrap: wrap;
@@ -1186,12 +1186,12 @@ body.page-node-type-platform .bread {
 
 .pf-help__cta-copy svg {
   flex-shrink: 0;
-  color: var(--color-primary-700, #047857);
+  color: var(--mot-accent-strong, #047857);
 }
 
 /* --- Three columns: process | requirements | official --- */
 .pf-triple {
-  background: #fff;
+  background: var(--mot-surface, #fff);
 }
 
 .pf-triple__grid {
@@ -1210,7 +1210,7 @@ body.page-node-type-platform .bread {
   margin: 0 0 1.25rem;
   font-size: 1.0625rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 /* Process stepper */
@@ -1237,14 +1237,14 @@ body.page-node-type-platform .bread {
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background: color-mix(in oklab, var(--color-primary-500, #10b981) 18%, #fff);
-  color: var(--color-primary-800, #065f46);
+  background: color-mix(in oklab, var(--mot-accent, #10b981) 18%, var(--mot-surface, #fff));
+  color: var(--mot-brand, #065f46);
   font-weight: 800;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid color-mix(in oklab, var(--color-primary-600, #059669) 35%, #fff);
+  border: 2px solid color-mix(in oklab, var(--mot-accent, #059669) 35%, var(--mot-surface, #fff));
 }
 
 .pf-process__item:not(:last-child)::after {
@@ -1254,14 +1254,14 @@ body.page-node-type-platform .bread {
   top: 2.25rem;
   bottom: 0.25rem;
   width: 0;
-  border-left: 2px dotted color-mix(in oklab, var(--color-primary-500, #10b981) 40%, #cbd5e1);
+  border-left: 2px dotted color-mix(in oklab, var(--mot-accent, #10b981) 40%, var(--mot-border, #cbd5e1));
 }
 
 .pf-process__item .field--name-field-title {
   margin: 0 0 0.35rem;
   font-size: 0.9375rem;
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-process__item .field--name-field-body {
@@ -1294,8 +1294,8 @@ body.page-node-type-platform .bread {
   height: 1.35rem;
   margin-top: 0.1rem;
   border-radius: 9999px;
-  background: var(--color-primary-600, #059669);
-  color: #fff;
+  background: var(--mot-accent, #059669);
+  color: var(--mot-surface, #fff);
   font-size: 0.65rem;
   font-weight: 800;
   line-height: 1.35rem;
@@ -1311,7 +1311,7 @@ body.page-node-type-platform .bread {
 
 /* --- Partner logos --- */
 .pf-trust {
-  background: #fff;
+  background: var(--mot-surface, #fff);
   border-top: 1px solid rgb(226 232 240 / 0.7);
 }
 
@@ -1346,9 +1346,9 @@ body.page-node-type-platform .bread {
 .pf-contact-strip {
   background: linear-gradient(
     120deg,
-    color-mix(in oklab, var(--color-primary-100, #d1fae5) 85%, #fff) 0%,
-    #f8faf8 50%,
-    color-mix(in oklab, #d4af37 12%, #f8faf8) 100%
+    color-mix(in oklab, var(--mot-emerald-100, #d1fae5) 85%, var(--mot-surface, #fff)) 0%,
+    var(--mot-emerald-surface, #f8faf8) 50%,
+    color-mix(in oklab, #d4af37 12%, var(--mot-emerald-surface, #f8faf8)) 100%
   );
   border-top: 1px solid rgb(226 232 240 / 0.6);
 }
@@ -1369,7 +1369,7 @@ body.page-node-type-platform .bread {
   margin: 0;
   font-size: clamp(1.125rem, 2.2vw, 1.35rem);
   font-weight: 800;
-  color: var(--color-primary-900, #064e3b);
+  color: var(--mot-brand-hover, #064e3b);
   max-width: 22rem;
 }
 
@@ -1381,33 +1381,33 @@ body.page-node-type-platform .bread {
 
 .pf-btn--wa {
   background: #128c7e;
-  color: #fff;
+  color: var(--mot-surface, #fff);
 }
 
 .pf-btn--wa:hover {
   background: #0e7a6f;
-  color: #fff;
+  color: var(--mot-surface, #fff);
 }
 
 .pf-btn--outline-dark {
   background: transparent;
-  border-color: var(--color-primary-800, #065f46);
-  color: var(--color-primary-900, #064e3b);
+  border-color: var(--mot-brand, #065f46);
+  color: var(--mot-brand-hover, #064e3b);
 }
 
 .pf-btn--outline-dark:hover {
-  background: #fff;
+  background: var(--mot-surface, #fff);
 }
 
 .pf-btn--accent {
   background: #a67c52;
-  color: #fff;
+  color: var(--mot-surface, #fff);
   border-color: #8f6844;
 }
 
 .pf-btn--accent:hover {
   background: #8f6844;
-  color: #fff;
+  color: var(--mot-surface, #fff);
 }
 
 .pf-sr-hint {

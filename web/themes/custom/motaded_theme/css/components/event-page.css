@@ -27,18 +27,7 @@
   }
 }
 
-.event-page__eyebrow {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--event-brand);
-  border: 1px solid rgba(0, 71, 63, 0.25);
-  padding: 0.25rem 0.6rem;
-  border-radius: 999px;
-  margin-bottom: 0.2rem;
-}
+/* Hero kicker: `.mot-eyebrow.mot-eyebrow--pill-solo` */
 
 .event-page__title {
   font-size: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
@@ -1105,16 +1094,7 @@
   padding: 1.1rem 0 1rem;
 }
 
-.event-connected__eyebrow {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #0f172a;
-  opacity: 0.7;
-  margin-bottom: 0.5rem;
-}
+/* Eyebrow: `.mot-eyebrow` */
 
 .event-connected__title {
   margin: 0;

@@ -16,10 +16,10 @@
 %}
 
 <section{{ attributes.addClass(classes) }}>
-  <div class="platforms-systems__inner">
+  <div class="platforms-systems__inner mot-shell">
     <header class="platforms-systems__masthead">
       {% if content.field_ps_eyebrow is not empty %}
-        <div class="platforms-systems__eyebrow">{{ content.field_ps_eyebrow }}</div>
+        <div class="platforms-systems__eyebrow mot-eyebrow">{{ content.field_ps_eyebrow }}</div>
       {% endif %}
       {% if content.field_title is not empty %}
         <h2 class="platforms-systems__title">{{ content.field_title }}</h2>
@@ -75,8 +75,8 @@
       </div>
     {% endif %}
 
-    <div class="platforms-systems__footer" aria-label="{{ 'Platforms directory'|t }}">
-      <div class="platforms-systems__footer-icon" aria-hidden="true">
+    <div class="platforms-systems__footer mot-cta-bar" aria-label="{{ 'Platforms directory'|t }}">
+      <div class="platforms-systems__footer-icon mot-cta-bar__icon" aria-hidden="true">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="currentColor" stroke-width="1.6"/>
           <path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>

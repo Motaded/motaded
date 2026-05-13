@@ -1,0 +1,6 @@
+motaded_sector_data.admin:
+  title: 'Motaded sector data'
+  description: 'External API mappings (World Bank, GASTAT) for sector pages.'
+  parent: system.admin_config_services
+  route_name: entity.sector_data_source.collection
+  weight: 15

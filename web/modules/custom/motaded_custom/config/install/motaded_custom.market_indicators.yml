@@ -1,0 +1,9 @@
+# Manual row: Non-oil GDP Growth (no single stable WDI code for v1).
+# Enable and set value_raw, value_display (optional), year, source_* when approved.
+manual_indicators:
+  non_oil_gdp_growth:
+    enabled: false
+    label: 'Non-oil GDP Growth'
+    value_display: ''
+    source_name: ''
+    source_url: ''

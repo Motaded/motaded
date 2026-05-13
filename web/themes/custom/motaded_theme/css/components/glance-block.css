@@ -3,61 +3,64 @@
 .glance-block {
   position: relative;
   padding: clamp(2.25rem, 5vw, 4rem) 0;
-  background:
-    radial-gradient(900px 360px at 18% 0%, rgba(6, 95, 70, 0.06), transparent 60%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.02), rgba(255, 255, 255, 0) 55%);
+  background: var(--mot-surface, #ffffff);
 }
 
 .glance-block__inner {
-  max-width: 1320px;
+  max-width: var(--mot-home-max, 1320px);
   margin-inline: auto;
-  padding-inline: clamp(1rem, 2.5vw, 1.5rem);
+  padding-inline: var(--mot-pad-x, clamp(1rem, 2.5vw, 1.5rem));
 }
 
 .glance-block__top {
-  display: grid;
-  gap: 1.5rem;
-  align-items: stretch;
+  display: block;
+  max-width: 56rem;
 }
 
-@media (min-width: 1024px) {
-  .glance-block__top {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    gap: clamp(1.5rem, 3.5vw, 2.5rem);
+/* Wide: narrow copy column, KPI uses rest of mot-shell (full inner width). */
+@media (min-width: 960px) {
+  .glance-block__top--with-kpi {
+    display: grid;
+    grid-template-columns: minmax(0, min(26rem, 34%)) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .glance-block__top--with-kpi .glance-block__copy {
+    min-width: 0;
+  }
+
+  .glance-block__top--with-kpi .glance-block__stats--kpi-strip {
+    margin-top: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
   }
 }
 
-.glance-block__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0 0 0.85rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #0f766e;
+.glance-block__stat-top .glance-block__stat-title + .glance-block__stat-value {
+  margin-top: 0.12rem;
 }
 
-.glance-block__eyebrow::before {
-  content: "";
-  width: 1.5rem;
-  height: 3px;
-  border-radius: 2px;
-  background: #0f766e;
+.glance-block__stat-top .glance-block__stat-value + .glance-block__stat-title {
+  margin-top: 0.12rem;
 }
+
+/* Eyebrow: `.mot-eyebrow.mot-eyebrow--rail` (mot-ui-primitives.css) */
 
 .glance-block__title {
-  margin: 0 0 0.9rem;
-  font-size: clamp(2rem, 4.2vw, 3.05rem);
-  font-weight: 850;
-  line-height: 1.06;
-  letter-spacing: -0.035em;
-  color: #0f172a;
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--mot-text-heading, #1e293b);
 }
 
 .glance-block__title-accent {
-  color: #0f766e;
+  color: var(--mot-accent-strong, #0d9488);
+  font-weight: 600;
 }
 
 .glance-block__lede {
@@ -65,19 +68,22 @@
   max-width: 62ch;
   font-size: 1.05rem;
   line-height: 1.62;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .glance-block__highlight {
   position: relative;
   overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
-  padding: clamp(1.35rem, 2.5vw, 1.85rem);
+  border-radius: var(--mot-radius-lg, 12px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+  padding: clamp(0.7rem, 1.5vw, 0.95rem);
   display: grid;
-  gap: 0.9rem;
+  gap: 0.45rem;
+  width: fit-content;
+  max-width: min(100%, 320px);
+  margin-inline-start: auto;
 }
 
 .glance-block__highlight::after {
@@ -86,8 +92,8 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(820px 260px at 105% 40%, rgba(6, 95, 70, 0.08), transparent 60%),
-    radial-gradient(720px 260px at 115% 40%, rgba(16, 185, 129, 0.06), transparent 65%);
+    radial-gradient(520px 200px at 102% 35%, rgba(6, 95, 70, 0.045), transparent 62%),
+    radial-gradient(480px 200px at 108% 35%, rgba(16, 185, 129, 0.035), transparent 65%);
 }
 
 .glance-block__highlight-head {
@@ -96,128 +102,362 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.65rem;
 }
 
 .glance-block__highlight-kicker {
   margin: 0;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #475569;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .glance-block__highlight-value {
-  margin: 0.35rem 0 0;
-  font-size: clamp(2.25rem, 5vw, 3.35rem);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #0f766e;
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--mot-accent-strong, #0d9488);
 }
 
 .glance-block__highlight-icon {
   position: relative;
   z-index: 1;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(6, 95, 70, 0.08);
-  color: #0f766e;
+  background: rgba(13, 148, 136, 0.08);
+  color: var(--mot-accent-strong, #0d9488);
   flex-shrink: 0;
+}
+
+.glance-block__highlight-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 .glance-block__highlight-body {
   position: relative;
   z-index: 1;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
   display: grid;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .glance-block__highlight-title {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mot-slate-700, #334155);
 }
 
 .glance-block__highlight-desc {
   margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: #475569;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--mot-text-muted, #64748b);
 }
 
 .glance-block__source {
-  margin: 0.35rem 0 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #0f766e;
+  margin: 0.25rem 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--mot-accent-strong, #0d9488);
 }
 
 .glance-block__stats {
-  margin-top: clamp(1.25rem, 3vw, 2rem);
+  margin-top: clamp(1rem, 2.5vw, 1.5rem);
   display: grid;
-  gap: 1rem;
+  gap: 0.65rem;
 }
 
+/* KPI strip: lives inside .glance-block__top (56rem rail); up to 4 cells, responsive auto-fit. */
+.glance-block__stats--kpi-strip {
+  margin-top: clamp(1.15rem, 2.8vw, 1.75rem);
+  gap: 0.55rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 520px) {
+  .glance-block__stats--kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 720px) {
+  .glance-block__stats--kpi-strip {
+    grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  }
+}
+
+/* Legacy: non-strip stats row (4 columns) if reused elsewhere. */
 @media (min-width: 900px) {
-  .glance-block__stats {
+  .glance-block__stats:not(.glance-block__stats--kpi-strip) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 .glance-block__stat {
-  border-radius: 16px;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06);
-  padding: 1.05rem 1.05rem;
+  border-radius: var(--mot-radius-lg, 12px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  padding: 0.75rem 0.8rem;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .glance-block__stat-top {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .glance-block__stat-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(6, 95, 70, 0.08);
-  color: #0f766e;
+  background: rgba(13, 148, 136, 0.07);
+  color: var(--mot-accent-strong, #0d9488);
   flex-shrink: 0;
+}
+
+.glance-block__stat-icon svg {
+  width: 15px;
+  height: 15px;
 }
 
 .glance-block__stat-value {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--mot-text-heading, #1e293b);
 }
 
 .glance-block__stat-title {
   margin: 0;
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mot-text-secondary, #475569);
 }
 
 .glance-block__stat-desc {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--mot-text-muted, #64748b);
+}
+
+/* --- Market indicators (World Bank table + GDP chart, below KPI cards) --- */
+.glance-block__market {
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  padding-top: clamp(1.5rem, 3.5vw, 2.25rem);
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.glance-block__market-head {
+  margin-bottom: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.glance-block__market-title {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mot-brand-hover, #115e59);
+}
+
+.glance-block__market-split {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .glance-block__market-split {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    gap: clamp(1.75rem, 3.5vw, 2.75rem);
+    align-items: stretch;
+  }
+}
+
+.glance-block__market-subtitle {
+  margin: 0 0 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mot-text-secondary, #475569);
+}
+
+.glance-block__market-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.glance-block__market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  color: var(--mot-slate-700, #334155);
+}
+
+.glance-block__market-table thead th {
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mot-text-muted, #64748b);
+  padding: 0.5rem 0.35rem 0.55rem 0;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.75);
+  white-space: nowrap;
+}
+
+.glance-block__market-table tbody th,
+.glance-block__market-table tbody td {
+  padding: 0.55rem 0.35rem 0.55rem 0;
+  border-bottom: 1px solid rgba(241, 245, 249, 0.95);
+  vertical-align: top;
+}
+
+.glance-block__market-table tbody th {
+  font-weight: 500;
+  color: var(--mot-slate-700, #334155);
+}
+
+.glance-block__market-table tbody td:nth-child(2) {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--mot-text-heading, #1e293b);
+}
+
+.glance-block__market-source-link {
+  color: var(--mot-accent-strong, #0d9488);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.glance-block__market-source-link:hover,
+.glance-block__market-source-link:focus-visible {
+  text-decoration: underline;
+}
+
+.glance-block__market-foot {
+  margin: 0.85rem 0 0;
+}
+
+.glance-block__market-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-accent-strong, #0d9488);
+  text-decoration: none;
+}
+
+.glance-block__market-more:hover,
+.glance-block__market-more:focus-visible {
+  text-decoration: underline;
+}
+
+.glance-block__market-chart {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.glance-block__market-col--chart {
+  min-width: 0;
+}
+
+.glance-block__market-chart-svg {
+  display: block;
+  width: 100%;
+  max-width: min(100%, 640px);
+  height: auto;
+}
+
+.glance-block__market-chart-grid {
+  stroke: rgba(148, 163, 184, 0.55);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.glance-block__market-chart-ytick {
+  fill: var(--mot-icon-muted, #94a3b8);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.glance-block__market-chart-xlabel {
+  fill: var(--mot-text-muted, #64748b);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.glance-block__market-chart-caption {
+  margin: 0.45rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mot-accent-strong, #0d9488);
+}
+
+.glance-block__market-chart-empty {
+  margin: 0;
+  font-size: 0.88rem;
   line-height: 1.5;
-  color: #475569;
+  color: var(--mot-text-muted, #64748b);
+}
+
+@media (max-width: 640px) {
+  .glance-block__market-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .glance-block__market-table tbody tr {
+    display: block;
+    border-bottom: 1px solid var(--mot-border, #e2e8f0);
+    padding: 0.65rem 0;
+  }
+
+  .glance-block__market-table tbody th,
+  .glance-block__market-table tbody td {
+    display: block;
+    border: 0;
+    padding: 0.2rem 0;
+  }
+
+  .glance-block__market-table tbody td::before,
+  .glance-block__market-table tbody th::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--mot-icon-muted, #94a3b8);
+    margin-bottom: 0.15rem;
+  }
 }
 
 .glance-block__features {
@@ -226,6 +466,12 @@
   padding-top: clamp(1.25rem, 3vw, 1.75rem);
   display: grid;
   gap: 1rem;
+}
+
+/* Avoid double rule when market block sits above the strategy row. */
+.glance-block__market + .glance-block__features {
+  border-top: 0;
+  padding-top: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 @media (min-width: 1024px) {
@@ -269,12 +515,12 @@
 .glance-block__feature-big-title {
   margin: 0;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .glance-block__feature-big-desc {
   margin: 0;
-  color: #475569;
+  color: var(--mot-text-secondary, #475569);
   line-height: 1.55;
   font-size: 0.92rem;
 }
@@ -285,7 +531,7 @@
   gap: 0.4rem;
   font-size: 0.85rem;
   font-weight: 800;
-  color: #0f766e;
+  color: var(--mot-brand, #0f766e);
 }
 
 .glance-block__feature-big-cta span[aria-hidden="true"] {
@@ -349,12 +595,12 @@
   padding-top: 0;
   font-weight: 900;
   font-size: 0.9rem;
-  color: #0f172a;
+  color: var(--mot-text, #0f172a);
 }
 
 .glance-block__feature-small-desc {
   margin: 0;
-  color: #64748b;
+  color: var(--mot-text-muted, #64748b);
   line-height: 1.5;
   font-size: 0.85rem;
 }

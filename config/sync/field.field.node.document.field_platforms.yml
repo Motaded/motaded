@@ -1,0 +1,31 @@
+uuid: c3c3c3c3-3333-4333-8333-333333333302
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_platforms
+    - node.type.document
+    - node.type.platform
+  module:
+    - node
+id: node.document.field_platforms
+field_name: field_platforms
+entity_type: node
+bundle: document
+label: Platforms
+description: 'Related Platform content items.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      platform: platform
+    sort:
+      field: title
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

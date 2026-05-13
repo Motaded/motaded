@@ -1,6 +1,6 @@
 {#
 /**
- * Homepage Library block: card tabs, sidebar + toolbar, rows.
+ * Homepage Library block: section tabs, filters + rows.
  */
 #}
 {{ attach_library('motaded_theme/library_home_block') }}
@@ -21,76 +21,7 @@
   {% endif %}
   {{ title_suffix }}
 
-  <nav class="library-home-view__tab-cards" aria-label="{{ 'Library sections'|t }}">
-    <a href="{{ library_url_templates|default('#') }}"
-       class="library-tab-card {{ library_section|default('templates') == 'templates' ? 'library-tab-card--active' : '' }}">
-      <span class="library-tab-card__icon" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <line x1="10" y1="9" x2="8" y2="9"/>
-        </svg>
-      </span>
-      <span class="library-tab-card__text">
-        <span class="library-tab-card__title">{{ 'Document templates & forms'|t }}</span>
-        <span class="library-tab-card__desc">{{ 'Downloadable templates and forms for your business needs.'|t }}</span>
-      </span>
-    </a>
-    <a href="{{ library_url_regulations|default('#') }}"
-       class="library-tab-card {{ library_section|default('templates') == 'regulations' ? 'library-tab-card--active' : '' }}">
-      <span class="library-tab-card__icon" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </span>
-      <span class="library-tab-card__text">
-        <span class="library-tab-card__title">{{ 'Regulations & laws'|t }}</span>
-        <span class="library-tab-card__desc">{{ 'Saudi Arabian legislations, laws and official references.'|t }}</span>
-      </span>
-    </a>
-  </nav>
-
-  <div class="library-home-view__layout">
-    <aside class="library-home-view__sidebar" aria-label="{{ 'Categories'|t }}">
-      {% if library_category_all_url %}
-        <a href="{{ library_category_all_url }}"
-           class="library-home-view__all mb-2 block rounded-lg border px-3 py-2 text-sm {{ library_category_all_active|default(true) ? 'is-active border-primary-500 bg-primary-50 font-medium text-primary-900' : 'border-slate-200 bg-white text-slate-800' }}">
-          {{ 'All categories'|t }}
-        </a>
-      {% endif %}
-      <ul class="m-0 list-none space-y-1 p-0">
-        {% for item in library_sidebar_links|default([]) %}
-          <li>
-            <a href="{{ item.url }}"
-               class="flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm {{ item.active ? 'is-active bg-primary-50 font-semibold text-primary-900' : 'text-slate-700 hover:bg-slate-50' }}">
-              <span class="library-sidebar-link-inner min-w-0">
-                {% if item.icon_url is defined and item.icon_url %}
-                  <img src="{{ item.icon_url }}" width="20" height="20" alt="" loading="lazy" decoding="async" />
-                {% endif %}
-                <span>{{ item.label }}</span>
-              </span>
-              <span class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">{{ item.count }}</span>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-
-      <div class="library-home-sidebar-cta" role="complementary" aria-label="{{ 'Get help'|t }}">
-        <div class="library-home-sidebar-cta__top">
-          <div class="library-home-sidebar-cta__icon" aria-hidden="true">
-            {% if library_sidebar_cta_icon_url %}
-              <img src="{{ library_sidebar_cta_icon_url }}" width="22" height="22" alt="" decoding="async" loading="lazy" />
-            {% endif %}
-          </div>
-          <h3 class="library-home-sidebar-cta__title">{{ 'Need something specific?'|t }}</h3>
-        </div>
-        <p class="library-home-sidebar-cta__text">{{ 'Our team can help you find the right document or guide.'|t }}</p>
-        <a href="{{ library_contact_url|default('/contact-us') }}" class="library-home-sidebar-cta__link">{{ 'Contact our experts'|t }} <span aria-hidden="true">→</span></a>
-      </div>
-    </aside>
-
+  <div class="library-home-view__layout library-home-view__layout--main-only">
     <div class="library-home-view__main min-w-0">
       {% if exposed %}
         <div class="library-home-view__filters view-filters mb-5 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
@@ -114,9 +45,9 @@
         </div>
       {% endif %}
 
-      {% if pager %}
-        <div class="library-home-view__pager mt-6">
-          {{ pager }}
+      {% if library_view_all_url %}
+        <div class="library-home-view__view-all-row">
+          <a href="{{ library_view_all_url }}" class="library-home-hero__view-all">{{ 'View all'|t }}</a>
         </div>
       {% endif %}
     </div>

@@ -1,0 +1,23 @@
+uuid: b0c1d2e3-2020-4202-8202-202020202020
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_line_percentage
+    - paragraphs.paragraphs_type.cost_breakdown_line
+id: paragraph.cost_breakdown_line.field_bce_line_percentage
+field_name: field_bce_line_percentage
+entity_type: paragraph
+bundle: cost_breakdown_line
+label: Percentage
+description: 'Share of total for the bar (0–100).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: '%'
+field_type: integer

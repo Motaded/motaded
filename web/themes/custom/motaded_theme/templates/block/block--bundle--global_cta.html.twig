@@ -1,9 +1,11 @@
 {#
-  Global CTA block — WhatsApp, Email, Call Now buttons (pill style).
-  Bundle: global_cta.
-  Fields: field_whatsapp, field_email_link, field_phone, field_show_title_on_button (optional)
+  Global CTA block — compact pill icons in header; card layout elsewhere (footer / prefooter).
+  Fields: field_text (title), field_subtitle (eyebrow), field_global_cta_intro, primary/secondary links,
+  field_whatsapp, field_email_link, field_phone, field_show_title_on_button (compact only).
 #}
 {% set show_title = show_title_on_button ?? true %}
+{% set _variant = global_cta_variant|default('card') %}
+{% set global_cta_card_minimal = global_cta_card_minimal|default(false) %}
 {%
   set base_classes = [
     'block',
@@ -11,7 +13,11 @@
     'block-' ~ configuration.provider|clean_class,
   ]
 %}
-{% set classes = not show_title ? base_classes|merge(['block-cta--icon-only']) : base_classes %}
+{% if _variant == 'compact' %}
+  {% set classes = not show_title ? base_classes|merge(['block-cta--icon-only']) : base_classes %}
+{% else %}
+  {% set classes = base_classes|merge(['block-cta--card']) %}
+{% endif %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if label and configuration.label_display %}
@@ -19,60 +25,158 @@
   {% endif %}
   {{ title_suffix }}
   {% block content %}
-    {% if cta_subtitle is defined and cta_subtitle is not empty %}
-      <span class="block-cta__badge inline-flex items-center rounded-full bg-primary-100 px-4 py-1.5 text-sm font-medium text-primary-700">{{ cta_subtitle }}</span>
-    {% endif %}
-    {% if cta_heading_line1 is defined and cta_heading_line1 is not empty %}
-      <div class="block-cta__heading">
-        <span class="block-cta__heading-line1">{{ cta_heading_line1 }}</span>
-        {% if cta_heading_line2 is defined and cta_heading_line2 is not empty %}
-          <span class="block-cta__heading-line2">{{ cta_heading_line2 }}</span>
+    {% if _variant == 'compact' %}
+      {% if cta_subtitle is defined and cta_subtitle is not empty %}
+        <span class="block-cta__badge inline-flex items-center rounded-full bg-primary-100 px-4 py-1.5 text-sm font-medium text-primary-700">{{ cta_subtitle }}</span>
+      {% endif %}
+      {% if cta_heading_line1 is defined and cta_heading_line1 is not empty %}
+        <div class="block-cta__heading">
+          <span class="block-cta__heading-line1">{{ cta_heading_line1 }}</span>
+          {% if cta_heading_line2 is defined and cta_heading_line2 is not empty %}
+            <span class="block-cta__heading-line2">{{ cta_heading_line2 }}</span>
+          {% endif %}
+        </div>
+      {% elseif cta_heading is defined and cta_heading is not empty %}
+        <p class="block-cta__heading block-cta__heading-single">{{ cta_heading }}</p>
+      {% endif %}
+      <div class="block-cta__buttons flex flex-wrap items-center gap-2">
+        {% if content.field_whatsapp.0 is not empty %}
+          {% set wa = content.field_whatsapp.0 %}
+          {% set wa_rel = wa['#options'].rel ?: 'nofollow noopener noreferrer' %}
+          <a href="{{ wa['#url'].toString() }}"
+             class="block-cta__btn block-cta__btn--green"
+             aria-label="{{ wa['#title'] ?: 'WhatsApp'|t }}"
+             {% if wa['#options'].target %}target="{{ wa['#options'].target }}"{% endif %}
+             rel="{{ wa_rel }}">
+            <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            {% if show_title %}<span class="block-cta__text">{{ wa['#title'] ?: 'WhatsApp'|t }}</span>{% endif %}
+          </a>
+        {% endif %}
+        {% if content.field_email_link.0 is not empty %}
+          {% set em = content.field_email_link.0 %}
+          <a href="{{ em['#url'].toString() }}"
+             class="block-cta__btn block-cta__btn--navy"
+             aria-label="{{ em['#title'] ?: 'Email'|t }}"
+             {% if em['#options'].target %}target="{{ em['#options'].target }}"{% endif %}
+             {% if em['#options'].rel %}rel="{{ em['#options'].rel }}"{% endif %}>
+            <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M14.92 3.19159C12.967 3.14252 11.033 3.14252 9.07999 3.19158L9.02182 3.19304C7.497 3.23133 6.27002 3.26214 5.2867 3.43339C4.2572 3.61268 3.42048 3.95656 2.71362 4.66611C2.00971 5.37269 1.66764 6.19738 1.49176 7.21019C1.32429 8.17456 1.29878 9.37159 1.26719 10.8544L1.26593 10.9132C1.24469 11.9095 1.24469 12.9001 1.26594 13.8964L1.26719 13.9551C1.29879 15.438 1.32429 16.635 1.49176 17.5994C1.66764 18.6122 2.00972 19.4369 2.71362 20.1435C3.42048 20.853 4.2572 21.1969 5.2867 21.3762C6.27001 21.5474 7.49697 21.5782 9.02177 21.6165L9.07999 21.618C11.033 21.6671 12.967 21.6671 14.92 21.618L14.9782 21.6165C16.503 21.5782 17.73 21.5474 18.7133 21.3762C19.7428 21.1969 20.5795 20.853 21.2864 20.1435C21.9903 19.4369 22.3324 18.6122 22.5082 17.5994C22.6757 16.635 22.7012 15.438 22.7328 13.9551L22.7341 13.8964C22.7553 12.9001 22.7553 11.9095 22.7341 10.9132L22.7328 10.8545C22.7012 9.37161 22.6757 8.17458 22.5082 7.2102C22.3324 6.1974 21.9903 5.37271 21.2864 4.66613C20.5795 3.95657 19.7428 3.61269 18.7133 3.4334C17.73 3.26215 16.503 3.23134 14.9782 3.19305L14.92 3.19159ZM9.11766 4.69111C11.0456 4.64267 12.9544 4.64268 14.8823 4.69112C16.479 4.73123 17.5947 4.76117 18.4559 4.91116C19.2835 5.05528 19.7994 5.29889 20.2237 5.72477C20.3977 5.89937 20.5405 6.08733 20.6582 6.30308L14.7173 9.66923C13.4621 10.3805 12.7003 10.6548 12.0001 10.6548C11.2999 10.6548 10.5381 10.3805 9.28285 9.66923L3.34181 6.30299C3.4595 6.08727 3.60237 5.89934 3.77629 5.72475C4.20055 5.29888 4.71652 5.05526 5.54405 4.91114C6.40529 4.76116 7.52099 4.73122 9.11766 4.69111ZM2.92102 7.78861C2.81754 8.58043 2.79468 9.58125 2.76559 10.9452C2.7448 11.9202 2.7448 12.8894 2.7656 13.8644C2.79877 15.4199 2.82385 16.5032 2.96964 17.3427C3.10923 18.1466 3.34907 18.656 3.77629 19.0848C4.20056 19.5107 4.71653 19.7543 5.54406 19.8984C6.4053 20.0484 7.521 20.0783 9.11767 20.1185C11.0456 20.1669 12.9544 20.1669 14.8823 20.1185C16.479 20.0783 17.5947 20.0484 18.4559 19.8984C19.2835 19.7543 19.7994 19.5107 20.2237 19.0848C20.6509 18.656 20.8908 18.1466 21.0304 17.3427C21.1762 16.5032 21.2012 15.4199 21.2344 13.8644C21.2552 12.8894 21.2552 11.9202 21.2344 10.9452C21.2053 9.58132 21.1825 8.58052 21.079 7.78872L15.4568 10.9743C14.1635 11.7071 13.1126 12.1548 12.0001 12.1548C10.8876 12.1548 9.83667 11.7071 8.54339 10.9743L2.92102 7.78861Z"/>
+            </svg>
+            {% if show_title %}<span class="block-cta__text">{{ em['#title'] ?: 'Email'|t }}</span>{% endif %}
+          </a>
+        {% endif %}
+        {% if content.field_phone.0 is not empty %}
+          {% set ph = content.field_phone.0 %}
+          <a href="{{ ph['#url'].toString() }}"
+             class="block-cta__btn block-cta__btn--amber"
+             aria-label="{{ ph['#title'] ?: 'Call Now'|t }}"
+             {% if ph['#options'].target %}target="{{ ph['#options'].target }}"{% endif %}
+             {% if ph['#options'].rel %}rel="{{ ph['#options'].rel }}"{% endif %}>
+            <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31677 1.69111C5.88346 1.80823 6.33476 2.18897 6.61515 2.692L7.50836 4.29444C7.83737 4.88465 8.11424 5.38134 8.29505 5.81311C8.48686 6.27112 8.60078 6.72278 8.5487 7.22214C8.49663 7.72151 8.29197 8.13994 8.0098 8.54853C7.74379 8.93371 7.3704 9.36258 6.92669 9.87221L4.69884 12.4312C6.46568 15.3272 9.07461 17.9373 11.9736 19.706L14.5326 17.4781C15.0422 17.0344 15.4711 16.661 15.8563 16.395C16.2649 16.1128 16.6833 15.9082 17.1827 15.8561C17.682 15.804 18.1337 15.9179 18.5917 16.1098C19.0235 16.2906 19.5202 16.5674 20.1104 16.8965L21.7128 17.7897C22.2158 18.07 22.5966 18.5213 22.7137 19.088C22.832 19.6606 22.6575 20.2362 22.2719 20.7092C20.873 22.4256 18.6317 23.5184 16.2805 23.0441C14.8353 22.7526 13.4093 22.2669 11.6846 21.2777C8.21921 19.2904 5.11214 16.1816 3.12706 12.7202C2.13795 10.9955 1.65223 9.56954 1.36069 8.12428C0.886392 5.77306 1.97923 3.53178 3.69559 2.13287C4.16862 1.74733 4.74417 1.57276 5.31677 1.69111ZM13.3707 20.4784C14.5371 21.0532 15.5516 21.3668 16.5771 21.5737C18.2732 21.9159 19.9854 21.1403 21.1092 19.7615C21.2568 19.5805 21.2577 19.4541 21.2447 19.3916C21.2306 19.3232 21.1733 19.2062 20.9825 19.0999L19.416 18.2267C18.7803 17.8724 18.3572 17.6378 18.0123 17.4933C17.6849 17.3562 17.4971 17.3315 17.3382 17.348C17.1794 17.3646 17.0007 17.4276 16.7087 17.6293C16.401 17.8417 16.0354 18.1586 15.4865 18.6365L13.3707 20.4784ZM3.92636 11.0341L5.76835 8.91831C6.24618 8.36944 6.56306 8.00379 6.77553 7.69613C6.97721 7.4041 7.04023 7.2254 7.05679 7.06656C7.07336 6.90773 7.04857 6.71987 6.91148 6.39251C6.76705 6.04764 6.53243 5.62447 6.17812 4.98883L5.30494 3.42232C5.19856 3.23147 5.08158 3.1742 5.01317 3.16006C4.95066 3.14714 4.82429 3.14805 4.64326 3.2956C3.26448 4.41936 2.48894 6.13162 2.83107 7.82767C3.03795 8.85325 3.35164 9.86773 3.92636 11.0341Z"/>
+            </svg>
+            {% if show_title %}<span class="block-cta__text">{{ ph['#title'] ?: 'Call Now'|t }}</span>{% endif %}
+          </a>
         {% endif %}
       </div>
-    {% elseif cta_heading is defined and cta_heading is not empty %}
-      <p class="block-cta__heading block-cta__heading-single">{{ cta_heading }}</p>
+    {% else %}
+      {{ attach_library('motaded_theme/global_cta') }}
+      <div class="global-cta-card{{ global_cta_card_minimal ? ' global-cta-card--minimal' : '' }}">
+        <div class="global-cta-card__body">
+          {% if cta_subtitle is defined and cta_subtitle is not empty %}
+            <p class="global-cta-card__eyebrow mot-eyebrow mot-eyebrow--rail">{{ cta_subtitle }}</p>
+          {% endif %}
+
+          {% if cta_heading_line1 is defined and cta_heading_line1 is not empty %}
+            <h2 class="global-cta-card__title mot-heading-2">
+              <span class="global-cta-card__title-line1">{{ cta_heading_line1 }}</span>
+              {% if cta_heading_line2 is defined and cta_heading_line2 is not empty %}
+                <span class="global-cta-card__title-line2"><br>{{ cta_heading_line2 }}</span>
+              {% endif %}
+            </h2>
+          {% elseif cta_heading is defined and cta_heading is not empty %}
+            <h2 class="global-cta-card__title mot-heading-2">{{ cta_heading }}</h2>
+          {% endif %}
+
+          {% if content.field_global_cta_intro is defined and content.field_global_cta_intro|render|trim is not empty %}
+            <div class="global-cta-card__intro mot-lead">{{ content.field_global_cta_intro }}</div>
+          {% endif %}
+
+          {% if content.field_global_cta_primary.0 is not empty or content.field_global_cta_secondary.0 is not empty %}
+            <div class="global-cta-card__actions">
+              {% if content.field_global_cta_primary.0 is not empty %}
+                {% set pr = content.field_global_cta_primary.0 %}
+                {% set pr_rel = pr['#options'].rel ?? 'noopener noreferrer' %}
+                <a href="{{ pr['#url'].toString() }}"
+                   class="global-cta-card__btn global-cta-card__btn--primary"
+                   {% if pr['#options'].target %}target="{{ pr['#options'].target }}"{% endif %}
+                   rel="{{ pr_rel }}">
+                  {{ pr['#title'] ?: 'Request support'|t }}<span aria-hidden="true"> →</span>
+                </a>
+              {% endif %}
+              {% if content.field_global_cta_secondary.0 is not empty %}
+                {% set sc = content.field_global_cta_secondary.0 %}
+                {% set sc_rel = sc['#options'].rel ?? 'noopener noreferrer' %}
+                <a href="{{ sc['#url'].toString() }}"
+                   class="global-cta-card__btn global-cta-card__btn--secondary"
+                   {% if sc['#options'].target %}target="{{ sc['#options'].target }}"{% endif %}
+                   rel="{{ sc_rel }}">
+                  {{ sc['#title'] ?: 'Contact our team'|t }}<span aria-hidden="true"> →</span>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% set has_wa = content.field_whatsapp.0 is not empty %}
+          {% set has_em = content.field_email_link.0 is not empty %}
+          {% set has_ph = content.field_phone.0 is not empty %}
+          {% if has_wa or has_em or has_ph %}
+            {% if not global_cta_card_minimal %}
+            <div class="global-cta-card__divider" role="presentation">
+              <span class="global-cta-card__divider-line" aria-hidden="true"></span>
+              <span class="global-cta-card__divider-text">{{ 'Or reach us directly'|t }}</span>
+              <span class="global-cta-card__divider-line" aria-hidden="true"></span>
+            </div>
+            {% endif %}
+            <div class="global-cta-card__contacts{{ global_cta_card_minimal ? ' global-cta-card__contacts--minimal' : '' }}">
+              {% if has_wa %}
+                {% set wa = content.field_whatsapp.0 %}
+                {% set wa_rel = wa['#options'].rel ?: 'nofollow noopener noreferrer' %}
+                <a href="{{ wa['#url'].toString() }}" class="global-cta-card__contact{{ global_cta_card_minimal ? ' global-cta-card__contact--whatsapp' : '' }}" aria-label="{{ wa['#title'] ?: 'WhatsApp'|t }}" {% if wa['#options'].target %}target="{{ wa['#options'].target }}"{% endif %} rel="{{ wa_rel }}">
+                  <svg class="global-cta-card__contact-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  <span>{{ wa['#title'] ?: 'WhatsApp'|t }}</span>
+                </a>
+              {% endif %}
+              {% if has_em %}
+                {% set em = content.field_email_link.0 %}
+                <a href="{{ em['#url'].toString() }}" class="global-cta-card__contact{{ global_cta_card_minimal ? ' global-cta-card__contact--email' : '' }}" aria-label="{{ em['#title'] ?: 'Email'|t }}" {% if em['#options'].target %}target="{{ em['#options'].target }}"{% endif %} {% if em['#options'].rel %}rel="{{ em['#options'].rel }}"{% endif %}>
+                  <svg class="global-cta-card__contact-icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.92 3.19159C12.967 3.14252 11.033 3.14252 9.07999 3.19158L9.02182 3.19304C7.497 3.23133 6.27002 3.26214 5.2867 3.43339C4.2572 3.61268 3.42048 3.95656 2.71362 4.66611C2.00971 5.37269 1.66764 6.19738 1.49176 7.21019C1.32429 8.17456 1.29878 9.37159 1.26719 10.8544L1.26593 10.9132C1.24469 11.9095 1.24469 12.9001 1.26594 13.8964L1.26719 13.9551C1.29879 15.438 1.32429 16.635 1.49176 17.5994C1.66764 18.6122 2.00972 19.4369 2.71362 20.1435C3.42048 20.853 4.2572 21.1969 5.2867 21.3762C6.27001 21.5474 7.49697 21.5782 9.02177 21.6165L9.07999 21.618C11.033 21.6671 12.967 21.6671 14.92 21.618L14.9782 21.6165C16.503 21.5782 17.73 21.5474 18.7133 21.3762C19.7428 21.1969 20.5795 20.853 21.2864 20.1435C21.9903 19.4369 22.3324 18.6122 22.5082 17.5994C22.6757 16.635 22.7012 15.438 22.7328 13.9551L22.7341 13.8964C22.7553 12.9001 22.7553 11.9095 22.7341 10.9132L22.7328 10.8545C22.7012 9.37161 22.6757 8.17458 22.5082 7.2102C22.3324 6.1974 21.9903 5.37271 21.2864 4.66613C20.5795 3.95657 19.7428 3.61269 18.7133 3.4334C17.73 3.26215 16.503 3.23134 14.9782 3.19305L14.92 3.19159ZM9.11766 4.69111C11.0456 4.64267 12.9544 4.64268 14.8823 4.69112C16.479 4.73123 17.5947 4.76117 18.4559 4.91116C19.2835 5.05528 19.7994 5.29889 20.2237 5.72477C20.3977 5.89937 20.5405 6.08733 20.6582 6.30308L14.7173 9.66923C13.4621 10.3805 12.7003 10.6548 12.0001 10.6548C11.2999 10.6548 10.5381 10.3805 9.28285 9.66923L3.34181 6.30299C3.4595 6.08727 3.60237 5.89934 3.77629 5.72475C4.20055 5.29888 4.71652 5.05526 5.54405 4.91114C6.40529 4.76116 7.52099 4.73122 9.11766 4.69111ZM2.92102 7.78861C2.81754 8.58043 2.79468 9.58125 2.76559 10.9452C2.7448 11.9202 2.7448 12.8894 2.7656 13.8644C2.79877 15.4199 2.82385 16.5032 2.96964 17.3427C3.10923 18.1466 3.34907 18.656 3.77629 19.0848C4.20056 19.5107 4.71653 19.7543 5.54406 19.8984C6.4053 20.0484 7.521 20.0783 9.11767 20.1185C11.0456 20.1669 12.9544 20.1669 14.8823 20.1185C16.479 20.0783 17.5947 20.0484 18.4559 19.8984C19.2835 19.7543 19.7994 19.5107 20.2237 19.0848C20.6509 18.656 20.8908 18.1466 21.0304 17.3427C21.1762 16.5032 21.2012 15.4199 21.2344 13.8644C21.2552 12.8894 21.2552 11.9202 21.2344 10.9452C21.2053 9.58132 21.1825 8.58052 21.079 7.78872L15.4568 10.9743C14.1635 11.7071 13.1126 12.1548 12.0001 12.1548C10.8876 12.1548 9.83667 11.7071 8.54339 10.9743L2.92102 7.78861Z"/></svg>
+                  <span>{{ em['#title'] ?: 'Email'|t }}</span>
+                </a>
+              {% endif %}
+              {% if has_ph %}
+                {% set ph = content.field_phone.0 %}
+                <a href="{{ ph['#url'].toString() }}" class="global-cta-card__contact{{ global_cta_card_minimal ? ' global-cta-card__contact--phone' : '' }}" aria-label="{{ ph['#title'] ?: 'Call'|t }}" {% if ph['#options'].target %}target="{{ ph['#options'].target }}"{% endif %} {% if ph['#options'].rel %}rel="{{ ph['#options'].rel }}"{% endif %}>
+                  <svg class="global-cta-card__contact-icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.31677 1.69111C5.88346 1.80823 6.33476 2.18897 6.61515 2.692L7.50836 4.29444C7.83737 4.88465 8.11424 5.38134 8.29505 5.81311C8.48686 6.27112 8.60078 6.72278 8.5487 7.22214C8.49663 7.72151 8.29197 8.13994 8.0098 8.54853C7.74379 8.93371 7.3704 9.36258 6.92669 9.87221L4.69884 12.4312C6.46568 15.3272 9.07461 17.9373 11.9736 19.706L14.5326 17.4781C15.0422 17.0344 15.4711 16.661 15.8563 16.395C16.2649 16.1128 16.6833 15.9082 17.1827 15.8561C17.682 15.804 18.1337 15.9179 18.5917 16.1098C19.0235 16.2906 19.5202 16.5674 20.1104 16.8965L21.7128 17.7897C22.2158 18.07 22.5966 18.5213 22.7137 19.088C22.832 19.6606 22.6575 20.2362 22.2719 20.7092C20.873 22.4256 18.6317 23.5184 16.2805 23.0441C14.8353 22.7526 13.4093 22.2669 11.6846 21.2777C8.21921 19.2904 5.11214 16.1816 3.12706 12.7202C2.13795 10.9955 1.65223 9.56954 1.36069 8.12428C0.886392 5.77306 1.97923 3.53178 3.69559 2.13287C4.16862 1.74733 4.74417 1.57276 5.31677 1.69111ZM13.3707 20.4784C14.5371 21.0532 15.5516 21.3668 16.5771 21.5737C18.2732 21.9159 19.9854 21.1403 21.1092 19.7615C21.2568 19.5805 21.2577 19.4541 21.2447 19.3916C21.2306 19.3232 21.1733 19.2062 20.9825 19.0999L19.416 18.2267C18.7803 17.8724 18.3572 17.6378 18.0123 17.4933C17.6849 17.3562 17.4971 17.3315 17.3382 17.348C17.1794 17.3646 17.0007 17.4276 16.7087 17.6293C16.401 17.8417 16.0354 18.1586 15.4865 18.6365L13.3707 20.4784ZM3.92636 11.0341L5.76835 8.91831C6.24618 8.36944 6.56306 8.00379 6.77553 7.69613C6.97721 7.4041 7.04023 7.2254 7.05679 7.06656C7.07336 6.90773 7.04857 6.71987 6.91148 6.39251C6.76705 6.04764 6.53243 5.62447 6.17812 4.98883L5.30494 3.42232C5.19856 3.23147 5.08158 3.1742 5.01317 3.16006C4.95066 3.14714 4.82429 3.14805 4.64326 3.2956C3.26448 4.41936 2.48894 6.13162 2.83107 7.82767C3.03795 8.85325 3.35164 9.86773 3.92636 11.0341Z"/></svg>
+                  <span>{{ ph['#title'] ?: 'Call'|t }}</span>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if not global_cta_card_minimal %}
+        <div class="global-cta-card__trust">
+          <svg class="global-cta-card__trust-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2l8 4v6c0 5-3.5 9.74-8 11-4.5-1.26-8-6-8-11V6l8-4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>{{ 'All guidance is based on official government procedures and platforms.'|t }}</p>
+        </div>
+        {% endif %}
+      </div>
     {% endif %}
-    <div class="block-cta__buttons flex flex-wrap items-center gap-2">
-      {% if content.field_whatsapp.0 is not empty %}
-        {% set wa = content.field_whatsapp.0 %}
-        {% set wa_rel = wa['#options'].rel ?: 'nofollow noopener noreferrer' %}
-        <a href="{{ wa['#url'].toString() }}"
-           class="block-cta__btn block-cta__btn--green"
-           aria-label="{{ wa['#title'] ?: 'WhatsApp'|t }}"
-           {% if wa['#options'].target %}target="{{ wa['#options'].target }}"{% endif %}
-           rel="{{ wa_rel }}">
-          <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          {% if show_title %}<span class="block-cta__text">{{ wa['#title'] ?: 'WhatsApp'|t }}</span>{% endif %}
-        </a>
-      {% endif %}
-      {% if content.field_email_link.0 is not empty %}
-        {% set em = content.field_email_link.0 %}
-        <a href="{{ em['#url'].toString() }}"
-           class="block-cta__btn block-cta__btn--navy"
-           aria-label="{{ em['#title'] ?: 'Email'|t }}"
-           {% if em['#options'].target %}target="{{ em['#options'].target }}"{% endif %}
-           {% if em['#options'].rel %}rel="{{ em['#options'].rel }}"{% endif %}>
-          <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.92 3.19159C12.967 3.14252 11.033 3.14252 9.07999 3.19158L9.02182 3.19304C7.497 3.23133 6.27002 3.26214 5.2867 3.43339C4.2572 3.61268 3.42048 3.95656 2.71362 4.66611C2.00971 5.37269 1.66764 6.19738 1.49176 7.21019C1.32429 8.17456 1.29878 9.37159 1.26719 10.8544L1.26593 10.9132C1.24469 11.9095 1.24469 12.9001 1.26594 13.8964L1.26719 13.9551C1.29879 15.438 1.32429 16.635 1.49176 17.5994C1.66764 18.6122 2.00972 19.4369 2.71362 20.1435C3.42048 20.853 4.2572 21.1969 5.2867 21.3762C6.27001 21.5474 7.49697 21.5782 9.02177 21.6165L9.07999 21.618C11.033 21.6671 12.967 21.6671 14.92 21.618L14.9782 21.6165C16.503 21.5782 17.73 21.5474 18.7133 21.3762C19.7428 21.1969 20.5795 20.853 21.2864 20.1435C21.9903 19.4369 22.3324 18.6122 22.5082 17.5994C22.6757 16.635 22.7012 15.438 22.7328 13.9551L22.7341 13.8964C22.7553 12.9001 22.7553 11.9095 22.7341 10.9132L22.7328 10.8545C22.7012 9.37161 22.6757 8.17458 22.5082 7.2102C22.3324 6.1974 21.9903 5.37271 21.2864 4.66613C20.5795 3.95657 19.7428 3.61269 18.7133 3.4334C17.73 3.26215 16.503 3.23134 14.9782 3.19305L14.92 3.19159ZM9.11766 4.69111C11.0456 4.64267 12.9544 4.64268 14.8823 4.69112C16.479 4.73123 17.5947 4.76117 18.4559 4.91116C19.2835 5.05528 19.7994 5.29889 20.2237 5.72477C20.3977 5.89937 20.5405 6.08733 20.6582 6.30308L14.7173 9.66923C13.4621 10.3805 12.7003 10.6548 12.0001 10.6548C11.2999 10.6548 10.5381 10.3805 9.28285 9.66923L3.34181 6.30299C3.4595 6.08727 3.60237 5.89934 3.77629 5.72475C4.20055 5.29888 4.71652 5.05526 5.54405 4.91114C6.40529 4.76116 7.52099 4.73122 9.11766 4.69111ZM2.92102 7.78861C2.81754 8.58043 2.79468 9.58125 2.76559 10.9452C2.7448 11.9202 2.7448 12.8894 2.7656 13.8644C2.79877 15.4199 2.82385 16.5032 2.96964 17.3427C3.10923 18.1466 3.34907 18.656 3.77629 19.0848C4.20056 19.5107 4.71653 19.7543 5.54406 19.8984C6.4053 20.0484 7.521 20.0783 9.11767 20.1185C11.0456 20.1669 12.9544 20.1669 14.8823 20.1185C16.479 20.0783 17.5947 20.0484 18.4559 19.8984C19.2835 19.7543 19.7994 19.5107 20.2237 19.0848C20.6509 18.656 20.8908 18.1466 21.0304 17.3427C21.1762 16.5032 21.2012 15.4199 21.2344 13.8644C21.2552 12.8894 21.2552 11.9202 21.2344 10.9452C21.2053 9.58132 21.1825 8.58052 21.079 7.78872L15.4568 10.9743C14.1635 11.7071 13.1126 12.1548 12.0001 12.1548C10.8876 12.1548 9.83667 11.7071 8.54339 10.9743L2.92102 7.78861Z"/>
-          </svg>
-          {% if show_title %}<span class="block-cta__text">{{ em['#title'] ?: 'Email'|t }}</span>{% endif %}
-        </a>
-      {% endif %}
-      {% if content.field_phone.0 is not empty %}
-        {% set ph = content.field_phone.0 %}
-        <a href="{{ ph['#url'].toString() }}"
-           class="block-cta__btn block-cta__btn--amber"
-           aria-label="{{ ph['#title'] ?: 'Call Now'|t }}"
-           {% if ph['#options'].target %}target="{{ ph['#options'].target }}"{% endif %}
-           {% if ph['#options'].rel %}rel="{{ ph['#options'].rel }}"{% endif %}>
-          <svg class="block-cta__icon" fill="currentColor" viewBox="0 0 24 25" aria-hidden="true">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31677 1.69111C5.88346 1.80823 6.33476 2.18897 6.61515 2.692L7.50836 4.29444C7.83737 4.88465 8.11424 5.38134 8.29505 5.81311C8.48686 6.27112 8.60078 6.72278 8.5487 7.22214C8.49663 7.72151 8.29197 8.13994 8.0098 8.54853C7.74379 8.93371 7.3704 9.36258 6.92669 9.87221L4.69884 12.4312C6.46568 15.3272 9.07461 17.9373 11.9736 19.706L14.5326 17.4781C15.0422 17.0344 15.4711 16.661 15.8563 16.395C16.2649 16.1128 16.6833 15.9082 17.1827 15.8561C17.682 15.804 18.1337 15.9179 18.5917 16.1098C19.0235 16.2906 19.5202 16.5674 20.1104 16.8965L21.7128 17.7897C22.2158 18.07 22.5966 18.5213 22.7137 19.088C22.832 19.6606 22.6575 20.2362 22.2719 20.7092C20.873 22.4256 18.6317 23.5184 16.2805 23.0441C14.8353 22.7526 13.4093 22.2669 11.6846 21.2777C8.21921 19.2904 5.11214 16.1816 3.12706 12.7202C2.13795 10.9955 1.65223 9.56954 1.36069 8.12428C0.886392 5.77306 1.97923 3.53178 3.69559 2.13287C4.16862 1.74733 4.74417 1.57276 5.31677 1.69111ZM13.3707 20.4784C14.5371 21.0532 15.5516 21.3668 16.5771 21.5737C18.2732 21.9159 19.9854 21.1403 21.1092 19.7615C21.2568 19.5805 21.2577 19.4541 21.2447 19.3916C21.2306 19.3232 21.1733 19.2062 20.9825 19.0999L19.416 18.2267C18.7803 17.8724 18.3572 17.6378 18.0123 17.4933C17.6849 17.3562 17.4971 17.3315 17.3382 17.348C17.1794 17.3646 17.0007 17.4276 16.7087 17.6293C16.401 17.8417 16.0354 18.1586 15.4865 18.6365L13.3707 20.4784ZM3.92636 11.0341L5.76835 8.91831C6.24618 8.36944 6.56306 8.00379 6.77553 7.69613C6.97721 7.4041 7.04023 7.2254 7.05679 7.06656C7.07336 6.90773 7.04857 6.71987 6.91148 6.39251C6.76705 6.04764 6.53243 5.62447 6.17812 4.98883L5.30494 3.42232C5.19856 3.23147 5.08158 3.1742 5.01317 3.16006C4.95066 3.14714 4.82429 3.14805 4.64326 3.2956C3.26448 4.41936 2.48894 6.13162 2.83107 7.82767C3.03795 8.85325 3.35164 9.86773 3.92636 11.0341Z"/>
-          </svg>
-          {% if show_title %}<span class="block-cta__text">{{ ph['#title'] ?: 'Call Now'|t }}</span>{% endif %}
-        </a>
-      {% endif %}
-    </div>
   {% endblock %}
 </div>

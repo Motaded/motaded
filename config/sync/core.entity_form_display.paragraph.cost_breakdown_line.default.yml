@@ -1,0 +1,61 @@
+uuid: d8e9f0a1-a1a1-4a1a-8a1a-a1a1a1a1a1a1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_max
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_min
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_percentage
+    - field.field.paragraph.cost_breakdown_line.field_bce_row_key
+    - field.field.paragraph.cost_breakdown_line.field_title
+    - paragraphs.paragraphs_type.cost_breakdown_line
+id: paragraph.cost_breakdown_line.default
+targetEntityType: paragraph
+bundle: cost_breakdown_line
+mode: default
+content:
+  field_bce_line_max:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_bce_line_min:
+    type: number
+    weight: 2
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_bce_line_percentage:
+    type: number
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_bce_row_key:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 40
+      placeholder: government_fees
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

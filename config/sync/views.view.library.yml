@@ -5,13 +5,15 @@ dependencies:
   config:
     - field.storage.node.field_category
     - field.storage.node.field_document
+    - field.storage.node.field_document_type
     - field.storage.node.field_short_description
+    - field.storage.taxonomy_term.field_library_section
     - node.type.document
     - taxonomy.vocabulary.document_category
     - taxonomy.vocabulary.document_type
+    - taxonomy.vocabulary.library_section
   module:
     - better_exposed_filters
-    - media
     - node
     - taxonomy
     - user
@@ -512,6 +514,17 @@ display:
               secondary_label: 'More filters'
               secondary_open: false
               reset_button_always_show: true
+            sort:
+              plugin_id: default
+              advanced:
+                combine: false
+                combine_rewrite: ''
+                combine_param: sort_bef_combine
+                reset: false
+                reset_label: ''
+                collapsible: false
+                collapsible_label: 'Sort options'
+                is_secondary: false
             filter:
               combine:
                 plugin_id: default
@@ -524,8 +537,29 @@ display:
                   hide_label: true
                   field_classes: ''
                   sort_options_unsupported: ''
+              field_library_section_target_id:
+                plugin_id: bef_links
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: |-
+                      Templates|Document templates & forms
+                      Regulations|Regulations & laws
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: true
+                  field_classes: ''
+                select_all_none: false
+                soft_limit: 0
+                soft_limit_label_less: 'Show less'
+                soft_limit_label_more: 'Show more'
               field_category_target_id:
-                plugin_id: bef
+                plugin_id: bef_links
                 advanced:
                   sort_options: false
                   sort_options_method: alphabetical_asc
@@ -540,8 +574,6 @@ display:
                   hide_label: false
                   field_classes: ''
                 select_all_none: false
-                select_all_none_nested: false
-                display_inline: false
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
@@ -679,6 +711,53 @@ display:
           fields:
             title: title
             field_short_description: field_short_description
+        field_library_section_target_id:
+          id: field_library_section_target_id
+          table: taxonomy_term__field_library_section
+          field: field_library_section_target_id
+          relationship: field_document_type
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_library_section_target_id_op
+            label: Section
+            description: ''
+            use_operator: false
+            operator: field_library_section_target_id_op
+            operator_limit_selection: false
+            operator_list:
+              or: or
+            identifier: library_section
+            required: true
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: anonymous
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: library_section
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
         field_category_target_id:
           id: field_category_target_id
           table: node__field_category
@@ -700,7 +779,7 @@ display:
             operator_limit_selection: false
             operator_list:
               or: or
-            identifier: field_category_target_id
+            identifier: library_category
             required: false
             remember: false
             multiple: false
@@ -752,7 +831,18 @@ display:
           distinct: false
           replica: false
           query_tags: {  }
-      relationships: {  }
+      relationships:
+        field_document_type:
+          id: field_document_type
+          table: node__field_document_type
+          field: field_document_type
+          relationship: none
+          group_type: group
+          admin_label: 'Document type'
+          entity_type: node
+          entity_field: field_document_type
+          plugin_id: standard
+          required: true
       css_class: library-directory
       use_ajax: true
       header:
@@ -771,12 +861,19 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'url.query_args:sort_by'
+        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_category'
+        - 'config:field.storage.node.field_document'
+        - 'config:field.storage.node.field_short_description'
+        - 'config:field.storage.taxonomy_term.field_library_section'
   block_1:
     id: block_1
     display_title: 'Library home'
@@ -785,43 +882,38 @@ display:
     display_options:
       title: ''
       pager:
-        type: full
+        type: some
         options:
           offset: 0
-          pagination_heading_level: h4
-          items_per_page: 6
-          total_pages: null
-          id: 0
-          tags:
-            next: ››
-            previous: ‹‹
-            first: «
-            last: »
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '6, 12, 24'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 5
+          items_per_page: 5
       defaults:
         css_class: false
         pager: false
       css_class: 'library-block library-home-block view-library-home'
+      use_ajax: true
       display_description: ''
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       block_description: 'Library — homepage'
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'url.query_args:library_section'
+        - 'url.query_args:sort_by'
+        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_category'
+        - 'config:field.storage.node.field_document'
+        - 'config:field.storage.node.field_short_description'
+        - 'config:field.storage.taxonomy_term.field_library_section'
   page_1:
     id: page_1
     display_title: 'Library page'
@@ -829,6 +921,7 @@ display:
     position: 1
     display_options:
       title: Library
+      use_ajax: true
       display_description: ''
       display_extenders:
         metatag_display_extender:
@@ -838,9 +931,15 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'url.query_args:sort_by'
+        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_category'
+        - 'config:field.storage.node.field_document'
+        - 'config:field.storage.node.field_short_description'

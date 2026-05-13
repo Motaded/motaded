@@ -39,21 +39,21 @@
     {% endif %}
 
     <div class="services-home-detail">
-      <div class="services-home-category-intro">
+      <div class="services-home-category-intro{% if services_home_term_description %} services-home-category-intro--stacked{% endif %}">
         <div class="services-home-category-intro__icon" aria-hidden="true">
           <img
             src="{{ services_home_category_icon_url }}"
             alt=""
-            width="56"
-            height="56"
+            width="48"
+            height="48"
             loading="lazy"
             decoding="async"
           />
         </div>
         <div class="services-home-category-intro__text">
-          <h2 class="services-home-category-intro__title">
+          <p class="services-home-category-intro__title">
             {{ services_home_term_name|default('Services'|t) }}
-          </h2>
+          </p>
           {% if services_home_term_description %}
             <div class="services-home-category-intro__description text-body">
               {{ services_home_term_description }}
@@ -70,13 +70,17 @@
 
       <h3 class="services-home-offer-heading">{{ 'What we offer'|t }}</h3>
 
-      {% if rows %}
+      {% if services_home_offer_has_rows %}
         <div class="services-home-offer-list">
           {{ rows }}
         </div>
-      {% elseif empty %}
+      {% else %}
         <div class="services-home-empty view-empty">
-          {{ empty }}
+          {% if empty %}
+            {{ empty }}
+          {% else %}
+            {{ 'No services found for this category yet.'|t }}
+          {% endif %}
         </div>
       {% endif %}
 

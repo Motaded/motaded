@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.investor_journey.field_investor_journey_eyebrow
+    - field.field.paragraph.investor_journey.field_investor_journey_note
     - field.field.paragraph.investor_journey.field_investor_journey_steps
     - field.field.paragraph.investor_journey.field_link
     - field.field.paragraph.investor_journey.field_sub_title
@@ -23,6 +24,14 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_investor_journey_note:
+    type: string_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 2
       placeholder: ''
     third_party_settings: {  }
   field_investor_journey_steps:

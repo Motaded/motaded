@@ -2095,7 +2095,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: '<div class="events-home__intro"><p class="events-home__eyebrow">Business events</p><h2 class="events-home__title">Key Business Events in Saudi Arabia</h2><p class="events-home__lede">Stay informed about major forums, investment events, and industry gatherings shaping the Saudi market.</p></div>'
+          content: '<div class="events-home__intro"><p class="events-home__eyebrow mot-eyebrow">Business events</p><h2 class="events-home__title">Key Business Events in Saudi Arabia</h2><p class="events-home__lede">Stay informed about major forums, investment events, and industry gatherings shaping the Saudi market.</p></div>'
           tokenize: false
       footer:
         area:

@@ -193,12 +193,6 @@
   word-break: break-word;
 }
 
-/* Service hero + breadcrumb band (see .bread--service-hero-band in page.html.twig). */
-.service-hero--fullbleed,
-.bread.bread--service-hero-band {
-  background-color: oklch(98.2% 0.018 155.826);
-}
-
 /* Service hero: band breaks out of .layout-content to viewport width (see main.css .banner-hero-fullbleed). */
 .service-hero--fullbleed {
   width: 100vw;
@@ -809,19 +803,7 @@
   background: linear-gradient(to inline-end, rgb(99 102 241) 0%, rgb(0 122 77) 100%);
 }
 
-.node--article-full .article-inline-cta__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  margin: 0;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgb(236 253 245);
-  color: rgb(6 95 70);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+/* Inline CTA kicker: `.mot-eyebrow.mot-eyebrow--pill-solo` (see toc.js) */
 
 .node--article-full .article-inline-cta__title {
   margin: 0;

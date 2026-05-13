@@ -1,0 +1,35 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345606
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hero_split_highlight.field_title
+    - field.field.paragraph.hero_split_highlight.field_why_feature_icon
+    - paragraphs.paragraphs_type.hero_split_highlight
+id: paragraph.hero_split_highlight.default
+targetEntityType: paragraph
+bundle: hero_split_highlight
+mode: default
+content:
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 80
+      placeholder: ''
+    third_party_settings: {  }
+  field_why_feature_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

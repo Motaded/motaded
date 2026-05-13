@@ -1,0 +1,19 @@
+uuid: b8c9d0e1-5555-4555-8555-555555555005
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_bce_card_note
+field_name: field_bce_card_note
+entity_type: paragraph
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

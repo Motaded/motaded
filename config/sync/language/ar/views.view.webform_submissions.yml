@@ -12,6 +12,8 @@ display:
       pager:
         options:
           tags:
+            previous: ‹‹
+            next: ››
             first: '« الأولى'
             last: 'آخر »'
           expose:

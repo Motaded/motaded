@@ -1,16 +1,17 @@
 {#
 /**
  * @file
- * Services page_1: top filters only (categories moved in preprocess_views_view).
+ * Services page_1: full exposed form (sidebar + toolbar grouped in preprocess).
  *
- * @see motaded_theme_preprocess_views_view__services__page_1()
+ * @see motaded_theme_preprocess_views_exposed_form()
  */
 #}
 {% if q is not empty %}
   {{ q }}
 {% endif %}
-<div class="services-exposed-top">
-  <div class="form--inline clearfix">
+<div class="services-directory__exposed-integrated services-directory__exposed-integrated--split-layout">
+  {# Avoid .form--inline on this wrapper: it creates a flex formatting context and breaks display:contents hoisting onto the page grid. #}
+  <div class="services-directory__exposed-split-inner clearfix">
     {{ form }}
   </div>
 </div>

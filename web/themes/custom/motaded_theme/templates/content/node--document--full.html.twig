@@ -1,0 +1,149 @@
+{#
+/**
+ * @file
+ * Document — full page: hero, download card, metadata aside (Motaded brand).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'doc-page',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+{# Library document_page attached in motaded_theme_preprocess_node. #}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="doc-page__hero">
+    <div class="doc-page__hero-bg" aria-hidden="true"></div>
+    <div class="doc-page__hero-inner">
+      <nav class="doc-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+        <ol class="doc-page__breadcrumb-list">
+          <li class="doc-page__breadcrumb-item"><a class="doc-page__breadcrumb-link" href="{{ path('<front>') }}">{{ 'Home'|t }}</a></li>
+          <li class="doc-page__breadcrumb-sep" aria-hidden="true">/</li>
+          <li class="doc-page__breadcrumb-item"><a class="doc-page__breadcrumb-link" href="{{ document_library_url|default('/library') }}">{{ 'Library'|t }}</a></li>
+          <li class="doc-page__breadcrumb-sep" aria-hidden="true">/</li>
+          <li class="doc-page__breadcrumb-item doc-page__breadcrumb-item--current" aria-current="page"><span class="doc-page__breadcrumb-current">{{ label }}</span></li>
+        </ol>
+      </nav>
+
+      {% set has_type = content.field_document_type|render|trim is not empty %}
+      {% set has_cat = content.field_category|render|trim is not empty %}
+      {% if has_type or has_cat %}
+        <div class="doc-page__chips">
+          {% if has_type %}
+            <span class="doc-page__chip doc-page__chip--type">{{ content.field_document_type }}</span>
+          {% endif %}
+          {% if has_cat %}
+            <span class="doc-page__chip doc-page__chip--category">{{ content.field_category }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if page and label %}
+        <h1{{ title_attributes.addClass('doc-page__title') }}>{{ label }}</h1>
+      {% endif %}
+
+      {% if content.field_short_description|render|trim is not empty %}
+        <div class="doc-page__lead">{{ content.field_short_description }}</div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="doc-page__shell">
+    <div class="doc-page__layout">
+      <main class="doc-page__main">
+        <section class="doc-page__download" aria-labelledby="doc-page-file-heading">
+          <h2 id="doc-page-file-heading" class="visually-hidden">{{ 'Document file'|t }}</h2>
+          <div class="doc-page__file-card">
+            <div class="doc-page__file-card-inner">
+              <div class="doc-page__file-icon" aria-hidden="true">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M12 11v6M9 14l3 3 3-3" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="doc-page__file-body">
+                <p class="doc-page__file-label">{{ 'Download'|t }}</p>
+                {{ content.field_document }}
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="doc-page__aside" aria-label="{{ 'Document details'|t }}">
+        <h2 class="doc-page__aside-heading">{{ 'Details'|t }}</h2>
+        <dl class="doc-page__meta">
+          {% if content.field_country|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Country'|t }}</dt>
+              <dd class="doc-page__meta-v">{{ content.field_country }}</dd>
+            </div>
+          {% endif %}
+          {% if content.field_year|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Publication year'|t }}</dt>
+              <dd class="doc-page__meta-v">{{ content.field_year }}</dd>
+            </div>
+          {% endif %}
+          {% if content.field_source_link|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Official source'|t }}</dt>
+              <dd class="doc-page__meta-v">{{ content.field_source_link }}</dd>
+            </div>
+          {% endif %}
+          {% if content.field_sector_pages|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Sector page'|t }}</dt>
+              <dd class="doc-page__meta-v">{{ content.field_sector_pages }}</dd>
+            </div>
+          {% endif %}
+          {% if content.field_taxonomy|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Service type'|t }}</dt>
+              <dd class="doc-page__meta-v">{{ content.field_taxonomy }}</dd>
+            </div>
+          {% endif %}
+          {% if content.field_platforms|render|trim is not empty %}
+            <div class="doc-page__meta-row">
+              <dt class="doc-page__meta-k">{{ 'Platforms'|t }}</dt>
+              <dd class="doc-page__meta-v doc-page__meta-v--platforms">{{ content.field_platforms }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+
+        <div class="doc-page__tip">
+          <p class="doc-page__tip-text">{{ 'This resource is for general guidance. Always confirm current requirements with the official authority.'|t }}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  {% set doc_excluded = [
+    'field_document_type',
+    'field_category',
+    'field_short_description',
+    'field_document',
+    'field_country',
+    'field_year',
+    'field_source_link',
+    'field_sector_pages',
+    'field_taxonomy',
+    'field_platforms',
+    'links',
+  ] %}
+  {% set doc_rest = content|without(doc_excluded) %}
+  {% if doc_rest|render|trim is not empty %}
+    <div{{ content_attributes.addClass('node__content', 'doc-page__rest') }}>
+      {{ doc_rest }}
+    </div>
+  {% endif %}
+
+  {% if content.links %}
+    <footer class="doc-page__admin-links">
+      {{ content.links }}
+    </footer>
+  {% endif %}
+</article>

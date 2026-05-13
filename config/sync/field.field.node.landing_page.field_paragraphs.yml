@@ -8,6 +8,7 @@ dependencies:
     - paragraphs.paragraphs_type.accordions
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.banner_sm
+    - paragraphs.paragraphs_type.business_cost_estimation
     - paragraphs.paragraphs_type.chambers_network
     - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.featured_contents
@@ -49,6 +50,7 @@ settings:
       banner: banner
       banner_sm: banner_sm
       business_setup_section: business_setup_section
+      business_cost_estimation: business_cost_estimation
       chambers_network: chambers_network
       media_lead: media_lead
       promo_split: promo_split
@@ -92,6 +94,9 @@ settings:
       business_activity:
         weight: -29
         enabled: false
+      business_cost_estimation:
+        weight: 51
+        enabled: true
       business_setup_card:
         weight: 49
         enabled: false

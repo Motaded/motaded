@@ -2,17 +2,17 @@
 
 .split-promo {
   --split-promo-radius: 1rem;
-  --split-promo-teal: #0d9488;
-  --split-promo-teal-hover: #0f766e;
-  --split-promo-icon-bg: #ecfdf5;
-  --split-promo-icon-fg: #0f766e;
+  --split-promo-teal: var(--mot-accent-strong, #0d9488);
+  --split-promo-teal-hover: var(--mot-brand, #0f766e);
+  --split-promo-icon-bg: var(--mot-emerald-50, #ecfdf5);
+  --split-promo-icon-fg: var(--mot-brand, #0f766e);
   --split-promo-icon-col: 2.5rem;
   --split-promo-icon-gap: 0.75rem;
   --split-promo-copy-max: min(38rem, 100%);
   box-sizing: border-box;
-  max-width: 1320px;
+  max-width: var(--mot-home-max, 1320px);
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: var(--mot-pad-x, 1rem);
   padding-block: clamp(1.5rem, 3vw, 2.5rem);
 }
 
@@ -22,7 +22,7 @@
   align-items: stretch;
   overflow: hidden;
   border-radius: var(--split-promo-radius);
-  background: #ffffff;
+  background: var(--mot-surface, #ffffff);
   box-shadow:
     0 1px 2px rgb(15 23 42 / 4%),
     0 12px 32px rgb(15 23 42 / 8%);
@@ -47,14 +47,14 @@
   font-weight: 700;
   line-height: 1.22;
   letter-spacing: -0.02em;
-  color: #0a0a0a;
+  color: var(--mot-text, #0a0a0a);
   text-wrap: balance;
 }
 
 .split-promo__sub {
   font-size: 1rem;
   line-height: 1.6;
-  color: #525252;
+  color: var(--mot-text-secondary, #525252);
 }
 
 .split-promo__bullets {
@@ -71,7 +71,7 @@
   gap: var(--split-promo-icon-gap);
   font-size: 1rem;
   line-height: 1.5;
-  color: #262626;
+  color: var(--mot-text-secondary, #262626);
 }
 
 /* Light rounded tile + simple mark (no per-line icon fields). */
@@ -117,7 +117,7 @@
   font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
-  color: #ffffff;
+  color: var(--mot-surface, #ffffff);
   background: var(--split-promo-teal);
   border: 1px solid var(--split-promo-teal);
   transition:
@@ -164,7 +164,7 @@
   gap: var(--split-promo-icon-gap);
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: #737373;
+  color: var(--mot-text-muted, #737373);
 }
 
 .split-promo__trust::before {
@@ -188,7 +188,7 @@
   position: relative;
   min-width: 0;
   min-height: 220px;
-  background: #e5e5e5;
+  background: var(--mot-border, #e5e5e5);
 }
 
 /* White wash from the text side so the photo blends into the card. */
@@ -200,7 +200,7 @@
   pointer-events: none;
   background: linear-gradient(
     to right,
-    #ffffff 0%,
+    var(--mot-surface, #ffffff) 0%,
     rgba(255, 255, 255, 0.92) 14%,
     rgba(255, 255, 255, 0.35) 38%,
     transparent 58%
@@ -210,7 +210,7 @@
 [dir="rtl"] .split-promo__media::after {
   background: linear-gradient(
     to left,
-    #ffffff 0%,
+    var(--mot-surface, #ffffff) 0%,
     rgba(255, 255, 255, 0.92) 14%,
     rgba(255, 255, 255, 0.35) 38%,
     transparent 58%

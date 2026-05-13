@@ -20,10 +20,13 @@ display:
             placeholder: 'ابحث في الخدمات…'
         field_beneficiaries_target_id:
           expose:
-            label: المستفيدون
+            label: 'رحلة العمل'
         field_taxonomy_target_id:
           expose:
-            label: الفئات
+            label: 'نوع الخدمة'
+        field_sector_target_id:
+          expose:
+            label: القطاع
         field_tags_target_id:
           expose:
             label: الوسوم
@@ -35,25 +38,6 @@ display:
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
           text_input_required: 'اختر أي مرشح ثم انقر على بحث لعرض النتائج'
-        bef:
-          general:
-            secondary_label: 'تصفية الخدمات'
-          sort:
-            advanced:
-              combine_rewrite: "تاريخ الإنشاء تصاعدي|تصاعدي\r\nتاريخ الإنشاء تنازلي|تنازلي"
-              collapsible_label: 'خيارات الترتيب'
-          filter:
-            field_beneficiaries_target_id:
-              advanced:
-                rewrite:
-                  filter_rewrite_values: All|المستفيدون
-            field_tags_target_id:
-              advanced:
-                rewrite:
-                  filter_rewrite_values: الكل|الوسوم
-            field_taxonomy_target_id:
-              soft_limit_label_less: أقل
-              soft_limit_label_more: المزيد
       sorts:
         created:
           expose:
@@ -65,8 +49,42 @@ display:
         metatag_display_extender:
           metatags:
             title: 'الخدمات | معتد'
-            description: 'اكتشف بصمة رقمية في كل خدمة. حلول أعمال شاملة صُممت لدعم المستثمرين ورواد الأعمال والشركات الراغبة في دخول السوق السعودي.'
+            description: 'برامج ومنصات متوافقة مع الحكومة للأعمال في السعودية. تصفّح الخدمات، رشّح حسب القطاع ومرحلة المسيرة، واستكشف القنوات الوطنية على معتد.'
     display_title: خدمات
   default:
     display_options:
       title: خدمات
+  block_2:
+    display_title: 'خدمات متكاملة'
+    display_options:
+      exposed_form:
+        options:
+          submit_button: تطبيق
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: ترتيب
+          sort_asc_label: أ-ي
+          sort_desc_label: ي-أ
+          text_input_required: 'اختر أي مرشّح ثم انقر «تطبيق» لعرض النتائج'
+          bef:
+            general:
+              secondary_label: 'خيارات متقدمة'
+            filter:
+              field_taxonomy_target_id:
+                soft_limit_label_less: أقل
+                soft_limit_label_more: المزيد
+      sorts:
+        title:
+          expose:
+            label: العنوان
+        created:
+          expose:
+            label: 'تاريخ الإنشاء'
+      empty:
+        area:
+          content:
+            value: 'لا توجد خدمات في هذه الفئة بعد.'
+            format: plain_text
+      fields:
+        nothing:
+          alter:
+            text: "  {{ include('motaded_theme:card', {\r\n      'title': title,\r\n      'desc': body,\r\n      'icon_url': '/themes/custom/motaded_theme/img/icon-checkmark-circle.svg',\r\n      'tags': (field_tags is not empty) ? field_tags | split(',') : false,\r\n      'cta1': {'url': view_node, 'title': 'اقرأ المزيد'},\r\n      'cta2': {'url': '/contact-us?service-id=' ~ nid, 'title': 'احجز الآن' },\r\n      'icon_position': 'topLeft',\r\n    }, with_context = false) }}"

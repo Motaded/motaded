@@ -8,14 +8,18 @@ dependencies:
     - field.field.node.document.field_document
     - field.field.node.document.field_document_type
     - field.field.node.document.field_featured
+    - field.field.node.document.field_platforms
+    - field.field.node.document.field_sector
+    - field.field.node.document.field_sector_pages
     - field.field.node.document.field_short_description
+    - field.field.node.document.field_taxonomy
     - field.field.node.document.field_source_link
     - field.field.node.document.field_year
     - node.type.document
   module:
     - link
     - media
-    - options
+    - taxonomy
     - user
 id: node.document.default
 targetEntityType: node
@@ -24,16 +28,17 @@ mode: default
 content:
   field_category:
     type: entity_reference_label
-    label: inline
+    label: hidden
     settings:
-      link: true
+      link: false
     third_party_settings: {  }
     weight: 2
     region: content
   field_country:
-    type: list_default
-    label: inline
-    settings: {  }
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
     third_party_settings: {  }
     weight: 5
     region: content
@@ -48,11 +53,27 @@ content:
     region: content
   field_document_type:
     type: entity_reference_label
-    label: inline
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_platforms:
+    type: entity_reference_label
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 1
+    weight: 10
+    region: content
+  field_sector_pages:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
     region: content
   field_short_description:
     type: basic_string
@@ -63,7 +84,7 @@ content:
     region: content
   field_source_link:
     type: link
-    label: inline
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -73,9 +94,17 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
+  field_taxonomy:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 9
+    region: content
   field_year:
     type: number_integer
-    label: inline
+    label: hidden
     settings:
       thousand_separator: ''
       prefix_suffix: true
@@ -90,5 +119,6 @@ content:
 hidden:
   addtoany: true
   field_featured: true
+  field_sector: true
   langcode: true
   search_api_excerpt: true

@@ -1,0 +1,378 @@
+/**
+ * Paragraph business_cost_estimation — homepage cost calculator promo.
+ */
+.bce {
+  padding-block: 2rem 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .bce {
+    padding-block: 2.25rem 2.75rem;
+  }
+}
+
+/* Decorative SVG: absolutely positioned <img> + scrim (not CSS url() on .bce__card). */
+.bce__card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 04%);
+  background-color: #fbfcfc;
+}
+
+.bce__card-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bce__card-art-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 68% 34%;
+}
+
+.bce__card-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    rgb(255 255 255 / 0.38),
+    rgb(255 255 255 / 0.68)
+  );
+}
+
+.bce__card-body {
+  position: relative;
+  z-index: 2;
+  padding: 1.35rem 1.25rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .bce__card-body {
+    padding: 1.65rem 1.5rem 1.4rem;
+  }
+
+  .bce__card-art-img {
+    object-position: 65% 30%;
+  }
+}
+
+.bce__top {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .bce__top {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 40%);
+    gap: 1.75rem;
+  }
+}
+
+/* Eyebrow: `.mot-eyebrow.mot-eyebrow--rail` (mot-ui-primitives.css) */
+.bce__eyebrow.mot-eyebrow--rail {
+  margin: 0 0 0.65rem;
+}
+
+.bce__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--mot-text, #0f172a);
+}
+
+.bce__lead.mot-lead {
+  margin-block-end: 1.25rem;
+}
+
+.bce__lead.mot-lead > *:first-child {
+  margin-top: 0;
+}
+
+.bce__lead.mot-lead > *:last-child {
+  margin-bottom: 0;
+}
+
+.bce__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid var(--mot-brand, #0f766e);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.bce__cta:hover {
+  background: rgb(236 253 245 / 85%);
+  text-decoration: none;
+  color: var(--mot-brand, #0f766e);
+}
+
+.bce__cta-arrow {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+
+.bce__note {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 1.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.bce__note-icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--mot-text-muted, #94a3b8);
+}
+
+.bce__note-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bce__aside {
+  min-width: 0;
+  position: relative;
+  padding: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+/* Right column: data card (sits above the aside SVG background) */
+.bce__cost-card {
+  border-radius: 14px;
+  padding: 1.35rem 1.25rem 1.15rem;
+  background: #fff;
+  border: 1px solid rgb(226 232 240 / 95%);
+  box-shadow: 0 10px 28px rgb(15 23 42 / 06%);
+}
+
+.bce__cost-range-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+}
+
+.bce__cost-range-value {
+  margin: 0 0 1rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--mot-brand, #0f766e);
+}
+
+.bce__cost-currency {
+  font-weight: 700;
+  margin-inline-end: 0.25rem;
+}
+
+.bce__cost-sep {
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+.bce__cost-rule {
+  height: 1px;
+  margin: 0 0 1rem;
+  background: rgb(226 232 240 / 90%);
+}
+
+.bce__cost-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.bce__cost-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 0.75rem;
+}
+
+.bce__cost-row-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.1rem;
+  color: var(--mot-brand, #0f766e);
+}
+
+.bce__cost-row-main {
+  flex: 1 1 8rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bce__cost-row-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-text, #0f172a);
+}
+
+.bce__cost-bar {
+  display: block;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgb(226 232 240 / 85%);
+  overflow: hidden;
+}
+
+.bce__cost-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mot-brand, #0f766e);
+  opacity: 0.85;
+  transition: width 0.25s ease;
+}
+
+.bce__cost-row-amt {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mot-text-muted, #475569);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.bce__cost-foot {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-top: 1.1rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: rgb(236 253 245 / 55%);
+  border: 1px solid rgb(167 243 208 / 35%);
+}
+
+.bce__cost-foot-icon {
+  flex-shrink: 0;
+  color: var(--mot-brand, #0f766e);
+  margin-top: 0.05rem;
+}
+
+.bce__cost-foot-text {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.bce__cost-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed rgb(226 232 240 / 90%);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: var(--mot-text-muted, #94a3b8);
+}
+
+.bce__cost-meta-item {
+  display: block;
+}
+
+.bce__divider {
+  height: 1px;
+  margin: 1.75rem 0 1.5rem;
+  background: #e2e8f0;
+}
+
+.bce__highlights {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .bce__highlights {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .bce__hi {
+    padding-inline: 1.25rem;
+    border-inline-end: 1px solid #e2e8f0;
+  }
+
+  .bce__hi:first-child {
+    padding-inline-start: 0;
+  }
+
+  .bce__hi:last-child {
+    padding-inline-end: 0;
+    border-inline-end: none;
+  }
+}
+
+.bce__hi {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.bce__hi-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  background: rgb(236 253 245 / 90%);
+  border: 1px solid rgb(167 243 208 / 45%);
+  color: var(--mot-brand, #0f766e);
+}
+
+.bce__hi-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mot-text, #0f172a);
+}
+
+.bce__hi-body {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.bce__hi-body > *:first-child {
+  margin-top: 0;
+}
+
+.bce__hi-body > *:last-child {
+  margin-bottom: 0;
+}

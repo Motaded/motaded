@@ -8,7 +8,11 @@ dependencies:
     - field.field.node.document.field_document
     - field.field.node.document.field_document_type
     - field.field.node.document.field_featured
+    - field.field.node.document.field_platforms
+    - field.field.node.document.field_sector
+    - field.field.node.document.field_sector_pages
     - field.field.node.document.field_short_description
+    - field.field.node.document.field_taxonomy
     - field.field.node.document.field_source_link
     - field.field.node.document.field_year
     - node.type.document
@@ -68,6 +72,36 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_platforms:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_sector:
+    type: entity_reference_autocomplete
+    weight: 12
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_sector_pages:
+    type: entity_reference_autocomplete
+    weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_short_description:
     type: string_textarea
     weight: 5
@@ -83,6 +117,16 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
+    third_party_settings: {  }
+  field_taxonomy:
+    type: entity_reference_autocomplete
+    weight: 14
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_year:
     type: number

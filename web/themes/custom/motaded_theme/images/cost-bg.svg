@@ -1,0 +1,41 @@
+<svg width="600" height="420" viewBox="0 0 600 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- background -->
+  <rect width="600" height="420" fill="#F7FAF9"/>
+
+  <!-- BAR CHART (left) -->
+  <g>
+    <rect x="90" y="260" width="22" height="80" rx="4" fill="#0F6B5B" opacity="0.08"/>
+    <rect x="130" y="220" width="22" height="120" rx="4" fill="#0F6B5B" opacity="0.08"/>
+    <rect x="170" y="190" width="22" height="150" rx="4" fill="#0F6B5B" opacity="0.08"/>
+    <rect x="210" y="150" width="22" height="190" rx="4" fill="#0F6B5B" opacity="0.08"/>
+  </g>
+
+  <!-- BASE LINE -->
+  <line x1="80" y1="340" x2="260" y2="340" stroke="#0F6B5B" stroke-opacity="0.1"/>
+
+  <!-- PIE CHART (right) -->
+  <g>
+    <!-- base circle -->
+    <circle cx="420" cy="230" r="90" fill="#0F6B5B" opacity="0.05"/>
+
+    <!-- slice 1 -->
+    <path d="M420 230 L420 140 A90 90 0 0 1 500 260 Z"
+          fill="#0F6B5B" opacity="0.12"/>
+
+    <!-- slice 2 -->
+    <path d="M420 230 L500 260 A90 90 0 0 1 370 300 Z"
+          fill="#0F6B5B" opacity="0.09"/>
+
+    <!-- inner circle (donut effect) -->
+    <circle cx="420" cy="230" r="45" fill="#F7FAF9"/>
+  </g>
+
+  <!-- SUBTLE GRID -->
+  <g stroke="#0F6B5B" stroke-opacity="0.05">
+    <line x1="0" y1="120" x2="600" y2="120"/>
+    <line x1="0" y1="200" x2="600" y2="200"/>
+    <line x1="0" y1="280" x2="600" y2="280"/>
+  </g>
+
+</svg>

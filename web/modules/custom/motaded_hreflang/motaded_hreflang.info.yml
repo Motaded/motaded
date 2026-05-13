@@ -1,0 +1,15 @@
+name: 'Motaded hreflang'
+type: module
+description: 'Filters and overrides hreflang alternate links from Metatag (missing translations, redirects, manual URLs).'
+package: Custom
+core_version_requirement: ^10 || ^11
+configure: motaded_hreflang.settings
+dependencies:
+  - drupal:metatag
+  - drupal:node
+  - drupal:language
+  - drupal:path_alias
+  - drupal:redirect
+  - drupal:content_translation
+
+weight: 100

@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Configurable sector / market external data sources.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function motaded_sector_data_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.motaded_sector_data':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Each <em>Sector data source</em> record describes one integration: which API provider is used, indicator codes, how series are merged, cache lifetime, and where on the site it is used (sector key + usage key). Edit sources under <a href=":url">Configuration → Motaded sector data</a>.', [':url' => \Drupal\Core\Url::fromRoute('entity.sector_data_source.collection')->toString()]) . '</p>';
+      return $output;
+
+    default:
+  }
+}

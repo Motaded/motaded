@@ -5,6 +5,9 @@ dependencies:
   config:
     - block_content.type.global_cta
     - field.field.block_content.global_cta.field_email_link
+    - field.field.block_content.global_cta.field_global_cta_intro
+    - field.field.block_content.global_cta.field_global_cta_primary
+    - field.field.block_content.global_cta.field_global_cta_secondary
     - field.field.block_content.global_cta.field_phone
     - field.field.block_content.global_cta.field_show_title_on_button
     - field.field.block_content.global_cta.field_subtitle
@@ -20,7 +23,7 @@ mode: default
 content:
   field_email_link:
     type: link
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -30,9 +33,40 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_global_cta_intro:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_global_cta_primary:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_global_cta_secondary:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
   field_phone:
     type: link
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -42,19 +76,9 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_show_title_on_button:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 3
-    region: content
   field_subtitle:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -69,7 +93,7 @@ content:
     region: content
   field_whatsapp:
     type: link
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -80,5 +104,6 @@ content:
     weight: 0
     region: content
 hidden:
+  field_show_title_on_button: true
   langcode: true
   search_api_excerpt: true

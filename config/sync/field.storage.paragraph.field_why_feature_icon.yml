@@ -35,6 +35,12 @@ settings:
     -
       value: trend
       label: 'Trend / growth'
+    -
+      value: document
+      label: 'Document / start business'
+    -
+      value: monitor
+      label: 'Monitor / platforms'
   allowed_values_function: ''
 module: options
 locked: false

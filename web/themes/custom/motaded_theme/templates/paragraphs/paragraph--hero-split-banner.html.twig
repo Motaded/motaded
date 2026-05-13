@@ -2,6 +2,7 @@
   Theme: Muin (Custom Licensed Version)
   © Banafsijy.com – Single Project License – Do Not Redistribute
 #}
+{% import '@motaded_theme/includes/hero-split-banner-icons.html.twig' as hs_icons %}
 {{ attach_library('motaded_theme/hero_split_banner') }}
 {%
   set classes = [
@@ -25,7 +26,7 @@
     <div class="hero-split-banner__copy-col">
       <div class="hero-split-banner__copy">
         {% if content.field_hero_split_eyebrow %}
-          <div class="hero-split-banner__eyebrow">
+          <div class="hero-split-banner__eyebrow mot-eyebrow mot-eyebrow--rail">
             {{ content.field_hero_split_eyebrow }}
           </div>
         {% endif %}
@@ -44,11 +45,23 @@
         {% if content.field_body %}
           <div class="hero-split-banner__intro">{{ content.field_body }}</div>
         {% endif %}
+      </div>
 
-        {% if hero_split_cta is not empty or hero_split_cta_secondary is not empty %}
+      {% if hero_split_highlights is not empty %}
+        <ul class="hero-split-banner__highlights" role="list">
+          {% for row in hero_split_highlights|slice(0, 4) %}
+            <li class="hero-split-banner__highlight">
+              <span class="hero-split-banner__highlight-text">{{ row.label }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if hero_split_cta is not empty or hero_split_cta_secondary is not empty %}
+        <div class="hero-split-banner__copy">
           <div class="hero-split-banner__actions">
             {% if hero_split_cta is not empty %}
-              <a href="{{ hero_split_cta.url }}" class="hero-split-banner__cta hero-split-banner__cta--primary">
+              <a href="{{ hero_split_cta.url|e('html_attr') }}" class="hero-split-banner__cta hero-split-banner__cta--primary">
                 {{ hero_split_cta.title }}
                 <svg class="hero-split-banner__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -56,147 +69,45 @@
               </a>
             {% endif %}
             {% if hero_split_cta_secondary is not empty %}
-              <a href="{{ hero_split_cta_secondary.url }}" class="hero-split-banner__cta hero-split-banner__cta--secondary">
+              <a href="{{ hero_split_cta_secondary.url|e('html_attr') }}" class="hero-split-banner__cta hero-split-banner__cta--secondary">
                 {{ hero_split_cta_secondary.title }}
+                <svg class="hero-split-banner__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </a>
             {% endif %}
           </div>
-        {% endif %}
-
-        {% if hero_split_trust %}
-          <p class="hero-split-banner__trust">
-            <span class="hero-split-banner__trust-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span>{{ hero_split_trust }}</span>
-          </p>
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="hero-split-banner__visual">
-        {% if hero_split_features is not empty %}
-          <div class="hero-split-banner__feature-cards" aria-label="{{ 'Highlights'|t }}">
+      {% if hero_split_features is not empty %}
+        <div class="hero-split-banner__feature-cards" aria-label="{{ 'Highlights'|t }}">
+          <div class="hero-split-banner__feature-panel" role="list">
             {% for f in hero_split_features|slice(0, 3) %}
-              <div class="hero-split-banner__feature-card">
-                <div class="hero-split-banner__feature-icon" aria-hidden="true">
-                  {# If editors didn't pick different icons (defaults), use deterministic per-card icons. #}
-                  {% set icon_key = f.icon|default('') %}
-                  {% if icon_key == 'medal' or (icon_key == 'people' and loop.index0 == 0) %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 14a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 14.5 7 22l5-3 5 3-1.5-7.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                  {% elseif icon_key == 'arrows' or (icon_key == 'people' and loop.index0 == 1) %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 7h-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 7l-2.5-2.5M20 7l-2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 17l2.5-2.5M4 17l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 7a4 4 0 0 0-4 4v2a4 4 0 0 0 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 17a4 4 0 0 0 4-4v-2a4 4 0 0 0-4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                  {% elseif icon_key == 'shield_check' or (icon_key == 'people' and loop.index0 == 2) %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  {% elseif icon_key == 'clock' %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  {% elseif icon_key == 'chart' %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                  {% elseif icon_key == 'globe' %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                  {% elseif icon_key == 'trend' %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  {% else %}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 14l4-4 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  {% endif %}
-                </div>
-                <div class="hero-split-banner__feature-copy">
-                  {% if f.title %}<p class="hero-split-banner__feature-title">{{ f.title }}</p>{% endif %}
-                  {% if f.body %}<p class="hero-split-banner__feature-body">{{ f.body|striptags }}</p>{% endif %}
-                </div>
-              </div>
+              {% set row_url = f.link.url|default('') %}
+              {% set row_tag = row_url ? 'a' : 'div' %}
+              <{{ row_tag }}
+                class="hero-split-banner__feature-row{% if not loop.last %} hero-split-banner__feature-row--border{% endif %}"
+                {% if row_url %}href="{{ row_url|e('html_attr') }}"{% endif %}
+                role="listitem"
+              >
+                <span class="hero-split-banner__feature-icon" aria-hidden="true">{{ hs_icons.why_icon(f.icon, 20)|raw }}</span>
+                <span class="hero-split-banner__feature-main">
+                  {% if f.title %}<span class="hero-split-banner__feature-title">{{ f.title }}</span>{% endif %}
+                  {% if f.body %}<span class="hero-split-banner__feature-body">{{ f.body|striptags|trim }}</span>{% endif %}
+                </span>
+                {% if row_url %}
+                  <span class="hero-split-banner__feature-chevron" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                {% endif %}
+              </{{ row_tag }}>
             {% endfor %}
           </div>
-        {% endif %}
-      </div>
-  </div>
-
-  {% if hero_split_stats is not empty %}
-    <div class="hero-split-banner__stats-band" role="group" aria-label="{{ 'Key figures'|t }}">
-      <div class="hero-split-banner__stats-wrap">
-        <div class="hero-split-banner__stats">
-          {% for stat in hero_split_stats %}
-            <div class="hero-split-banner__stat{% if not loop.last %} hero-split-banner__stat--divider{% endif %}">
-              <div class="hero-split-banner__stat-icon" aria-hidden="true">
-                {% if stat.icon == 'shield' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {% elseif stat.icon == 'users' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% elseif stat.icon == 'briefcase' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M4 13h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% elseif stat.icon == 'building' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M9 7h2M9 11h2M9 15h2M13 7h2M13 11h2M13 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% elseif stat.icon == 'globe' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
-                    <path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% elseif stat.icon == 'chart' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 19V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M8 15v-5M12 15V7m4 8v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% elseif stat.icon == 'shield_check' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {% elseif stat.icon == 'layers' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3 3.5 8.2 12 13.4 20.5 8.2 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M3.5 12.1 12 17.3 20.5 12.1" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M3.5 16 12 21.2 20.5 16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                  </svg>
-                {% elseif stat.icon == 'handshake' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M8 12l2-2a3 3 0 0 1 4 0l2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 12l5-5 4 4-5 5H3v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M21 12l-5-5-4 4 5 5h4v-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                  </svg>
-                {% elseif stat.icon == 'headset' %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 12a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <path d="M4 12v4a2 2 0 0 0 2 2h1v-6H6a2 2 0 0 0-2 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M20 12v4a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                    <path d="M12 20h2a2 2 0 0 0 2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                {% else %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
-                    <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                {% endif %}
-              </div>
-              {% if stat.value %}
-                <p class="hero-split-banner__stat-value">{{ stat.value }}</p>
-              {% endif %}
-              {% if stat.label %}
-                <p class="hero-split-banner__stat-label">{{ stat.label }}</p>
-              {% endif %}
-            </div>
-          {% endfor %}
         </div>
-      </div>
+      {% endif %}
     </div>
-  {% endif %}
+  </div>
 </section>

@@ -1,0 +1,67 @@
+uuid: 2c3d4e5f-6071-4890-c123-4567890abcde
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_cost_estimation.field_bce_breakdown
+    - field.field.paragraph.business_cost_estimation.field_bce_card_note
+    - field.field.paragraph.business_cost_estimation.field_bce_cost_max
+    - field.field.paragraph.business_cost_estimation.field_bce_cost_min
+    - field.field.paragraph.business_cost_estimation.field_bce_currency
+    - field.field.paragraph.business_cost_estimation.field_bce_footnote
+    - field.field.paragraph.business_cost_estimation.field_bce_highlights
+    - field.field.paragraph.business_cost_estimation.field_bce_last_updated
+    - field.field.paragraph.business_cost_estimation.field_bce_meta_source
+    - field.field.paragraph.business_cost_estimation.field_body
+    - field.field.paragraph.business_cost_estimation.field_glance_eyebrow
+    - field.field.paragraph.business_cost_estimation.field_link
+    - field.field.paragraph.business_cost_estimation.field_title
+    - paragraphs.paragraphs_type.business_cost_estimation
+  module:
+    - text
+id: paragraph.business_cost_estimation.default
+targetEntityType: paragraph
+bundle: business_cost_estimation
+mode: default
+content:
+  field_bce_footnote:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_glance_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_bce_breakdown: true
+  field_bce_card_note: true
+  field_bce_cost_max: true
+  field_bce_cost_min: true
+  field_bce_currency: true
+  field_bce_highlights: true
+  field_bce_last_updated: true
+  field_bce_meta_source: true
+  field_link: true
+  search_api_excerpt: true

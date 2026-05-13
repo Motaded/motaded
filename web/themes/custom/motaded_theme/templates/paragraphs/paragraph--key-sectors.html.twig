@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Homepage key sectors layout: headline, sidebar insight, Views grid, CTA footer.
+ * Homepage key sectors: headline, sidebar, sector cards (View + WB overlay in node template), CTA.
  */
 #}
 {%
@@ -16,11 +16,11 @@
 {% set ksb_hid = 'ksb-heading-' ~ (paragraph.id() ?: 'draft') %}
 <section{{ attributes.addClass(classes) }} role="region"{% if ksb_heading %} aria-labelledby="{{ ksb_hid }}"{% endif %}>
   {{ title_prefix }}
-  <div class="key-sectors__shell">
+  <div class="key-sectors__shell mot-shell">
     <div class="key-sectors__hero">
       <div class="key-sectors__main">
         {% if ksb_eyebrow %}
-          <p class="key-sectors__eyebrow">{{ ksb_eyebrow }}</p>
+          <p class="key-sectors__eyebrow mot-eyebrow">{{ ksb_eyebrow }}</p>
         {% endif %}
         {% if ksb_heading %}
           <h2 id="{{ ksb_hid }}" class="key-sectors__heading">{{ ksb_heading }}</h2>
@@ -49,9 +49,9 @@
   </div>
 
   {% if ksb_footer_title or ksb_footer_body or ksb_cta_url %}
-    <div class="key-sectors__shell">
-      <div class="key-sectors__footer">
-        <div class="key-sectors__footer-visual" aria-hidden="true">
+    <div class="key-sectors__shell mot-shell">
+      <div class="key-sectors__footer mot-cta-bar">
+        <div class="key-sectors__footer-visual mot-cta-bar__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/>
             <path d="M12 3.8v16.4M12 12l6.6-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>

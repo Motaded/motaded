@@ -1,0 +1,19 @@
+uuid: 7a8b9c0d-1e2f-4a3b-9c8d-7e6f5a4b3c2d
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_bce_footnote
+field_name: field_bce_footnote
+entity_type: paragraph
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

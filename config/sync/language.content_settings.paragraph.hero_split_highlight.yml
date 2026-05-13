@@ -1,0 +1,18 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345608
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.hero_split_highlight
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: paragraph.hero_split_highlight
+target_entity_type_id: paragraph
+target_bundle: hero_split_highlight
+default_langcode: site_default
+language_alterable: true

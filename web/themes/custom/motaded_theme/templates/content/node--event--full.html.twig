@@ -21,7 +21,7 @@
     <div class="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
       <div class="event-page__hero-inner">
         <div class="event-page__hero-copy">
-          <span class="event-page__eyebrow">{{ 'Event'|t }}</span>
+          <span class="event-page__eyebrow mot-eyebrow mot-eyebrow--pill-solo">{{ 'Event'|t }}</span>
           {% if view_mode == 'full' and label %}
             <h1{{ title_attributes.addClass('event-page__title') }}>{{ label }}</h1>
           {% endif %}
@@ -322,7 +322,7 @@
     <section class="event-connected" aria-labelledby="event-connected-heading">
       <div class="event-connected__head">
         <div>
-          <div class="event-connected__eyebrow">{{ connected_market_label }}</div>
+          <div class="event-connected__eyebrow mot-eyebrow">{{ connected_market_label }}</div>
           <h2 id="event-connected-heading" class="event-connected__title">{{ 'Connected to this event'|t }}</h2>
           <p class="event-connected__sub">{{ connected_market_subtitle }}</p>
         </div>

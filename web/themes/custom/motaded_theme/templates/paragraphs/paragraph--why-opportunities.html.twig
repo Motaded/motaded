@@ -13,11 +13,11 @@
   ]
 %}
 <section{{ attributes.addClass(classes) }}>
-  <div class="why-opportunities__container">
+  <div class="why-opportunities__container mot-shell">
   <div class="why-opportunities__inner">
     <header class="why-opportunities__header">
       {% if content.field_why_eyebrow %}
-        <div class="why-opportunities__eyebrow">{{ content.field_why_eyebrow }}</div>
+        <div class="why-opportunities__eyebrow mot-eyebrow--pill mot-eyebrow--pill-center">{{ content.field_why_eyebrow }}</div>
       {% endif %}
       {% if content.field_why_title_prefix or content.field_why_title_accent %}
         <h2 id="{{ why_opportunities_heading_id }}" class="why-opportunities__title">

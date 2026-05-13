@@ -1,0 +1,149 @@
+{#
+/**
+ * @file
+ * Sectors directory: hero (same visual language as /services), top filters, 2-col sector cards.
+ */
+#}
+{{ attach_library('motaded_theme/sectors-directory') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'page-gray',
+    'services-directory',
+    'services-directory--page-redesign',
+    'sectors-directory',
+    'sectors-directory--page',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="services-page-hero services-page-hero--split-banner sectors-directory__hero">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo sectors-directory__hero-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'Industry sectors shaping opportunity in Saudi Arabia'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'Each sector page brings together strategic context, headline indicators from global data where available, and Motaded guidance — filter by taxonomy or search by name.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip services-page-hero__stats-strip--three" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="{{ sectors_hero_url_services|default('/services') }}" aria-label="{{ 'Government-aligned services (@count)'|t({'@count': sectors_hero_stat_services|default(0)}) }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h10M10 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value">{{ sectors_hero_stat_services|default(0) }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Services'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ sectors_hero_url_platforms|default('/platforms') }}" aria-label="{{ 'Government platforms (@count)'|t({'@count': sectors_hero_stat_platforms|default(0)}) }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21V8l8-5 8 5v13" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value">{{ sectors_hero_stat_platforms|default(0) }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Platforms'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ sectors_sidebar_contact_url|default('/contact-us') }}" aria-label="{{ 'Contact us — speak to our team'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m4 8 8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Contact us'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Expert support'|t }}</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  {% if attachment_before %}
+    <div class="attachment attachment-before">
+      {{ attachment_before }}
+    </div>
+  {% endif %}
+
+  <div class="w-full py-6">
+    {% if exposed %}
+      <div class="services-directory__page sectors-directory__page-inner">
+        <div class="services-directory__main services-directory__main--integrated-exposed sectors-directory__main">
+          <div class="services-directory__exposed-top sectors-directory__exposed-wrap">
+            {{ exposed }}
+          </div>
+          <div class="services-directory__results-column sectors-directory__results" id="sectors-directory-listings">
+            {% if header %}
+              <div class="services-directory__results-meta">
+                <p class="services-directory__results-count text-sm text-gray-600">
+                  {{ header }}
+                </p>
+              </div>
+            {% endif %}
+            <div class="services-directory__results-body">
+              {% if rows %}
+                <div class="view-content sectors-directory__grid">
+                  {{ rows }}
+                </div>
+              {% elseif empty %}
+                <div class="view-empty">
+                  {{ empty }}
+                </div>
+              {% endif %}
+              {% if pager %}
+                <div class="services-directory__pager mt-8">
+                  {{ pager }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="services-directory__results-body">
+        {% if rows %}
+          <div class="view-content sectors-directory__grid">
+            {{ rows }}
+          </div>
+        {% elseif empty %}
+          <div class="view-empty">
+            {{ empty }}
+          </div>
+        {% endif %}
+        {% if pager %}
+          <div class="mt-8">
+            {{ pager }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if attachment_after %}
+    <div class="attachment attachment-after">
+      {{ attachment_after }}
+    </div>
+  {% endif %}
+  {% if more %}
+    {{ more }}
+  {% endif %}
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
+  {% if feed_icons %}
+    <div class="feed-icons">
+      {{ feed_icons }}
+    </div>
+  {% endif %}
+</div>

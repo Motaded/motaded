@@ -5,10 +5,12 @@
 {{ attach_library('motaded_theme/alpine') }}
 
 <header
-	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null }" class="sticky top-0 z-[201] h-[91px] bg-white border-b border-gray-200" @keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null">
+	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null }"
+	class="sticky top-0 z-[201] bg-white border-b border-slate-200 site-header-bar"
+	@keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null">
 	<!-- Desktop -->
-	<div class="max-w-[1320px] mx-auto px-4 hidden md:block h-full">
-		<div class="flex items-center h-full py-1 gap-4">
+	<div class="max-w-[1320px] mx-auto px-4 hidden md:block">
+		<div class="flex items-center justify-between gap-6 min-h-[72px] py-2">
 			<!-- Left: Logo -->
 			<div class="shrink-0 flex items-center">
 				<a href="{{ front_page }}" class="block">
@@ -17,7 +19,8 @@
 			</div>
 
 			<!-- Center: Nav -->
-			<nav class="hidden lg:flex flex-1 min-w-0 justify-start items-center h-full" @click.outside="openMenu=null">
+			{# max-md:hidden + md:flex = same as hidden md:flex, without a bare .hidden on the wrapper #}
+			<nav class="max-md:hidden md:flex flex-1 min-w-0 justify-center items-center px-2 mot-header-main-nav" @click.outside="openMenu=null" aria-label="{{ 'Primary'|t }}">
 				{{ page.main_menu }}
 			</nav>
 

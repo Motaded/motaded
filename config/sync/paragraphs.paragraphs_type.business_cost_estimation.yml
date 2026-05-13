@@ -1,0 +1,10 @@
+uuid: 9c0d1e2f-3a4b-5c6d-9e0f-8a7b6c5d4e3f
+langcode: en
+status: true
+dependencies: {  }
+id: business_cost_estimation
+label: 'Business cost estimation'
+icon_uuid: null
+icon_default: null
+description: 'Homepage block: cost calculator promo with image and three highlight rows.'
+behavior_plugins: {  }

@@ -1,0 +1,333 @@
+/**
+ * Global CTA block — card layout (footer / prefooter). Header uses compact `.block-cta` from main.css.
+ */
+
+/* Pre-footer layout no longer wraps region in `.pre-footer-band__panel` (Twig). If panel exists (cached/old markup), strip nested “card” chrome — works even when only `dist/main.css` is deployed. */
+.pre-footer-band__panel:has(.global-cta-card) {
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.block-cta--card {
+  box-sizing: border-box;
+  max-width: var(--mot-home-max, 82.5rem);
+  margin-inline: auto;
+}
+
+.global-cta-card {
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--mot-radius-lg, 16px);
+  background: var(--mot-surface, #fff);
+  border: 1px solid var(--mot-border, #e2e8f0);
+  box-shadow: var(--mot-shadow-card, 0 4px 18px rgba(15, 23, 42, 0.06));
+  color: var(--mot-text, #0f172a);
+}
+
+.global-cta-card__body {
+  padding: clamp(1.75rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
+  text-align: center;
+}
+
+/* Tighter band when nested in pre-footer (single card, less vertical mass). */
+.pre-footer-band .global-cta-card {
+  max-width: 42rem;
+  margin-inline: auto;
+  border-radius: var(--mot-radius-md, 12px);
+  box-shadow: 0 2px 12px rgb(15 23 42 / 0.06);
+}
+
+.pre-footer-band .global-cta-card__body {
+  padding: clamp(1.25rem, 3vw, 1.65rem) clamp(1rem, 2.5vw, 1.35rem);
+}
+
+.pre-footer-band .global-cta-card__title.mot-heading-2 {
+  font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+}
+
+.pre-footer-band .global-cta-card__intro.mot-lead {
+  font-size: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.pre-footer-band .global-cta-card__actions {
+  margin-bottom: 1.25rem;
+}
+
+.pre-footer-band .global-cta-card__btn {
+  min-height: 2.5rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.875rem;
+}
+
+.pre-footer-band .global-cta-card__trust {
+  padding: 0.75rem 1rem 0.85rem;
+}
+
+/* Eyebrow: same language as glance / chambers — `.mot-eyebrow.mot-eyebrow--rail` (mot-ui-primitives.css) */
+.global-cta-card__eyebrow.mot-eyebrow--rail {
+  margin: 0 auto 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
+}
+
+.global-cta-card__title {
+  margin: 0 auto 0.75rem;
+  max-width: 36rem;
+}
+
+.global-cta-card__intro {
+  margin: 0 auto 1.5rem;
+  max-width: 42rem;
+  text-align: center;
+}
+
+.global-cta-card__intro .field {
+  margin: 0;
+}
+
+.global-cta-card__intro p {
+  margin: 0;
+}
+
+.global-cta-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.global-cta-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.35rem;
+  border-radius: var(--mot-radius-md, 12px);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.global-cta-card__btn--primary {
+  border: 1px solid transparent;
+  background: var(--mot-brand, #0f766e);
+  color: #fff;
+  box-shadow: 0 2px 8px rgb(15 118 110 / 22%);
+}
+
+.global-cta-card__btn--primary:hover {
+  background: var(--mot-accent-strong, #0d9488);
+  color: #fff;
+  text-decoration: none;
+}
+
+.global-cta-card__btn--secondary {
+  border: 1px solid var(--mot-brand, #0f766e);
+  background: var(--mot-surface, #fff);
+  color: var(--mot-brand, #0f766e);
+}
+
+.global-cta-card__btn--secondary:hover {
+  background: rgb(240 253 250 / 0.95);
+  border-color: var(--mot-accent-strong, #0d9488);
+  color: var(--mot-accent-strong, #0d9488);
+  text-decoration: none;
+}
+
+.global-cta-card__btn:focus-visible {
+  outline: 2px solid var(--mot-accent, #14b8a6);
+  outline-offset: 2px;
+}
+
+.global-cta-card__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 auto 1.25rem;
+  max-width: 36rem;
+}
+
+.global-cta-card__divider-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--mot-border, #e2e8f0);
+}
+
+.global-cta-card__divider-text {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-text-muted, #64748b);
+  white-space: nowrap;
+}
+
+.global-cta-card__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.global-cta-card__contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.35rem 1.15rem;
+  border-inline-start: 1px solid var(--mot-border, #e2e8f0);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.global-cta-card__contact:first-child {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+.global-cta-card__contact:hover {
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+}
+
+.global-cta-card__contact:focus-visible {
+  outline: 2px solid var(--mot-accent, #14b8a6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.global-cta-card__contact-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--mot-brand, #0f766e);
+}
+
+.global-cta-card__trust {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem 1.15rem;
+  background: var(--mot-surface-muted, #f8fafc);
+  border-top: 1px solid var(--mot-border, #e2e8f0);
+  text-align: left;
+}
+
+.global-cta-card__trust-icon {
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  color: var(--mot-brand, #0f766e);
+}
+
+.global-cta-card__trust p {
+  margin: 0;
+  max-width: 44rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--mot-text-muted, #64748b);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-cta-card__btn,
+  .global-cta-card__contact {
+    transition: none;
+  }
+}
+
+/* Services / blog sidebar: `motaded_theme_ctaservicesblog_2` — contacts only, colored pills (see preprocess). */
+#block-motaded-theme-ctaservicesblog-2.block-cta--card {
+  max-width: 100%;
+}
+
+.global-cta-card--minimal {
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 6px rgb(15 23 42 / 0.05);
+}
+
+.global-cta-card--minimal .global-cta-card__body {
+  padding: 0.65rem 0.5rem;
+}
+
+.global-cta-card--minimal .global-cta-card__actions {
+  margin-bottom: 0.65rem;
+}
+
+.global-cta-card__contacts--minimal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.global-cta-card__contacts--minimal .global-cta-card__contact {
+  margin: 0;
+  border-inline-start: 0;
+  padding: 0.28rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  text-decoration: none;
+  gap: 0.3rem;
+  transition: background-color 0.15s ease;
+}
+
+.global-cta-card__contacts--minimal .global-cta-card__contact-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: inherit;
+}
+
+.global-cta-card__contact--whatsapp {
+  background-color: #128c7e;
+}
+
+.global-cta-card__contact--whatsapp:hover {
+  background-color: #0f7a6e;
+  color: #fff;
+}
+
+.global-cta-card__contact--email {
+  background-color: var(--color-primary-800, #115e59);
+}
+
+.global-cta-card__contact--email:hover {
+  background-color: var(--color-primary-900, #134e4a);
+  color: #fff;
+}
+
+.global-cta-card__contact--phone {
+  background-color: var(--color-amber-700, #b45309);
+}
+
+.global-cta-card__contact--phone:hover {
+  background-color: var(--color-amber-800, #92400e);
+  color: #fff;
+}
+
+.global-cta-card__contacts--minimal .global-cta-card__contact:focus-visible {
+  outline: 2px solid var(--mot-accent, #14b8a6);
+  outline-offset: 2px;
+}

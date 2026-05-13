@@ -1,0 +1,23 @@
+uuid: a9b0c1d2-1010-4101-8101-101010101010
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_line_max
+    - paragraphs.paragraphs_type.cost_breakdown_line
+id: paragraph.cost_breakdown_line.field_bce_line_max
+field_name: field_bce_line_max
+entity_type: paragraph
+bundle: cost_breakdown_line
+label: Maximum
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -2,13 +2,12 @@
 
 /* One continuous band under content (no white “card” wrapper — gradient shows through). */
 .why-opportunities {
-  --why-accent: var(--color-primary-600, #0f766e);
-  --why-accent-soft: #0d9488;
-  --why-text: #0f172a;
-  --why-muted: #475569;
-  --why-soft: #64748b;
-  --why-band: #f5f7f6;
-  /* Barely-there mint at bottom — mostly white / cool grey. */
+  --why-accent: var(--mot-brand, #0f766e);
+  --why-accent-soft: var(--mot-accent-strong, #0d9488);
+  --why-text: var(--mot-text, #0f172a);
+  --why-muted: var(--mot-text-secondary, #475569);
+  --why-soft: var(--mot-text-muted, #64748b);
+  /* Barely-there mint at bottom (custom hue — no single palette token). */
   --why-gradient-end: #e6efeb;
   position: relative;
   isolation: isolate;
@@ -18,7 +17,7 @@
   margin-inline: calc(50% - 50vw);
   background: linear-gradient(
     180deg,
-    #ffffff 0%,
+    var(--mot-surface, #ffffff) 0%,
     #fbfcfc 28%,
     #f5f9f7 52%,
     #eef4f1 78%,
@@ -31,11 +30,9 @@
 /* Layout wrapper only — gradient comes from .why-opportunities. */
 .why-opportunities__container {
   position: relative;
-  max-width: 1320px;
-  margin-inline: auto;
   background: transparent;
   border-radius: 0;
-  padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 4vw, 2.5rem);
+  padding-block: clamp(2rem, 5vw, 5rem);
   padding-bottom: 1rem;
   box-shadow: none;
   overflow: visible;
@@ -53,32 +50,7 @@
   margin: 0 auto clamp(1.5rem, 3vw, 2.25rem);
 }
 
-/* Eyebrow: pill like investor_journey (no green bar) */
-.why-opportunities__eyebrow {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 1rem;
-}
-
-.why-opportunities__eyebrow .field {
-  margin: 0;
-}
-
-.why-opportunities__eyebrow .field__item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem 0.95rem;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #475569;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
-}
+/* Eyebrow pill: `.mot-eyebrow--pill.mot-eyebrow--pill-center` */
 
 .why-opportunities__title {
   margin: 0 0 0.75rem;
@@ -131,8 +103,8 @@
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1.25rem 1.35rem;
-  background: #fff;
-  border: 1px solid #e8edf3;
+  background: var(--mot-surface, #fff);
+  border: 1px solid var(--mot-border, #e8edf3);
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   transition:
@@ -145,12 +117,12 @@
   .why-opportunities__card:hover {
     transform: translateY(-4px);
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
-    border-color: #cbd5e1;
+    border-color: var(--mot-border, #cbd5e1);
   }
 }
 
 .why-opportunities__card:focus-within {
-  outline: 2px solid var(--color-primary-400, #2dd4bf);
+  outline: 2px solid var(--mot-accent, #2dd4bf);
   outline-offset: 3px;
 }
 
@@ -194,9 +166,9 @@
   width: 2.35rem;
   height: 2.35rem;
   border-radius: 9999px;
-  border: 1px solid #d1fae5;
+  border: 1px solid var(--mot-emerald-100, #d1fae5);
   color: var(--why-accent);
-  background: #f0fdf4;
+  background: var(--mot-green-50, #f0fdf4);
 }
 
 .why-opportunities__card-index {
@@ -204,7 +176,7 @@
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: #e2e8f0;
+  color: var(--mot-border, #e2e8f0);
   user-select: none;
 }
 
@@ -240,7 +212,7 @@
 }
 
 .why-opportunities__card-link:hover {
-  color: var(--color-primary-700, #0f766e);
+  color: var(--mot-brand-hover, #0f766e);
   text-decoration: underline;
 }
 
@@ -260,10 +232,10 @@
   padding: clamp(1.1rem, 2.2vw, 1.4rem) clamp(0.5rem, 1.25vw, 0.85rem);
   /* Extra bottom space so translateY + shadow don’t collide with trust row */
   margin-bottom: calc(1.25rem + clamp(1.25rem, 3vw, 2rem));
-  background: linear-gradient(180deg, #0f766e 0%, #0a5c4d 100%);
+  background: linear-gradient(180deg, var(--mot-brand, #0f766e) 0%, #0a5c4d 100%);
   border: 1px solid rgb(0 0 0 / 12%);
   border-radius: 1rem;
-  color: #fff;
+  color: var(--mot-surface, #fff);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   transform: translateY(20px);
   transition: box-shadow 0.22s ease, transform 0.22s ease;
@@ -311,7 +283,7 @@
   margin-bottom: 0.35rem;
   border-radius: 9999px;
   border: 1.5px solid rgb(255 255 255 / 45%);
-  color: #fff;
+  color: var(--mot-surface, #fff);
   background: rgb(255 255 255 / 8%);
 }
 
@@ -321,7 +293,7 @@
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.015em;
-  color: #fff;
+  color: var(--mot-surface, #fff);
 }
 
 .why-opportunities__stat-label {
@@ -343,10 +315,10 @@
   margin: 0;
   padding-top: 0.25rem;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--mot-icon-muted, #94a3b8);
 }
 
 .why-opportunities__trust-icon {
   display: flex;
-  color: #94a3b8;
+  color: var(--mot-icon-muted, #94a3b8);
 }

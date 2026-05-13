@@ -1,0 +1,19 @@
+uuid: b6c7d8e9-8080-4808-8808-808080808080
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_meta_source
+    - paragraphs.paragraphs_type.business_cost_estimation
+id: paragraph.business_cost_estimation.field_bce_meta_source
+field_name: field_bce_meta_source
+entity_type: paragraph
+bundle: business_cost_estimation
+label: 'Data source'
+description: 'Line under the card (e.g. Government fees + internal estimates).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,21 +1,29 @@
 {#
 /**
  * @file
- * Chambers — homepage embed (inside Business Network paragraph).
+ * Chambers — homepage embed (Business Network paragraph): featured slot + list.
  */
 #}
 {% if title %}
   <h3 class="visually-hidden">{{ title }}</h3>
 {% endif %}
-<div class="chambers-network__grid" role="list">
-  {% for row in rows %}
-    {%
-      set row_classes = [
-        default_row_class ? 'views-row',
-      ]
-    %}
-    <div{{ row.attributes.addClass(row_classes) }}>
-      {{- row.content -}}
+{% if rows %}
+  <div class="cnb-home">
+    <div class="cnb-home__featured" role="list">
+      {% set first_row = rows|first %}
+      <div{{ first_row.attributes.addClass('cnb-home__featured-slot') }}>
+        {{- first_row.content -}}
+      </div>
     </div>
-  {% endfor %}
-</div>
+    {% if rows|length > 1 %}
+      <h3 class="cnb-home__subheading">{{ 'Other Chambers & Councils'|t }}</h3>
+      <div class="cnb-home__list" role="list">
+        {% for row in rows|slice(1, 4) %}
+          <div{{ row.attributes.addClass('views-row', 'cnb-home__list-item') }}>
+            {{- row.content -}}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

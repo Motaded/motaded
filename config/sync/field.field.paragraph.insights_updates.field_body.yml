@@ -13,7 +13,7 @@ field_name: field_body
 entity_type: paragraph
 bundle: insights_updates
 label: Intro
-description: 'Optional text below the main “Insights & updates” title.'
+description: 'Optional intro below the title (overrides default Publications & Updates intro when filled).'
 required: false
 translatable: true
 default_value: {  }

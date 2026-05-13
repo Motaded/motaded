@@ -33,6 +33,9 @@ settings:
       value: chart
       label: Chart
     -
+      value: trend
+      label: 'Trend / growth'
+    -
       value: shield_check
       label: 'Shield check / compliance'
     -

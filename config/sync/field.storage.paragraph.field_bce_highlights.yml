@@ -1,0 +1,20 @@
+uuid: 8b9c0d1e-2f3a-4b5c-8d9e-7f6a5b4c3d2e
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference_revisions
+    - paragraphs
+id: paragraph.field_bce_highlights
+field_name: field_bce_highlights
+entity_type: paragraph
+type: entity_reference_revisions
+settings:
+  target_type: paragraph
+module: entity_reference_revisions
+locked: false
+cardinality: 3
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
