@@ -4,11 +4,8 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.storage.node.field_category
-    - field.storage.node.field_region
     - node.type.platform
     - taxonomy.vocabulary.platform_category
-    - taxonomy.vocabulary.region
   module:
     - better_exposed_filters
     - node
@@ -299,53 +296,6 @@ display:
           hierarchy: false
           limit: true
           error_message: true
-        field_region_target_id:
-          id: field_region_target_id
-          table: node__field_region
-          field: field_region_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_region_target_id_op
-            label: Region
-            description: ''
-            use_operator: false
-            operator: field_region_target_id_op
-            operator_limit_selection: false
-            operator_list:
-              or: or
-            identifier: field_region_target_id
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: anonymous
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          vid: region
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -395,7 +345,12 @@ display:
       display_description: ''
       display_extenders:
         metatag_display_extender:
-          metatags: {  }
+          metatags:
+            title: 'Government platforms in Saudi Arabia | Motaded'
+            description: 'Browse official government and digital platforms supporting business in Saudi Arabia. Filter by category, find the right service portal, and connect with Motaded for expert guidance.'
+            hreflang_xdefault: '[site:base-url]/platforms'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/platforms'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/platforms'
           tokenize: false
       path: platforms
     cache_metadata:

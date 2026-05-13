@@ -80,6 +80,7 @@
         "drupal/redirect": "^1.12",
         "drupal/redirect_410": "dev-1.0.x",
         "drupal/redirect_regex": "^1.0@alpha",
+        "drupal/responsive_favicons": "^4.0",
         "drupal/robotstxt": "^1.6",
         "drupal/schema_metatag": "^3.0",
         "drupal/search_api": "^1.40",

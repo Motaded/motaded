@@ -1,5 +1,180 @@
 /* Blog (/blog) + News (/news): exposed filters layout + button styling (scoped .blog-listing) */
 
+/* -----------------------------------------------------------------------------
+ * /blog split-banner hero (shared architecture with /services, /sectors,
+ * /platforms, /library). Activated only on the full Blog page via the
+ * `.blog-listing--page` modifier so the News view (/news) keeps its layout.
+ * -------------------------------------------------------------------------- */
+.blog-listing.blog-listing--page {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.main-wrapper:has(.blog-listing.blog-listing--page),
+main:has(.blog-listing.blog-listing--page),
+.layout-content:has(.blog-listing.blog-listing--page) {
+  overflow: visible;
+}
+
+/* Full-bleed: drop the centred max-w-[1320px] rail inherited from the legacy
+ * blog template — the split-banner hero spans the whole viewport. */
+.blog-listing.blog-listing--page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Hero visual: dedicated articles artwork on the right (mirrored in RTL).
+ * WebP preferred via image-set() with PNG fallback for older browsers. */
+.blog-listing.blog-listing--page .services-page-hero__visual-photo.blog-listing__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/articles-bg.png') no-repeat center right 1.5rem / auto 78%;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/articles-bg.webp') type('image/webp'),
+      url('../../images/articles-bg.png') type('image/png')
+    ) no-repeat center right 1.5rem / auto 78%;
+}
+
+[dir='rtl'] .blog-listing.blog-listing--page .services-page-hero__visual-photo.blog-listing__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/articles-bg.png') no-repeat center right 1.5rem / auto 78%;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/articles-bg.webp') type('image/webp'),
+      url('../../images/articles-bg.png') type('image/png')
+    ) no-repeat center right 1.5rem / auto 78%;
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+@media (max-width: 47.99rem) {
+  .blog-listing.blog-listing--page .services-page-hero__visual-photo.blog-listing__hero-photo {
+    background-size: auto 60%;
+  }
+}
+
+/* Hero stat strip: three equal columns on wider screens. */
+@media (min-width: 720px) {
+  .blog-listing.blog-listing--page .services-page-hero__stats-strip--three .services-page-hero__stat {
+    flex: 1 1 33.333%;
+  }
+}
+
+/* Page content rail: keep flush with the global container (no extra padding). */
+.blog-listing.blog-listing--page .blog-listing__page-inner {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+.blog-listing.blog-listing--page .blog-listing__main {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Filters card on the Blog page reuses the rounded card look from /library. */
+.blog-listing.blog-listing--page .blog-listing__filters {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--mot-border, #e5e7eb);
+  border-radius: 1rem;
+  background: var(--mot-surface, #fff);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* /news split-banner hero: same page architecture as /blog, with dedicated artwork. */
+.blog-listing.news-listing--page {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.main-wrapper:has(.blog-listing.news-listing--page),
+main:has(.blog-listing.news-listing--page),
+.layout-content:has(.blog-listing.news-listing--page) {
+  overflow: visible;
+}
+
+.blog-listing.news-listing--page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.blog-listing.news-listing--page .services-page-hero__visual-photo.news-listing__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/news-bg.png') no-repeat center right 1.5rem / auto 90%;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/news-bg.webp') type('image/webp'),
+      url('../../images/news-bg.png') type('image/png')
+    ) no-repeat center right 1.5rem / auto 90%;
+}
+
+[dir='rtl'] .blog-listing.news-listing--page .services-page-hero__visual-photo.news-listing__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/news-bg.png') no-repeat center right 1.5rem / auto 90%;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/news-bg.webp') type('image/webp'),
+      url('../../images/news-bg.png') type('image/png')
+    ) no-repeat center right 1.5rem / auto 90%;
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+@media (max-width: 47.99rem) {
+  .blog-listing.news-listing--page .services-page-hero__visual-photo.news-listing__hero-photo {
+    background-size: auto 72%;
+  }
+}
+
+@media (min-width: 720px) {
+  .blog-listing.news-listing--page .services-page-hero__stats-strip--three .services-page-hero__stat {
+    flex: 1 1 33.333%;
+  }
+}
+
+.blog-listing.news-listing--page .news-listing__page-inner,
+.blog-listing.news-listing--page .news-listing__main {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.blog-listing.news-listing--page .news-listing__page-inner {
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+.blog-listing.news-listing--page .news-listing__filters {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--mot-border, #e5e7eb);
+  border-radius: 1rem;
+  background: var(--mot-surface, #fff);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+
 .blog-listing .view-filters .views-exposed-form .form--inline {
   display: flex;
   flex-direction: column;

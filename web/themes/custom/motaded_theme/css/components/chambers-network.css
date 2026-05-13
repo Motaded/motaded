@@ -562,6 +562,76 @@
     linear-gradient(180deg, var(--mot-emerald-surface, #f5f8f7) 0%, var(--mot-surface, #ffffff) 45%);
 }
 
+/* /chambers split-banner hero. The artwork is an actual image element, not a
+ * cover background, because chambers-bg.png is an illustration asset. */
+.chambers-directory-view.chambers-directory-page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: 0;
+  overflow: visible;
+}
+
+.main-wrapper:has(.chambers-directory-view.chambers-directory-page),
+main:has(.chambers-directory-view.chambers-directory-page),
+.layout-content:has(.chambers-directory-view.chambers-directory-page) {
+  overflow: visible;
+}
+
+.chambers-directory-view.chambers-directory-page .chambers-directory__hero-photo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-inline: clamp(1rem, 3vw, 2.5rem);
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%);
+}
+
+[dir='rtl'] .chambers-directory-view.chambers-directory-page .chambers-directory__hero-photo {
+  justify-content: flex-start;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%);
+}
+
+.chambers-directory-view.chambers-directory-page .chambers-directory__hero-img {
+  display: block;
+  width: min(62vw, 820px);
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (min-width: 1280px) {
+  .chambers-directory-view.chambers-directory-page .chambers-directory__hero-img {
+    width: min(58vw, 920px);
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .chambers-directory-view.chambers-directory-page .chambers-directory__hero-photo {
+    justify-content: center;
+    padding-inline: 1rem;
+  }
+
+  .chambers-directory-view.chambers-directory-page .services-page-hero__col--visual {
+    min-height: clamp(14rem, 56vw, 22rem);
+  }
+
+  .chambers-directory-view.chambers-directory-page .chambers-directory__hero-img {
+    width: min(92vw, 520px);
+    max-height: 100%;
+  }
+}
+
+@media (min-width: 720px) {
+  .chambers-directory-view.chambers-directory-page .services-page-hero__stats-strip--three .services-page-hero__stat {
+    flex: 1 1 33.333%;
+  }
+}
+
 .chambers-directory__inner {
   max-width: var(--mot-home-max, 1320px);
   margin-inline: auto;

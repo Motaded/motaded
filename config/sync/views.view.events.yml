@@ -2130,7 +2130,13 @@ display:
       display_description: ''
       display_extenders:
         metatag_display_extender:
-          metatags: {  }
+          metatags:
+            title: 'Business events in Saudi Arabia | Motaded'
+            description: 'Browse upcoming business conferences, exhibitions, forums, and workshops across Saudi Arabia and the GCC. Filter by date, region, or industry, and contact the Motaded team for planning or attending support.'
+            canonical_url: '[site:base-url]/events'
+            hreflang_xdefault: '[site:base-url]/events'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/events'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/events'
           tokenize: false
       path: events
     cache_metadata:

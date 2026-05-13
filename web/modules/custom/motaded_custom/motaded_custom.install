@@ -590,33 +590,120 @@ function motaded_custom_update_10009(): void {
 }
 
 /**
- * Seeds main navigation (Services mega groups, Sectors, Resources, etc.).
+ * Imports /translations/motaded-service-ui.ar.po into the locale DB.
  *
- * Re-run manually: drush state:del motaded_custom.main_menu_seed_v3 && drush updb -y
+ * Shared helper used by individual `_update_NNNN` hooks below. Drupal does not
+ * pick up changes to PO files automatically — Gettext::fileToDatabase() writes
+ * msgid/msgstr pairs into locales_source/locales_target. We only overwrite
+ * non-customized translations to preserve any manual edits made via
+ * Configuration → Translate interface.
  */
-function motaded_custom_update_10010(): void {
-  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'inc', 'motaded_custom.menu_seed');
-  if (!function_exists('motaded_custom_seed_main_navigation')) {
+function _motaded_custom_import_ar_locale_po(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('locale')) {
     return;
   }
-  motaded_custom_seed_main_navigation();
+  $absolute_path = \Drupal::root() . '/../translations/motaded-service-ui.ar.po';
+  if (!is_file($absolute_path) || !is_readable($absolute_path)) {
+    \Drupal::logger('motaded_custom')->warning('Skipping locale import: @path not readable.', ['@path' => $absolute_path]);
+    return;
+  }
+  $languages = \Drupal::languageManager()->getLanguages();
+  if (!isset($languages['ar'])) {
+    \Drupal::logger('motaded_custom')->notice('Skipping locale import: Arabic language is not enabled.');
+    return;
+  }
+
+  $file = (object) [
+    'filename' => basename($absolute_path),
+    'uri' => $absolute_path,
+    'langcode' => 'ar',
+    'timestamp' => filemtime($absolute_path) ?: \Drupal::time()->getRequestTime(),
+  ];
+
+  $options = [
+    'customized' => 0,
+    'overwrite_options' => [
+      'not_customized' => TRUE,
+      'customized' => FALSE,
+    ],
+  ];
+
+  try {
+    \Drupal\locale\Gettext::fileToDatabase($file, $options);
+    \Drupal::logger('motaded_custom')->info('Imported Arabic locale file @file.', ['@file' => $file->filename]);
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('motaded_custom')->error('Failed to import @file: @msg', [
+      '@file' => $file->filename,
+      '@msg' => $e->getMessage(),
+    ]);
+  }
 }
 
 /**
- * Backfills field_menu_icon on Services category groups (v4 of main menu seed).
+ * Initial Arabic UI strings import (hero copy, quick links, aria labels).
  *
- * Requires field.storage.menu_link_content.field_menu_icon and the matching
- * field.field config to be imported first (drush cim).
- *
- * Re-run manually: drush state:del motaded_custom.main_menu_seed_v4 && drush updb -y
+ * Re-run manually: drush php:eval "module_load_install('motaded_custom'); _motaded_custom_import_ar_locale_po();"
  */
-function motaded_custom_update_10011(): void {
-  // Clear the v3 / v4 state so the seeder re-runs and updates icons in place.
-  \Drupal::state()->delete('motaded_custom.main_menu_seed_v3');
-  \Drupal::state()->delete('motaded_custom.main_menu_seed_v4');
-  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'inc', 'motaded_custom.menu_seed');
-  if (!function_exists('motaded_custom_seed_main_navigation')) {
-    return;
-  }
-  motaded_custom_seed_main_navigation();
+function motaded_custom_update_10012(): void {
+  _motaded_custom_import_ar_locale_po();
 }
+
+/**
+ * Re-imports Arabic UI strings after adding /platforms filter placeholders.
+ */
+function motaded_custom_update_10013(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after the full audit of /services, /sectors,
+ * /platforms (card CTAs, sidebar accordion summaries, aria labels, stats).
+ */
+function motaded_custom_update_10014(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding directory form / empty-state labels
+ * and global CTA copy used on /services, /sectors and /platforms.
+ */
+function motaded_custom_update_10015(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding the split-banner hero copy and
+ * quick-link labels used on the /events listing page.
+ */
+function motaded_custom_update_10016(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding hero/quick-link/filter labels
+ * for /chambers and /library, plus runtime form_alter placeholders.
+ */
+function motaded_custom_update_10017(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after moving library tab descriptions from CSS
+ * into real markup and adding missing events/library/webform labels.
+ */
+function motaded_custom_update_10018(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding hero copy, quick-link labels,
+ * and exposed-filter strings for /blog (view: news, display: page_1) and
+ * /news (view: news, display: page_2). Aligns with new metatag titles and
+ * descriptions populated for those displays and ensures Arabic search
+ * placeholders/buttons load at render time on Arabic listing pages.
+ */
+function motaded_custom_update_10019(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+

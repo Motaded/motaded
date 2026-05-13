@@ -319,8 +319,11 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'Sectors | Motaded'
-            description: 'Explore industry sectors in Saudi Arabia — data and highlights from Motaded sector pages.'
+            title: 'Industry sectors in Saudi Arabia | Motaded'
+            description: 'Discover the industry sectors shaping opportunity in Saudi Arabia. Browse strategic context, headline indicators, and Motaded guidance for each sector to support market entry and growth.'
+            hreflang_xdefault: '[site:base-url]/sectors'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/sectors'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/sectors'
           tokenize: false
       path: sectors
     cache_metadata:

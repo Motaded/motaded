@@ -1,0 +1,40 @@
+label: المنصات
+display:
+  default:
+    display_options:
+      title: المنصات
+  page_1:
+    display_title: 'صفحة المنصات'
+    display_options:
+      empty:
+        area_text_custom:
+          content: '<p class="platforms-directory__empty" role="status">لا توجد منصات مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى.</p>'
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: ترتيب
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          text_input_required: 'اختر المرشحات ثم انقر «تطبيق» لعرض المنصات المطابقة.'
+          bef:
+            general:
+              secondary_label: 'مرشحات إضافية'
+      filters:
+        title:
+          expose:
+            label: بحث
+        field_category_target_id:
+          expose:
+            label: الفئة
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'المنصات الحكومية في المملكة العربية السعودية | معتد'
+            description: 'تصفّح المنصات الحكومية والرقمية الرسمية التي تدعم الأعمال في المملكة العربية السعودية. رشّح حسب الفئة، واعثر على البوابة المناسبة، وتواصل مع معتد للحصول على إرشادات الخبراء.'

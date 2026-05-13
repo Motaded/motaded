@@ -82,48 +82,29 @@
       <div class="services-directory__main services-directory__main--integrated-exposed platforms-directory__main">
 
         {% if exposed %}
-          <div class="services-directory__exposed-top platforms-directory__exposed-wrap" id="platforms-directory-filters">
+          <div class="services-directory__exposed-top platforms-directory__exposed-wrap" id="platforms-directory-filters" role="group" aria-label="{{ 'Filter platforms'|t }}">
             {{ exposed }}
           </div>
         {% endif %}
 
-        {% if motaded_platforms_category_chips is defined and motaded_platforms_category_chips is not empty %}
-          <nav class="platforms-directory__chips" aria-label="{{ 'Platform categories'|t }}">
-            {% for chip in motaded_platforms_category_chips %}
-              <a class="platforms-directory__chip" href="{{ chip.url }}">{{ chip.label }}</a>
-            {% endfor %}
-          </nav>
-        {% endif %}
-
-        <div class="services-directory__results-column platforms-directory__results" id="platforms-directory-listings">
-          <div class="platforms-directory__toolbar" role="toolbar" aria-label="{{ 'Listing display'|t }}">
+        <section class="services-directory__results-column platforms-directory__results" id="platforms-directory-listings" aria-labelledby="platforms-directory-listings-heading">
+          <div class="platforms-directory__toolbar">
             <div class="platforms-directory__toolbar-intro">
-              <h2 class="platforms-directory__grid-heading">{{ 'Explore platforms'|t }}</h2>
+              <h2 id="platforms-directory-listings-heading" class="platforms-directory__grid-heading">{{ 'Explore platforms'|t }}</h2>
               {% if header %}
                 <p class="services-directory__results-count text-sm text-gray-600">{{ header }}</p>
               {% endif %}
             </div>
-            <div class="platforms-directory__toolbar-controls">
-              <span class="platforms-directory__toolbar-label" id="platforms-dir-toggle-label">{{ 'View as'|t }}</span>
-              <div class="platforms-directory__toggle" role="group" aria-labelledby="platforms-dir-toggle-label">
-                <button type="button" class="platforms-directory__toggle-btn is-active" data-platforms-dir-mode="grid" aria-pressed="true">
-                  {{ 'Grid'|t }}
-                </button>
-                <button type="button" class="platforms-directory__toggle-btn" data-platforms-dir-mode="list" aria-pressed="false">
-                  {{ 'List'|t }}
-                </button>
-              </div>
-            </div>
           </div>
 
-          <div class="services-directory__results-body platforms-directory__panel" data-platforms-dir-panel="list">
+          <div class="services-directory__results-body platforms-directory__panel">
             {% if rows %}
-              <div class="view-content platforms-directory__grid" data-platforms-dir-grid>
+              <div class="view-content platforms-directory__grid">
                 {{ rows }}
               </div>
             {% elseif empty %}
               <div class="view-empty">
-                {{ empty }}
+                <p class="platforms-directory__empty" role="status">{{ 'No platforms match these filters. Try resetting or choose different options.'|t }}</p>
               </div>
             {% endif %}
             {% if pager %}
@@ -132,7 +113,7 @@
               </div>
             {% endif %}
           </div>
-        </div>
+        </section>
 
       </div>
     </div>

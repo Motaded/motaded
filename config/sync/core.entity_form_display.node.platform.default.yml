@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.platform.field_hero_image
     - field.field.node.platform.field_how_we_help
     - field.field.node.platform.field_logo
+    - field.field.node.platform.field_meta_tags
     - field.field.node.platform.field_partner_logos
     - field.field.node.platform.field_process_steps
     - field.field.node.platform.field_region
@@ -26,6 +27,7 @@ dependencies:
   module:
     - link
     - media_library
+    - metatag
     - paragraphs
     - path
     - text
@@ -122,6 +124,14 @@ content:
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_meta_tags:
+    type: metatag_firehose
+    weight: 55
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
     third_party_settings: {  }
   field_partner_logos:
     type: media_library_widget

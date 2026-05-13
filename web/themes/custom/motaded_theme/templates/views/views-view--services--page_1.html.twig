@@ -84,14 +84,17 @@
       <div class="services-directory__page">
         <div class="services-directory__main services-directory__main--integrated-exposed">
           {{ exposed }}
-          <div class="services-directory__results-column" id="services-directory-listings">
-            {% if header %}
-              <div class="services-directory__results-meta">
-                <p class="services-directory__results-count text-sm text-gray-600">
-                  {{ header }}
-                </p>
-              </div>
-            {% endif %}
+          <section class="services-directory__results-column" id="services-directory-listings" aria-labelledby="services-directory-listings-heading">
+            <div class="services-directory__results-head">
+              <h2 id="services-directory-listings-heading" class="services-directory__results-heading">{{ 'Explore services'|t }}</h2>
+              {% if header %}
+                <div class="services-directory__results-meta">
+                  <p class="services-directory__results-count text-sm text-gray-600">
+                    {{ header }}
+                  </p>
+                </div>
+              {% endif %}
+            </div>
             <div class="services-directory__results-body">
               {% if rows %}
                 <div class="services-directory__card-list">
@@ -108,7 +111,7 @@
                 </div>
               {% endif %}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     {% else %}

@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.chamber.field_external_link
     - field.field.node.chamber.field_featured
     - field.field.node.chamber.field_logo
+    - field.field.node.chamber.field_meta_tags
     - field.field.node.chamber.field_priority
     - field.field.node.chamber.field_relationship_focus
     - field.field.node.chamber.field_short_description
@@ -16,6 +17,7 @@ dependencies:
   module:
     - link
     - media_library
+    - metatag
     - path
 id: node.chamber.default
 targetEntityType: node
@@ -63,6 +65,14 @@ content:
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_meta_tags:
+    type: metatag_firehose
+    weight: 40
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
     third_party_settings: {  }
   field_priority:
     type: number

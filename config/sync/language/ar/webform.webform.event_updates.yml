@@ -1,0 +1,15 @@
+title: 'تحديثات الفعاليات'
+elements: |-
+  email:
+    '#type': email
+    '#title': 'البريد الإلكتروني'
+    '#placeholder': 'name@company.com'
+    '#required': true
+  consent:
+    '#type': checkbox
+    '#title': 'أوافق على تلقي تحديثات الفعاليات من معتد.'
+    '#required': true
+  actions:
+    '#type': webform_actions
+    '#title': 'زر/أزرار الإرسال'
+    '#submit__label': 'اشترك'

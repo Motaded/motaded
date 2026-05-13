@@ -4,14 +4,10 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.chamber_card
-    - field.storage.node.field_country
-    - field.storage.node.field_type
     - node.type.chamber
-    - taxonomy.vocabulary.country
   module:
     - node
     - options
-    - taxonomy
     - user
 id: chambers
 label: Chambers
@@ -226,15 +222,11 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - 'user.node_grants:view'
         - user.permissions
-      tags:
-        - 'config:field.storage.node.field_chamber_featured_stats'
-        - 'config:field.storage.node.field_featured'
-        - 'config:field.storage.node.field_priority'
-        - 'config:field.storage.node.field_short_description'
+      tags: {  }
   homepage:
     id: homepage
     display_title: Homepage
@@ -250,17 +242,11 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - 'user.node_grants:view'
         - user.permissions
-      tags:
-        - 'config:field.storage.node.field_chamber_featured_stats'
-        - 'config:field.storage.node.field_featured'
-        - 'config:field.storage.node.field_priority'
-        - 'config:field.storage.node.field_short_description'
-        - 'config:field.storage.node.field_relationship_focus'
-        - 'config:field.storage.node.field_type'
+      tags: {  }
   page_1:
     id: page_1
     display_title: Directory
@@ -396,53 +382,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        field_country_target_id:
-          id: field_country_target_id
-          table: node__field_country
-          field: field_country_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_country_target_id_op
-            label: Country
-            description: ''
-            use_operator: false
-            operator: field_country_target_id_op
-            operator_limit_selection: false
-            operator_list:
-              or: or
-            identifier: field_country_target_id
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: anonymous
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          vid: country
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
         field_type_value:
           id: field_type_value
           table: node__field_type
@@ -489,25 +428,30 @@ display:
         groups:
           1: AND
       defaults:
+        use_ajax: false
         pager: false
         exposed_form: false
         arguments: false
         filters: false
         filter_groups: false
-      display_extenders: {  }
+      use_ajax: true
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'Chambers of commerce and business councils in Saudi Arabia | Motaded'
+            description: 'Directory of chambers of commerce, business councils, and sector networks across Saudi Arabia and the GCC. Find the right organisation for membership, partnerships, and market access in the Kingdom.'
+            canonical_url: '[site:base-url]/chambers'
+            hreflang_xdefault: '[site:base-url]/chambers'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/chambers'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/chambers'
+          tokenize: false
       path: chambers
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags:
-        - 'config:field.storage.node.field_country'
-        - 'config:field.storage.node.field_featured'
-        - 'config:field.storage.node.field_priority'
-        - 'config:field.storage.node.field_short_description'
-        - 'config:field.storage.node.field_type'
-        - 'config:taxonomy.vocabulary.country'
+      tags: {  }

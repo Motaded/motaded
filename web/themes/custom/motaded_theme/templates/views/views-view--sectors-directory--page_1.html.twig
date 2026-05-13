@@ -81,14 +81,17 @@
           <div class="services-directory__exposed-top sectors-directory__exposed-wrap">
             {{ exposed }}
           </div>
-          <div class="services-directory__results-column sectors-directory__results" id="sectors-directory-listings">
-            {% if header %}
-              <div class="services-directory__results-meta">
-                <p class="services-directory__results-count text-sm text-gray-600">
-                  {{ header }}
-                </p>
-              </div>
-            {% endif %}
+          <section class="services-directory__results-column sectors-directory__results" id="sectors-directory-listings" aria-labelledby="sectors-directory-listings-heading">
+            <div class="services-directory__results-head sectors-directory__results-head">
+              <h2 id="sectors-directory-listings-heading" class="sectors-directory__results-heading">{{ 'Explore sectors'|t }}</h2>
+              {% if header %}
+                <div class="services-directory__results-meta">
+                  <p class="services-directory__results-count text-sm text-gray-600">
+                    {{ header }}
+                  </p>
+                </div>
+              {% endif %}
+            </div>
             <div class="services-directory__results-body">
               {% if rows %}
                 <div class="view-content sectors-directory__grid">
@@ -96,7 +99,7 @@
                 </div>
               {% elseif empty %}
                 <div class="view-empty">
-                  {{ empty }}
+                  <p class="sectors-directory__empty" role="status">{{ 'No sector pages match these filters. Try resetting or adjust your search.'|t }}</p>
                 </div>
               {% endif %}
               {% if pager %}
@@ -105,7 +108,7 @@
                 </div>
               {% endif %}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     {% else %}
@@ -116,7 +119,7 @@
           </div>
         {% elseif empty %}
           <div class="view-empty">
-            {{ empty }}
+            <p class="sectors-directory__empty" role="status">{{ 'No sector pages match these filters. Try resetting or adjust your search.'|t }}</p>
           </div>
         {% endif %}
         {% if pager %}

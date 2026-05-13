@@ -174,3 +174,657 @@ msgstr "المصدر / النطاق"
 
 msgid "Found this helpful? Share it so colleagues and contacts can stay up to date."
 msgstr "وجدت هذا مفيدًا؟ شاركه ليبقى الزملاء وجهات الاتصال على اطلاع."
+
+# /services hero + quick links
+
+msgid "Government-aligned services for every step of your business journey"
+msgstr "خدمات متوافقة مع الحكومة لكل خطوة في مسيرة عملك"
+
+msgid "From registration to operations and compliance, we provide integrated solutions aligned with Saudi systems to help you start, operate and grow with confidence."
+msgstr "من التسجيل إلى التشغيل والامتثال، نقدّم حلولاً متكاملة متوافقة مع الأنظمة السعودية لمساعدتك على الانطلاق والتشغيل والنمو بثقة."
+
+msgid "Quick links"
+msgstr "روابط سريعة"
+
+msgid "Browse all services in this directory"
+msgstr "تصفّح جميع الخدمات في هذا الدليل"
+
+msgid "Browse"
+msgstr "تصفّح"
+
+msgid "All services"
+msgstr "جميع الخدمات"
+
+msgid "Browse government platforms (@count)"
+msgstr "تصفّح المنصات الحكومية (@count)"
+
+msgid "Government platforms"
+msgstr "المنصات الحكومية"
+
+msgid "Open filters to narrow results by type, sector, and tags"
+msgstr "افتح المرشحات لتضييق النتائج حسب النوع والقطاع والوسوم"
+
+msgid "Filters"
+msgstr "المرشحات"
+
+msgid "Type, sector & tags"
+msgstr "النوع والقطاع والوسوم"
+
+msgid "Contact us — speak to our team"
+msgstr "تواصل معنا — تحدث مع فريقنا"
+
+msgid "Contact us"
+msgstr "تواصل معنا"
+
+msgid "Expert support"
+msgstr "دعم متخصص"
+
+msgid "Explore services"
+msgstr "استكشف الخدمات"
+
+# /sectors hero + quick links
+
+msgid "Industry sectors shaping opportunity in Saudi Arabia"
+msgstr "قطاعات الأعمال التي تشكّل الفرص في المملكة العربية السعودية"
+
+msgid "Each sector page brings together strategic context, headline indicators from global data where available, and Motaded guidance — filter by taxonomy or search by name."
+msgstr "تجمع كل صفحة قطاع السياق الاستراتيجي والمؤشرات الرئيسية من البيانات العالمية حين تتوفر، وإرشادات معتد — رشّح حسب التصنيف أو ابحث بالاسم."
+
+msgid "Government-aligned services (@count)"
+msgstr "الخدمات المتوافقة مع الحكومة (@count)"
+
+msgid "Services"
+msgstr "الخدمات"
+
+msgid "Government platforms (@count)"
+msgstr "المنصات الحكومية (@count)"
+
+msgid "Platforms"
+msgstr "المنصات"
+
+msgid "Explore sectors"
+msgstr "استكشف القطاعات"
+
+msgid "Filter sectors"
+msgstr "تصفية القطاعات"
+
+# /platforms hero + quick links
+
+msgid "All the platforms you need, in one place"
+msgstr "كل المنصات التي تحتاجها في مكان واحد"
+
+msgid "Discover official platforms and digital services in Saudi Arabia. We help you navigate, register, and stay compliant — filter by category or search by name."
+msgstr "اكتشف المنصات الرسمية والخدمات الرقمية في المملكة العربية السعودية. نساعدك على التصفح والتسجيل والامتثال — رشّح حسب الفئة أو ابحث بالاسم."
+
+msgid "Official platforms (@count)"
+msgstr "المنصات الرسمية (@count)"
+
+msgid "Official platforms"
+msgstr "المنصات الرسمية"
+
+msgid "Government-aligned services"
+msgstr "الخدمات المتوافقة مع الحكومة"
+
+msgid "Browse all"
+msgstr "تصفّح الكل"
+
+msgid "Explore platforms"
+msgstr "استكشف المنصات"
+
+msgid "Filter platforms"
+msgstr "تصفية المنصات"
+
+# /platforms exposed filters (set via after_build in motaded_theme.theme)
+
+msgid "Search platforms, services, or keywords…"
+msgstr "ابحث في المنصات أو الخدمات أو الكلمات المفتاحية…"
+
+msgid "All categories"
+msgstr "كل الفئات"
+
+msgid "All regions"
+msgstr "كل المناطق"
+
+msgid "All types"
+msgstr "كل الأنواع"
+
+msgid "All industries"
+msgstr "كل القطاعات"
+
+# /services rows + sidebar accordion + sidebar CTA
+
+msgid "View service"
+msgstr "عرض الخدمة"
+
+msgid "Highlights"
+msgstr "أبرز النقاط"
+
+msgid "Beneficiaries"
+msgstr "المستفيدون"
+
+msgid "Filter services"
+msgstr "تصفية الخدمات"
+
+msgid "Sector"
+msgstr "القطاع"
+
+msgid "Tags"
+msgstr "الوسوم"
+
+msgid "Need guidance? Speak with our experts about the right services for your setup."
+msgstr "تحتاج إلى توجيه؟ تحدّث مع خبرائنا لتحديد الخدمات المناسبة لإعداد عملك."
+
+msgid "Contact an expert"
+msgstr "تواصل مع خبير"
+
+# /sectors directory card
+
+msgid "View sector"
+msgstr "عرض القطاع"
+
+msgid "Key figures"
+msgstr "أبرز الأرقام"
+
+msgid "Themes"
+msgstr "المحاور"
+
+# /platforms teaser + stats helper
+
+msgid "Learn more"
+msgstr "اعرف المزيد"
+
+msgid "Regions"
+msgstr "المناطق"
+
+# View exposed forms / empty states / global CTA strings used on directory pages.
+
+msgid "Apply filters"
+msgstr "تطبيق المرشحات"
+
+msgid "Reset filters"
+msgstr "إعادة تعيين المرشحات"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search sectors…"
+msgstr "ابحث في القطاعات…"
+
+msgid "No platforms match these filters. Try resetting or choose different options."
+msgstr "لا توجد منصات مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى."
+
+msgid "No sector pages match these filters. Try resetting or adjust your search."
+msgstr "لا توجد صفحات قطاعات مطابقة لهذه المرشحات. جرّب إعادة الضبط أو عدّل بحثك."
+
+msgid "Or reach us directly"
+msgstr "أو تواصل معنا مباشرة"
+
+msgid "All guidance is based on official government procedures and platforms."
+msgstr "تستند جميع الإرشادات إلى الإجراءات والمنصات الحكومية الرسمية."
+
+msgid "All sectors"
+msgstr "كل القطاعات"
+
+msgid "All tags"
+msgstr "كل الوسوم"
+
+# /events page — split-banner hero.
+msgid "Business events and meetups in Saudi Arabia"
+msgstr "فعاليات الأعمال واللقاءات في المملكة العربية السعودية"
+
+msgid "Discover conferences, workshops, expos, and networking sessions happening across the Kingdom — curated for investors, founders, and operators expanding in Saudi Arabia."
+msgstr "اكتشف المؤتمرات وورش العمل والمعارض وجلسات التواصل التي تُقام في جميع أنحاء المملكة — مختارة للمستثمرين ورواد الأعمال والشركات التي توسّع نشاطها في السعودية."
+
+msgid "Filter by date, region, or topic to find the events that move your business forward, and reach our team if you need help planning or attending."
+msgstr "صفِّ النتائج حسب التاريخ أو المنطقة أو الموضوع للعثور على الفعاليات التي تدفع أعمالك للأمام، وتواصل مع فريقنا إذا احتجت للمساعدة في التخطيط أو الحضور."
+
+msgid "Upcoming events"
+msgstr "الفعاليات القادمة"
+
+msgid "Events hosted"
+msgstr "الفعاليات المُستضافة"
+
+msgid "Cities"
+msgstr "المدن"
+
+msgid "Industries"
+msgstr "القطاعات"
+
+msgid "Browse upcoming events"
+msgstr "تصفح الفعاليات القادمة"
+
+msgid "Browse events"
+msgstr "تصفح الفعاليات"
+
+msgid "Filter events"
+msgstr "تصفية الفعاليات"
+
+msgid "Find events"
+msgstr "ابحث عن فعاليات"
+
+msgid "Upcoming"
+msgstr "قادمة"
+
+msgid "Filters"
+msgstr "المرشحات"
+
+msgid "Discover business events, conferences, and workshops happening across Saudi Arabia."
+msgstr "اكتشف فعاليات الأعمال والمؤتمرات وورش العمل التي تُقام في جميع أنحاء المملكة العربية السعودية."
+
+msgid "Explore all upcoming business events and opportunities."
+msgstr "استعرض جميع فعاليات الأعمال والفرص القادمة."
+
+msgid "Get event updates"
+msgstr "احصل على تحديثات الفعاليات"
+
+msgid "Tell us what you follow — our team can share relevant invitations and briefings."
+msgstr "أخبرنا بما تتابعه — يمكن لفريقنا مشاركة الدعوات والإحاطات ذات الصلة."
+
+msgid "Event updates signup"
+msgstr "التسجيل في تحديثات الفعاليات"
+
+msgid "Listing display"
+msgstr "عرض القائمة"
+
+msgid "Cards"
+msgstr "بطاقات"
+
+msgid "Calendar"
+msgstr "تقويم"
+
+msgid "Subscribe"
+msgstr "اشترك"
+
+# /chambers — split-banner hero, quick links and listings.
+msgid "Business chambers and networks in Saudi Arabia"
+msgstr "غرف الأعمال والشبكات في المملكة العربية السعودية"
+
+msgid "Find chambers of commerce, business councils, and sector networks that help companies connect with local markets, public institutions, and commercial opportunities across Saudi Arabia."
+msgstr "اعثر على الغرف التجارية ومجالس الأعمال والشبكات القطاعية التي تساعد الشركات على التواصل مع الأسواق المحلية والجهات العامة والفرص التجارية في مختلف أنحاء المملكة العربية السعودية."
+
+msgid "Use the directory to identify the right chamber, explore membership pathways, and reach organizations that can support market entry, partnerships, and growth."
+msgstr "استخدم الدليل لتحديد الغرفة المناسبة، واستكشف مسارات العضوية، وتواصل مع المنظمات التي يمكنها دعم دخول السوق والشراكات والنمو."
+
+msgid "Directory"
+msgstr "الدليل"
+
+msgid "Browse chambers"
+msgstr "تصفح الغرف"
+
+msgid "Browse chamber directory"
+msgstr "تصفح دليل الغرف"
+
+msgid "Filter chambers"
+msgstr "تصفية الغرف"
+
+msgid "Search network"
+msgstr "البحث في الشبكة"
+
+msgid "Get support"
+msgstr "احصل على دعم"
+
+msgid "Contact Motaded team"
+msgstr "تواصل مع فريق معتد"
+
+msgid "Chambers directory"
+msgstr "دليل الغرف"
+
+msgid "Browse chambers of commerce and business councils across Saudi Arabia and the GCC."
+msgstr "تصفّح الغرف التجارية ومجالس الأعمال في المملكة العربية السعودية ودول الخليج."
+
+msgid "Search chambers…"
+msgstr "ابحث في الغرف…"
+
+msgid "Organization type"
+msgstr "نوع المنظمة"
+
+msgid "No chambers match this selection."
+msgstr "لا توجد غرف مطابقة لهذا الاختيار."
+
+# /library — split-banner hero, quick links and listings.
+msgid "Library"
+msgstr "المكتبة"
+
+msgid "A curated hub of ready-to-use templates, forms, checklists, and step-by-step guides — alongside the official regulations, policies and legal references you need to start, operate and grow a compliant business in Saudi Arabia."
+msgstr "مركز مختار يضم قوالب جاهزة للاستخدام ونماذج وقوائم تحقق وأدلة خطوة بخطوة — إلى جانب اللوائح والسياسات والمراجع القانونية الرسمية التي تحتاجها لبدء وتشغيل ونمو أعمال متوافقة في المملكة العربية السعودية."
+
+msgid "Every document is mapped to its government source and updated when the rules change, so your team can move faster with the confidence that the paperwork is current and aligned with Saudi systems."
+msgstr "كل وثيقة مرتبطة بمصدرها الحكومي ويتم تحديثها عند تغيّر القواعد، حتى يتحرك فريقك بسرعة مع الثقة بأن المستندات محدّثة ومتوافقة مع الأنظمة السعودية."
+
+msgid "Templates"
+msgstr "القوالب"
+
+msgid "Forms & guides"
+msgstr "النماذج والأدلة"
+
+msgid "Document templates and forms"
+msgstr "قوالب الوثائق والنماذج"
+
+msgid "Regulations"
+msgstr "اللوائح"
+
+msgid "Laws & references"
+msgstr "القوانين والمراجع"
+
+msgid "Regulations and laws"
+msgstr "اللوائح والقوانين"
+
+msgid "Search library"
+msgstr "ابحث في المكتبة"
+
+msgid "Filter library documents"
+msgstr "تصفية وثائق المكتبة"
+
+msgid "Library documents"
+msgstr "وثائق المكتبة"
+
+msgid "Templates, forms, guides, and official regulations curated for businesses in Saudi Arabia."
+msgstr "قوالب ونماذج وأدلة ولوائح رسمية مختارة للأعمال في المملكة العربية السعودية."
+
+msgid "Section"
+msgstr "القسم"
+
+msgid "Category"
+msgstr "الفئة"
+
+msgid "Document templates & forms"
+msgstr "قوالب الوثائق والنماذج"
+
+msgid "Regulations & laws"
+msgstr "اللوائح والقوانين"
+
+msgid "Contracts, checklists, and downloadable guides for day-to-day operations."
+msgstr "عقود وقوائم تحقق وأدلة قابلة للتنزيل للعمليات اليومية."
+
+msgid "Official instruments, policies, and regulatory references."
+msgstr "أدوات رسمية وسياسات ومراجع تنظيمية."
+
+msgid "Search documents…"
+msgstr "ابحث في الوثائق…"
+
+msgid "Search documents, templates, forms, guides…"
+msgstr "ابحث في الوثائق والقوالب والنماذج والأدلة…"
+
+msgid "Open document"
+msgstr "فتح الوثيقة"
+
+msgid "No documents match these filters."
+msgstr "لا توجد وثائق مطابقة لهذه المرشحات."
+
+msgid "No documents match these filters. Try resetting or choose different options."
+msgstr "لا توجد وثائق مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى."
+
+# /events — additional placeholders not covered by views config.
+msgid "Search events, topics, or keywords…"
+msgstr "ابحث في الفعاليات أو الموضوعات أو الكلمات المفتاحية…"
+
+msgid "Event type"
+msgstr "نوع الفعالية"
+
+msgid "Industry"
+msgstr "القطاع"
+
+msgid "Region"
+msgstr "المنطقة"
+
+msgid "From"
+msgstr "من"
+
+msgid "To"
+msgstr "إلى"
+
+msgid "View as"
+msgstr "عرض كـ"
+
+msgid "I agree to receive event updates from Motaded."
+msgstr "أوافق على تلقي تحديثات الفعاليات من معتد."
+
+# /blog (views-view--news--page_1)
+msgid "Insights & articles for doing business in Saudi Arabia"
+msgstr "رؤى ومقالات لممارسة الأعمال في المملكة العربية السعودية"
+
+msgid "Practical guides, market analysis, and step-by-step explainers covering company formation, government platforms, regulations, and the sectors driving growth in the Kingdom."
+msgstr "أدلة عملية وتحليلات للسوق وشروحات تفصيلية تغطّي تأسيس الشركات والمنصات الحكومية والأنظمة والقطاعات المحفّزة للنمو في المملكة."
+
+msgid "Articles are written and reviewed by our specialists, refreshed when the rules change, and mapped back to the official sources you can verify with one click."
+msgstr "تُكتب المقالات وتُراجَع من قِبل اختصاصيّينا، وتُحدَّث عند تغيّر الأنظمة، وتُربط بالمصادر الرسمية التي يمكنك التحقّق منها بنقرة واحدة."
+
+msgid "Browse the latest articles"
+msgstr "تصفّح أحدث المقالات"
+
+msgid "Latest"
+msgstr "الأحدث"
+
+msgid "Fresh articles"
+msgstr "مقالات جديدة"
+
+msgid "Search and filter articles"
+msgstr "ابحث وصفِّ المقالات"
+
+msgid "Find a topic"
+msgstr "ابحث عن موضوع"
+
+msgid "Read the latest news"
+msgstr "اقرأ آخر الأخبار"
+
+msgid "Press updates"
+msgstr "أخبار المستجدّات"
+
+msgid "Filter articles"
+msgstr "تصفية المقالات"
+
+msgid "Articles"
+msgstr "المقالات"
+
+# /news (views-view--news--page_2)
+msgid "News and company updates"
+msgstr "الأخبار وآخر المستجدّات"
+
+msgid "Follow the latest Motaded announcements, Saudi market updates, regulatory news, partnerships, and public-sector developments that matter to investors and growing businesses."
+msgstr "تابع آخر إعلانات معتد وتحديثات السوق السعودي والأخبار التنظيمية والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية."
+
+msgid "We collect the important signals in one place, so your team can track changes, understand what is happening, and act with confidence."
+msgstr "نجمع الإشارات المهمّة في مكان واحد، لتتمكّن فِرَقك من رصد التغيّرات وفهم ما يحدث والتحرّك بثقة."
+
+msgid "Browse the latest news"
+msgstr "تصفّح آخر الأخبار"
+
+msgid "News updates"
+msgstr "تحديثات الأخبار"
+
+msgid "Search news"
+msgstr "ابحث في الأخبار"
+
+msgid "Find updates"
+msgstr "اعثر على التحديثات"
+
+msgid "Read articles and insights"
+msgstr "اقرأ المقالات والرؤى"
+
+msgid "Insights hub"
+msgstr "مركز الرؤى"
+
+msgid "Filter news"
+msgstr "تصفية الأخبار"
+
+# Main navigation — Services mega menu (v6)
+msgid "Government Services"
+msgstr "الخدمات الحكومية"
+
+msgid "HR & Workforce"
+msgstr "الموارد البشرية والقوى العاملة"
+
+msgid "Finance & Compliance"
+msgstr "المالية والامتثال"
+
+msgid "Company Formation (LLC)"
+msgstr "تأسيس شركة (ذ.م.م.)"
+
+msgid "Branch Setup"
+msgstr "تأسيس فرع"
+
+msgid "Foreign Company Registration"
+msgstr "تسجيل شركة أجنبية"
+
+msgid "Commercial Registration"
+msgstr "السجل التجاري"
+
+msgid "Investment License"
+msgstr "ترخيص الاستثمار"
+
+msgid "Mudad"
+msgstr "مدد"
+
+msgid "Qiwa"
+msgstr "قِوى"
+
+msgid "Muqeem"
+msgstr "مقيم"
+
+msgid "Etimad"
+msgstr "اعتماد"
+
+msgid "GOSI"
+msgstr "التأمينات الاجتماعية (GOSI)"
+
+msgid "ZATCA"
+msgstr "هيئة الزكاة والضريبة والجمارك"
+
+msgid "Employee Transfer"
+msgstr "نقل الموظفين"
+
+msgid "Saudization (Nitaqat)"
+msgstr "السعودة (نطاقات)"
+
+msgid "HR Operations"
+msgstr "عمليات الموارد البشرية"
+
+msgid "Virtual Office"
+msgstr "مكتب افتراضي"
+
+msgid "Serviced Offices"
+msgstr "مكاتب مجهزة بالخدمات"
+
+msgid "Co-working Spaces"
+msgstr "مساحات عمل مشتركة"
+
+msgid "Meeting Rooms"
+msgstr "غرف الاجتماعات"
+
+msgid "PRO Services"
+msgstr "خدمات العلاقات الحكومية"
+
+msgid "Accounting Services"
+msgstr "خدمات المحاسبة"
+
+msgid "VAT Registration"
+msgstr "تسجيل ضريبة القيمة المضافة"
+
+msgid "Audit Support"
+msgstr "دعم التدقيق"
+
+msgid "Financial Reporting"
+msgstr "التقارير المالية"
+
+msgid "Tax Advisory"
+msgstr "الاستشارات الضريبية"
+
+msgid "Company formation, licenses and investment support in Saudi Arabia."
+msgstr "تأسيس الشركات والتراخيص ودعم الاستثمار في المملكة العربية السعودية."
+
+msgid "Support for government platforms and official procedures."
+msgstr "دعم المنصات الحكومية والإجراءات الرسمية."
+
+msgid "Visa services, Saudization, payroll and full HR operations support."
+msgstr "خدمات التأشيرات والسعودة والرواتب ودعم شامل لعمليات الموارد البشرية."
+
+msgid "Flexible offices, virtual addresses and meeting space solutions."
+msgstr "مكاتب مرنة وعناوين افتراضية وحلول لمساحات الاجتماعات."
+
+msgid "Accounting, VAT, audit support and financial compliance."
+msgstr "المحاسبة وضريبة القيمة المضافة ودعم التدقيق والامتثال المالي."
+
+msgid "Sectors"
+msgstr "القطاعات"
+
+msgid "Resources"
+msgstr "الموارد"
+
+msgid "Setup Packages"
+msgstr "باقات التأسيس"
+
+msgid "Need help?"
+msgstr "هل تحتاج إلى مساعدة؟"
+
+msgid "Explore key industries driving Saudi Arabia's economy."
+msgstr "استكشف القطاعات الرئيسية التي تقود اقتصاد المملكة العربية السعودية."
+
+msgid "Access government and business platforms in one place."
+msgstr "الوصول إلى المنصات الحكومية والتجارية في مكان واحد."
+
+msgid "Articles, guides, events and tools to support your business."
+msgstr "مقالات وأدلة وفعاليات وأدوات لدعم أعمالك."
+
+msgid "All-in-one packages for a smooth business setup experience."
+msgstr "باقات شاملة لتجربة تأسيس أعمال سلسة."
+
+msgid "Our team is available 24/7 to support your journey."
+msgstr "فريقنا متاح على مدار الساعة لدعم رحلتك."
+
+msgid "View sectors"
+msgstr "عرض القطاعات"
+
+msgid "View platforms"
+msgstr "عرض المنصات"
+
+msgid "View resources"
+msgstr "عرض الموارد"
+
+msgid "View packages"
+msgstr "عرض الباقات"
+
+# Main navigation v7 — collapsed top bar (About sectioned + Resources expanded).
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "About"
+msgstr "نبذة"
+
+msgid "About us"
+msgstr "من نحن"
+
+msgid "About Kingdom"
+msgstr "عن المملكة"
+
+msgid "Who we are"
+msgstr "من نحن"
+
+msgid "Our mission"
+msgstr "مهمتنا"
+
+msgid "Life in Saudi Arabia"
+msgstr "الحياة في المملكة العربية السعودية"
+
+msgid "Taxes In Saudi Arabia"
+msgstr "الضرائب في المملكة العربية السعودية"
+
+msgid "Quality of Life"
+msgstr "جودة الحياة"
+
+msgid "Investment Opportunities"
+msgstr "الفرص الاستثمارية"
+
+msgid "Why Invest in Saudi Arabia?"
+msgstr "لماذا الاستثمار في المملكة العربية السعودية؟"
+
+msgid "NEOM"
+msgstr "نيوم"
+
+msgid "Insights"
+msgstr "الرؤى"
+
+msgid "Events"
+msgstr "الفعاليات"
+
+msgid "Government Platforms"
+msgstr "المنصات الحكومية"
