@@ -1,0 +1,40 @@
+uuid: 7c1a4ee5-1b2c-4f63-8c0a-f1c5e7a91104
+langcode: en
+status: true
+dependencies:
+  module:
+    - metatag_hreflang
+    - metatag_open_graph
+    - metatag_twitter_cards
+    - schema_article
+    - schema_metatag
+id: node__market_insight
+label: 'Content: Market Insight'
+tags:
+  title: '[node:title] | Saudi market insights | [site:name]'
+  description: '[node:summary]'
+  canonical_url: '[node:url]'
+  hreflang_xdefault: '[node:url:absolute]'
+  'hreflang_per_language:hreflang_en': '[node:url:absolute]'
+  'hreflang_per_language:hreflang_ar': '[node:url:absolute]'
+  og_title: '[node:title]'
+  og_description: '[node:summary]'
+  og_url: '[node:url:absolute]'
+  og_type: article
+  og_site_name: '[site:name]'
+  og_image: '[node:field_insight_thumbnail:entity:field_media_image:entity:url]'
+  og_image_alt: '[node:title]'
+  twitter_cards_type: summary_large_image
+  twitter_cards_title: '[node:title]'
+  twitter_cards_description: '[node:summary]'
+  twitter_cards_image: '[node:field_insight_thumbnail:entity:field_media_image:entity:url]'
+  schema_article_type: AnalysisNewsArticle
+  schema_article_name: '[node:title]'
+  schema_article_headline: '[node:title]'
+  schema_article_description: '[node:summary]'
+  schema_article_main_entity_of_page: '[node:url:absolute]'
+  schema_article_date_modified: '[node:changed:format:c]'
+  schema_article_date_published: '[node:created:format:c]'
+  schema_article_id: '[node:url:absolute]#insight'
+  schema_article_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:69:"[node:field_insight_thumbnail:entity:field_media_image:entity:url]";s:5:"width";s:64:"[node:field_insight_thumbnail:entity:field_media_image:width]";s:6:"height";s:65:"[node:field_insight_thumbnail:entity:field_media_image:height]";}'
+  schema_article_publisher: 'a:4:{s:5:"@type";s:12:"Organization";s:4:"name";s:11:"[site:name]";s:3:"url";s:10:"[site:url]";s:4:"logo";a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:59:"https://motaded.com.sa/themes/custom/motaded_theme/logo.svg";s:5:"width";s:3:"130";s:6:"height";s:3:"130";}}'

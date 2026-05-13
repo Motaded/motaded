@@ -1,37 +1,9 @@
-{# 
-  Theme: Muin (Custom Licensed Version)
-  © Banafsijy.com – Single Project License – Do Not Redistribute
-#}
 {#
 /**
  * @file
- * Theme override for a main view template.
- *
- * Available variables:
- * - attributes: Remaining HTML attributes for the element.
- * - css_name: A CSS-safe version of the view name.
- * - css_class: The user-specified classes names, if any.
- * - header: The optional header.
- * - footer: The optional footer.
- * - rows: The results of the view query, if any.
- * - empty: The content to display if there are no rows.
- * - pager: The optional pager next/prev links to display.
- * - exposed: Exposed widget form/info to display.
- * - feed_icons: Optional feed icons to display.
- * - more: An optional link to the next page of results.
- * - title: Title of the view, only used when displaying in the admin preview.
- * - title_prefix: Additional output populated by modules, intended to be
- *   displayed in front of the view title.
- * - title_suffix: Additional output populated by modules, intended to be
- *   displayed after the view title.
- * - attachment_before: An optional attachment view to be displayed before the
- *   view content.
- * - attachment_after: An optional attachment view to be displayed after the
- *   view content.
- * - dom_id: Unique id for every view being printed to give unique class for
- *   JavaScript.
- *
- * @see template_preprocess_views_view()
+ * /blog (view: news, display: page_1): split-banner hero (same architecture
+ * used on /services, /sectors, /platforms, /library) with articles-bg.png on
+ * the visual side, exposed search filter, and the article cards grid.
  */
 #}
 {{ attach_library('motaded_theme/blog_listing') }}
@@ -42,64 +14,118 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
-    'max-w-[1320px] mx-auto',
-    'page-green',
+    'services-directory',
+    'services-directory--page-redesign',
     'blog-listing',
+    'blog-listing--page',
+    'blog-listing-page',
+    'page-gray',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
   {{ title_suffix }}
-  {% if header %}
-    <header class="flex flex-wrap items-center justify-between gap-3">
-      <div>{{ header }}</div>
-    </header>
-  {% endif %}
-  {% if exposed %}
-    <section class="view-filters mt-6 bg-white rounded-xl border border-gray-200 px-4 py-3">
-      {{ exposed }}
-    </section>
-  {% endif %}
+
+  <header class="services-page-hero services-page-hero--split-banner blog-listing__hero">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo blog-listing__hero-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'Insights & articles for doing business in Saudi Arabia'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'Practical guides, market analysis, and step-by-step explainers covering company formation, government platforms, regulations, and the sectors driving growth in the Kingdom.'|t }}</p>
+            <p>{{ 'Articles are written and reviewed by our specialists, refreshed when the rules change, and mapped back to the official sources you can verify with one click.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip services-page-hero__stats-strip--three" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="#blog-listing-results" aria-label="{{ 'Browse the latest articles'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 18l4-4 3 3-4 4h-3v-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Latest'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Fresh articles'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="#blog-listing-filters" aria-label="{{ 'Search and filter articles'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Search'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Find a topic'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="/news" aria-label="{{ 'Read the latest news'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5h13a2 2 0 0 1 2 2v11H6a2 2 0 0 1-2-2V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M19 8h2v8a2 2 0 0 1-2 2M8 9h7M8 13h7M8 17h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'News'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Press updates'|t }}</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
+
   {% if attachment_before %}
     <div class="attachment attachment-before">
       {{ attachment_before }}
     </div>
   {% endif %}
 
-  {% if rows %}
-    <section class="view-content mt-6 w-full">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
-        {{ rows }}
-      </div>
-    </section>
-  {% elseif empty %}
-    <div class="view-empty">
-      {{ empty }}
-    </div>
-  {% endif %}
+  <div class="blog-listing__shell w-full py-6">
+    <div class="blog-listing__page-inner">
+      <div class="blog-listing__main min-w-0" id="blog-listing-results">
+        {% if exposed %}
+          <section class="view-filters blog-listing__filters mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" id="blog-listing-filters" role="group" aria-label="{{ 'Filter articles'|t }}">
+            {{ exposed }}
+          </section>
+        {% endif %}
 
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
-  {% if attachment_after %}
-    <div class="attachment attachment-after">
-      {{ attachment_after }}
+        {% if rows %}
+          <section class="view-content blog-listing__results mt-6 w-full" aria-label="{{ 'Articles'|t }}">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
+              {{ rows }}
+            </div>
+          </section>
+        {% elseif empty %}
+          <div class="view-empty rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            {{ empty }}
+          </div>
+        {% endif %}
+
+        {% if pager %}
+          <div class="blog-listing__pager mt-8">
+            {{ pager }}
+          </div>
+        {% endif %}
+      </div>
     </div>
-  {% endif %}
-  {% if more %}
-    {{ more }}
-  {% endif %}
-  {% if footer %}
-    <div class="view-footer">
-      {{ footer }}
-    </div>
-  {% endif %}
-  {% if feed_icons %}
-    <div class="feed-icons">
-      {{ feed_icons }}
-    </div>
-  {% endif %}
+
+    {% if attachment_after %}
+      <div class="attachment attachment-after mt-10">
+        {{ attachment_after }}
+      </div>
+    {% endif %}
+    {% if more %}
+      <div class="mt-6">
+        {{ more }}
+      </div>
+    {% endif %}
+    {% if footer %}
+      <div class="view-footer mt-10">
+        {{ footer }}
+      </div>
+    {% endif %}
+    {% if feed_icons %}
+      <div class="feed-icons mt-4">
+        {{ feed_icons }}
+      </div>
+    {% endif %}
+  </div>
 </div>

@@ -7,12 +7,17 @@
 
 @media (min-width: 768px) {
   #site-header.site-header-bar {
-    --mot-header-h: 72px;
+    --mot-header-h: 80px;
   }
 }
 
 #site-header .mot-header-main-nav {
   position: relative;
+}
+
+html.mot-menu-open,
+html.mot-menu-open body {
+  overflow: hidden;
 }
 
 /* Override legacy menu.css hover fill inside header */
@@ -22,16 +27,20 @@
   color: inherit !important;
 }
 
-.mot-main-menu__trigger,
-.mot-main-menu__trigger--mega {
+#site-header .mot-main-menu__link,
+#site-header .mot-main-menu__trigger,
+#site-header .mot-main-menu__trigger--mega {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.45rem 0.65rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.75rem;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 0;
   background: transparent;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
   font-weight: 600;
   color: var(--mot-text, #0f172a);
   cursor: pointer;
@@ -40,15 +49,45 @@
     background-color 0.15s ease;
 }
 
-.mot-main-menu__trigger:hover,
-.mot-main-menu__trigger--mega:hover {
+#site-header .mot-main-menu__link::after,
+#site-header .mot-main-menu__trigger::after,
+#site-header .mot-main-menu__trigger--mega::after {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  bottom: -0.5rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--mot-brand, #0f766e);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-main-menu__link:hover,
+#site-header .mot-main-menu__trigger:hover,
+#site-header .mot-main-menu__trigger--mega:hover {
   color: var(--mot-brand, #0f766e);
 }
 
-.mot-main-menu__trigger.is-open,
-.mot-main-menu__trigger--mega.is-open {
+#site-header .mot-main-menu__link.is-active,
+#site-header .mot-main-menu__trigger.is-active,
+#site-header .mot-main-menu__trigger.is-open,
+#site-header .mot-main-menu__trigger--mega.is-active,
+#site-header .mot-main-menu__trigger--mega.is-open {
   color: var(--mot-brand, #0f766e);
-  box-shadow: inset 0 -3px 0 var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-main-menu__link.is-active::after,
+#site-header .mot-main-menu__trigger.is-active::after,
+#site-header .mot-main-menu__trigger.is-open::after,
+#site-header .mot-main-menu__trigger--mega.is-active::after,
+#site-header .mot-main-menu__trigger--mega.is-open::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .mot-main-menu__chev svg {
@@ -56,9 +95,219 @@
   transition: transform 0.18s ease;
 }
 
-.mot-main-menu__link.is-active {
+/* Standard dropdown (non-mega) — full-bleed panel like Services.
+   Panel background matches the header (no border-top) so it reads as a
+   visual continuation of the header bar; soft shadow is below the panel
+   only. */
+.mot-dropdown {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--mot-header-h, 72px);
+  z-index: 200;
+}
+
+.mot-dropdown__panel {
+  background: var(--mot-surface, #fff);
+  box-shadow: 0 18px 48px rgb(15 23 42 / 10%);
+}
+
+.mot-dropdown__inner {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.mot-dropdown__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+@media (min-width: 1024px) {
+  .mot-dropdown__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem 3.5rem;
+  }
+}
+
+/* Each grid cell sizes to its own content — otherwise a tall group cell
+   stretches sibling link cells and the link's hover background floods
+   the empty space. */
+.mot-dropdown__cell {
+  display: flex;
+  align-self: start;
+}
+
+/* Group cell mirrors a Services mega column: icon row + nested list. */
+.mot-dropdown__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+}
+
+.mot-dropdown__group-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2rem;
+}
+
+#site-header .mot-dropdown__group-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-title:hover {
   color: var(--mot-brand, #0f766e);
-  box-shadow: inset 0 -3px 0 var(--mot-brand, #0f766e);
+}
+
+.mot-dropdown__group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 1.25rem;
+}
+
+@media (max-width: 1023px) {
+  .mot-dropdown__group-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+#site-header .mot-dropdown__group-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.35rem 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-link::after {
+  content: "›";
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0;
+  margin-inline-start: auto;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-link:hover {
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-dropdown__group-link:hover::after {
+  opacity: 0.85;
+  transform: translateX(2px);
+}
+
+[dir='rtl'] #site-header .mot-dropdown__group-link::after {
+  content: "‹";
+}
+
+[dir='rtl'] #site-header .mot-dropdown__group-link:hover::after {
+  transform: translateX(-2px);
+}
+
+[dir='rtl'] .mot-dropdown__grid {
+  text-align: right;
+}
+
+#site-header .mot-main-menu__dropdown-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+#site-header .mot-main-menu__dropdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+  color: var(--mot-brand, #0f766e);
+  background: rgb(236 253 245 / 70%);
+  border: 1px solid rgb(167 243 208 / 50%);
+}
+
+#site-header .mot-main-menu__dropdown-icon svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+#site-header .mot-main-menu__dropdown-text {
+  min-width: 0;
+}
+
+#site-header .mot-main-menu__dropdown-link::after {
+  content: "›";
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.45;
+  margin-inline-start: auto;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-main-menu__dropdown-link:hover {
+  background: rgb(240 253 250 / 60%);
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-main-menu__dropdown-link:hover::after {
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+
+[dir='rtl'] #site-header .mot-main-menu__dropdown-link::after {
+  content: "‹";
+}
+
+[dir='rtl'] #site-header .mot-main-menu__dropdown-link:hover::after {
+  transform: translateX(-2px);
+}
+
+@media (max-width: 767px) {
+  .mot-dropdown {
+    display: none !important;
+  }
 }
 
 /* Full-bleed mega under header */
@@ -73,81 +322,50 @@
 
 .mot-mega__panel {
   background: var(--mot-surface, #fff);
-  border-top: 1px solid var(--mot-border, #e2e8f0);
   box-shadow: 0 18px 48px rgb(15 23 42 / 10%);
 }
 
-.mot-mega__intro {
-  padding: 1.25rem 1.35rem;
-  border-radius: var(--mot-radius-md, 12px);
-  background: var(--mot-surface-muted, #f8fafc);
-  border: 1px solid rgb(226 232 240 / 80%);
+/* Mega content stretches across the full 1320px container so it lines up
+   with the rest of the page chrome. */
+.mot-mega__inner {
+  max-width: 1320px;
 }
 
-.mot-mega__intro-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  margin-bottom: 0.85rem;
-  border-radius: 0.65rem;
-  background: rgb(236 253 245 / 80%);
-  border: 1px solid rgb(167 243 208 / 45%);
-  color: var(--mot-brand, #0f766e);
+.mot-mega__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 4rem;
 }
 
-.mot-mega__intro-title {
-  margin: 0 0 0.5rem;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--mot-brand, #0f766e);
-}
-
-.mot-mega__intro-text {
-  margin: 0 0 1rem;
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--mot-text-muted, #64748b);
-}
-
-.mot-mega__intro-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid var(--mot-brand, #0f766e);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--mot-brand, #0f766e);
-  text-decoration: none;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.mot-mega__intro-cta:hover {
-  background: rgb(240 253 250 / 90%);
-  text-decoration: none;
+@media (min-width: 1024px) {
+  .mot-mega__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    column-gap: 3rem;
+  }
 }
 
 /* One category per column. */
 .mot-mega__col-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.mot-mega__group-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2rem;
 }
 
 .mot-mega__group-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-bottom: 0.45rem;
-  border-radius: 0.6rem;
+  flex: 0 0 1.9rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.5rem;
   color: var(--mot-brand, #0f766e);
   background: rgb(236 253 245 / 70%);
   border: 1px solid rgb(167 243 208 / 50%);
@@ -155,34 +373,25 @@
 
 .mot-mega__group-icon svg {
   display: block;
+  width: 1.05rem;
+  height: 1.05rem;
 }
 
 .mot-mega__group-title {
-  margin: 0 0 0.55rem;
-  font-size: 0.9375rem;
+  margin: 0;
+  font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--mot-text, #0f172a);
 }
 
-/* Flat Services items: title row is the link (no nested group children). */
-.mot-mega__group-title--flat {
-  margin-bottom: 0.5rem;
-}
-
-.mot-mega__group-title--flat .mot-mega__link {
-  font-weight: 700;
-  color: var(--mot-text, #0f172a);
-}
-
-.mot-mega__group-title--flat .mot-mega__link:hover {
-  color: var(--mot-brand, #0f766e);
-}
-
 .mot-mega__group-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgb(226 232 240 / 80%);
 }
 
 .mot-mega__group-list li {
@@ -195,9 +404,9 @@
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--mot-text-muted, #475569);
+  color: var(--mot-text, #0f172a);
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -207,9 +416,10 @@
 }
 
 .mot-mega__link::after {
-  content: "→";
-  font-size: 0.75rem;
-  opacity: 0.35;
+  content: "›";
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.45;
   margin-inline-start: auto;
   transition:
     opacity 0.15s ease,
@@ -217,27 +427,44 @@
 }
 
 .mot-mega__link:hover::after {
-  opacity: 0.75;
+  opacity: 0.9;
   transform: translateX(2px);
 }
 
-/* Popular Links column: highlighted card with brand accent. */
-.mot-mega__col-group--popular {
-  padding: 1rem 1.15rem 1.1rem;
-  border-radius: var(--mot-radius-md, 12px);
-  border: 1px solid rgb(167 243 208 / 80%);
-  background: rgb(240 253 250 / 60%);
-  box-shadow: 0 2px 10px rgb(15 118 110 / 06%);
+[dir='rtl'] .mot-mega__link::after {
+  content: "‹";
 }
 
-.mot-mega__col-group--popular .mot-mega__group-icon {
-  background: rgb(255 255 255 / 90%);
-  border-color: rgb(167 243 208 / 90%);
-  color: var(--mot-brand, #0f766e);
+[dir='rtl'] .mot-mega__link:hover::after {
+  transform: translateX(-2px);
 }
 
-.mot-mega__col-group--popular .mot-mega__group-title {
+.mot-mega__group-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(20 184 166 / 35%);
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mot-mega__group-view:hover {
+  background: rgb(240 253 250 / 85%);
+  color: var(--mot-brand-hover, #0d5f59);
+  text-decoration: none;
+}
+
+.mot-mega__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(226 232 240 / 80%);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,17 +3,33 @@
  * /sectors directory: two-column cards + toolbar layout (extends services-directory).
  */
 
-/* Hero visual: dedicated sectors artwork (overrides services-bg on this view). */
+/* Hero visual: dedicated sectors artwork (overrides services-bg on this view).
+ * Loads optimized WebP via image-set() with PNG fallback for older browsers. */
 .sectors-directory.sectors-directory--page .services-page-hero__visual-photo.sectors-directory__hero-photo {
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     url('../../images/sectors-bg.png') no-repeat center right / cover;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/sectors-bg.webp') type('image/webp'),
+      url('../../images/sectors-bg.png') type('image/png')
+    ) no-repeat center right / cover;
 }
 
 [dir='rtl'] .sectors-directory.sectors-directory--page .services-page-hero__visual-photo.sectors-directory__hero-photo {
+  transform: scaleX(-1);
+  transform-origin: center;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     url('../../images/sectors-bg.png') no-repeat center left / cover;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/sectors-bg.webp') type('image/webp'),
+      url('../../images/sectors-bg.png') type('image/png')
+    ) no-repeat center left / cover;
+  background-position: center, center left;
 }
 
 /* Full-width rail: override services directory max-width + sidebar grid. */
@@ -26,11 +42,11 @@
 
 .sectors-directory__page-inner {
   width: 100%;
-  max-width: none;
+  max-width: var(--mot-home-max, 1320px);
   margin-left: auto;
   margin-right: auto;
-  padding-left: clamp(1rem, 3vw, 2.5rem);
-  padding-right: clamp(1rem, 3vw, 2.5rem);
+  padding-left: var(--mot-pad-x, 1rem);
+  padding-right: var(--mot-pad-x, 1rem);
   box-sizing: border-box;
 }
 

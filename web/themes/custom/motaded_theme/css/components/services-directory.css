@@ -791,20 +791,62 @@
   background: linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.92) 28%, rgba(248, 250, 249, 0.96) 100%);
 }
 
+/* Listing heading shared across /services and /sectors. Sits above the results
+ * grid and provides an outline-level landmark that mirrors /platforms. */
+.services-directory--page-redesign .services-directory__results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1rem;
+  min-width: 0;
+}
+
+.services-directory--page-redesign .services-directory__results-heading,
+.services-directory--page-redesign .sectors-directory__results-heading {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.services-directory--page-redesign .services-directory__results-head .services-directory__results-meta {
+  margin: 0;
+  min-width: 0;
+}
+
 .services-directory--page-redesign .services-page-hero__visual-photo {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     url("../../images/services-bg.png") no-repeat center right / cover;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url("../../images/services-bg.webp") type("image/webp"),
+      url("../../images/services-bg.png") type("image/png")
+    ) no-repeat center right / cover;
   opacity: 0.72;
   filter: saturate(0.88) contrast(0.98);
 }
 
 [dir="rtl"] .services-directory--page-redesign .services-page-hero__visual-photo {
+  transform: scaleX(-1);
+  transform-origin: center;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     url("../../images/services-bg.png") no-repeat center left / cover;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url("../../images/services-bg.webp") type("image/webp"),
+      url("../../images/services-bg.png") type("image/png")
+    ) no-repeat center left / cover;
+  background-position: center, center left;
 }
 
 .services-directory--page-redesign .services-page-hero__visual-arcs {

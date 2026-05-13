@@ -1,4 +1,47 @@
+label: الفعاليات
 display:
+  default:
+    display_options:
+      title: الفعاليات
+      empty:
+        area_text_custom:
+          content: '<p class="events-directory__empty" role="status">لا توجد فعاليات مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى.</p>'
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          text_input_required: 'اختر المرشحات ثم انقر «تطبيق» لعرض الفعاليات المطابقة.'
+          bef:
+            general:
+              secondary_label: 'مرشحات إضافية'
+      filters:
+        title:
+          expose:
+            label: بحث
+        field_event_type_target_id:
+          expose:
+            label: 'نوع الفعالية'
+        field_category_target_id:
+          expose:
+            label: القطاع
+        field_region_target_id:
+          expose:
+            label: المنطقة
+        motaded_event_date_from:
+          expose:
+            label: 'من'
+        motaded_event_date_to:
+          expose:
+            label: 'إلى'
   block_calendar:
     display_title: 'الرئيسية — التقويم'
     display_options:
@@ -25,3 +68,15 @@ display:
           content:
             value: '<aside class="events-home-cta" aria-label="دعوة للتواصل"><span class="events-home-cta__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></span><div class="events-home-cta__text"><h3 class="events-home-cta__title">تخطّط للحضور؟</h3><p class="events-home-cta__body">أخبرنا بأي فعاليات تهتم وسيتابع معك فريقنا.</p></div><a class="events-home-cta__btn" href="/contact-us">تواصل مع فريقنا ←</a></aside>'
             format: full_html
+  page_1:
+    display_title: 'صفحة الفعاليات'
+    display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'فعاليات الأعمال في المملكة العربية السعودية | معتد'
+            description: 'استعرض المؤتمرات والمعارض والمنتديات وورش العمل القادمة في المملكة العربية السعودية ودول الخليج. صفِّ النتائج حسب التاريخ أو المنطقة أو القطاع، وتواصل مع فريق معتد للمساعدة في التخطيط أو الحضور.'
+            canonical_url: '[site:base-url]/ar/events'
+            hreflang_xdefault: '[site:base-url]/events'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/events'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/events'

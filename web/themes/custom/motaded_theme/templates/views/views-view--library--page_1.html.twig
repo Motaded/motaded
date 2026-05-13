@@ -1,6 +1,6 @@
 {#
 /**
- * Full Library page: hero, section tabs, sidebar counts, filters, document rows.
+ * Full Library page: split-banner hero, integrated filters, document rows.
  */
 #}
 {{ attach_library('motaded_theme/library_directory') }}
@@ -11,61 +11,69 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'services-directory',
+    'services-directory--page-redesign',
     'library-directory',
+    'library-directory--page',
     'library-directory-page',
     'page-gray',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    {{ title }}
-  {% endif %}
   {{ title_suffix }}
 
-  {% set hero_bg_url = motaded_library_hero_bg_url|default('') %}
-
-  <div class="library-directory__hero"{% if hero_bg_url %} style="--library-hero-bg: url('{{ hero_bg_url|e('html_attr') }}');"{% endif %}>
-    <div class="library-directory__hero-bg" aria-hidden="true"></div>
-    <div class="library-directory__hero-gradient" aria-hidden="true"></div>
-    <div class="library-directory__hero-inner max-w-[1320px] mx-auto px-4">
-      <header class="library-directory__masthead max-w-3xl">
-        <h1 class="library-directory__title">{{ 'Library'|t }}</h1>
-        <p class="library-directory__lede">{{ 'Templates, forms, guides, and legal references for doing business in Saudi Arabia.'|t }}</p>
-      </header>
+  <header class="services-page-hero services-page-hero--split-banner library-directory__hero">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo library-directory__hero-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
     </div>
-  </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'Library'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'A curated hub of ready-to-use templates, forms, checklists, and step-by-step guides — alongside the official regulations, policies and legal references you need to start, operate and grow a compliant business in Saudi Arabia.'|t }}</p>
+            <p>{{ 'Every document is mapped to its government source and updated when the rules change, so your team can move faster with the confidence that the paperwork is current and aligned with Saudi systems.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip services-page-hero__stats-strip--three" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="{{ library_url_templates|default('#library-directory-listings') }}" aria-label="{{ 'Document templates and forms'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Templates'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Forms & guides'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="{{ library_url_regulations|default('#library-directory-listings') }}" aria-label="{{ 'Regulations and laws'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9 12 2 2 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Regulations'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Laws & references'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="#library-directory-filters" aria-label="{{ 'Filter library documents'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="6" r="2" fill="currentColor"/><circle cx="8" cy="12" r="2" fill="currentColor"/><circle cx="13" cy="18" r="2" fill="currentColor"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Filters'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Search library'|t }}</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
 
-  <div class="library-directory__shell max-w-[1320px] mx-auto px-4 pb-16 pt-8">
-    <div class="library-directory__layout">
-      <aside class="library-directory__sidebar mb-8 lg:mb-0" aria-label="{{ 'Categories'|t }}">
-        {% if library_category_all_url %}
-          <a href="{{ library_category_all_url }}"
-             class="library-directory__sidebar-all mb-3 block rounded-lg border px-3 py-2 text-sm font-medium transition {{ library_category_all_active|default(true) ? 'is-active border-primary-500 bg-primary-50 text-primary-900' : 'border-slate-200 bg-white text-slate-800 hover:border-primary-200' }}">
-            {{ 'All categories'|t }}
-          </a>
-        {% endif %}
-        <ul class="library-directory__sidebar-list m-0 list-none space-y-1 p-0">
-          {% for item in library_sidebar_links|default([]) %}
-            <li>
-              <a href="{{ item.url }}"
-                 class="library-directory__sidebar-link flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition {{ item.active ? 'is-active border-primary-500 bg-primary-50 text-primary-900' : 'border-transparent bg-slate-50 text-slate-800 hover:border-primary-200' }}">
-                <span class="library-sidebar-link-inner min-w-0">
-                  {% if item.icon_url is defined and item.icon_url %}
-                    <img src="{{ item.icon_url }}" width="20" height="20" alt="" loading="lazy" decoding="async" />
-                  {% endif %}
-                  <span>{{ item.label }}</span>
-                </span>
-                <span class="library-directory__sidebar-count rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold text-slate-600">{{ item.count }}</span>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </aside>
-
-      <div class="library-directory__main min-w-0">
+  <div class="library-directory__shell w-full py-6">
+    <div class="library-directory__page-inner">
+      <section class="library-directory__main min-w-0" id="library-directory-listings" aria-label="{{ 'Library documents'|t }}">
         {% if exposed %}
-          <div class="library-directory__filters view-filters mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div class="library-directory__filters view-filters mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" id="library-directory-filters" role="group" aria-label="{{ 'Filter library documents'|t }}">
             {{ exposed }}
           </div>
         {% endif %}
@@ -91,7 +99,7 @@
             {{ pager }}
           </div>
         {% endif %}
-      </div>
+      </section>
     </div>
 
     {% if footer %}

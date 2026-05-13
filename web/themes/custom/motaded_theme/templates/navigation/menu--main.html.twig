@@ -8,7 +8,7 @@
 
 {% import _self as menus %}
 
-<ul{{ attributes.addClass('mot-main-menu', 'flex', 'flex-col', 'lg:flex-row', 'lg:items-center', 'lg:justify-center', 'gap-0', 'lg:gap-1', 'w-full', 'list-none', 'm-0', 'p-0') }}>
+<ul{{ attributes.addClass('mot-main-menu', 'flex', 'flex-col', 'lg:flex-row', 'lg:items-center', 'lg:justify-center', 'gap-0', 'lg:gap-2', 'w-full', 'list-none', 'm-0', 'p-0') }}>
   {% for item in items %}
     {% set title_clean = item.title|render|striptags|trim %}
     {% set route_name = item.url.isRouted ? item.url.routeName : '' %}
@@ -18,7 +18,10 @@
 
     <li{{ item.attributes.addClass('mot-main-menu__item', 'relative', 'shrink-0') }}>
       {% if has_children and is_services %}
-        <button type="button" class="mot-main-menu__trigger mot-main-menu__trigger--mega" aria-expanded="false" :aria-expanded="openMenu === 'services'" aria-haspopup="true" @click.prevent="openMenu = openMenu === 'services' ? null : 'services'" :class="openMenu === 'services' ? 'is-open' : ''">
+        {# Buttons never receive Drupal's automatic is-active class, so we
+           mirror it here for the parent of the current page. Links keep the
+           Drupal-native behaviour (no manual class added). #}
+        <button type="button" class="mot-main-menu__trigger mot-main-menu__trigger--mega{% if item.in_active_trail %} is-active{% endif %}" aria-expanded="false" :aria-expanded="openMenu === 'services'" aria-haspopup="true" @click.prevent="openMenu = openMenu === 'services' ? null : 'services'" :class="openMenu === 'services' ? 'is-open' : ''">
           <span>{{ item.title }}</span>
           <span class="mot-main-menu__chev" aria-hidden="true">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="openMenu === 'services' ? 'rotate-180' : ''"><path d="M6 9l6 6 6-6"/></svg>
@@ -28,28 +31,18 @@
         {# Visibility = x-show only (no Tailwind hidden classes — Alpine toggles inline display). #}
         <div class="mot-mega" x-show="openMenu === 'services'" x-transition.opacity.duration.200ms x-cloak @keydown.escape.window="openMenu=null" role="region" aria-label="{{ 'Services menu'|t }}">
           <div class="mot-mega__panel">
-            <div class="mot-mega__inner max-w-[1320px] mx-auto px-4 py-8 lg:py-10 flex flex-col lg:flex-row gap-8 lg:gap-10">
-              <aside class="mot-mega__intro shrink-0 lg:max-w-[280px] text-left">
-                <div class="mot-mega__intro-icon" aria-hidden="true">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect x="8" y="6" width="8" height="4" rx="1"/></svg>
-                </div>
-                <h2 class="mot-mega__intro-title">{{ 'Comprehensive services'|t }}</h2>
-                <p class="mot-mega__intro-text">{{ 'End-to-end solutions to help you start, operate, and grow your business in Saudi Arabia.'|t }}</p>
-                <a href="/services" class="mot-mega__intro-cta">{{ 'View all services'|t }}<span aria-hidden="true"> →</span></a>
-              </aside>
-
-              {# 6-column grid: one category per column. Last column ("Popular Links") gets a highlighted card. #}
-              <div class="mot-mega__grid flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 lg:gap-8 text-left">
+            <div class="mot-mega__inner max-w-[1320px] mx-auto px-4 py-6 lg:py-7">
+              <div class="mot-mega__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 lg:gap-6 text-left">
                 {% for group in item.below %}
-                  {% set group_title_clean = group.title|render|striptags|trim %}
-                  {% set is_popular = 'Popular' in group_title_clean %}
-                  <div class="mot-mega__col-group{% if is_popular %} mot-mega__col-group--popular{% endif %}">
-                    {% if group.menu_icon_svg %}
-                      <div class="mot-mega__group-icon" aria-hidden="true">{{ group.menu_icon_svg }}</div>
-                    {% endif %}
+                  <div class="mot-mega__col-group">
+                    <div class="mot-mega__group-head">
+                      {% if group.menu_icon_svg %}
+                        <div class="mot-mega__group-icon" aria-hidden="true">{{ group.menu_icon_svg }}</div>
+                      {% endif %}
+                      <h3 class="mot-mega__group-title">{{ group.title }}</h3>
+                    </div>
 
                     {% if group.below is not empty %}
-                      <h3 class="mot-mega__group-title">{{ group.title }}</h3>
                       <ul class="mot-mega__group-list list-none m-0 p-0">
                         {% for child in group.below %}
                           <li>
@@ -57,45 +50,92 @@
                           </li>
                         {% endfor %}
                       </ul>
-                    {% else %}
-                      <h3 class="mot-mega__group-title mot-mega__group-title--flat">
-                        {{ link(group.title, group.url, { 'class': ['mot-mega__link'] }) }}
-                      </h3>
                     {% endif %}
                   </div>
                 {% endfor %}
+              </div>
+
+              <div class="mot-mega__actions">
+                <a href="/services" class="mot-mega__group-view">
+                  {{ 'View all services'|t }}<span aria-hidden="true"> →</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
 
       {% elseif has_children %}
-        <button type="button" class="mot-main-menu__trigger" aria-expanded="false" :aria-expanded="openMenu === '{{ nav_key }}'" aria-haspopup="true" @click.prevent="openMenu = openMenu === '{{ nav_key }}' ? null : '{{ nav_key }}'" :class="openMenu === '{{ nav_key }}' ? 'is-open' : ''">
+        <button type="button" class="mot-main-menu__trigger{% if item.in_active_trail %} is-active{% endif %}" aria-expanded="false" :aria-expanded="openMenu === '{{ nav_key }}'" aria-haspopup="true" @click.prevent="openMenu = openMenu === '{{ nav_key }}' ? null : '{{ nav_key }}'" :class="openMenu === '{{ nav_key }}' ? 'is-open' : ''">
           <span>{{ item.title }}</span>
           <span class="mot-main-menu__chev" aria-hidden="true">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </span>
         </button>
-        <ul class="mot-main-menu__dropdown hidden lg:block absolute left-0 top-full mt-1 min-w-[14rem] bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-[60]" x-show="openMenu === '{{ nav_key }}'" x-transition.opacity x-cloak role="menu">
-          {% for child in item.below %}
-            <li role="none" class="lg:px-1">
-              {{ link(child.title, child.url, { 'class': ['mot-main-menu__dropdown-link', 'block', 'px-3', 'py-2', 'text-sm', 'rounded-lg', 'hover:bg-slate-50'], 'role': ['menuitem'] }) }}
-            </li>
-          {% endfor %}
-        </ul>
-        <div class="lg:hidden pl-3 ml-1 mt-2 border-l border-slate-200 space-y-1" x-show="openMenu === '{{ nav_key }}'" x-cloak>
+        <div class="mot-dropdown" x-show="openMenu === '{{ nav_key }}'" x-transition.opacity.duration.200ms x-cloak @keydown.escape.window="openMenu=null" role="region" aria-label="{{ title_clean }} menu">
+          <div class="mot-dropdown__panel">
+            <div class="mot-dropdown__inner">
+              <ul class="mot-dropdown__grid" role="menu">
+                {% for child in item.below %}
+                  {% set has_grandchildren = child.below is not empty %}
+                  <li role="none" class="mot-dropdown__cell{% if has_grandchildren %} mot-dropdown__cell--group{% endif %}">
+                    {% if has_grandchildren %}
+                      <div class="mot-dropdown__group">
+                        <div class="mot-dropdown__group-head">
+                          <span class="mot-main-menu__dropdown-icon" aria-hidden="true">
+                            {% if child.menu_icon_svg %}
+                              {{ child.menu_icon_svg }}
+                            {% else %}
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                                <path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                              </svg>
+                            {% endif %}
+                          </span>
+                          {{ link(child.title, child.url, { 'class': ['mot-dropdown__group-title'] }) }}
+                        </div>
+                        <ul class="mot-dropdown__group-list">
+                          {% for gc in child.below %}
+                            <li>{{ link(gc.title, gc.url, { 'class': ['mot-dropdown__group-link'] }) }}</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    {% else %}
+                      <a href="{{ child.url }}" class="mot-main-menu__dropdown-link" role="menuitem">
+                        <span class="mot-main-menu__dropdown-icon" aria-hidden="true">
+                          {% if child.menu_icon_svg %}
+                            {{ child.menu_icon_svg }}
+                          {% else %}
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                              <rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                              <path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                          {% endif %}
+                        </span>
+                        <span class="mot-main-menu__dropdown-text">{{ child.title }}</span>
+                      </a>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="hidden pl-3 ml-1 mt-2 border-l border-slate-200 space-y-1" x-show="openMenu === '{{ nav_key }}'" x-cloak>
           {% for child in item.below %}
             <div>{{ link(child.title, child.url, { 'class': ['text-sm', 'py-1', 'block'] }) }}</div>
           {% endfor %}
         </div>
 
       {% else %}
+        {# is-active is added at response time by ActiveLinkResponseFilter only
+           when this link matches the current page exactly. Drupal's active
+           trail is intentionally not used here, because nested pages would
+           highlight several top-level entries at once. #}
         {% set link_classes = [
           'mot-main-menu__link',
           'inline-flex', 'items-center', 'gap-1', 'px-2', 'py-2', 'rounded-md',
           'text-sm', 'font-semibold', 'text-slate-800', 'whitespace-nowrap',
           'hover:text-[var(--mot-brand)]', 'transition-colors',
-          item.in_active_trail ? 'is-active' : '',
         ] %}
         {{ link(item.title, item.url, { 'class': link_classes }) }}
       {% endif %}

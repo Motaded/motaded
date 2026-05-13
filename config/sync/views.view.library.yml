@@ -5,12 +5,9 @@ dependencies:
   config:
     - field.storage.node.field_category
     - field.storage.node.field_document
-    - field.storage.node.field_document_type
     - field.storage.node.field_short_description
-    - field.storage.taxonomy_term.field_library_section
     - node.type.document
     - taxonomy.vocabulary.document_category
-    - taxonomy.vocabulary.document_type
     - taxonomy.vocabulary.library_section
   module:
     - better_exposed_filters
@@ -596,23 +593,7 @@ display:
           empty: true
           content: '<p class="library-directory__empty" role="status">No documents match these filters.</p>'
           tokenize: false
-      sorts:
-        changed:
-          id: changed
-          table: node_field_data
-          field: changed
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: changed
-          plugin_id: date
-          order: DESC
-          expose:
-            label: Latest
-            field_identifier: changed
-          exposed: true
-          granularity: second
+      sorts: {  }
       arguments: {  }
       filters:
         status:
@@ -865,15 +846,12 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.field_category'
         - 'config:field.storage.node.field_document'
         - 'config:field.storage.node.field_short_description'
-        - 'config:field.storage.taxonomy_term.field_library_section'
   block_1:
     id: block_1
     display_title: 'Library home'
@@ -903,17 +881,12 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - url.query_args
-        - 'url.query_args:library_section'
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.field_category'
         - 'config:field.storage.node.field_document'
         - 'config:field.storage.node.field_short_description'
-        - 'config:field.storage.taxonomy_term.field_library_section'
   page_1:
     id: page_1
     display_title: 'Library page'
@@ -925,7 +898,13 @@ display:
       display_description: ''
       display_extenders:
         metatag_display_extender:
-          metatags: {  }
+          metatags:
+            title: 'Library — templates, forms, and regulations for Saudi Arabia | Motaded'
+            description: 'A curated hub of templates, forms, checklists, step-by-step guides, and official regulations to help you start, operate, and grow a compliant business in Saudi Arabia.'
+            canonical_url: '[site:base-url]/library'
+            hreflang_xdefault: '[site:base-url]/library'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/library'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/library'
           tokenize: false
       path: library
     cache_metadata:
@@ -935,8 +914,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:

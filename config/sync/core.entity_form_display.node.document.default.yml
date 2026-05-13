@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.document.field_document
     - field.field.node.document.field_document_type
     - field.field.node.document.field_featured
+    - field.field.node.document.field_meta_tags
     - field.field.node.document.field_platforms
     - field.field.node.document.field_sector
     - field.field.node.document.field_sector_pages
@@ -19,6 +20,7 @@ dependencies:
   module:
     - link
     - media_library
+    - metatag
     - options
     - path
 id: node.document.default
@@ -71,6 +73,14 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  field_meta_tags:
+    type: metatag_firehose
+    weight: 45
+    region: content
+    settings:
+      sidebar: true
+      use_details: true
     third_party_settings: {  }
   field_platforms:
     type: entity_reference_autocomplete

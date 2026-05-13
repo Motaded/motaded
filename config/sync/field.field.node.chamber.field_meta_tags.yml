@@ -1,0 +1,21 @@
+uuid: 4a8b9c01-1d2e-4f3a-9b1c-1100000ch001
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_meta_tags
+    - node.type.chamber
+  module:
+    - metatag
+id: node.chamber.field_meta_tags
+field_name: field_meta_tags
+entity_type: node
+bundle: chamber
+label: 'Meta Tags'
+description: 'Override the default SEO meta tags for this chamber.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

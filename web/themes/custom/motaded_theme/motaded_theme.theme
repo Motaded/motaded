@@ -374,7 +374,7 @@ function _motaded_theme_sector_sparkline_svg_markup(array $series, string $svg_c
  */
 function _motaded_theme_key_sector_wb_icon_markup(string $key): Markup {
   $svg = match ($key) {
-    'tourism' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M9 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h8M8 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'tourism' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M9 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h8M8 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     'energy' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-4 5-7 8-7 11a7 7 0 0 0 14 0c0-3-3-6-7-11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
     'manufacturing' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21V10l4-2 4 2v11" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10h8v11H12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 14h2M9 18h2M15 14h2M15 18h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     'technology' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 22h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 16v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
@@ -910,10 +910,9 @@ function motaded_theme_preprocess_views_view(&$variables): void {
   }
 
   if ($view->id() === 'platforms' && $display_id === 'page_1') {
-    $variables['#attached']['library'][] = 'motaded_theme/platforms_directory';
+    // Library is attached from the Twig template (views-view--platforms--page_1.html.twig).
     $variables['attributes']['class'][] = 'platforms-directory-page';
     $variables['motaded_platforms_stats'] = _motaded_theme_platforms_directory_stats();
-    $variables['motaded_platforms_category_chips'] = _motaded_theme_platforms_directory_category_chips();
   }
 
   if ($view->id() === 'chambers' && $display_id === 'page_1') {
@@ -1013,8 +1012,6 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     if ($display_id === 'page_1') {
       $variables['#attached']['library'][] = 'motaded_theme/library_directory';
       $variables['attributes']['class'][] = 'library-directory-page';
-      $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
-      $variables['motaded_library_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
     }
     else {
       $variables['#attached']['library'][] = 'motaded_theme/library_home_block';
@@ -5609,6 +5606,58 @@ function motaded_theme_platforms_directory_views_exposed_form_after_build(array 
  * Implements hook_form_FORM_ID_alter().
  */
 function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\FormStateInterface $form_state) {
+  $form_id = (string) ($form['#id'] ?? '');
+  $is_arabic_interface = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)
+    ->getId() === 'ar';
+
+  // Views/BEF button labels are config-driven and can lag behind on multilingual
+  // pages until config translation is imported. Normalize the Arabic directory
+  // forms at render time so exposed filters never fall back to English.
+  if ($is_arabic_interface) {
+    $directory_action_labels = [
+      'views-exposed-form-platforms-page-1' => [
+        'submit' => 'تطبيق المرشحات',
+        'reset' => 'إعادة ضبط',
+      ],
+      'views-exposed-form-sectors-directory-page-1' => [
+        'submit' => 'بحث',
+        'reset' => 'إعادة تعيين المرشحات',
+      ],
+      'views-exposed-form-services-page-1' => [
+        'submit' => 'بحث',
+        'reset' => 'إعادة تعيين المرشحات',
+      ],
+      'views-exposed-form-events-page-1' => [
+        'submit' => 'تطبيق المرشحات',
+        'reset' => 'إعادة ضبط',
+      ],
+      'views-exposed-form-chambers-page-1' => [
+        'submit' => 'تطبيق المرشحات',
+        'reset' => 'إعادة ضبط',
+      ],
+      'views-exposed-form-library-page-1' => [
+        'submit' => 'تطبيق المرشحات',
+        'reset' => 'إعادة ضبط',
+      ],
+      'views-exposed-form-news-page-1' => [
+        'submit' => 'تطبيق',
+        'reset' => 'مسح',
+      ],
+      'views-exposed-form-news-page-2' => [
+        'submit' => 'تطبيق',
+        'reset' => 'مسح',
+      ],
+    ];
+    if (isset($directory_action_labels[$form_id], $form['actions']) && is_array($form['actions'])) {
+      foreach ($directory_action_labels[$form_id] as $action_key => $label) {
+        if (isset($form['actions'][$action_key]) && is_array($form['actions'][$action_key])) {
+          $form['actions'][$action_key]['#value'] = $label;
+        }
+      }
+    }
+  }
+
   // ViewsExposedForm uses the view page URL as #action whenever the view has a path
   // (/events); these block displays still need to POST/GET against the current page.
   $view = $form_state->get('view');
@@ -5626,10 +5675,49 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
     }
   }
 
-  if (($form['#id'] ?? '') === 'views-exposed-form-events-page-1') {
+  if ($form_id === 'views-exposed-form-chambers-page-1' && isset($form['title']) && is_array($form['title'])) {
+    $form['title']['#attributes']['placeholder'] = $is_arabic_interface
+      ? 'ابحث في الغرف…'
+      : (string) t('Search chambers…');
+  }
+
+  if ($form_id === 'views-exposed-form-library-page-1' && isset($form['combine']) && is_array($form['combine'])) {
+    $form['combine']['#attributes']['placeholder'] = $is_arabic_interface
+      ? 'البحث في الوثائق…'
+      : (string) t('Search documents…');
+  }
+
+  // /blog (view: news, display: page_1): exposed combined search uses
+  // identifier "search". Provide a richer placeholder and AR translation so
+  // the filter never reads "Search" only.
+  if ($form_id === 'views-exposed-form-news-page-1') {
+    $search_keys = ['search', 'combine'];
+    foreach ($search_keys as $key) {
+      if (isset($form[$key]) && is_array($form[$key])) {
+        $form[$key]['#attributes']['placeholder'] = $is_arabic_interface
+          ? 'ابحث في المقالات، المواضيع أو الكلمات المفتاحية…'
+          : (string) t('Search articles, topics, or keywords…');
+      }
+    }
+  }
+
+  if ($form_id === 'views-exposed-form-news-page-2') {
+    $search_keys = ['search', 'combine'];
+    foreach ($search_keys as $key) {
+      if (isset($form[$key]) && is_array($form[$key])) {
+        $form[$key]['#attributes']['placeholder'] = $is_arabic_interface
+          ? 'ابحث في الأخبار…'
+          : (string) t('Search news…');
+      }
+    }
+  }
+
+  if ($form_id === 'views-exposed-form-events-page-1') {
     $form['#attributes']['class'][] = 'events-directory__hero-exposed';
     if (isset($form['title']) && is_array($form['title'])) {
-      $form['title']['#attributes']['placeholder'] = (string) t('Search events, topics, or keywords…');
+      $form['title']['#attributes']['placeholder'] = $is_arabic_interface
+        ? 'ابحث في الفعاليات أو الموضوعات أو الكلمات المفتاحية…'
+        : (string) t('Search events, topics, or keywords…');
       $form['title']['#weight'] = -20;
     }
 
@@ -5673,7 +5761,7 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
     $form['#after_build'][] = 'motaded_theme_events_directory_views_exposed_form_after_build';
   }
 
-  if (($form['#id'] ?? '') === 'views-exposed-form-insights-page-1') {
+  if ($form_id === 'views-exposed-form-insights-page-1') {
     $form['#attributes']['class'][] = 'insights-directory__hero-exposed';
     if (isset($form['title']) && is_array($form['title'])) {
       $form['title']['#attributes']['placeholder'] = (string) t('Search insights, topics, or keywords…');
@@ -5682,10 +5770,18 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
     $form['#after_build'][] = 'motaded_theme_insights_directory_views_exposed_form_after_build';
   }
 
-  if (($form['#id'] ?? '') === 'views-exposed-form-platforms-page-1') {
+  if ($form_id === 'views-exposed-form-sectors-directory-page-1' && isset($form['title']) && is_array($form['title'])) {
+    $form['title']['#attributes']['placeholder'] = $is_arabic_interface
+      ? 'ابحث في القطاعات…'
+      : (string) t('Search sectors…');
+  }
+
+  if ($form_id === 'views-exposed-form-platforms-page-1') {
     $form['#attributes']['class'][] = 'platforms-directory__hero-exposed';
     if (isset($form['title']) && is_array($form['title'])) {
-      $form['title']['#attributes']['placeholder'] = (string) t('Search platforms, services, or keywords…');
+      $form['title']['#attributes']['placeholder'] = $is_arabic_interface
+        ? 'ابحث في المنصات أو الخدمات أو الكلمات المفتاحية…'
+        : (string) t('Search platforms, services, or keywords…');
       $form['title']['#weight'] = -20;
     }
     $form['#after_build'][] = 'motaded_theme_platforms_directory_views_exposed_form_after_build';
@@ -5839,7 +5935,9 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
       }
     }
     if (isset($form['search']) && is_array($form['search'])) {
-      $form['search']['#attributes']['placeholder'] = (string) t('Search documents, templates, forms, guides…');
+      $form['search']['#attributes']['placeholder'] = $is_arabic_interface
+        ? 'ابحث في الوثائق والقوالب والنماذج والأدلة…'
+        : (string) t('Search documents, templates, forms, guides…');
     }
     $form['#after_build'][] = 'motaded_theme_library_views_exposed_form_after_build';
   }
@@ -5853,6 +5951,33 @@ function motaded_theme_library_views_exposed_form_after_build(array $form, FormS
   $fid = $form['#id'] ?? '';
   if (!in_array($fid, ['views-exposed-form-library-block-1', 'views-exposed-form-library-page-1'], TRUE)) {
     return $form;
+  }
+  if (isset($form['library_section']['#options']) && is_array($form['library_section']['#options'])) {
+    foreach ($form['library_section']['#options'] as $key => $label) {
+      $label_plain = trim((string) $label);
+      if ($label_plain === 'Document templates & forms') {
+        $form['library_section']['#options'][$key] = \Drupal\Core\Render\Markup::create(
+          '<span class="library-directory__tab-card-body">'
+          . '<span class="library-directory__tab-card-title">' . (string) t('Document templates & forms') . '</span>'
+          . ' '
+          . '<span class="library-directory__tab-card-desc">'
+          . (string) t('Contracts, checklists, and downloadable guides for day-to-day operations.')
+          . '</span>'
+          . '</span>'
+        );
+      }
+      elseif ($label_plain === 'Regulations & laws') {
+        $form['library_section']['#options'][$key] = \Drupal\Core\Render\Markup::create(
+          '<span class="library-directory__tab-card-body">'
+          . '<span class="library-directory__tab-card-title">' . (string) t('Regulations & laws') . '</span>'
+          . ' '
+          . '<span class="library-directory__tab-card-desc">'
+          . (string) t('Official instruments, policies, and regulatory references.')
+          . '</span>'
+          . '</span>'
+        );
+      }
+    }
   }
   if (isset($form['actions']['submit']) && is_array($form['actions']['submit'])) {
     $form['actions']['submit']['#attributes']['class'][] = 'library-exposed__submit';

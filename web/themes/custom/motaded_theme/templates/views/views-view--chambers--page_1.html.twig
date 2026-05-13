@@ -4,6 +4,7 @@
  * Chambers directory page (/chambers).
  */
 #}
+{{ attach_library('motaded_theme/chambers_network') }}
 {%
   set classes = [
     'view',
@@ -11,6 +12,8 @@
     'view-id-' ~ id,
     'view-display-id-' ~ display_id,
     dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'services-directory',
+    'services-directory--page-redesign',
     'chambers-directory-view',
     'chambers-directory-page',
     'page-gray',
@@ -18,27 +21,83 @@
 %}
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
-  {% if title %}
-    <div class="chambers-directory__title-wrap">
-      {{ title }}
-    </div>
-  {% endif %}
   {{ title_suffix }}
+
+  <header class="services-page-hero services-page-hero--split-banner chambers-directory__hero">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo chambers-directory__hero-photo">
+        <picture>
+          <source type="image/webp" srcset="/themes/custom/motaded_theme/images/chambers-bg.webp">
+          <img class="chambers-directory__hero-img" src="/themes/custom/motaded_theme/images/chambers-bg.png" alt="" loading="eager" decoding="async" width="640" height="480">
+        </picture>
+      </div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <h1 class="hero-split-banner__title">{{ 'Business chambers and networks in Saudi Arabia'|t }}</h1>
+          <div class="hero-split-banner__intro">
+            <p>{{ 'Find chambers of commerce, business councils, and sector networks that help companies connect with local markets, public institutions, and commercial opportunities across Saudi Arabia.'|t }}</p>
+            <p>{{ 'Use the directory to identify the right chamber, explore membership pathways, and reach organizations that can support market entry, partnerships, and growth.'|t }}</p>
+          </div>
+          <nav class="services-page-hero__stats-strip services-page-hero__stats-strip--three" aria-label="{{ 'Quick links'|t }}">
+            <a class="services-page-hero__stat" href="#chambers-directory-listings" aria-label="{{ 'Browse chamber directory'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21h16M6 21V8l6-4 6 4v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-6h6v6M9 10h.01M12 10h.01M15 10h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Directory'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Browse chambers'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="#chambers-directory-filters" aria-label="{{ 'Filter chambers'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="6" r="2" fill="currentColor"/><circle cx="8" cy="12" r="2" fill="currentColor"/><circle cx="13" cy="18" r="2" fill="currentColor"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Filters'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Search network'|t }}</span>
+            </a>
+            <a class="services-page-hero__stat" href="/contact-us" aria-label="{{ 'Contact Motaded team'|t }}">
+              <span class="services-page-hero__stat-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m4 8 8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Contact us'|t }}</span>
+              <span class="services-page-hero__stat-label">{{ 'Get support'|t }}</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
 
   <div class="chambers-directory__inner">
     {% if exposed %}
-      <div class="chambers-directory__filters" role="search" aria-label="{{ 'Filter chambers'|t }}">
+      <div class="chambers-directory__filters" id="chambers-directory-filters" role="search" aria-label="{{ 'Filter chambers'|t }}">
         {{ exposed }}
       </div>
     {% endif %}
     {{ attachment_before }}
 
-    {% if rows -%}
-      {{ rows }}
-    {% elseif empty -%}
-      {{ empty }}
-    {% endif %}
-    {{ pager }}
+    <section class="chambers-directory__results" aria-label="{{ 'Chambers directory'|t }}">
+      {% if rows -%}
+        <div id="chambers-directory-listings">
+          {{ rows }}
+        </div>
+      {% elseif empty -%}
+        <div class="view-empty">
+          {{ empty }}
+        </div>
+      {% endif %}
+      {% if pager %}
+        <div class="chambers-directory__pager">
+          {{ pager }}
+        </div>
+      {% endif %}
+    </section>
 
     {{ attachment_after }}
     {{ more }}
