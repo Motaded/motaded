@@ -38,10 +38,10 @@ display:
             label: المنطقة
         motaded_event_date_from:
           expose:
-            label: 'من'
+            label: من
         motaded_event_date_to:
           expose:
-            label: 'إلى'
+            label: إلى
   block_calendar:
     display_title: 'الرئيسية — التقويم'
     display_options:

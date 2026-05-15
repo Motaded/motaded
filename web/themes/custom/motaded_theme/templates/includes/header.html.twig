@@ -7,7 +7,7 @@
 <header
 	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null }"
 	x-effect="document.documentElement.classList.toggle('mot-menu-open', Boolean(openMenu || mobileOpen))"
-	class="sticky top-0 z-[201] bg-white border-b border-slate-200 site-header-bar"
+	class="z-[201] bg-white border-b border-slate-200 site-header-bar"
 	@keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null">
 	<!-- Desktop -->
 	<div class="max-w-[1320px] mx-auto px-4 hidden md:block">

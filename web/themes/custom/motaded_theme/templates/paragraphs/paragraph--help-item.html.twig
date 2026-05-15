@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Paragraph: help_item.
+ *
+ * Used inside a <div class="pf2-card"> on the platform node template, so we
+ * only emit the inner card body — no extra wrapper or .paragraph chrome.
+ */
+#}
+{% set has_icon = pf_icon_markup is not empty %}
+{% if has_icon %}
+  <span class="pf2-card__icon" aria-hidden="true">{{ pf_icon_markup }}</span>
+{% endif %}
+{% if content.field_title|render|trim is not empty %}
+  <h3 class="pf2-card__title">{{ content.field_title }}</h3>
+{% endif %}
+{% if content.field_body|render|trim is not empty %}
+  <div class="pf2-card__body">{{ content.field_body }}</div>
+{% endif %}

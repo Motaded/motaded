@@ -404,6 +404,57 @@ function _motaded_theme_cnb_icon_markup(string $key): Markup {
 }
 
 /**
+ * Generic line-icon library used by platform paragraphs (help_item, benefit_item,
+ * platform_resource) so editors can pick an icon key from a list.
+ *
+ * Keep this list in sync with allowed_values on field.storage.paragraph.field_icon.
+ */
+function _motaded_theme_pf_icon_markup(?string $key): Markup {
+  $svg = match ($key) {
+    'briefcase' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'building' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21V8l8-4 8 4v13" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'users' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'shield' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'document' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'globe' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c2.8 3.3 2.8 14.7 0 18M12 3c-2.8 3.3-2.8 14.7 0 18" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'search' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'chart' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 17 10 11l4 4 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'check' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'cog' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'map_pin' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-5.2 7-10a7 7 0 1 0-14 0c0 4.8 7 10 7 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'target' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
+    'lamp' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3h6l3 7H6l3-7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 20h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'star' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.6 5.3 5.9.86-4.25 4.14 1 5.86L12 16.77 6.75 19.16l1-5.86L3.5 9.16l5.9-.86L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'link' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 14a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14 10a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'list_check' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'lightbulb' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.6 1 2.5h6c0-.9.3-1.8 1-2.5A6 6 0 0 0 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+    'scale' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M5 21h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 9 3 14h6L7 9H5Zm14 0-2 5h6l-2-5h-2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'sparkles' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'clock' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'info' => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    default => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  };
+  return Markup::create($svg);
+}
+
+/**
+ * Normalizes a URL for duplicate detection (scheme + host + path, no trailing slash).
+ */
+function _motaded_theme_platform_url_canonical(?string $url): string {
+  if ($url === NULL || $url === '') {
+    return '';
+  }
+  $parts = parse_url($url);
+  if ($parts === FALSE || empty($parts['host'])) {
+    return strtolower(rtrim($url, '/'));
+  }
+  $scheme = strtolower((string) ($parts['scheme'] ?? 'https'));
+  $host = strtolower((string) $parts['host']);
+  $path = rtrim((string) ($parts['path'] ?? ''), '/');
+  return $scheme . '://' . $host . $path;
+}
+
+/**
  * LCP: fetchpriority=high for responsive hero banner images.
  */
 function motaded_theme_preprocess_responsive_image_formatter(array &$variables) {
@@ -1040,28 +1091,30 @@ function motaded_theme_preprocess_views_view(&$variables): void {
 }
 
 /**
- * Chambers View: node theme suggestion uses list layout only on the homepage embed.
+ * Implements hook_views_pre_render().
+ *
+ * Chambers: reset per-view statics before rows render so chamber_card nodes pick
+ * the correct template (homepage embed vs directory). Relying only on
+ * preprocess_views_view_unformatted missed some style / AJAX render paths and
+ * left motaded_cnb_home_chamber_card_layout stuck from an earlier embed.
  */
-function motaded_theme_preprocess_views_view_unformatted(array &$variables): void {
-  $view = $variables['view'] ?? NULL;
-  if (!$view instanceof ViewExecutable) {
+function motaded_theme_views_pre_render(ViewExecutable $view): void {
+  if (($view->id() ?? '') !== 'chambers') {
     return;
   }
-  if ($view->id() !== 'chambers') {
-    return;
-  }
+  $is_homepage = ($view->current_display === 'homepage');
   $flag = &drupal_static('motaded_cnb_home_chamber_card_layout', FALSE);
-  $flag = ($view->current_display === 'homepage');
+  $flag = $is_homepage;
 
-  // First row NID: only that chamber may use the wide “stats” featured layout on embed.
   $first_nid = &drupal_static('motaded_cnb_home_first_chamber_nid', NULL);
   $first_nid = NULL;
-  if ($view->current_display === 'homepage' && !empty($variables['rows'])) {
-    $first_row = reset($variables['rows']);
-    $content = $first_row['content'] ?? [];
-    $row_node = is_array($content) ? ($content['#node'] ?? NULL) : NULL;
-    if ($row_node instanceof NodeInterface) {
-      $first_nid = (int) $row_node->id();
+  if ($is_homepage && !empty($view->result)) {
+    $first = reset($view->result);
+    if (isset($first->_entity) && $first->_entity instanceof NodeInterface) {
+      $first_nid = (int) $first->_entity->id();
+    }
+    elseif (!empty($first->nid)) {
+      $first_nid = (int) $first->nid;
     }
   }
 }
@@ -1672,7 +1725,9 @@ function motaded_theme_preprocess_node(&$variables) {
         && (int) $node->id() === $first_slot_nid;
     }
     else {
-      $variables['cnb_is_featured'] = $is_featured_field;
+      // Directory and any non–Business-Network context: never use the wide
+      // featured stats layout for chamber_card (only the homepage embed may).
+      $variables['cnb_is_featured'] = FALSE;
     }
 
     $variables['cnb_focus_line'] = '';
@@ -1725,6 +1780,30 @@ function motaded_theme_preprocess_node(&$variables) {
 
     $variables['cnb_icon_focus'] = _motaded_theme_cnb_icon_markup('target');
     $variables['cnb_icon_type'] = _motaded_theme_cnb_icon_markup('building');
+  }
+
+  // Chamber (full canonical page): expose featured stats so the dedicated
+  // node page can render them alongside the relationship-focus section.
+  // The same icon order (users / briefcase / shield) keeps visual parity
+  // with the homepage Business Network featured card.
+  if ($node->bundle() === 'chamber' && ($variables['view_mode'] ?? '') === 'full') {
+    $variables['cnb_featured_stats'] = [];
+    if ($node->hasField('field_chamber_featured_stats')
+      && !$node->get('field_chamber_featured_stats')->isEmpty()) {
+      $icon_keys = ['users', 'briefcase', 'shield'];
+      foreach ($node->get('field_chamber_featured_stats') as $delta => $item) {
+        $text = trim((string) $item->value);
+        if ($text === '') {
+          continue;
+        }
+        $icon = $icon_keys[(int) $delta] ?? 'users';
+        $variables['cnb_featured_stats'][] = [
+          'icon' => $icon,
+          'text' => $text,
+          'icon_markup' => _motaded_theme_cnb_icon_markup($icon),
+        ];
+      }
+    }
   }
 
   // Article (full page): blog-style hero rail — read time, media, meta for twig.
@@ -1823,6 +1902,7 @@ function motaded_theme_preprocess_node(&$variables) {
       'platform_external_url' => NULL,
       'platform_external_label' => (string) t('Visit official website'),
       'platform_external_new_window' => FALSE,
+      'platform_cta_distinct_from_external' => TRUE,
       'platform_wa_url' => NULL,
       'platform_tel_url' => NULL,
     ];
@@ -1847,6 +1927,10 @@ function motaded_theme_preprocess_node(&$variables) {
         }
       }
     }
+    $ext_url = (string) ($variables['platform_external_url'] ?? '');
+    $cta_url = (string) ($variables['platform_cta_url'] ?? '');
+    $variables['platform_cta_distinct_from_external'] = $cta_url !== ''
+      && ($ext_url === '' || _motaded_theme_platform_url_canonical($cta_url) !== _motaded_theme_platform_url_canonical($ext_url));
     $page_url = \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBasePath() . \Drupal::request()->getPathInfo();
     $variables['platform_wa_url'] = 'https://wa.me/?text=' . rawurlencode($node->getTitle() . ' — ' . $page_url);
     $variables['platform_tel_url'] = NULL;
@@ -1855,6 +1939,29 @@ function motaded_theme_preprocess_node(&$variables) {
       $digits = preg_replace('/\D+/', '', $tel);
       if ($digits !== '') {
         $variables['platform_tel_url'] = 'tel:' . $digits;
+      }
+    }
+
+    // Glance taxonomy + source strings: English canonical values → ar.po (interface lang).
+    $lang = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+    $variables += [
+      'platform_glance_category_label' => '',
+      'platform_glance_region_label' => '',
+    ];
+    if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+      $term = $node->get('field_category')->entity;
+      if ($term instanceof TermInterface) {
+        $default_lang = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $term_default = $term->hasTranslation($default_lang) ? $term->getTranslation($default_lang) : $term;
+        $variables['platform_glance_category_label'] = (string) t($term_default->getName(), [], ['langcode' => $lang]);
+      }
+    }
+    if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+      $term = $node->get('field_region')->entity;
+      if ($term instanceof TermInterface) {
+        $default_lang = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $term_default = $term->hasTranslation($default_lang) ? $term->getTranslation($default_lang) : $term;
+        $variables['platform_glance_region_label'] = (string) t($term_default->getName(), [], ['langcode' => $lang]);
       }
     }
   }
@@ -2869,6 +2976,15 @@ function _motaded_theme_preprocess_market_insight_teaser(array &$variables, Node
  */
 function motaded_theme_preprocess_paragraph(array &$variables): void {
   $paragraph = $variables['paragraph'];
+
+  // Platform paragraphs (help_item, benefit_item, platform_resource) carry an
+  // optional `field_icon` (list_string). Expose its SVG markup to Twig.
+  if ($paragraph->hasField('field_icon')) {
+    $key = $paragraph->get('field_icon')->isEmpty() ? null : (string) $paragraph->get('field_icon')->value;
+    $variables['pf_icon_key'] = $key;
+    $variables['pf_icon_markup'] = $key ? _motaded_theme_pf_icon_markup($key) : NULL;
+  }
+
   if ($paragraph->bundle() === 'business_cost_estimation') {
     _motaded_theme_preprocess_paragraph_bce($variables);
   }
@@ -6198,6 +6314,23 @@ function motaded_theme_preprocess_page__webform__contact__confirmation(&$variabl
 }
 
 /**
+ * Drops invalid theme hook suggestions (non-strings break ThemeRegistry::has()).
+ *
+ * @param string[] $suggestions
+ *   Theme hook suggestions, by reference.
+ * @param string|null $exclude
+ *   Optional suggestion name to remove.
+ */
+function _motaded_theme_prune_node_theme_suggestions(array &$suggestions, ?string $exclude = NULL): void {
+  foreach ($suggestions as $delta => $suggestion) {
+    if (!is_string($suggestion) || ($exclude !== NULL && $suggestion === $exclude)) {
+      unset($suggestions[$delta]);
+    }
+  }
+  $suggestions = array_values($suggestions);
+}
+
+/**
  * Implements hook_theme_suggestions_node_alter().
  */
 function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
@@ -6206,8 +6339,16 @@ function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $
     return;
   }
   if ($node->bundle() === 'chamber' && ($variables['elements']['#view_mode'] ?? '') === 'chamber_card') {
-    if (drupal_static('motaded_cnb_home_chamber_card_layout', FALSE)) {
-      // Appended last so after array_reverse() it is tried first (most specific).
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    // Directory: never use the homepage embed template (stale drupal_static or contrib
+    // must not switch card chrome here).
+    if ($route_name === 'view.chambers.page_1') {
+      _motaded_theme_prune_node_theme_suggestions($suggestions, 'node__chamber__chamber_card__cnb_home');
+      return;
+    }
+    _motaded_theme_prune_node_theme_suggestions($suggestions);
+    if ($route_name !== 'view.chambers.page_1'
+      && drupal_static('motaded_cnb_home_chamber_card_layout', FALSE)) {
       $suggestions[] = 'node__chamber__chamber_card__cnb_home';
     }
     return;

@@ -18,10 +18,81 @@
   {{ title_suffix }}
 
   {% set has_overview = content.body|render|trim is not empty %}
-  {% set has_key = content.field_how_we_help|render|trim is not empty %}
-  {% set has_process = content.field_process_steps|render|trim is not empty %}
-  {% set has_req = content.field_requirements|render|trim is not empty %}
+  {% set has_hero_logo = content.field_logo|render|trim is not empty %}
+
+  {# Walk paragraph fields once and keep only items whose rendered markup
+     isn't whitespace — Drupal Paragraphs render hollow wrappers for empty
+     items which otherwise look like skeleton boxes. #}
+  {% set key_children = [] %}
+  {% if content.field_how_we_help|render|trim is not empty %}
+    {% for key, child in content.field_how_we_help %}
+      {% if key|first != '#' and child|render|striptags|trim is not empty %}
+        {% set key_children = key_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set process_children = [] %}
+  {% if content.field_process_steps|render|trim is not empty %}
+    {% for key, child in content.field_process_steps %}
+      {% if key|first != '#' and child|render|striptags|trim is not empty %}
+        {% set process_children = process_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set req_children = [] %}
+  {% if content.field_requirements|render|trim is not empty %}
+    {% for key, child in content.field_requirements %}
+      {% if key|first != '#' and child|render|striptags|trim is not empty %}
+        {% set req_children = req_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set has_key = key_children|length > 0 %}
+  {% set has_process = process_children|length > 0 %}
+  {% set has_req = req_children|length > 0 %}
   {% set has_trust = content.field_partner_logos|render|trim is not empty %}
+
+  {% set why_children = [] %}
+  {% if content.field_why_matters|render|trim is not empty %}
+    {% for key, child in content.field_why_matters %}
+      {% if key|first != '#' and child|render|striptags|trim is not empty %}
+        {% set why_children = why_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  {% set has_why = why_children|length > 0 %}
+
+  {% set resource_children = [] %}
+  {% if content.field_resources is defined and content.field_resources|render|trim is not empty %}
+    {% for key, child in content.field_resources %}
+      {% if key|first != '#' and child|render|striptags|trim is not empty %}
+        {% set resource_children = resource_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set related_children = [] %}
+  {% if content.field_related_platforms is defined and content.field_related_platforms|render|trim is not empty %}
+    {% for key, child in content.field_related_platforms %}
+      {% if key|first != '#' %}
+        {% set related_children = related_children|merge([child]) %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set has_resources = (resource_children|length > 0)
+                      or (content.field_source_text|render|trim is not empty)
+                      or (content.field_source_link|render|trim is not empty)
+                      or platform_external_url
+                      or (related_children|length > 0) %}
+
+  {% set hero_eyebrow = '' %}
+  {% if node.field_category.entity %}
+    {% set hero_eyebrow = (node.field_category.entity.label ~ ' ' ~ 'platform'|t) %}
+  {% endif %}
 
   <header class="pf2-hero" aria-labelledby="pf2-hero-title">
     <div class="pf2-hero__bg" aria-hidden="true">
@@ -43,16 +114,17 @@
         </nav>
       </div>
 
-      <div class="pf2-hero__main">
-        <div class="pf2-hero__logo-card" aria-label="{{ 'Platform logo'|t }}">
-          {% if content.field_logo|render|trim is not empty %}
+      <div class="pf2-hero__main{% if has_hero_logo %} pf2-hero__main--has-logo{% else %} pf2-hero__main--no-logo{% endif %}">
+        {% if has_hero_logo %}
+          <div class="pf2-hero__logo-card" aria-label="{{ 'Platform logo'|t }}">
             {{ content.field_logo }}
-          {% else %}
-            <div class="pf2-hero__logo-fallback" aria-hidden="true"></div>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
 
         <div class="pf2-hero__copy">
+          {% if hero_eyebrow %}
+            <div class="pf2-hero__eyebrow">{{ hero_eyebrow }}</div>
+          {% endif %}
           {% if page and label %}
             <h1 id="pf2-hero-title"{{ title_attributes.addClass('pf2-hero__title') }}>{{ label }}</h1>
           {% endif %}
@@ -65,47 +137,21 @@
             <div class="pf2-hero__lead">{{ summary }}</div>
           {% endif %}
 
-          <div class="pf2-hero__meta-row" aria-label="{{ 'Key information'|t }}">
-            {% if platform_external_url %}
-              <a class="pf2-meta" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>
-                <span class="pf2-meta__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 14a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14 10a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-                </span>
-                <span class="pf2-meta__label">{{ 'Official website'|t }}</span>
-                <span class="pf2-meta__value">{{ platform_external_label|default('Visit') }}</span>
-              </a>
-            {% endif %}
-
-            {% if content.field_source_text|render|trim is not empty %}
-              <div class="pf2-meta">
-                <span class="pf2-meta__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                </span>
-                <span class="pf2-meta__label">{{ 'Governing entity'|t }}</span>
-                <span class="pf2-meta__value">{{ node.field_source_text.value }}</span>
-              </div>
-            {% endif %}
-
-            {% if node.field_category.entity %}
-              <div class="pf2-meta">
-                <span class="pf2-meta__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-                </span>
-                <span class="pf2-meta__label">{{ 'Platform type'|t }}</span>
-                <span class="pf2-meta__value">{{ node.field_category.entity.label }}</span>
-              </div>
-            {% endif %}
-
-            {% if node.field_region.entity %}
-              <div class="pf2-meta">
-                <span class="pf2-meta__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
-                </span>
-                <span class="pf2-meta__label">{{ 'Coverage'|t }}</span>
-                <span class="pf2-meta__value">{{ node.field_region.entity.label }}</span>
-              </div>
-            {% endif %}
-          </div>
+          {% if platform_external_url or platform_cta_url %}
+            <div class="pf2-hero__cta-row">
+              {% if platform_external_url %}
+                <a class="pf2-btn pf2-btn--primary" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4 10 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M19 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span>{{ platform_external_label|default('Visit official website'|t) }}</span>
+                </a>
+              {% elseif platform_cta_url %}
+                <a class="pf2-btn pf2-btn--primary" href="{{ platform_cta_url }}">{{ platform_cta_label|default('Talk to an expert'|t) }}</a>
+              {% endif %}
+              {% if platform_external_url and platform_cta_url and platform_cta_distinct_from_external %}
+                <a class="pf2-btn pf2-btn--ghost" href="{{ platform_cta_url }}">{{ platform_cta_label|default('Talk to an expert'|t) }}</a>
+              {% endif %}
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -116,9 +162,10 @@
       <a class="pf2-tabs__link" href="#pf2-overview">{{ 'Overview'|t }}</a>
       {% if has_key %}<a class="pf2-tabs__link" href="#pf2-key">{{ 'Key services'|t }}</a>{% endif %}
       {% if has_process %}<a class="pf2-tabs__link" href="#pf2-process">{{ 'How it works'|t }}</a>{% endif %}
+      {% if has_why %}<a class="pf2-tabs__link" href="#pf2-when">{{ 'When you need this'|t }}</a>{% endif %}
       {% if has_req %}<a class="pf2-tabs__link" href="#pf2-req">{{ 'Requirements'|t }}</a>{% endif %}
       {% if has_trust %}<a class="pf2-tabs__link" href="#pf2-trust">{{ 'Partners'|t }}</a>{% endif %}
-      <a class="pf2-tabs__link" href="#pf2-resources">{{ 'Resources'|t }}</a>
+      {% if has_resources %}<a class="pf2-tabs__link" href="#pf2-resources">{{ 'Resources'|t }}</a>{% endif %}
     </nav>
 
     <div class="pf2-layout">
@@ -138,30 +185,30 @@
           <section class="pf2-section" id="pf2-key" aria-labelledby="pf2-key-title">
             <h2 id="pf2-key-title" class="pf2-section__title">{{ 'Key services'|t }}</h2>
             <div class="pf2-cards">
-              {% for key, child in content.field_how_we_help %}
-                {% if key|first != '#' %}
-                  <div class="pf2-card">
-                    {{ child }}
-                  </div>
-                {% endif %}
+              {% for child in key_children %}
+                <div class="pf2-card">{{ child }}</div>
               {% endfor %}
             </div>
-            {% if platform_cta_url %}
-              <div class="pf2-cta-row">
-                <a class="pf2-btn pf2-btn--primary" href="{{ platform_cta_url }}">{{ platform_cta_label }}</a>
-              </div>
-            {% endif %}
           </section>
         {% endif %}
 
         {% if has_process %}
           <section class="pf2-section" id="pf2-process" aria-labelledby="pf2-process-title">
             <h2 id="pf2-process-title" class="pf2-section__title">{{ 'How it works'|t }}</h2>
-            <div class="pf2-steps">
-              {% for key, child in content.field_process_steps %}
-                {% if key|first != '#' %}
-                  <div class="pf2-step">{{ child }}</div>
-                {% endif %}
+            <ol class="pf2-steps">
+              {% for child in process_children %}
+                <li class="pf2-step"><span class="pf2-step__num" aria-hidden="true">{{ loop.index }}</span>{{ child }}</li>
+              {% endfor %}
+            </ol>
+          </section>
+        {% endif %}
+
+        {% if has_why %}
+          <section class="pf2-section" id="pf2-when" aria-labelledby="pf2-when-title">
+            <h2 id="pf2-when-title" class="pf2-section__title">{{ 'When you need this platform'|t }}</h2>
+            <div class="pf2-cards pf2-cards--quad">
+              {% for child in why_children %}
+                <div class="pf2-card pf2-card--centered">{{ child }}</div>
               {% endfor %}
             </div>
           </section>
@@ -170,13 +217,11 @@
         {% if has_req %}
           <section class="pf2-section" id="pf2-req" aria-labelledby="pf2-req-title">
             <h2 id="pf2-req-title" class="pf2-section__title">{{ 'Requirements'|t }}</h2>
-            <div class="pf2-req">
-              {% for key, child in content.field_requirements %}
-                {% if key|first != '#' %}
-                  <div class="pf2-req__item">{{ child }}</div>
-                {% endif %}
+            <ul class="pf2-req">
+              {% for child in req_children %}
+                <li class="pf2-req__item">{{ child }}</li>
               {% endfor %}
-            </div>
+            </ul>
           </section>
         {% endif %}
 
@@ -187,20 +232,57 @@
           </section>
         {% endif %}
 
-        <section class="pf2-section" id="pf2-resources" aria-labelledby="pf2-resources-title">
-          <h2 id="pf2-resources-title" class="pf2-section__title">{{ 'Resources'|t }}</h2>
-          <div class="pf2-prose">
-            {% if content.field_source_text|render|trim is not empty %}
-              <p><strong>{{ 'Source'|t }}:</strong> {{ node.field_source_text.value }}</p>
-            {% endif %}
-            {% if content.field_source_link|render|trim is not empty %}
-              <div class="pf2-links">{{ content.field_source_link }}</div>
-            {% endif %}
-            {% if platform_external_url %}
-              <p><a href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>{{ 'Visit official website'|t }}</a></p>
-            {% endif %}
-          </div>
-        </section>
+        {% if has_resources %}
+          <section class="pf2-section" id="pf2-resources" aria-labelledby="pf2-resources-title">
+            <div class="pf2-resgrid">
+              {# Left column: structured resource links #}
+              {% if resource_children|length > 0 or platform_external_url %}
+                <div class="pf2-resgrid__col">
+                  <h2 id="pf2-resources-title" class="pf2-section__title">{{ 'Resources'|t }}</h2>
+                  <ul class="pf2-reslist" role="list">
+                    {% if platform_external_url and resource_children|length == 0 %}
+                      <li class="pf2-reslist__item">
+                        <a class="pf2-reslist__link" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>
+                          <span class="pf2-reslist__icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c2.8 3.3 2.8 14.7 0 18M12 3c-2.8 3.3-2.8 14.7 0 18" stroke="currentColor" stroke-width="1.6"/></svg>
+                          </span>
+                          <span class="pf2-reslist__text">{{ platform_external_label|default('Official website'|t) }}</span>
+                          <span class="pf2-reslist__chev" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% for child in resource_children %}
+                      <li class="pf2-reslist__item">{{ child }}</li>
+                    {% endfor %}
+                  </ul>
+                  {% if content.field_source_text|render|trim is not empty %}
+                    <p class="pf2-resgrid__source"><strong>{{ 'Source'|t }}:</strong> {{ node.field_source_text.value }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {# Right column: related platforms #}
+              {% if related_children|length > 0 %}
+                <div class="pf2-resgrid__col">
+                  <h2 class="pf2-section__title">{{ 'Related platforms'|t }}</h2>
+                  <ul class="pf2-reslist pf2-reslist--plain" role="list">
+                    {% for child in related_children %}
+                      <li class="pf2-reslist__item pf2-reslist__item--plain">
+                        <span class="pf2-reslist__text">{{ child }}</span>
+                        <span class="pf2-reslist__chev" aria-hidden="true">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  <a class="pf2-resgrid__all" href="{{ platform_listing_url|default('/platforms') }}">{{ 'View all platforms'|t }} →</a>
+                </div>
+              {% endif %}
+            </div>
+          </section>
+        {% endif %}
       </main>
 
       <aside class="pf2-aside" aria-label="{{ 'Sidebar'|t }}">
@@ -208,16 +290,13 @@
           <h3 class="pf2-aside-card__title">{{ 'At a Glance'|t }}</h3>
           <ul class="pf2-glance">
             {% if node.field_category.entity %}
-              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Platform type'|t }}</span><span class="pf2-glance__value">{{ node.field_category.entity.label }}</span></li>
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Platform type'|t }}</span><span class="pf2-glance__value">{{ platform_glance_category_label|default(node.field_category.entity.label) }}</span></li>
             {% endif %}
             {% if content.field_source_text|render|trim is not empty %}
-              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Governing entity'|t }}</span><span class="pf2-glance__value">{{ node.field_source_text.value }}</span></li>
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Governing entity'|t }}</span><span class="pf2-glance__value">{{ node.field_source_text.value|t }}</span></li>
             {% endif %}
             {% if node.field_region.entity %}
-              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Coverage'|t }}</span><span class="pf2-glance__value">{{ node.field_region.entity.label }}</span></li>
-            {% endif %}
-            {% if platform_external_url %}
-              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Website'|t }}</span><span class="pf2-glance__value">{{ platform_external_label|default('Official') }}</span></li>
+              <li class="pf2-glance__item"><span class="pf2-glance__label">{{ 'Coverage'|t }}</span><span class="pf2-glance__value">{{ platform_glance_region_label|default(node.field_region.entity.label) }}</span></li>
             {% endif %}
           </ul>
         </section>
@@ -226,15 +305,15 @@
           <h3 class="pf2-aside-card__title">{{ 'Need Help?'|t }}</h3>
           <p class="pf2-aside-card__text">{{ 'Our experts can assist you with setup, documentation, and compliance on this platform.'|t }}</p>
           <div class="pf2-aside-card__actions">
-            <a class="pf2-btn pf2-btn--primary" href="{{ platform_contact_url }}">{{ 'Talk to an Expert'|t }}</a>
+            <a class="pf2-btn pf2-btn--primary" href="{{ platform_contact_url }}">{{ 'Talk to an expert'|t }}</a>
           </div>
         </section>
 
         <section class="pf2-aside-card" aria-label="{{ 'Quick links'|t }}">
           <h3 class="pf2-aside-card__title">{{ 'Quick Links'|t }}</h3>
           <ul class="pf2-quicklinks">
-            {% if platform_external_url %}
-              <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>{{ platform_external_label|default('Official website') }}</a></li>
+            {% if platform_external_url and resource_children|length == 0 %}
+              <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_external_url }}"{% if platform_external_new_window %} rel="noopener noreferrer" target="_blank"{% endif %}>{{ platform_external_label|default('Official website'|t) }}</a></li>
             {% endif %}
             <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_listing_url|default('/platforms') }}">{{ 'Browse platforms'|t }}</a></li>
             <li class="pf2-quicklinks__item"><a class="pf2-quicklinks__link" href="{{ platform_contact_url }}">{{ 'Contact us'|t }}</a></li>
@@ -245,9 +324,15 @@
         <section class="pf2-aside-card" aria-label="{{ 'Share this platform'|t }}">
           <h3 class="pf2-aside-card__title">{{ 'Share this Platform'|t }}</h3>
           <div class="pf2-share">
-            <a class="pf2-share__btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank">in</a>
-            <a class="pf2-share__btn" href="https://twitter.com/intent/tweet?url={{ share_url|url_encode }}&text={{ label|url_encode }}" rel="noopener noreferrer" target="_blank">X</a>
-            <a class="pf2-share__btn" href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank">f</a>
+            <a class="pf2-share__btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank" aria-label="{{ 'Share on LinkedIn'|t }}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05a4.17 4.17 0 0 1 3.75-2.06c4.01 0 4.75 2.64 4.75 6.07V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.86V21h-4V9Z"/></svg>
+            </a>
+            <a class="pf2-share__btn" href="https://twitter.com/intent/tweet?url={{ share_url|url_encode }}&text={{ label|url_encode }}" rel="noopener noreferrer" target="_blank" aria-label="{{ 'Share on X'|t }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21.5l-7.36 8.418L22.7 22h-6.86l-5.37-7.04L4.4 22H1.14l7.87-9 -8.21-11h6.99l4.86 6.43L18.244 2Zm-1.2 18h1.9L7.04 4H5.04l12.004 16Z"/></svg>
+            </a>
+            <a class="pf2-share__btn" href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|url_encode }}" rel="noopener noreferrer" target="_blank" aria-label="{{ 'Share on Facebook'|t }}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.7V4.2c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.4V14h2.7v8h3.4Z"/></svg>
+            </a>
           </div>
         </section>
       </aside>

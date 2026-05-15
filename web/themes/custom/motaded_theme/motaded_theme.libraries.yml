@@ -32,13 +32,24 @@ global_cta:
     - motaded_theme/base
 
 menu_main_nav:
-  version: 20260513groups2
+  version: 20260515toolbar110
   css:
     component:
       css/components/menu-main-nav.css:
         weight: -9
   dependencies:
     - motaded_theme/base
+    - motaded_theme/site_header
+
+site_header:
+  version: 20260515toolbar110
+  css:
+    component:
+      css/components/site-header-layout.css: {}
+  js:
+    js/site-header-autohide.js: {}
+  dependencies:
+    - core/drupal
 
 base:
   version: VERSION
@@ -171,7 +182,7 @@ platform_page:
     - motaded_theme/node
 
 platform_node:
-  version: VERSION
+  version: 20260514platformhero2
   css:
     component:
       css/components/platform-node.css: {}
@@ -211,7 +222,7 @@ sector_logistics_gdp_chart:
     - core/once
 
 document_page:
-  version: VERSION
+  version: 20260514docmainv2
   css:
     component:
       css/components/document-page.css: {}
@@ -228,7 +239,7 @@ sector_card:
     - motaded_theme/base
 
 chamber_page:
-  version: VERSION
+  version: 20260513typepanel
   css:
     component:
       css/components/chamber-page.css: {}
@@ -593,7 +604,7 @@ platforms_systems:
     - motaded_theme/base
 
 chambers_network:
-  version: 20260513chamberswebp
+  version: 20260515chambersdirmeta
   css:
     component:
       css/components/chambers-network.css:

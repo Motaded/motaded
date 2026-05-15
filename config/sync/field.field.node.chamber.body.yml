@@ -1,0 +1,28 @@
+uuid: a1000001-0000-4000-8000-0000000chb01
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - node.type.chamber
+  module:
+    - text
+id: node.chamber.body
+field_name: body
+entity_type: node
+bundle: chamber
+label: Overview
+description: 'Long-form overview for the chamber page; summary can be used for listings and meta when enabled.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats:
+    - full_html
+    - basic_html
+field_type: text_with_summary

@@ -42,13 +42,13 @@
               <div class="cnb-card__summary">{{ content.field_short_description }}</div>
             {% endif %}
             <div class="cnb-card__row-meta cnb-card__featured-meta">
-              <div class="cnb-card__meta">
+              <div class="cnb-card__meta cnb-card__meta--focus">
                 <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
-                <span class="cnb-card__meta-text">
+                <span class="cnb-card__meta-text"{% if cnb_focus_line %} title="{{ cnb_focus_line|striptags|e('html_attr') }}"{% endif %}>
                   {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
                 </span>
               </div>
-              <div class="cnb-card__meta">
+              <div class="cnb-card__meta cnb-card__meta--type">
                 <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
                 <span class="cnb-card__meta-text">
                   {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}
@@ -57,21 +57,6 @@
             </div>
           </div>
         </div>
-        {% if cnb_featured_stats is not empty %}
-          <div class="cnb-card__featured-stats" role="group" aria-label="{{ 'Key facts'|t }}">
-            {% for stat in cnb_featured_stats %}
-              {% set stat_text = stat.text|default('')|trim %}
-              <div class="cnb-card__featured-stat">
-                {% if stat.icon_markup %}
-                  <span class="cnb-card__featured-stat-icon" aria-hidden="true">{{ stat.icon_markup }}</span>
-                {% endif %}
-                {% if stat_text != '' %}
-                  <p class="cnb-card__featured-stat-text">{{ stat.text }}</p>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
         <span class="cnb-card__featured-cta">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></span>
       </div>
     </a>
@@ -99,13 +84,13 @@
           </div>
         </div>
         <div class="cnb-card__row-meta">
-          <div class="cnb-card__meta">
+          <div class="cnb-card__meta cnb-card__meta--focus">
             <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
-            <span class="cnb-card__meta-text">
+            <span class="cnb-card__meta-text"{% if cnb_focus_line %} title="{{ cnb_focus_line|striptags|e('html_attr') }}"{% endif %}>
               {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
             </span>
           </div>
-          <div class="cnb-card__meta">
+          <div class="cnb-card__meta cnb-card__meta--type">
             <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
             <span class="cnb-card__meta-text">
               {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}

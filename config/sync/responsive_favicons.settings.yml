@@ -2,9 +2,6 @@ _core:
   default_config_hash: motadedresponsivefaviconshashplaceholder
 path_type: upload
 path: favicons
-cache_refresh_suffix: 0
-show_missing: 0
-remove_default: 1
 tags:
   - '<link rel="icon" href="/favicon.ico" sizes="any">'
   - '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">'
@@ -19,3 +16,6 @@ tags:
   - '<meta name="msapplication-TileImage" content="/mstile-150x150.png">'
   - '<meta name="msapplication-config" content="/sites/default/files/favicons/browserconfig.xml">'
   - '<meta name="theme-color" content="#0f7a3d">'
+cache_refresh_suffix: 0
+show_missing: 0
+remove_default: 1

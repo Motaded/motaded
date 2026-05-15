@@ -15,7 +15,9 @@ dependencies:
     - field.field.node.platform.field_partner_logos
     - field.field.node.platform.field_process_steps
     - field.field.node.platform.field_region
+    - field.field.node.platform.field_related_platforms
     - field.field.node.platform.field_requirements
+    - field.field.node.platform.field_resources
     - field.field.node.platform.field_short_description
     - field.field.node.platform.field_sector
     - field.field.node.platform.field_source_link
@@ -134,6 +136,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_related_platforms:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
+    region: content
   field_requirements:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -142,6 +152,15 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_resources:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_short_description:
     type: basic_string
@@ -195,6 +214,7 @@ content:
 hidden:
   addtoany: true
   field_featured: true
+  field_meta_tags: true
   field_sector: true
   langcode: true
   search_api_excerpt: true

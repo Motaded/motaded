@@ -57,6 +57,13 @@ function motaded_custom_page_attachments(array &$attachments) {
   if (in_array(\Drupal::routeMatch()->getRouteName(), ['entity.node.edit_form', 'node.add'])) {
     $attachments['#attached']['library'][] = 'motaded_custom/gin-custom';
   }
+
+  // Frontend + Toolbar + Gin Toolbar: secondary meta row must clear the fixed toolbar.
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()
+    && \Drupal::moduleHandler()->moduleExists('toolbar')
+    && \Drupal::currentUser()->hasPermission('access toolbar')) {
+    $attachments['#attached']['library'][] = 'motaded_custom/toolbar_frontend_stack_fix';
+  }
 }
 
 /**

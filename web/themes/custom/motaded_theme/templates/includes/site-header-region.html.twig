@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Site header wrapper: reserves layout height while the bar is position:fixed,
+ * and enables scroll-direction auto-hide (see js/site-header-autohide.js).
+ */
+#}
+{{ attach_library('motaded_theme/site_header') }}
+<div id="site-header" class="site-header-root">
+	<div class="site-header-spacer" aria-hidden="true"></div>
+	{{ include('@motaded_theme/includes/header.html.twig') }}
+</div>

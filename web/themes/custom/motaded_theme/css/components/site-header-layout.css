@@ -1,0 +1,54 @@
+/**
+ * Fixed site header + spacer + scroll-direction conceal (see site-header-autohide.js).
+ */
+#site-header.site-header-root {
+  --mot-header-h: 88px;
+}
+
+@media (min-width: 768px) {
+  #site-header.site-header-root {
+    --mot-header-h: 80px;
+  }
+}
+
+#site-header.site-header-root > .site-header-spacer {
+  display: block;
+  width: 100%;
+  height: var(--mot-header-h, 88px);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+#site-header.site-header-root > header.site-header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 201;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+#site-header.site-header-root.site-header--concealed > header.site-header-bar {
+  transform: translate3d(0, -100%, 0);
+}
+
+/* Drupal admin toolbar (+ Gin meta row on frontend): logged-in offset stack ~110px. */
+body.user-logged-in.toolbar-fixed {
+  --mot-toolbar-stack-offset: 110px;
+}
+
+body.user-logged-in.toolbar-fixed.toolbar-tray-open.toolbar-horizontal {
+  --mot-toolbar-stack-offset: 150px;
+}
+
+body.user-logged-in.toolbar-fixed #site-header.site-header-root > header.site-header-bar {
+  top: var(--mot-toolbar-stack-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #site-header.site-header-root > header.site-header-bar {
+    transition-duration: 0.01ms;
+  }
+}

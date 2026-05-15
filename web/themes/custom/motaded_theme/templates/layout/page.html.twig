@@ -88,14 +88,14 @@
 
 {% if node and node.type.value[0]["target_id"] == 'page' %}
   {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-gray-50']) %}
+{% elseif node and node.bundle == 'document' %}
+  {# No bg utility: document layout uses hero + muted shell; body gray-50 must show through. #}
 {% else %}
   {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-white']) %}
 {% endif %}
 
 
-<div id="site-header">
-  {{ include('@motaded_theme/includes/header.html.twig') }}
-</div>
+{{ include('@motaded_theme/includes/site-header-region.html.twig') }}
 
 {% if page.breadcrumb %}
   <div class="bread{% if use_content_full_bleed %} bread--service-hero-band{% endif %}">

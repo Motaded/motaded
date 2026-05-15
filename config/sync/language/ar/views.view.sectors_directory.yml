@@ -20,8 +20,8 @@ display:
           submit_button: بحث
           reset_button_label: 'إعادة تعيين المرشحات'
           exposed_sorts_label: ترتيب
-          sort_asc_label: 'أ-ي'
-          sort_desc_label: 'ي-أ'
+          sort_asc_label: أ-ي
+          sort_desc_label: ي-أ
           text_input_required: 'استخدم المرشحات في الأعلى للعثور على القطاعات.'
           bef:
             general:

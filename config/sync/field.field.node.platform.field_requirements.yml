@@ -15,7 +15,7 @@ bundle: platform
 label: Requirements
 description: 'Documents, approvals, or checklist rows (reuse Requirements paragraph).'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
