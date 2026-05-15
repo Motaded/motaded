@@ -7,7 +7,8 @@
 /**
  * @file
  * Partners marquee variant.
- * All partners are rendered server-side for SEO.
+ * Desktop (≥1024px): infinite marquee rail.
+ * Tablet/mobile (<1024px): Swiper carousel.
  */
 #}
 
@@ -18,6 +19,7 @@
 {% set total = view.result|length %}
 
 {% if total > 0 %}
+  {{ attach_library('motaded_theme/partner_carousel') }}
   <section class="partners-showcase partners-showcase--marquee">
     <div class="partners-showcase__bg" aria-hidden="true">
       <span class="partners-showcase__blob partners-showcase__blob--one"></span>
@@ -57,32 +59,37 @@
       </div>
     </div>
 
-    <div class="partners-showcase__mobile-grid">
-      {% for result_row in view.result %}
-        {% set entity = result_row._entity %}
-        {% set media = (entity.hasField('field_media') and not entity.field_media.isEmpty) ? entity.field_media.entity : null %}
-        {% set image = (media and media.field_media_image is defined and not media.field_media_image.isEmpty) ? media.field_media_image.entity : null %}
-        {% set logo_uri = image ? image.uri.value : '' %}
-        {% set logo_url = logo_uri ? file_url(logo_uri) : '' %}
-        {% set logo_alt = (media and not media.field_media_image.isEmpty) ? media.field_media_image.alt : '' %}
-        {% set partner_name = (entity.hasField('field_partner_name') and not entity.field_partner_name.isEmpty) ? entity.field_partner_name.value : entity.label %}
-        {% set role = (entity.hasField('field_one_line_role') and not entity.field_one_line_role.isEmpty) ? entity.field_one_line_role.value : '' %}
-        <article class="partners-showcase__logo-card partners-showcase__logo-card--mobile" aria-label="{{ partner_name }}{% if role %} — {{ role }}{% endif %}">
-          {% if logo_url %}
-            <img
-              src="{{ logo_url }}"
-              alt="{{ logo_alt|default(partner_name)|e }}"
-              class="partners-showcase__logo-img"
-              loading="lazy"
-              decoding="async"
-              fetchpriority="low"
-              width="160"
-              height="64"
-              sizes="(max-width: 1023px) 160px"
-            />
-          {% endif %}
-        </article>
-      {% endfor %}
+    <div class="partners-showcase__mobile-swiper partners-swiper swiper" aria-label="{{ 'Partners'|t }}">
+      <div class="swiper-wrapper">
+        {% for result_row in view.result %}
+          {% set entity = result_row._entity %}
+          {% set media = (entity.hasField('field_media') and not entity.field_media.isEmpty) ? entity.field_media.entity : null %}
+          {% set image = (media and media.field_media_image is defined and not media.field_media_image.isEmpty) ? media.field_media_image.entity : null %}
+          {% set logo_uri = image ? image.uri.value : '' %}
+          {% set logo_url = logo_uri ? file_url(logo_uri) : '' %}
+          {% set logo_alt = (media and not media.field_media_image.isEmpty) ? media.field_media_image.alt : '' %}
+          {% set partner_name = (entity.hasField('field_partner_name') and not entity.field_partner_name.isEmpty) ? entity.field_partner_name.value : entity.label %}
+          {% set role = (entity.hasField('field_one_line_role') and not entity.field_one_line_role.isEmpty) ? entity.field_one_line_role.value : '' %}
+          <div class="swiper-slide">
+            <article class="partners-showcase__logo-card partners-showcase__logo-card--slide" aria-label="{{ partner_name }}{% if role %} — {{ role }}{% endif %}">
+              {% if logo_url %}
+                <img
+                  src="{{ logo_url }}"
+                  alt="{{ logo_alt|default(partner_name)|e }}"
+                  class="partners-showcase__logo-img"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                  width="160"
+                  height="64"
+                  sizes="(max-width: 1023px) 42vw"
+                />
+              {% endif %}
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination" aria-hidden="true"></div>
     </div>
   </section>
 {% endif %}

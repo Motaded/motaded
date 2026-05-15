@@ -5,7 +5,7 @@
   --mot-header-h: 88px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   #site-header.site-header-root {
     --mot-header-h: 80px;
   }
@@ -50,5 +50,27 @@ body.user-logged-in.toolbar-fixed #site-header.site-header-root > header.site-he
 @media (prefers-reduced-motion: reduce) {
   #site-header.site-header-root > header.site-header-bar {
     transition-duration: 0.01ms;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1279px) {
+  #site-header .site-header-bar__inner-row {
+    gap: 0.75rem;
+  }
+
+  #site-header .site-header-bar__inner-row > .shrink-0 img[alt="Motaded"] {
+    max-width: 104px;
+    height: 2rem;
+  }
+
+  #site-header .block-cta--icon-only .block-cta__btn {
+    min-width: 1.75rem;
+    min-height: 1.75rem;
+    padding: 0.3rem;
+  }
+
+  #site-header .block-cta--icon-only .block-cta__icon {
+    width: 16px;
+    height: 16px;
   }
 }

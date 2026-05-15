@@ -220,6 +220,20 @@
   line-height: 1.22;
 }
 
+.chambers-network .cnb-card--featured .cnb-card__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.chambers-network .cnb-card__logo-fallback {
+  color: rgba(15, 118, 110, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chambers-network .cnb-card__featured-main .cnb-card__featured-meta {
   margin-top: 0.55rem;
 }
@@ -250,17 +264,58 @@
 
 .chambers-network .cnb-card__featured-main {
   display: flex;
-  gap: 1.1rem;
-  align-items: flex-start;
+  gap: 1.25rem;
+  align-items: center;
   min-width: 0;
 }
 
-.chambers-network .cnb-card--featured .cnb-card__logo-wrap {
-  flex: 0 0 92px;
-  width: 92px;
-  height: 92px;
-  background: rgba(15, 118, 110, 0.1);
-  border-color: rgba(15, 118, 110, 0.15);
+/* Homepage embed: logos without boxed wrap — larger, object-fit contain. */
+.chambers-network .cnb-card__logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.chambers-network .cnb-card__logo .field,
+.chambers-network .cnb-card__logo .field__item {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chambers-network .cnb-card--featured .cnb-card__logo {
+  flex: 0 0 auto;
+  min-width: 6.5rem;
+  max-width: 10.5rem;
+}
+
+.chambers-network .cnb-card--featured .cnb-card__logo img,
+.chambers-network .cnb-card--featured .cnb-card__logo picture img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 10.5rem;
+  max-height: 5.5rem;
+  object-fit: contain;
+}
+
+.chambers-network .cnb-card--row .cnb-card__logo--row {
+  flex: 0 0 auto;
+  min-width: 3.75rem;
+  max-width: 5.5rem;
+}
+
+.chambers-network .cnb-card--row .cnb-card__logo--row img,
+.chambers-network .cnb-card--row .cnb-card__logo--row picture img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 5.5rem;
+  max-height: 3.5rem;
+  object-fit: contain;
 }
 
 .chambers-network .cnb-card__featured-stats {
@@ -335,18 +390,9 @@
 
 .chambers-network .cnb-card__row-brand {
   display: flex;
-  gap: 0.85rem;
-  align-items: flex-start;
+  gap: 1rem;
+  align-items: center;
   min-width: 0;
-}
-
-.chambers-network .cnb-card__logo-wrap--sm {
-  flex: 0 0 52px;
-  width: 52px;
-  height: 52px;
-  border-radius: 10px;
-  background: rgba(15, 118, 110, 0.1);
-  border-color: rgba(15, 118, 110, 0.14);
 }
 
 .chambers-network .cnb-card__title-plain {
@@ -417,8 +463,8 @@
 }
 
 .chambers-network .cnb-card--featured .cnb-card__meta--focus .cnb-card__meta-text {
-  -webkit-line-clamp: 3;
-  font-size: 0.8125rem;
+  -webkit-line-clamp: 2;
+  font-size: 0.8rem;
 }
 
 .chambers-network .cnb-card__meta--type .cnb-card__meta-text {
@@ -537,6 +583,56 @@
     0 14px 40px rgba(15, 118, 110, 0.08);
 }
 
+/* /chambers directory: entire card is one link (see node--chamber--chamber-card.html.twig). */
+.chambers-directory__grid .cnb-card {
+  padding: 0;
+  gap: 0;
+}
+
+.chambers-directory__grid .cnb-card__link-hit--directory {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  flex: 1 1 auto;
+  min-height: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+  border-radius: inherit;
+}
+
+.chambers-directory__grid .cnb-card__link-hit--directory:focus-visible {
+  outline: 2px solid var(--cnb-green, #0f766e);
+  outline-offset: 3px;
+}
+
+.chambers-directory__grid .cnb-card__link-hit--directory .cnb-card__title {
+  color: var(--mot-text, #101828);
+  transition: color 160ms ease;
+}
+
+.chambers-directory__grid .cnb-card:hover .cnb-card__link-hit--directory .cnb-card__title,
+.chambers-directory__grid .cnb-card__link-hit--directory:focus-visible .cnb-card__title {
+  color: var(--cnb-green, #0f766e);
+}
+
+.chambers-directory__grid .cnb-card__link-hit--directory .cnb-card__cta {
+  margin-top: auto;
+}
+
+.chambers-directory__grid .cnb-card:hover .cnb-card__link-hit--directory .cnb-card__cta,
+.chambers-directory__grid .cnb-card__link-hit--directory:focus-visible .cnb-card__cta {
+  color: var(--cnb-green-strong, #0d5f59);
+  gap: 0.55rem;
+}
+
+.chambers-directory__grid .cnb-card:hover .cnb-card__link-hit--directory .cnb-card__cta span[aria-hidden='true'],
+.chambers-directory__grid .cnb-card__link-hit--directory:focus-visible .cnb-card__cta span[aria-hidden='true'] {
+  transform: translateX(4px);
+}
+
 .cnb-card__top {
   display: flex;
   gap: 1rem;
@@ -581,8 +677,53 @@
 
 .cnb-card__logo-fallback {
   color: rgba(15, 118, 110, 0.45);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 64px;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+.cnb-card__logo-fallback svg {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+/* Directory grid: keep logos inside the 76px slot (incl. cached homepage row markup). */
+.chambers-directory__grid .cnb-card__logo-wrap img,
+.chambers-directory__grid .cnb-card__logo-wrap picture img,
+.chambers-directory__grid .cnb-card__logo img,
+.chambers-directory__grid .cnb-card__logo--row img,
+.chambers-directory__grid .cnb-card__logo picture img {
+  max-width: 100%;
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.chambers-directory__grid .cnb-card__logo-wrap .media,
+.chambers-directory__grid .cnb-card__logo .media {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chambers-directory__grid .cnb-card__logo-wrap .field,
+.chambers-directory__grid .cnb-card__logo .field {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cnb-card__text {

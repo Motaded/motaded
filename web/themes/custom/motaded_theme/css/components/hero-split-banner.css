@@ -319,8 +319,19 @@
   .hero-split-banner__feature-cards {
     position: static;
     width: 100%;
+    min-width: 100%;
+    max-width: none;
+    margin-inline: 0;
     transform: none;
+    margin-top: 1.25rem;
+    margin-bottom: 1.5rem;
     padding: 1rem clamp(1rem, 2.5vw, 1.5rem) 0;
+    box-sizing: border-box;
+  }
+
+  .hero-split-banner__feature-panel {
+    border-radius: 0;
+    border-inline: 0;
   }
 }
 

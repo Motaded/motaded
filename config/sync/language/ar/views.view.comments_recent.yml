@@ -11,3 +11,4 @@ display:
     display_title: الصندوق
     display_options:
       block_description: 'أحدث التعليقات'
+      block_category: 'Lists (Views)'

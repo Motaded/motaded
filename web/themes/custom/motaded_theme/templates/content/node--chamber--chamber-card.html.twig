@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Chamber card — directory grid (/chambers) and any non-homepage chambers View.
+ * Chamber card — /chambers directory grid (logo, title, summary, CTA only).
  */
 #}
 {%
@@ -16,41 +16,27 @@
 <article{{ attributes.addClass(classes) }} role="listitem">
   {{ title_prefix }}
   {{ title_suffix }}
-  <div class="cnb-card__top">
-    <div class="cnb-card__logo-wrap">
-      {% if content.field_logo|render|trim is not empty %}
-        {{ content.field_logo }}
-      {% else %}
-        <span class="cnb-card__logo-fallback" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </span>
-      {% endif %}
+  <a class="cnb-card__link-hit cnb-card__link-hit--directory" href="{{ url }}" rel="bookmark" aria-label="{{ (label|render|striptags ~ ' — ' ~ ('Learn more'|t))|e('html_attr') }}">
+    <div class="cnb-card__top">
+      <div class="cnb-card__logo-wrap">
+        {% if content.field_logo|render|trim is not empty %}
+          {{ content.field_logo }}
+        {% else %}
+          <span class="cnb-card__logo-fallback" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        {% endif %}
+      </div>
+      <div class="cnb-card__text">
+        <h3 class="cnb-card__title">{{ label }}</h3>
+        {% if content.field_short_description|render|trim is not empty %}
+          <div class="cnb-card__summary">{{ content.field_short_description }}</div>
+        {% endif %}
+      </div>
     </div>
-    <div class="cnb-card__text">
-      <h3 class="cnb-card__title">
-        <a class="cnb-card__title-link" href="{{ url }}" rel="bookmark">{{ label }}</a>
-      </h3>
-      {% if content.field_short_description|render|trim is not empty %}
-        <div class="cnb-card__summary">{{ content.field_short_description }}</div>
-      {% endif %}
-    </div>
-  </div>
-  <div class="cnb-card__row-meta cnb-card__directory-meta">
-    <div class="cnb-card__meta cnb-card__meta--focus">
-      <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
-      <span class="cnb-card__meta-text"{% if cnb_focus_line %} title="{{ cnb_focus_line|striptags|e('html_attr') }}"{% endif %}>
-        {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
-      </span>
-    </div>
-    <div class="cnb-card__meta cnb-card__meta--type">
-      <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
-      <span class="cnb-card__meta-text">
-        {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}
-      </span>
-    </div>
-  </div>
-  <a href="{{ url }}" class="cnb-card__cta" rel="bookmark">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></a>
+    <span class="cnb-card__cta">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></span>
+  </a>
 </article>

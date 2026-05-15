@@ -1,0 +1,65 @@
+{#
+  Mobile drawer — teleported to body so position:fixed is not clipped by header transform.
+  Requires Alpine scope on #site-header.site-header-root (mobileOpen, mobileSection).
+#}
+{% set search_url = url('<front>')|render ~ '/search/content' %}
+
+<template x-teleport="body">
+	<div
+		class="mot-mobile-drawer nav-desktop:hidden"
+		x-show="mobileOpen"
+		x-cloak
+		role="presentation">
+		<div
+			class="mot-mobile-drawer__backdrop"
+			x-show="mobileOpen"
+			x-transition.opacity
+			@click="mobileOpen = false; mobileSection = null; mobileSubsection = null"
+			aria-hidden="true"></div>
+
+		<aside
+			class="mot-mobile-drawer__panel"
+			x-show="mobileOpen"
+			x-transition:enter="transition ease-out duration-200"
+			x-transition:enter-start="-translate-x-full"
+			x-transition:enter-end="translate-x-0"
+			x-transition:leave="transition ease-in duration-150"
+			x-transition:leave-start="translate-x-0"
+			x-transition:leave-end="-translate-x-full"
+			@click.stop
+			role="dialog"
+			aria-modal="true"
+			:aria-hidden="!mobileOpen"
+			aria-label="{{ 'Mobile menu'|t }}">
+			<div class="mot-mobile-drawer__head">
+				<a href="{{ front_page }}" class="mot-mobile-drawer__logo">
+					<img alt="Motaded" class="h-8 w-auto max-w-[100px] object-contain" src="{{ logo_path }}" width="500" height="92"/>
+				</a>
+				<button
+					type="button"
+					class="mot-mobile-drawer__close"
+					@click="mobileOpen = false; mobileSection = null; mobileSubsection = null"
+					aria-label="{{ 'Close menu'|t }}">
+					<img alt="" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-close.svg"/>
+				</button>
+			</div>
+
+			<div class="mot-mobile-drawer__body mot-mobile-drawer__body--with-cta">
+				{{ page.menu_mobile }}
+			</div>
+
+			<div class="mot-mobile-drawer__foot">
+				<a
+					href="{{ search_url|replace({'//s': '/s'}) }}"
+					class="mot-mobile-drawer__foot-link"
+					aria-label="{{ 'Search'|t }}">
+					<img alt="" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
+					<span>{{ 'Search'|t }}</span>
+				</a>
+				<div class="mot-mobile-drawer__foot-lang">
+					{{ page.secondary_menu }}
+				</div>
+			</div>
+		</aside>
+	</div>
+</template>

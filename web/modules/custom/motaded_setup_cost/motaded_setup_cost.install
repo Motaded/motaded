@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for motaded_setup_cost.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_requirements().
+ */
+function motaded_setup_cost_requirements(string $phase): array {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    if (!\Drupal::moduleHandler()->moduleExists('webform')) {
+      $requirements['motaded_setup_cost_webform'] = [
+        'title' => t('Setup cost calculator'),
+        'description' => t('Webform module is required for lead capture.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}

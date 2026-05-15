@@ -715,3 +715,21 @@ function motaded_custom_update_10020(): void {
   _motaded_custom_import_ar_locale_po();
 }
 
+/**
+ * Enables homepage paragraph translation, applies node 374 Arabic copy, re-imports PO.
+ */
+function motaded_custom_update_10021(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_node_374_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings for investor journey labels.
+ */
+function motaded_custom_update_10022(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+

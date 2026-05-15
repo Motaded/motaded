@@ -1,132 +1,107 @@
 {#
-  Theme: Muin (Custom Licensed Version)
-  © Banafsijy.com – Single Project License – Do Not Redistribute
-#}
-
-{#
-/**
- * @file
- * Theme override to display a menu.
- *
- * Available variables:
- * - menu_name: The machine name of the menu.
- * - items: A nested list of menu items. Each menu item contains:
- *   - attributes: HTML attributes for the menu item.
- *   - below: The menu item child items.
- *   - title: The menu link title.
- *   - url: The menu link URL, instance of \Drupal\Core\Url
- *   - localized_options: Menu link localized options.
- *   - is_expanded: TRUE if the link has visible children within the current
- *     menu tree.
- *   - is_collapsed: TRUE if the link has children within the current menu tree
- *     that are not currently visible.
- *   - in_active_trail: TRUE if the link is in the active trail.
- */
+  Mobile drawer menu — accordion (closed by default).
+  Level 0: mobileSection. Nested groups inside a panel: mobileSubsection.
 #}
 {% import _self as menus %}
 
-{#
-  We call a macro which calls itself to render the full tree.
-  @see https://twig.symfony.com/doc/3.x/tags/macro.html
-#}
-{{ menus.menu_links(items, attributes, 0) }}
+<div class="mot-mobile-menu">
+	{{ menus.menu_links(items, 0, '', '') }}
+</div>
 
-{% macro menu_links(items, attributes, menu_level) %}
+{% macro menu_slug(title) %}
+	{{- title|render|striptags|trim|lower|replace({'&': 'and', '/': ' ', '-': ' '})|replace({'  ': ' ', ' ': '_'}) -}}
+{% endmacro %}
+
+{% macro menu_links(items, menu_level, parent_key, subsection_key) %}
 	{% import _self as menus %}
 	{% if items %}
 		{% if menu_level == 1 %}
-			<div x-show="mobileSection==='{{ attributes.menu_parent }}'" x-transition x-cloak class="pb-3 px-3">
-				<ul class="grid grid-cols-1 gap-2">
-				{% endif %}
-				{% for item in items %}
-					{%
-        set classes = [
-          menu_level == 0 ? 'border-b border-gray-200' : '',
-          item.in_active_trail ? 'menu-item--active-trail',
-        ]
-      %}
-					{% set title = item.title | lower | replace({' ': '_'}) %}
-					{% if menu_level == 0 %}
-						<div{{item.attributes.addClass(classes)}}>
-						{% endif %}
+			<div
+				class="mot-mobile-menu__panel"
+				x-show="mobileSection === '{{ parent_key }}'"
+				x-cloak
+				x-transition.opacity.duration.150ms>
+				<ul class="mot-mobile-menu__list mot-mobile-menu__list--child" role="list">
+		{% elseif menu_level == 2 %}
+			<div
+				class="mot-mobile-menu__subpanel"
+				x-show="mobileSubsection === '{{ subsection_key }}'"
+				x-cloak
+				x-transition.opacity.duration.150ms>
+				<ul class="mot-mobile-menu__list mot-mobile-menu__list--grandchild" role="list">
+		{% endif %}
 
-						{% if item.below %}
-							<button type="button" class="w-full flex items-center justify-between px-4 py-3 text-md font-medium" @click="mobileSection = mobileSection==='{{ title }}' ? null : '{{ title }}'" :aria-expanded="mobileSection==='{{ title }}'">
-								<span>{{ item.title }}</span>
-								<img alt="chevron" width="16" height="16" class="transition-transform" :class="openMenu==='{{ title }}' ? 'rotate-180' : ''" src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
-							</button>
-							{{ menus.menu_links(item.below, attributes.setAttribute('menu_parent', title), menu_level + 1) }}
-						{% else %}
-							{% set internal_path = (menu_level == 1 and item.url.isRouted) ? item.url.getInternalPath() : '' %}
-							{% set is_services_hub = menu_level == 1 and internal_path == 'services' %}
-							{% if menu_level == 1 %}
-								<li>
-								{% endif %}
-								{% set link_classes = [
-            'flex',
-            'items-center',
-            'gap-0',
-            'px-4',
-            'py-4',
-            'w-fit',
-            'm-0.5',
-            'rounded-md',
-            'text-md',
-            'leading-[1.2]',
-            'font-medium',
-            'transition',
-            'h-full',
-            'relative',
-            'focus-visible:outline',
-            'focus-visible:outline-2',
-            'focus-visible:outline-gray-800',
-            'text-gray-900',
-          ]
-        %}
-								{% set mobile_hub_classes = [
-            'inline-flex',
-            'items-center',
-            'justify-center',
-            'rounded-full',
-            'bg-primary-600',
-            'text-white',
-            'px-8',
-            'py-3.5',
-            'font-normal',
-            'no-underline',
-            'shadow-sm',
-            'transition',
-            'hover:bg-primary-700',
-            'hover:no-underline',
-            'focus-visible:outline',
-            'focus-visible:outline-2',
-            'focus-visible:outline-offset-2',
-            'focus-visible:outline-gray-800',
-            'block',
-            'rounded-md',
-            'px-3',
-            'py-2',
-            'hover:bg-gray-50',
-            'text-sm',
-          ] %}
-								{% set mobile_default_classes = ['block', 'rounded-md', 'px-3', 'py-2', 'hover:bg-gray-50', 'text-sm'] %}
-								{% set mobile_link_attributes = menu_level == 0
-            ? create_attribute({'class': link_classes})
-            : (is_services_hub
-              ? create_attribute({'class': mobile_hub_classes})
-              : create_attribute({'class': mobile_default_classes}))
-          %}
-								{{ link(item.title, item.url, mobile_link_attributes) }}
-								{% if menu_level == 1 %}
-								</li>
-							{% endif %}
-						{% endif %}
-
-						{% if menu_level == 0 %}
-						</div>
+		{% for item in items %}
+			{% set slug = menus.menu_slug(item.title) %}
+			{% if menu_level == 0 %}
+				<div class="mot-mobile-menu__item border-b border-gray-200{{ item.in_active_trail ? ' menu-item--active-trail' : '' }}">
+					{% if item.below %}
+						<button
+							type="button"
+							class="mot-mobile-menu__trigger mot-mobile-menu__trigger--top"
+							@click="mobileSection = (mobileSection === '{{ slug }}' ? null : '{{ slug }}'); mobileSubsection = null"
+							:aria-expanded="mobileSection === '{{ slug }}'">
+							<span>{{ item.title }}</span>
+							<img
+								alt=""
+								width="16"
+								height="16"
+								class="mot-mobile-menu__chev transition-transform"
+								:class="mobileSection === '{{ slug }}' ? 'rotate-180' : ''"
+								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+						</button>
+						{{ menus.menu_links(item.below, 1, slug, '') }}
+					{% else %}
+						{{ link(item.title, item.url, {
+							'class': [
+								'mot-mobile-menu__link',
+								'mot-mobile-menu__link--top',
+								item.in_active_trail ? 'is-active',
+							],
+						}) }}
 					{% endif %}
-				{% endfor %}
-				{% if menu_level == 1 %}
+				</div>
+			{% elseif menu_level == 1 %}
+				<li class="mot-mobile-menu__list-item">
+					{% if item.below %}
+						<button
+							type="button"
+							class="mot-mobile-menu__trigger mot-mobile-menu__trigger--child"
+							@click="mobileSubsection = (mobileSubsection === '{{ slug }}' ? null : '{{ slug }}')"
+							:aria-expanded="mobileSubsection === '{{ slug }}'">
+							<span>{{ item.title }}</span>
+							<img
+								alt=""
+								width="16"
+								height="16"
+								class="mot-mobile-menu__chev transition-transform"
+								:class="mobileSubsection === '{{ slug }}' ? 'rotate-180' : ''"
+								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+						</button>
+						{{ menus.menu_links(item.below, 2, parent_key, slug) }}
+					{% else %}
+						{% set internal_path = item.url.isRouted ? item.url.getInternalPath() : '' %}
+						{% set is_services_hub = internal_path == 'services' %}
+						{{ link(item.title, item.url, {
+							'class': is_services_hub
+								? ['mot-mobile-menu__link', 'mot-mobile-menu__link--hub']
+								: ['mot-mobile-menu__link', 'mot-mobile-menu__link--child'],
+						}) }}
+					{% endif %}
+				</li>
+			{% else %}
+				<li class="mot-mobile-menu__list-item">
+					{{ link(item.title, item.url, {
+						'class': ['mot-mobile-menu__link', 'mot-mobile-menu__link--grandchild'],
+					}) }}
+				</li>
+			{% endif %}
+		{% endfor %}
+
+		{% if menu_level == 1 %}
+				</ul>
+			</div>
+		{% elseif menu_level == 2 %}
 				</ul>
 			</div>
 		{% endif %}

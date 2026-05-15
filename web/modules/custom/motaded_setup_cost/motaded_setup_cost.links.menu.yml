@@ -1,0 +1,18 @@
+motaded_setup_cost.collection:
+  title: 'Setup cost calculator'
+  description: 'Pricing profiles and estimator configuration.'
+  route_name: entity.setup_cost_profile.collection
+  parent: system.admin_config
+  weight: 12
+
+motaded_setup_cost.settings:
+  title: 'Calculator settings'
+  route_name: motaded_setup_cost.settings
+  parent: motaded_setup_cost.collection
+  weight: 5
+
+entity.setup_cost_profile.collection:
+  title: 'Profiles'
+  route_name: entity.setup_cost_profile.collection
+  parent: motaded_setup_cost.collection
+  weight: 0

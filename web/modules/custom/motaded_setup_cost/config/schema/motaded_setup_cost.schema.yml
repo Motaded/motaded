@@ -1,0 +1,215 @@
+motaded_setup_cost.settings:
+  type: config_object
+  label: 'Setup cost calculator settings'
+  mapping:
+    active_profile:
+      type: string
+      label: 'Active profile ID'
+
+motaded_setup_cost.profile.*:
+  type: config_entity
+  label: 'Setup cost profile'
+  mapping:
+    uuid:
+      type: string
+    langcode:
+      type: string
+    status:
+      type: boolean
+    dependencies:
+      type: config_dependencies
+    id:
+      type: string
+    label:
+      type: label
+    currency:
+      type: string
+    webform_id:
+      type: string
+    global_setup_buffer_min:
+      type: float
+    global_setup_buffer_max:
+      type: float
+    disclaimer:
+      type: text
+    last_updated:
+      type: string
+    methodology_source:
+      type: string
+    steps:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          label:
+            type: label
+          type:
+            type: string
+          weight:
+            type: integer
+          slider_min:
+            type: integer
+          slider_max:
+            type: integer
+          slider_step:
+            type: integer
+          options:
+            type: sequence
+            sequence:
+              type: mapping
+              mapping:
+                id:
+                  type: string
+                label:
+                  type: label
+                weight:
+                  type: integer
+    line_items:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          label:
+            type: label
+          base_min:
+            type: float
+          base_max:
+            type: float
+          weight:
+            type: integer
+    modifiers:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          line_item_id:
+            type: string
+          dimension:
+            type: string
+          value:
+            type: string
+          value_min:
+            type: string
+          value_max:
+            type: string
+          add_min:
+            type: float
+          add_max:
+            type: float
+          multiply_min:
+            type: float
+          multiply_max:
+            type: float
+    monthly:
+      type: mapping
+      mapping:
+        base_min:
+          type: float
+        base_max:
+          type: float
+        per_employee_min:
+          type: float
+        per_employee_max:
+          type: float
+        office:
+          type: sequence
+          sequence:
+            type: mapping
+            mapping:
+              option_id:
+                type: string
+              add_min:
+                type: float
+              add_max:
+                type: float
+        service:
+          type: sequence
+          sequence:
+            type: mapping
+            mapping:
+              option_id:
+                type: string
+              add_min:
+                type: float
+              add_max:
+                type: float
+    timelines:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          label:
+            type: label
+          min_weeks:
+            type: integer
+          max_weeks:
+            type: integer
+          conditions:
+            type: sequence
+            sequence:
+              type: mapping
+              mapping:
+                dimension:
+                  type: string
+                value:
+                  type: string
+    timeline_default:
+      type: mapping
+      mapping:
+        min_weeks:
+          type: integer
+        max_weeks:
+          type: integer
+    packages:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          label:
+            type: label
+          description:
+            type: text
+          min_points:
+            type: integer
+          rules:
+            type: sequence
+            sequence:
+              type: mapping
+              mapping:
+                dimension:
+                  type: string
+                value:
+                  type: string
+                points:
+                  type: integer
+    ui:
+      type: mapping
+      mapping:
+        progress_label:
+          type: label
+        result_setup_label:
+          type: label
+        result_monthly_label:
+          type: label
+        result_timeline_label:
+          type: label
+        result_breakdown_title:
+          type: label
+        packages_title:
+          type: label
+        lead_title:
+          type: label
+        lead_description:
+          type: text
+        cta_advisor_label:
+          type: label
+        cta_advisor_url:
+          type: string
+        empty_selection_hint:
+          type: label

@@ -1,0 +1,339 @@
+<?php
+
+/**
+ * @file
+ * Business setup cost calculator module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\node\NodeInterface;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\webform\WebformSubmissionInterface;
+
+/**
+ * Landing paths that use the 2-column SEO paragraph grid.
+ */
+const MOTADED_SETUP_COST_LANDING_ALIASES = [
+  '/business-setup-cost-calculator',
+  '/حاسبة-تكلفة-تأسيس-الأعمال',
+];
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function motaded_setup_cost_library_info_alter(array &$libraries, string $extension): void {
+  if ($extension !== 'motaded_theme') {
+    return;
+  }
+  foreach (['alpine', 'setup_cost_alpine'] as $id) {
+    if (empty($libraries[$id]['js'])) {
+      continue;
+    }
+    foreach ($libraries[$id]['js'] as &$js) {
+      $js['preprocess'] = FALSE;
+    }
+    unset($js);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for html templates.
+ */
+function motaded_setup_cost_preprocess_html(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof NodeInterface || !motaded_setup_cost_is_calculator_landing($node)) {
+    return;
+  }
+  if (!empty($variables['attributes']) && $variables['attributes'] instanceof \Drupal\Core\Template\Attribute) {
+    $variables['attributes']->addClass('is-setup-cost-landing');
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function motaded_setup_cost_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node instanceof NodeInterface || !$node->isPublished()) {
+    return;
+  }
+  if (!motaded_setup_cost_is_calculator_landing($node)) {
+    return;
+  }
+  $variables['attributes']['class'][] = 'setup-cost-landing';
+  $variables['#attached']['library'][] = 'motaded_theme/promo_split';
+  motaded_setup_cost_strip_landing_deferred_paragraphs($variables);
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function motaded_setup_cost_preprocess_page(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof NodeInterface || !motaded_setup_cost_is_calculator_landing($node)) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'motaded_theme/promo_split';
+  $variables['#attached']['library'][] = 'motaded_theme/setup_cost_alpine';
+  $variables['#attached']['library'][] = 'motaded_setup_cost/estimator';
+  $config = \Drupal::service('motaded_setup_cost.data_builder')->buildFrontendConfig();
+  if ($config !== NULL) {
+    $variables['#attached']['drupalSettings']['motadedSetupCost'] = $config;
+  }
+  $packages = motaded_setup_cost_build_landing_packages($node);
+  if ($packages !== NULL) {
+    $variables['page']['content']['setup_cost_landing_packages'] = [
+      '#type' => 'container',
+      '#weight' => -6.5,
+      '#attributes' => [
+        'class' => ['setup-cost-landing__packages'],
+      ],
+      'intro' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => ['class' => ['setup-cost-landing__packages-intro']],
+        '#value' => '<h2 class="setup-cost-landing__packages-title">' . t('Motaded setup packages') . '</h2>'
+          . '<p class="setup-cost-landing__packages-lead">' . t('Fixed one-time packages with government and PRO services. Use the calculator above for an indicative custom range, or choose a package to get started.') . '</p>',
+      ],
+      'packages' => $packages,
+    ];
+  }
+  $faq = motaded_setup_cost_build_landing_faq($node);
+  if ($faq !== NULL) {
+    $variables['page']['content']['setup_cost_landing_faq'] = [
+      '#type' => 'container',
+      '#weight' => -6,
+      '#attributes' => [
+        'class' => ['setup-cost-landing__faq'],
+      ],
+      'faq' => $faq,
+    ];
+  }
+}
+
+/**
+ * Removes paragraphs rendered after the estimator block (packages, FAQ).
+ *
+ * @param array<string, mixed> $variables
+ */
+function motaded_setup_cost_strip_landing_deferred_paragraphs(array &$variables): void {
+  if (empty($variables['content']['field_paragraphs']) || !is_array($variables['content']['field_paragraphs'])) {
+    return;
+  }
+  foreach (Element::children($variables['content']['field_paragraphs']) as $key) {
+    $element = $variables['content']['field_paragraphs'][$key];
+    $paragraph = $element['#paragraph'] ?? NULL;
+    if (!$paragraph instanceof ParagraphInterface) {
+      continue;
+    }
+    if ($paragraph->bundle() === 'accordions' || motaded_setup_cost_is_packages_section($paragraph)) {
+      unset($variables['content']['field_paragraphs'][$key]);
+    }
+  }
+}
+
+/**
+ * Whether a section paragraph holds pricing package cards.
+ */
+function motaded_setup_cost_is_packages_section(ParagraphInterface $paragraph): bool {
+  if ($paragraph->bundle() !== 'section') {
+    return FALSE;
+  }
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $child = $item->entity;
+    if ($child instanceof ParagraphInterface && $child->bundle() === 'pricing') {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Builds render array for the fixed packages section on the calculator landing.
+ *
+ * @return array<string, mixed>|null
+ */
+function motaded_setup_cost_build_landing_packages(NodeInterface $node): ?array {
+  if (!$node->hasField('field_paragraphs')) {
+    return NULL;
+  }
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('paragraph');
+  foreach ($node->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if ($paragraph instanceof ParagraphInterface && motaded_setup_cost_is_packages_section($paragraph)) {
+      return $view_builder->view($paragraph, 'default');
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Builds render array for the landing FAQ accordions paragraph.
+ *
+ * @return array<string, mixed>|null
+ */
+function motaded_setup_cost_build_landing_faq(NodeInterface $node): ?array {
+  if (!$node->hasField('field_paragraphs')) {
+    return NULL;
+  }
+  foreach ($node->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if ($paragraph instanceof ParagraphInterface && $paragraph->bundle() === 'accordions') {
+      $paragraph = motaded_setup_cost_resolve_paragraph_for_view($paragraph);
+      return \Drupal::entityTypeManager()
+        ->getViewBuilder('paragraph')
+        ->view($paragraph, 'default');
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Picks the paragraph translation that has nested items for the current language.
+ *
+ * AR shell translations may exist with a translated title but no child refs;
+ * fall back to the default-language entity so accordion children still render.
+ */
+function motaded_setup_cost_resolve_paragraph_for_view(ParagraphInterface $paragraph): ParagraphInterface {
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  if (!$paragraph->hasTranslation($langcode)) {
+    return $paragraph;
+  }
+  $translated = $paragraph->getTranslation($langcode);
+  if (!$translated->get('field_paragraphs')->isEmpty()) {
+    return $translated;
+  }
+  if ($langcode !== $paragraph->language()->getId()) {
+    return $paragraph;
+  }
+  return $translated;
+}
+
+/**
+ * Whether the node is the public setup cost calculator landing page.
+ */
+function motaded_setup_cost_is_calculator_landing(NodeInterface $node): bool {
+  if ($node->bundle() !== 'landing_page') {
+    return FALSE;
+  }
+  $langcode = $node->language()->getId();
+  $alias = strtolower(\Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $langcode));
+  foreach (MOTADED_SETUP_COST_LANDING_ALIASES as $path) {
+    if ($alias === strtolower($path)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function motaded_setup_cost_theme($existing, $type, $theme, $path): array {
+  return [
+    'setup_cost_estimator' => [
+      'variables' => [
+        'profile' => [],
+        'show_packages' => TRUE,
+        'webform' => NULL,
+      ],
+      'template' => 'setup-cost-estimator',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_webform_submission_form_alter().
+ */
+function motaded_setup_cost_webform_submission_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
+  $webform_id = $form['#webform_id'] ?? NULL;
+  if ($webform_id !== 'setup_cost_estimate_lead') {
+    return;
+  }
+  $form['#attributes']['class'][] = 'setup-cost-lead-form';
+  $form['#attached']['library'][] = 'motaded_setup_cost/estimator';
+  motaded_setup_cost_apply_lead_webform_labels($form);
+}
+
+/**
+ * Applies Arabic field labels for the setup cost lead webform.
+ *
+ * Config translation does not reach fields nested in webform_flexbox containers;
+ * set titles at form-build time when the interface language is Arabic.
+ *
+ * @param array<string, mixed> $form
+ */
+function motaded_setup_cost_apply_lead_webform_labels(array &$form): void {
+  if (\Drupal::languageManager()->getCurrentLanguage()->getId() !== 'ar') {
+    return;
+  }
+  $labels = [
+    'first_name' => 'الاسم الأول',
+    'last_name' => 'اسم العائلة',
+    'email' => 'البريد الإلكتروني',
+    'phone' => 'رقم الهاتف',
+    'company_name' => 'اسم الشركة (اختياري)',
+  ];
+  if (isset($form['elements']) && is_array($form['elements'])) {
+    motaded_setup_cost_set_nested_element_titles($form['elements'], $labels);
+  }
+  if (isset($form['actions']['submit'])) {
+    $form['actions']['submit']['#value'] = 'إرسال';
+  }
+}
+
+/**
+ * Recursively sets #title on matching webform element keys.
+ *
+ * @param array<string, mixed> $elements
+ * @param array<string, string> $labels
+ */
+function motaded_setup_cost_set_nested_element_titles(array &$elements, array $labels): void {
+  foreach ($labels as $key => $title) {
+    if (isset($elements[$key]) && is_array($elements[$key])) {
+      $elements[$key]['#title'] = $title;
+    }
+  }
+  foreach ($elements as $key => &$child) {
+    if (!is_array($child) || str_starts_with((string) $key, '#')) {
+      continue;
+    }
+    motaded_setup_cost_set_nested_element_titles($child, $labels);
+  }
+}
+
+/**
+ * Implements hook_webform_submission_presave().
+ */
+function motaded_setup_cost_webform_submission_presave(WebformSubmissionInterface $webform_submission): void {
+  if ($webform_submission->getWebform()->id() !== 'setup_cost_estimate_lead') {
+    return;
+  }
+  $data = $webform_submission->getData();
+  $json = $data['estimate_result_json'] ?? '';
+  if ($json === '' || !is_string($json)) {
+    return;
+  }
+  try {
+    $result = json_decode($json, TRUE, 512, JSON_THROW_ON_ERROR);
+  }
+  catch (\JsonException) {
+    return;
+  }
+  if (!is_array($result)) {
+    return;
+  }
+  $data['estimate_setup_min'] = (string) ($result['setup_min'] ?? '');
+  $data['estimate_setup_max'] = (string) ($result['setup_max'] ?? '');
+  $data['estimate_monthly_min'] = (string) ($result['monthly_min'] ?? '');
+  $data['estimate_monthly_max'] = (string) ($result['monthly_max'] ?? '');
+  $timelineMin = (int) ($result['timeline_min_weeks'] ?? 0);
+  $timelineMax = (int) ($result['timeline_max_weeks'] ?? 0);
+  $data['estimate_timeline'] = $timelineMin . '–' . $timelineMax . ' weeks';
+  $package = $result['package']['label'] ?? $result['package']['id'] ?? '';
+  $data['estimate_package'] = is_string($package) ? $package : '';
+  $webform_submission->setData($data);
+}

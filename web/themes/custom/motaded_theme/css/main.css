@@ -1462,7 +1462,8 @@ table {
 }
 /* Hide badge in header and drawer */
 #site-header .block-cta__badge,
-[aria-label="Mobile menu"] .block-cta__badge {
+[aria-label="Mobile menu"] .block-cta__badge,
+.mot-mobile-drawer .block-cta__badge {
   display: none;
 }
 

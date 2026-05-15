@@ -1,0 +1,177 @@
+langcode: en
+status: open
+dependencies:
+  enforced:
+    module:
+      - motaded_setup_cost
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: setup_cost_estimate_lead
+title: 'Setup cost estimate lead'
+description: 'Lead capture after business setup cost calculator.'
+categories: {  }
+elements: |-
+  markup_intro:
+    '#type': webform_markup
+    '#markup': '<p class="setup-cost-lead__intro">Share your details to receive a detailed breakdown and next steps.</p>'
+  flex_contact:
+    '#type': webform_flexbox
+    first_name:
+      '#type': textfield
+      '#title': 'First name'
+      '#required': true
+    last_name:
+      '#type': textfield
+      '#title': 'Last name'
+      '#required': true
+  flex_contact_2:
+    '#type': webform_flexbox
+    email:
+      '#type': email
+      '#title': Email
+      '#required': true
+    phone:
+      '#type': tel
+      '#title': 'Phone number'
+      '#required': true
+      '#default_value': '+966 '
+      '#international': true
+      '#international_initial_country': SA
+  company_name:
+    '#type': textfield
+    '#title': 'Company name (optional)'
+  estimate_setup_min:
+    '#type': hidden
+    '#title': 'Setup min'
+  estimate_setup_max:
+    '#type': hidden
+    '#title': 'Setup max'
+  estimate_monthly_min:
+    '#type': hidden
+    '#title': 'Monthly min'
+  estimate_monthly_max:
+    '#type': hidden
+    '#title': 'Monthly max'
+  estimate_timeline:
+    '#type': hidden
+    '#title': Timeline
+  estimate_package:
+    '#type': hidden
+    '#title': Package
+  estimate_answers_json:
+    '#type': hidden
+    '#title': 'Answers JSON'
+  estimate_result_json:
+    '#type': hidden
+    '#title': 'Result JSON'
+  estimate_profile_id:
+    '#type': hidden
+    '#title': 'Profile ID'
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: form
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: ''
+  page_confirm_path: ''
+  form_submit_once: false
+  form_exception_message: ''
+  form_open_message: ''
+  form_close_message: ''
+  form_previous_submissions: true
+  form_confidential: false
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_autofocus: false
+  form_details_toggle: false
+  form_login: false
+  form_login_message: ''
+  submission_label: ''
+  submission_log: false
+  submission_user_columns: {  }
+  submission_login: false
+  submission_login_message: ''
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  wizard_progress_bar: false
+  preview: 0
+  draft: none
+  confirmation_type: message
+  confirmation_title: ''
+  confirmation_message: '<p>Thank you. We will send your detailed estimate shortly.</p>'
+  confirmation_url: ''
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  limit_total: null
+  limit_total_interval: null
+  limit_user: null
+  limit_user_interval: null
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers: {  }

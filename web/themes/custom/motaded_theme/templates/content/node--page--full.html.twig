@@ -99,7 +99,8 @@
           {% if _tax_keys is not empty %}
             {% set _i0 = _tax_keys[0] %}
             {% set _cat_txt = content.field_taxonomy[_i0]['#plain_text']|default('') %}
-            {% set _cat_display = _cat_txt is not empty ? _cat_txt : (content.field_taxonomy[_i0]|render|striptags|trim) %}
+            {% set _cat_raw = _cat_txt is not empty ? _cat_txt : (content.field_taxonomy[_i0]|render|striptags|trim) %}
+            {% set _cat_display = _cat_raw|replace({'&amp;': '&', '&#039;': "'", '&quot;': '"', '&#38;': '&', '&#038;': '&'}) %}
             <p class="service-hero__category m-0">
               <span class="service-hero__category-pill">{{ _cat_display }}</span>
             </p>
@@ -108,14 +109,16 @@
                 {% for i in _tax_keys|slice(1) %}
                   <span class="service-hero__tag-chip" role="listitem">
                     {% set _tx = content.field_taxonomy[i]['#plain_text']|default('') %}
-                    {{ _tx is not empty ? _tx : (content.field_taxonomy[i]|render|striptags|trim) }}
+                    {% set _tx_raw = _tx is not empty ? _tx : (content.field_taxonomy[i]|render|striptags|trim) %}
+                    {{ _tx_raw|replace({'&amp;': '&', '&#039;': "'", '&quot;': '"', '&#38;': '&', '&#038;': '&'}) }}
                   </span>
                 {% endfor %}
                 {% if content.field_tags['#items'] is defined %}
                   {% for i in content.field_tags['#items']|keys %}
                     <span class="service-hero__tag-chip service-hero__tag-chip--muted" role="listitem">
                       {% set _tg = content.field_tags[i]['#plain_text']|default('') %}
-                      {{ _tg is not empty ? _tg : (content.field_tags[i]|render|striptags|trim) }}
+                      {% set _tg_raw = _tg is not empty ? _tg : (content.field_tags[i]|render|striptags|trim) %}
+                      {{ _tg_raw|replace({'&amp;': '&', '&#039;': "'", '&quot;': '"', '&#38;': '&', '&#038;': '&'}) }}
                     </span>
                   {% endfor %}
                 {% endif %}
@@ -124,15 +127,17 @@
           {% elseif _tag_keys is not empty %}
             {% set _ti = _tag_keys[0] %}
             {% set _tg0 = content.field_tags[_ti]['#plain_text']|default('') %}
+            {% set _tg0_raw = _tg0 is not empty ? _tg0 : (content.field_tags[_ti]|render|striptags|trim) %}
             <p class="service-hero__category m-0">
-              <span class="service-hero__category-pill">{{ _tg0 is not empty ? _tg0 : (content.field_tags[_ti]|render|striptags|trim) }}</span>
+              <span class="service-hero__category-pill">{{ _tg0_raw|replace({'&amp;': '&', '&#039;': "'", '&quot;': '"', '&#38;': '&', '&#038;': '&'}) }}</span>
             </p>
             {% if _tag_keys|length > 1 %}
               <div class="service-hero__tags-row flex flex-wrap gap-2 items-center" role="list">
                 {% for i in _tag_keys|slice(1) %}
                   <span class="service-hero__tag-chip service-hero__tag-chip--muted" role="listitem">
                     {% set _tg = content.field_tags[i]['#plain_text']|default('') %}
-                    {{ _tg is not empty ? _tg : (content.field_tags[i]|render|striptags|trim) }}
+                    {% set _tg_raw = _tg is not empty ? _tg : (content.field_tags[i]|render|striptags|trim) %}
+                    {{ _tg_raw|replace({'&amp;': '&', '&#039;': "'", '&quot;': '"', '&#38;': '&', '&#038;': '&'}) }}
                   </span>
                 {% endfor %}
               </div>

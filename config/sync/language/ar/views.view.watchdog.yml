@@ -1,3 +1,4 @@
+label: Watchdog
 description: 'آخر رسائل السجل'
 display:
   default:
