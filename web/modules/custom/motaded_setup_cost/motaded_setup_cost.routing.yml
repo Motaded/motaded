@@ -1,0 +1,43 @@
+entity.setup_cost_profile.collection:
+  route_name: entity.setup_cost_profile.collection
+  path: '/admin/config/motaded/setup-cost'
+  defaults:
+    _entity_list: 'setup_cost_profile'
+    _title: 'Setup cost calculator'
+  requirements:
+    _permission: 'administer setup cost profiles'
+
+entity.setup_cost_profile.add_form:
+  route_name: entity.setup_cost_profile.add_form
+  path: '/admin/config/motaded/setup-cost/add'
+  defaults:
+    _entity_form: 'setup_cost_profile.add'
+    _title: 'Add profile'
+  requirements:
+    _permission: 'administer setup cost profiles'
+
+entity.setup_cost_profile.edit_form:
+  route_name: entity.setup_cost_profile.edit_form
+  path: '/admin/config/motaded/setup-cost/{setup_cost_profile}'
+  defaults:
+    _entity_form: 'setup_cost_profile.edit'
+    _title: 'Edit profile'
+  requirements:
+    _permission: 'administer setup cost profiles'
+
+entity.setup_cost_profile.delete_form:
+  route_name: entity.setup_cost_profile.delete_form
+  path: '/admin/config/motaded/setup-cost/{setup_cost_profile}/delete'
+  defaults:
+    _entity_form: 'setup_cost_profile.delete'
+    _title: 'Delete profile'
+  requirements:
+    _permission: 'administer setup cost profiles'
+
+motaded_setup_cost.settings:
+  path: '/admin/config/motaded/setup-cost/settings'
+  defaults:
+    _form: '\Drupal\motaded_setup_cost\Form\SetupCostSettingsForm'
+    _title: 'Calculator settings'
+  requirements:
+    _permission: 'administer setup cost profiles'

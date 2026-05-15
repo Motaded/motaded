@@ -8,7 +8,7 @@
 
 {% import _self as menus %}
 
-<ul{{ attributes.addClass('mot-main-menu', 'flex', 'flex-col', 'lg:flex-row', 'lg:items-center', 'lg:justify-center', 'gap-0', 'lg:gap-2', 'w-full', 'list-none', 'm-0', 'p-0') }}>
+<ul{{ attributes.addClass('mot-main-menu', 'flex', 'flex-row', 'items-center', 'justify-center', 'gap-0', 'nav-desktop:gap-0.5', 'xl:gap-2', 'w-full', 'list-none', 'm-0', 'p-0') }}>
   {% for item in items %}
     {% set title_clean = item.title|render|striptags|trim %}
     {% set route_name = item.url.isRouted ? item.url.routeName : '' %}

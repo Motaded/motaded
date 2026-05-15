@@ -1,0 +1,28 @@
+uuid: b5eaab43-6426-43c8-b341-2056e30d6b3f
+langcode: en
+status: true
+dependencies:
+  module:
+    - motaded_setup_cost
+    - system
+  theme:
+    - motaded_theme
+id: motaded_theme_setupcostestimator
+theme: motaded_theme
+region: content
+weight: -7
+provider: null
+plugin: setup_cost_estimator
+settings:
+  id: setup_cost_estimator
+  label: 'Setup cost estimator'
+  label_display: '0'
+  provider: motaded_setup_cost
+  profile_id: ''
+  show_webform: true
+  show_packages: true
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/business-setup-cost-calculator\r\n/ar/حاسبة-تكلفة-تأسيس-الأعمال\r\n/حاسبة-تكلفة-تأسيس-الأعمال\r\n/node/535"

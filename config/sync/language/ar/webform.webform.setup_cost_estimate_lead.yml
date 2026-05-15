@@ -1,0 +1,39 @@
+title: 'طلب تقدير تكلفة التأسيس'
+description: 'جمع بيانات العملاء بعد حاسبة تكلفة تأسيس الأعمال.'
+elements: |
+  markup_intro:
+    '#markup': '<p class="setup-cost-lead__intro">شاركنا بياناتك لاستلام تفصيل مفصل والخطوات التالية.</p>'
+  flex_contact:
+    '#type': webform_flexbox
+    first_name:
+      '#title': 'الاسم الأول'
+    last_name:
+      '#title': 'اسم العائلة'
+  flex_contact_2:
+    '#type': webform_flexbox
+    email:
+      '#title': 'البريد الإلكتروني'
+    phone:
+      '#title': 'رقم الهاتف'
+  company_name:
+    '#title': 'اسم الشركة (اختياري)'
+  estimate_setup_min:
+    '#title': 'الحد الأدنى للتأسيس'
+  estimate_setup_max:
+    '#title': 'الحد الأعلى للتأسيس'
+  estimate_monthly_min:
+    '#title': 'الحد الأدنى الشهري'
+  estimate_monthly_max:
+    '#title': 'الحد الأعلى الشهري'
+  estimate_timeline:
+    '#title': 'الجدول الزمني'
+  estimate_package:
+    '#title': الباقة
+  estimate_answers_json:
+    '#title': 'إجابات JSON'
+  estimate_result_json:
+    '#title': 'نتيجة JSON'
+  estimate_profile_id:
+    '#title': 'معرّف الملف'
+settings:
+  confirmation_message: '<p>شكراً لك. سنرسل تقديرك المفصل قريباً.</p>'

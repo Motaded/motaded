@@ -1422,7 +1422,6 @@ function motaded_custom_market_indicators_table_rows(): array {
     'gdp_growth',
     'population',
     'fdi_inflow',
-    'non_oil_gdp_growth',
     'inflation',
     'unemployment',
   ];

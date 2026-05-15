@@ -282,3 +282,498 @@
   max-height: 3.5rem;
   object-fit: contain;
 }
+
+/* Setup cost landing: breadcrumb band matches hero-split-banner atmosphere. */
+body.is-setup-cost-landing .bread {
+  margin: 0;
+  padding: 0;
+  background-color: rgba(16, 120, 96, 0.05);
+  background-image: linear-gradient(
+    to right,
+    #f0f4f2 0%,
+    var(--mot-surface-muted, #f8fafc) 22%,
+    var(--mot-surface, #ffffff) 48%,
+    rgba(255, 255, 255, 0.55) 72%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+[dir='rtl'] body.is-setup-cost-landing .bread {
+  background-image: linear-gradient(
+    to left,
+    #f0f4f2 0%,
+    var(--mot-surface-muted, #f8fafc) 22%,
+    var(--mot-surface, #ffffff) 48%,
+    rgba(255, 255, 255, 0.55) 72%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+body.is-setup-cost-landing .bread nav[role='navigation'],
+body.is-setup-cost-landing .bread .breadcrumb {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+  padding-top: 2rem;
+  padding-bottom: 0.75rem;
+  background: transparent;
+}
+
+body.is-setup-cost-landing .bread .block-system-breadcrumb-block {
+  background: transparent;
+}
+
+body.is-setup-cost-landing .main-wrapper.bg-white {
+  background-color: transparent;
+}
+
+body.is-setup-cost-landing .main-wrapper > main[role='main'] {
+  margin-top: 0 !important;
+}
+
+body.is-setup-cost-landing .layout-content:has(.setup-cost-landing) {
+  padding-top: 0;
+}
+
+/* Setup cost landing: Cards (simple_text_card) — SEO grid below hero. */
+.setup-cost-landing .section:has(.paragraph--type--cards) {
+  padding-block: 2.5rem 3rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #fff 45%, #f8fafc 100%);
+}
+
+.setup-cost-landing .paragraph--type--cards.paragraph.wrap {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+}
+
+@media (min-width: 640px) {
+  .setup-cost-landing .paragraph--type--cards.paragraph.wrap {
+    padding-inline: 1.25rem;
+  }
+}
+
+.setup-cost-landing .paragraph--type--cards .h2 {
+  margin: 0 0 0.65rem;
+  max-width: 28ch;
+  font-size: clamp(1.35rem, 2.8vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #0f2a1d;
+}
+
+.setup-cost-landing .paragraph--type--cards .h2::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #047857, #14b8a6);
+}
+
+.setup-cost-landing .paragraph--type--cards .lead {
+  margin: 0 0 1.75rem;
+  max-width: 42rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #64748b;
+}
+
+.setup-cost-landing .paragraph--type--cards .lead:empty {
+  display: none;
+  margin: 0;
+}
+
+.setup-cost-landing .paragraph--type--cards .lead p {
+  margin: 0;
+}
+
+.setup-cost-landing .paragraph--type--cards .grid.md\:grid-cols-2 {
+  gap: 1rem;
+  margin-top: 0;
+  counter-reset: setup-cost-card;
+}
+
+@media (min-width: 768px) {
+  .setup-cost-landing .paragraph--type--cards .grid.md\:grid-cols-2 {
+    gap: 1.25rem;
+  }
+}
+
+.setup-cost-landing .paragraph--type--cards .route {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 1.35rem 1.35rem 1.35rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 5%);
+  overflow: hidden;
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.setup-cost-landing .paragraph--type--cards .route::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #047857, #14b8a6);
+  opacity: 0.85;
+  transition: width 0.22s ease;
+}
+
+.setup-cost-landing .paragraph--type--cards .route::after {
+  counter-increment: setup-cost-card;
+  content: counter(setup-cost-card, decimal-leading-zero);
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: #94a3b8;
+}
+
+.setup-cost-landing .paragraph--type--cards .route:hover {
+  border-color: #99f6e4;
+  box-shadow: 0 12px 28px rgb(15 23 42 / 8%);
+  transform: translateY(-2px);
+}
+
+.setup-cost-landing .paragraph--type--cards .route:hover::before {
+  width: 5px;
+}
+
+.setup-cost-landing .paragraph--type--cards .route-title {
+  margin: 0 2.5rem 0.6rem 0;
+  padding: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0f2a1d;
+}
+
+[dir='rtl'] .setup-cost-landing .paragraph--type--cards .route-title {
+  margin-inline-end: 0;
+  margin-inline-start: 2.5rem;
+}
+
+.setup-cost-landing .paragraph--type--cards .route > p,
+.setup-cost-landing .paragraph--type--cards .route .route-body {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.setup-cost-landing .paragraph--type--cards .route p + p {
+  margin-top: 0.65rem;
+}
+
+.setup-cost-landing .paragraph--type--cards .route strong {
+  font-weight: 600;
+  color: #0f766e;
+}
+
+.setup-cost-landing .paragraph--type--cards .route a {
+  color: #047857;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.setup-cost-landing .paragraph--type--cards .route a:hover {
+  text-decoration: underline;
+}
+
+.setup-cost-landing .paragraph--type--accordions,
+.setup-cost-landing__faq .paragraph--type--accordions {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+}
+
+@media (min-width: 640px) {
+  .setup-cost-landing .paragraph--type--accordions,
+  .setup-cost-landing__faq .paragraph--type--accordions {
+    padding-inline: 1.25rem;
+  }
+}
+
+/* Fixed Motaded packages — after calculator block. */
+.setup-cost-landing__packages {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding: 2.5rem var(--mot-pad-x, 1rem) 1rem;
+}
+
+@media (min-width: 640px) {
+  .setup-cost-landing__packages {
+    padding-inline: 1.25rem;
+  }
+}
+
+.setup-cost-landing__packages-intro {
+  max-width: 42rem;
+  margin-bottom: 1.75rem;
+}
+
+.setup-cost-landing__packages-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 2.8vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #0f2a1d;
+}
+
+.setup-cost-landing__packages-title::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #047857, #14b8a6);
+}
+
+.setup-cost-landing__packages-lead {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #64748b;
+}
+
+.setup-cost-landing__packages .paragraph--type--section {
+  margin-top: 0;
+}
+
+.setup-cost-landing__packages #packages {
+  margin-top: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.setup-cost-landing__packages .pricing-card {
+  height: 100%;
+  border-color: #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgb(15 23 42 / 6%);
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.setup-cost-landing__packages .pricing-card:hover {
+  border-color: #99f6e4;
+  box-shadow: 0 14px 32px rgb(15 23 42 / 10%);
+  transform: translateY(-3px);
+}
+
+.setup-cost-landing__packages .pricing-card h2 {
+  color: #0f2a1d;
+}
+
+.setup-cost-landing__packages .pricing-card .body ul {
+  margin: 0;
+  padding-inline-start: 1.15rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.setup-cost-landing__packages .pricing-card .webform-button--submit,
+.setup-cost-landing__packages .pricing-card a.button,
+.setup-cost-landing__packages .pricing-card .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  background: #047857;
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.setup-cost-landing__packages .pricing-card .webform-button--submit:hover,
+.setup-cost-landing__packages .pricing-card a.button:hover,
+.setup-cost-landing__packages .pricing-card .btn-secondary:hover {
+  background: #0d9488;
+}
+
+.setup-cost-landing__faq {
+  margin-top: 2.5rem;
+  padding-block: 0 3rem;
+}
+
+/* FAQ accordions — setup cost landing. */
+.setup-cost-landing__faq .paragraph--type--accordions.section {
+  padding-block: 0;
+}
+
+.setup-cost-landing__faq .paragraph--type--accordions .wrap {
+  max-width: none;
+  padding: 0;
+}
+
+.setup-cost-landing__faq .paragraph--type--accordions .h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.35rem, 2.8vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #0f2a1d;
+}
+
+.setup-cost-landing__faq .paragraph--type--accordions .h2::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #047857, #14b8a6);
+}
+
+.setup-cost-landing__faq .paragraph--type--accordions .space-y-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .setup-cost-landing__faq .paragraph--type--accordions .space-y-3 {
+    gap: 1.15rem;
+  }
+}
+
+.setup-cost-landing__faq details.faq {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-inline-start: 4px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 5%);
+  overflow: hidden;
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    border-inline-start-color 0.22s ease;
+}
+
+.setup-cost-landing__faq details.faq:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 18px rgb(15 23 42 / 7%);
+}
+
+.setup-cost-landing__faq details.faq[open] {
+  border-color: #99f6e4;
+  border-inline-start-color: #047857;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 8%);
+}
+
+.setup-cost-landing__faq details.faq > summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+  margin: 0;
+  padding: 1.05rem 3.25rem 1.05rem 1.25rem;
+  list-style: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f2a1d;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+[dir='rtl'] .setup-cost-landing__faq details.faq > summary {
+  padding-inline: 1.15rem 3rem;
+}
+
+.setup-cost-landing__faq details.faq > summary::-webkit-details-marker {
+  display: none;
+}
+
+.setup-cost-landing__faq details.faq > summary::marker {
+  content: '';
+}
+
+.setup-cost-landing__faq details.faq > summary::before,
+.setup-cost-landing__faq details.faq > summary::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: 1.15rem;
+  top: 50%;
+  width: 0.75rem;
+  height: 2px;
+  border-radius: 1px;
+  background: #047857;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.setup-cost-landing__faq details.faq > summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.setup-cost-landing__faq details.faq[open] > summary {
+  background: linear-gradient(180deg, #f0fdfa 0%, #fff 100%);
+  color: #047857;
+}
+
+.setup-cost-landing__faq details.faq[open] > summary::after {
+  transform: translateY(-50%) rotate(0deg);
+  opacity: 0;
+}
+
+.setup-cost-landing__faq details.faq > summary:hover {
+  background: #f8fafc;
+}
+
+.setup-cost-landing__faq details.faq > summary:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: -2px;
+}
+
+.setup-cost-landing__faq .faq-a {
+  margin: 0;
+  padding: 0.35rem 1.25rem 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #64748b;
+  border-top: 1px solid #f1f5f9;
+}
+
+.setup-cost-landing__faq .faq-a p {
+  margin: 0;
+}
+
+.setup-cost-landing__faq .faq-a p + p {
+  margin-top: 0.65rem;
+}
+
+.setup-cost-landing__faq .faq-a a {
+  color: #047857;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.setup-cost-landing__faq .faq-a a:hover {
+  text-decoration: underline;
+}

@@ -16,6 +16,7 @@ fontawesome_async:
   js:
     js/load-fontawesome.js:
       preprocess: false
+      minified: false
       scope: footer
       attributes:
         defer: true
@@ -23,7 +24,7 @@ fontawesome_async:
     - core/drupal
 
 global_cta:
-  version: 20260511eyebrow
+  version: 20260515ctaminimal
   css:
     component:
       css/components/global-cta-card.css:
@@ -32,7 +33,7 @@ global_cta:
     - motaded_theme/base
 
 menu_main_nav:
-  version: 20260515toolbar110
+  version: 20260515nav992
   css:
     component:
       css/components/menu-main-nav.css:
@@ -42,7 +43,7 @@ menu_main_nav:
     - motaded_theme/site_header
 
 site_header:
-  version: 20260515toolbar110
+  version: 20260515mobiledrawer
   css:
     component:
       css/components/site-header-layout.css: {}
@@ -50,6 +51,15 @@ site_header:
     js/site-header-autohide.js: {}
   dependencies:
     - core/drupal
+
+mobile_header:
+  version: 20260515mobilemenu
+  css:
+    component:
+      css/components/mobile-header.css: {}
+  dependencies:
+    - motaded_theme/site_header
+    - motaded_theme/alpine
 
 base:
   version: VERSION
@@ -162,7 +172,7 @@ node:
     - core/once
 
 service_page_detail:
-  version: VERSION
+  version: 20260515servicehero
   css:
     component:
       css/components/service-page-detail.css: {}
@@ -303,6 +313,20 @@ alpine:
     # Registers Alpine.data() in alpine:init; must run before alpine.min.js.
     js/alpine-components.js: { weight: -50 }
     js/alpine.min.js: { defer: true, weight: 0 }
+
+# Non-aggregated Alpine for setup cost calculator (avoids broken JS aggregates for anonymous).
+setup_cost_alpine:
+  version: 3.15.0
+  license:
+    name: MIT
+    url: https://github.com/alpinejs/alpine/blob/main/LICENSE.md
+    gpl-compatible: true
+  dependencies:
+    - core/drupal
+  js:
+    js/alpine-components.js: { weight: -50, preprocess: false, minified: false }
+    js/alpine.min.js: { defer: true, weight: 0, preprocess: false, minified: true }
+
 toc:
   js:
     js/toc.js: {}
@@ -350,12 +374,27 @@ steps:
     - core/drupal
     - core/drupalSettings
     - motaded_theme/alpine
+swiper:
+  remote: https://cdn.jsdelivr.net/npm/swiper@11
+  version: 11.2.8
+  license:
+    name: MIT
+    url: https://github.com/nolimits4web/swiper/blob/master/LICENSE
+    gpl-compatible: true
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css: { type: external, minified: true }
+  js:
+    https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js: { type: external, minified: true }
+
 partner-carousel:
+  version: 20260515partnersslider2
   js:
     js/partner-carousel.js: {}
   dependencies:
     - core/drupal
     - core/once
+    - motaded_theme/swiper
 news-carousel:
   dependencies:
     - motaded_theme/alpine
@@ -368,7 +407,7 @@ latest_news_block:
         weight: -9
 
 services_home_block:
-  version: VERSION
+  version: 20260515svchomerowlink
   css:
     component:
       css/components/services-home-block.css:
@@ -403,7 +442,7 @@ business_cost_estimation:
     - motaded_theme/base
 
 promo_split:
-  version: VERSION
+  version: 20260515g
   css:
     component:
       css/components/promo-split.css:
@@ -486,7 +525,7 @@ insights_directory:
     - views/views.ajax
 
 library_directory:
-  version: 20260513libtabbodyfix
+  version: 20260515libtabstack
   css:
     component:
       css/components/library-directory.css:
@@ -512,7 +551,7 @@ homepage_ui_system:
     - motaded_theme/base
 
 library_home_block:
-  version: 20260511librow
+  version: 20260515libhometabstack
   css:
     component:
       css/components/library-home-block.css:
@@ -565,7 +604,7 @@ insights-updates:
     - core/once
 
 glance_block:
-  version: VERSION
+  version: 20260515glancemobile
   css:
     component:
       css/components/glance-block.css:
@@ -604,7 +643,7 @@ platforms_systems:
     - motaded_theme/base
 
 chambers_network:
-  version: 20260515chambersdirmeta
+  version: 20260515chambercardlink
   css:
     component:
       css/components/chambers-network.css:

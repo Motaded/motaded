@@ -1,10 +1,18 @@
-{# 
-  Theme: Muin (Custom Licensed Version)
-  © Banafsijy.com – Single Project License – Do Not Redistribute
+{#
+/**
+ * @file
+ * Services homepage block — one fully clickable row per service.
+ */
 #}
 {% set service_url = fields.view_node.content|striptags|trim %}
-<div class="services-home-row">
-  <div class="services-home-row__icon" aria-hidden="true">
+{% set service_title = fields.title.content|striptags|trim %}
+<a
+  href="{{ service_url }}"
+  class="services-home-row services-home-row__link"
+  rel="bookmark"
+  aria-label="{{ (service_title ~ ' — ' ~ ('View details'|t))|e('html_attr') }}"
+>
+  <span class="services-home-row__icon" aria-hidden="true">
     <img
       src="{{ services_home_row_icon_url }}"
       alt=""
@@ -13,13 +21,13 @@
       loading="lazy"
       decoding="async"
     />
-  </div>
-  <div class="services-home-row__main">
+  </span>
+  <span class="services-home-row__main">
     <h4 class="services-home-row__title">{{ fields.title.content }}</h4>
-    <div class="services-home-row__body">{{ fields.body.content }}</div>
-  </div>
-  <a href="{{ service_url }}" class="services-home-row__cta">
+    <span class="services-home-row__body">{{ fields.body.content }}</span>
+  </span>
+  <span class="services-home-row__cta">
     {{ 'View details'|t }}
     <span class="services-home-row__cta-arrow" aria-hidden="true">→</span>
-  </a>
-</div>
+  </span>
+</a>

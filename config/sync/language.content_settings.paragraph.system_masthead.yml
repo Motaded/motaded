@@ -1,0 +1,18 @@
+uuid: cfed85b1-e36d-44a9-94dd-ee991473d4a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.system_masthead
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: paragraph.system_masthead
+target_entity_type_id: paragraph
+target_bundle: system_masthead
+default_langcode: site_default
+language_alterable: true

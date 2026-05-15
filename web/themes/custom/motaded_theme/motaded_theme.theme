@@ -21,9 +21,21 @@ use Drupal\node\Entity\NodeType;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\views\Plugin\views\field\FieldPluginInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
+
+/**
+ * Nested paragraph in the active content language when a translation exists.
+ */
+function motaded_theme_paragraph_from_context(?ParagraphInterface $paragraph): ?ParagraphInterface {
+  if (!$paragraph instanceof ParagraphInterface) {
+    return NULL;
+  }
+  $translated = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph);
+  return $translated instanceof ParagraphInterface ? $translated : $paragraph;
+}
 
 /**
  * Inline SVG icon for sector / stats presets (matches Glance block set).
@@ -118,7 +130,6 @@ function _motaded_theme_glance_market_indicators_variables(): array {
     'gdp_growth' => (string) t('GDP Growth'),
     'population' => (string) t('Population'),
     'fdi_inflow' => (string) t('FDI Inflows'),
-    'non_oil_gdp_growth' => (string) t('Non-oil GDP Growth'),
     'inflation' => (string) t('Inflation Rate'),
     'unemployment' => (string) t('Unemployment Rate'),
   ];
@@ -133,11 +144,13 @@ function _motaded_theme_glance_market_indicators_variables(): array {
   foreach ($order as $key => $default_label) {
     $r = $by_key[$key] ?? NULL;
     $value_display = ($r !== NULL && isset($r['value_display'])) ? trim((string) $r['value_display']) : '';
+    $label = ($r !== NULL && isset($r['label']) && trim((string) $r['label']) !== '') ? trim((string) $r['label']) : $default_label;
+    $source = ($r !== NULL && isset($r['source_name'])) ? trim((string) $r['source_name']) : '';
     $rows[] = [
-      'indicator' => ($r !== NULL && isset($r['label']) && trim((string) $r['label']) !== '') ? trim((string) $r['label']) : $default_label,
+      'indicator' => (string) t($label),
       'value' => $value_display !== '' ? $value_display : '—',
       'year' => ($r !== NULL && isset($r['year'])) ? (string) (int) $r['year'] : '—',
-      'source' => ($r !== NULL && isset($r['source_name'])) ? trim((string) $r['source_name']) : '',
+      'source' => $source !== '' ? (string) t($source) : '',
       'source_url' => ($r !== NULL && isset($r['source_url'])) ? trim((string) $r['source_url']) : '',
     ];
   }
@@ -1231,13 +1244,14 @@ function motaded_theme_preprocess_block(array &$variables) {
       if ($block_content->hasField('field_subtitle') && !$block_content->get('field_subtitle')->isEmpty()) {
         $variables['cta_subtitle'] = trim($block_content->get('field_subtitle')->value);
       }
-      // Same Global CTA block type is placed in header (compact icons) and footer/prefooter (card).
+      // Same Global CTA block type: header / mobile drawer = compact icons; footer = card.
       $variables['global_cta_variant'] = 'card';
       if (!empty($variables['elements']['#id'])) {
         $placed_block = Block::load($variables['elements']['#id']);
         if ($placed_block) {
           $region = (string) $placed_block->getRegion();
-          if ($region === 'header_cta' || strpos($region, 'header') === 0) {
+          if (in_array($region, ['header_cta', 'drawer_cta', 'menu_mobile'], TRUE)
+            || strpos($region, 'header') === 0) {
             $variables['global_cta_variant'] = 'compact';
           }
         }
@@ -1538,6 +1552,17 @@ function motaded_theme_plain_text_truncate(string $html, int $max_length): strin
 }
 
 /**
+ * Decodes HTML entities in plain labels (taxonomy terms, tags) for safe Twig output.
+ */
+function motaded_theme_decode_plain_label(string $raw): string {
+  $raw = trim(strip_tags($raw));
+  if ($raw === '') {
+    return '';
+  }
+  return trim(Html::decodeEntities($raw, ENT_QUOTES | ENT_HTML5));
+}
+
+/**
  * Resolves [view_id, display_id] pairs from one viewsreference field value row.
  *
  * Viewsreference may store display_id in a column or only inside serialized `data`.
@@ -1731,28 +1756,40 @@ function motaded_theme_preprocess_node(&$variables) {
     }
 
     $variables['cnb_focus_line'] = '';
-    if ($node->hasField('field_relationship_focus') && !$node->get('field_relationship_focus')->isEmpty()) {
-      $focus = trim((string) $node->get('field_relationship_focus')->value);
-      if ($focus !== '') {
-        $variables['cnb_focus_line'] = Markup::create((string) t('Focus: @text', ['@text' => $focus]));
-      }
-    }
-
+    $variables['cnb_focus_tooltip'] = '';
     $variables['cnb_type_line'] = '';
-    if ($node->hasField('field_type') && !$node->get('field_type')->isEmpty()) {
-      $def = $node->getFieldDefinition('field_type');
-      $allowed = $def->getSetting('allowed_values');
-      $key = (string) $node->get('field_type')->value;
-      $type_label = '';
-      if (is_array($allowed) && isset($allowed[$key])) {
-        $type_label = (string) $allowed[$key];
+    $variables['cnb_icon_focus'] = NULL;
+    $variables['cnb_icon_type'] = NULL;
+    if ($in_cnb_home) {
+      if ($node->hasField('field_relationship_focus') && !$node->get('field_relationship_focus')->isEmpty()) {
+        $focus = trim((string) $node->get('field_relationship_focus')->value);
+        if ($focus !== '') {
+          $variables['cnb_focus_tooltip'] = (string) t('Focus: @text', ['@text' => $focus]);
+          if (!empty($variables['cnb_is_featured'])) {
+            $focus = motaded_theme_plain_text_truncate($focus, 120);
+          }
+          $variables['cnb_focus_line'] = Markup::create((string) t('Focus: @text', ['@text' => $focus]));
+        }
       }
-      elseif ($key !== '') {
-        $type_label = $key;
+
+      if ($node->hasField('field_type') && !$node->get('field_type')->isEmpty()) {
+        $def = $node->getFieldDefinition('field_type');
+        $allowed = $def->getSetting('allowed_values');
+        $key = (string) $node->get('field_type')->value;
+        $type_label = '';
+        if (is_array($allowed) && isset($allowed[$key])) {
+          $type_label = (string) $allowed[$key];
+        }
+        elseif ($key !== '') {
+          $type_label = $key;
+        }
+        if ($type_label !== '') {
+          $variables['cnb_type_line'] = Markup::create((string) t('Type: @type', ['@type' => $type_label]));
+        }
       }
-      if ($type_label !== '') {
-        $variables['cnb_type_line'] = Markup::create((string) t('Type: @type', ['@type' => $type_label]));
-      }
+
+      $variables['cnb_icon_focus'] = _motaded_theme_cnb_icon_markup('target');
+      $variables['cnb_icon_type'] = _motaded_theme_cnb_icon_markup('building');
     }
 
     $variables['cnb_featured_stats'] = [];
@@ -1778,8 +1815,9 @@ function motaded_theme_preprocess_node(&$variables) {
       $variables['cnb_featured_stats'] = $stats;
     }
 
-    $variables['cnb_icon_focus'] = _motaded_theme_cnb_icon_markup('target');
-    $variables['cnb_icon_type'] = _motaded_theme_cnb_icon_markup('building');
+    // Homepage embed vs /chambers directory use different Twig templates; without
+    // route.name the entity view cache can serve homepage markup on the directory.
+    $variables['#cache']['contexts'][] = 'route.name';
   }
 
   // Chamber (full canonical page): expose featured stats so the dedicated
@@ -3137,8 +3175,8 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
   $field = $paragraph->get('field_investor_journey_steps');
   if ($field->access('view')) {
     foreach ($field as $item) {
-      $sub = $item->entity;
-      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'journey_step') {
+      $sub = motaded_theme_paragraph_from_context($item->entity);
+      if (!$sub instanceof ParagraphInterface || $sub->bundle() !== 'journey_step') {
         continue;
       }
       $icon = (string) ($sub->get('field_journey_icon')->value ?: 'document');
@@ -3161,10 +3199,12 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
 
       $platform_cards = [];
       if ($sub->hasField('field_journey_platforms') && $sub->get('field_journey_platforms')->access('view') && !$sub->get('field_journey_platforms')->isEmpty()) {
+        $entity_repository = \Drupal::service('entity.repository');
         foreach ($sub->get('field_journey_platforms')->referencedEntities() as $platform_node) {
           if (!$platform_node instanceof \Drupal\node\NodeInterface || $platform_node->bundle() !== 'platform') {
             continue;
           }
+          $platform_node = $entity_repository->getTranslationFromContext($platform_node);
           $logo = [
             'src' => '',
             'srcset' => '',
@@ -3308,8 +3348,8 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
     $feature_field = $paragraph->get('field_hero_split_features');
     if ($feature_field->access('view')) {
       foreach ($feature_field as $item) {
-        $sub = $item->entity;
-        if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+        $sub = motaded_theme_paragraph_from_context($item->entity);
+        if (!$sub instanceof ParagraphInterface || $sub->bundle() !== 'why_feature_card') {
           continue;
         }
         $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'people');
@@ -3356,8 +3396,8 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
     $hl_field = $paragraph->get('field_hero_split_highlights');
     if ($hl_field->access('view')) {
       foreach ($hl_field as $item) {
-        $sub = $item->entity;
-        if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'hero_split_highlight') {
+        $sub = motaded_theme_paragraph_from_context($item->entity);
+        if (!$sub instanceof ParagraphInterface || $sub->bundle() !== 'hero_split_highlight') {
           continue;
         }
         $icon = (string) ($sub->get('field_why_feature_icon')->value ?: 'shield_check');
@@ -4134,8 +4174,8 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
 
   $variables['glance_highlight'] = [];
   if ($paragraph->hasField('field_glance_highlight') && $paragraph->get('field_glance_highlight')->access('view') && !$paragraph->get('field_glance_highlight')->isEmpty()) {
-    $sub = $paragraph->get('field_glance_highlight')->entity;
-    if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+    $sub = motaded_theme_paragraph_from_context($paragraph->get('field_glance_highlight')->entity);
+    if ($sub instanceof ParagraphInterface && $sub->bundle() === 'glance_stat_item') {
       $variables['glance_highlight'] = $read_stat($sub);
       // Highlight uses a separate kicker convention.
       $variables['glance_highlight']['kicker'] = $variables['glance_highlight']['title'];
@@ -4145,8 +4185,8 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
   $variables['glance_stats'] = [];
   if ($paragraph->hasField('field_glance_stats') && $paragraph->get('field_glance_stats')->access('view') && !$paragraph->get('field_glance_stats')->isEmpty()) {
     foreach ($paragraph->get('field_glance_stats') as $item) {
-      $sub = $item->entity;
-      if ($sub instanceof \Drupal\paragraphs\Entity\Paragraph && $sub->bundle() === 'glance_stat_item') {
+      $sub = motaded_theme_paragraph_from_context($item->entity);
+      if ($sub instanceof ParagraphInterface && $sub->bundle() === 'glance_stat_item') {
         $variables['glance_stats'][] = $read_stat($sub);
       }
     }
@@ -4155,8 +4195,8 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
   $variables['glance_features'] = [];
   if ($paragraph->hasField('field_glance_features') && $paragraph->get('field_glance_features')->access('view') && !$paragraph->get('field_glance_features')->isEmpty()) {
     foreach ($paragraph->get('field_glance_features') as $item) {
-      $sub = $item->entity;
-      if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
+      $sub = motaded_theme_paragraph_from_context($item->entity);
+      if (!$sub instanceof ParagraphInterface || $sub->bundle() !== 'why_feature_card') {
         continue;
       }
       $title = '';
@@ -4714,6 +4754,8 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
  * Preprocess for News View block (unformatted).
  */
 function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$variables) {
+  $variables['#attached']['library'][] = 'motaded_theme/partner_carousel';
+
   foreach ($variables['rows'] as &$row) {
     $entity = $row['content']['#row']->_entity ?? NULL;
     $fallback_label = $entity ? $entity->label() : '';
@@ -6321,9 +6363,17 @@ function motaded_theme_preprocess_page__webform__contact__confirmation(&$variabl
  * @param string|null $exclude
  *   Optional suggestion name to remove.
  */
-function _motaded_theme_prune_node_theme_suggestions(array &$suggestions, ?string $exclude = NULL): void {
+function _motaded_theme_prune_node_theme_suggestions(array &$suggestions, ?string $exclude = NULL, bool $strip_cnb_home = FALSE): void {
   foreach ($suggestions as $delta => $suggestion) {
-    if (!is_string($suggestion) || ($exclude !== NULL && $suggestion === $exclude)) {
+    if (!is_string($suggestion)) {
+      unset($suggestions[$delta]);
+      continue;
+    }
+    if ($strip_cnb_home && str_contains($suggestion, 'cnb_home')) {
+      unset($suggestions[$delta]);
+      continue;
+    }
+    if ($exclude !== NULL && $suggestion === $exclude) {
       unset($suggestions[$delta]);
     }
   }
@@ -6343,7 +6393,7 @@ function motaded_theme_theme_suggestions_node_alter(array &$suggestions, array $
     // Directory: never use the homepage embed template (stale drupal_static or contrib
     // must not switch card chrome here).
     if ($route_name === 'view.chambers.page_1') {
-      _motaded_theme_prune_node_theme_suggestions($suggestions, 'node__chamber__chamber_card__cnb_home');
+      _motaded_theme_prune_node_theme_suggestions($suggestions, strip_cnb_home: TRUE);
       return;
     }
     _motaded_theme_prune_node_theme_suggestions($suggestions);

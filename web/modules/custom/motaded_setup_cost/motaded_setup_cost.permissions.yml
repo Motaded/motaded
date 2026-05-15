@@ -1,0 +1,4 @@
+administer setup cost profiles:
+  title: 'Administer setup cost calculator profiles'
+  description: 'Edit pricing matrices, steps, and calculator options.'
+  restrict access: true

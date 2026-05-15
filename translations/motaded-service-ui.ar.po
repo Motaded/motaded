@@ -1047,3 +1047,120 @@ msgstr "وزارة العدل"
 
 msgid "MC e-services"
 msgstr "الخدمات الإلكترونية لوزارة التجارة"
+
+# Setup cost calculator (motaded_setup_cost).
+
+msgid "Select all services you need — optional."
+msgstr "اختر جميع الخدمات التي تحتاجها — اختياري."
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Continue"
+msgstr "متابعة"
+
+msgid "Get detailed estimate"
+msgstr "احصل على تقدير مفصل"
+
+msgid "Recommended package"
+msgstr "الباقة الموصى بها"
+
+msgid "Updated"
+msgstr "آخر تحديث"
+
+msgid "Item"
+msgstr "البند"
+
+msgid "Estimated"
+msgstr "المقدر"
+
+msgid "Complete the steps to see your estimate."
+msgstr "أكمل الخطوات لعرض تقديرك."
+
+msgid "Talk to an advisor"
+msgstr "تحدث إلى مستشار"
+
+# Homepage glance block + market indicators (motaded_theme).
+
+msgid "Key economic indicators"
+msgstr "المؤشرات الاقتصادية الرئيسية"
+
+msgid "Indicator"
+msgstr "المؤشر"
+
+msgid "Value"
+msgstr "القيمة"
+
+msgid "Year"
+msgstr "السنة"
+
+msgid "Source"
+msgstr "المصدر"
+
+msgid "View all indicators"
+msgstr "عرض جميع المؤشرات"
+
+msgid "GDP growth trend"
+msgstr "اتجاه نمو الناتج المحلي"
+
+msgid "Source: World Bank"
+msgstr "المصدر: البنك الدولي"
+
+msgid "GDP Growth"
+msgstr "نمو الناتج المحلي"
+
+msgid "Population"
+msgstr "السكان"
+
+msgid "FDI Inflows"
+msgstr "تدفقات الاستثمار الأجنبي المباشر"
+
+msgid "Inflation Rate"
+msgstr "معدل التضخم"
+
+msgid "Unemployment Rate"
+msgstr "معدل البطالة"
+
+msgid "World Bank"
+msgstr "البنك الدولي"
+
+msgid "Source:"
+msgstr "المصدر:"
+
+msgid "Market data"
+msgstr "بيانات السوق"
+
+msgid "Key statistics"
+msgstr "إحصائيات رئيسية"
+
+msgid "Highlights"
+msgstr "أبرز النقاط"
+
+msgid "Learn more"
+msgstr "اعرف المزيد"
+
+msgid "Explore"
+msgstr "استكشف"
+
+msgid "Chart data is not available yet. It will appear after the next successful import."
+msgstr "بيانات الرسم البياني غير متوفرة بعد. ستظهر بعد الاستيراد التالي الناجح."
+
+msgid "View all sectors"
+msgstr "عرض جميع القطاعات"
+
+# Investor journey (homepage).
+
+msgid "Platforms used in this step"
+msgstr "المنصات المستخدمة في هذه الخطوة"
+
+msgid "Registration steps"
+msgstr "خطوات التسجيل"
+
+msgid "Step @n"
+msgstr "الخطوة @n"
+
+msgid "Motaded setup packages"
+msgstr "باقات تأسيس موتاد"
+
+msgid "Fixed one-time packages with government and PRO services. Use the calculator above for an indicative custom range, or choose a package to get started."
+msgstr "باقات ثابتة لمرة واحدة تشمل الخدمات الحكومية وخدمات العلاقات الحكومية. استخدم الحاسبة أعلاه للحصول على نطاق مخصص استرشادي، أو اختر باقة للبدء."

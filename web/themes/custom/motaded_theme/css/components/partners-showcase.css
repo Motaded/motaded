@@ -270,10 +270,12 @@
   }
 }
 
-.partners-showcase__mobile-grid {
+.partners-showcase__mobile-swiper {
   display: none;
   position: relative;
   z-index: 1;
+  overflow: hidden;
+  padding-inline: 0.25rem;
 }
 
 @keyframes partners-marquee {
@@ -289,20 +291,64 @@
   .partners-showcase--marquee {
     padding: 1rem 0.25rem 0.2rem;
     background: transparent;
+    overflow: hidden;
   }
 
   .partners-showcase__bg,
-  .partners-showcase__rail-wrap {
+  .partners-showcase__rail-wrap,
+  .partners-showcase__rail-track {
+    display: none !important;
+  }
+
+  .partners-showcase__mobile-swiper {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Layout before Swiper JS runs (and as reduced-motion fallback). */
+  .partners-showcase__mobile-swiper .swiper-wrapper {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .partners-showcase__mobile-swiper:not(.swiper-initialized) .swiper-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .partners-showcase__mobile-swiper:not(.swiper-initialized) .swiper-wrapper::-webkit-scrollbar {
     display: none;
   }
 
-  .partners-showcase__mobile-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
+  .partners-showcase__mobile-swiper .swiper-slide {
+    flex-shrink: 0;
+    width: calc((100% - 12px) / 2.15);
+    height: auto;
+    scroll-snap-align: start;
   }
 
-  .partners-showcase__logo-card--mobile {
+  @media (min-width: 480px) {
+    .partners-showcase__mobile-swiper .swiper-slide {
+      width: calc((100% - 12px) / 2.5);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .partners-showcase__mobile-swiper .swiper-slide {
+      width: calc((100% - 24px) / 3);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .partners-showcase__mobile-swiper .swiper-slide {
+      width: calc((100% - 36px) / 3.5);
+    }
+  }
+
+  .partners-showcase__logo-card--slide {
     width: 100%;
     height: 72px;
     border: 1px solid rgb(226 232 240 / 0.9);
@@ -312,7 +358,7 @@
     padding: 0.35rem 0.5rem;
   }
 
-  .partners-showcase__logo-card--mobile .partners-showcase__logo-img {
+  .partners-showcase__logo-card--slide .partners-showcase__logo-img {
     height: 42px;
     max-height: 42px;
   }
@@ -344,6 +390,13 @@
     rgba(248, 250, 249, 0.97) 72%,
     var(--mot-surface, #ffffff) 100%
   ) !important;
+}
+
+@media (max-width: 1023px) {
+  .paragraph--type--view-block:has(.view-id-partners.view-display-id-block_2) {
+    margin-top: 0.5rem;
+    padding-top: 2rem !important;
+  }
 }
 
 @media (min-width: 1024px) {

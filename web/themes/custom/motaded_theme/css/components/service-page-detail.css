@@ -216,14 +216,55 @@ body.is-service-detail-page .bread .block-system-breadcrumb-block {
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
 }
 
-.node--service-page .service-hero__share-card .a2a_kit > a {
-  background-color: var(--mot-brand) !important;
-  border-radius: 0.375rem;
+/* AddToAny: unified brand tiles (override per-network inline colors on .a2a_svg). */
+.node--service-page .service-hero__share-card .addtoany_list,
+.node--service-page .service-hero__share-card .a2a_kit {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  line-height: 0;
+}
+
+.node--service-page .service-hero__share-card .a2a_kit > a,
+.node--service-page .service-hero__share-card .addtoany_list a {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.375rem !important;
+  border: 0 !important;
+  border-radius: 0.375rem !important;
+  background-color: var(--mot-brand, #0f766e) !important;
+  line-height: 1 !important;
+  transition: background-color 0.15s ease;
+}
+
+.node--service-page .service-hero__share-card .a2a_kit .a2a_svg {
+  background-color: transparent !important;
+}
+
+.node--service-page .service-hero__share-card .a2a_kit > a img,
+.node--service-page .service-hero__share-card .addtoany_list a img {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  margin: 0 !important;
+  filter: brightness(0) invert(1);
+}
+
+.node--service-page .service-hero__share-card .a2a_svg svg path,
+.node--service-page .service-hero__share-card .a2a_svg svg rect,
+.node--service-page .service-hero__share-card .a2a_svg svg circle {
+  fill: #fff !important;
 }
 
 @media (hover: hover) {
-  .node--service-page .service-hero__share-card .a2a_kit > a:hover {
-    background-color: var(--mot-brand-hover) !important;
+  .node--service-page .service-hero__share-card .a2a_kit > a:hover,
+  .node--service-page .service-hero__share-card .addtoany_list a:hover {
+    background-color: var(--mot-brand-hover, #0d5f59) !important;
   }
 }
 

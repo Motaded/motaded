@@ -93,6 +93,12 @@ $node = $nodeStorage->load(374);
 if (!$node) {
   throw new \RuntimeException('Node 374 not found.');
 }
+if (!$node->hasTranslation('ar')) {
+  $node->addTranslation('ar', array_merge($node->getTranslation('en')->toArray(), [
+    'title' => 'الرئيسية',
+    'status' => (int) $node->isPublished(),
+  ]));
+}
 $nodeAr = $node->getTranslation('ar');
 $nodeAr->setTitle('الرئيسية');
 if (!$node->get('field_meta')->isEmpty()) {

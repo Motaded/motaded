@@ -6,7 +6,16 @@
  */
 #}
 {{ attach_library('motaded_theme/site_header') }}
-<div id="site-header" class="site-header-root">
+{{ attach_library('motaded_theme/mobile_header') }}
+{{ attach_library('motaded_theme/alpine') }}
+
+<div
+	id="site-header"
+	class="site-header-root"
+	x-data="{ openMenu: null, mobileOpen: false, mobileSection: null, mobileSubsection: null }"
+	x-effect="document.documentElement.classList.toggle('mot-menu-open', Boolean(openMenu || mobileOpen))"
+	@keydown.escape.window="openMenu=null; mobileOpen=false; mobileSection=null; mobileSubsection=null">
 	<div class="site-header-spacer" aria-hidden="true"></div>
 	{{ include('@motaded_theme/includes/header.html.twig') }}
+	{{ include('@motaded_theme/includes/mobile-drawer.html.twig') }}
 </div>

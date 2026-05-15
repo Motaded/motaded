@@ -1,0 +1,10 @@
+estimator:
+  version: 20260515q
+  css:
+    component:
+      css/setup-cost-estimator.css: {}
+  js:
+    js/setup-cost-estimator.js: { weight: -45, preprocess: false, minified: false }
+  dependencies:
+    - core/drupalSettings
+    - motaded_theme/setup_cost_alpine

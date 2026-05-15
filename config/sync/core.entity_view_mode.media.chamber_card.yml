@@ -1,0 +1,11 @@
+uuid: b4d9f2a3-5c6e-7f8a-0d1e-2f3a4b5c6d7e
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.chamber_card
+label: 'Chamber card logo'
+description: 'Small logo for chamber listing cards.'
+targetEntityType: media
+cache: true

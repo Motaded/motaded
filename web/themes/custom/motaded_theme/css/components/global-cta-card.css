@@ -260,12 +260,13 @@
 }
 
 .global-cta-card--minimal {
+  border: none;
   border-radius: 0.75rem;
-  box-shadow: 0 1px 6px rgb(15 23 42 / 0.05);
+  box-shadow: none;
 }
 
 .global-cta-card--minimal .global-cta-card__body {
-  padding: 0.65rem 0.5rem;
+  padding: 0.85rem 0.35rem;
 }
 
 .global-cta-card--minimal .global-cta-card__actions {
@@ -275,28 +276,32 @@
 .global-cta-card__contacts--minimal {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35rem;
+  justify-content: stretch;
+  gap: 0.5rem;
   margin: 0;
+  border: none;
 }
 
 .global-cta-card__contacts--minimal .global-cta-card__contact {
   margin: 0;
+  flex: 1 1 auto;
+  min-width: min(100%, 7.5rem);
+  border: none;
   border-inline-start: 0;
-  padding: 0.28rem 0.6rem;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.25;
   color: #fff;
   text-decoration: none;
-  gap: 0.3rem;
+  gap: 0.4rem;
   transition: background-color 0.15s ease;
 }
 
 .global-cta-card__contacts--minimal .global-cta-card__contact-icon {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 1.125rem;
+  height: 1.125rem;
   color: inherit;
 }
 
