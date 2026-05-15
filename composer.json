@@ -155,6 +155,9 @@
             "drupal/content_export_csv": {
                 "Avoid undefined langcode key warning in export": "patches/content_export_csv-undefined-array-key-langcode.patch"
             },
+            "drupal/entity_export_csv": {
+                "3352195: TypeError in FieldTypeExportBase (implode on null)": "https://www.drupal.org/files/issues/2023-04-04/type-error-in-field-type-export-base-3352195-2.patch"
+            },
             "drupal/redirect": {
                 "2831605: support wildcards": "https://git.drupalcode.org/project/redirect/-/merge_requests/97.diff",
                 "redirect_404: safe logger.factory->get() when channel omitted": "patches/redirect_404-logger-factory-get-default.patch"

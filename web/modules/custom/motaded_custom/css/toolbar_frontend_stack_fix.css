@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Frontend (non-Gin theme): Gin Toolbar secondary strip under core Toolbar.
+ *
+ * Without this, .gin-secondary-toolbar--frontend can sit at top:0 and overlap
+ * the primary .toolbar-bar (Content / Structure row).
+ */
+body.toolbar-fixed .gin-secondary-toolbar--frontend,
+body.toolbar-fixed .gin-secondary-toolbar,
+body.toolbar-fixed header.gin-secondary-toolbar {
+  top: 39px;
+}
+
+body.toolbar-fixed.toolbar-tray-open.toolbar-horizontal .gin-secondary-toolbar--frontend,
+body.toolbar-fixed.toolbar-tray-open.toolbar-horizontal .gin-secondary-toolbar,
+body.toolbar-fixed.toolbar-tray-open.toolbar-horizontal header.gin-secondary-toolbar {
+  top: 79px;
+}

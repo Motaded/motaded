@@ -405,9 +405,6 @@ msgstr "ابحث عن فعاليات"
 msgid "Upcoming"
 msgstr "قادمة"
 
-msgid "Filters"
-msgstr "المرشحات"
-
 msgid "Discover business events, conferences, and workshops happening across Saudi Arabia."
 msgstr "اكتشف فعاليات الأعمال والمؤتمرات وورش العمل التي تُقام في جميع أنحاء المملكة العربية السعودية."
 
@@ -828,3 +825,225 @@ msgstr "الفعاليات"
 
 msgid "Government Platforms"
 msgstr "المنصات الحكومية"
+
+# Chamber node — full page UI.
+msgid "Chambers"
+msgstr "الغرف"
+
+msgid "Chamber details"
+msgstr "تفاصيل الغرفة"
+
+msgid "Sidebar"
+msgstr "الشريط الجانبي"
+
+msgid "Breadcrumb"
+msgstr "مسار التنقل"
+
+msgid "Organization details"
+msgstr "تفاصيل المنظمة"
+
+msgid "Organization logo"
+msgstr "شعار المنظمة"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "Country"
+msgstr "الدولة"
+
+msgid "Focus"
+msgstr "التركيز"
+
+msgid "Relationship focus"
+msgstr "محور العلاقة"
+
+msgid "Key facts"
+msgstr "أبرز المعلومات"
+
+msgid "At a Glance"
+msgstr "نظرة سريعة"
+
+msgid "Official website"
+msgstr "الموقع الرسمي"
+
+msgid "Visit website"
+msgstr "زيارة الموقع"
+
+msgid "Visit the chamber’s official website for membership, events, and contact details."
+msgstr "زر الموقع الرسمي للغرفة للاطلاع على العضوية والفعاليات وبيانات التواصل."
+
+msgid "Need Help?"
+msgstr "تحتاج إلى مساعدة؟"
+
+msgid "Need help"
+msgstr "تحتاج إلى مساعدة"
+
+msgid "Our team can introduce you to the right chamber and help arrange membership or partnership opportunities."
+msgstr "يمكن لفريقنا تعريفك بالغرفة المناسبة ومساعدتك في ترتيب فرص العضوية أو الشراكة."
+
+msgid "Talk to our team"
+msgstr "تحدث مع فريقنا"
+
+msgid "Explore"
+msgstr "استكشف"
+
+msgid "Browse all chambers"
+msgstr "تصفح جميع الغرف"
+
+msgid "Saudi industry sectors"
+msgstr "قطاعات الصناعة السعودية"
+
+# Platform node — new sections (mockup-aligned).
+
+msgid "When you need this platform"
+msgstr "متى تحتاج هذه المنصة"
+
+msgid "When you need this"
+msgstr "متى تحتاج هذه"
+
+msgid "Related platforms"
+msgstr "منصات ذات صلة"
+
+msgid "View all platforms"
+msgstr "عرض جميع المنصات"
+
+msgid "Talk to an expert"
+msgstr "تحدث مع خبير"
+
+msgid "Visit official website"
+msgstr "زيارة الموقع الرسمي"
+
+msgid "Resource link"
+msgstr "رابط المصدر"
+
+msgid "platform"
+msgstr "منصة"
+
+# Platform node — tabs, sidebar, glance (node--platform--full.html.twig).
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "Requirements"
+msgstr "المتطلبات"
+
+msgid "Partners"
+msgstr "الشركاء"
+
+msgid "Platform navigation"
+msgstr "تنقل المنصة"
+
+msgid "Platform content"
+msgstr "محتوى المنصة"
+
+msgid "No overview has been added yet."
+msgstr "لم تُضف نظرة عامة بعد."
+
+msgid "Trusted partners"
+msgstr "شركاء موثوقون"
+
+msgid "Key services"
+msgstr "الخدمات الرئيسية"
+
+msgid "How it works"
+msgstr "كيفية العمل"
+
+msgid "Platform type"
+msgstr "نوع المنصة"
+
+msgid "Governing entity"
+msgstr "الجهة الحاكمة"
+
+msgid "Coverage"
+msgstr "النطاق الجغرافي"
+
+msgid "Our experts can assist you with setup, documentation, and compliance on this platform."
+msgstr "يمكن لخبرائنا مساعدتك في الإعداد والوثائق والامتثال على هذه المنصة."
+
+msgid "Quick Links"
+msgstr "روابط سريعة"
+
+msgid "Browse platforms"
+msgstr "تصفح المنصات"
+
+msgid "Share this Platform"
+msgstr "شارك هذه المنصة"
+
+msgid "Source"
+msgstr "المصدر"
+
+# Platform taxonomy term names (English keys from import) — displayed via t() in preprocess.
+
+msgid "Tax"
+msgstr "الضرائب"
+
+msgid "Investment"
+msgstr "الاستثمار"
+
+msgid "Labor"
+msgstr "العمل"
+
+msgid "Operations"
+msgstr "العمليات"
+
+msgid "Licensing"
+msgstr "التراخيص"
+
+msgid "Logistics"
+msgstr "اللوجستيات"
+
+msgid "Finance"
+msgstr "المالية"
+
+msgid "Legal"
+msgstr "القضائي"
+
+msgid "Saudi Arabia"
+msgstr "المملكة العربية السعودية"
+
+# Platform field_source_text values (English) — rendered with |t in glance.
+
+msgid "Official VAT materials"
+msgstr "مواد ضريبة القيمة المضافة الرسمية"
+
+msgid "Mission and vision (official)"
+msgstr "الرسالة والرؤية (رسمي)"
+
+msgid "Third-party directory (verify on HRSD)"
+msgstr "دليل طرف ثالث (يُرجى التحقق على وزارة الموارد)"
+
+msgid "Service directory references"
+msgstr "مراجع دليل الخدمات"
+
+msgid "Agency summary (my.gov.sa)"
+msgstr "ملخص الجهة (my.gov.sa)"
+
+msgid "Secondary reference"
+msgstr "مرجع ثانوي"
+
+msgid "Official service page"
+msgstr "صفحة الخدمة الرسمية"
+
+msgid "WPS / wage protection (official)"
+msgstr "نظام حماية الأجور (رسمي)"
+
+msgid "Government directory"
+msgstr "الدليل الحكومي"
+
+msgid "Public materials"
+msgstr "مواد عامة"
+
+msgid "Saudi Standards, Metrology and Quality Organization"
+msgstr "الهيئة السعودية للمواصفات والمقاييس والجودة"
+
+msgid "Ministry of Finance"
+msgstr "وزارة المالية"
+
+msgid "Human Resources Development Fund"
+msgstr "صندوق تنمية الموارد البشرية"
+
+msgid "Ministry of Justice"
+msgstr "وزارة العدل"
+
+msgid "MC e-services"
+msgstr "الخدمات الإلكترونية لوزارة التجارة"

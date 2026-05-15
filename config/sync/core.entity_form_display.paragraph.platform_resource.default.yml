@@ -1,0 +1,42 @@
+uuid: a1000001-0000-4000-8000-0000000000f7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.platform_resource.field_icon
+    - field.field.paragraph.platform_resource.field_link
+    - field.field.paragraph.platform_resource.field_title
+    - paragraphs.paragraphs_type.platform_resource
+  module:
+    - link
+    - options
+id: paragraph.platform_resource.default
+targetEntityType: paragraph
+bundle: platform_resource
+mode: default
+content:
+  field_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: 'https://example.com'
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,21 @@
+uuid: a1000001-0000-4000-8000-0000000000f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_icon
+    - paragraphs.paragraphs_type.help_item
+  module:
+    - options
+id: paragraph.help_item.field_icon
+field_name: field_icon
+entity_type: paragraph
+bundle: help_item
+label: Icon
+description: 'Optional icon shown on the Key services card.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

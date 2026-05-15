@@ -62,11 +62,13 @@
           <div class="doc-page__file-card">
             <div class="doc-page__file-card-inner">
               <div class="doc-page__file-icon" aria-hidden="true">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M12 11v6M9 14l3 3 3-3" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/><path d="M12 11v6M9 14l3 3 3-3" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="doc-page__file-body">
-                <p class="doc-page__file-label">{{ 'Download'|t }}</p>
-                {{ content.field_document }}
+                <div class="doc-page__file-stack">
+                  <p class="doc-page__file-label">{{ 'Download'|t }}</p>
+                  {{ content.field_document }}
+                </div>
               </div>
             </div>
           </div>
@@ -98,12 +100,6 @@
             <div class="doc-page__meta-row">
               <dt class="doc-page__meta-k">{{ 'Sector page'|t }}</dt>
               <dd class="doc-page__meta-v">{{ content.field_sector_pages }}</dd>
-            </div>
-          {% endif %}
-          {% if content.field_taxonomy|render|trim is not empty %}
-            <div class="doc-page__meta-row">
-              <dt class="doc-page__meta-k">{{ 'Service type'|t }}</dt>
-              <dd class="doc-page__meta-v">{{ content.field_taxonomy }}</dd>
             </div>
           {% endif %}
           {% if content.field_platforms|render|trim is not empty %}

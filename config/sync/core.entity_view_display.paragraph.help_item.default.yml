@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.help_item.field_body
+    - field.field.paragraph.help_item.field_icon
     - field.field.paragraph.help_item.field_title
     - paragraphs.paragraphs_type.help_item
   module:
+    - options
     - text
 id: paragraph.help_item.default
 targetEntityType: paragraph
@@ -18,7 +20,14 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
+    region: content
+  field_icon:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
     region: content
   field_title:
     type: string
@@ -26,7 +35,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
   created: true

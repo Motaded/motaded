@@ -38,5 +38,19 @@
       {% endif %}
     </div>
   </div>
+  <div class="cnb-card__row-meta cnb-card__directory-meta">
+    <div class="cnb-card__meta cnb-card__meta--focus">
+      <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_focus }}</span>
+      <span class="cnb-card__meta-text"{% if cnb_focus_line %} title="{{ cnb_focus_line|striptags|e('html_attr') }}"{% endif %}>
+        {% if cnb_focus_line %}{{ cnb_focus_line }}{% else %}{{ 'Focus: —'|t }}{% endif %}
+      </span>
+    </div>
+    <div class="cnb-card__meta cnb-card__meta--type">
+      <span class="cnb-card__meta-icon" aria-hidden="true">{{ cnb_icon_type }}</span>
+      <span class="cnb-card__meta-text">
+        {% if cnb_type_line %}{{ cnb_type_line }}{% else %}{{ 'Type: —'|t }}{% endif %}
+      </span>
+    </div>
+  </div>
   <a href="{{ url }}" class="cnb-card__cta" rel="bookmark">{{ 'Learn more'|t }}<span aria-hidden="true"> →</span></a>
 </article>

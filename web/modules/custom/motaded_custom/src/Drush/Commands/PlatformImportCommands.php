@@ -9,15 +9,61 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\taxonomy\Entity\Term;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 
 /**
- * Import platform nodes from CSV.
+ * Import / upsert platform nodes from CSV (local + prod).
  */
 final class PlatformImportCommands extends DrushCommands {
+
+  /** @var list<string> */
+  private const PARAGRAPH_REFERENCE_FIELDS = [
+    'field_why_matters',
+    'field_how_we_help',
+    'field_process_steps',
+    'field_requirements',
+    'field_resources',
+  ];
+
+  /** Paragraph fields cleared and rebuilt per translation row. */
+  private const TRANSLATION_PARAGRAPH_FIELDS = [
+    'field_why_matters',
+    'field_how_we_help',
+    'field_process_steps',
+    'field_requirements',
+    'field_resources',
+  ];
+
+  /** @var list<string> */
+  private const TRANSLATION_VALUE_KEYS = [
+    'title',
+    'status',
+    'body',
+    'field_short_description',
+    'field_subtitle',
+    'field_cta_text',
+    'field_source_text',
+    'field_category',
+    'field_region',
+    'field_sector',
+    'field_cta_link',
+    'field_external_link',
+    'field_source_link',
+    'field_logo',
+    'field_hero_image',
+    'field_partner_logos',
+    'field_meta_tags',
+    'field_why_matters',
+    'field_how_we_help',
+    'field_process_steps',
+    'field_requirements',
+    'field_resources',
+    'field_related_platforms',
+  ];
 
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
@@ -27,14 +73,21 @@ final class PlatformImportCommands extends DrushCommands {
 
   /**
    * Import platforms from CSV into node type "platform".
+   *
+   * Default: upsert by exact title (overwrites body, paragraphs, links, etc.).
+   * Taxonomy columns must match existing term names (no auto-create).
+   * Non-default langcode: set translation_source_title to the English platform title.
    */
   #[CLI\Command(name: 'motaded:platform-import-csv', aliases: ['mpic'])]
   #[CLI\Argument(name: 'path', description: 'Path to CSV (default: ../platform_import_ready.csv relative to Drupal root).')]
-  #[CLI\Option(name: 'skip-existing', description: 'Skip row when a published platform with the same title already exists.')]
+  #[CLI\Option(name: 'upsert', description: 'When true (default), update existing platform with same title+langcode; otherwise only create new nodes.')]
+  #[CLI\Option(name: 'skip-existing', description: 'When upsert is false: skip row if a published platform with the same title exists.')]
   #[CLI\Option(name: 'dry-run', description: 'Parse and validate only; do not save.')]
-  #[CLI\Usage(name: 'drush mpic', description: 'Import from project root platform_import_ready.csv')]
-  #[CLI\Usage(name: 'drush mpic /path/to.csv', description: 'Import a specific file.')]
+  #[CLI\Usage(name: 'drush mpic', description: 'Upsert from project root platform_import_ready.csv')]
+  #[CLI\Usage(name: 'drush mpic ../platform_import_ar_ready.csv', description: 'Upsert Arabic translations (requires EN platforms; translation_source_title column).')]
+  #[CLI\Usage(name: 'drush mpic /path/to.csv --upsert=1', description: 'Upsert from a specific CSV file.')]
   public function import(?string $path = NULL, array $options = [
+    'upsert' => TRUE,
     'skip-existing' => TRUE,
     'dry-run' => FALSE,
   ]): void {
@@ -42,7 +95,6 @@ final class PlatformImportCommands extends DrushCommands {
     $default = $drupal_root . '/../platform_import_ready.csv';
     $path = $path ?? $default;
 
-    // Relative filenames resolve against repo root (parent of web/).
     if ($path !== '' && $path[0] !== '/' && !preg_match('#^[a-zA-Z]:\\\\#', $path)) {
       $candidate = $drupal_root . '/../' . $path;
       if (is_readable($candidate)) {
@@ -53,10 +105,11 @@ final class PlatformImportCommands extends DrushCommands {
     $resolved = $this->fileSystem->realpath($path);
     $path = $resolved ?: $path;
     if (!is_readable($path)) {
-      $this->logger()->error('Cannot read CSV: @path (tip: put file in project root or pass absolute path)', ['@path' => $path]);
+      $this->logger()->error(sprintf('Cannot read CSV: %s', $path));
       return;
     }
 
+    $upsert = filter_var($options['upsert'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
     $skip_existing = filter_var($options['skip-existing'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
     $dry_run = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
 
@@ -66,36 +119,33 @@ final class PlatformImportCommands extends DrushCommands {
       return;
     }
 
-    $langcode = $this->languageManager->getDefaultLanguage()->getId();
-    $header = fgetcsv($handle);
+    $default_lang = $this->languageManager->getDefaultLanguage()->getId();
+    // Match scripts/rebuild_platform_import_csv.php: enclosure ", escape \.
+    $header = fgetcsv($handle, 0, ',', '"', '\\');
     if ($header === FALSE || $header === []) {
       fclose($handle);
       $this->logger()->error('Empty CSV.');
       return;
     }
-
-    // Strip BOM from first header cell if present.
     if (isset($header[0])) {
       $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', $header[0]);
     }
 
     $indexes = array_flip($header);
-
-    $required_cols = ['title', 'status', 'langcode', 'body', 'body_summary'];
-    foreach ($required_cols as $col) {
+    foreach (['title', 'status', 'langcode', 'body', 'body_summary'] as $col) {
       if (!isset($indexes[$col])) {
         fclose($handle);
-        $this->logger()->error('Missing column in CSV: @c', ['@c' => $col]);
+        $this->logger()->error(sprintf('Missing column in CSV: %s', $col));
         return;
       }
     }
 
     $node_storage = $this->entityTypeManager->getStorage('node');
-    $created = 0;
+    $saved = 0;
     $skipped = 0;
     $row_num = 1;
 
-    while (($row = fgetcsv($handle)) !== FALSE) {
+    while (($row = fgetcsv($handle, 0, ',', '"', '\\')) !== FALSE) {
       $row_num++;
       $row = $this->padRow($row, count($header));
       $get = static function (array $idx, array $r, string $key): string {
@@ -111,15 +161,28 @@ final class PlatformImportCommands extends DrushCommands {
         continue;
       }
 
-      if ($skip_existing && !$dry_run) {
-        $existing = $node_storage->getQuery()
+      $row_lang = $get($indexes, $row, 'langcode') ?: $default_lang;
+      $translation_source = isset($indexes['translation_source_title'])
+        ? $get($indexes, $row, 'translation_source_title')
+        : '';
+      if ($row_lang !== $default_lang && $translation_source === '') {
+        $msg = sprintf('Row %d: translation_source_title is required when langcode is %s.', $row_num, $row_lang);
+        $this->logger()->error($msg);
+        $this->io()->writeln('[error] ' . $msg);
+        continue;
+      }
+      $is_translation = ($row_lang !== $default_lang);
+      $existing = $is_translation ? NULL : $this->findPlatformByTitle($title, $row_lang);
+
+      if (!$is_translation && !$upsert && $skip_existing && !$dry_run) {
+        $published = $node_storage->getQuery()
           ->accessCheck(FALSE)
           ->condition('type', 'platform')
           ->condition('title', $title)
           ->condition('status', NodeInterface::PUBLISHED)
           ->range(0, 1)
           ->execute();
-        if ($existing) {
+        if ($published) {
           $this->io()->writeln(sprintf('Skip row %d (exists): %s', $row_num, $title));
           $skipped++;
           continue;
@@ -128,8 +191,6 @@ final class PlatformImportCommands extends DrushCommands {
 
       try {
         $status = (int) ($get($indexes, $row, 'status') ?: '1');
-        $row_lang = $get($indexes, $row, 'langcode') ?: $langcode;
-
         $summary = $get($indexes, $row, 'body_summary');
         $body_raw = $get($indexes, $row, 'body');
         if ($body_raw === '') {
@@ -140,15 +201,66 @@ final class PlatformImportCommands extends DrushCommands {
         }
 
         if ($dry_run) {
-          // Validate JSON columns early.
           $this->decodeJsonList($get($indexes, $row, 'field_why_matters_json'), 'field_why_matters_json');
           $this->decodeJsonList($get($indexes, $row, 'field_how_we_help_json'), 'field_how_we_help_json');
           $this->decodeJsonList($get($indexes, $row, 'field_process_steps_json'), 'field_process_steps_json');
           $this->decodeJsonList($get($indexes, $row, 'field_requirements_json'), 'field_requirements_json');
-
+          $this->decodeResourcesJson($get($indexes, $row, 'field_resources_json'));
+          $meta_raw = $get($indexes, $row, 'field_meta_tags_json');
+          if ($meta_raw !== '') {
+            $decoded = json_decode($meta_raw, TRUE);
+            if (!is_array($decoded)) {
+              throw new \InvalidArgumentException('Invalid JSON in field_meta_tags_json');
+            }
+          }
+          if ($is_translation) {
+            $base_nid_check = $this->findPlatformByTitle($translation_source, $default_lang);
+            if ($base_nid_check === NULL) {
+              throw new \InvalidArgumentException('Base platform not found for translation_source_title: ' . $translation_source);
+            }
+          }
           $this->io()->writeln(sprintf('[dry-run] Row %d OK: %s', $row_num, $title));
-          $created++;
+          $saved++;
           continue;
+        }
+
+        $tax_lang = $is_translation ? $default_lang : $row_lang;
+        $related_lang = $is_translation ? $default_lang : $row_lang;
+
+        $base = NULL;
+        $tr = NULL;
+        $node = NULL;
+
+        if ($is_translation) {
+          $base_nid = $this->findPlatformByTitle($translation_source, $default_lang);
+          if ($base_nid === NULL) {
+            throw new \InvalidArgumentException('Base platform not found for translation_source_title: ' . $translation_source);
+          }
+          $base = $node_storage->load($base_nid);
+          if (!$base instanceof NodeInterface) {
+            throw new \InvalidArgumentException('Could not load base platform node.');
+          }
+          if (!$base->isTranslatable()) {
+            throw new \InvalidArgumentException('Platform nodes are not translatable. Enable content translation for the platform bundle (language.content_settings.node.platform) and import configuration.');
+          }
+          if (!$base->hasTranslation($row_lang)) {
+            $base->addTranslation($row_lang, [
+              'title' => $title,
+              'status' => $status,
+            ]);
+          }
+          $tr = $base->getTranslation($row_lang);
+          foreach (self::TRANSLATION_PARAGRAPH_FIELDS as $fieldName) {
+            $this->deleteParagraphFieldItems($tr, $fieldName);
+          }
+        }
+        else {
+          $node = $existing ? $node_storage->load($existing) : NULL;
+          if ($node instanceof NodeInterface) {
+            foreach (self::PARAGRAPH_REFERENCE_FIELDS as $fieldName) {
+              $this->deleteParagraphFieldItems($node, $fieldName);
+            }
+          }
         }
 
         $values = [
@@ -172,12 +284,35 @@ final class PlatformImportCommands extends DrushCommands {
 
         $category_name = $get($indexes, $row, 'field_category_name');
         if ($category_name !== '') {
-          $values['field_category'] = ['target_id' => $this->getOrCreateTerm('platform_category', $category_name, $row_lang)];
+          $tid = $this->getExistingTermId('platform_category', $category_name, $tax_lang);
+          if ($tid !== NULL) {
+            $values['field_category'] = ['target_id' => $tid];
+          }
+          else {
+            $this->logger()->warning(sprintf('Row %d: category term not found (skipped): %s', $row_num, $category_name));
+          }
         }
 
         $region_name = $get($indexes, $row, 'field_region_name');
         if ($region_name !== '') {
-          $values['field_region'] = ['target_id' => $this->getOrCreateTerm('region', $region_name, $row_lang)];
+          $tid = $this->getExistingTermId('region', $region_name, $tax_lang);
+          if ($tid !== NULL) {
+            $values['field_region'] = ['target_id' => $tid];
+          }
+          else {
+            $this->logger()->warning(sprintf('Row %d: region term not found (skipped): %s', $row_num, $region_name));
+          }
+        }
+
+        $sector_name = $get($indexes, $row, 'field_sector_name');
+        if ($sector_name !== '') {
+          $tid = $this->getExistingTermId('sector', $sector_name, $tax_lang);
+          if ($tid !== NULL) {
+            $values['field_sector'] = ['target_id' => $tid];
+          }
+          else {
+            $this->logger()->warning(sprintf('Row %d: sector term not found (skipped): %s', $row_num, $sector_name));
+          }
         }
 
         $cta_link = $this->buildLinkValue($get($indexes, $row, 'field_cta_link_uri'), $get($indexes, $row, 'field_cta_link_title'));
@@ -210,7 +345,6 @@ final class PlatformImportCommands extends DrushCommands {
           $values['field_partner_logos'] = array_map(static fn (int $mid): array => ['target_id' => $mid], $partner_mids);
         }
 
-        // Paragraphs.
         $why_items = $this->decodeJsonList($get($indexes, $row, 'field_why_matters_json'), 'field_why_matters_json');
         if ($why_items !== []) {
           $values['field_why_matters'] = $this->createTitleBodyParagraphs('benefit_item', $why_items, $row_lang);
@@ -231,38 +365,83 @@ final class PlatformImportCommands extends DrushCommands {
           $values['field_requirements'] = $this->createRequirementsParagraphs($reqs, $row_lang);
         }
 
-        $alias = $get($indexes, $row, 'path_alias');
-
-        $node = $node_storage->create($values);
-        $node->save();
-        $nid = (int) $node->id();
-
-        if ($alias !== '') {
-          $alias = '/' . ltrim($alias, '/');
-          PathAlias::create([
-            'path' => '/node/' . $nid,
-            'alias' => $alias,
-            'langcode' => $row_lang,
-          ])->save();
+        $resources = $this->decodeResourcesJson($get($indexes, $row, 'field_resources_json'));
+        if ($resources !== []) {
+          $values['field_resources'] = $this->createPlatformResourceParagraphs($resources, $row_lang);
         }
 
-        $this->io()->writeln(sprintf('Created nid=%d: %s', $nid, $title));
-        $created++;
+        $related_raw = $get($indexes, $row, 'field_related_platforms_titles');
+        if ($related_raw !== '') {
+          $refs = $this->resolveRelatedPlatformTargets($related_raw, $related_lang);
+          if ($refs !== []) {
+            $values['field_related_platforms'] = $refs;
+          }
+        }
+
+        $meta_json = $get($indexes, $row, 'field_meta_tags_json');
+        if ($meta_json !== '') {
+          $decoded = json_decode($meta_json, TRUE);
+          if (is_array($decoded) && $decoded !== []) {
+            $encoded = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $values['field_meta_tags'] = [['value' => $encoded]];
+          }
+        }
+
+        $alias = $get($indexes, $row, 'path_alias');
+
+        if ($is_translation) {
+          if ($tr === NULL || $base === NULL) {
+            throw new \InvalidArgumentException('Translation state is inconsistent.');
+          }
+          unset($values['field_featured']);
+          foreach (self::TRANSLATION_VALUE_KEYS as $key) {
+            if (!array_key_exists($key, $values)) {
+              continue;
+            }
+            if (!$tr->hasField($key)) {
+              continue;
+            }
+            $tr->set($key, $values[$key]);
+          }
+          $base->save();
+          $nid = (int) $base->id();
+          $this->io()->writeln(sprintf('Saved translation %s for nid=%d: %s', $row_lang, $nid, $title));
+        }
+        elseif ($node instanceof NodeInterface) {
+          foreach ($values as $key => $value) {
+            $node->set($key, $value);
+          }
+          $node->save();
+          $nid = (int) $node->id();
+          $this->io()->writeln(sprintf('Updated nid=%d: %s', $nid, $title));
+        }
+        else {
+          $node = $node_storage->create($values);
+          $node->save();
+          $nid = (int) $node->id();
+          $this->io()->writeln(sprintf('Created nid=%d: %s', $nid, $title));
+        }
+
+        if ($alias !== '') {
+          $this->replaceNodePathAlias($nid, $row_lang, '/' . ltrim($alias, '/'));
+        }
+
+        $saved++;
       }
       catch (\Throwable $e) {
-        $this->logger()->error('Row @n: @msg', ['@n' => $row_num, '@msg' => $e->getMessage()]);
+        $msg = sprintf('Row %d: %s', $row_num, $e->getMessage());
+        $this->logger()->error($msg);
+        $this->io()->writeln(sprintf('[error] %s', $msg));
+        \Drupal::logger('motaded_custom')->error($msg);
       }
     }
 
     fclose($handle);
     if ($dry_run) {
-      $this->logger()->success('Dry-run: @n row(s) OK (nothing saved).', ['@n' => (string) $created]);
+      $this->logger()->success(sprintf('Dry-run: %d row(s) OK.', $saved));
     }
     else {
-      $this->logger()->success('Imported @n platform(s); skipped @s.', [
-        '@n' => (string) $created,
-        '@s' => (string) $skipped,
-      ]);
+      $this->logger()->success(sprintf('Processed %d platform row(s); skipped %d.', $saved, $skipped));
     }
   }
 
@@ -275,6 +454,79 @@ final class PlatformImportCommands extends DrushCommands {
       $row[] = '';
     }
     return $row;
+  }
+
+  private function findPlatformByTitle(string $title, string $langcode): ?int {
+    $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'platform')
+      ->condition('title', $title)
+      ->condition('langcode', $langcode)
+      ->sort('nid', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    if (!$nids) {
+      return NULL;
+    }
+    return (int) reset($nids);
+  }
+
+  private function deleteParagraphFieldItems(NodeInterface $node, string $fieldName): void {
+    if (!$node->hasField($fieldName) || $node->get($fieldName)->isEmpty()) {
+      return;
+    }
+    $ids = [];
+    foreach ($node->get($fieldName) as $item) {
+      $p = $item->entity;
+      if ($p instanceof ParagraphInterface) {
+        $ids[] = (int) $p->id();
+      }
+    }
+    $node->set($fieldName, NULL);
+    foreach ($ids as $pid) {
+      $p = Paragraph::load($pid);
+      if ($p instanceof ParagraphInterface) {
+        $p->delete();
+      }
+    }
+  }
+
+  /**
+   * @return list<array{target_id:int}>
+   */
+  private function resolveRelatedPlatformTargets(string $rawTitles, string $langcode): array {
+    $out = [];
+    foreach (preg_split('/\s*\|\s*/', $rawTitles, -1, PREG_SPLIT_NO_EMPTY) as $t) {
+      $t = trim($t);
+      if ($t === '') {
+        continue;
+      }
+      $nid = $this->findPlatformByTitle($t, $langcode);
+      if ($nid === NULL) {
+        $this->logger()->warning(sprintf('Related platform title not found: %s', $t));
+        continue;
+      }
+      $out[] = ['target_id' => $nid];
+    }
+    return $out;
+  }
+
+  private function replaceNodePathAlias(int $nid, string $langcode, string $alias): void {
+    $alias = '/' . ltrim($alias, '/');
+    $system_path = '/node/' . $nid;
+    $storage = $this->entityTypeManager->getStorage('path_alias');
+    $existing = $storage->loadByProperties([
+      'path' => $system_path,
+      'langcode' => $langcode,
+    ]);
+    foreach ($existing as $entity) {
+      $entity->delete();
+    }
+    PathAlias::create([
+      'path' => $system_path,
+      'alias' => $alias,
+      'langcode' => $langcode,
+    ])->save();
   }
 
   private function normalizeBodyHtml(string $raw): string {
@@ -301,6 +553,69 @@ final class PlatformImportCommands extends DrushCommands {
       throw new \InvalidArgumentException('Invalid JSON in ' . $colName);
     }
     return array_values(array_filter($decoded, static fn ($v): bool => is_array($v)));
+  }
+
+  /**
+   * @return list<array{title: string, uri: string, link_title?: string, icon?: string}>
+   */
+  private function decodeResourcesJson(string $raw): array {
+    $raw = trim($raw);
+    if ($raw === '') {
+      return [];
+    }
+    $decoded = json_decode($raw, TRUE);
+    if (!is_array($decoded)) {
+      throw new \InvalidArgumentException('Invalid JSON in field_resources_json');
+    }
+    $out = [];
+    foreach ($decoded as $item) {
+      if (!is_array($item)) {
+        continue;
+      }
+      $title = trim((string) ($item['title'] ?? ''));
+      $uri = trim((string) ($item['uri'] ?? ''));
+      if ($title === '' || $uri === '') {
+        continue;
+      }
+      $out[] = [
+        'title' => $title,
+        'uri' => $uri,
+        'link_title' => trim((string) ($item['link_title'] ?? $title)),
+        'icon' => trim((string) ($item['icon'] ?? '')),
+      ];
+    }
+    return $out;
+  }
+
+  /**
+   * @param list<array{title: string, uri: string, link_title?: string, icon?: string}> $items
+   *
+   * @return array<int, array{target_id:int, target_revision_id:int}>
+   */
+  private function createPlatformResourceParagraphs(array $items, string $langcode): array {
+    $out = [];
+    foreach ($items as $item) {
+      $link = $this->buildLinkValue($item['uri'], $item['link_title'] ?? $item['title']);
+      if ($link === NULL) {
+        continue;
+      }
+      $values = [
+        'type' => 'platform_resource',
+        'langcode' => $langcode,
+        'field_title' => $item['title'],
+        'field_link' => [$link],
+      ];
+      if (($item['icon'] ?? '') !== '') {
+        $values['field_icon'] = $item['icon'];
+      }
+      $p = Paragraph::create($values);
+      $p->save();
+      $out[] = [
+        'target_id' => (int) $p->id(),
+        'target_revision_id' => (int) $p->getRevisionId(),
+      ];
+    }
+    return $out;
   }
 
   /**
@@ -362,6 +677,10 @@ final class PlatformImportCommands extends DrushCommands {
           'format' => 'basic_html',
         ],
       ]);
+      $icon = trim((string) ($item['icon'] ?? ''));
+      if ($icon !== '' && $p->hasField('field_icon')) {
+        $p->set('field_icon', $icon);
+      }
       $p->save();
 
       $out[] = [
@@ -410,29 +729,29 @@ final class PlatformImportCommands extends DrushCommands {
     return $out;
   }
 
-  private function getOrCreateTerm(string $vid, string $name, string $langcode): int {
+  private function getExistingTermId(string $vid, string $name, string $langcode): ?int {
     $name = trim($name);
     if ($name === '') {
-      throw new \InvalidArgumentException('Empty taxonomy term name for vocabulary ' . $vid);
+      return NULL;
     }
     $storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $tids = $storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('vid', $vid)
       ->condition('name', $name)
+      ->condition('langcode', $langcode)
       ->range(0, 1)
       ->execute();
     if ($tids) {
       return (int) reset($tids);
     }
-    $term = Term::create([
-      'vid' => $vid,
-      'name' => $name,
-      'langcode' => $langcode,
-    ]);
-    $term->save();
-    $this->io()->writeln(sprintf('Created term %s / %s (tid=%d)', $vid, $name, (int) $term->id()));
-    return (int) $term->id();
+    $tids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    return $tids ? (int) reset($tids) : NULL;
   }
 
 }

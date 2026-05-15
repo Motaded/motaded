@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Paragraph: platform_resource.
+ *
+ * Rendered as an <a> row inside the Resources panel. The platform node
+ * template wraps each child in <li class="pf2-reslist__item">.
+ */
+#}
+{% set url = paragraph.field_link.0.url %}
+{% set title = paragraph.field_title.value|default('') %}
+{% set is_external = url and url.isExternal() %}
+<a class="pf2-reslist__link" href="{{ url ? url.toString() : '#' }}"{% if is_external %} rel="noopener noreferrer" target="_blank"{% endif %}>
+  <span class="pf2-reslist__icon" aria-hidden="true">{{ pf_icon_markup ?? _self.fallback() }}</span>
+  <span class="pf2-reslist__text">{{ title }}</span>
+  <span class="pf2-reslist__chev" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </span>
+</a>
+
+{% macro fallback() %}
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+{% endmacro %}

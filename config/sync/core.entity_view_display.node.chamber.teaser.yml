@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.chamber.body
     - field.field.node.chamber.field_country
     - field.field.node.chamber.field_logo
     - field.field.node.chamber.field_short_description
@@ -53,8 +54,11 @@ content:
     region: content
 hidden:
   addtoany: true
+  body: true
+  field_chamber_featured_stats: true
   field_external_link: true
   field_featured: true
+  field_meta_tags: true
   field_priority: true
   field_relationship_focus: true
   langcode: true

@@ -370,11 +370,15 @@
 .chambers-network .cnb-card__meta {
   display: flex;
   gap: 0.45rem;
-  align-items: center;
+  align-items: flex-start;
   min-width: 0;
   font-size: 0.8125rem;
   line-height: 1.45;
   color: var(--mot-text-muted, #64748b);
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.035);
+  border: 1px solid rgba(148, 163, 184, 0.28);
 }
 
 .chambers-network .cnb-card__meta-icon {
@@ -388,6 +392,103 @@
 
 .chambers-network .cnb-card__meta-icon svg {
   display: block;
+}
+
+/* Homepage cards: compact Focus + clearer Type chips (line-clamp on long focus copy). */
+.chambers-network .cnb-card__row-meta,
+.chambers-network .cnb-card__featured-meta {
+  gap: 0.55rem 0.85rem;
+}
+
+.chambers-network .cnb-card__meta--type {
+  background: rgba(15, 118, 110, 0.06);
+  border-color: rgba(15, 118, 110, 0.18);
+}
+
+.chambers-network .cnb-card__meta--focus .cnb-card__meta-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.42;
+  font-size: 0.8rem;
+  color: var(--mot-text-secondary, #475569);
+}
+
+.chambers-network .cnb-card--featured .cnb-card__meta--focus .cnb-card__meta-text {
+  -webkit-line-clamp: 3;
+  font-size: 0.8125rem;
+}
+
+.chambers-network .cnb-card__meta--type .cnb-card__meta-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* /chambers directory grid: same Focus / Type chips + clamp (single template: chamber_card). */
+.chambers-directory__grid .cnb-card__directory-meta {
+  display: grid;
+  gap: 0.55rem 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 639px) {
+  .chambers-directory__grid .cnb-card__directory-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chambers-directory__grid .cnb-card__meta {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  min-width: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--mot-text-muted, #64748b);
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.035);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.chambers-directory__grid .cnb-card__meta-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cnb-green);
+  opacity: 0.9;
+}
+
+.chambers-directory__grid .cnb-card__meta-icon svg {
+  display: block;
+}
+
+.chambers-directory__grid .cnb-card__meta--type {
+  background: rgba(15, 118, 110, 0.06);
+  border-color: rgba(15, 118, 110, 0.18);
+}
+
+.chambers-directory__grid .cnb-card__meta--focus .cnb-card__meta-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.42;
+  font-size: 0.8rem;
+  color: var(--mot-text-secondary, #475569);
+}
+
+.chambers-directory__grid .cnb-card__meta--type .cnb-card__meta-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chambers-network .cnb-card__meta-placeholder {

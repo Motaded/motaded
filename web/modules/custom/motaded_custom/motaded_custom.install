@@ -643,7 +643,7 @@ function _motaded_custom_import_ar_locale_po(): void {
 /**
  * Initial Arabic UI strings import (hero copy, quick links, aria labels).
  *
- * Re-run manually: drush php:eval "module_load_install('motaded_custom'); _motaded_custom_import_ar_locale_po();"
+ * Re-run manually: drush ev '\Drupal::moduleHandler()->loadInclude("motaded_custom", "install"); _motaded_custom_import_ar_locale_po();' && drush cr
  */
 function motaded_custom_update_10012(): void {
   _motaded_custom_import_ar_locale_po();
@@ -704,6 +704,14 @@ function motaded_custom_update_10018(): void {
  * placeholders/buttons load at render time on Arabic listing pages.
  */
 function motaded_custom_update_10019(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after platform node labels, glance taxonomy keys,
+ * and field_source_text glossary entries were added to motaded-service-ui.ar.po.
+ */
+function motaded_custom_update_10020(): void {
   _motaded_custom_import_ar_locale_po();
 }
 

@@ -58,24 +58,14 @@
             <div class="chamber-page__lead">{{ content.field_short_description }}</div>
           {% endif %}
 
-          {% set has_meta = content.field_type|render|trim is not empty or content.field_country|render|trim is not empty %}
+          {# Type moved to main column (Relationship focus / Key facts pattern).
+             Country still lives in the hero meta strip when present. #}
+          {% set has_meta = content.field_country|render|trim is not empty %}
           {% set has_cta = chamber_external_url is not empty %}
           {% if has_meta or has_cta %}
             <div class="chamber-page__hero-actions" aria-label="{{ 'Organization details'|t }}">
               {% if has_meta %}
                 <div class="chamber-page__hero-actions-meta" role="list">
-                  {% if content.field_type|render|trim is not empty %}
-                    <div class="chamber-page__meta-item chamber-page__meta-item--type" role="listitem">
-                      <span class="chamber-page__meta-label">{{ 'Type'|t }}</span>
-                      <span class="chamber-page__meta-value">{{ content.field_type }}</span>
-                    </div>
-                  {% endif %}
-                  {% if content.field_country|render|trim is not empty %}
-                    <div class="chamber-page__meta-item chamber-page__meta-item--country" role="listitem">
-                      <span class="chamber-page__meta-label">{{ 'Country'|t }}</span>
-                      <span class="chamber-page__meta-value">{{ content.field_country }}</span>
-                    </div>
-                  {% endif %}
                 </div>
               {% endif %}
               {% if has_cta %}
@@ -90,30 +80,118 @@
     </div>
   </header>
 
-  <div class="chamber-page__main">
-    {% if content.field_relationship_focus|render|trim is not empty %}
-      <section class="chamber-page__section chamber-page__section--focus" aria-labelledby="chamber-focus-heading">
-        <div class="chamber-page__panel chamber-page__panel--focus">
-          <h2 id="chamber-focus-heading" class="chamber-page__panel-title">{{ 'Relationship focus'|t }}</h2>
-          <div class="chamber-page__panel-body chamber-page__focus-body chamber-page__prose">
-            {{ content.field_relationship_focus }}
-          </div>
-        </div>
-      </section>
-    {% endif %}
+  <div class="chamber-page__shell">
+    <div class="chamber-page__layout">
+      <main class="chamber-page__main" aria-label="{{ 'Chamber details'|t }}">
+        {% if content.field_type|render|trim is not empty %}
+          <section class="chamber-page__section chamber-page__section--type" aria-labelledby="chamber-type-heading">
+            <div class="chamber-page__panel chamber-page__panel--type">
+              <h2 id="chamber-type-heading" class="chamber-page__panel-title">{{ 'Type'|t }}</h2>
+              <div class="chamber-page__panel-body chamber-page__type-body">
+                {{ content.field_type }}
+              </div>
+            </div>
+          </section>
+        {% endif %}
 
-    {{ content|without(
-      'field_logo',
-      'field_short_description',
-      'field_type',
-      'field_country',
-      'field_relationship_focus',
-      'field_external_link',
-      'links'
-    ) }}
+        {% if content.field_relationship_focus|render|trim is not empty %}
+          <section class="chamber-page__section chamber-page__section--focus" aria-labelledby="chamber-focus-heading">
+            <div class="chamber-page__panel chamber-page__panel--focus">
+              <h2 id="chamber-focus-heading" class="chamber-page__panel-title">{{ 'Relationship focus'|t }}</h2>
+              <div class="chamber-page__panel-body chamber-page__focus-body chamber-page__prose">
+                {{ content.field_relationship_focus }}
+              </div>
+            </div>
+          </section>
+        {% endif %}
 
-    {% if content.links %}
-      <footer class="chamber-page__links">{{ content.links }}</footer>
-    {% endif %}
+        {% if content.body|render|trim is not empty %}
+          <section class="chamber-page__section chamber-page__section--overview" aria-labelledby="chamber-overview-heading">
+            <div class="chamber-page__panel chamber-page__panel--overview">
+              <h2 id="chamber-overview-heading" class="chamber-page__panel-title">{{ 'Overview'|t }}</h2>
+              <div class="chamber-page__panel-body chamber-page__overview-body chamber-page__prose">
+                {{ content.body }}
+              </div>
+            </div>
+          </section>
+        {% endif %}
+
+        {% if cnb_featured_stats is not empty %}
+          <section class="chamber-page__section chamber-page__section--stats" aria-labelledby="chamber-stats-heading">
+            <div class="chamber-page__panel chamber-page__panel--stats">
+              <h2 id="chamber-stats-heading" class="chamber-page__panel-title">{{ 'Key facts'|t }}</h2>
+              <ul class="chamber-page__stats" role="list">
+                {% for stat in cnb_featured_stats %}
+                  <li class="chamber-page__stat">
+                    {% if stat.icon_markup %}
+                      <span class="chamber-page__stat-icon" aria-hidden="true">{{ stat.icon_markup }}</span>
+                    {% endif %}
+                    <span class="chamber-page__stat-text">{{ stat.text }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+        {% endif %}
+
+        {# Catch-all for any future fields enabled in the chamber view display.
+           Explicit fields above are stripped so they don't render twice. #}
+        {{ content|without(
+          'field_logo',
+          'field_short_description',
+          'field_type',
+          'field_country',
+          'field_relationship_focus',
+          'body',
+          'field_external_link',
+          'field_chamber_featured_stats',
+          'links'
+        ) }}
+
+        {% if content.links %}
+          <footer class="chamber-page__links">{{ content.links }}</footer>
+        {% endif %}
+      </main>
+
+      <aside class="chamber-page__aside" aria-label="{{ 'Sidebar'|t }}">
+        {# At a Glance only shows Country now — Type lives in main as its own
+           panel and Focus duplicated the Relationship-focus section. #}
+        {% if content.field_country|render|trim is not empty %}
+          <section class="chamber-aside-card" aria-label="{{ 'At a glance'|t }}">
+            <h3 class="chamber-aside-card__title">{{ 'At a Glance'|t }}</h3>
+            <ul class="chamber-aside-card__list">
+              <li class="chamber-aside-card__item">
+                <span class="chamber-aside-card__label">{{ 'Country'|t }}</span>
+                <span class="chamber-aside-card__value">{{ content.field_country }}</span>
+              </li>
+            </ul>
+          </section>
+        {% endif %}
+
+        {% if chamber_external_url %}
+          <section class="chamber-aside-card chamber-aside-card--cta" aria-label="{{ 'Official website'|t }}">
+            <h3 class="chamber-aside-card__title">{{ 'Official website'|t }}</h3>
+            <p class="chamber-aside-card__text">{{ 'Visit the chamber’s official website for membership, events, and contact details.'|t }}</p>
+            <a class="chamber-aside-card__btn" href="{{ chamber_external_url }}" rel="noopener noreferrer" target="_blank">
+              {{ chamber_external_label|default('Visit website'|t) }}<span aria-hidden="true"> →</span>
+            </a>
+          </section>
+        {% endif %}
+
+        <section class="chamber-aside-card chamber-aside-card--help" aria-label="{{ 'Need help'|t }}">
+          <h3 class="chamber-aside-card__title">{{ 'Need Help?'|t }}</h3>
+          <p class="chamber-aside-card__text">{{ 'Our team can introduce you to the right chamber and help arrange membership or partnership opportunities.'|t }}</p>
+          <a class="chamber-aside-card__btn chamber-aside-card__btn--ghost" href="{{ path('<front>') ~ 'contact-us' }}">{{ 'Talk to our team'|t }}<span aria-hidden="true"> →</span></a>
+        </section>
+
+        <section class="chamber-aside-card" aria-label="{{ 'Explore'|t }}">
+          <h3 class="chamber-aside-card__title">{{ 'Explore'|t }}</h3>
+          <ul class="chamber-aside-card__quicklinks">
+            <li><a class="chamber-aside-card__quicklink" href="{{ path('view.chambers.page_1') }}">{{ 'Browse all chambers'|t }}</a></li>
+            <li><a class="chamber-aside-card__quicklink" href="{{ path('<front>') ~ 'sectors' }}">{{ 'Saudi industry sectors'|t }}</a></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
   </div>
 </article>

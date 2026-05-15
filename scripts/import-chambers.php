@@ -2,34 +2,23 @@
 
 /**
  * @file
- * One-off import for Chamber nodes. Run:
- *   ddev drush php:script scripts/import-chambers.php
+ * Legacy one-off import for Chamber nodes (hard-coded rows).
+ *
+ * Prefer the CSV pipeline (same pattern as platforms):
+ * - php scripts/rebuild_chamber_import_csv.php
+ * - ddev drush mcic
+ * - php scripts/rebuild_chamber_import_ar_csv.php
+ * - ddev drush mcic ../chamber_import_ar_ready.csv
+ *
+ * This script remains for quick local runs without Drush services cache rebuild.
+ * Run: ddev drush php:script scripts/import-chambers.php
  */
 
 declare(strict_types=1);
 
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-
-$country_keys = [
-  'Saudi Arabia' => 'saudi_arabia',
-  'United Kingdom' => 'uk',
-  'USA' => 'usa',
-  'Germany' => 'germany',
-  'France' => 'france',
-  'UAE' => 'uae',
-  'Bahrain' => 'bahrain',
-  'India' => 'india',
-  'Canada' => 'canada',
-  'Australia' => 'australia',
-  'Italy' => 'italy',
-  'Spain' => 'spain',
-  'Japan' => 'japan',
-  'South Korea' => 'south_korea',
-  'China' => 'china',
-  'Switzerland' => 'switzerland',
-  'Netherlands' => 'netherlands',
-];
+use Drupal\taxonomy\Entity\Term;
 
 $type_keys = [
   'Chamber of Commerce' => 'chamber_of_commerce',
@@ -65,13 +54,30 @@ $rows = [
 $nid_list = [];
 /** @var \Drupal\node\NodeStorageInterface $storage */
 $storage = \Drupal::entityTypeManager()->getStorage('node');
+$term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+$default_lang = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
 foreach ($rows as $row) {
   [$title, $desc, $country_label, $type_label, $url, $focus, $priority, $featured] = $row;
 
-  if (!isset($country_keys[$country_label])) {
-    echo "SKIP (unknown country): {$title}\n";
-    continue;
+  $tids = $term_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'country')
+    ->condition('name', $country_label)
+    ->range(0, 1)
+    ->execute();
+  if ($tids) {
+    $country_tid = (int) reset($tids);
+  }
+  else {
+    $term = Term::create([
+      'vid' => 'country',
+      'name' => $country_label,
+      'langcode' => $default_lang,
+    ]);
+    $term->save();
+    $country_tid = (int) $term->id();
+    echo "Created country term: {$country_label} (tid={$country_tid})\n";
   }
   if (!isset($type_keys[$type_label])) {
     echo "SKIP (unknown type): {$title}\n";
@@ -102,7 +108,7 @@ foreach ($rows as $row) {
 
   $node->set('title', $title);
   $node->set('field_short_description', $desc);
-  $node->set('field_country', $country_keys[$country_label]);
+  $node->set('field_country', ['target_id' => $country_tid]);
   $node->set('field_type', $type_keys[$type_label]);
   $node->set('field_relationship_focus', $focus);
   $node->set('field_priority', $priority);

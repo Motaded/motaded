@@ -1,0 +1,28 @@
+uuid: a1000001-0000-4000-8000-0000000000fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_platforms
+    - node.type.platform
+id: node.platform.field_related_platforms
+field_name: field_related_platforms
+entity_type: node
+bundle: platform
+label: 'Related platforms'
+description: 'Pick other government platforms to surface in a "Related platforms" panel.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      platform: platform
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

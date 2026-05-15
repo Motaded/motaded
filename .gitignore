@@ -79,6 +79,9 @@ data/service-import/last_import_report.csv
 # Local Drush export (motaded:fr-es-export-map default output)
 /fr-es-redirect-map.csv
 
+# Platform CSV export (scripts/export_platform_nodes_csv.php)
+/exports/
+
 # Article/news body export + apply reports (large, site-specific)
 data/service-import/article_news_body_export.csv
 data/service-import/article_news_body_summaries_apply_report.csv

@@ -1,0 +1,21 @@
+uuid: a1000001-0000-4000-8000-0000000000f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_icon
+    - paragraphs.paragraphs_type.platform_resource
+  module:
+    - options
+id: paragraph.platform_resource.field_icon
+field_name: field_icon
+entity_type: paragraph
+bundle: platform_resource
+label: Icon
+description: 'Visual marker for this resource (default: document).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
