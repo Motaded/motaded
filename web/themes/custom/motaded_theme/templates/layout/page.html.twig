@@ -49,7 +49,8 @@
 #}
 {% set service_page_full_bleed = service_page_full_bleed|default(false) %}
 {% set platform_page_full_bleed = platform_page_full_bleed|default(false) %}
-{% set use_content_full_bleed = service_page_full_bleed or platform_page_full_bleed %}
+{% set document_page_full_bleed = document_page_full_bleed|default(false) %}
+{% set use_content_full_bleed = service_page_full_bleed or platform_page_full_bleed or document_page_full_bleed %}
 {# Two-column layout + narrow content only when the service sidebar is actually shown (see <aside> below). #}
 {% set show_service_side = false %}
 {% if node and node.bundle == 'page' %}

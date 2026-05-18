@@ -60,6 +60,22 @@ main:has(.insights-directory.insights-directory-page),
   pointer-events: none;
 }
 
+/* RTL: mirror hero photo so the skyline sits on the start (inline-start) side. */
+[dir='rtl'] .insights-directory__hero-bg {
+  transform: scaleX(-1);
+  background-position: 28% 40%;
+}
+
+[dir='rtl'] .insights-directory__hero-gradient {
+  background: linear-gradient(
+    268deg,
+    var(--mot-surface, #ffffff) 0%,
+    rgba(255, 255, 255, 0.97) 38%,
+    rgba(255, 255, 255, 0.62) 58%,
+    rgba(248, 250, 252, 0.18) 100%
+  );
+}
+
 .insights-directory__hero-inner {
   position: relative;
   z-index: 2;
@@ -608,7 +624,7 @@ main:has(.insights-directory.insights-directory-page),
   margin-top: 2rem;
 }
 
-/* Newsletter strip — mirror events directory */
+/* Newsletter strip — aligned with events directory */
 .insights-directory__newsletter {
   margin: 2.5rem 0 0;
   padding: 1.25rem 1.25rem;
@@ -637,6 +653,7 @@ main:has(.insights-directory.insights-directory-page),
   margin: 0 0 0.35rem;
   font-size: 1.2rem;
   font-weight: 800;
+  line-height: 1.25;
   color: var(--mot-text, #0f172a);
 }
 
@@ -660,25 +677,38 @@ main:has(.insights-directory.insights-directory-page),
   margin: 0;
 }
 
-.insights-directory__newsletter-form .webform-submission-form :where(label, .option) {
-  width: 100% !important;
-  max-width: none !important;
+.insights-directory__newsletter-form .webform-submission-form .form-item {
+  margin: 0;
 }
 
-/* Some utility classes force fixed label width (w-80); override. */
-.insights-directory__newsletter-form .webform-submission-form label,
-.insights-directory__newsletter-form .webform-submission-form .option {
-  width: 100% !important;
-  max-width: none !important;
-}
-
+/* Neutralize Tailwind utility classes on webform fields. */
 .insights-directory__newsletter-form .webform-submission-form .form-item-email,
 .insights-directory__newsletter-form .webform-submission-form .form-item-consent {
+  display: block !important;
+  flex: none !important;
   align-items: stretch !important;
-  gap: 0.35rem !important;
+  width: 100% !important;
+  max-width: none !important;
+  gap: 0 !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-email > label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .insights-directory__newsletter-form .webform-submission-form .form-item-email .form-el-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  align-self: stretch !important;
+  width: 100% !important;
   background: var(--mot-surface, #fff) !important;
   border: 1px solid var(--mot-border, #cbd5e1) !important;
   border-radius: 12px !important;
@@ -694,28 +724,37 @@ main:has(.insights-directory.insights-directory-page),
 }
 
 .insights-directory__newsletter-form .webform-submission-form .form-item-email input[type="email"] {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
   background: transparent !important;
   border: none !important;
   outline: none !important;
+  box-shadow: none !important;
   padding: 0 !important;
   height: 100% !important;
+  min-height: 0 !important;
   color: var(--mot-text, #0f172a) !important;
 }
 
+.insights-directory__newsletter-form .webform-submission-form .form-item-email input[type="email"]::placeholder {
+  color: #94a3b8;
+}
+
 .insights-directory__newsletter-form .webform-submission-form .form-item-consent {
-  display: grid !important;
-  grid-template-columns: 0.95rem minmax(0, 1fr);
-  gap: 0.35rem 0.55rem !important;
-  align-items: center !important;
-  width: 100% !important;
-  justify-self: stretch !important;
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: flex-start !important;
+  gap: 0.6rem !important;
 }
 
 .insights-directory__newsletter-form .webform-submission-form .form-item-consent input[type="checkbox"] {
-  margin: 0 !important;
+  flex: 0 0 auto !important;
+  margin: 0.15rem 0 0 !important;
   width: 0.9rem;
   height: 0.9rem;
   appearance: none;
+  -webkit-appearance: none;
   border: 1.5px solid rgba(100, 116, 139, 0.55);
   border-radius: 5px;
   background: var(--mot-surface, #fff);
@@ -731,17 +770,51 @@ main:has(.insights-directory.insights-directory-page),
   background-size: 10px 10px;
 }
 
-.insights-directory__newsletter-form .webform-submission-form .form-item-consent label {
+.insights-directory__newsletter-form .webform-submission-form .form-item-consent > label.option {
+  flex: 1 1 auto !important;
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
   font-size: 0.85rem !important;
   font-weight: 600 !important;
+  letter-spacing: 0 !important;
   text-transform: none !important;
   color: var(--mot-slate-700, #334155) !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-consent label.option > span {
+  display: inline !important;
+  position: static !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-consent label.option > span > span {
+  position: static !important;
+  display: inline !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-item-consent label .text-red-700 {
+  color: #b91c1c !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  margin-inline-end: 0.2rem !important;
+}
+
+.insights-directory__newsletter-form .webform-submission-form .form-actions {
+  margin: 0;
+  padding: 0;
 }
 
 .insights-directory__newsletter-form .webform-submission-form input[type="submit"],
 .insights-directory__newsletter-form .webform-submission-form button[type="submit"] {
   width: 100%;
   min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.62rem 1.15rem;
   font-size: 0.92rem;
   font-weight: 800;
@@ -750,7 +823,7 @@ main:has(.insights-directory.insights-directory-page),
   border-radius: 12px;
   border: 2px solid transparent;
   cursor: pointer;
-  box-shadow: 0 10px 22px rgba(0, 71, 63, 0.16);
+  box-shadow: 0 6px 20px rgba(0, 71, 63, 0.22);
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -759,33 +832,29 @@ main:has(.insights-directory.insights-directory-page),
 .insights-directory__newsletter-form .webform-submission-form input[type="submit"]:focus-visible,
 .insights-directory__newsletter-form .webform-submission-form button[type="submit"]:focus-visible {
   background: var(--event-brand-hover, #003630);
-  box-shadow: 0 14px 28px rgba(0, 71, 63, 0.22);
+  box-shadow: 0 10px 28px rgba(0, 71, 63, 0.28);
   transform: translateY(-1px);
 }
 
-/* Override utility classes injected on webform button. */
 .insights-directory__newsletter-form .webform-submission-form .webform-button--submit.button {
+  width: 100% !important;
   padding: 0.62rem 1.15rem !important;
   height: auto !important;
   min-height: 2.75rem !important;
+  max-height: none !important;
   border-radius: 12px !important;
   background: var(--event-brand, #00473f) !important;
   border-color: transparent !important;
 }
 
-@media (min-width: 980px) {
-  .insights-directory__newsletter-inner {
-    flex-wrap: nowrap;
-    align-items: center;
-  }
-
+@media (min-width: 640px) {
   .insights-directory__newsletter-form .webform-submission-form {
-    grid-template-columns: minmax(0, 1fr) 10.25rem;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       "email submit"
       "consent consent";
-    align-items: start;
-    gap: 0.75rem 0.75rem;
+    align-items: end;
+    gap: 0.65rem 0.75rem;
   }
 
   .insights-directory__newsletter-form .webform-submission-form .form-item-email {
@@ -795,34 +864,25 @@ main:has(.insights-directory.insights-directory-page),
   .insights-directory__newsletter-form .webform-submission-form .form-item-consent {
     grid-area: consent;
     grid-column: 1 / -1;
-    width: 100%;
-    justify-self: stretch;
   }
 
   .insights-directory__newsletter-form .webform-submission-form .form-actions {
     grid-area: submit;
-    grid-column: 2;
-    margin: 0;
-    padding: 0;
-    align-self: start;
+    align-self: end;
   }
 
   .insights-directory__newsletter-form .webform-submission-form input[type="submit"],
-  .insights-directory__newsletter-form .webform-submission-form button[type="submit"] {
-    width: auto;
+  .insights-directory__newsletter-form .webform-submission-form button[type="submit"],
+  .insights-directory__newsletter-form .webform-submission-form .webform-button--submit.button {
+    width: auto !important;
+    min-width: 9.5rem;
+    white-space: nowrap;
   }
 }
 
-/* Clean, compact alignment for the embedded signup. */
-.insights-directory__newsletter-form .webform-submission-form .form-item-email label {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-}
-
-.insights-directory__newsletter-form .webform-submission-form .form-item-consent {
-  margin-top: 0.1rem;
+@media (min-width: 980px) {
+  .insights-directory__newsletter-inner {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
 }

@@ -88,6 +88,7 @@
                       or (content.field_source_link|render|trim is not empty)
                       or platform_external_url
                       or (related_children|length > 0) %}
+  {% set has_documents = platform_documents is defined and platform_documents is not empty %}
 
   {% set hero_eyebrow = '' %}
   {% if node.field_category.entity %}
@@ -166,6 +167,7 @@
       {% if has_req %}<a class="pf2-tabs__link" href="#pf2-req">{{ 'Requirements'|t }}</a>{% endif %}
       {% if has_trust %}<a class="pf2-tabs__link" href="#pf2-trust">{{ 'Partners'|t }}</a>{% endif %}
       {% if has_resources %}<a class="pf2-tabs__link" href="#pf2-resources">{{ 'Resources'|t }}</a>{% endif %}
+      {% if has_documents %}<a class="pf2-tabs__link" href="#pf2-documents">{{ 'Documents'|t }}</a>{% endif %}
     </nav>
 
     <div class="pf2-layout">
@@ -337,6 +339,10 @@
         </section>
       </aside>
     </div>
+
+    {% if has_documents %}
+      {% include '@motaded_theme/platform-page/platform-documents.html.twig' %}
+    {% endif %}
   </div>
 
   {{ content.links }}

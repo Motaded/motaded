@@ -27,6 +27,10 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
   $storage = $em->getStorage('node');
   $date_formatter = \Drupal::service('date.formatter');
   $langcode = $node->language()->getId();
+  $entity_repository = \Drupal::service('entity.repository');
+  $t = static function (string $string, array $args = []) use ($langcode): string {
+    return (string) t($string, $args, ['langcode' => $langcode]);
+  };
 
   $sector_label = $node->getTitle();
   $sector_nid = (int) $node->id();
@@ -65,15 +69,15 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $en);
-      $rows[] = _motaded_theme_sector_row_event($en, $date_formatter, $langcode);
+      $rows[] = _motaded_theme_sector_row_event($en, $date_formatter, $langcode, $entity_repository);
     }
     if ($rows !== []) {
       $sections[] = [
         'layout' => 'list',
         'id' => 'sector-related-events',
-        'title' => Markup::create((string) t('Upcoming events in @sector', ['@sector' => $sector_label])),
+        'title' => Markup::create($t('Upcoming events in @sector', ['@sector' => $sector_label])),
         'more_url' => Url::fromUserInput('/events')->toString(),
-        'more_label' => (string) t('View all events'),
+        'more_label' => $t('View all events'),
         'rows' => $rows,
       ];
     }
@@ -102,7 +106,7 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $in);
-      $insight_rows[] = _motaded_theme_sector_row_insight($in, $em);
+      $insight_rows[] = _motaded_theme_sector_row_insight($in, $em, $langcode, $entity_repository);
     }
   }
 
@@ -122,7 +126,7 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $pf);
-      $platform_rows[] = _motaded_theme_sector_row_platform($pf, $em);
+      $platform_rows[] = _motaded_theme_sector_row_platform($pf, $em, $langcode, $entity_repository);
     }
   }
 
@@ -132,19 +136,19 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
       'id' => 'sector-split-insights-platforms',
       'left' => [
         'id' => 'sector-related-insights',
-        'title' => (string) t('Market insights'),
+        'title' => $t('Market insights'),
         'more_url' => Url::fromUserInput('/insights')->toString(),
-        'more_label' => (string) t('View all insights'),
+        'more_label' => $t('View all insights'),
         'rows' => $insight_rows,
-        'empty' => (string) t('No insights linked yet.'),
+        'empty' => $t('No insights linked yet.'),
       ],
       'right' => [
         'id' => 'sector-related-platforms',
-        'title' => (string) t('Key platforms for this sector'),
+        'title' => $t('Key platforms for this sector'),
         'more_url' => Url::fromUserInput('/platforms')->toString(),
-        'more_label' => (string) t('View all platforms'),
+        'more_label' => $t('View all platforms'),
         'rows' => $platform_rows,
-        'empty' => (string) t('No platforms linked yet.'),
+        'empty' => $t('No platforms linked yet.'),
       ],
     ];
   }
@@ -167,7 +171,7 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $pn);
-      $svc_rows[] = _motaded_theme_sector_row_service($pn);
+      $svc_rows[] = _motaded_theme_sector_row_service($pn, $langcode, $entity_repository);
     }
   }
 
@@ -187,7 +191,7 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $dn);
-      $doc_rows[] = _motaded_theme_sector_row_document($dn);
+      $doc_rows[] = _motaded_theme_sector_row_document($dn, $langcode, $entity_repository);
     }
   }
 
@@ -197,19 +201,19 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
       'id' => 'sector-split-services-docs',
       'left' => [
         'id' => 'sector-related-services',
-        'title' => Markup::create((string) t('Services for @sector', ['@sector' => $sector_label])),
+        'title' => Markup::create($t('Services for @sector', ['@sector' => $sector_label])),
         'more_url' => Url::fromUserInput('/services')->toString(),
-        'more_label' => (string) t('View all services'),
+        'more_label' => $t('View all services'),
         'rows' => $svc_rows,
-        'empty' => (string) t('No services linked yet.'),
+        'empty' => $t('No services linked yet.'),
       ],
       'right' => [
         'id' => 'sector-related-documents',
-        'title' => (string) t('Documents & resources'),
+        'title' => $t('Documents & resources'),
         'more_url' => Url::fromUserInput('/library')->toString(),
-        'more_label' => (string) t('View all documents'),
+        'more_label' => $t('View all documents'),
         'rows' => $doc_rows,
-        'empty' => (string) t('No documents linked yet.'),
+        'empty' => $t('No documents linked yet.'),
       ],
     ];
   }
@@ -231,16 +235,16 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
         continue;
       }
       $cache_tags = $merge_node_tags($cache_tags, $nn);
-      $news_rows[] = _motaded_theme_sector_row_news($nn, $date_formatter, $langcode);
+      $news_rows[] = _motaded_theme_sector_row_news($nn, $date_formatter, $langcode, $entity_repository);
     }
     if ($news_rows !== []) {
       $sections[] = [
         'layout' => 'list',
         'variant' => 'news',
         'id' => 'sector-related-news',
-        'title' => (string) t('Latest news & updates'),
+        'title' => $t('Latest news & updates'),
         'more_url' => Url::fromUserInput('/news')->toString(),
-        'more_label' => (string) t('View all news'),
+        'more_label' => $t('View all news'),
         'rows' => $news_rows,
       ];
     }
@@ -257,7 +261,8 @@ function motaded_theme_sector_page_related_build(NodeInterface $node): array {
 /**
  * @return array{type: string, url: string, title: string, meta: string, badge: string}
  */
-function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, string $langcode): array {
+function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, string $langcode, $entity_repository): array {
+  $node = $entity_repository->getTranslationFromContext($node, $langcode);
   $range = '';
   if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
     $start_ts = strtotime((string) $node->get('field_event_start')->value);
@@ -281,9 +286,10 @@ function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, s
   }
   $city = '';
   if ($place === '' && $node->hasField('field_city') && !$node->get('field_city')->isEmpty()) {
-    $t = $node->get('field_city')->entity;
-    if ($t instanceof TermInterface) {
-      $city = $t->getName();
+    $city_term = $node->get('field_city')->entity;
+    if ($city_term instanceof TermInterface) {
+      $city_term = $entity_repository->getTranslationFromContext($city_term, $langcode);
+      $city = $city_term->getName();
     }
   }
   if ($place === '' && $city !== '') {
@@ -294,6 +300,7 @@ function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, s
   if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
     $term = $node->get('field_event_type')->entity;
     if ($term instanceof TermInterface) {
+      $term = $entity_repository->getTranslationFromContext($term, $langcode);
       $type_label = $term->getName();
     }
   }
@@ -302,7 +309,7 @@ function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, s
 
   return [
     'type' => 'event',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'meta' => implode(' · ', $meta_parts),
     'badge' => '',
@@ -310,9 +317,17 @@ function _motaded_theme_sector_row_event(NodeInterface $node, $date_formatter, s
 }
 
 /**
+ * Resolves a node in the requested content language (falls back per Drupal rules).
+ */
+function _motaded_theme_sector_translated_node(NodeInterface $node, string $langcode, $entity_repository): NodeInterface {
+  return $entity_repository->getTranslationFromContext($node, $langcode);
+}
+
+/**
  * @return array{type: string, url: string, title: string, excerpt: string, thumbnail: array}
  */
-function _motaded_theme_sector_row_insight(NodeInterface $node, $em): array {
+function _motaded_theme_sector_row_insight(NodeInterface $node, $em, string $langcode, $entity_repository): array {
+  $node = _motaded_theme_sector_translated_node($node, $langcode, $entity_repository);
   $thumb = [];
   if ($node->hasField('field_insight_thumbnail') && !$node->get('field_insight_thumbnail')->isEmpty()) {
     $media = $node->get('field_insight_thumbnail')->entity;
@@ -335,7 +350,7 @@ function _motaded_theme_sector_row_insight(NodeInterface $node, $em): array {
 
   return [
     'type' => 'insight',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'excerpt' => $excerpt,
     'thumbnail' => $thumb,
@@ -345,7 +360,8 @@ function _motaded_theme_sector_row_insight(NodeInterface $node, $em): array {
 /**
  * @return array{type: string, url: string, title: string, logo: array}
  */
-function _motaded_theme_sector_row_platform(NodeInterface $node, $em): array {
+function _motaded_theme_sector_row_platform(NodeInterface $node, $em, string $langcode, $entity_repository): array {
+  $node = _motaded_theme_sector_translated_node($node, $langcode, $entity_repository);
   $logo = [];
   if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
     $media = $node->get('field_logo')->entity;
@@ -356,7 +372,7 @@ function _motaded_theme_sector_row_platform(NodeInterface $node, $em): array {
 
   return [
     'type' => 'platform',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'logo' => $logo,
   ];
@@ -365,7 +381,8 @@ function _motaded_theme_sector_row_platform(NodeInterface $node, $em): array {
 /**
  * @return array{type: string, url: string, title: string, excerpt: string}
  */
-function _motaded_theme_sector_row_service(NodeInterface $node): array {
+function _motaded_theme_sector_row_service(NodeInterface $node, string $langcode, $entity_repository): array {
+  $node = _motaded_theme_sector_translated_node($node, $langcode, $entity_repository);
   $excerpt = '';
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
     $raw = (string) $node->get('body')->value;
@@ -376,7 +393,7 @@ function _motaded_theme_sector_row_service(NodeInterface $node): array {
 
   return [
     'type' => 'service',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'excerpt' => $excerpt,
   ];
@@ -385,7 +402,10 @@ function _motaded_theme_sector_row_service(NodeInterface $node): array {
 /**
  * @return array{type: string, url: string, title: string, meta: string}
  */
-function _motaded_theme_sector_row_document(NodeInterface $node): array {
+function _motaded_theme_sector_row_document(NodeInterface $node, ?string $langcode = NULL, $entity_repository = NULL): array {
+  if ($langcode !== NULL && $entity_repository !== NULL) {
+    $node = _motaded_theme_sector_translated_node($node, $langcode, $entity_repository);
+  }
   $meta = '';
   if ($node->hasField('field_document') && !$node->get('field_document')->isEmpty()) {
     $media = $node->get('field_document')->entity;
@@ -400,9 +420,13 @@ function _motaded_theme_sector_row_document(NodeInterface $node): array {
     }
   }
 
+  if ($meta === '' && $node->hasField('field_short_description') && !$node->get('field_short_description')->isEmpty()) {
+    $meta = motaded_theme_plain_text_truncate(trim((string) $node->get('field_short_description')->value), 80);
+  }
+
   return [
     'type' => 'document',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'meta' => $meta,
   ];
@@ -411,7 +435,8 @@ function _motaded_theme_sector_row_document(NodeInterface $node): array {
 /**
  * @return array{type: string, url: string, title: string, date: string, excerpt: string}
  */
-function _motaded_theme_sector_row_news(NodeInterface $node, $date_formatter, string $langcode): array {
+function _motaded_theme_sector_row_news(NodeInterface $node, $date_formatter, string $langcode, $entity_repository): array {
+  $node = _motaded_theme_sector_translated_node($node, $langcode, $entity_repository);
   $created_ts = (int) $node->getCreatedTime();
   $date_line = $date_formatter->format($created_ts, 'custom', 'j M Y', NULL, $langcode);
 
@@ -428,7 +453,7 @@ function _motaded_theme_sector_row_news(NodeInterface $node, $date_formatter, st
 
   return [
     'type' => 'news',
-    'url' => $node->toUrl()->toString(),
+    'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
     'title' => $node->getTitle(),
     'date' => $date_line,
     'excerpt' => $excerpt,

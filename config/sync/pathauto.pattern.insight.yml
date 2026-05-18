@@ -2,6 +2,8 @@ uuid: a3343438-2c45-4ea6-81b5-d5300a849db9
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.market_insight
   module:
     - node
 id: insight
@@ -12,7 +14,6 @@ selection_criteria:
   5286443a-96fa-479b-b40b-882e94399919:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 5286443a-96fa-479b-b40b-882e94399919
     context_mapping:
       node: node
     bundles:

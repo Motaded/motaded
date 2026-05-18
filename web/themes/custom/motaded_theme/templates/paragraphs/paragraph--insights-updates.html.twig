@@ -60,7 +60,7 @@
           {% set card_img = iu_card_images[nid] ?? {} %}
           {% set kind = item.kind %}
           <div class="iu-bn__cell" role="listitem" data-iu-kind="{{ kind }}">
-            <a href="{{ path('entity.node.canonical', {'node': nid}) }}" class="iu-bn__card">
+            <a href="{{ item.url }}" class="iu-bn__card">
               <div class="iu-bn__card-media">
                 {% if card_img.src %}
                   {% if card_img.srcset %}

@@ -2,6 +2,8 @@ uuid: 01ded924-0ef0-4b22-83f6-3a41a86febfe
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.sector_page
   module:
     - node
 id: sector
@@ -12,7 +14,6 @@ selection_criteria:
   7b4fd269-fd7b-42f7-bd68-189784f1b1af:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 7b4fd269-fd7b-42f7-bd68-189784f1b1af
     context_mapping:
       node: node
     bundles:

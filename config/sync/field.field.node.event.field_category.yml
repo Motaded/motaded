@@ -11,7 +11,7 @@ field_name: field_category
 entity_type: node
 bundle: event
 label: Category
-description: 'Same taxonomy as services (Service type) for consistent filtering.'
+description: 'Deprecated. Use field_sector_pages (sector_page nodes). Cleared by motaded_custom_update_10036().'
 required: false
 translatable: true
 default_value: {  }

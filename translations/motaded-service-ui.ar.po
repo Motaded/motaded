@@ -720,6 +720,48 @@ msgstr "تسجيل ضريبة القيمة المضافة"
 msgid "Audit Support"
 msgstr "دعم التدقيق"
 
+msgid "Business Support"
+msgstr "دعم الأعمال"
+
+msgid "Office Solutions"
+msgstr "حلول المكاتب"
+
+msgid "Residency and Visas"
+msgstr "الإقامة والتأشيرات"
+
+msgid "Business Setup"
+msgstr "تأسيس الأعمال"
+
+msgid "Saudi Partners"
+msgstr "الشركاء السعوديون"
+
+msgid "Consultation"
+msgstr "الاستشارات"
+
+msgid "Translation Services"
+msgstr "خدمات الترجمة"
+
+msgid "Free Zones in KSA"
+msgstr "المناطق الحرة في السعودية"
+
+msgid "Premium Residency"
+msgstr "الإقامة المميزة"
+
+msgid "Business Incubators"
+msgstr "حاضنات الأعمال"
+
+msgid "Visa Issuance"
+msgstr "إصدار التأشيرة"
+
+msgid "Virtual Address"
+msgstr "العنوان الافتراضي"
+
+msgid "ZAKAT"
+msgstr "الزكاة"
+
+msgid "Payroll Services"
+msgstr "خدمات الرواتب"
+
 msgid "Financial Reporting"
 msgstr "التقارير المالية"
 
@@ -1148,6 +1190,66 @@ msgstr "بيانات الرسم البياني غير متوفرة بعد. ست�
 msgid "View all sectors"
 msgstr "عرض جميع القطاعات"
 
+msgid "Explore sector"
+msgstr "استكشف القطاع"
+
+msgid "View all events"
+msgstr "عرض جميع الفعاليات"
+
+msgid "View details"
+msgstr "عرض التفاصيل"
+
+msgid "Today"
+msgstr "اليوم"
+
+msgid "Tourist arrivals"
+msgstr "وصول السياح"
+
+msgid "Oil rents (% GDP)"
+msgstr "إيرادات النفط (% من الناتج المحلي)"
+
+msgid "Manufacturing value added (% GDP)"
+msgstr "القيمة المضافة للتصنيع (% من الناتج المحلي)"
+
+msgid "High-tech exports (% mfg exports)"
+msgstr "صادرات التقنية العالية (% من صادرات التصنيع)"
+
+msgid "Domestic credit to private sector (% GDP)"
+msgstr "الائتمان المحلي للقطاع الخاص (% من الناتج المحلي)"
+
+msgid "Logistics performance index (LPI)"
+msgstr "مؤشر الأداء اللوجستي (LPI)"
+
+msgid "Health expenditure (% GDP)"
+msgstr "الإنفاق الصحي (% من الناتج المحلي)"
+
+msgid "Gross fixed capital formation (% GDP)"
+msgstr "تكوين رأس المال الثابت الإجمالي (% من الناتج المحلي)"
+
+msgid "Current health expenditure (% of GDP)"
+msgstr "الإنفاق الصحي الحالي (% من الناتج المحلي)"
+
+msgid "Manufacturing, value added (% of GDP)"
+msgstr "القيمة المضافة للتصنيع (% من الناتج المحلي)"
+
+msgid "High-technology exports (% of manufactured exports)"
+msgstr "صادرات التقنية العالية (% من صادرات التصنيع)"
+
+msgid "Domestic credit to private sector (% of GDP)"
+msgstr "الائتمان المحلي للقطاع الخاص (% من الناتج المحلي)"
+
+msgid "Logistics performance index (1–5)"
+msgstr "مؤشر الأداء اللوجستي (1–5)"
+
+msgid "Gross fixed capital formation (% of GDP)"
+msgstr "تكوين رأس المال الثابت الإجمالي (% من الناتج المحلي)"
+
+msgid "International tourist arrivals"
+msgstr "وصول السياح الدوليين"
+
+msgid "Oil rents (% of GDP)"
+msgstr "إيرادات النفط (% من الناتج المحلي)"
+
 # Investor journey (homepage).
 
 msgid "Platforms used in this step"
@@ -1164,3 +1266,590 @@ msgstr "باقات تأسيس موتاد"
 
 msgid "Fixed one-time packages with government and PRO services. Use the calculator above for an indicative custom range, or choose a package to get started."
 msgstr "باقات ثابتة لمرة واحدة تشمل الخدمات الحكومية وخدمات العلاقات الحكومية. استخدم الحاسبة أعلاه للحصول على نطاق مخصص استرشادي، أو اختر باقة للبدء."
+
+# Document node (full page) — UI labels and download card.
+msgid "Download guide"
+msgstr "تنزيل الدليل"
+
+msgid "Download"
+msgstr "تحميل"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "PDF Document"
+msgstr "مستند PDF"
+
+msgid "Word document"
+msgstr "مستند Word"
+
+msgid "Spreadsheet"
+msgstr "جدول بيانات"
+
+msgid "Document"
+msgstr "مستند"
+
+msgid "PDF"
+msgstr "PDF"
+
+msgid "Document file"
+msgstr "ملف المستند"
+
+msgid "File information"
+msgstr "معلومات الملف"
+
+msgid "Document details"
+msgstr "تفاصيل المستند"
+
+msgid "Publication year"
+msgstr "سنة النشر"
+
+msgid "Official source"
+msgstr "المصدر الرسمي"
+
+msgid "Sector page"
+msgstr "صفحة القطاع"
+
+msgid "Important notice"
+msgstr "إشعار مهم"
+
+msgid "This resource is for general guidance. Always confirm current requirements with the official authority."
+msgstr "هذا المصدر للإرشاد العام فقط. تحقق دائماً من المتطلبات الحالية لدى الجهة الرسمية المختصة."
+
+msgid "More resources you might find useful"
+msgstr "موارد أخرى قد تفيدك"
+
+msgid "View all resources"
+msgstr "عرض جميع الموارد"
+
+# Sector page (full) — triptych, charts, related hub.
+msgid "Key stats"
+msgstr "إحصائيات رئيسية"
+
+msgid "Key highlights"
+msgstr "أبرز النقاط"
+
+msgid "View all statistics"
+msgstr "عرض جميع الإحصائيات"
+
+msgid "Trade volume over time"
+msgstr "حجم التجارة عبر الزمن"
+
+msgid "Value (USD Billion)"
+msgstr "القيمة (مليار دولار أمريكي)"
+
+msgid "Growth (%)"
+msgstr "النمو (%)"
+
+msgid "Chart metric"
+msgstr "مؤشر الرسم البياني"
+
+msgid "Trade volume in USD billion by year"
+msgstr "حجم التجارة بالمليار دولار أمريكي حسب السنة"
+
+msgid "Year over year growth of trade volume"
+msgstr "النمو السنوي لحجم التجارة"
+
+msgid "World Bank methodology for development indicators"
+msgstr "منهجية البنك الدولي لمؤشرات التنمية"
+
+msgid "View methodology"
+msgstr "عرض المنهجية"
+
+msgid "GDP growth by economic activity (GASTAT, % year-on-year)"
+msgstr "نمو الناتج المحلي حسب النشاط الاقتصادي (الهيئة العامة للإحصاء، % سنوياً)"
+
+msgid "Source: GASTAT"
+msgstr "المصدر: الهيئة العامة للإحصاء"
+
+msgid "Year-on-year GDP growth for transport, storage and communication"
+msgstr "النمو السنوي للناتج في النقل والتخزين والاتصالات"
+
+msgid "Sector content"
+msgstr "محتوى القطاع"
+
+msgid "Upcoming events in @sector"
+msgstr "الفعاليات القادمة في @sector"
+
+msgid "Market insights"
+msgstr "رؤى السوق"
+
+msgid "View all insights"
+msgstr "عرض جميع الرؤى"
+
+msgid "Key platforms for this sector"
+msgstr "المنصات الرئيسية لهذا القطاع"
+
+msgid "View all platforms"
+msgstr "عرض جميع المنصات"
+
+msgid "Services for @sector"
+msgstr "الخدمات لقطاع @sector"
+
+msgid "View all services"
+msgstr "عرض جميع الخدمات"
+
+msgid "Documents & resources"
+msgstr "الوثائق والموارد"
+
+msgid "View all documents"
+msgstr "عرض جميع الوثائق"
+
+msgid "Latest news & updates"
+msgstr "آخر الأخبار والتحديثات"
+
+msgid "View all news"
+msgstr "عرض جميع الأخبار"
+
+msgid "Publications & Updates"
+msgstr "المنشورات والتحديثات"
+
+msgid "View all blog"
+msgstr "عرض جميع المدونة"
+
+msgid "Estimated cost range"
+msgstr "النطاق التقديري للتكلفة"
+
+msgid "Updated"
+msgstr "آخر تحديث"
+
+msgid "Focus: @text"
+msgstr "التركيز: @text"
+
+msgid "Focus: —"
+msgstr "التركيز: —"
+
+msgid "Type: @type"
+msgstr "النوع: @type"
+
+msgid "Type: —"
+msgstr "النوع: —"
+
+msgid "Other Chambers & Councils"
+msgstr "غرف ومجالس أخرى"
+
+msgid "View all chambers & councils"
+msgstr "عرض جميع الغرف والمجالس"
+
+msgid "Chamber of Commerce"
+msgstr "غرفة تجارية"
+
+msgid "Business Council"
+msgstr "مجلس أعمال"
+
+msgid "Trade Association"
+msgstr "جمعية تجارية"
+
+msgid "No insights linked yet."
+msgstr "لا توجد رؤى مرتبطة بعد."
+
+msgid "No platforms linked yet."
+msgstr "لا توجد منصات مرتبطة بعد."
+
+msgid "No services linked yet."
+msgstr "لا توجد خدمات مرتبطة بعد."
+
+msgid "No documents linked yet."
+msgstr "لا توجد وثائق مرتبطة بعد."
+
+msgid "Merchandise exports (current US$)"
+msgstr "صادرات السلع (بالدولار الأمريكي الجاري)"
+
+msgid "Merchandise imports (current US$)"
+msgstr "واردات السلع (بالدولار الأمريكي الجاري)"
+
+msgid "Trade (% of GDP)"
+msgstr "التجارة (% من الناتج المحلي)"
+
+msgid "International tourist arrivals"
+msgstr "وصول السياح الدوليين"
+
+msgid "International tourism receipts"
+msgstr "إيرادات السياحة الدولية"
+
+msgid "International tourism expenditure (current US$)"
+msgstr "إنفاق السياحة الدولية (بالدولار الأمريكي الجاري)"
+
+msgid "Oil rents (% of GDP)"
+msgstr "إيرادات النفط (% من الناتج المحلي)"
+
+msgid "Energy use (kg of oil equivalent per capita)"
+msgstr "استخدام الطاقة (كجم مكافئ نفطي للفرد)"
+
+msgid "Renewable energy consumption (% of total final energy consumption)"
+msgstr "استهلاك الطاقة المتجددة (% من إجمالي استهلاك الطاقة النهائي)"
+
+msgid "Manufacturing, value added (% of GDP)"
+msgstr "القيمة المضافة للتصنيع (% من الناتج المحلي)"
+
+msgid "Manufacturing, value added (current US$)"
+msgstr "القيمة المضافة للتصنيع (بالدولار الأمريكي الجاري)"
+
+msgid "Manufactures exports (% of merchandise exports)"
+msgstr "صادرات المصنّعات (% من صادرات السلع)"
+
+msgid "High-technology exports (% of manufactured exports)"
+msgstr "صادرات التقنية العالية (% من صادرات التصنيع)"
+
+msgid "ICT service exports (BoP, current US$)"
+msgstr "صادرات خدمات تكنولوجيا المعلومات (ميزان المدفوعات، دولار جاري)"
+
+msgid "Individuals using the Internet (% of population)"
+msgstr "الأفراد الذين يستخدمون الإنترنت (% من السكان)"
+
+msgid "Domestic credit to private sector (% of GDP)"
+msgstr "الائتمان المحلي للقطاع الخاص (% من الناتج المحلي)"
+
+msgid "Commercial bank branches (per 100,000 adults)"
+msgstr "فروع البنوك التجارية (لكل 100,000 بالغ)"
+
+msgid "Broad money (% of GDP)"
+msgstr "النقدية الواسعة (% من الناتج المحلي)"
+
+msgid "Logistics performance index (1–5)"
+msgstr "مؤشر الأداء اللوجستي (1–5)"
+
+msgid "Air transport, passengers carried"
+msgstr "النقل الجوي، الركاب المنقولون"
+
+msgid "Air freight (thousand ton-km)"
+msgstr "الشحن الجوي (ألف طن-كم)"
+
+msgid "Container port traffic (TEU)"
+msgstr "حركة الموانئ للحاويات (TEU)"
+
+msgid "Rail lines (total route-km)"
+msgstr "خطوط السكك الحديدية (إجمالي كم المسار)"
+
+msgid "Current health expenditure (% of GDP)"
+msgstr "الإنفاق الصحي الحالي (% من الناتج المحلي)"
+
+msgid "Hospital beds (per 1,000 people)"
+msgstr "أسرة المستشفيات (لكل 1,000 نسمة)"
+
+msgid "Life expectancy at birth (years)"
+msgstr "متوسط العمر المتوقع عند الولادة (سنوات)"
+
+msgid "Urban population growth (annual %)"
+msgstr "نمو السكان الحضري (سنوياً %)"
+
+msgid "GDP growth, transport storage & communication"
+msgstr "نمو الناتج، النقل والتخزين والاتصالات"
+
+msgid "GDP growth, construction"
+msgstr "نمو الناتج، الإنشاءات"
+
+msgid "GDP growth, manufacturing"
+msgstr "نمو الناتج، التصنيع"
+
+msgid "GDP growth, electricity, gas & water"
+msgstr "نمو الناتج، الكهرباء والغاز والمياه"
+
+msgid "Investment sectors in Saudi Arabia"
+msgstr "قطاعات الاستثمار في المملكة العربية السعودية"
+
+# Event detail page (node--event--full) and event field labels.
+msgid "Event"
+msgstr "فعالية"
+
+msgid "Key facts"
+msgstr "حقائق أساسية"
+
+msgid "Event facts"
+msgstr "معلومات الفعالية"
+
+msgid "Register"
+msgstr "التسجيل"
+
+msgid "Register now"
+msgstr "سجّل الآن"
+
+msgid "Add to calendar"
+msgstr "أضف إلى التقويم"
+
+msgid "Event highlights"
+msgstr "أبرز ما في الفعالية"
+
+msgid "About the event"
+msgstr "عن الفعالية"
+
+msgid "Why attend"
+msgstr "لماذا تحضر"
+
+msgid "Key highlights"
+msgstr "أبرز النقاط"
+
+msgid "Who should attend"
+msgstr "من يجب أن يحضر"
+
+msgid "Agenda overview"
+msgstr "نظرة على الأجندة"
+
+msgid "Gallery"
+msgstr "معرض الصور"
+
+msgid "Partners"
+msgstr "الشركاء"
+
+msgid "Event sidebar"
+msgstr "الشريط الجانبي للفعالية"
+
+msgid "Event details"
+msgstr "تفاصيل الفعالية"
+
+msgid "View on map"
+msgstr "عرض على الخريطة"
+
+msgid "Share event"
+msgstr "مشاركة الفعالية"
+
+msgid "Registration"
+msgstr "التسجيل"
+
+msgid "Meeting requests available"
+msgstr "طلبات الاجتماعات متاحة"
+
+msgid "Secure online registration"
+msgstr "تسجيل آمن عبر الإنترنت"
+
+msgid "Contact"
+msgstr "اتصل بنا"
+
+msgid "Questions about this event? Our team can help."
+msgstr "أسئلة حول هذه الفعالية؟ فريقنا جاهز للمساعدة."
+
+msgid "Tags"
+msgstr "وسوم"
+
+msgid "Documents"
+msgstr "الوثائق"
+
+msgid "We’ll help you register"
+msgstr "نساعدك على التسجيل"
+
+msgid "Share your details and our team will contact you with the next steps."
+msgstr "شارك بياناتك وسيتواصل فريقنا معك بخطوات التسجيل التالية."
+
+msgid "Your information is secure"
+msgstr "معلوماتك آمنة"
+
+msgid "We respect your privacy"
+msgstr "نحترم خصوصيتك"
+
+msgid "Your details will only be used for registration purposes."
+msgstr "تُستخدم بياناتك لأغراض التسجيل فقط."
+
+msgid "Registration help info"
+msgstr "معلومات مساعدة التسجيل"
+
+msgid "What to expect"
+msgstr "ماذا تتوقع"
+
+msgid "Personal assistance"
+msgstr "مساعدة شخصية"
+
+msgid "Our team will contact you to guide you through the registration process."
+msgstr "سيتواصل فريقنا معك لإرشادك خلال عملية التسجيل."
+
+msgid "Timely updates"
+msgstr "تحديثات في الوقت المناسب"
+
+msgid "Receive important event information and next steps."
+msgstr "تلقَّ معلومات الفعالية المهمة والخطوات التالية."
+
+msgid "Smooth experience"
+msgstr "تجربة سلسة"
+
+msgid "We’ll help ensure your participation is confirmed."
+msgstr "نساعدك على تأكيد مشاركتك."
+
+msgid "Need immediate help?"
+msgstr "تحتاج مساعدة فورية؟"
+
+msgid "If you have any questions, our team is here to assist you."
+msgstr "إذا كان لديك أي سؤال، فريقنا هنا لمساعدتك."
+
+msgid "Connected to this event"
+msgstr "مرتبط بهذه الفعالية"
+
+msgid "Related events"
+msgstr "فعاليات ذات صلة"
+
+msgid "View all events"
+msgstr "عرض جميع الفعاليات"
+
+msgid "View event"
+msgstr "عرض الفعالية"
+
+msgid "Relevant sectors"
+msgstr "قطاعات ذات صلة"
+
+msgid "View all sectors"
+msgstr "عرض جميع القطاعات"
+
+msgid "Insights"
+msgstr "رؤى"
+
+msgid "View all insights"
+msgstr "عرض جميع الرؤى"
+
+msgid "Read insight"
+msgstr "اقرأ الرؤية"
+
+msgid "Market context"
+msgstr "سياق السوق"
+
+msgid "Explore related events, key sectors, and curated insights to stay informed and make the most of your participation."
+msgstr "استكشف الفعاليات ذات الصلة والقطاعات الرئيسية والرؤى المختارة للبقاء على اطلاع والاستفادة القصوى من مشاركتك."
+
+msgid "City"
+msgstr "المدينة"
+
+msgid "Country"
+msgstr "الدولة"
+
+msgid "Sector"
+msgstr "القطاع"
+
+msgid "Event format"
+msgstr "نوع الفعالية"
+
+msgid "Price range"
+msgstr "نطاق السعر"
+
+msgid "Attendance type"
+msgstr "نوع الحضور"
+
+msgid "Event status"
+msgstr "حالة الفعالية"
+
+msgid "Official website"
+msgstr "الموقع الرسمي"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Format"
+msgstr "النوع"
+
+msgid "Price"
+msgstr "السعر"
+
+msgid "Attendance"
+msgstr "الحضور"
+
+msgid "Website"
+msgstr "الموقع"
+
+msgid "In-person"
+msgstr "حضوري"
+
+msgid "Online"
+msgstr "عبر الإنترنت"
+
+msgid "Hybrid"
+msgstr "مختلط"
+
+msgid "Free"
+msgstr "مجاني"
+
+msgid "Paid"
+msgstr "مدفوع"
+
+msgid "Invite only"
+msgstr "بدعوة فقط"
+
+msgid "Invite-only"
+msgstr "بدعوة فقط"
+
+msgid "Public"
+msgstr "عام"
+
+msgid "Private"
+msgstr "خاص"
+
+msgid "Upcoming"
+msgstr "قادمة"
+
+msgid "Ongoing"
+msgstr "جارية"
+
+msgid "Past"
+msgstr "منتهية"
+
+# Homepage blocks — library, services, events (paragraph + views).
+msgid "Knowledge. Documents. Resources."
+msgstr "المعرفة. الوثائق. الموارد."
+
+msgid "Access official templates, forms, guides, and regulations to help your business operate in Saudi Arabia with confidence."
+msgstr "اطلع على القوالب والنماذج والأدلة واللوائح الرسمية لمساعدة أعمالك على العمل في السعودية بثقة."
+
+msgid "Our library is continuously updated to ensure you have the latest documents and references from official sources."
+msgstr "نُحدّث مكتبتنا باستمرار لضمان حصولك على أحدث الوثائق والمراجع من المصادر الرسمية."
+
+msgid "About this library"
+msgstr "عن هذه المكتبة"
+
+msgid "Our multidisciplinary team combines regulatory insight with hands-on business experience to guide your journey in Saudi Arabia."
+msgstr "يجمع فريقنا متعدد التخصصات بين البصيرة التنظيمية والخبرة العملية في الأعمال ليرشد رحلتك في السعودية."
+
+msgid "About our team"
+msgstr "عن فريقنا"
+
+msgid "What we offer"
+msgstr "ما نقدمه"
+
+msgid "No services found for this category yet."
+msgstr "لا توجد خدمات في هذه الفئة بعد."
+
+msgid "View all services in this category"
+msgstr "عرض جميع الخدمات في هذه الفئة"
+
+msgid "Service categories"
+msgstr "فئات الخدمات"
+
+msgid "Business events"
+msgstr "فعاليات الأعمال"
+
+msgid "Key Business Events in Saudi Arabia"
+msgstr "أهم فعاليات الأعمال في السعودية"
+
+msgid "Stay informed about major forums, investment events, and industry gatherings shaping the Saudi market."
+msgstr "ابقَ على اطلاع بالمنتديات الكبرى وفعاليات الاستثمار واللقاءات القطاعية التي تشكّل السوق السعودي."
+
+# Insights directory (/insights, /ar/insights).
+msgid "Data, analysis, and sector briefings to help you understand opportunities in Saudi Arabia and the region."
+msgstr "بيانات وتحليلات وموجزات قطاعية لفهم الفرص في السعودية والمنطقة."
+
+msgid "Featured insights"
+msgstr "رؤى مميزة"
+
+msgid "Latest insights"
+msgstr "أحدث الرؤى"
+
+msgid "Browse the full library — filter by category, sector, or region."
+msgstr "تصفّح المكتبة الكاملة — رشّح حسب الفئة أو القطاع أو المنطقة."
+
+msgid "Stay updated"
+msgstr "ابقَ على اطلاع"
+
+msgid "Get event and market updates — we only send what is relevant to you."
+msgstr "احصل على تحديثات الفعاليات والسوق — نرسل فقط ما يهمك."
+
+msgid "Insights signup"
+msgstr "الاشتراك في الرؤى"
+
+msgid "Search insights, topics, or keywords…"
+msgstr "ابحث في الرؤى أو المواضيع أو الكلمات المفتاحية…"
+
+msgid "Choose filters and apply to see matching insights."
+msgstr "اختر المرشحات ثم انقر «تطبيق» لعرض الرؤى المطابقة."
+
+msgid "No insights match these filters. Try resetting or choose different options."
+msgstr "لا توجد رؤى مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى."
+
+msgid "I agree to receive event updates from Motaded."
+msgstr "أوافق على تلقي تحديثات الفعاليات ورؤى السوق من معتد."
+
+msgid "Thanks — we’ll be in touch with relevant updates."
+msgstr "شكراً — سنتواصل معك بالتحديثات ذات الصلة."

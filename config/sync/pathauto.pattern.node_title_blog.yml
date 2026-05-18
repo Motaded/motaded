@@ -2,6 +2,8 @@ uuid: ce569a22-d258-4faa-ade8-7d6f4593de8b
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.article
   module:
     - language
     - node
@@ -13,7 +15,6 @@ selection_criteria:
   b7fd5ee7-9cf0-4361-88b1-80e90aef2cc5:
     id: 'entity_bundle:node'
     negate: false
-    uuid: b7fd5ee7-9cf0-4361-88b1-80e90aef2cc5
     context_mapping:
       node: node
     bundles:
@@ -21,7 +22,6 @@ selection_criteria:
   effa6868-23aa-4777-80f8-d5c74cff3603:
     id: language
     negate: false
-    uuid: effa6868-23aa-4777-80f8-d5c74cff3603
     context_mapping:
       language: 'node:langcode:language'
     langcodes:
