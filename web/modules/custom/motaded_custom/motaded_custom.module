@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeInterface;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\webform\Entity\WebformOptions;
 
 /**
@@ -1189,6 +1190,17 @@ function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \D
 
   if ($view_id === 'events') {
     $display_id = $view->current_display ?? '';
+    if (in_array($display_id, ['block_calendar', 'attachment_home_list'], TRUE)) {
+      if ($query instanceof \Drupal\views\Plugin\views\query\Sql) {
+        $langcode = \Drupal::languageManager()
+          ->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)
+          ->getId();
+        if ($langcode !== '') {
+          $table = $query->ensureTable('node_field_data');
+          $query->addWhere(0, $table . '.langcode', $langcode, '=');
+        }
+      }
+    }
     if (!in_array($display_id, ['page_1', 'attachment_page_calendar'], TRUE)) {
       return;
     }
@@ -1567,6 +1579,9 @@ function motaded_custom_sector_wb_overlay_for_node(NodeInterface $node): ?array 
   if ($kpi_card === '') {
     $kpi_card = trim((string) ($def['kpi_label'] ?? ''));
   }
+  if ($kpi_card !== '') {
+    $kpi_card = (string) t($kpi_card);
+  }
   return [
     'sector_key' => $sector_key,
     'value_display' => $value_display,
@@ -1598,6 +1613,9 @@ function motaded_custom_preprocess_node(array &$variables): void {
   if (!in_array($sector_key, $allowed, TRUE)) {
     return;
   }
+  $langcode = $node->language()->getId();
+  $variables['#cache']['contexts'][] = 'languages:language_content';
+  $variables['#cache']['contexts'][] = 'languages:language_interface';
   $variables['#cache']['tags'][] = 'node:' . $node->id();
   $api_max_age = 43200;
   $has_api_layer = FALSE;
@@ -1605,7 +1623,7 @@ function motaded_custom_preprocess_node(array &$variables): void {
   if (\Drupal::hasService('motaded_custom.sector_page_key_stats_builder')) {
     /** @var \Drupal\motaded_custom\SectorKeyStats\SectorPageKeyStatsBuilder $builder */
     $builder = \Drupal::service('motaded_custom.sector_page_key_stats_builder');
-    $rows = $builder->build($sector_key);
+    $rows = $builder->build($sector_key, $langcode);
     if ($rows !== []) {
       $years = array_filter(array_map(
         static fn(array $r): int => (int) ($r['year'] ?? 0),
@@ -1654,4 +1672,139 @@ function motaded_custom_preprocess_node(array &$variables): void {
       $variables['#cache']['max-age'] = min((int) $prev_max, $api_max_age);
     }
   }
+}
+
+/**
+ * Reuse the English document path alias for the Arabic translation.
+ *
+ * Pathauto transliteration strips Arabic titles to empty slugs, which leaves
+ * /node/{nid} for ar. Language negotiation adds the /ar URL prefix; the stored
+ * alias should match EN (e.g. /documents/investment-law), not /ar/documents/….
+ */
+function motaded_custom_node_ar_sync_path_alias(NodeInterface $node, array $bundles = ['document', 'sector_page']): bool {
+  if (!in_array($node->bundle(), $bundles, TRUE) || !$node->hasTranslation('en') || !$node->hasTranslation('ar')) {
+    return FALSE;
+  }
+
+  $nid = (int) $node->id();
+  $system_path = '/node/' . $nid;
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $en_alias = $alias_manager->getAliasByPath($system_path, 'en');
+
+  if ($en_alias === $system_path && \Drupal::moduleHandler()->moduleExists('pathauto')) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($node->getTranslation('en'), 'update');
+    $en_alias = $alias_manager->getAliasByPath($system_path, 'en');
+  }
+
+  if ($en_alias === $system_path) {
+    return FALSE;
+  }
+
+  $alias = $en_alias;
+  if (strncmp($alias, '/ar/', 4) === 0) {
+    $alias = substr($alias, 3) ?: $alias;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  foreach ($storage->loadByProperties(['path' => $system_path, 'langcode' => 'ar']) as $entity) {
+    $entity->delete();
+  }
+
+  PathAlias::create([
+    'path' => $system_path,
+    'alias' => $alias,
+    'langcode' => 'ar',
+  ])->save();
+
+  return TRUE;
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (document nodes).
+ */
+function motaded_custom_document_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['document']);
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (sector_page nodes).
+ */
+function motaded_custom_sector_page_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['sector_page']);
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (event nodes).
+ */
+function motaded_custom_event_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['event']);
+}
+
+/**
+ * Applies meta_title, meta_description, meta_keywords to a node metatag field.
+ *
+ * @param array<string, mixed> $row
+ *   Catalog row with optional meta_title, meta_description, meta_keywords.
+ * @param string $field_name
+ *   field_meta_tags (most bundles) or field_meta (event).
+ */
+function motaded_custom_apply_node_metatags(NodeInterface $node, array $row, string $field_name = 'field_meta_tags'): void {
+  if (!$node->hasField($field_name)) {
+    return;
+  }
+  $meta = array_filter([
+    'title' => trim((string) ($row['meta_title'] ?? '')),
+    'description' => trim((string) ($row['meta_description'] ?? '')),
+    'keywords' => trim((string) ($row['meta_keywords'] ?? '')),
+  ], static fn (string $v): bool => $v !== '');
+  if ($meta === []) {
+    return;
+  }
+  $encoded = json_encode($meta, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  if ($encoded === FALSE) {
+    return;
+  }
+  $node->set($field_name, [['value' => $encoded]]);
+}
+
+/**
+ * Copies field values from the English translation onto Arabic (shared refs/scalars).
+ *
+ * Use for media, taxonomy, flags, and other values that stay the same across languages.
+ *
+ * @param string[] $field_names
+ *   Field machine names on the node bundle.
+ */
+function motaded_custom_node_ar_copy_shared_field_values(NodeInterface $ar, NodeInterface $en, array $field_names): void {
+  foreach ($field_names as $field_name) {
+    if (!$ar->hasField($field_name) || !$en->hasField($field_name)) {
+      continue;
+    }
+    $ar->set($field_name, $en->get($field_name)->getValue());
+  }
+}
+
+/**
+ * Market insight fields copied from EN when creating/updating the AR translation.
+ *
+ * @return string[]
+ */
+function motaded_custom_market_insight_ar_shared_field_names(): array {
+  return [
+    'field_media',
+    'field_insight_thumbnail',
+    'field_category',
+    'field_sector',
+    'field_region',
+    'field_year',
+    'field_featured',
+    'field_order',
+  ];
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (market_insight nodes).
+ */
+function motaded_custom_market_insight_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['market_insight']);
 }

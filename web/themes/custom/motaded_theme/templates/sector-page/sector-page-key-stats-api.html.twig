@@ -4,6 +4,7 @@
  * API-driven Key stats (Logistics): World Bank + GASTAT.
  */
 #}
+{% set sector_t = {'langcode': sector_langcode|default('en')} %}
 <div class="sector-page__api-stats">
   <ul class="sector-page__api-stats-list" role="list">
     {% for row in sector_api_key_stats %}
@@ -16,7 +17,7 @@
   {% if sector_api_key_stats_more_url %}
     <p class="sector-page__api-stats-foot">
       <a href="{{ sector_api_key_stats_more_url }}" class="sector-page__api-stats-more" rel="noopener noreferrer" target="_blank">
-        {{ 'View all statistics'|t }}<span class="sector-page__api-stats-more-arrow" aria-hidden="true">→</span>
+        {{ 'View all statistics'|t({}, sector_t) }}<span class="sector-page__api-stats-more-arrow" aria-hidden="true">→</span>
       </a>
     </p>
   {% endif %}

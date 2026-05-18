@@ -87,6 +87,24 @@
           return;
         }
         cal._motadedEventHtmlPatched = true;
+        const isArabic =
+          (document.documentElement.lang || '').toLowerCase().indexOf('ar') === 0 ||
+          document.documentElement.getAttribute('dir') === 'rtl';
+        if (isArabic) {
+          try {
+            cal.setOption('locale', 'ar');
+            cal.setOption('direction', 'rtl');
+            cal.setOption('buttonText', {
+              today: 'اليوم',
+              month: 'شهر',
+              week: 'أسبوع',
+              day: 'يوم',
+              list: 'قائمة',
+            });
+          } catch (e) {
+            // FullCalendar locale bundle may be unavailable.
+          }
+        }
         try {
           cal.setOption('eventContent', function (arg) {
             const raw = arg.event.title;

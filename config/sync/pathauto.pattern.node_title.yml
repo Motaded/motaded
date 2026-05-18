@@ -2,6 +2,11 @@ uuid: af1ac722-37f4-40c1-9731-5b4838bb1472
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.entities
+    - node.type.landing_page
+    - node.type.partner
+    - node.type.pricing
   module:
     - language
     - node
@@ -13,7 +18,6 @@ selection_criteria:
   6c2feb64-d623-4a0e-9236-0eceaed94b2c:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 6c2feb64-d623-4a0e-9236-0eceaed94b2c
     context_mapping:
       node: node
     bundles:
@@ -24,7 +28,6 @@ selection_criteria:
   661950e5-98a1-44a8-afbc-4860df605626:
     id: language
     negate: false
-    uuid: 661950e5-98a1-44a8-afbc-4860df605626
     context_mapping:
       language: 'node:langcode:language'
     langcodes:

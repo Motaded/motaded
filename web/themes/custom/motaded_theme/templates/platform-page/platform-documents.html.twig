@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Platform full page — related documents (3 cards + see more).
+ *
+ * @see motaded_theme_platform_documents_build()
+ */
+#}
+<section class="pf2-section pf2-section--documents" id="pf2-documents" aria-labelledby="pf2-documents-title">
+  <div class="pf2-docs">
+    <header class="pf2-docs__head">
+      <h2 id="pf2-documents-title" class="pf2-section__title pf2-docs__title">{{ 'Documents for this platform'|t }}</h2>
+    </header>
+    <ul class="pf2-docs__grid" role="list">
+      {% for doc in platform_documents %}
+        <li class="pf2-docs__item">
+          <a class="pf2-docs__card" href="{{ doc.url }}">
+            <span class="pf2-docs__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            </span>
+            <span class="pf2-docs__body">
+              <span class="pf2-docs__card-head">
+                <span class="pf2-docs__card-title">{{ doc.title }}</span>
+                {% if doc.badge %}
+                  <span class="pf2-docs__badge">{{ doc.badge }}</span>
+                {% endif %}
+              </span>
+              {% if doc.excerpt %}
+                <span class="pf2-docs__excerpt">{{ doc.excerpt }}</span>
+              {% endif %}
+              {% if doc.meta %}
+                <span class="pf2-docs__meta">{{ doc.meta }}</span>
+              {% endif %}
+            </span>
+            <span class="pf2-docs__chev" aria-hidden="true">→</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% if platform_documents_more_url %}
+      <div class="pf2-docs__footer">
+        <a class="pf2-docs__more" href="{{ platform_documents_more_url }}">
+          {{ platform_documents_more_label|default('See more'|t) }}
+          <span aria-hidden="true"> →</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>

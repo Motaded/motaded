@@ -93,7 +93,7 @@ content:
   field_category:
     type: entity_reference_autocomplete
     weight: 32
-    region: content
+    region: hidden
     settings:
       match_operator: CONTAINS
       match_limit: 10

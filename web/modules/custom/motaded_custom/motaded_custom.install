@@ -733,3 +733,202 @@ function motaded_custom_update_10022(): void {
   _motaded_custom_import_ar_locale_po();
 }
 
+/**
+ * Homepage AR: sector/event content translations + UI strings for cards/calendar.
+ */
+function motaded_custom_update_10023(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_homepage_sectors_events_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Applies Arabic translations for all taxonomy terms (full site vocabulary map).
+ */
+function motaded_custom_update_10024(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_taxonomy_terms_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Enable document content translation and apply Arabic node translations.
+ */
+function motaded_custom_update_10025(): void {
+  $config_factory = \Drupal::configFactory();
+  $settings = $config_factory->getEditable('language.content_settings.node.document');
+  if ($settings->isNew()) {
+    $settings->set('id', 'node.document');
+    $settings->set('target_entity_type_id', 'node');
+    $settings->set('target_bundle', 'document');
+    $settings->set('default_langcode', 'site_default');
+    $settings->set('language_alterable', TRUE);
+  }
+  $settings->set('third_party_settings', [
+    'content_translation' => [
+      'enabled' => TRUE,
+      'bundle_settings' => [
+        'untranslatable_fields_hide' => '0',
+      ],
+    ],
+  ]);
+  $settings->save(TRUE);
+
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_documents_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Re-imports Arabic UI strings for document full page labels and buttons.
+ */
+function motaded_custom_update_10026(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Applies Arabic translations for menu_link_content (header, footer, quick links).
+ */
+function motaded_custom_update_10027(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_menu_links_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Applies Arabic translations for sector taxonomy and sector_page nodes.
+ */
+function motaded_custom_update_10028(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_sectors_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Re-imports Arabic UI strings for sector page labels, KPIs, and charts.
+ */
+function motaded_custom_update_10029(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Imports event registration help webform + Arabic translation.
+ */
+function motaded_custom_update_10031(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'webform.webform.event_registration_help';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+  $lang_sync_dir = $sync_dir . '/language/ar';
+  if (is_dir($lang_sync_dir)) {
+    $lang_sync = new \Drupal\Core\Config\FileStorage($lang_sync_dir);
+    $lang_data = $lang_sync->read($name);
+    if (is_array($lang_data)) {
+      \Drupal::languageManager()->getLanguageConfigOverrideStorage('ar')->write($name, $lang_data);
+    }
+  }
+}
+
+/**
+ * Arabic sector_page metatag defaults + AR field_meta_tags on sector nodes.
+ */
+function motaded_custom_update_10032(): void {
+  $lang_sync_dir = dirname(\Drupal::root()) . '/config/sync/language/ar';
+  if (is_dir($lang_sync_dir)) {
+    $lang_sync = new \Drupal\Core\Config\FileStorage($lang_sync_dir);
+    $name = 'metatag.metatag_defaults.node__sector_page';
+    $lang_data = $lang_sync->read($name);
+    if (is_array($lang_data)) {
+      \Drupal::languageManager()->getLanguageConfigOverrideStorage('ar')->write($name, $lang_data);
+    }
+  }
+  _motaded_custom_import_ar_locale_po();
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_sectors_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Imports events view: language filter on homepage calendar block.
+ */
+function motaded_custom_update_10033(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.events';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Homepage AR UI strings + library view rendering language for current interface.
+ */
+function motaded_custom_update_10034(): void {
+  _motaded_custom_import_ar_locale_po();
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.library';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Apply SEO meta keywords to events, documents, and sector_page nodes (EN + AR).
+ */
+function motaded_custom_update_10035(): void {
+  $scripts = [
+    'apply_sector_page_seo.php',
+    'translate_events_official_ar.php',
+    'translate_documents_ar.php',
+    'translate_sectors_ar.php',
+  ];
+  $root = \Drupal::root() . '/modules/custom/motaded_custom/scripts';
+  foreach ($scripts as $script) {
+    $path = $root . '/' . $script;
+    if (is_readable($path)) {
+      require $path;
+    }
+  }
+}
+
+/**
+ * Canonical Service types, document remap, event field_category cleanup, Events view.
+ */
+function motaded_custom_update_10036(): void {
+  require_once __DIR__ . '/includes/motaded_custom.service_type.inc';
+  motaded_custom_ensure_service_type_terms();
+  motaded_custom_remap_document_service_types();
+  motaded_custom_clear_event_field_category();
+  motaded_custom_patch_events_view_sector_filter();
+}
+
+/**
+ * Re-clear event field_category (10036 used wrong translation set).
+ */
+function motaded_custom_update_10037(): void {
+  require_once __DIR__ . '/includes/motaded_custom.service_type.inc';
+  motaded_custom_clear_event_field_category();
+}
+

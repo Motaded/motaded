@@ -232,13 +232,14 @@ sector_logistics_gdp_chart:
     - core/once
 
 document_page:
-  version: 20260514docmainv2
+  version: 20260518docpagev9
   css:
     component:
       css/components/document-page.css: {}
   dependencies:
     - motaded_theme/base
     - motaded_theme/node
+    - motaded_theme/hero_split_banner
 
 sector_card:
   version: VERSION
@@ -515,7 +516,7 @@ events_directory:
     - views/views.ajax
 
 insights_directory:
-  version: 20260506ab
+  version: 20260518newsletter2
   css:
     component:
       css/components/insights-directory.css:
@@ -525,7 +526,7 @@ insights_directory:
     - views/views.ajax
 
 library_directory:
-  version: 20260515libtabstack
+  version: 20260518librowhit
   css:
     component:
       css/components/library-directory.css:
@@ -551,7 +552,7 @@ homepage_ui_system:
     - motaded_theme/base
 
 library_home_block:
-  version: 20260515libhometabstack
+  version: 20260518librowhit
   css:
     component:
       css/components/library-home-block.css:

@@ -90,7 +90,7 @@
             </div>
             {% if content.field_link.0 is not empty %}
               <div class="library-home-hero__link-row">
-                <a href="{{ content.field_link.0['#url'] }}" class="library-home-hero__view-all">{{ content.field_link.0['#title'] }}</a>
+                <a href="{{ content.field_link.0['#url'] }}" class="library-home-hero__view-all">{{ 'View all documents'|t }}</a>
               </div>
             {% endif %}
           </header>
@@ -119,7 +119,7 @@
           {% if content.field_link.0 is not empty %}
             <div class="services-home-header-actions flex justify-end mb-6 lg:mb-8">
               <a href="{{ content.field_link.0['#url'] }}" class="services-home-view-all">
-                {{ content.field_link.0['#title'] }}
+                {{ 'View all services'|t }}
               </a>
             </div>
           {% endif %}

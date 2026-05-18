@@ -30,7 +30,7 @@ display:
         field_event_type_target_id:
           expose:
             label: 'نوع الفعالية'
-        field_category_target_id:
+        field_sector_pages_target_id:
           expose:
             label: القطاع
         field_region_target_id:

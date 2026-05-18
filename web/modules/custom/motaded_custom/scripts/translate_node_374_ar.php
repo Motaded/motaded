@@ -67,8 +67,9 @@ function motaded374_apply_paragraph_map(ParagraphInterface $p, array $map): void
     }
     elseif ($type === 'text_long' || $type === 'text_with_summary') {
       $src = $en->get($fieldName)->isEmpty() ? [] : $en->get($fieldName)->getValue();
-      $row = $src[0] ?? ['format' => 'basic_html'];
-      $row['value'] = (string) $newValue;
+    $row = $src[0] ?? ['format' => 'basic_html'];
+    $row['value'] = (string) $newValue;
+    $row['format'] = preg_match('/<\s*\w+/u', $row['value']) ? 'basic_html' : ($row['format'] ?? 'basic_html');
       $ar->set($fieldName, [$row]);
     }
     elseif ($type === 'link' && is_array($newValue)) {

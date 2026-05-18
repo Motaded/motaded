@@ -1,4 +1,4 @@
-title: 'تحديثات الفعاليات'
+title: 'تحديثات الفعاليات والسوق'
 elements: |-
   email:
     '#type': email
@@ -7,9 +7,11 @@ elements: |-
     '#required': true
   consent:
     '#type': checkbox
-    '#title': 'أوافق على تلقي تحديثات الفعاليات من معتد.'
+    '#title': 'أوافق على تلقي تحديثات الفعاليات ورؤى السوق من معتد.'
     '#required': true
   actions:
     '#type': webform_actions
     '#title': 'زر/أزرار الإرسال'
     '#submit__label': 'اشترك'
+settings:
+  form_submitted_message: 'شكراً — سنتواصل معك بالتحديثات ذات الصلة.'

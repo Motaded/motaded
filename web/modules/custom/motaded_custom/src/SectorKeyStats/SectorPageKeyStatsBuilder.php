@@ -32,7 +32,10 @@ final class SectorPageKeyStatsBuilder {
   /**
    * @return list<StatRow>
    */
-  public function build(string $sectorKey): array {
+  public function build(string $sectorKey, ?string $langcode = NULL): array {
+    if ($langcode === NULL || $langcode === '') {
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    }
     $rows = [];
     foreach (SectorIndicatorDefinitions::economyWideRows() as $def) {
       $this->appendOneWorldBankStat(
@@ -42,6 +45,7 @@ final class SectorPageKeyStatsBuilder {
         (string) $def['wb_code'],
         (string) $def['format'],
         (string) $def['kpi_label'],
+        $langcode,
       );
     }
     foreach (SectorIndicatorDefinitions::worldBankRowsForSectorPage($sectorKey) as $def) {
@@ -52,9 +56,10 @@ final class SectorPageKeyStatsBuilder {
         (string) $def['wb_code'],
         (string) $def['format'],
         (string) $def['kpi_label'],
+        $langcode,
       );
     }
-    $this->appendGastatFromDb($rows, $sectorKey);
+    $this->appendGastatFromDb($rows, $sectorKey, $langcode);
     return $rows;
   }
 
@@ -68,6 +73,7 @@ final class SectorPageKeyStatsBuilder {
     string $wbCode,
     string $format,
     string $labelEnglish,
+    string $langcode,
   ): void {
     $db = $this->sectorIndicatorRepository->loadLatest($storageSectorKey, $indicatorKey);
     $rawStr = $db['value_raw'] ?? NULL;
@@ -75,7 +81,7 @@ final class SectorPageKeyStatsBuilder {
       $raw = (float) $rawStr;
       $year = (int) ($db['year'] ?? 0);
       $rows[] = [
-        'label' => (string) $this->t($labelEnglish),
+        'label' => (string) $this->t($labelEnglish, [], ['langcode' => $langcode]),
         'value' => $this->formatFromRaw($raw, $format),
         'year' => $year,
       ];
@@ -89,7 +95,7 @@ final class SectorPageKeyStatsBuilder {
     $value = (float) $latest['value'];
     $year = (int) $latest['year'];
     $rows[] = [
-      'label' => (string) $this->t($labelEnglish),
+      'label' => (string) $this->t($labelEnglish, [], ['langcode' => $langcode]),
       'value' => $this->formatFromRaw($value, $format),
       'year' => $year,
     ];
@@ -112,7 +118,7 @@ final class SectorPageKeyStatsBuilder {
   /**
    * @param list<StatRow> $rows
    */
-  private function appendGastatFromDb(array &$rows, string $sectorKey): void {
+  private function appendGastatFromDb(array &$rows, string $sectorKey, string $langcode): void {
     foreach (SectorIndicatorDefinitions::GASTAT_IMPORT_ROWS as $def) {
       if (($def['sector_key'] ?? '') !== $sectorKey) {
         continue;
@@ -133,7 +139,7 @@ final class SectorPageKeyStatsBuilder {
         $display = $this->normalizer->formatPercentPlain($raw);
       }
       $rows[] = [
-        'label' => (string) $this->t((string) ($def['kpi_label'] ?? 'GDP growth')),
+        'label' => (string) $this->t((string) ($def['kpi_label'] ?? 'GDP growth'), [], ['langcode' => $langcode]),
         'value' => $display,
         'year' => $year,
       ];

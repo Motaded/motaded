@@ -2,6 +2,8 @@ uuid: 8f79084a-e019-418e-8ad1-2aff4e82f01c
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.chamber
   module:
     - node
 id: chamber
@@ -12,7 +14,6 @@ selection_criteria:
   52eb15ee-9f89-4d35-8766-fd94bb2d0c1f:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 52eb15ee-9f89-4d35-8766-fd94bb2d0c1f
     context_mapping:
       node: node
     bundles:

@@ -33,11 +33,11 @@
               {{ content.field_glance_eyebrow }}
             </div>
           {% endif %}
-          {% if paragraph.field_title is not empty %}
-            <h2 id="{{ bce_heading_id }}" class="bce__title">{{ paragraph.field_title.value }}</h2>
+          {% if bce_title is not empty %}
+            <h2 id="{{ bce_heading_id }}" class="bce__title">{{ bce_title }}</h2>
           {% endif %}
-          {% if content.field_body %}
-            <div class="bce__lead mot-lead">{{ content.field_body }}</div>
+          {% if bce_lead is not empty %}
+            <div class="bce__lead mot-lead">{{ bce_lead }}</div>
           {% endif %}
           {% if bce_cta is not empty %}
             <a href="{{ bce_cta.url }}" class="bce__cta">{{ bce_cta.title }}<span class="bce__cta-arrow" aria-hidden="true">→</span></a>

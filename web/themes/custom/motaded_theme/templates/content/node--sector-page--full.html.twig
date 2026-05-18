@@ -4,6 +4,7 @@
  * Sector page — Invest Saudi style hub (hero, triptych, list rows).
  */
 #}
+{% set sector_t = {'langcode': sector_langcode|default('en')} %}
 {%
   set classes = [
     'node',
@@ -26,11 +27,11 @@
     <div class="sector-page__hero-row{% if sector_hero_bg_url %} sector-page__hero-row--has-media{% endif %}">
       <div class="sector-page__hero-copy-col">
         <div class="sector-page__hero-copy">
-          <nav class="sector-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+          <nav class="sector-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t({}, sector_t) }}">
             <ol>
-              <li><a href="{{ path('<front>') }}">{{ 'Home'|t }}</a></li>
+              <li><a href="{{ path('<front>') }}">{{ 'Home'|t({}, sector_t) }}</a></li>
               <li aria-hidden="true">/</li>
-              <li><a href="{{ sector_listing_url|default('/sectors') }}">{{ 'Sectors'|t }}</a></li>
+              <li><a href="{{ sector_listing_url|default('/sectors') }}">{{ 'Sectors'|t({}, sector_t) }}</a></li>
               <li aria-hidden="true">/</li>
               <li aria-current="page">{{ node.label() }}</li>
             </ol>
@@ -99,14 +100,14 @@
       <div class="sector-page__triptych">
         {% if has_overview %}
           <section class="sector-page__triptych-cell sector-page__overview prose prose-neutral max-w-none" aria-labelledby="sector-overview-heading">
-            <h2 id="sector-overview-heading">{{ 'Overview'|t }}</h2>
+            <h2 id="sector-overview-heading">{{ 'Overview'|t({}, sector_t) }}</h2>
             {{ content.body }}
           </section>
         {% endif %}
 
         {% if has_highlights %}
           <section class="sector-page__triptych-cell sector-page__panel sector-page__panel--highlights" aria-labelledby="sector-highlights-heading">
-            <h2 id="sector-highlights-heading">{{ 'Key highlights'|t }}</h2>
+            <h2 id="sector-highlights-heading">{{ 'Key highlights'|t({}, sector_t) }}</h2>
             {{ content.field_sector_highlights }}
           </section>
         {% endif %}
@@ -115,9 +116,9 @@
           <section class="sector-page__triptych-cell sector-page__panel sector-page__panel--stats" aria-labelledby="sector-stats-heading">
             <h2 id="sector-stats-heading">
               {% if sector_api_key_stats is defined and sector_api_key_stats is not empty and sector_api_key_stats_year is defined %}
-                {{ 'Key stats'|t }} ({{ sector_api_key_stats_year }})
+                {{ 'Key stats'|t({}, sector_t) }} ({{ sector_api_key_stats_year }})
               {% else %}
-                {{ 'Key stats'|t }}
+                {{ 'Key stats'|t({}, sector_t) }}
               {% endif %}
             </h2>
             {% if sector_api_key_stats is defined and sector_api_key_stats is not empty %}
@@ -144,7 +145,7 @@
   {% endif %}
 
   {% if sector_related_sections is not empty %}
-    <div class="sector-page__hub" role="region" aria-label="{{ 'Sector content'|t }}">
+    <div class="sector-page__hub" role="region" aria-label="{{ 'Sector content'|t({}, sector_t) }}">
       {% for section in sector_related_sections %}
         {% if section.layout == 'split' %}
           <section class="sector-page__hub-band sector-page__hub-band--split"{% if section.id %} id="{{ section.id }}"{% endif %}>

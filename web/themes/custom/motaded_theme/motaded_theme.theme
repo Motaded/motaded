@@ -1,7 +1,10 @@
 <?php
 
 require_once __DIR__ . '/includes/motaded_theme.image.inc';
+require_once __DIR__ . '/includes/motaded_theme.text.inc';
+require_once __DIR__ . '/includes/motaded_theme.menu.inc';
 require_once __DIR__ . '/includes/motaded_theme.sector_related.inc';
+require_once __DIR__ . '/includes/motaded_theme.platform_related.inc';
 
 use Drupal\block\BlockInterface;
 use Drupal\block\Entity\Block;
@@ -35,6 +38,41 @@ function motaded_theme_paragraph_from_context(?ParagraphInterface $paragraph): ?
   }
   $translated = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph);
   return $translated instanceof ParagraphInterface ? $translated : $paragraph;
+}
+
+/**
+ * Active UI language code (path prefix / interface).
+ */
+function motaded_theme_interface_langcode(): string {
+  return \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+}
+
+/**
+ * Entity label in a specific language (no fallback to default).
+ */
+function motaded_theme_entity_label_in_language(object $entity, ?string $langcode = NULL): string {
+  if (!method_exists($entity, 'label')) {
+    return '';
+  }
+  $langcode ??= motaded_theme_interface_langcode();
+  if (method_exists($entity, 'hasTranslation') && $entity->hasTranslation($langcode)) {
+    return (string) $entity->getTranslation($langcode)->label();
+  }
+  return (string) $entity->label();
+}
+
+/**
+ * Replaces Views area/footer plugin markup when present.
+ */
+function motaded_theme_views_replace_area_markup(array &$variables, string $area_key, string $markup): void {
+  if (empty($variables[$area_key]) || !is_array($variables[$area_key])) {
+    return;
+  }
+  foreach ($variables[$area_key] as $key => $item) {
+    if (is_array($item) && array_key_exists('#markup', $item)) {
+      $variables[$area_key][$key]['#markup'] = Markup::create($markup);
+    }
+  }
 }
 
 /**
@@ -585,9 +623,10 @@ function _motaded_theme_events_directory_stats(): array {
       ->count()
       ->execute();
 
-    $industry_count = (int) $term_storage->getQuery()
+    $industry_count = (int) $node_storage->getQuery()
       ->accessCheck(TRUE)
-      ->condition('vid', 'taxonomy')
+      ->condition('type', 'sector_page')
+      ->condition('status', NodeInterface::PUBLISHED)
       ->count()
       ->execute();
 
@@ -748,6 +787,7 @@ function _motaded_theme_library_category_counts(array $document_type_tids): arra
         ->accessCheck(TRUE)
         ->condition('type', 'document')
         ->condition('status', 1)
+        ->condition('langcode', \Drupal::languageManager()->getCurrentLanguage()->getId())
         ->condition('field_category', $tid)
         ->condition('field_document_type', $document_type_tids, 'IN')
         ->count()
@@ -947,6 +987,35 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     }
   }
 
+  if ($view->id() === 'events' && in_array($display_id, ['attachment_home_list', 'block_home'], TRUE)) {
+    $langcode = motaded_theme_interface_langcode();
+    $t_opts = ['langcode' => $langcode];
+    try {
+      $events_path = Url::fromRoute('view.events.page_1', [], [
+        'language' => \Drupal::languageManager()->getLanguage($langcode),
+      ])->toString();
+    }
+    catch (\Throwable $e) {
+      $events_path = $langcode === 'ar' ? '/ar/events' : '/events';
+    }
+    $label = (string) t('View all events', [], $t_opts);
+    $arrow = $langcode === 'ar' ? '←' : '→';
+    $footer_markup = '<div class="events-home__footer-more"><a class="events-home__view-all" href="'
+      . Html::escape($events_path) . '">' . Html::escape($label) . ' ' . $arrow . '</a></div>';
+    motaded_theme_views_replace_area_markup($variables, 'footer', $footer_markup);
+
+    if ($display_id === 'block_home') {
+      $eyebrow = (string) t('Business events', [], $t_opts);
+      $title = (string) t('Key Business Events in Saudi Arabia', [], $t_opts);
+      $lede = (string) t('Stay informed about major forums, investment events, and industry gatherings shaping the Saudi market.', [], $t_opts);
+      $header_markup = '<div class="events-home__intro"><p class="events-home__eyebrow mot-eyebrow">'
+        . Html::escape($eyebrow) . '</p><h2 class="events-home__title">'
+        . Html::escape($title) . '</h2><p class="events-home__lede">'
+        . Html::escape($lede) . '</p></div>';
+      motaded_theme_views_replace_area_markup($variables, 'header', $header_markup);
+    }
+  }
+
   if ($view->id() === 'insights' && $display_id === 'page_1') {
     $variables['#attached']['library'][] = 'motaded_theme/insights_directory';
     $variables['attributes']['class'][] = 'insights-directory-page';
@@ -1038,12 +1107,14 @@ function motaded_theme_preprocess_views_view(&$variables): void {
 
     $term = $term_storage->load($tid);
     if ($term instanceof TermInterface) {
-      $variables['services_home_term_name'] = $term->label();
-      if ($term->hasField('description') && !$term->get('description')->isEmpty()) {
-        $format = $term->get('description')->format ?: filter_fallback_format();
+      $term_lang = motaded_theme_interface_langcode();
+      $term_view = $term->hasTranslation($term_lang) ? $term->getTranslation($term_lang) : $term;
+      $variables['services_home_term_name'] = motaded_theme_entity_label_in_language($term);
+      if ($term_view->hasField('description') && !$term_view->get('description')->isEmpty()) {
+        $format = $term_view->get('description')->format ?: filter_fallback_format();
         $variables['services_home_term_description'] = [
           '#type' => 'processed_text',
-          '#text' => $term->get('description')->value,
+          '#text' => $term_view->get('description')->value,
           '#format' => $format,
         ];
       }
@@ -1061,6 +1132,7 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     try {
       $variables['services_home_category_more_url'] = Url::fromUri('internal:/services', [
         'query' => ['field_taxonomy_target_id' => $tid],
+        'language' => \Drupal::languageManager()->getLanguage(motaded_theme_interface_langcode()),
       ])->toString();
     }
     catch (\Throwable $e) {
@@ -1069,6 +1141,7 @@ function motaded_theme_preprocess_views_view(&$variables): void {
 
     // Unformatted output can leave `rows` truthy while rendering nothing; use SQL row count for empty state.
     $variables['services_home_offer_has_rows'] = ((int) ($view->total_rows ?? 0)) > 0;
+    $variables['services_home_list_arrow'] = motaded_theme_interface_langcode() === 'ar' ? '←' : '→';
   }
 
   if ($view->id() === 'library' && ($display_id === 'block_1' || $display_id === 'page_1')) {
@@ -1336,6 +1409,15 @@ function _motaded_theme_decorate_menu_items_with_icon(array &$items): void {
 }
 
 /**
+ * Localizes sector_page menu titles on Arabic interface.
+ */
+function motaded_theme_preprocess_menu(array &$variables): void {
+  if (!empty($variables['items'])) {
+    motaded_theme_menu_apply_content_language_titles($variables['items']);
+  }
+}
+
+/**
  * Exposes field_menu_icon to twig templates for the main menu.
  */
 function motaded_theme_preprocess_menu__main(array &$variables): void {
@@ -1481,6 +1563,14 @@ function motaded_theme_preprocess_page(&$variables) {
     && $route_node->bundle() === 'sector_page'
     && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
     $variables['platform_page_full_bleed'] = TRUE;
+  }
+
+  // Document full node: split hero + muted shell (no narrow main max-width rail).
+  if ($route_node instanceof NodeInterface
+    && $route_node->bundle() === 'document'
+    && \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    $variables['document_page_full_bleed'] = TRUE;
+    unset($variables['page']['breadcrumb']);
   }
 
   if ($route_node instanceof NodeInterface
@@ -1738,15 +1828,13 @@ function motaded_theme_preprocess_node(&$variables) {
 
   // Chamber (chamber_card): homepage list + featured card (Business Network paragraph).
   if ($node->bundle() === 'chamber' && ($variables['view_mode'] ?? '') === 'chamber_card') {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+    $chamber = \Drupal::service('entity.repository')->getTranslationFromContext($node, $langcode);
     $in_cnb_home = drupal_static('motaded_cnb_home_chamber_card_layout', FALSE);
     $first_slot_nid = drupal_static('motaded_cnb_home_first_chamber_nid', NULL);
-    $is_featured_field = $node->hasField('field_featured')
-      && !$node->get('field_featured')->isEmpty()
-      && (bool) $node->get('field_featured')->value;
-    // On homepage embed, only the first View row may render as the wide stats card.
+    // Homepage embed: first View row is always the hero banner (ordering via field_featured).
     if ($in_cnb_home) {
-      $variables['cnb_is_featured'] = $is_featured_field
-        && $first_slot_nid !== NULL
+      $variables['cnb_is_featured'] = $first_slot_nid !== NULL
         && (int) $node->id() === $first_slot_nid;
     }
     else {
@@ -1758,11 +1846,20 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['cnb_focus_line'] = '';
     $variables['cnb_focus_tooltip'] = '';
     $variables['cnb_type_line'] = '';
+    $variables['cnb_external_url'] = NULL;
+    $variables['cnb_external_label'] = NULL;
     $variables['cnb_icon_focus'] = NULL;
     $variables['cnb_icon_type'] = NULL;
     if ($in_cnb_home) {
-      if ($node->hasField('field_relationship_focus') && !$node->get('field_relationship_focus')->isEmpty()) {
-        $focus = trim((string) $node->get('field_relationship_focus')->value);
+      if ($chamber->hasField('field_external_link') && !$chamber->get('field_external_link')->isEmpty()) {
+        $link_item = $chamber->get('field_external_link')->first();
+        if ($link_item) {
+          $variables['cnb_external_url'] = $link_item->getUrl()->toString();
+          $variables['cnb_external_label'] = (string) t('Visit website');
+        }
+      }
+      if ($chamber->hasField('field_relationship_focus') && !$chamber->get('field_relationship_focus')->isEmpty()) {
+        $focus = trim((string) $chamber->get('field_relationship_focus')->value);
         if ($focus !== '') {
           $variables['cnb_focus_tooltip'] = (string) t('Focus: @text', ['@text' => $focus]);
           if (!empty($variables['cnb_is_featured'])) {
@@ -1772,10 +1869,10 @@ function motaded_theme_preprocess_node(&$variables) {
         }
       }
 
-      if ($node->hasField('field_type') && !$node->get('field_type')->isEmpty()) {
-        $def = $node->getFieldDefinition('field_type');
+      if ($chamber->hasField('field_type') && !$chamber->get('field_type')->isEmpty()) {
+        $def = $chamber->getFieldDefinition('field_type');
         $allowed = $def->getSetting('allowed_values');
-        $key = (string) $node->get('field_type')->value;
+        $key = (string) $chamber->get('field_type')->value;
         $type_label = '';
         if (is_array($allowed) && isset($allowed[$key])) {
           $type_label = (string) $allowed[$key];
@@ -1784,6 +1881,7 @@ function motaded_theme_preprocess_node(&$variables) {
           $type_label = $key;
         }
         if ($type_label !== '') {
+          $type_label = (string) t($type_label);
           $variables['cnb_type_line'] = Markup::create((string) t('Type: @type', ['@type' => $type_label]));
         }
       }
@@ -1900,18 +1998,11 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['news_changed_iso'] = gmdate('c', (int) $node->getChangedTime());
   }
 
-  // Document (full): library URL + document page styles.
+  // Document (full): library URL, file meta, related resources, page styles.
   if ($node->bundle() === 'document'
     && ($variables['view_mode'] ?? '') === 'full'
     && !empty($variables['page'])) {
-    $variables['#attached']['library'][] = 'motaded_theme/document_page';
-    $variables['document_library_url'] = '/library';
-    try {
-      $variables['document_library_url'] = Url::fromRoute('view.library.page_1')->toString();
-    }
-    catch (\Throwable $e) {
-      // Fallback internal path.
-    }
+    _motaded_theme_preprocess_document_node_full($variables, $node);
   }
 
   if ($node->bundle() === 'event' && ($variables['view_mode'] ?? '') === 'full' && !empty($variables['page'])) {
@@ -2002,6 +2093,16 @@ function motaded_theme_preprocess_node(&$variables) {
         $variables['platform_glance_region_label'] = (string) t($term_default->getName(), [], ['langcode' => $lang]);
       }
     }
+
+    $doc_build = motaded_theme_platform_documents_build($node, 3);
+    $variables['platform_documents'] = $doc_build['rows'];
+    $variables['platform_documents_more_url'] = $doc_build['more_url'];
+    $variables['platform_documents_more_label'] = $doc_build['more_label'];
+    $variables['platform_documents_has_more'] = $doc_build['has_more'];
+    $variables['#cache']['tags'] = Cache::mergeTags(
+      $variables['#cache']['tags'] ?? [],
+      $doc_build['cache_tags']
+    );
   }
 
   // Sector page (full): layout + listing URL; suppress redundant eyebrow/pill vs title.
@@ -2033,9 +2134,13 @@ function motaded_theme_preprocess_node(&$variables) {
     }
     $variables['sector_page_show_sector_pill'] = $term_norm !== '' && $term_norm !== $title_norm;
     $variables['sector_term_pill_name'] = '';
+    $sector_langcode = $node->language()->getId();
+    $variables['sector_langcode'] = $sector_langcode;
+    $variables['sector_is_rtl'] = $sector_langcode === 'ar';
     if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
       $term_entity = $node->get('field_sector')->entity;
       if ($term_entity instanceof TermInterface) {
+        $term_entity = \Drupal::service('entity.repository')->getTranslationFromContext($term_entity, $sector_langcode);
         $variables['sector_term_pill_name'] = $term_entity->getName();
       }
     }
@@ -2075,6 +2180,10 @@ function motaded_theme_preprocess_node(&$variables) {
 
     $related = motaded_theme_sector_page_related_build($node);
     $variables['sector_related_sections'] = $related['sections'];
+    $variables['#cache']['contexts'] = Cache::mergeContexts(
+      $variables['#cache']['contexts'] ?? [],
+      ['languages:language_content'],
+    );
     if ($related['cache_tags'] !== []) {
       $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $related['cache_tags']);
     }
@@ -2082,6 +2191,18 @@ function motaded_theme_preprocess_node(&$variables) {
 
   // Sector_page (sector_card): tile for homepage Views / key sectors block.
   if ($node->bundle() === 'sector_page' && ($variables['view_mode'] ?? '') === 'sector_card') {
+    $content_langcode = \Drupal::languageManager()
+      ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+      ->getId();
+    if ($content_langcode !== '' && $node->hasTranslation($content_langcode)) {
+      try {
+        $node = $node->getTranslation($content_langcode);
+        $variables['node'] = $node;
+      }
+      catch (\Exception $e) {
+        // Keep default translation.
+      }
+    }
     $variables['#attached']['library'][] = 'motaded_theme/sector_card';
     $variables['sector_card_has_custom_icon'] = FALSE;
     $variables['sector_card_icon_custom'] = [];
@@ -2557,28 +2678,29 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
     $variables['event_secondary_url'] = $variables['event_calendar_url'];
   }
 
+  $entity_label = static function ($entity) use ($langcode): string {
+    if (!$entity) {
+      return '';
+    }
+    if (is_object($entity) && method_exists($entity, 'hasTranslation') && $entity->hasTranslation($langcode)) {
+      return (string) $entity->getTranslation($langcode)->label();
+    }
+    return is_object($entity) && method_exists($entity, 'label') ? (string) $entity->label() : '';
+  };
+
   $variables['event_type_label'] = '';
   if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
-    $term = $node->get('field_event_type')->entity;
-    if ($term) {
-      $variables['event_type_label'] = $term->label();
-    }
+    $variables['event_type_label'] = $entity_label($node->get('field_event_type')->entity);
   }
 
   $variables['event_region_label'] = '';
   if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
-    $term = $node->get('field_region')->entity;
-    if ($term) {
-      $variables['event_region_label'] = $term->label();
-    }
+    $variables['event_region_label'] = $entity_label($node->get('field_region')->entity);
   }
 
   $variables['event_category_label'] = '';
-  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
-    $term = $node->get('field_category')->entity;
-    if ($term) {
-      $variables['event_category_label'] = $term->label();
-    }
+  if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
+    $variables['event_category_label'] = $entity_label($node->get('field_sector_pages')->first()?->entity);
   }
 
   $variables['event_tags'] = [];
@@ -2612,7 +2734,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
     $chips[] = ['value' => $value, 'url' => $url];
   };
 
-  $list_label = static function (NodeInterface $n, string $field_name): string {
+  $list_label = static function (NodeInterface $n, string $field_name) use ($langcode): string {
     if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
       return '';
     }
@@ -2621,21 +2743,23 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
       return '';
     }
     $allowed = $n->getFieldDefinition($field_name)->getSetting('allowed_values') ?? [];
-    return isset($allowed[$raw]) ? (string) $allowed[$raw] : $raw;
+    if (!isset($allowed[$raw])) {
+      return $raw;
+    }
+    $label = (string) $allowed[$raw];
+    return $langcode === 'ar' ? (string) t($label) : $label;
   };
-  $term_label = static function (NodeInterface $n, string $field_name): string {
+  $term_label = static function (NodeInterface $n, string $field_name) use ($entity_label): string {
     if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
       return '';
     }
-    $term = $n->get($field_name)->entity;
-    return $term ? (string) $term->label() : '';
+    return $entity_label($n->get($field_name)->entity);
   };
-  $first_ref_label = static function (NodeInterface $n, string $field_name): string {
+  $first_ref_label = static function (NodeInterface $n, string $field_name) use ($entity_label): string {
     if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
       return '';
     }
-    $ent = $n->get($field_name)->first()?->entity;
-    return $ent ? (string) $ent->label() : '';
+    return $entity_label($n->get($field_name)->first()?->entity);
   };
   $official_host = static function (NodeInterface $n): string {
     if (!$n->hasField('field_official_website') || $n->get('field_official_website')->isEmpty()) {
@@ -2659,33 +2783,15 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   };
 
   // Event facts (real fields) for sidebar display.
-  $allowed_label = static function (NodeInterface $n, string $field_name): string {
-    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
-      return '';
-    }
-    $raw = (string) $n->get($field_name)->value;
-    if ($raw === '') {
-      return '';
-    }
-    $allowed = $n->getFieldDefinition($field_name)->getSetting('allowed_values') ?? [];
-    return isset($allowed[$raw]) ? (string) $allowed[$raw] : $raw;
-  };
-  $term_label = static function (NodeInterface $n, string $field_name): string {
-    if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
-      return '';
-    }
-    $term = $n->get($field_name)->entity;
-    return $term ? (string) $term->label() : '';
-  };
-  $terms_list = static function (NodeInterface $n, string $field_name, int $limit = 3): array {
+  $terms_list = static function (NodeInterface $n, string $field_name, int $limit = 3) use ($entity_label): array {
     if (!$n->hasField($field_name) || $n->get($field_name)->isEmpty()) {
       return [];
     }
     $out = [];
     foreach ($n->get($field_name) as $item) {
-      $label = $item->entity?->label();
-      if ($label) {
-        $out[] = (string) $label;
+      $label = $entity_label($item->entity);
+      if ($label !== '') {
+        $out[] = $label;
       }
       if (count($out) >= $limit) {
         break;
@@ -2699,7 +2805,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
     $sector = $node->get('field_sector_pages')->first()?->entity;
     if ($sector) {
-      $add_chip($variables['event_hero_chips'], (string) $sector->label(), $sector->toUrl()->toString());
+      $add_chip($variables['event_hero_chips'], $entity_label($sector), $sector->toUrl()->toString());
     }
   }
 
@@ -2718,10 +2824,10 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   if ($sectors !== []) {
     $add_fact($variables['event_facts'], (string) t('Sector'), implode(', ', $sectors));
   }
-  $add_fact($variables['event_facts'], (string) t('Event format'), $allowed_label($node, 'field_event_format'));
-  $add_fact($variables['event_facts'], (string) t('Price range'), $allowed_label($node, 'field_price_range'));
-  $add_fact($variables['event_facts'], (string) t('Attendance type'), $allowed_label($node, 'field_attendance_type'));
-  $add_fact($variables['event_facts'], (string) t('Event status'), $allowed_label($node, 'field_event_status'));
+  $add_fact($variables['event_facts'], (string) t('Event format'), $list_label($node, 'field_event_format'));
+  $add_fact($variables['event_facts'], (string) t('Price range'), $list_label($node, 'field_price_range'));
+  $add_fact($variables['event_facts'], (string) t('Attendance type'), $list_label($node, 'field_attendance_type'));
+  $add_fact($variables['event_facts'], (string) t('Event status'), $list_label($node, 'field_event_status'));
   if ($node->hasField('field_official_website') && !$node->get('field_official_website')->isEmpty()) {
     $uri = (string) $node->get('field_official_website')->first()->uri;
     $title = trim((string) $node->get('field_official_website')->first()->title);
@@ -2762,7 +2868,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
       }
       $sector_page_nids[] = (int) $sector_page->id();
       $variables['connected_sectors'][] = [
-        'title' => (string) $sector_page->label(),
+        'title' => $entity_label($sector_page),
         'url' => $sector_page->toUrl()->toString(),
       ];
       if ($sector_page->hasField('field_sector') && !$sector_page->get('field_sector')->isEmpty()) {
@@ -2805,6 +2911,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
       if (!$rn instanceof NodeInterface || $rn->bundle() !== 'event' || !$rn->access('view')) {
         continue;
       }
+      $rn_view = $rn->hasTranslation($langcode) ? $rn->getTranslation($langcode) : $rn;
       $start_ts = $rn->hasField('field_event_start') && !$rn->get('field_event_start')->isEmpty()
         ? strtotime((string) $rn->get('field_event_start')->value)
         : 0;
@@ -2812,13 +2919,13 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
       $city = $term_label($rn, 'field_city');
       $country = $term_label($rn, 'field_country');
       $place = trim(implode(' • ', array_values(array_filter([$city, $country]))));
-      if ($place === '' && $rn->hasField('field_location') && !$rn->get('field_location')->isEmpty()) {
-        $place = trim((string) $rn->get('field_location')->value);
+      if ($place === '' && $rn_view->hasField('field_location') && !$rn_view->get('field_location')->isEmpty()) {
+        $place = trim((string) $rn_view->get('field_location')->value);
       }
       $sector = $first_ref_label($rn, 'field_sector_pages');
       $variables['connected_related_events'][] = [
-        'title' => (string) $rn->label(),
-        'url' => $rn->toUrl()->toString(),
+        'title' => $entity_label($rn),
+        'url' => $rn_view->toUrl()->toString(),
         'meta' => trim(implode(' • ', array_values(array_filter([$place, $when])))),
         'sector' => $sector,
       ];
@@ -2843,9 +2950,10 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
         if (!$in instanceof NodeInterface || $in->bundle() !== 'market_insight' || !$in->access('view')) {
           continue;
         }
+        $in_view = $in->hasTranslation($langcode) ? $in->getTranslation($langcode) : $in;
         $excerpt = '';
-        if ($in->hasField('body') && !$in->get('body')->isEmpty()) {
-          $item = $in->get('body')->first();
+        if ($in_view->hasField('body') && !$in_view->get('body')->isEmpty()) {
+          $item = $in_view->get('body')->first();
           $summary = $item ? trim((string) $item->summary) : '';
           $raw = $summary !== '' ? $summary : (string) ($item?->value ?? '');
           $plain = trim(Html::decodeEntities(strip_tags($raw)));
@@ -2854,8 +2962,8 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
           }
         }
         $variables['connected_insights'][] = [
-          'title' => (string) $in->label(),
-          'url' => $in->toUrl()->toString(),
+          'title' => $entity_label($in),
+          'url' => $in_view->toUrl()->toString(),
           'excerpt' => $excerpt,
         ];
       }
@@ -2904,7 +3012,18 @@ function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInte
   $variables['#attached']['library'][] = 'motaded_theme/event_page';
   $em = \Drupal::entityTypeManager();
   $date_formatter = \Drupal::service('date.formatter');
-  $langcode = $node->language()->getId();
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+    ->getId();
+  if ($langcode !== '' && $node->hasTranslation($langcode)) {
+    try {
+      $node = $node->getTranslation($langcode);
+      $variables['node'] = $node;
+    }
+    catch (\Exception $e) {
+      // Keep default translation.
+    }
+  }
 
   $variables['event_teaser_media'] = [];
   if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
@@ -2944,19 +3063,26 @@ function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInte
   if ($node->hasField('field_event_type') && !$node->get('field_event_type')->isEmpty()) {
     $term = $node->get('field_event_type')->entity;
     if ($term instanceof TermInterface) {
-      $variables['event_teaser_type_pill'] = mb_strtoupper($term->getName());
+      $type_label = motaded_theme_taxonomy_term_translated_label($term, $langcode);
+      $variables['event_teaser_type_pill'] = $langcode === 'ar'
+        ? $type_label
+        : mb_strtoupper($type_label);
     }
   }
   if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
     $term = $node->get('field_region')->entity;
     if ($term instanceof TermInterface) {
-      $variables['event_teaser_chips'][] = $term->getName();
+      $variables['event_teaser_chips'][] = motaded_theme_taxonomy_term_translated_label($term, $langcode);
     }
   }
-  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
-    $term = $node->get('field_category')->entity;
-    if ($term instanceof TermInterface && !in_array($term->getName(), $variables['event_teaser_chips'], TRUE)) {
-      $variables['event_teaser_chips'][] = $term->getName();
+  if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
+    $sector = $node->get('field_sector_pages')->first()?->entity;
+    if ($sector instanceof NodeInterface) {
+      $sector = \Drupal::service('entity.repository')->getTranslationFromContext($sector, $langcode);
+      $sector_label = $sector->label();
+      if ($sector_label !== '' && !in_array($sector_label, $variables['event_teaser_chips'], TRUE)) {
+        $variables['event_teaser_chips'][] = $sector_label;
+      }
     }
   }
 
@@ -3189,9 +3315,7 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
         'icon' => $icon,
       ];
       if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $value = (string) $sub->get('field_body')->value;
-        $format = (string) ($sub->get('field_body')->format ?: 'plain_text');
-        $body_markup = check_markup($value, $format);
+        $body_markup = motaded_theme_markup_from_text_field($sub, 'field_body');
         if ($body_markup !== '') {
           $row['body'] = Markup::create($body_markup);
         }
@@ -3439,7 +3563,7 @@ function motaded_theme_preprocess_paragraph__why_opportunities(array &$variables
   $feature_field = $paragraph->get('field_why_features');
   if ($feature_field->access('view')) {
     foreach ($feature_field as $item) {
-      $sub = $item->entity;
+      $sub = motaded_theme_paragraph_from_context($item->entity);
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_feature_card') {
         continue;
       }
@@ -3461,13 +3585,9 @@ function motaded_theme_preprocess_paragraph__why_opportunities(array &$variables
           $icon = 'clock';
         }
       }
-      $body = [];
-      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $body = $sub->get('field_body')->view([
-          'type' => 'text_default',
-          'label' => 'hidden',
-        ]);
-      }
+      $body = $sub->get('field_body')->access('view')
+        ? motaded_theme_render_formatted_text_field($sub, 'field_body')
+        : [];
       $link = [];
       $link_field = $sub->get('field_link');
       if ($link_field->access('view') && !$link_field->isEmpty()) {
@@ -3542,7 +3662,7 @@ function motaded_theme_preprocess_paragraph__business_setup_section(array &$vari
   $card_field = $paragraph->get('field_business_setup_cards');
   if ($card_field->access('view')) {
     foreach ($card_field as $item) {
-      $sub = $item->entity;
+      $sub = motaded_theme_paragraph_from_context($item->entity);
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'business_setup_card') {
         continue;
       }
@@ -3551,13 +3671,9 @@ function motaded_theme_preprocess_paragraph__business_setup_section(array &$vari
       if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
         $title = trim((string) $sub->get('field_title')->value);
       }
-      $body = [];
-      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $body = $sub->get('field_body')->view([
-          'type' => 'text_default',
-          'label' => 'hidden',
-        ]);
-      }
+      $body = $sub->get('field_body')->access('view')
+        ? motaded_theme_render_formatted_text_field($sub, 'field_body')
+        : [];
       $link = [];
       $link_field = $sub->get('field_link');
       if ($link_field->access('view') && !$link_field->isEmpty()) {
@@ -3609,11 +3725,24 @@ function motaded_theme_preprocess_paragraph__business_setup_section(array &$vari
 function _motaded_theme_preprocess_paragraph_bce(array &$variables): void {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  $repository = \Drupal::service('entity.repository');
+  $paragraph = $repository->getTranslationFromContext($paragraph, $langcode);
+  $variables['paragraph'] = $paragraph;
+
   $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
   $request = \Drupal::request();
   // Absolute URL so <img src> / overlays work behind reverse proxies and subdirs.
   $variables['bce_cost_bg_url'] = $request->getSchemeAndHttpHost() . base_path() . $theme_path . '/images/cost-bg.svg';
   $variables['bce_heading_id'] = Html::getUniqueId('bce-heading-' . $paragraph->id());
+  $variables['bce_title'] = '';
+  if ($paragraph->get('field_title')->access('view') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['bce_title'] = trim((string) $paragraph->get('field_title')->value);
+  }
+  $variables['bce_lead'] = $paragraph->get('field_body')->access('view')
+    ? motaded_theme_render_formatted_text_field($paragraph, 'field_body')
+    : [];
+  $variables['#cache']['contexts'][] = 'languages:language_content';
 
   $fmt_money = static function (int $n): string {
     return number_format($n, 0, '.', ',');
@@ -3627,6 +3756,7 @@ function _motaded_theme_preprocess_paragraph_bce(array &$variables): void {
     if ($link_item) {
       $url = $link_item->getUrl();
       if ($url) {
+        $url = $url->mergeOptions(['language' => $paragraph->language()]);
         $url->setAbsolute(FALSE);
         $ltitle = $link_item->getTitle();
         $variables['bce_cta'] = [
@@ -3672,6 +3802,7 @@ function _motaded_theme_preprocess_paragraph_bce(array &$variables): void {
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'cost_breakdown_line') {
         continue;
       }
+      $sub = $repository->getTranslationFromContext($sub, $langcode);
       $label = '';
       if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
         $label = trim((string) $sub->get('field_title')->value);
@@ -3742,17 +3873,14 @@ function _motaded_theme_preprocess_paragraph_bce(array &$variables): void {
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'help_item') {
         continue;
       }
+      $sub = $repository->getTranslationFromContext($sub, $langcode);
       $title = '';
       if ($sub->get('field_title')->access('view') && !$sub->get('field_title')->isEmpty()) {
         $title = trim((string) $sub->get('field_title')->value);
       }
-      $body = [];
-      if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $body = $sub->get('field_body')->view([
-          'type' => 'text_default',
-          'label' => 'hidden',
-        ]);
-      }
+      $body = $sub->get('field_body')->access('view')
+        ? motaded_theme_render_formatted_text_field($sub, 'field_body')
+        : [];
       $highlights[] = [
         'title' => $title,
         'body' => $body,
@@ -4001,21 +4129,25 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
   $variables['iu_insight_nodes'] = [];
   $variables['iu_news_nodes'] = [];
 
-  $route_url = static function (string $route_name, string $path): string {
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  $interface_langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
+  $language = \Drupal::languageManager()->getLanguage($interface_langcode);
+
+  $route_url = static function (string $route_name, string $path) use ($language): string {
     try {
-      return Url::fromRoute($route_name)->toString();
+      return Url::fromRoute($route_name, [], ['language' => $language])->toString();
     }
     catch (\Throwable $e) {
-      return Url::fromUserInput($path)->toString();
+      return Url::fromUserInput($path, ['language' => $language])->toString();
     }
   };
 
   $variables['iu_insights_list_url'] = $route_url('view.news.page_1', '/blog');
   $variables['iu_news_list_url'] = $route_url('view.news.page_2', '/news');
+  $variables['#cache']['contexts'][] = 'languages:language_content';
+  $variables['#cache']['contexts'][] = 'languages:language_interface';
 
-  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
-
-  $collect_meta = function (array $nodes) use (&$variables): void {
+  $collect_meta = function (array $nodes) use (&$variables, $langcode): void {
     foreach ($nodes as $node) {
       if (!$node instanceof NodeInterface) {
         continue;
@@ -4027,31 +4159,40 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
       $variables['iu_card_images'][$nid] = $meta;
       $ts = (int) $node->getCreatedTime();
       $variables['iu_item_dates'][$nid] = $ts
-        ? \Drupal::service('date.formatter')->format($ts, 'custom', 'j M Y')
+        ? \Drupal::service('date.formatter')->format($ts, 'custom', 'j F Y', NULL, $langcode)
         : '';
       $variables['iu_item_dates_iso'][$nid] = $ts
-        ? \Drupal::service('date.formatter')->format($ts, 'html_datetime')
+        ? \Drupal::service('date.formatter')->format($ts, 'html_datetime', '', NULL, $langcode)
         : '';
     }
+  };
+
+  $resolve_node = static function (NodeInterface $node) use ($langcode): ?NodeInterface {
+    if ($langcode !== 'en' && !$node->hasTranslation($langcode)) {
+      return NULL;
+    }
+    return $node->hasTranslation($langcode)
+      ? $node->getTranslation($langcode)
+      : $node;
   };
 
   if ($paragraph->hasField('field_iu_insights') && !$paragraph->get('field_iu_insights')->isEmpty()) {
     foreach ($paragraph->get('field_iu_insights')->referencedEntities() as $node) {
       if ($node instanceof NodeInterface) {
-        if ($node->hasTranslation($langcode)) {
-          $node = $node->getTranslation($langcode);
+        $node = $resolve_node($node);
+        if ($node instanceof NodeInterface) {
+          $variables['iu_insight_nodes'][] = $node;
         }
-        $variables['iu_insight_nodes'][] = $node;
       }
     }
   }
   if ($paragraph->hasField('field_iu_news') && !$paragraph->get('field_iu_news')->isEmpty()) {
     foreach ($paragraph->get('field_iu_news')->referencedEntities() as $node) {
       if ($node instanceof NodeInterface) {
-        if ($node->hasTranslation($langcode)) {
-          $node = $node->getTranslation($langcode);
+        $node = $resolve_node($node);
+        if ($node instanceof NodeInterface) {
+          $variables['iu_news_nodes'][] = $node;
         }
-        $variables['iu_news_nodes'][] = $node;
       }
     }
   }
@@ -4086,6 +4227,7 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
         'node' => $node,
         'kind' => 'blog',
         'excerpt' => $iu_excerpt($node),
+        'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
       ];
     }
   }
@@ -4095,6 +4237,7 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
         'node' => $node,
         'kind' => 'news',
         'excerpt' => $iu_excerpt($node),
+        'url' => $node->toUrl('canonical', ['language' => $node->language()])->toString(),
       ];
     }
   }
@@ -4248,7 +4391,8 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
 function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): void {
   $variables['#attached']['library'][] = 'motaded_theme/gateway_block';
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-  $paragraph = $variables['paragraph'];
+  $paragraph = motaded_theme_paragraph_from_context($variables['paragraph']);
+  $variables['paragraph'] = $paragraph;
 
   $variables['gateway_eyebrow'] = '';
   if ($paragraph->hasField('field_gateway_eyebrow') && $paragraph->get('field_gateway_eyebrow')->access('view') && !$paragraph->get('field_gateway_eyebrow')->isEmpty()) {
@@ -4274,7 +4418,7 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
   $variables['gateway_items'] = [];
   if ($paragraph->hasField('field_gateway_items') && $paragraph->get('field_gateway_items')->access('view') && !$paragraph->get('field_gateway_items')->isEmpty()) {
     foreach ($paragraph->get('field_gateway_items') as $ref) {
-      $sub = $ref->entity;
+      $sub = motaded_theme_paragraph_from_context($ref->entity);
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'gateway_item') {
         continue;
       }
@@ -4289,6 +4433,7 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
         $raw_body = (string) $sub->get('field_body')->value;
         $format_id = (string) ($sub->get('field_body')->format ?: 'plain_text');
         if ($raw_body !== '') {
+          $format_id = motaded_theme_resolved_text_format($format_id, $raw_body);
           $body_html = check_markup($raw_body, $format_id);
           $body_has_list = (bool) preg_match('/<\s*(ul|ol)\b/i', $raw_body);
         }
@@ -4324,6 +4469,7 @@ function motaded_theme_preprocess_paragraph__gateway_block(array &$variables): v
     $fb_raw = (string) $paragraph->get('field_gateway_footer_body')->value;
     $fb_fmt = (string) ($paragraph->get('field_gateway_footer_body')->format ?: 'plain_text');
     if (trim(strip_tags($fb_raw)) !== '') {
+      $fb_fmt = motaded_theme_resolved_text_format($fb_fmt, $fb_raw);
       $variables['gateway_footer_body_html'] = Markup::create(check_markup($fb_raw, $fb_fmt));
     }
   }
@@ -4492,7 +4638,8 @@ function motaded_theme_preprocess_paragraph__gateway_hub_block(array &$variables
 function motaded_theme_preprocess_paragraph__key_sectors(array &$variables): void {
   $variables['#attached']['library'][] = 'motaded_theme/key_sectors';
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-  $paragraph = $variables['paragraph'];
+  $paragraph = motaded_theme_paragraph_from_context($variables['paragraph']);
+  $variables['paragraph'] = $paragraph;
   $get_plain = static function (\Drupal\paragraphs\Entity\Paragraph $p, string $field): string {
     return $p->hasField($field) && !$p->get($field)->isEmpty()
       ? trim((string) $p->get($field)->value) : '';
@@ -4509,33 +4656,15 @@ function motaded_theme_preprocess_paragraph__key_sectors(array &$variables): voi
   }
   $variables['ksb_sidebar_icon_markup'] = motaded_theme_glance_icon_markup($sk !== '' ? $sk : 'chart_up');
   $variables['ksb_footer_title'] = $get_plain($paragraph, 'field_ksb_footer_title');
-  $variables['ksb_intro'] = [];
-  if ($paragraph->hasField('field_body') && $paragraph->get('field_body')->access('view') && !$paragraph->get('field_body')->isEmpty()) {
-    $variables['ksb_intro'] = $paragraph->get('field_body')->view([
-      'type' => 'text_default',
-      'label' => 'hidden',
-      'settings' => [],
-      'third_party_settings' => [],
-    ]);
-  }
-  $variables['ksb_sidebar_body'] = [];
-  if ($paragraph->hasField('field_ksb_sidebar_body') && $paragraph->get('field_ksb_sidebar_body')->access('view') && !$paragraph->get('field_ksb_sidebar_body')->isEmpty()) {
-    $variables['ksb_sidebar_body'] = $paragraph->get('field_ksb_sidebar_body')->view([
-      'type' => 'text_default',
-      'label' => 'hidden',
-      'settings' => [],
-      'third_party_settings' => [],
-    ]);
-  }
-  $variables['ksb_footer_body'] = [];
-  if ($paragraph->hasField('field_ksb_footer_body') && $paragraph->get('field_ksb_footer_body')->access('view') && !$paragraph->get('field_ksb_footer_body')->isEmpty()) {
-    $variables['ksb_footer_body'] = $paragraph->get('field_ksb_footer_body')->view([
-      'type' => 'text_default',
-      'label' => 'hidden',
-      'settings' => [],
-      'third_party_settings' => [],
-    ]);
-  }
+  $variables['ksb_intro'] = $paragraph->get('field_body')->access('view')
+    ? motaded_theme_render_formatted_text_field($paragraph, 'field_body')
+    : [];
+  $variables['ksb_sidebar_body'] = $paragraph->hasField('field_ksb_sidebar_body') && $paragraph->get('field_ksb_sidebar_body')->access('view')
+    ? motaded_theme_render_formatted_text_field($paragraph, 'field_ksb_sidebar_body')
+    : [];
+  $variables['ksb_footer_body'] = $paragraph->hasField('field_ksb_footer_body') && $paragraph->get('field_ksb_footer_body')->access('view')
+    ? motaded_theme_render_formatted_text_field($paragraph, 'field_ksb_footer_body')
+    : [];
   $variables['ksb_cta_url'] = '';
   $variables['ksb_cta_label'] = (string) t('View all sectors');
   if ($paragraph->hasField('field_link') && !$paragraph->get('field_link')->isEmpty() && $paragraph->get('field_link')->access('view')) {
@@ -4928,6 +5057,20 @@ function motaded_theme_build_views_node_card_data($entity): array {
  * Implements hook__preprocess_HOOK().
  */
 function motaded_theme_preprocess_breadcrumb(&$variables) {
+  $route_name = (string) (\Drupal::routeMatch()->getRouteName() ?? '');
+  if ($route_name === 'view.insights.page_1') {
+    foreach ($variables['breadcrumb'] as &$crumb) {
+      if (!is_array($crumb)) {
+        continue;
+      }
+      $text = trim((string) ($crumb['text'] ?? ''));
+      if ($text === 'Insights' || $text === 'Market insights') {
+        $crumb['text'] = (string) t('Market insights');
+      }
+    }
+    unset($crumb);
+  }
+
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node) {
     $prefix = getLanguagePrefix();
@@ -5632,7 +5775,16 @@ function motaded_theme_preprocess_views_view_fullcalendar(array &$variables): vo
         $nids[(int) $ev['eid']] = (int) $ev['eid'];
       }
     }
+    if ($langcode === 'ar') {
+      $decoded['locale'] = 'ar';
+      $decoded['direction'] = 'rtl';
+      if (empty($decoded['buttonText']) || !is_array($decoded['buttonText'])) {
+        $decoded['buttonText'] = [];
+      }
+      $decoded['buttonText']['today'] = (string) t('Today');
+    }
     if ($nids === []) {
+      $settings['calendar_options'] = Json::encode($decoded);
       unset($settings);
       continue;
     }
@@ -5666,6 +5818,9 @@ function motaded_theme_preprocess_views_view_fullcalendar(array &$variables): vo
         'motaded_region' => $region_plain,
         'motaded_meta_line' => $meta_parts === [] ? '' : implode(' · ', $meta_parts),
       ]);
+      if (!empty($event['title']) && is_string($event['title']) && strpos($event['title'], '<') === FALSE) {
+        $decoded['events'][$i]['title'] = $display_node->label();
+      }
     }
     $settings['calendar_options'] = Json::encode($decoded);
     unset($settings);
@@ -5724,7 +5879,7 @@ function motaded_theme_events_directory_views_exposed_form_after_build(array $fo
   }
   $pairs = [
     'field_event_type_target_id' => (string) t('All types'),
-    'field_category_target_id' => (string) t('All industries'),
+    'field_sector_pages_target_id' => (string) t('All sectors'),
     'field_region_target_id' => (string) t('All regions'),
   ];
   foreach ($pairs as $key => $all_label) {
@@ -5787,6 +5942,10 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
         'reset' => 'إعادة تعيين المرشحات',
       ],
       'views-exposed-form-events-page-1' => [
+        'submit' => 'تطبيق المرشحات',
+        'reset' => 'إعادة ضبط',
+      ],
+      'views-exposed-form-insights-page-1' => [
         'submit' => 'تطبيق المرشحات',
         'reset' => 'إعادة ضبط',
       ],
@@ -5922,7 +6081,9 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
   if ($form_id === 'views-exposed-form-insights-page-1') {
     $form['#attributes']['class'][] = 'insights-directory__hero-exposed';
     if (isset($form['title']) && is_array($form['title'])) {
-      $form['title']['#attributes']['placeholder'] = (string) t('Search insights, topics, or keywords…');
+      $form['title']['#attributes']['placeholder'] = $is_arabic_interface
+        ? 'ابحث في الرؤى أو المواضيع أو الكلمات المفتاحية…'
+        : (string) t('Search insights, topics, or keywords…');
       $form['title']['#weight'] = -20;
     }
     $form['#after_build'][] = 'motaded_theme_insights_directory_views_exposed_form_after_build';
@@ -6149,18 +6310,273 @@ function motaded_theme_library_views_exposed_form_after_build(array $form, FormS
 }
 
 /**
+ * Resolves the attached document media file for a document node.
+ *
+ * @return array{url: string, filename: string, size_label: string, mime_label: string}|null
+ */
+function _motaded_theme_document_file_from_node(NodeInterface $node, ?string $langcode = NULL): ?array {
+  if (!$node->hasField('field_document') || $node->get('field_document')->isEmpty()) {
+    return NULL;
+  }
+  $media = $node->get('field_document')->entity;
+  if (!$media instanceof MediaInterface
+    || !$media->hasField('field_media_document')
+    || $media->get('field_media_document')->isEmpty()) {
+    return NULL;
+  }
+  $file = $media->get('field_media_document')->entity;
+  if (!$file instanceof FileInterface) {
+    return NULL;
+  }
+  $langcode ??= $node->language()->getId();
+  $t_opts = ['langcode' => $langcode];
+  $mime = (string) $file->getMimeType();
+  $mime_label = match (TRUE) {
+    str_contains($mime, 'pdf') => (string) t('PDF Document', [], $t_opts),
+    str_contains($mime, 'word') || str_contains($mime, 'document') => (string) t('Word document', [], $t_opts),
+    str_contains($mime, 'sheet') || str_contains($mime, 'excel') => (string) t('Spreadsheet', [], $t_opts),
+    default => (string) t('Document', [], $t_opts),
+  };
+  return [
+    'url' => \Drupal::service('file_url_generator')->generateString($file->getFileUri()),
+    'filename' => $file->getFilename(),
+    'size_label' => _motaded_theme_format_bytes((int) $file->getSize()),
+    'mime_label' => $mime_label,
+  ];
+}
+
+/**
+ * Preprocess variables for document full page (hero, download, meta, related).
+ */
+function _motaded_theme_preprocess_document_node_full(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/document_page';
+  $langcode = $node->language()->getId();
+  $node = \Drupal::service('entity.repository')->getTranslationFromContext($node, $langcode);
+  $variables['document_library_url'] = '/library';
+  try {
+    $language = \Drupal::languageManager()->getLanguage($langcode);
+    $variables['document_library_url'] = Url::fromRoute('view.library.page_1', [], ['language' => $language])->toString();
+  }
+  catch (\Throwable $e) {
+    // Fallback internal path.
+  }
+  $t_opts = ['langcode' => $langcode];
+  $variables['document_langcode'] = $langcode;
+  $variables['document_is_rtl'] = ($langcode === 'ar');
+  $variables['document_related_arrow'] = $langcode === 'ar' ? '←' : '→';
+  $variables['document_breadcrumb_title'] = $node->getTitle();
+  $variables['document_type_label'] = '';
+  $variables['document_category_label'] = '';
+  if ($node->hasField('field_document_type') && !$node->get('field_document_type')->isEmpty()) {
+    $term = $node->get('field_document_type')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['document_type_label'] = motaded_theme_taxonomy_term_translated_label($term, $langcode);
+    }
+  }
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['document_category_label'] = motaded_theme_taxonomy_term_translated_label($term, $langcode);
+    }
+  }
+
+  $file = _motaded_theme_document_file_from_node($node, $langcode);
+  $variables['document_file_url'] = $file['url'] ?? '';
+  $variables['document_file_name'] = $file['filename'] ?? '';
+  $variables['document_file_size'] = $file['size_label'] ?? '';
+  $variables['document_file_mime_label'] = $file['mime_label'] ?? '';
+  $type_label = $variables['document_type_label'];
+  $variables['document_download_kicker'] = (stripos($type_label, 'guide') !== FALSE || stripos($type_label, 'دليل') !== FALSE)
+    ? (string) t('Download guide', [], $t_opts)
+    : (string) t('Download', [], $t_opts);
+
+  $variables['document_meta_items'] = [];
+  if ($node->hasField('field_country') && !$node->get('field_country')->isEmpty()) {
+    $term = $node->get('field_country')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['document_meta_items'][] = [
+        'icon' => 'globe',
+        'label' => (string) t('Country', [], $t_opts),
+        'value' => motaded_theme_taxonomy_term_translated_label($term, $langcode),
+        'url' => '',
+      ];
+    }
+  }
+  if ($node->hasField('field_year') && !$node->get('field_year')->isEmpty()) {
+    $variables['document_meta_items'][] = [
+      'icon' => 'calendar',
+      'label' => (string) t('Publication year', [], $t_opts),
+      'value' => (string) $node->get('field_year')->value,
+      'url' => '',
+    ];
+  }
+  if ($node->hasField('field_source_link') && !$node->get('field_source_link')->isEmpty()) {
+    $link_item = $node->get('field_source_link')->first();
+    if ($link_item) {
+      $url = $link_item->getUrl()->toString();
+      $title = trim((string) $link_item->title);
+      $variables['document_meta_items'][] = [
+        'icon' => 'link',
+        'label' => (string) t('Official source', [], $t_opts),
+        'value' => $title !== '' ? $title : $url,
+        'url' => $url,
+      ];
+    }
+  }
+  if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
+    $labels = [];
+    foreach ($node->get('field_sector_pages')->referencedEntities() as $ref) {
+      if ($ref instanceof NodeInterface) {
+        $ref = \Drupal::service('entity.repository')->getTranslationFromContext($ref, $langcode);
+        $labels[] = $ref->label();
+      }
+    }
+    if ($labels !== []) {
+      $variables['document_meta_items'][] = [
+        'icon' => 'sector',
+        'label' => (string) t('Sector page', [], $t_opts),
+        'value' => implode(', ', $labels),
+        'url' => '',
+      ];
+    }
+  }
+  if ($node->hasField('field_platforms') && !$node->get('field_platforms')->isEmpty()) {
+    $links = [];
+    foreach ($node->get('field_platforms')->referencedEntities() as $ref) {
+      if ($ref instanceof NodeInterface) {
+        $ref = \Drupal::service('entity.repository')->getTranslationFromContext($ref, $langcode);
+        $links[] = [
+          'title' => $ref->label(),
+          'url' => $ref->toUrl()->toString(),
+        ];
+      }
+    }
+    if ($links !== []) {
+      $variables['document_meta_items'][] = [
+        'icon' => 'platform',
+        'label' => (string) t('Platforms', [], $t_opts),
+        'value' => '',
+        'links' => $links,
+      ];
+    }
+  }
+
+  $variables['document_related'] = _motaded_theme_document_related_resources($node, $langcode);
+}
+
+/**
+ * Loads up to three related published documents in the current language.
+ *
+ * @return list<array{url: string, title: string, summary: string, category_label: string, mime_label: string, size_label: string}>
+ */
+function _motaded_theme_document_related_resources(NodeInterface $node, string $langcode): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $exclude = [(int) $node->id()];
+
+  $nids = [];
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $nids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'document')
+      ->condition('status', 1)
+      ->condition('langcode', $langcode)
+      ->condition('nid', $exclude, 'NOT IN')
+      ->condition('field_category', $node->get('field_category')->target_id)
+      ->sort('changed', 'DESC')
+      ->range(0, 3)
+      ->execute();
+  }
+  if (count($nids) < 3 && $node->hasField('field_document_type') && !$node->get('field_document_type')->isEmpty()) {
+    $more = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'document')
+      ->condition('status', 1)
+      ->condition('langcode', $langcode)
+      ->condition('nid', array_merge($exclude, array_map('intval', $nids)), 'NOT IN')
+      ->condition('field_document_type', $node->get('field_document_type')->target_id)
+      ->sort('changed', 'DESC')
+      ->range(0, 3 - count($nids))
+      ->execute();
+    $nids = array_merge($nids, $more);
+  }
+  if (count($nids) < 3) {
+    $more = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'document')
+      ->condition('status', 1)
+      ->condition('langcode', $langcode)
+      ->condition('nid', array_merge($exclude, array_map('intval', $nids)), 'NOT IN')
+      ->sort('changed', 'DESC')
+      ->range(0, 3 - count($nids))
+      ->execute();
+    $nids = array_merge($nids, $more);
+  }
+
+  $out = [];
+  foreach ($storage->loadMultiple($nids) as $related) {
+    if (!$related instanceof NodeInterface) {
+      continue;
+    }
+    $related = \Drupal::service('entity.repository')->getTranslationFromContext($related, $langcode);
+    $category_label = '';
+    if ($related->hasField('field_category') && !$related->get('field_category')->isEmpty()) {
+      $term = $related->get('field_category')->entity;
+      if ($term instanceof TermInterface) {
+        $category_label = motaded_theme_taxonomy_term_translated_label($term, $langcode);
+      }
+    }
+    $file = _motaded_theme_document_file_from_node($related, $langcode);
+    $summary = '';
+    if ($related->hasField('field_short_description') && !$related->get('field_short_description')->isEmpty()) {
+      $summary = (string) $related->get('field_short_description')->value;
+    }
+    $out[] = [
+      'url' => $related->toUrl()->toString(),
+      'title' => $related->label(),
+      'summary' => $summary,
+      'category_label' => $category_label,
+      'mime_label' => $file['mime_label'] ?? (string) t('PDF', [], ['langcode' => $langcode]),
+      'size_label' => $file['size_label'] ?? '',
+    ];
+  }
+  return $out;
+}
+
+/**
  * Preprocesses Library view row fields: file URL + human link label for the template.
  */
 function motaded_theme_preprocess_views_view_fields__library(array &$variables): void {
   $variables['library_row_file_url'] = '';
   $variables['library_row_file_label'] = '';
+  $variables['library_row_node_url'] = '';
+  $variables['library_row_title'] = '';
 
   $row = $variables['row'] ?? NULL;
   if (!is_object($row) || !isset($row->_entity)) {
     return;
   }
   $entity = $row->_entity;
-  if (!$entity instanceof NodeInterface || !$entity->hasField('field_document') || $entity->get('field_document')->isEmpty()) {
+  if (!$entity instanceof NodeInterface || $entity->bundle() !== 'document') {
+    return;
+  }
+
+  $langcode = motaded_theme_interface_langcode();
+  if (!$entity->hasTranslation($langcode)) {
+    return;
+  }
+  $entity = $entity->getTranslation($langcode);
+  $variables['library_row_node_url'] = $entity->toUrl('canonical', ['language' => \Drupal::languageManager()->getLanguage($langcode)])->toString();
+  $variables['library_row_title'] = $entity->label();
+  $variables['library_row_file_label'] = (string) t('Open document', [], ['langcode' => $langcode]);
+  $variables['library_row_category_label'] = '';
+  if ($entity->hasField('field_category') && !$entity->get('field_category')->isEmpty()) {
+    $category = $entity->get('field_category')->entity;
+    if ($category instanceof TermInterface) {
+      $variables['library_row_category_label'] = motaded_theme_entity_label_in_language($category, $langcode);
+    }
+  }
+
+  if (!$entity->hasField('field_document') || $entity->get('field_document')->isEmpty()) {
     return;
   }
   $media = $entity->get('field_document')->entity;
@@ -6175,7 +6591,6 @@ function motaded_theme_preprocess_views_view_fields__library(array &$variables):
     return;
   }
   $variables['library_row_file_url'] = \Drupal::service('file_url_generator')->generateString($file->getFileUri());
-  $variables['library_row_file_label'] = (string) t('Open document');
 }
 
 /**
@@ -6213,6 +6628,13 @@ function motaded_theme_services_home_block_exposed_after_build(array $form, Form
     $src = $base . $file;
     $icon_markup = '<span class="services-home-sidebar-radio__icon" aria-hidden="true"><img src="' . Html::escape($src) . '" alt="" width="22" height="22" loading="lazy" decoding="async" /></span>';
     $element[$key]['#prefix'] = ($element[$key]['#prefix'] ?? '') . Markup::create($icon_markup);
+    $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load((int) $tid);
+    if ($term instanceof TermInterface) {
+      $label = motaded_theme_entity_label_in_language($term);
+      if ($label !== '') {
+        $element[$key]['#title'] = $label;
+      }
+    }
   }
 
   // Always show every category: disable BEF soft-limit JS (non-zero soft_limit loads

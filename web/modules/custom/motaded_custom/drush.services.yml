@@ -93,3 +93,51 @@ services:
       - '@motaded_custom.sector_indicators_importer'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.taxonomy_terms_ar_commands:
+    class: Drupal\motaded_custom\Drush\Commands\TaxonomyTermsArCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.document_import_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\DocumentImportOfficialCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.event_import_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\EventImportOfficialCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.market_insight_import_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MarketInsightImportOfficialCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.market_insight_ar_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MarketInsightArOfficialCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.documents_ar_commands:
+    class: Drupal\motaded_custom\Drush\Commands\DocumentsArCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.events_ar_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\EventsArOfficialCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.menu_links_ar_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MenuLinksArCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.sectors_ar_commands:
+    class: Drupal\motaded_custom\Drush\Commands\SectorsArCommands
+    tags:
+      - { name: drush.command }

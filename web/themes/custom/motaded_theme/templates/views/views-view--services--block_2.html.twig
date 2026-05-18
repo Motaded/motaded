@@ -99,7 +99,7 @@
       <p class="services-home-category-more-wrap">
         <a href="{{ services_home_category_more_url }}" class="services-home-category-more">
           {{ 'View all services in this category'|t }}
-          <span class="services-home-category-more__arrow" aria-hidden="true">→</span>
+          <span class="services-home-category-more__arrow" aria-hidden="true">{{ services_home_list_arrow|default('→') }}</span>
         </a>
       </p>
 
