@@ -60,6 +60,22 @@ main:has(.insights-directory.insights-directory-page),
   pointer-events: none;
 }
 
+/* RTL: mirror hero photo so the skyline sits on the start (inline-start) side. */
+[dir='rtl'] .insights-directory__hero-bg {
+  transform: scaleX(-1);
+  background-position: 28% 40%;
+}
+
+[dir='rtl'] .insights-directory__hero-gradient {
+  background: linear-gradient(
+    268deg,
+    var(--mot-surface, #ffffff) 0%,
+    rgba(255, 255, 255, 0.97) 38%,
+    rgba(255, 255, 255, 0.62) 58%,
+    rgba(248, 250, 252, 0.18) 100%
+  );
+}
+
 .insights-directory__hero-inner {
   position: relative;
   z-index: 2;

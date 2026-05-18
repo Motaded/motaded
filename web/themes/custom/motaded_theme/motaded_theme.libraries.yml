@@ -516,7 +516,7 @@ events_directory:
     - views/views.ajax
 
 insights_directory:
-  version: 20260518newsletter2
+  version: 20260518herortl
   css:
     component:
       css/components/insights-directory.css:
