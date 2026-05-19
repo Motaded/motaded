@@ -202,6 +202,11 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
     }
   }
 
+  require_once __DIR__ . '/includes/motaded_custom.platform_metatag.inc';
+  require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
+  motaded_custom_platform_page_jsonld_alter($html_head);
+  motaded_custom_sector_page_page_jsonld_alter($html_head);
+
   // If no @graph script exists (e.g. taxonomy, search), add standalone BreadcrumbList.
   if (!empty($breadcrumb_list) && !$breadcrumb_added) {
     $data = [
@@ -411,6 +416,14 @@ function _motaded_custom_build_breadcrumb_list_schema() {
     $url = $link->getUrl();
     $url->setAbsolute(TRUE);
     $url_string = $url->toString();
+    if ($url_string === '' || $url_string === '#') {
+      try {
+        $url_string = \Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable) {
+        $url_string = '';
+      }
+    }
     $text = $link->getText();
     if (is_object($text) && method_exists($text, '__toString')) {
       $text = (string) $text;
@@ -679,19 +692,30 @@ function _motaded_custom_get_accessible_translation_langcodes(): ?array {
  */
 function motaded_custom_metatags_alter(array &$metatags, array &$context) {
   $entity = $context['entity'] ?? NULL;
-  if (!$entity || !$entity instanceof NodeInterface) {
-    return;
-  }
-  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'page') {
+  if (!$entity || !$entity instanceof NodeInterface || $entity->getEntityTypeId() !== 'node') {
     return;
   }
 
-  $faq = _motaded_custom_extract_faq_from_node($entity);
-  if (!empty($faq)) {
-    $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+  if ($entity->bundle() === 'page') {
+    $faq = _motaded_custom_extract_faq_from_node($entity);
+    if (!empty($faq)) {
+      $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+    }
+    else {
+      unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+    }
+    return;
   }
-  else {
-    unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+
+  if ($entity->bundle() === 'platform') {
+    require_once __DIR__ . '/includes/motaded_custom.platform_metatag.inc';
+    motaded_custom_platform_metatags_alter($metatags, $entity);
+    return;
+  }
+
+  if ($entity->bundle() === 'sector_page') {
+    require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
+    motaded_custom_sector_page_metatags_alter($metatags, $entity);
   }
 }
 
@@ -1129,6 +1153,136 @@ function motaded_custom_ajax_render_alter(array &$commands): void {
 }
 
 /**
+ * Whether an event's end datetime is in the past (UTC), for display logic.
+ */
+function motaded_custom_event_is_past(\Drupal\node\NodeInterface $node): bool {
+  if ($node->bundle() !== 'event') {
+    return FALSE;
+  }
+  $date_node = $node;
+  if ($node->hasField('field_event_end') && $node->get('field_event_end')->isEmpty()
+    && $node->hasField('field_event_start') && $node->get('field_event_start')->isEmpty()
+    && $node->hasTranslation('en')) {
+    $date_node = $node->getTranslation('en');
+  }
+  $end_raw = '';
+  if ($date_node->hasField('field_event_end') && !$date_node->get('field_event_end')->isEmpty()) {
+    $end_raw = (string) $date_node->get('field_event_end')->value;
+  }
+  elseif ($date_node->hasField('field_event_start') && !$date_node->get('field_event_start')->isEmpty()) {
+    $end_raw = (string) $date_node->get('field_event_start')->value;
+  }
+  if ($end_raw === '') {
+    return FALSE;
+  }
+  try {
+    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
+    return \Drupal::time()->getRequestTime() > $end->getTimestamp();
+  }
+  catch (\Throwable $e) {
+    return FALSE;
+  }
+}
+
+/**
+ * Computes event status (upcoming / ongoing / past) from start/end datetimes (UTC).
+ *
+ * @return 'upcoming'|'ongoing'|'past'|null
+ *   NULL when dates are missing or invalid.
+ */
+function motaded_custom_event_compute_status(\Drupal\node\NodeInterface $node): ?string {
+  if ($node->bundle() !== 'event') {
+    return NULL;
+  }
+  if (!$node->hasField('field_event_status') || !$node->hasField('field_event_start') || !$node->hasField('field_event_end')) {
+    return NULL;
+  }
+  if ($node->get('field_event_start')->isEmpty() || $node->get('field_event_end')->isEmpty()) {
+    return NULL;
+  }
+
+  $start_raw = (string) ($node->get('field_event_start')->value ?? '');
+  $end_raw = (string) ($node->get('field_event_end')->value ?? '');
+  if ($start_raw === '' || $end_raw === '') {
+    return NULL;
+  }
+
+  try {
+    $start = new DrupalDateTime($start_raw, new \DateTimeZone('UTC'));
+    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
+    $now_ts = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->getTimestamp();
+    $start_ts = $start->getTimestamp();
+    $end_ts = $end->getTimestamp();
+
+    if ($now_ts < $start_ts) {
+      return 'upcoming';
+    }
+    if ($now_ts > $end_ts) {
+      return 'past';
+    }
+    return 'ongoing';
+  }
+  catch (\Throwable $e) {
+    return NULL;
+  }
+}
+
+/**
+ * Sets field_event_status on all translations when it differs from computed value.
+ *
+ * @return bool
+ *   TRUE if the node was saved.
+ */
+function motaded_custom_event_sync_status_on_node(\Drupal\node\NodeInterface $node): bool {
+  $status = motaded_custom_event_compute_status($node);
+  if ($status === NULL) {
+    return FALSE;
+  }
+
+  $changed = FALSE;
+  foreach (array_keys($node->getTranslationLanguages()) as $langcode) {
+    $translation = $node->getTranslation($langcode);
+    if (!$translation->hasField('field_event_status')) {
+      continue;
+    }
+    if ((string) $translation->get('field_event_status')->value !== $status) {
+      $translation->set('field_event_status', $status);
+      $changed = TRUE;
+    }
+  }
+
+  if ($changed) {
+    $node->save();
+  }
+  return $changed;
+}
+
+/**
+ * Recomputes field_event_status for every event node (cron / Drush).
+ *
+ * @return int
+ *   Number of nodes saved.
+ */
+function motaded_custom_sync_all_event_statuses(): int {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->execute();
+  if ($nids === []) {
+    return 0;
+  }
+
+  $updated = 0;
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if ($node instanceof \Drupal\node\NodeInterface && motaded_custom_event_sync_status_on_node($node)) {
+      $updated++;
+    }
+  }
+  return $updated;
+}
+
+/**
  * Implements hook_entity_presave().
  *
  * Auto-compute Event status (upcoming/ongoing/past) from start/end datetimes.
@@ -1140,41 +1294,9 @@ function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
   if ($entity->bundle() !== 'event') {
     return;
   }
-  if (!$entity->hasField('field_event_status') || !$entity->hasField('field_event_start') || !$entity->hasField('field_event_end')) {
-    return;
-  }
-  if ($entity->get('field_event_start')->isEmpty() || $entity->get('field_event_end')->isEmpty()) {
-    return;
-  }
-
-  $start_raw = (string) ($entity->get('field_event_start')->value ?? '');
-  $end_raw = (string) ($entity->get('field_event_end')->value ?? '');
-  if ($start_raw === '' || $end_raw === '') {
-    return;
-  }
-
-  try {
-    $start = new DrupalDateTime($start_raw, new \DateTimeZone('UTC'));
-    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
-    $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-    $start_ts = $start->getTimestamp();
-    $end_ts = $end->getTimestamp();
-    $now_ts = $now->getTimestamp();
-
-    $status = 'upcoming';
-    if ($now_ts < $start_ts) {
-      $status = 'upcoming';
-    }
-    elseif ($now_ts > $end_ts) {
-      $status = 'past';
-    }
-    else {
-      $status = 'ongoing';
-    }
+  $status = motaded_custom_event_compute_status($entity);
+  if ($status !== NULL) {
     $entity->set('field_event_status', $status);
-  }
-  catch (\Throwable $e) {
-    // Keep editor-provided value if parsing fails.
   }
 }
 
@@ -1419,6 +1541,13 @@ function motaded_custom_cron(): void {
     if ($queue_sector->numberOfItems() === 0) {
       $queue_sector->createItem([]);
       $state->set('motaded_custom.sector_indicators_queue_day', $day);
+    }
+  }
+  if ($state->get('motaded_custom.event_status_sync_day') !== $day) {
+    $updated = motaded_custom_sync_all_event_statuses();
+    $state->set('motaded_custom.event_status_sync_day', $day);
+    if ($updated > 0) {
+      \Drupal::logger('motaded_custom')->info('Event status cron: updated @count node(s).', ['@count' => $updated]);
     }
   }
 }
@@ -1800,6 +1929,58 @@ function motaded_custom_market_insight_ar_shared_field_names(): array {
     'field_featured',
     'field_order',
   ];
+}
+
+/**
+ * Event fields copied from EN when creating/updating the AR translation.
+ *
+ * @return string[]
+ */
+function motaded_custom_event_ar_shared_field_names(): array {
+  return [
+    'field_event_start',
+    'field_event_end',
+    'field_event_status',
+    'field_event_type',
+    'field_event_format',
+    'field_region',
+    'field_city',
+    'field_country',
+    'field_sector_pages',
+    'field_featured_image',
+    'field_hero_image',
+    'field_meeting_enabled',
+    'field_cta_type',
+    'field_price_range',
+    'field_attendance_type',
+  ];
+}
+
+/**
+ * Copies shared EN field values onto every event AR translation.
+ *
+ * @return int
+ *   Number of nodes updated.
+ */
+function motaded_custom_sync_all_event_ar_shared_fields(): int {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->execute();
+  $field_names = motaded_custom_event_ar_shared_field_names();
+  $updated = 0;
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if (!$node instanceof \Drupal\node\NodeInterface || !$node->hasTranslation('en') || !$node->hasTranslation('ar')) {
+      continue;
+    }
+    $en = $node->getTranslation('en');
+    $ar = $node->getTranslation('ar');
+    motaded_custom_node_ar_copy_shared_field_values($ar, $en, $field_names);
+    $node->save();
+    $updated++;
+  }
+  return $updated;
 }
 
 /**

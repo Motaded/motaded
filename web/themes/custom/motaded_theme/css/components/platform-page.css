@@ -136,7 +136,7 @@
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  text-align: left;
+  text-align: start;
 }
 
 .market-insight--platform .mi-hero__main {
@@ -211,26 +211,67 @@
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(14px);
-  text-align: left;
+  text-align: start;
 }
 
-/* Bottom-right of hero (over image), aligned with max-w-6xl gutter when centered. */
+/* Bottom-inline-end of hero (over image), aligned with max-w-6xl gutter when centered. */
 .market-insight--platform .mi-stat-card--floating {
   position: absolute;
   z-index: 4;
   margin: 0;
   width: min(22.5rem, calc(100vw - 2.5rem));
   max-width: 24rem;
-  right: max(0.75rem, calc((100vw - min(72rem, calc(100vw - 2rem))) / 2 + 1rem));
+  inset-inline-end: max(0.75rem, calc((100vw - min(72rem, calc(100vw - 2rem))) / 2 + 1rem));
   bottom: clamp(1rem, 3.5vh, 2.75rem);
 }
 
+/* Mobile: stat card in document flow (no overlap with hero meta). */
 @media (max-width: 767px) {
-  .market-insight--platform .mi-stat-card--floating {
-    width: min(17.5rem, calc(100vw - 3rem));
-    right: max(0.75rem, env(safe-area-inset-right, 0px));
-    bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  .market-insight--platform .mi-hero {
+    min-height: auto;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
   }
+
+  .market-insight--platform .mi-hero__content--valign {
+    flex: 0 1 auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .market-insight--platform .mi-stat-card--floating {
+    position: relative;
+    inset: auto;
+    z-index: 3;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+    margin: 0.75rem 1rem 0;
+  }
+}
+
+/* RTL: readable column on the start side; photo focal point toward inline-end. */
+[dir='rtl'] .market-insight--platform .mi-hero:has(.mi-hero__photo img) .mi-hero__overlay,
+[dir='rtl'] .market-insight--platform .mi-hero:has(.mi-hero__photo picture) .mi-hero__overlay {
+  background-image:
+    linear-gradient(
+      268deg,
+      color-mix(in oklab, var(--color-primary-900) 93%, transparent) 0%,
+      color-mix(in oklab, #050a08 58%, transparent) 18%,
+      color-mix(in oklab, var(--color-primary-900) 32%, transparent) 42%,
+      color-mix(in oklab, var(--color-primary-900) 8%, transparent) 62%,
+      transparent 78%
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, #000 38%, transparent) 0%,
+      transparent 46%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+[dir='rtl'] .market-insight--platform .mi-hero__photo img,
+[dir='rtl'] .market-insight--platform .mi-hero__photo picture img {
+  transform: scaleX(-1);
+  object-position: 72% center;
 }
 
 .market-insight--platform .mi-stat-card__label {

@@ -48,28 +48,28 @@
               <span class="mi-hero__meta-text">{{ node.field_year.value }}</span>
             </li>
           {% endif %}
-          {% if node.field_category.entity %}
+          {% if mi_category_label %}
             <li class="mi-hero__meta-item">
               <span class="mi-hero__meta-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 3h6l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/><path d="M13 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
               </span>
-              <span class="mi-hero__meta-text">{{ node.field_category.entity.label }}</span>
+              <span class="mi-hero__meta-text">{{ mi_category_label }}</span>
             </li>
           {% endif %}
-          {% if node.field_region.entity %}
+          {% if mi_region_label %}
             <li class="mi-hero__meta-item">
               <span class="mi-hero__meta-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
               </span>
-              <span class="mi-hero__meta-text">{{ node.field_region.entity.label }}</span>
+              <span class="mi-hero__meta-text">{{ mi_region_label }}</span>
             </li>
           {% endif %}
-          {% if node.field_sector.entity %}
+          {% if mi_sector_label %}
             <li class="mi-hero__meta-item">
               <span class="mi-hero__meta-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </span>
-              <span class="mi-hero__meta-text">{{ node.field_sector.entity.label }}</span>
+              <span class="mi-hero__meta-text">{{ mi_sector_label }}</span>
             </li>
           {% endif %}
           {% if market_insight_read_mins %}
@@ -121,36 +121,36 @@
         <div class="mi-aside-card">
           <h2 class="mi-aside-card__title">{{ 'Details'|t }}</h2>
           <dl class="mi-aside-dl">
-            {% if node.field_category.entity %}
+            {% if mi_category_label %}
               <div class="mi-aside-dl__row">
                 <span class="mi-aside-dl__icon" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 3h6l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5"/><path d="M13 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
                 </span>
                 <div class="mi-aside-dl__text">
                   <dt>{{ 'Category'|t }}</dt>
-                  <dd>{{ node.field_category.entity.label }}</dd>
+                  <dd>{{ mi_category_label }}</dd>
                 </div>
               </div>
             {% endif %}
-            {% if node.field_sector.entity %}
+            {% if mi_sector_label %}
               <div class="mi-aside-dl__row">
                 <span class="mi-aside-dl__icon" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.5"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </span>
                 <div class="mi-aside-dl__text">
                   <dt>{{ 'Sector'|t }}</dt>
-                  <dd>{{ node.field_sector.entity.label }}</dd>
+                  <dd>{{ mi_sector_label }}</dd>
                 </div>
               </div>
             {% endif %}
-            {% if node.field_region.entity %}
+            {% if mi_region_label %}
               <div class="mi-aside-dl__row">
                 <span class="mi-aside-dl__icon" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
                 </span>
                 <div class="mi-aside-dl__text">
                   <dt>{{ 'Region'|t }}</dt>
-                  <dd>{{ node.field_region.entity.label }}</dd>
+                  <dd>{{ mi_region_label }}</dd>
                 </div>
               </div>
             {% endif %}
@@ -232,7 +232,7 @@
     <div class="mi-related__inner mx-auto max-w-6xl px-4 pb-12 pt-2 md:pb-16">
       <div class="mi-related__head">
         <h2 id="mi-related-heading" class="mi-related__title">{{ 'Related insights'|t }}</h2>
-        <a href="/insights" class="mi-related__all">{{ 'View all insights'|t }}<span class="mi-related__chev" aria-hidden="true" aria-label="">→</span></a>
+        <a href="{{ market_insight_insights_url }}" class="mi-related__all">{{ 'View all insights'|t }}<span class="mi-related__chev" aria-hidden="true" aria-label="">→</span></a>
       </div>
       {% if market_insight_related is not empty %}
         <div class="mi-related__grid">

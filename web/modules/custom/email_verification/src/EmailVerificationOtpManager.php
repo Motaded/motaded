@@ -3,22 +3,13 @@
 namespace Drupal\email_verification;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Mail\MailManagerInterface;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\Core\Url;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Stores OTP and verified state in private tempstore (session-scoped).
  */
 class EmailVerificationOtpManager {
-
-  use StringTranslationTrait;
 
   public const OTP_TTL = 600;
 
@@ -26,12 +17,9 @@ class EmailVerificationOtpManager {
 
   public function __construct(
     private PrivateTempStoreFactory $tempStoreFactory,
-    private MailManagerInterface $mailManager,
+    private BrandedEmailBuilder $brandedEmail,
     private LoggerInterface $logger,
     private ConfigFactoryInterface $configFactory,
-    private RendererInterface $renderer,
-    private LanguageManagerInterface $languageManager,
-    private RequestStack $requestStack,
   ) {}
 
   /**
@@ -81,78 +69,12 @@ class EmailVerificationOtpManager {
     ];
     $store->set($this->key($webformId, $email), $data);
 
-    $site_name = trim((string) ($this->configFactory->get('system.site')->get('name') ?: ''));
-    $t_opts = ['langcode' => $langcode];
-    $subject = $site_name !== ''
-      ? $this->t('Confirm your email — @site', ['@site' => $site_name], $t_opts)
-      : $this->t('Confirm your email', [], $t_opts);
-
-    $result = $this->mailManager->mail(
-      'email_verification',
-      'email_verification_otp',
-      $email,
-      $langcode,
-      [
-        'subject' => $subject,
-        'html_body' => $this->buildOtpEmailHtml($otp, $langcode),
-      ],
-      NULL,
-      TRUE
-    );
-
-    $sent = ($result['result'] ?? NULL) === TRUE;
+    $expiry_minutes = (int) (self::OTP_TTL / 60);
+    $sent = $this->brandedEmail->sendOtp($email, $otp, $langcode, $expiry_minutes);
     if (!$sent) {
-      $this->logger->error(
-        'OTP email not sent to @email. result=@result message_id=@mid',
-        [
-          '@email' => $email,
-          '@result' => json_encode($result['result'] ?? null),
-          '@mid' => $result['id'] ?? 'n/a',
-        ]
-      );
-      return FALSE;
+      $this->logger->error('OTP email not sent to @email.', ['@email' => $email]);
     }
-    return TRUE;
-  }
-
-  /**
-   * Renders the branded HTML email body (Twig template).
-   */
-  protected function buildOtpEmailHtml(string $otp, string $langcode): string {
-    $site_url = $this->getSiteBaseUrlWithoutLanguagePrefix();
-    $languages = $this->languageManager->getLanguages();
-    if (isset($languages[$langcode])) {
-      $text_direction = $languages[$langcode]->getDirection();
-    }
-    else {
-      // RTL email layout even if the language is not enabled as configurable.
-      $text_direction = in_array($langcode, ['ar', 'he', 'fa', 'ur', 'ps'], TRUE)
-        ? LanguageInterface::DIRECTION_RTL
-        : LanguageInterface::DIRECTION_LTR;
-    }
-    // Theme variables must use # keys so ThemeManager passes them to Twig
-    // (see core ThemeManager::render); un-prefixed keys are child render arrays.
-    $build = [
-      '#theme' => 'email_verification_otp',
-      '#langcode' => $langcode,
-      '#text_direction' => $text_direction,
-      '#site_url' => $site_url,
-      '#otp_code' => $otp,
-      '#expiry_minutes' => (int) (self::OTP_TTL / 60),
-      '#year' => date('Y'),
-    ];
-    return (string) $this->renderer->renderPlain($build);
-  }
-
-  /**
-   * Absolute site root for email assets/links (no /ar etc. from path negotiation).
-   */
-  protected function getSiteBaseUrlWithoutLanguagePrefix(): string {
-    $request = $this->requestStack->getCurrentRequest();
-    if ($request) {
-      return rtrim($request->getSchemeAndHttpHost() . $request->getBasePath(), '/');
-    }
-    return rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
+    return $sent;
   }
 
   /**

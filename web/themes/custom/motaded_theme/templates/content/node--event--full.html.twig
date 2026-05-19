@@ -63,14 +63,21 @@
           </div>
 
           <div class="event-page__hero-ctas">
-            {% if event_register_url %}
-              <a class="event-page__btn event-page__btn--primary" href="{{ event_register_url }}">{{ event_register_title }}</a>
-            {% endif %}
-            {% if event_registration_help_form is not empty %}
-              <a class="event-page__btn event-page__btn--ghost" href="#event-registration-help">{{ 'Register'|t }}</a>
-            {% endif %}
-            {% if event_secondary_url %}
-              <a class="event-page__btn event-page__btn--ghost" href="{{ event_secondary_url }}">{{ event_secondary_title }}</a>
+            {% if event_is_past %}
+              <a class="event-page__btn event-page__btn--primary" href="{{ event_events_directory_url|e('html_attr') }}">{{ 'Browse upcoming events'|t({}, event_lang|default({})) }}</a>
+              {% if event_secondary_url %}
+                <a class="event-page__btn event-page__btn--ghost" href="{{ event_secondary_url }}">{{ event_secondary_title }}</a>
+              {% endif %}
+            {% else %}
+              {% if event_register_url %}
+                <a class="event-page__btn event-page__btn--primary" href="{{ event_register_url }}">{{ event_register_title }}</a>
+              {% endif %}
+              {% if event_registration_help_form is not empty %}
+                <a class="event-page__btn event-page__btn--ghost" href="#event-registration-help">{{ 'Register'|t }}</a>
+              {% endif %}
+              {% if event_secondary_url %}
+                <a class="event-page__btn event-page__btn--ghost" href="{{ event_secondary_url }}">{{ event_secondary_title }}</a>
+              {% endif %}
             {% endif %}
           </div>
         </div>
@@ -224,21 +231,29 @@
 
       <div class="event-page__aside-card event-page__reg">
         <h3>{{ 'Registration'|t }}</h3>
-        {% if event_register_kind != 'external' and event_cta_blurb %}
-          <p class="m-0 text-sm leading-relaxed text-slate-600">{{ event_cta_blurb }}</p>
-        {% endif %}
-        {% if event_register_kind != 'external' and (event_meeting_enabled or event_register_url) %}
-          <ul class="event-page__reg-list">
-            {% if event_meeting_enabled %}
-              <li>{{ 'Meeting requests available'|t }}</li>
-            {% endif %}
-            {% if event_register_url %}
-              <li>{{ 'Secure online registration'|t }}</li>
-            {% endif %}
-          </ul>
-        {% endif %}
-        {% if event_register_url %}
-          <a class="event-page__btn event-page__btn--primary w-full text-center" href="{{ event_register_url }}">{{ event_register_title }}</a>
+        {% if event_is_past %}
+          {% include '@motaded_theme/event/event-past-notice.html.twig' with {
+            compact: true,
+            event_lang: event_lang|default({}),
+            event_events_directory_url: event_events_directory_url,
+          } only %}
+        {% else %}
+          {% if event_register_kind != 'external' and event_cta_blurb %}
+            <p class="m-0 text-sm leading-relaxed text-slate-600">{{ event_cta_blurb }}</p>
+          {% endif %}
+          {% if event_register_kind != 'external' and (event_meeting_enabled or event_register_url) %}
+            <ul class="event-page__reg-list">
+              {% if event_meeting_enabled %}
+                <li>{{ 'Meeting requests available'|t }}</li>
+              {% endif %}
+              {% if event_register_url %}
+                <li>{{ 'Secure online registration'|t }}</li>
+              {% endif %}
+            </ul>
+          {% endif %}
+          {% if event_register_url %}
+            <a class="event-page__btn event-page__btn--primary w-full text-center" href="{{ event_register_url }}">{{ event_register_title }}</a>
+          {% endif %}
         {% endif %}
       </div>
 
@@ -270,10 +285,17 @@
     </section>
   {% endif %}
 
-  {% if event_registration_help_form is not empty %}
+  {% if event_is_past or event_registration_help_form is not empty %}
     <section id="event-registration-help" class="event-page__help" aria-labelledby="event-help-heading">
       <div class="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
-        <div class="event-page__help-card">
+        <div class="event-page__help-card{% if event_is_past %} event-page__help-card--past{% endif %}">
+          {% if event_is_past %}
+            {% include '@motaded_theme/event/event-past-notice.html.twig' with {
+              compact: false,
+              event_lang: event_lang|default({}),
+              event_events_directory_url: event_events_directory_url,
+            } only %}
+          {% else %}
           <div class="event-help__head">
             <div class="event-help__head-left">
               <div class="event-help__badge" aria-hidden="true"></div>
@@ -313,6 +335,7 @@
               </div>
             </aside>
           </div>
+          {% endif %}
         </div>
       </div>
     </section>

@@ -7,3 +7,9 @@ webforms:
     email_element: email
   career:
     email_element: email
+  event_registration_help:
+    email_element: email
+  event_updates:
+    email_element: email
+  setup_cost_estimate_lead:
+    email_element: email

@@ -83,6 +83,12 @@ data/events/images/*
 # Market insight hero images for drush minsight --download-images.
 data/market_insights/images/*
 
+# Chamber logos for drush mcil (cached downloads).
+data/chambers/images/*
+
+# Platform logos for drush mpil (cached downloads).
+data/platforms/images/*
+
 data/service-import/last_import_report.csv
 
 # Local Drush export (motaded:fr-es-export-map default output)

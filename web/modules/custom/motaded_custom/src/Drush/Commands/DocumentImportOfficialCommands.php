@@ -229,6 +229,8 @@ final class DocumentImportOfficialCommands extends DrushCommands {
         $tid = $termId('sector', $sector);
         if ($tid) {
           $node->set('field_sector', ['target_id' => $tid]);
+          require_once \Drupal::root() . '/modules/custom/motaded_custom/includes/motaded_custom.document_sector_pages.inc';
+          motaded_custom_document_apply_sector_pages_from_sector($node, FALSE);
         }
       }
 

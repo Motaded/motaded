@@ -6,6 +6,15 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - node.type.platform
     - taxonomy.vocabulary.platform_category
+  content:
+    - 'taxonomy_term:platform_category:037df13b-bd21-409f-b5ac-b07e590dc45e'
+    - 'taxonomy_term:platform_category:72168355-df2e-4e1e-97c9-5a93eed525bf'
+    - 'taxonomy_term:platform_category:827f9f07-886f-4f48-9f78-85ad415d5559'
+    - 'taxonomy_term:platform_category:9379aa04-09e0-4757-a69e-b1efe3de739f'
+    - 'taxonomy_term:platform_category:bebba861-973b-43da-8931-332f150c9d0b'
+    - 'taxonomy_term:platform_category:bf15397a-34df-4f72-b461-69277544ad4c'
+    - 'taxonomy_term:platform_category:c06a3939-8b6b-4314-b358-32caaa78ed88'
+    - 'taxonomy_term:platform_category:d12ef5ec-97ee-4ae8-b206-c878c16a5bb3'
   module:
     - better_exposed_filters
     - node
@@ -300,7 +309,15 @@ display:
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value: {  }
+          value:
+            197: 197
+            180: 180
+            194: 194
+            199: 199
+            193: 193
+            198: 198
+            196: 196
+            195: 195
           group: 1
           exposed: true
           expose:
@@ -317,9 +334,9 @@ display:
             remember: false
             multiple: false
             remember_roles:
-              authenticated: authenticated
               anonymous: anonymous
-            reduce: false
+              authenticated: authenticated
+            reduce: true
           is_grouped: false
           group_info:
             label: ''
@@ -390,9 +407,14 @@ display:
           metatags:
             title: 'Government platforms in Saudi Arabia | Motaded'
             description: 'Browse official government and digital platforms supporting business in Saudi Arabia. Filter by category, find the right service portal, and connect with Motaded for expert guidance.'
+            canonical_url: '[site:base-url]/platforms'
             hreflang_xdefault: '[site:base-url]/platforms'
             'hreflang_per_language:hreflang_en': '[site:base-url]/platforms'
             'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/platforms'
+            og_title: 'Government platforms in Saudi Arabia | Motaded'
+            og_description: 'Browse official government and digital platforms supporting business in Saudi Arabia.'
+            og_type: website
+            og_url: '[site:base-url]/platforms'
           tokenize: false
       path: platforms
     cache_metadata:

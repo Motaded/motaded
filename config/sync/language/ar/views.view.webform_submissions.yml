@@ -5,8 +5,8 @@ display:
       exposed_form:
         options:
           submit_button: تطبيق
-          reset_button_label: 'إعادة الضبط'
-          exposed_sorts_label: 'الترتيب حسب'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'ترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
       pager:
@@ -33,7 +33,7 @@ display:
           label: 'عنوان الـIP'
           separator: ', '
         view_webform_submission:
-          label: عمليات
+          label: العمليات
           text: عرض
       header:
         result:
@@ -68,7 +68,7 @@ display:
           label: 'عنوان الـIP'
           separator: ', '
         operations:
-          label: عمليات
+          label: العمليات
       filters:
         sticky:
           expose:
@@ -102,10 +102,10 @@ display:
           label: 'عنوان الـIP'
           separator: ', '
         view_webform_submission:
-          label: عمليات
+          label: العمليات
           text: عرض
         edit_webform_submission:
-          label: عمليات
+          label: العمليات
           text: تحرير
       filters:
         sticky:
@@ -138,7 +138,7 @@ display:
           label: 'عنوان الـIP'
           separator: ', '
         view_webform_submission:
-          label: عمليات
+          label: العمليات
           text: عرض
       filters:
         sticky:

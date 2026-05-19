@@ -46,6 +46,8 @@ if (!function_exists('_motaded_pi_row')) {
       'field_source_link_uri' => (string) ($r['field_source_link_uri'] ?? ''),
       'field_source_link_title' => (string) ($r['field_source_link_title'] ?? ''),
       'field_logo_mid' => (string) ($r['field_logo_mid'] ?? ''),
+      'field_logo_url' => (string) ($r['field_logo_url'] ?? ''),
+      'field_logo_basename' => (string) ($r['field_logo_basename'] ?? ''),
       'field_hero_image_mid' => (string) ($r['field_hero_image_mid'] ?? ''),
       'field_partner_logos_mids' => (string) ($r['field_partner_logos_mids'] ?? ''),
       'field_meta_tags_json' => $meta !== [] ? json_encode($meta, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '',

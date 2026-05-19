@@ -18,8 +18,15 @@ final class EventsArOfficialCommands extends DrushCommands {
    */
   #[CLI\Command(name: 'motaded:events-official-ar', aliases: ['mevent-ar'])]
   #[CLI\Option(name: 'aliases-only', description: 'Only sync AR path aliases from EN (skip content).')]
+  #[CLI\Option(name: 'shared-only', description: 'Only copy shared EN fields (dates, status, refs) to AR translations.')]
   #[CLI\Usage(name: 'drush mevent-ar', description: 'Apply AR translations for all official events')]
-  public function apply(array $options = ['aliases-only' => FALSE]): void {
+  #[CLI\Usage(name: 'drush mevent-ar --shared-only', description: 'Copy event dates and shared fields EN → AR')]
+  public function apply(array $options = ['aliases-only' => FALSE, 'shared-only' => FALSE]): void {
+    if (filter_var($options['shared-only'] ?? FALSE, FILTER_VALIDATE_BOOLEAN)) {
+      $updated = motaded_custom_sync_all_event_ar_shared_fields();
+      $this->io()->success(sprintf('Copied shared fields on %d event AR translation(s).', $updated));
+      return;
+    }
     if (filter_var($options['aliases-only'] ?? FALSE, FILTER_VALIDATE_BOOLEAN)) {
       $this->syncAliasesOnly();
       return;

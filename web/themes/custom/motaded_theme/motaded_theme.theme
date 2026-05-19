@@ -2300,59 +2300,13 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['sector_directory_icon_markup'] = motaded_theme_glance_icon_markup($icon_key);
   }
 
-  // Market Insight (platform full): read time for hero meta (breadcrumb uses page region).
+  // Market Insight (platform full): translated meta, hero, related list.
   if ($node->bundle() === 'market_insight'
     && ($variables['view_mode'] ?? '') === 'full'
     && !empty($variables['page'])
     && $node->hasField('field_insight_shell')
     && $node->get('field_insight_shell')->value === 'platform') {
-    $variables['market_insight_read_mins'] = NULL;
-    $variables['market_insight_related'] = [];
-    if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-      $plain = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('body')->value)));
-      if ($plain !== '') {
-        $words = count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY));
-        $variables['market_insight_read_mins'] = max(1, (int) ceil($words / 200));
-      }
-    }
-
-    // Related insights: same sector when available, else latest insights.
-    try {
-      $em = \Drupal::entityTypeManager();
-      $q = $em->getStorage('node')->getQuery()
-        ->condition('type', 'market_insight')
-        ->condition('status', 1)
-        ->condition('nid', $node->id(), '<>')
-        ->sort('field_year', 'DESC')
-        ->sort('changed', 'DESC')
-        ->range(0, 3)
-        ->accessCheck(TRUE);
-      if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
-        $tid = (int) $node->get('field_sector')->target_id;
-        if ($tid > 0) {
-          $q->condition('field_sector.target_id', $tid);
-        }
-      }
-      $nids = $q->execute();
-      if (!$nids) {
-        $nids = $em->getStorage('node')->getQuery()
-          ->condition('type', 'market_insight')
-          ->condition('status', 1)
-          ->condition('nid', $node->id(), '<>')
-          ->sort('field_year', 'DESC')
-          ->sort('changed', 'DESC')
-          ->range(0, 3)
-          ->accessCheck(TRUE)
-          ->execute();
-      }
-      if ($nids) {
-        $nodes = $em->getStorage('node')->loadMultiple($nids);
-        $variables['market_insight_related'] = $em->getViewBuilder('node')->viewMultiple($nodes, 'teaser');
-      }
-    }
-    catch (\Throwable $e) {
-      $variables['market_insight_related'] = [];
-    }
+    _motaded_theme_preprocess_market_insight_platform($variables, $node);
   }
 
   // Service page (Basic page + Display on services): compact hero data.
@@ -2476,7 +2430,11 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   $em = \Drupal::entityTypeManager();
   $view_builder = $em->getViewBuilder('node');
   $date_formatter = \Drupal::service('date.formatter');
-  $langcode = $node->language()->getId();
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+    ->getId();
+  $node = \Drupal::service('entity.repository')->getTranslationFromContext($node, $langcode);
+  $variables['node'] = $node;
   $request = \Drupal::request();
 
   $variables['event_hero_media'] = [];
@@ -2596,20 +2554,24 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   $variables['event_time_line'] = '';
   $variables['event_datetime_iso_start'] = '';
   $variables['event_datetime_iso_end'] = '';
-  if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
-    $start_ts = strtotime($node->get('field_event_start')->value);
+  $date_node = $node;
+  if ($node->hasField('field_event_start') && $node->get('field_event_start')->isEmpty() && $node->hasTranslation('en')) {
+    $date_node = $node->getTranslation('en');
+  }
+  if ($date_node->hasField('field_event_start') && !$date_node->get('field_event_start')->isEmpty()) {
+    $start_ts = strtotime($date_node->get('field_event_start')->value);
     if ($start_ts) {
       $variables['event_date_line'] = $date_formatter->format($start_ts, 'custom', 'l, j F Y', NULL, $langcode);
       $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode);
       $variables['event_datetime_iso_start'] = gmdate('c', $start_ts);
     }
   }
-  if ($node->hasField('field_event_end') && !$node->get('field_event_end')->isEmpty()) {
-    $end_ts = strtotime($node->get('field_event_end')->value);
+  if ($date_node->hasField('field_event_end') && !$date_node->get('field_event_end')->isEmpty()) {
+    $end_ts = strtotime($date_node->get('field_event_end')->value);
     if ($end_ts) {
       $variables['event_datetime_iso_end'] = gmdate('c', $end_ts);
-      if ($node->hasField('field_event_start') && !$node->get('field_event_start')->isEmpty()) {
-        $start_ts = strtotime($node->get('field_event_start')->value);
+      if ($date_node->hasField('field_event_start') && !$date_node->get('field_event_start')->isEmpty()) {
+        $start_ts = strtotime($date_node->get('field_event_start')->value);
         if ($start_ts) {
           if (date('Ymd', $start_ts) === date('Ymd', $end_ts)) {
             $variables['event_time_line'] = $date_formatter->format($start_ts, 'custom', 'g:i a', NULL, $langcode)
@@ -2975,6 +2937,22 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   $variables['event_meeting_enabled'] = $node->hasField('field_meeting_enabled')
     && !$node->get('field_meeting_enabled')->isEmpty()
     && (bool) $node->get('field_meeting_enabled')->value;
+
+  $variables['event_lang'] = ['langcode' => $langcode];
+  $variables['event_is_past'] = motaded_custom_event_is_past($node);
+  $variables['event_events_directory_url'] = '/events';
+  try {
+    $language = \Drupal::languageManager()->getLanguage($langcode);
+    $variables['event_events_directory_url'] = Url::fromRoute('view.events.page_1', [], ['language' => $language])->toString();
+  }
+  catch (\Throwable $e) {
+    // Internal path fallback.
+  }
+  if ($variables['event_is_past']) {
+    $variables['event_register_url'] = '';
+    $variables['event_registration_help_form'] = [];
+    $variables['event_meeting_enabled'] = FALSE;
+  }
 }
 
 /**
@@ -3094,6 +3072,141 @@ function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInte
 }
 
 /**
+ * Market insight platform layout: content language, taxonomy labels, related list.
+ */
+function _motaded_theme_preprocess_market_insight_platform(array &$variables, NodeInterface $node): void {
+  $variables['#attached']['library'][] = 'motaded_theme/platform_page';
+
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+    ->getId();
+  if ($langcode !== '' && $node->hasTranslation($langcode)) {
+    $node = $node->getTranslation($langcode);
+    $variables['node'] = $node;
+  }
+
+  $variables['summary'] = NULL;
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $body_item = $node->get('body')->first();
+    if ($body_item) {
+      $summary_text = trim((string) $body_item->summary);
+      if ($summary_text !== '') {
+        $variables['summary'] = ['#markup' => nl2br(Html::escape($summary_text))];
+      }
+    }
+  }
+
+  $variables['mi_category_label'] = '';
+  $variables['mi_sector_label'] = '';
+  $variables['mi_region_label'] = '';
+  if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
+    $term = $node->get('field_category')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['mi_category_label'] = motaded_theme_entity_label_in_language($term, $langcode);
+    }
+  }
+  if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+    $term = $node->get('field_sector')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['mi_sector_label'] = motaded_theme_entity_label_in_language($term, $langcode);
+    }
+  }
+  if ($node->hasField('field_region') && !$node->get('field_region')->isEmpty()) {
+    $term = $node->get('field_region')->entity;
+    if ($term instanceof TermInterface) {
+      $variables['mi_region_label'] = motaded_theme_entity_label_in_language($term, $langcode);
+    }
+  }
+
+  $variables['market_insight_read_mins'] = NULL;
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $plain = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $node->get('body')->value)));
+    if ($plain !== '') {
+      $words = count(preg_split('/\s+/u', $plain, -1, PREG_SPLIT_NO_EMPTY));
+      $variables['market_insight_read_mins'] = max(1, (int) ceil($words / 200));
+    }
+  }
+
+  try {
+    $variables['market_insight_insights_url'] = Url::fromRoute('view.insights.page_1', [], [
+      'language' => \Drupal::languageManager()->getLanguage(motaded_theme_interface_langcode()),
+    ])->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['market_insight_insights_url'] = motaded_theme_interface_langcode() === 'ar'
+      ? '/ar/insights'
+      : '/insights';
+  }
+
+  $variables['market_insight_related'] = [];
+  try {
+    $em = \Drupal::entityTypeManager();
+    $storage = $em->getStorage('node');
+    $build_related = static function (array $nids) use ($em, $storage, $langcode): array {
+      if ($nids === []) {
+        return [];
+      }
+      $nodes = [];
+      foreach ($storage->loadMultiple($nids) as $related) {
+        if (!$related instanceof NodeInterface || !$related->access('view')) {
+          continue;
+        }
+        if ($langcode !== '' && $related->hasTranslation($langcode)) {
+          $related = $related->getTranslation($langcode);
+        }
+        elseif ($langcode !== '' && $langcode !== 'en' && !$related->hasTranslation($langcode)) {
+          continue;
+        }
+        $nodes[] = $related;
+      }
+      return $nodes === [] ? [] : $em->getViewBuilder('node')->viewMultiple($nodes, 'teaser');
+    };
+
+    $q = $storage->getQuery()
+      ->condition('type', 'market_insight')
+      ->condition('status', 1)
+      ->condition('nid', $node->id(), '<>')
+      ->sort('field_year', 'DESC')
+      ->sort('changed', 'DESC')
+      ->range(0, 3)
+      ->accessCheck(TRUE);
+    if ($langcode !== '') {
+      $q->condition('langcode', $langcode);
+    }
+    if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+      $tid = (int) $node->get('field_sector')->target_id;
+      if ($tid > 0) {
+        $q->condition('field_sector.target_id', $tid);
+      }
+    }
+    $nids = $q->execute();
+    if (!$nids) {
+      $q = $storage->getQuery()
+        ->condition('type', 'market_insight')
+        ->condition('status', 1)
+        ->condition('nid', $node->id(), '<>')
+        ->sort('field_year', 'DESC')
+        ->sort('changed', 'DESC')
+        ->range(0, 3)
+        ->accessCheck(TRUE);
+      if ($langcode !== '') {
+        $q->condition('langcode', $langcode);
+      }
+      $nids = $q->execute();
+    }
+    $variables['market_insight_related'] = $build_related($nids);
+  }
+  catch (\Throwable $e) {
+    $variables['market_insight_related'] = [];
+  }
+
+  $variables['#cache']['contexts'] = Cache::mergeContexts(
+    $variables['#cache']['contexts'] ?? [],
+    ['languages:language_content', 'languages:language_interface'],
+  );
+}
+
+/**
  * Preprocess variables for Market insight teaser (directory cards + list).
  */
 function _motaded_theme_preprocess_market_insight_teaser(array &$variables, NodeInterface $node): void {
@@ -3108,11 +3221,19 @@ function _motaded_theme_preprocess_market_insight_teaser(array &$variables, Node
     }
   }
 
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+    ->getId();
+  if ($langcode !== '' && $node->hasTranslation($langcode)) {
+    $node = $node->getTranslation($langcode);
+    $variables['node'] = $node;
+  }
+
   $variables['insight_teaser_category'] = '';
   if ($node->hasField('field_category') && !$node->get('field_category')->isEmpty()) {
     $term = $node->get('field_category')->entity;
     if ($term instanceof TermInterface) {
-      $variables['insight_teaser_category'] = $term->getName();
+      $variables['insight_teaser_category'] = motaded_theme_entity_label_in_language($term, $langcode);
     }
   }
 
@@ -5119,6 +5240,28 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
         array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
       }
     }
+    elseif ($node->bundle() === 'market_insight') {
+      foreach ($variables['breadcrumb'] as &$crumb) {
+        if (!is_array($crumb)) {
+          continue;
+        }
+        $text = trim((string) ($crumb['text'] ?? ''));
+        if ($text === 'Insights' || $text === 'Market insights') {
+          $crumb['text'] = (string) t('Market insights');
+        }
+      }
+      unset($crumb);
+      if (
+        !isset($variables['breadcrumb'][1]) ||
+        !motaded_theme_breadcrumb_url_matches_section($variables['breadcrumb'][1]['url'] ?? NULL, 'insights')
+      ) {
+        $list_crumb = [
+          'text' => (string) t('Market insights'),
+          'url' => $prefix . 'insights',
+        ];
+        array_splice($variables['breadcrumb'], 1, 0, [$list_crumb]);
+      }
+    }
   }
 }
 
@@ -6424,19 +6567,22 @@ function _motaded_theme_preprocess_document_node_full(array &$variables, NodeInt
     }
   }
   if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
-    $labels = [];
+    $links = [];
     foreach ($node->get('field_sector_pages')->referencedEntities() as $ref) {
       if ($ref instanceof NodeInterface) {
         $ref = \Drupal::service('entity.repository')->getTranslationFromContext($ref, $langcode);
-        $labels[] = $ref->label();
+        $links[] = [
+          'title' => $ref->label(),
+          'url' => $ref->toUrl()->toString(),
+        ];
       }
     }
-    if ($labels !== []) {
+    if ($links !== []) {
       $variables['document_meta_items'][] = [
         'icon' => 'sector',
         'label' => (string) t('Sector page', [], $t_opts),
-        'value' => implode(', ', $labels),
-        'url' => '',
+        'value' => '',
+        'links' => $links,
       ];
     }
   }
@@ -6626,15 +6772,20 @@ function motaded_theme_services_home_block_exposed_after_build(array $form, Form
     $file = $map[$tid] ?? $fallback[$i % count($fallback)];
     $i++;
     $src = $base . $file;
-    $icon_markup = '<span class="services-home-sidebar-radio__icon" aria-hidden="true"><img src="' . Html::escape($src) . '" alt="" width="22" height="22" loading="lazy" decoding="async" /></span>';
-    $element[$key]['#prefix'] = ($element[$key]['#prefix'] ?? '') . Markup::create($icon_markup);
+    $icon_alt = '';
     $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load((int) $tid);
     if ($term instanceof TermInterface) {
       $label = motaded_theme_entity_label_in_language($term);
       if ($label !== '') {
         $element[$key]['#title'] = $label;
+        $icon_alt = $label;
       }
     }
+    if ($icon_alt === '') {
+      $icon_alt = (string) t('Service category');
+    }
+    $icon_markup = '<span class="services-home-sidebar-radio__icon" aria-hidden="true"><img src="' . Html::escape($src) . '" alt="' . Html::escape($icon_alt) . '" width="22" height="22" loading="lazy" decoding="async" /></span>';
+    $element[$key]['#prefix'] = ($element[$key]['#prefix'] ?? '') . Markup::create($icon_markup);
   }
 
   // Always show every category: disable BEF soft-limit JS (non-zero soft_limit loads

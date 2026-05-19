@@ -29,12 +29,15 @@
   'focus:border-gray-900',
 ] %}
 
-<input{{ attributes.addClass(classes) }} />{{ children }}
+<div class="mot-views-filter-input">
+  <input{{ attributes.addClass(classes) }} />{{ children }}
 
-<img
-  src="/themes/custom/motaded_theme/img/icon-search.svg"
-  alt=""
-  width="18"
-  height="18"
-  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 opacity-70"
-/>
+  <img
+    src="/themes/custom/motaded_theme/img/icon-search.svg"
+    alt="{{ 'Search'|t }}"
+    width="18"
+    height="18"
+    class="mot-views-filter-input__icon"
+    aria-hidden="true"
+  />
+</div>

@@ -125,6 +125,8 @@ return [
     'title' => 'الميزانية العامة للسعودية 2024',
     'body_summary' => 'نتائج الميزانية المركزية تؤطر الإنفاق الرأسمالي ودورات المشتريات للمقاولين.',
     'field_stat_label' => 'فائض الميزانية (2024 تقريبي)',
+    'field_stat_suffix' => 'مليار ر.س',
+    'field_source_text' => 'وزارة المالية',
     'field_source_link_title' => 'التقارير المالية',
   ],
   'Female Labour Force Participation 2024' => [
