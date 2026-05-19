@@ -62,7 +62,7 @@ return [
   'MISA Investment License' => 'رخصة استثمار وزارة الاستثمار',
   'MIZA' => 'ميزا',
   'MODON' => 'مدن',
-  'motaded' => 'موتاد',
+  'motaded' => 'متعدد',
   'Mudad' => 'مدد',
   'Mudad Platform' => 'منصة مدد',
   'Mudad Platform and the Wage Protection System' => 'منصة مدد ونظام حماية الأجور',

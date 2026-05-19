@@ -36,7 +36,7 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'رؤى ومقالات لممارسة الأعمال في المملكة العربية السعودية | معتد'
+            title: 'رؤى ومقالات لممارسة الأعمال في المملكة العربية السعودية | متعدد'
             description: 'أدلة عملية وتحليلات للسوق وشروحات تفصيلية تغطّي تأسيس الشركات والمنصات الحكومية والأنظمة والقطاعات المحفّزة للنمو في المملكة العربية السعودية.'
             canonical_url: '[site:base-url]/ar/blog'
             hreflang_xdefault: '[site:base-url]/blog'
@@ -84,8 +84,8 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'الأخبار وآخر المستجدّات من معتد | أخبار الأعمال في المملكة العربية السعودية'
-            description: 'آخر إعلانات معتد وتحديثات السوق السعودي والأنظمة والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية في المملكة العربية السعودية.'
+            title: 'الأخبار وآخر المستجدّات من متعدد | أخبار الأعمال في المملكة العربية السعودية'
+            description: 'آخر إعلانات متعدد وتحديثات السوق السعودي والأنظمة والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية في المملكة العربية السعودية.'
             canonical_url: '[site:base-url]/ar/news'
             hreflang_xdefault: '[site:base-url]/news'
             'hreflang_per_language:hreflang_en': '[site:base-url]/news'

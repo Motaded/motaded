@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 return static function (): array {
   return [
-    'library' => '<a href="/library">مكتبة موتاد</a>',
+    'library' => '<a href="/library">مكتبة متعدد</a>',
     'events_dir' => '<a href="/events">دليل الفعاليات</a>',
     'inc_guide' => '<a href="/documents/company-incorporation-guide">دليل تأسيس الشركات</a>',
     'inv_law' => '<a href="/documents/investment-law">نظام الاستثمار</a>',

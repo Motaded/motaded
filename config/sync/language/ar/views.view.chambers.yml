@@ -40,7 +40,7 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'الغرف التجارية والمجالس في المملكة العربية السعودية | معتد'
+            title: 'الغرف التجارية والمجالس في المملكة العربية السعودية | متعدد'
             description: 'دليل الغرف التجارية ومجالس الأعمال والشبكات القطاعية في المملكة العربية السعودية ودول الخليج. اعثر على المنظمة المناسبة للعضوية والشراكات والوصول إلى السوق داخل المملكة.'
             canonical_url: '[site:base-url]/ar/chambers'
             hreflang_xdefault: '[site:base-url]/chambers'

@@ -83,13 +83,13 @@ msgid "Next step"
 msgstr "الخطوة التالية"
 
 msgid "Talk to Motaded experts today"
-msgstr "تحدث مع خبراء معتد اليوم"
+msgstr "تحدث مع خبراء متعدد اليوم"
 
 msgid "Book a quick consultation and receive clear, actionable guidance tailored to your case."
 msgstr "احجز استشارة سريعة واحصل على توجيهات واضحة وقابلة للتنفيذ مخصصة لحالتك."
 
 msgid "Motaded Team"
-msgstr "فريق معتد"
+msgstr "فريق متعدد"
 
 msgid "Article tools"
 msgstr "أدوات المقال"
@@ -228,7 +228,7 @@ msgid "Industry sectors shaping opportunity in Saudi Arabia"
 msgstr "قطاعات الأعمال التي تشكّل الفرص في المملكة العربية السعودية"
 
 msgid "Each sector page brings together strategic context, headline indicators from global data where available, and Motaded guidance — filter by taxonomy or search by name."
-msgstr "تجمع كل صفحة قطاع السياق الاستراتيجي والمؤشرات الرئيسية من البيانات العالمية حين تتوفر، وإرشادات معتد — رشّح حسب التصنيف أو ابحث بالاسم."
+msgstr "تجمع كل صفحة قطاع السياق الاستراتيجي والمؤشرات الرئيسية من البيانات العالمية حين تتوفر، وإرشادات متعدد — رشّح حسب التصنيف أو ابحث بالاسم."
 
 msgid "Government-aligned services (@count)"
 msgstr "الخدمات المتوافقة مع الحكومة (@count)"
@@ -461,7 +461,7 @@ msgid "Get support"
 msgstr "احصل على دعم"
 
 msgid "Contact Motaded team"
-msgstr "تواصل مع فريق معتد"
+msgstr "تواصل مع فريق متعدد"
 
 msgid "Chambers directory"
 msgstr "دليل الغرف"
@@ -574,7 +574,7 @@ msgid "View as"
 msgstr "عرض كـ"
 
 msgid "I agree to receive event updates from Motaded."
-msgstr "أوافق على تلقي تحديثات الفعاليات من معتد."
+msgstr "أوافق على تلقي تحديثات الفعاليات من متعدد."
 
 # /blog (views-view--news--page_1)
 msgid "Insights & articles for doing business in Saudi Arabia"
@@ -618,7 +618,7 @@ msgid "News and company updates"
 msgstr "الأخبار وآخر المستجدّات"
 
 msgid "Follow the latest Motaded announcements, Saudi market updates, regulatory news, partnerships, and public-sector developments that matter to investors and growing businesses."
-msgstr "تابع آخر إعلانات معتد وتحديثات السوق السعودي والأخبار التنظيمية والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية."
+msgstr "تابع آخر إعلانات متعدد وتحديثات السوق السعودي والأخبار التنظيمية والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية."
 
 msgid "We collect the important signals in one place, so your team can track changes, understand what is happening, and act with confidence."
 msgstr "نجمع الإشارات المهمّة في مكان واحد، لتتمكّن فِرَقك من رصد التغيّرات وفهم ما يحدث والتحرّك بثقة."
@@ -1262,7 +1262,7 @@ msgid "Step @n"
 msgstr "الخطوة @n"
 
 msgid "Motaded setup packages"
-msgstr "باقات تأسيس موتاد"
+msgstr "باقات تأسيس متعدد"
 
 msgid "Fixed one-time packages with government and PRO services. Use the calculator above for an indicative custom range, or choose a package to get started."
 msgstr "باقات ثابتة لمرة واحدة تشمل الخدمات الحكومية وخدمات العلاقات الحكومية. استخدم الحاسبة أعلاه للحصول على نطاق مخصص استرشادي، أو اختر باقة للبدء."
@@ -1867,7 +1867,7 @@ msgid "No insights match these filters. Try resetting or choose different option
 msgstr "لا توجد رؤى مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى."
 
 msgid "I agree to receive event updates from Motaded."
-msgstr "أوافق على تلقي تحديثات الفعاليات ورؤى السوق من معتد."
+msgstr "أوافق على تلقي تحديثات الفعاليات ورؤى السوق من متعدد."
 
 msgid "Thanks — we’ll be in touch with relevant updates."
 msgstr "شكراً — سنتواصل معك بالتحديثات ذات الصلة."

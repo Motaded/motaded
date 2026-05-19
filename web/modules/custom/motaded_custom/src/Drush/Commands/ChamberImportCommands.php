@@ -7,6 +7,8 @@ namespace Drupal\motaded_custom\Drush\Commands;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\motaded_custom\Logo\LogoImportConfig;
+use Drupal\motaded_custom\Logo\NodeLogoImporter;
 use Drupal\node\NodeInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\taxonomy\Entity\Term;
@@ -31,7 +33,10 @@ final class ChamberImportCommands extends DrushCommands {
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly LanguageManagerInterface $languageManager,
     protected readonly FileSystemInterface $fileSystem,
-  ) {}
+    protected readonly NodeLogoImporter $logoImporter,
+  ) {
+    parent::__construct();
+  }
 
   /**
    * Import chambers from CSV into node type "chamber".
@@ -48,6 +53,7 @@ final class ChamberImportCommands extends DrushCommands {
   #[CLI\Option(name: 'create-country-terms', description: 'When true (default), create missing country taxonomy terms (vocabulary: country). When false, require an existing term name match.')]
   #[CLI\Usage(name: 'drush mcic', description: 'Upsert from project root chamber_import_ready.csv')]
   #[CLI\Usage(name: 'drush mcic ../chamber_import_ar_ready.csv', description: 'Upsert Arabic translations (requires EN chambers; translation_source_title column).')]
+  #[CLI\Usage(name: 'drush mcia', description: 'Full pipeline: EN + AR CSV + logos (see motaded:chamber-import-all).')]
   public function import(?string $path = NULL, array $options = [
     'upsert' => TRUE,
     'skip-existing' => TRUE,
@@ -366,6 +372,60 @@ final class ChamberImportCommands extends DrushCommands {
     else {
       $this->logger()->success(sprintf('Processed %d chamber row(s); skipped %d.', $saved, $skipped));
     }
+  }
+
+  /**
+   * Full chamber import: EN CSV, AR CSV, then logos (content + metatags + field_logo).
+   */
+  #[CLI\Command(name: 'motaded:chamber-import-all', aliases: ['mcia'])]
+  #[CLI\Option(name: 'dry-run', description: 'Validate EN/AR CSV and list logo targets only; do not save.')]
+  #[CLI\Option(name: 'force-logos', description: 'Replace existing field_logo when importing logos (default: true).')]
+  #[CLI\Option(name: 'skip-logos', description: 'Skip the logo download step.')]
+  #[CLI\Option(name: 'create-country-terms', description: 'Create missing country taxonomy terms during CSV import (default: true).')]
+  #[CLI\Usage(name: 'drush mcia', description: 'Upsert EN + AR from chamber_import_*_ready.csv, then download logos.')]
+  public function importAll(array $options = [
+    'dry-run' => FALSE,
+    'force-logos' => TRUE,
+    'skip-logos' => FALSE,
+    'create-country-terms' => TRUE,
+  ]): void {
+    $dry_run = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $force_logos = filter_var($options['force-logos'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $skip_logos = filter_var($options['skip-logos'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $create_country_terms = filter_var($options['create-country-terms'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $import_opts = [
+      'upsert' => TRUE,
+      'skip-existing' => TRUE,
+      'dry-run' => $dry_run,
+      'create-country-terms' => $create_country_terms,
+    ];
+
+    $this->io()->title('Chambers: EN (content, metatags)');
+    $this->import(NULL, $import_opts);
+
+    $ar_csv = \Drupal::root() . '/../chamber_import_ar_ready.csv';
+    if (!is_readable($ar_csv)) {
+      throw new \RuntimeException('Arabic CSV not found: ' . $ar_csv . ' (run php scripts/rebuild_chamber_import_ar_csv.php)');
+    }
+    $this->io()->title('Chambers: AR translations');
+    $this->import('../chamber_import_ar_ready.csv', $import_opts);
+
+    if ($skip_logos) {
+      $this->logger()->notice('Logo step skipped (--skip-logos).');
+      return;
+    }
+
+    $this->io()->title('Chambers: logos');
+    $this->logoImporter->run(LogoImportConfig::chambers(), [
+      'force' => $force_logos,
+      'dry-run' => $dry_run,
+      'title' => '',
+      'limit' => 0,
+      'repair' => FALSE,
+      'only-overrides' => FALSE,
+    ], $this->io(), $this->logger());
+
+    $this->logger()->success('Chamber import-all finished (EN + AR + logos).');
   }
 
   private function truncateAtWord(string $text, int $max): string {

@@ -106,7 +106,7 @@ if (!$node->get('field_meta')->isEmpty()) {
   $metaRow = $node->getTranslation('en')->get('field_meta')->getValue();
   if (!empty($metaRow[0]['value'])) {
     $decoded = json_decode($metaRow[0]['value'], TRUE, 512, JSON_THROW_ON_ERROR);
-    $decoded['title'] = 'موتاد | تمكين الأعمال في المملكة العربية السعودية';
+    $decoded['title'] = 'متعدد | تمكين الأعمال في المملكة العربية السعودية';
     $metaRow[0]['value'] = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $nodeAr->set('field_meta', $metaRow);
   }
