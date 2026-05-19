@@ -47,7 +47,7 @@ display:
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'المكتبة — قوالب ونماذج ولوائح للأعمال في السعودية | معتد'
+            title: 'المكتبة — قوالب ونماذج ولوائح للأعمال في السعودية | متعدد'
             description: 'مركز مختار للقوالب والنماذج وقوائم التحقق والأدلة خطوة بخطوة واللوائح الرسمية لمساعدتك على بدء أعمالك وتشغيلها وتنميتها بشكل متوافق في المملكة العربية السعودية.'
             canonical_url: '[site:base-url]/ar/library'
             hreflang_xdefault: '[site:base-url]/library'

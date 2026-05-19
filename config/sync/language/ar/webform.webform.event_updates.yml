@@ -7,7 +7,7 @@ elements: |-
     '#required': true
   consent:
     '#type': checkbox
-    '#title': 'أوافق على تلقي تحديثات الفعاليات ورؤى السوق من معتد.'
+    '#title': 'أوافق على تلقي تحديثات الفعاليات ورؤى السوق من متعدد.'
     '#required': true
   actions:
     '#type': webform_actions

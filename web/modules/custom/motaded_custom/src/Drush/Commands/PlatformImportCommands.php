@@ -7,6 +7,8 @@ namespace Drupal\motaded_custom\Drush\Commands;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\motaded_custom\Logo\LogoImportConfig;
+use Drupal\motaded_custom\Logo\NodeLogoImporter;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\ParagraphInterface;
@@ -69,7 +71,10 @@ final class PlatformImportCommands extends DrushCommands {
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly LanguageManagerInterface $languageManager,
     protected readonly FileSystemInterface $fileSystem,
-  ) {}
+    protected readonly NodeLogoImporter $logoImporter,
+  ) {
+    parent::__construct();
+  }
 
   /**
    * Import platforms from CSV into node type "platform".
@@ -86,6 +91,7 @@ final class PlatformImportCommands extends DrushCommands {
   #[CLI\Usage(name: 'drush mpic', description: 'Upsert from project root platform_import_ready.csv')]
   #[CLI\Usage(name: 'drush mpic ../platform_import_ar_ready.csv', description: 'Upsert Arabic translations (requires EN platforms; translation_source_title column).')]
   #[CLI\Usage(name: 'drush mpic /path/to.csv --upsert=1', description: 'Upsert from a specific CSV file.')]
+  #[CLI\Usage(name: 'drush mpia', description: 'Full pipeline: EN + AR CSV + logos (see motaded:platform-import-all).')]
   public function import(?string $path = NULL, array $options = [
     'upsert' => TRUE,
     'skip-existing' => TRUE,
@@ -443,6 +449,56 @@ final class PlatformImportCommands extends DrushCommands {
     else {
       $this->logger()->success(sprintf('Processed %d platform row(s); skipped %d.', $saved, $skipped));
     }
+  }
+
+  /**
+   * Full platform import: EN CSV, AR CSV, then logos (content + metatags + field_logo).
+   */
+  #[CLI\Command(name: 'motaded:platform-import-all', aliases: ['mpia'])]
+  #[CLI\Option(name: 'dry-run', description: 'Validate EN/AR CSV and list logo targets only; do not save.')]
+  #[CLI\Option(name: 'force-logos', description: 'Replace existing field_logo when importing logos (default: true).')]
+  #[CLI\Option(name: 'skip-logos', description: 'Skip the logo download step.')]
+  #[CLI\Usage(name: 'drush mpia', description: 'Upsert EN + AR from platform_import_*_ready.csv, then download logos.')]
+  public function importAll(array $options = [
+    'dry-run' => FALSE,
+    'force-logos' => TRUE,
+    'skip-logos' => FALSE,
+  ]): void {
+    $dry_run = filter_var($options['dry-run'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $force_logos = filter_var($options['force-logos'] ?? TRUE, FILTER_VALIDATE_BOOLEAN);
+    $skip_logos = filter_var($options['skip-logos'] ?? FALSE, FILTER_VALIDATE_BOOLEAN);
+    $import_opts = [
+      'upsert' => TRUE,
+      'skip-existing' => TRUE,
+      'dry-run' => $dry_run,
+    ];
+
+    $this->io()->title('Platforms: EN (content, paragraphs, metatags)');
+    $this->import(NULL, $import_opts);
+
+    $ar_csv = \Drupal::root() . '/../platform_import_ar_ready.csv';
+    if (!is_readable($ar_csv)) {
+      throw new \RuntimeException('Arabic CSV not found: ' . $ar_csv . ' (run php scripts/rebuild_platform_import_ar_csv.php)');
+    }
+    $this->io()->title('Platforms: AR translations');
+    $this->import('../platform_import_ar_ready.csv', $import_opts);
+
+    if ($skip_logos) {
+      $this->logger()->notice('Logo step skipped (--skip-logos).');
+      return;
+    }
+
+    $this->io()->title('Platforms: logos');
+    $this->logoImporter->run(LogoImportConfig::platforms(), [
+      'force' => $force_logos,
+      'dry-run' => $dry_run,
+      'title' => '',
+      'limit' => 0,
+      'repair' => FALSE,
+      'only-overrides' => FALSE,
+    ], $this->io(), $this->logger());
+
+    $this->logger()->success('Platform import-all finished (EN + AR + logos).');
   }
 
   /**

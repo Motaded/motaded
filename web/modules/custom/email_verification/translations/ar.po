@@ -64,10 +64,10 @@ msgid "Your verification code"
 msgstr "رمز التحقق الخاص بك"
 
 msgid "Your Motaded verification code is ready. It expires in {{ expiry_minutes }} minutes."
-msgstr "رمز تحقق موتاد جاهز. ينتهي خلال {{ expiry_minutes }} دقيقة."
+msgstr "رمز تحقق متعدد جاهز. ينتهي خلال {{ expiry_minutes }} دقيقة."
 
 msgid "Motaded"
-msgstr "Motaded"
+msgstr "متعدد"
 
 msgid "Verify your email"
 msgstr "تحقق من بريدك الإلكتروني"
@@ -76,19 +76,19 @@ msgid "Your code"
 msgstr "رمزك"
 
 msgid "You’re almost done. To continue with your form submission, use the verification code below. We sent this message because someone entered this email address on the Motaded website."
-msgstr "أوشكت على الانتهاء. لمتابعة إرسال النموذج، استخدم رمز التحقق أدناه. أرسلنا هذه الرسالة لأن شخصًا أدخل عنوان البريد الإلكتروني هذا على موقع Motaded."
+msgstr "أوشكت على الانتهاء. لمتابعة إرسال النموذج، استخدم رمز التحقق أدناه. أرسلنا هذه الرسالة لأن شخصًا أدخل عنوان البريد الإلكتروني هذا على موقع متعدد."
 
 msgid "This code expires in <strong style=\"color:#0f2a1d;\">{{ expiry_minutes }} minutes</strong>. If you didn’t request it, you can safely ignore this email — your account details won’t be changed."
 msgstr "تنتهي صلاحية هذا الرمز خلال <strong>{{ expiry_minutes }} دقيقة</strong>. إذا لم تطلبه، يمكنك تجاهل هذا البريد بأمان — لن تتغير تفاصيل حسابك."
 
 msgid "For your security, never share this code with anyone. Motaded staff will never ask you for it by phone or chat."
-msgstr "لأمانك، لا تشارك هذا الرمز مع أي شخص. لن يطلب منك موظفو Motaded هذا الرمز عبر الهاتف أو الدردشة."
+msgstr "لأمانك، لا تشارك هذا الرمز مع أي شخص. لن يطلب منك موظفو متعدد هذا الرمز عبر الهاتف أو الدردشة."
 
 msgid "Motaded Consultancy is a premier firm facilitating Business Setup in Saudi Arabia."
-msgstr "شركة Motaded الاستشارية هي شركة رائدة في تسهيل تأسيس الأعمال في المملكة العربية السعودية."
+msgstr "شركة متعدد الاستشارية هي شركة رائدة في تسهيل تأسيس الأعمال في المملكة العربية السعودية."
 
 msgid "ⓒ {{ year }} Motaded Consultancy. All Rights Reserved."
-msgstr "ⓒ {{ year }} Motaded Consultancy. جميع الحقوق محفوظة."
+msgstr "ⓒ {{ year }} متعدد. جميع الحقوق محفوظة."
 
 msgid "This is an automated message — please do not reply to this email."
 msgstr "هذه رسالة تلقائية — يُرجى عدم الرد على هذا البريد."

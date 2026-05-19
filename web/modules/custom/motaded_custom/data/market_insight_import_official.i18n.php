@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 return static function (): array {
   return [
-    'library' => '<a href="/library">مكتبة موتاد</a>',
+    'library' => '<a href="/library">مكتبة متعدد</a>',
     'insights_dir' => '<a href="/insights">دليل الرؤى</a>',
     'sector_tourism' => '<a href="/sectors/tourism">قطاع السياحة</a>',
     'sector_finance' => '<a href="/sectors/finance-fintech">التمويل والتقنية المالية</a>',

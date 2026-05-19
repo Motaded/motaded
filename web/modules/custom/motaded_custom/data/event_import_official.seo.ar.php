@@ -44,7 +44,7 @@ foreach ($overrides as $en_title => $row) {
   $out[$en_title] = motaded_custom_seo_row(
     $ar_title,
     $desc,
-    ' | فعاليات الأعمال في السعودية | موتاد',
+    ' | فعاليات الأعمال في السعودية | متعدد',
     array_merge([$ar_title . ' السعودية', 'فعاليات أعمال'], $kw),
   );
 }

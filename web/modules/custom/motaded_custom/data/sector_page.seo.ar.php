@@ -32,7 +32,7 @@ foreach ($nodes as $en_title => $row) {
   $out[$en_title] = motaded_custom_seo_row(
     $ar_title,
     $desc,
-    ' | قطاعات الاستثمار في السعودية | موتاد',
+    ' | قطاعات الاستثمار في السعودية | متعدد',
     array_merge([$ar_title, 'قطاع ' . $ar_title . ' السعودية', 'رؤية 2030'], $kw),
   );
 }

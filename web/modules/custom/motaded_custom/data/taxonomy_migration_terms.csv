@@ -1,0 +1,189 @@
+﻿vid,vocabulary,tid,name,langcode,status
+city,City,217,Riyadh,en,1
+city,City,217,الرياض,ar,1
+city,City,219,Dubai,en,1
+city,City,219,دبي,ar,1
+city,City,290,Dhahran,en,1
+city,City,290,الظهران,ar,1
+city,City,322,Jeddah,en,1
+city,City,322,جدة,ar,1
+country,Country,218,"Saudi Arabia",en,1
+country,Country,218,"المملكة العربية السعودية",ar,1
+country,Country,220,"United Arab Emirates",en,1
+country,Country,220,"الإمارات العربية المتحدة",ar,1
+country,Country,239,"United Kingdom",en,1
+country,Country,239,"المملكة المتحدة",ar,1
+country,Country,240,USA,en,1
+country,Country,240,"الولايات المتحدة",ar,1
+country,Country,241,France,en,1
+country,Country,241,فرنسا,ar,1
+country,Country,242,Germany,en,1
+country,Country,242,ألمانيا,ar,1
+country,Country,243,UAE,en,1
+country,Country,243,الإمارات,ar,1
+country,Country,244,Bahrain,en,1
+country,Country,244,البحرين,ar,1
+country,Country,245,India,en,1
+country,Country,245,الهند,ar,1
+country,Country,246,Canada,en,1
+country,Country,246,كندا,ar,1
+country,Country,247,Australia,en,1
+country,Country,247,أستراليا,ar,1
+country,Country,248,Italy,en,1
+country,Country,248,إيطاليا,ar,1
+country,Country,249,Spain,en,1
+country,Country,249,إسبانيا,ar,1
+country,Country,250,Japan,en,1
+country,Country,250,اليابان,ar,1
+country,Country,251,"South Korea",en,1
+country,Country,251,"كوريا الجنوبية",ar,1
+country,Country,252,China,en,1
+country,Country,252,الصين,ar,1
+country,Country,253,Switzerland,en,1
+country,Country,253,سويسرا,ar,1
+country,Country,254,Netherlands,en,1
+country,Country,254,هولندا,ar,1
+document_category,"Document category",211,"Business Setup",en,1
+document_category,"Document category",211,"تأسيس الأعمال",ar,1
+document_category,"Document category",212,HR,en,1
+document_category,"Document category",212,"الموارد البشرية",ar,1
+document_category,"Document category",213,Tax,en,1
+document_category,"Document category",213,الضرائب,ar,1
+document_category,"Document category",214,Compliance,en,1
+document_category,"Document category",214,الامتثال,ar,1
+document_category,"Document category",215,Licensing,en,1
+document_category,"Document category",215,التراخيص,ar,1
+document_type,"Document type",205,Template,en,1
+document_type,"Document type",205,قالب,ar,1
+document_type,"Document type",206,Form,en,1
+document_type,"Document type",206,نموذج,ar,1
+document_type,"Document type",207,Guide,en,1
+document_type,"Document type",207,دليل,ar,1
+document_type,"Document type",208,Regulation,en,1
+document_type,"Document type",208,لائحة,ar,1
+document_type,"Document type",209,Law,en,1
+document_type,"Document type",209,"نظام / قانون",ar,1
+document_type,"Document type",210,Policy,en,1
+document_type,"Document type",210,سياسة,ar,1
+event_organizer,Organizer,221,"dmg events",en,1
+event_organizer,Organizer,221,"دي إم جي للفعاليات",ar,1
+event_organizer,Organizer,222,"Public Investment Fund (PIF)",en,1
+event_organizer,Organizer,222,"صندوق الاستثمارات العامة",ar,1
+event_organizer,Organizer,223,Tahaluf,en,1
+event_organizer,Organizer,223,تحالف,ar,1
+event_organizer,Organizer,224,"Ministry of Investment",en,1
+event_organizer,Organizer,224,"وزارة الاستثمار",ar,1
+event_organizer,Organizer,225,Informa,en,1
+event_organizer,Organizer,225,إنفورما,ar,1
+event_organizer,Organizer,226,"Informa Markets",en,1
+event_organizer,Organizer,226,"إنفورما ماركتس",ar,1
+event_organizer,Organizer,227,"Ministry of Municipalities and Housing",en,1
+event_organizer,Organizer,227,"وزارة البلديات والإسكان",ar,1
+event_organizer,Organizer,228,Exito,en,1
+event_organizer,Organizer,228,إكسيتو,ar,1
+event_organizer,Organizer,229,"FII Institute",en,1
+event_organizer,Organizer,229,"معهد مبادرة مستقبل الاستثمار",ar,1
+event_organizer,Organizer,278,"Ministry of Industry and Mineral Resources",en,1
+event_organizer,Organizer,278,"وزارة الصناعة والثروة المعدنية",ar,1
+event_organizer,Organizer,283,Monsha'at,en,1
+event_organizer,Organizer,283,منشآت,ar,1
+event_organizer,Organizer,292,SPE,en,1
+event_organizer,Organizer,292,"جمعية مهندسي البترول",ar,1
+event_organizer,Organizer,299,"General Authority for Military Industries",en,1
+event_organizer,Organizer,299,"الهيئة العامة للصناعات العسكرية",ar,1
+event_organizer,Organizer,303,SDAIA,en,1
+event_organizer,Organizer,303,"الهيئة السعودية للبيانات والذكاء الاصطناعي",ar,1
+event_organizer,Organizer,316,"1st Arabia Tradeshows & Conferences",en,1
+event_organizer,Organizer,316,"العربية الأولى للمعارض والمؤتمرات",ar,1
+event_organizer,Organizer,319,"Riyadh Exhibitions Company",en,1
+event_organizer,Organizer,319,"شركة معارض الرياض",ar,1
+event_organizer,Organizer,324,"Saudi Tourism Authority",en,1
+event_organizer,Organizer,324,"هيئة السياحة السعودية",ar,1
+event_type,"Event type",171,Networking,en,1
+event_type,"Event type",171,"شبكات أعمال",ar,1
+event_type,"Event type",172,Conference,en,1
+event_type,"Event type",172,مؤتمر,ar,1
+event_type,"Event type",173,Workshop,en,1
+event_type,"Event type",173,"ورشة عمل",ar,1
+event_type,"Event type",184,Forum,en,1
+event_type,"Event type",184,منتدى,ar,1
+event_type,"Event type",185,Exhibition,en,1
+event_type,"Event type",185,معرض,ar,1
+event_type,"Event type",216,Summit,en,1
+event_type,"Event type",216,قمة,ar,1
+library_section,"Library section",231,Templates,en,1
+library_section,"Library section",231,القوالب,ar,1
+library_section,"Library section",232,Regulations,en,1
+library_section,"Library section",232,"الأنظمة واللوائح",ar,1
+market_insight_category,"Market insight type",174,Economy,en,1
+market_insight_category,"Market insight type",174,الاقتصاد,ar,1
+market_insight_category,"Market insight type",175,Investment,en,1
+market_insight_category,"Market insight type",175,الاستثمار,ar,1
+market_insight_category,"Market insight type",186,Labor,en,1
+market_insight_category,"Market insight type",186,"سوق العمل",ar,1
+market_insight_category,"Market insight type",187,Demographics,en,1
+market_insight_category,"Market insight type",187,"التركيبة السكانية",ar,1
+market_insight_category,"Market insight type",188,Technology,en,1
+market_insight_category,"Market insight type",188,التكنولوجيا,ar,1
+market_insight_category,"Market insight type",189,Tourism,en,1
+market_insight_category,"Market insight type",189,السياحة,ar,1
+market_insight_category,"Market insight type",191,Energy,en,1
+market_insight_category,"Market insight type",191,الطاقة,ar,1
+market_insight_category,"Market insight type",326,Sector,en,1
+market_insight_category,"Market insight type",326,القطاع,ar,1
+platform_category,"Platform category",180,Investment,en,1
+platform_category,"Platform category",180,الاستثمار,ar,1
+platform_category,"Platform category",193,Licensing,en,1
+platform_category,"Platform category",193,التراخيص,ar,1
+platform_category,"Platform category",194,Labor,en,1
+platform_category,"Platform category",194,العمالة,ar,1
+platform_category,"Platform category",195,Tax,en,1
+platform_category,"Platform category",195,الضرائب,ar,1
+platform_category,"Platform category",196,Operations,en,1
+platform_category,"Platform category",196,العمليات,ar,1
+platform_category,"Platform category",197,Finance,en,1
+platform_category,"Platform category",197,التمويل,ar,1
+platform_category,"Platform category",198,Logistics,en,1
+platform_category,"Platform category",198,"الخدمات اللوجستية",ar,1
+platform_category,"Platform category",199,Legal,en,1
+platform_category,"Platform category",199,"الشؤون القانونية",ar,1
+platform_category,"Platform category",233,"Government Platforms",en,1
+platform_category,"Platform category",233,"المنصات الحكومية",ar,1
+region,Region,178,"Saudi Arabia",en,1
+region,Region,178,"المملكة العربية السعودية",ar,1
+region,Region,179,GCC,en,1
+region,Region,179,"دول مجلس التعاون",ar,1
+region,Region,255,"Riyadh Region",en,1
+region,Region,255,"منطقة الرياض",ar,1
+region,Region,291,"Eastern Province",en,1
+region,Region,291,"المنطقة الشرقية",ar,1
+region,Region,323,"Makkah Region",en,1
+region,Region,323,"منطقة مكة المكرمة",ar,1
+sector,Sector,176,General,en,1
+sector,Sector,176,عام,ar,1
+sector,Sector,177,Technology,en,1
+sector,Sector,177,التكنولوجيا,ar,1
+sector,Sector,190,Tourism,en,1
+sector,Sector,190,السياحة,ar,1
+sector,Sector,192,Energy,en,1
+sector,Sector,192,الطاقة,ar,1
+sector,Sector,200,"Construction & Infrastructure",en,1
+sector,Sector,200,"الإنشاءات والبنية التحتية",ar,1
+sector,Sector,201,"Logistics & Transport",en,1
+sector,Sector,201,"الخدمات اللوجستية والنقل",ar,1
+sector,Sector,202,"Finance & Fintech",en,1
+sector,Sector,202,"التمويل والتقنية المالية",ar,1
+sector,Sector,203,Manufacturing,en,1
+sector,Sector,203,التصنيع,ar,1
+sector,Sector,204,Healthcare,en,1
+sector,Sector,204,"الرعاية الصحية",ar,1
+sector,Sector,234,"All sectors (especially labor-intensive industries)",en,1
+sector,Sector,234,"جميع القطاعات (خصوصاً الصناعات كثيفة العمالة)",ar,1
+sector,Sector,235,"All sectors employing foreign workforce",en,1
+sector,Sector,235,"جميع القطاعات التي توظّف قوى عاملة أجنبية",ar,1
+sector,Sector,236,"All sectors",en,1
+sector,Sector,236,"جميع القطاعات",ar,1
+sector,Sector,237,Retail,en,1
+sector,Sector,237,التجزئة,ar,1
+sector,Sector,238,"All sectors with employees",en,1
+sector,Sector,238,"جميع القطاعات التي لديها موظفون",ar,1
