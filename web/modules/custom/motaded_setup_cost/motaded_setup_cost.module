@@ -337,3 +337,14 @@ function motaded_setup_cost_webform_submission_presave(WebformSubmissionInterfac
   $data['estimate_package'] = is_string($package) ? $package : '';
   $webform_submission->setData($data);
 }
+
+/**
+ * Implements hook_webform_submission_insert().
+ */
+function motaded_setup_cost_webform_submission_insert(WebformSubmissionInterface $webform_submission): void {
+  if ($webform_submission->getWebform()->id() !== 'setup_cost_estimate_lead') {
+    return;
+  }
+  \Drupal::service('email_verification.branded_email')
+    ->sendSetupCostLeadConfirmation($webform_submission);
+}

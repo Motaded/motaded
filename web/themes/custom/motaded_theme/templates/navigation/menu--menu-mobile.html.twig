@@ -43,12 +43,13 @@
 							:aria-expanded="mobileSection === '{{ slug }}'">
 							<span>{{ item.title }}</span>
 							<img
-								alt=""
+								alt="{{ 'Toggle submenu'|t }}"
 								width="16"
 								height="16"
 								class="mot-mobile-menu__chev transition-transform"
 								:class="mobileSection === '{{ slug }}' ? 'rotate-180' : ''"
-								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
+								aria-hidden="true"/>
 						</button>
 						{{ menus.menu_links(item.below, 1, slug, '') }}
 					{% else %}
@@ -71,12 +72,13 @@
 							:aria-expanded="mobileSubsection === '{{ slug }}'">
 							<span>{{ item.title }}</span>
 							<img
-								alt=""
+								alt="{{ 'Toggle submenu'|t }}"
 								width="16"
 								height="16"
 								class="mot-mobile-menu__chev transition-transform"
 								:class="mobileSubsection === '{{ slug }}' ? 'rotate-180' : ''"
-								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"/>
+								src="/themes/custom/motaded_theme/img/icon-arrow-down.svg"
+								aria-hidden="true"/>
 						</button>
 						{{ menus.menu_links(item.below, 2, parent_key, slug) }}
 					{% else %}

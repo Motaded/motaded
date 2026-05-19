@@ -30,8 +30,8 @@
 				<div class="flex gap-1.5 lg:gap-2 text-xs">
 					<!-- Search -->
 					<div class="relative flex items-center">
-						<a class="inline-flex items-center justify-center font-medium transition rounded-sm text-black text-xs size-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="Search" href="{{ search_url|replace({'//s': '/s'}) }}">
-							<img alt="search" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
+						<a class="inline-flex items-center justify-center font-medium transition rounded-sm text-black text-xs size-8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gray-800" aria-label="{{ 'Search'|t }}" href="{{ search_url|replace({'//s': '/s'}) }}">
+							<img alt="{{ 'Search'|t }}" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-search.svg" aria-hidden="true"/>
 						</a>
 						<p class="text-xs font-medium leading-[1.6] hidden xl:block ml-1 mb-0">
 							{{ "Search"|t }}
@@ -66,7 +66,7 @@
 					aria-label="{{ 'Menu'|t }}"
 					:aria-expanded="mobileOpen"
 					@click="mobileOpen = true; mobileSection = null; mobileSubsection = null">
-					<img alt="" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-menu.svg"/>
+					<img alt="{{ 'Menu'|t }}" width="24" height="24" src="/themes/custom/motaded_theme/img/icon-menu.svg" aria-hidden="true"/>
 				</button>
 			</div>
 		</div>

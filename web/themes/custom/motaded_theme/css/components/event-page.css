@@ -1665,3 +1665,73 @@
   background: rgba(14, 116, 144, 0.08);
   border-color: rgba(14, 116, 144, 0.22);
 }
+
+/* Past event — registration closed notice */
+.event-page__past-notice {
+  padding: 0.15rem 0 0;
+}
+
+.event-page__past-notice--compact {
+  padding: 0;
+}
+
+.event-page__past-notice-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.event-page__past-notice-title {
+  margin: 0 0 0.65rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.event-page__past-notice--compact .event-page__past-notice-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-page__help-card--past .event-page__past-notice-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.event-page__past-notice-lead,
+.event-page__past-notice-body {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.event-page__past-notice-body {
+  margin-bottom: 1rem;
+}
+
+.event-page__past-notice-cta-wrap {
+  margin: 0.25rem 0 0;
+}
+
+.event-page__past-notice--compact .event-page__past-notice-cta {
+  width: 100%;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.event-page__help-card--past {
+  padding: 1.75rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .event-page__help-card--past {
+    padding: 2rem 2.25rem;
+  }
+}

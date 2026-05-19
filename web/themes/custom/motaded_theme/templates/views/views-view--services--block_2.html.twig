@@ -43,7 +43,7 @@
         <div class="services-home-category-intro__icon" aria-hidden="true">
           <img
             src="{{ services_home_category_icon_url }}"
-            alt=""
+            alt="{{ services_home_term_name|default('Services'|t)|e('html_attr') }}"
             width="48"
             height="48"
             loading="lazy"

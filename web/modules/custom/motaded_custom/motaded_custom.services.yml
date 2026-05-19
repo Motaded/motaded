@@ -27,6 +27,13 @@ services:
     tags:
       - { name: event_subscriber }
 
+  motaded_custom.node_logo_importer:
+    class: Drupal\motaded_custom\Logo\NodeLogoImporter
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+
   motaded_custom.world_bank_indicator_client:
     class: Drupal\motaded_custom\MarketIndicators\WorldBankIndicatorClient
     arguments: ['@http_client', '@logger.factory']

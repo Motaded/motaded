@@ -10,6 +10,7 @@
  *
  * Генерація EN: php scripts/rebuild_chamber_import_csv.php
  * Генерація AR: php scripts/rebuild_chamber_import_ar_csv.php
+ * Логотипи: ddev drush mcil (автозавантаження з сайту chamber); overrides — chamber_import.logos.php
  *
  * @return list<array<string, string>>
  */

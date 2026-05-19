@@ -6,6 +6,7 @@
  * field_short_description — короткий тизер; детальний текст у body (після вступних абзаців).
  * Генерація EN: php scripts/rebuild_platform_import_csv.php
  * Генерація AR: php scripts/rebuild_platform_import_ar_csv.php
+ * Логотипи: ddev drush mpil (автозавантаження з field_external_link); overrides — platform_import.logos.php
  * AR-рядки: translation_source_title = точний англомовний title; taxonomy names лишаються англійськими.
  *
  * @return list<array<string, string>>

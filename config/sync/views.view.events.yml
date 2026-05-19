@@ -9,7 +9,6 @@ dependencies:
     - node.type.event
     - taxonomy.vocabulary.event_type
     - taxonomy.vocabulary.region
-    - taxonomy.vocabulary.taxonomy
   module:
     - better_exposed_filters
     - datetime
@@ -378,7 +377,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          handler: default:node
+          handler: 'default:node'
           handler_settings:
             target_bundles:
               sector_page: sector_page
@@ -386,7 +385,7 @@ display:
               field: title
               direction: ASC
             auto_create: false
-            auto_create_bundle: ""
+            auto_create_bundle: ''
         field_region_target_id:
           id: field_region_target_id
           table: node__field_region
@@ -581,7 +580,7 @@ display:
         options:
           query_comment: ''
           disable_sql_rewrite: false
-          distinct: false
+          distinct: true
           replica: false
           query_tags: {  }
       relationships: {  }
@@ -1123,7 +1122,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          handler: default:node
+          handler: 'default:node'
           handler_settings:
             target_bundles:
               sector_page: sector_page
@@ -1131,7 +1130,7 @@ display:
               field: title
               direction: ASC
             auto_create: false
-            auto_create_bundle: ""
+            auto_create_bundle: ''
         field_region_target_id:
           id: field_region_target_id
           table: node__field_region
@@ -1692,7 +1691,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          handler: default:node
+          handler: 'default:node'
           handler_settings:
             target_bundles:
               sector_page: sector_page
@@ -1700,7 +1699,7 @@ display:
               field: title
               direction: ASC
             auto_create: false
-            auto_create_bundle: ""
+            auto_create_bundle: ''
         field_region_target_id:
           id: field_region_target_id
           table: node__field_region
@@ -2115,7 +2114,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          handler: default:node
+          handler: 'default:node'
           handler_settings:
             target_bundles:
               sector_page: sector_page
@@ -2123,7 +2122,7 @@ display:
               field: title
               direction: ASC
             auto_create: false
-            auto_create_bundle: ""
+            auto_create_bundle: ''
         field_region_target_id:
           id: field_region_target_id
           table: node__field_region
@@ -2253,7 +2252,10 @@ display:
             value: '<div class="events-home__footer-more"><a class="events-home__view-all" href="/events">View all events →</a></div>'
             format: full_html
           tokenize: false
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
     cache_metadata:
       max-age: -1
       contexts:

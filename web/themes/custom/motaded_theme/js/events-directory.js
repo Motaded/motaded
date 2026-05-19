@@ -124,6 +124,41 @@
     }, 140);
   }
 
+  /**
+   * Opens the native date picker when the user clicks anywhere on the control.
+   */
+  function openDatePicker(input) {
+    if (!input || input.disabled || input.readOnly) {
+      return;
+    }
+    input.focus();
+    if (typeof input.showPicker === 'function') {
+      try {
+        input.showPicker();
+        return;
+      }
+      catch (e) {
+        // showPicker() may throw if not in a direct user gesture.
+      }
+    }
+    input.click();
+  }
+
+  Drupal.behaviors.motadedEventsDirectoryDatePicker = {
+    attach(context) {
+      const selector =
+        '#events-directory-filters .form-item-motaded-event-date-from .form-el-wrapper, ' +
+        '#events-directory-filters .form-item-motaded-event-date-to .form-el-wrapper';
+
+      once('motaded-events-date-picker', selector, context).forEach(function (wrapper) {
+        wrapper.addEventListener('click', function () {
+          const input = wrapper.querySelector('input[type="date"]');
+          openDatePicker(input);
+        });
+      });
+    },
+  };
+
   Drupal.behaviors.motadedEventsDirectory = {
     attach(context) {
       function getRoot(el) {

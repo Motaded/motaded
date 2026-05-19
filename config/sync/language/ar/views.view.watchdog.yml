@@ -20,7 +20,7 @@ display:
           label: المستخدم
           separator: ', '
         link:
-          label: عمليات
+          label: العمليات
       pager:
         options:
           tags:
@@ -33,8 +33,8 @@ display:
       exposed_form:
         options:
           submit_button: انتقاء
-          reset_button_label: 'إعادة الضبط'
-          exposed_sorts_label: 'الترتيب حسب'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'ترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
       empty:

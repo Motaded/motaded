@@ -5,13 +5,20 @@ services:
     tags:
       - { name: logger.channel, channel: email_verification }
 
-  email_verification.otp_manager:
-    class: Drupal\email_verification\EmailVerificationOtpManager
+  email_verification.branded_email:
+    class: Drupal\email_verification\BrandedEmailBuilder
     arguments:
-      - '@tempstore.private'
       - '@plugin.manager.mail'
       - '@logger.channel.email_verification'
       - '@config.factory'
       - '@renderer'
       - '@language_manager'
       - '@request_stack'
+
+  email_verification.otp_manager:
+    class: Drupal\email_verification\EmailVerificationOtpManager
+    arguments:
+      - '@tempstore.private'
+      - '@email_verification.branded_email'
+      - '@logger.channel.email_verification'
+      - '@config.factory'

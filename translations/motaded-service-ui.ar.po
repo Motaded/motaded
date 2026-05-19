@@ -1612,6 +1612,24 @@ msgstr "طلبات الاجتماعات متاحة"
 msgid "Secure online registration"
 msgstr "تسجيل آمن عبر الإنترنت"
 
+msgid "Event ended"
+msgstr "انتهت الفعالية"
+
+msgid "This event has ended"
+msgstr "انتهت هذه الفعالية"
+
+msgid "This event has already taken place. Registration is closed."
+msgstr "انتهت هذه الفعالية بالفعل. التسجيل مغلق."
+
+msgid "Registration for this event is now closed. The event has already taken place, but you can still explore event details and related resources below."
+msgstr "التسجيل في هذه الفعالية مغلق الآن. لقد انتهت الفعالية بالفعل، ويمكنك الاطلاع على التفاصيل والموارد ذات الصلة أدناه."
+
+msgid "Discover upcoming business conferences, exhibitions, forums, and workshops across Saudi Arabia and the GCC on our events calendar."
+msgstr "اكتشف المؤتمرات والمعارض والمنتديات وورش العمل القادمة في المملكة ودول الخليج عبر تقويم الفعاليات لدينا."
+
+msgid "Browse upcoming events"
+msgstr "تصفح الفعاليات القادمة"
+
 msgid "Contact"
 msgstr "اتصل بنا"
 
@@ -1853,3 +1871,57 @@ msgstr "أوافق على تلقي تحديثات الفعاليات ورؤى ا
 
 msgid "Thanks — we’ll be in touch with relevant updates."
 msgstr "شكراً — سنتواصل معك بالتحديثات ذات الصلة."
+
+msgid "Business chambers network — decorative background"
+msgstr "شبكة غرف الأعمال — خلفية زخرفية"
+
+msgid "Business cost estimation — decorative illustration"
+msgstr "تقدير تكلفة الأعمال — رسم توضيحي زخرفي"
+
+msgid "Service category"
+msgstr "فئة الخدمة"
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Close menu"
+msgstr "إغلاق القائمة"
+
+msgid "Toggle submenu"
+msgstr "تبديل القائمة الفرعية"
+
+msgid "Market insight"
+msgstr "رؤية سوقية"
+
+msgid "min read"
+msgstr "دقائق قراءة"
+
+msgid "Key takeaways"
+msgstr "النقاط الرئيسية"
+
+msgid "Insight details"
+msgstr "تفاصيل الرؤية"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Share this insight"
+msgstr "مشاركة هذه الرؤية"
+
+msgid "Data source"
+msgstr "مصدر البيانات"
+
+msgid "Official indicators and publications"
+msgstr "المؤشرات والمنشورات الرسمية"
+
+msgid "View source"
+msgstr "عرض المصدر"
+
+msgid "World Development Indicators and official statistical releases."
+msgstr "مؤشرات التنمية العالمية والإصدارات الإحصائية الرسمية."
+
+msgid "Related insights"
+msgstr "رؤى ذات صلة"
+
+msgid "No related insights found."
+msgstr "لا توجد رؤى ذات صلة."

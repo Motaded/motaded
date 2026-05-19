@@ -81,6 +81,18 @@ services:
       - '@file_system'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.chamber_logo_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\ChamberLogoImportCommands
+    arguments:
+      - '@motaded_custom.node_logo_importer'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.platform_logo_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\PlatformLogoImportCommands
+    arguments:
+      - '@motaded_custom.node_logo_importer'
+    tags:
+      - { name: drush.command }
   motaded_custom.drush.market_indicators_import_commands:
     class: Drupal\motaded_custom\Drush\Commands\MarketIndicatorsImportCommands
     arguments:
@@ -127,6 +139,14 @@ services:
       - { name: drush.command }
   motaded_custom.drush.documents_ar_commands:
     class: Drupal\motaded_custom\Drush\Commands\DocumentsArCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.document_sector_pages_commands:
+    class: Drupal\motaded_custom\Drush\Commands\DocumentSectorPagesCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.event_status_commands:
+    class: Drupal\motaded_custom\Drush\Commands\EventStatusCommands
     tags:
       - { name: drush.command }
   motaded_custom.drush.events_ar_official_commands:

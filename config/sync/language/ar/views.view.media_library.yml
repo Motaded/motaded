@@ -18,9 +18,9 @@ display:
             offset_label: الإزاحة
       exposed_form:
         options:
-          submit_button: 'عمل تصفية'
-          reset_button_label: 'إعادة الضبط'
-          exposed_sorts_label: 'الترتيب حسب'
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'ترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
       empty:
@@ -102,7 +102,7 @@ display:
         uid:
           label: المؤلف
         changed:
-          label: التحديث
+          label: 'آخر تحديث'
       arguments:
         bundle:
           exception:

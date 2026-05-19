@@ -113,6 +113,8 @@ if (!function_exists('_motaded_ci_truncate')) {
       'field_featured' => (string) ((int) ($r['field_featured'] ?? 0)),
       'field_meta_tags_json' => $meta !== [] ? json_encode($meta, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '',
       'field_logo_mid' => (string) ($r['field_logo_mid'] ?? ''),
+      'field_logo_url' => (string) ($r['field_logo_url'] ?? ''),
+      'field_logo_basename' => (string) ($r['field_logo_basename'] ?? ''),
       'field_chamber_featured_stats_json' => $stats !== [] ? json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '',
       'path_alias' => (string) ($r['path_alias'] ?? ''),
     ];

@@ -8,6 +8,7 @@ dependencies:
     - metatag_twitter_cards
     - schema_metatag
     - schema_organization
+    - schema_web_page
 id: node__platform
 label: 'Content: Platform'
 tags:
@@ -28,7 +29,13 @@ tags:
   twitter_cards_title: '[node:title]'
   twitter_cards_description: '[node:field_short_description]'
   twitter_cards_image: '[node:field_hero_image:entity:field_media_image:entity:url]'
+  schema_web_page_type: WebPage
+  schema_web_page_id: '[node:url:absolute]#webpage'
+  schema_web_page_name: '[node:title]'
+  schema_web_page_description: '[node:field_short_description]'
+  schema_web_page_url: '[node:url:absolute]'
   schema_organization_type: GovernmentService
+  schema_organization_id: '[node:url:absolute]#government-service'
   schema_organization_name: '[node:title]'
   schema_organization_description: '[node:field_short_description]'
   schema_organization_url: '[node:url:absolute]'

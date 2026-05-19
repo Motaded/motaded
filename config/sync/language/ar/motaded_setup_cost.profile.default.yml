@@ -1,7 +1,21 @@
-label: 'تأسيس الأعمال في السعودية (افتراضي)'
-disclaimer: 'تقدير استرشادي فقط. تختلف الرسوم الحكومية الفعلية وإيجارات المكاتب والرسوم المهنية حسب النشاط والملكية ونطاق الخدمة. ليس استشارة قانونية أو ضريبية.'
 last_updated: 'مايو 2026'
 methodology_source: 'استناداً إلى جداول الرسوم المنشورة وعملاء موتاد المعتادين.'
+ui:
+  lead_cta_label: 'احصل على تقدير مفصل'
+  cta_advisor_url: /ar/contact-us
+  timeline_weeks_suffix: ' أسابيع'
+  progress_label: 'الخطوة @current من @total'
+  result_setup_label: 'التكلفة الأولية المقدرة'
+  result_monthly_label: 'التشغيل الشهري المقدر'
+  result_timeline_label: 'الجدول الزمني المقدر'
+  result_breakdown_title: 'تفصيل التكلفة'
+  packages_title: 'الباقة الموصى بها'
+  lead_title: 'احصل على تقديرك المفصل'
+  lead_description: 'سنرسل لك ملخصاً مع التفصيل والخطوات التالية. للإرشاد فقط.'
+  cta_advisor_label: 'تحدث إلى مستشار'
+  empty_selection_hint: 'أكمل الخطوات لعرض تقديرك.'
+label: 'تأسيس الأعمال في السعودية (افتراضي)'
+disclaimer: 'تقدير استرشادي فقط. تختلف الرسوم الحكومية الفعلية وإيجارات المكاتب والرسوم المهنية حسب النشاط والملكية ونطاق الخدمة. ليس استشارة قانونية أو ضريبية.'
 steps:
   -
     label: 'النشاط التجاري'
@@ -19,7 +33,7 @@ steps:
       -
         label: تسويق
       -
-        label: لوجستيات
+        label: اللوجستيات
       -
         label: أخرى
   -
@@ -83,6 +97,13 @@ line_items:
     label: 'التأشيرات والهجرة'
   -
     label: 'الامتثال والتقديمات'
+timelines:
+  -
+    label: 'شركة ذات مسؤولية محدودة سعودية — نموذجي'
+  -
+    label: 'مستثمر أجنبي'
+  -
+    label: 'المقر الإقليمي'
 packages:
   -
     label: مبتدئ
@@ -93,24 +114,3 @@ packages:
   -
     label: مؤسسات
     description: 'هياكل معقدة، ملكية أجنبية، أو عمليات بحجم مقر رئيسي.'
-timelines:
-  -
-    label: 'شركة ذات مسؤولية محدودة سعودية — نموذجي'
-  -
-    label: 'مستثمر أجنبي'
-  -
-    label: 'المقر الإقليمي'
-ui:
-  progress_label: 'الخطوة @current من @total'
-  result_setup_label: 'التكلفة الأولية المقدرة'
-  result_monthly_label: 'التشغيل الشهري المقدر'
-  result_timeline_label: 'الجدول الزمني المقدر'
-  result_breakdown_title: 'تفصيل التكلفة'
-  packages_title: 'الباقة الموصى بها'
-  lead_title: 'احصل على تقديرك المفصل'
-  lead_description: 'سنرسل لك ملخصاً مع التفصيل والخطوات التالية. للإرشاد فقط.'
-  lead_cta_label: 'احصل على تقدير مفصل'
-  cta_advisor_label: 'تحدث إلى مستشار'
-  cta_advisor_url: /ar/contact-us
-  empty_selection_hint: 'أكمل الخطوات لعرض تقديرك.'
-  timeline_weeks_suffix: ' أسابيع'

@@ -113,3 +113,57 @@ msgstr "نموذج ويب مكرر: %id."
 
 msgid "Enter a valid element machine name (e.g. email)."
 msgstr "أدخل اسم آلة عنصر صالحًا (مثل email)."
+
+msgid "We received your request — @site"
+msgstr "استلمنا طلبك — @site"
+
+msgid "We received your request"
+msgstr "استلمنا طلبك"
+
+msgid "there"
+msgstr "عزيزي/عزيزتي"
+
+msgid "Hi @name, thank you for submitting your business setup cost estimate request on Motaded. Our team will review your details and contact you with a tailored breakdown and recommended next steps."
+msgstr "مرحباً @name، شكراً لإرسال طلب تقدير تكلفة تأسيس الأعمال على Motaded. سيراجع فريقنا بياناتك ويتواصل معك بتفصيل مخصص والخطوات التالية الموصى بها."
+
+msgid "We received your setup cost estimate request and will be in touch soon."
+msgstr "استلمنا طلب تقدير تكلفة التأسيس وسنتواصل معك قريباً."
+
+msgid "Thank you for your request"
+msgstr "شكراً لطلبك"
+
+msgid "Your reference"
+msgstr "مرجعك"
+
+msgid "This estimate is indicative only. Final government fees, office costs, and professional charges depend on your activity, ownership, and scope of services."
+msgstr "هذا التقدير استرشادي فقط. تختلف الرسوم الحكومية الفعلية وتكاليف المكاتب والرسوم المهنية حسب نشاطك وملكيتك ونطاق الخدمات."
+
+msgid "If you did not submit this request, you can safely ignore this email."
+msgstr "إذا لم تُرسل هذا الطلب، يمكنك تجاهل هذا البريد بأمان."
+
+msgid "Estimated initial setup: @min–@max SAR."
+msgstr "التكلفة الأولية المقدرة: @min–@max ريال."
+
+msgid "Recommended package: @package."
+msgstr "الباقة الموصى بها: @package."
+
+msgid "Your Motaded verification code is ready. It expires in @minutes minutes."
+msgstr "رمز تحقق Motaded جاهز. ينتهي خلال @minutes دقيقة."
+
+msgid "You're subscribed to updates — @site"
+msgstr "اشتركت في التحديثات — @site"
+
+msgid "You're subscribed to updates"
+msgstr "اشتركت في التحديثات"
+
+msgid "Thanks for subscribing — we will keep you posted with relevant Motaded updates."
+msgstr "شكراً على الاشتراك — سنبقيك على اطلاع بالتحديثات ذات الصلة من Motaded."
+
+msgid "You're subscribed"
+msgstr "تم اشتراكك"
+
+msgid "Thank you for subscribing to Motaded updates. Our team will share relevant invitations, briefings, and insights when they apply to your interests."
+msgstr "شكراً لاشتراكك في تحديثات Motaded. سيتشارك فريقنا الدعوات والإحاطات والرؤى ذات الصلة عندما تتوافق مع اهتماماتك."
+
+msgid "We will only send updates that are relevant. You can contact us at any time if you wish to change your preferences."
+msgstr "سنرسل فقط التحديثات ذات الصلة. يمكنك التواصل معنا في أي وقت إذا رغبت بتغيير تفضيلاتك."

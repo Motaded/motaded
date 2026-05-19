@@ -138,6 +138,9 @@ foreach ($nids as $nid) {
   if (!empty($row['field_source_text'])) {
     $ar->set('field_source_text', (string) $row['field_source_text']);
   }
+  elseif (!$en->get('field_source_text')->isEmpty()) {
+    $ar->set('field_source_text', (string) $en->get('field_source_text')->value);
+  }
 
   if ($ar->hasField('field_source_link') && !$en->get('field_source_link')->isEmpty()) {
     $link = $en->get('field_source_link')->first();

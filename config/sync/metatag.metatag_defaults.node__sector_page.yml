@@ -28,8 +28,7 @@ tags:
   twitter_cards_title: '[node:title]'
   twitter_cards_description: '[node:field_short_description]'
   twitter_cards_image: '[node:field_media:entity:field_media_image:entity:url]'
-  schema_web_page_type: WebPage
-  schema_web_page_name: '[node:title]'
+  schema_web_page_type: AboutPage
+  schema_web_page_id: '[node:url:absolute]#webpage'
   schema_web_page_description: '[node:field_short_description]'
-  schema_web_page_url: '[node:url:absolute]'
-  schema_web_page_image: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:54:"[node:field_media:entity:field_media_image:entity:url]";s:5:"width";s:49:"[node:field_media:entity:field_media_image:width]";s:6:"height";s:50:"[node:field_media:entity:field_media_image:height]";}'
+  schema_web_page_in_language: '[node:langcode]'

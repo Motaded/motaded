@@ -213,6 +213,8 @@ foreach ($nids as $nid) {
     motaded_custom_apply_node_metatags($ar, $row, 'field_meta');
   }
 
+  motaded_custom_node_ar_copy_shared_field_values($ar, $en, motaded_custom_event_ar_shared_field_names());
+
   $ar->setPublished($en->isPublished());
   $node->save();
 

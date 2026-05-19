@@ -40,7 +40,7 @@
 					class="mot-mobile-drawer__close"
 					@click="mobileOpen = false; mobileSection = null; mobileSubsection = null"
 					aria-label="{{ 'Close menu'|t }}">
-					<img alt="" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-close.svg"/>
+					<img alt="{{ 'Close menu'|t }}" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-close.svg" aria-hidden="true"/>
 				</button>
 			</div>
 
@@ -53,7 +53,7 @@
 					href="{{ search_url|replace({'//s': '/s'}) }}"
 					class="mot-mobile-drawer__foot-link"
 					aria-label="{{ 'Search'|t }}">
-					<img alt="" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-search.svg"/>
+					<img alt="{{ 'Search'|t }}" width="20" height="20" src="/themes/custom/motaded_theme/img/icon-search.svg" aria-hidden="true"/>
 					<span>{{ 'Search'|t }}</span>
 				</a>
 				<div class="mot-mobile-drawer__foot-lang">
