@@ -605,7 +605,7 @@ insights-updates:
     - core/once
 
 glance_block:
-  version: 20260515glancemobile
+  version: 20260520glancebodyp
   css:
     component:
       css/components/glance-block.css:

@@ -108,6 +108,17 @@ function motaded_theme_glance_icon_markup(?string $key): Markup {
 }
 
 /**
+ * Plain text for glance stat descriptions (field often stores "<p>…</p>").
+ */
+function motaded_theme_glance_body_plain(string $html): string {
+  $html = trim($html);
+  if ($html === '') {
+    return '';
+  }
+  return trim(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+}
+
+/**
  * Inline SVG icon for header mega menu category headings.
  *
  * Keys match the allowed_values of menu_link_content.field_menu_icon.
@@ -1698,6 +1709,9 @@ function motaded_theme_build_sidebar_second_region(): array {
  */
 function motaded_theme_plain_text_truncate(string $html, int $max_length): string {
   $text = trim(preg_replace('/\s+/u', ' ', strip_tags($html)));
+  if ($text !== '') {
+    $text = trim(Html::decodeEntities($text, ENT_QUOTES | ENT_HTML5));
+  }
   if ($text === '') {
     return '';
   }
@@ -3142,8 +3156,13 @@ function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInte
 
   $variables['event_teaser_summary'] = '';
   if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-    $raw = (string) $node->get('body')->value;
-    $variables['event_teaser_summary'] = motaded_theme_plain_text_truncate($raw, 176);
+    $body_item = $node->get('body')->first();
+    $raw = $body_item ? (string) ($body_item->summary ?: $body_item->value) : '';
+    if ($raw !== '') {
+      $variables['event_teaser_summary'] = motaded_theme_decode_plain_label(
+        motaded_theme_plain_text_truncate($raw, 176)
+      );
+    }
   }
 }
 
@@ -4497,7 +4516,7 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
     $title = $p->hasField('field_glance_title') ? trim((string) ($p->get('field_glance_title')->value ?? '')) : '';
     $body = '';
     if ($p->hasField('field_glance_body') && !$p->get('field_glance_body')->isEmpty()) {
-      $body = trim((string) $p->get('field_glance_body')->value);
+      $body = motaded_theme_glance_body_plain((string) $p->get('field_glance_body')->value);
     }
     $source = $p->hasField('field_glance_source') ? trim((string) ($p->get('field_glance_source')->value ?? '')) : '';
     return [
@@ -4545,7 +4564,7 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
       }
       $body = '';
       if ($sub->get('field_body')->access('view') && !$sub->get('field_body')->isEmpty()) {
-        $body = trim((string) $sub->get('field_body')->value);
+        $body = motaded_theme_glance_body_plain((string) $sub->get('field_body')->value);
       }
       $link_url = '';
       $link_title = '';
