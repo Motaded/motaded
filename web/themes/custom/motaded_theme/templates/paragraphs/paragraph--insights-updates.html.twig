@@ -64,7 +64,7 @@
               <div class="iu-bn__card-media">
                 {% if card_img.src %}
                   {% if card_img.srcset %}
-                    <img loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                    <img loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="(max-width: 639px) min(100vw, 420px), (max-width: 1023px) min(50vw, 420px), min(33vw, 420px)" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
                   {% else %}
                     <img loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
                   {% endif %}

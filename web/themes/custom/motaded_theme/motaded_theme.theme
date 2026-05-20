@@ -527,22 +527,191 @@ function _motaded_theme_platform_url_canonical(?string $url): string {
 }
 
 /**
- * LCP: fetchpriority=high for responsive hero banner images.
+ * Image style names that must not appear in responsive hero output.
+ */
+function motaded_theme_responsive_image_blocked_styles(): array {
+  return ['max_2600x2600', 'max_1300x1300'];
+}
+
+/**
+ * Extracts public:// URI from a generated image style URL or URI.
+ */
+function motaded_theme_responsive_image_source_uri(string $style_uri): ?string {
+  if (preg_match('#^public://#', $style_uri)) {
+    return $style_uri;
+  }
+  if (preg_match('#/styles/[^/]+/(?:public|private)/(.+)$#', $style_uri, $matches)) {
+    return 'public://' . rawurldecode($matches[1]);
+  }
+  return NULL;
+}
+
+/**
+ * Replaces oversized src/srcset entries (legacy max_2600 / max_1300) on responsive images.
+ */
+function motaded_theme_responsive_image_clamp_oversized_src(array &$variables, string $fallback_style): void {
+  if (empty($variables['img_element']) || !is_array($variables['img_element'])) {
+    return;
+  }
+
+  $blocked = motaded_theme_responsive_image_blocked_styles();
+  $uri = (string) ($variables['img_element']['#uri'] ?? '');
+  $needs_src_fix = $uri !== '' && array_filter($blocked, static fn(string $style): bool => str_contains($uri, '/styles/' . $style . '/')) !== [];
+
+  $filter_srcset = static function (string $srcset) use ($blocked): string {
+    $candidates = array_filter(array_map('trim', explode(',', $srcset)));
+    $kept = [];
+    foreach ($candidates as $candidate) {
+      $skip = FALSE;
+      foreach ($blocked as $style) {
+        if (str_contains($candidate, '/styles/' . $style . '/')) {
+          $skip = TRUE;
+          break;
+        }
+      }
+      if (!$skip) {
+        $kept[] = $candidate;
+      }
+    }
+    return implode(', ', $kept);
+  };
+
+  $attrs = &$variables['img_element']['#attributes'];
+  if ($attrs === NULL) {
+    return;
+  }
+
+  $srcset_value = NULL;
+  if ($attrs instanceof \Drupal\Core\Template\Attribute) {
+    $srcset_value = $attrs->offsetGet('srcset');
+    if (is_string($srcset_value) && $srcset_value !== '') {
+      $filtered = $filter_srcset($srcset_value);
+      if ($filtered !== $srcset_value) {
+        $attrs->setAttribute('srcset', $filtered);
+        $needs_src_fix = TRUE;
+      }
+    }
+    $src_value = $attrs->offsetGet('src');
+    if (is_string($src_value) && array_filter($blocked, static fn(string $style): bool => str_contains($src_value, '/styles/' . $style . '/')) !== []) {
+      $needs_src_fix = TRUE;
+    }
+  }
+  elseif (is_array($attrs)) {
+    if (!empty($attrs['srcset']) && is_string($attrs['srcset'])) {
+      $filtered = $filter_srcset($attrs['srcset']);
+      if ($filtered !== $attrs['srcset']) {
+        $variables['img_element']['#attributes']['srcset'] = $filtered;
+        $needs_src_fix = TRUE;
+      }
+    }
+    if (!empty($attrs['src']) && is_string($attrs['src'])) {
+      foreach ($blocked as $style) {
+        if (str_contains($attrs['src'], '/styles/' . $style . '/')) {
+          $needs_src_fix = TRUE;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!$needs_src_fix) {
+    return;
+  }
+
+  $source_uri = motaded_theme_responsive_image_source_uri($uri);
+  if ($source_uri === NULL) {
+    return;
+  }
+
+  /** @var \Drupal\image\ImageStyleInterface|null $style */
+  $style = \Drupal::entityTypeManager()->getStorage('image_style')->load($fallback_style);
+  if ($style === NULL) {
+    return;
+  }
+
+  $variables['img_element']['#uri'] = $style->buildUri($source_uri);
+  $url = $style->buildUrl($source_uri);
+  if ($attrs instanceof \Drupal\Core\Template\Attribute) {
+    $attrs->setAttribute('src', $url);
+  }
+  elseif (is_array($attrs)) {
+    $variables['img_element']['#attributes']['src'] = $url;
+  }
+}
+
+/**
+ * LCP + sizing for responsive hero images (hero_banner style).
  */
 function motaded_theme_preprocess_responsive_image_formatter(array &$variables) {
-  if (($variables['responsive_image_style_id'] ?? '') !== 'hero_banner') {
+  $style_id = (string) ($variables['responsive_image_style_id'] ?? '');
+  if (!in_array($style_id, ['hero_banner', 'banner_sm', 'chamber_card', 'event_teaser', 'news_full'], TRUE)) {
     return;
   }
-  if (empty($variables['responsive_image']['#attributes'])) {
-    return;
+
+  $sizes_by_style = [
+    'hero_banner' => '(min-width: 1024px) min(45vw, 750px), min(100vw, 320px)',
+    'banner_sm' => '(min-width: 1024px) min(40vw, 520px), (min-width: 640px) min(50vw, 520px), min(100vw, 360px)',
+    'chamber_card' => '(min-width: 900px) 120px, 88px',
+    'event_teaser' => '(min-width: 1024px) 200px, (min-width: 640px) min(42vw, 240px), min(100vw, 360px)',
+    'news_full' => '(min-width: 1024px) min(66vw, 720px), min(100vw, 420px)',
+  ];
+  $fallback_style_by_id = [
+    'hero_banner' => 'max_325x325',
+    'banner_sm' => 'max_325x325',
+    'chamber_card' => 'chamber_card_logo_sm',
+    'event_teaser' => 'max_325x325',
+    'news_full' => 'max_325x325',
+  ];
+  motaded_theme_responsive_image_clamp_oversized_src($variables, $fallback_style_by_id[$style_id] ?? 'max_650x650');
+  $sizes = $sizes_by_style[$style_id] ?? '';
+
+  foreach (['img_element', 'responsive_image'] as $key) {
+    if (empty($variables[$key]['#attributes'])) {
+      continue;
+    }
+    $attr = $variables[$key]['#attributes'];
+    if ($attr instanceof \Drupal\Core\Template\Attribute) {
+      if ($sizes !== '') {
+        $attr->setAttribute('sizes', $sizes);
+      }
+      if ($style_id === 'hero_banner') {
+        $attr->setAttribute('fetchpriority', 'high');
+        $attr->setAttribute('decoding', 'async');
+      }
+      elseif ($style_id === 'chamber_card') {
+        $attr->setAttribute('decoding', 'async');
+      }
+    }
+    elseif (is_array($attr)) {
+      if ($sizes !== '') {
+        $variables[$key]['#attributes']['sizes'] = $sizes;
+      }
+      if ($style_id === 'hero_banner') {
+        $variables[$key]['#attributes']['fetchpriority'] = 'high';
+        $variables[$key]['#attributes']['decoding'] = 'async';
+      }
+      elseif ($style_id === 'chamber_card') {
+        $variables[$key]['#attributes']['decoding'] = 'async';
+      }
+    }
   }
-  $attr = $variables['responsive_image']['#attributes'];
-  if ($attr instanceof \Drupal\Core\Template\Attribute) {
-    $attr->setAttribute('fetchpriority', 'high');
+}
+
+/**
+ * Renders image media with a responsive hero view mode when available.
+ */
+function motaded_theme_media_responsive_view(?\Drupal\media\MediaInterface $media, string $preferred_mode = 'hero_banner'): array {
+  if ($media === NULL || $media->bundle() !== 'image') {
+    return [];
   }
-  elseif (is_array($attr)) {
-    $variables['responsive_image']['#attributes']['fetchpriority'] = 'high';
+  $modes = array_unique([$preferred_mode, 'hero_banner', 'banner_sm', 'event_teaser', 'default']);
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+  foreach ($modes as $mode) {
+    if (\Drupal::entityTypeManager()->getStorage('entity_view_display')->load("media.image.{$mode}")) {
+      return $view_builder->view($media, $mode);
+    }
   }
+  return [];
 }
 
 /**
@@ -993,7 +1162,7 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     $variables['#attached']['library'][] = 'motaded_theme/events_directory';
     $variables['attributes']['class'][] = 'events-directory-page';
     $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
-    $variables['motaded_events_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_events_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.webp';
     $variables['motaded_events_stats'] = _motaded_theme_events_directory_stats();
     $langcode = motaded_theme_interface_langcode();
     try {
@@ -1097,7 +1266,7 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     $variables['#attached']['library'][] = 'motaded_theme/insights_directory';
     $variables['attributes']['class'][] = 'insights-directory-page';
     $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
-    $variables['motaded_insights_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
+    $variables['motaded_insights_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.webp';
 
     $variables['motaded_event_updates_form'] = [];
     try {
@@ -1885,6 +2054,21 @@ function motaded_theme_preprocess_node(&$variables) {
     }
   }
 
+  // Chamber (full): localized sidebar / CTA URLs.
+  if ($node->bundle() === 'chamber' && ($variables['view_mode'] ?? '') === 'full') {
+    $langcode = motaded_theme_interface_langcode();
+    try {
+      $language = \Drupal::languageManager()->getLanguage($langcode);
+      $url_options = ['language' => $language];
+      $variables['chamber_contact_url'] = Url::fromUserInput('/contact-us', $url_options)->toString();
+      $variables['chamber_sectors_url'] = Url::fromUserInput('/sectors', $url_options)->toString();
+    }
+    catch (\Throwable $e) {
+      $variables['chamber_contact_url'] = $langcode === 'ar' ? '/ar/contact-us' : '/contact-us';
+      $variables['chamber_sectors_url'] = $langcode === 'ar' ? '/ar/sectors' : '/sectors';
+    }
+  }
+
   // Chamber (full): CTA link text — hide raw URLs; respect editor-set titles otherwise.
   if ($node->bundle() === 'chamber'
     && ($variables['view_mode'] ?? '') === 'full'
@@ -2225,17 +2409,13 @@ function motaded_theme_preprocess_node(&$variables) {
       }
     }
 
-    // Optional hero background (card/listing image) + up to three KPI cards from field_sector_kpis.
+    // Hero image via responsive styles (not full-size original URL).
     $variables['sector_hero_bg_url'] = '';
+    $variables['sector_hero_media'] = [];
     if ($node->hasField('field_media') && !$node->get('field_media')->isEmpty()) {
       $hero_media = $node->get('field_media')->entity;
-      if ($hero_media && $hero_media->bundle() === 'image'
-        && $hero_media->hasField('field_media_image') && !$hero_media->get('field_media_image')->isEmpty()) {
-        $img_file = $hero_media->get('field_media_image')->entity;
-        if ($img_file instanceof FileInterface) {
-          $variables['sector_hero_bg_url'] = \Drupal::service('file_url_generator')
-            ->generateAbsoluteString($img_file->getFileUri());
-        }
+      if ($hero_media instanceof \Drupal\media\MediaInterface) {
+        $variables['sector_hero_media'] = motaded_theme_media_responsive_view($hero_media, 'hero_banner');
       }
     }
 
@@ -2536,7 +2716,7 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
     $media = $node->get('field_featured_image')->entity;
   }
   if ($media) {
-    $variables['event_hero_media'] = $em->getViewBuilder('media')->view($media, 'default');
+    $variables['event_hero_media'] = motaded_theme_media_responsive_view($media, 'hero_banner');
   }
 
   $variables['event_body'] = [];
@@ -3097,9 +3277,9 @@ function _motaded_theme_preprocess_event_node_teaser(array &$variables, NodeInte
   if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
     $media = $node->get('field_featured_image')->entity;
     if ($media) {
-      // Responsive image styles (WebP pipeline) instead of fixed `large` default.
-      $view_mode = $media->bundle() === 'image' ? 'banner_sm' : 'default';
-      $variables['event_teaser_media'] = $em->getViewBuilder('media')->view($media, $view_mode);
+      $featured = !empty($variables['elements']['#motaded_featured_teaser']);
+      $mode = $featured ? 'hero_banner' : 'event_teaser';
+      $variables['event_teaser_media'] = motaded_theme_media_responsive_view($media, $mode);
     }
   }
 
@@ -3556,7 +3736,7 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
             $media = $platform_node->get('field_logo')->entity;
             $fallback_alt = (string) t('@name logo', ['@name' => $platform_node->label()]);
             $extracted = motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
-            $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+            $meta = motaded_theme_platform_logo_image_metadata($extracted['uri']);
             $logo = [
               'src' => $meta['src'],
               'srcset' => $meta['srcset'],
@@ -4370,7 +4550,7 @@ function motaded_theme_preprocess_paragraph__insights_updates(array &$variables)
       }
       $nid = (int) $node->id();
       $extracted = motaded_theme_entity_field_media_image_uri_and_alt($node, $node->label());
-      $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+      $meta = motaded_theme_publication_card_image_metadata($extracted['uri']);
       $meta['alt'] = $extracted['alt'];
       $variables['iu_card_images'][$nid] = $meta;
       $ts = (int) $node->getCreatedTime();
@@ -4959,7 +5139,7 @@ function motaded_theme_preprocess_paragraph__platforms_systems(array &$variables
               $media = $node->get('field_logo')->entity;
               $fallback_alt = (string) t('@name logo', ['@name' => $node->label()]);
               $extracted = motaded_theme_media_image_uri_and_alt($media, $fallback_alt);
-              $meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+              $meta = motaded_theme_platform_logo_image_metadata($extracted['uri']);
               $logo = [
                 'src' => $meta['src'],
                 'srcset' => $meta['srcset'],
@@ -5100,27 +5280,40 @@ function motaded_theme_preprocess_views_view_unformatted__news__block_4(&$variab
  */
 function motaded_theme_preprocess_views_view_unformatted__partners__block_2(&$variables) {
   $variables['#attached']['library'][] = 'motaded_theme/partner_carousel';
+  $variables['partner_items'] = [];
 
-  foreach ($variables['rows'] as &$row) {
-    $entity = $row['content']['#row']->_entity ?? NULL;
-    $fallback_label = $entity ? $entity->label() : '';
-    $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $fallback_label);
-    $img_meta = motaded_theme_responsive_teaser_image_metadata($extracted['uri']);
+  foreach ($variables['view']->result as $result_row) {
+    $entity = $result_row->_entity ?? NULL;
+    if (!$entity) {
+      continue;
+    }
+
+    $partner_name = $entity->label();
+    if ($entity->hasField('field_partner_name') && !$entity->get('field_partner_name')->isEmpty()) {
+      $partner_name = trim((string) $entity->get('field_partner_name')->value) ?: $partner_name;
+    }
+
+    $role = '';
+    if ($entity->hasField('field_one_line_role') && !$entity->get('field_one_line_role')->isEmpty()) {
+      $role = trim((string) $entity->get('field_one_line_role')->value);
+    }
+
+    $extracted = motaded_theme_entity_field_media_image_uri_and_alt($entity, $partner_name);
+    $img_meta = motaded_theme_partner_logo_image_metadata($extracted['uri']);
     $img_alt = trim($extracted['alt']);
-    if ($img_alt === '' && $entity) {
-      $img_alt = (string) t('@name logo', ['@name' => $entity->label()]);
-    }
-    elseif ($img_alt === '') {
-      $img_alt = (string) t('Partner logo');
+    if ($img_alt === '') {
+      $img_alt = (string) t('@name logo', ['@name' => $partner_name]);
     }
 
-    $row['image']['src'] = $img_meta['src'];
-    $row['image']['srcset'] = $img_meta['srcset'];
-    $row['image']['width'] = $img_meta['width'];
-    $row['image']['height'] = $img_meta['height'];
-    $row['image']['url'] = $img_meta['src'];
-    $row['image']['alt'] = $img_alt;
-    $row['title'] = $entity ? $entity->label() : '';
+    $variables['partner_items'][] = [
+      'name' => $partner_name,
+      'role' => $role,
+      'alt' => $img_alt,
+      'src' => $img_meta['src'],
+      'srcset' => $img_meta['srcset'],
+      'width' => $img_meta['width'],
+      'height' => $img_meta['height'],
+    ];
   }
 }
 
@@ -5996,6 +6189,13 @@ function motaded_theme_preprocess_views_view_fullcalendar(array &$variables): vo
   if (empty($variables['#attached']['drupalSettings']['fullCalendarView'])) {
     return;
   }
+
+  $variables['#attached']['library'][] = 'motaded_theme/events_calendar_crawlable';
+  $variables['#attached']['drupalSettings']['motadedEventsCalendar'] = [
+    'eventsPath' => Url::fromRoute('view.events.page_1')->toString(),
+    'dateFrom' => 'motaded_event_date_from',
+    'dateTo' => 'motaded_event_date_to',
+  ];
 
   $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId();
   foreach (array_keys($variables['#attached']['drupalSettings']['fullCalendarView']) as $view_index) {

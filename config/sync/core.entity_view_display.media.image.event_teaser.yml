@@ -1,24 +1,24 @@
-uuid: c5e0a3b4-6d7f-8a9b-1e2f-3a4b5c6d7e8f
+uuid: b3c4d5e6-f708-4901-bcde-f123456789ab
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.chamber_card
+    - core.entity_view_mode.media.event_teaser
     - field.field.media.image.field_media_image
-    - responsive_image.styles.chamber_card
+    - responsive_image.styles.event_teaser
     - media.type.image
   module:
     - responsive_image
-id: media.image.chamber_card
+id: media.image.event_teaser
 targetEntityType: media
 bundle: image
-mode: chamber_card
+mode: event_teaser
 content:
   field_media_image:
     type: responsive_image
     label: visually_hidden
     settings:
-      responsive_image_style: chamber_card
+      responsive_image_style: event_teaser
       image_link: ''
       image_loading:
         attribute: lazy

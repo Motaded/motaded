@@ -1,0 +1,22 @@
+uuid: e7f80911-2132-4456-d789-0123abcdef04
+langcode: en
+status: true
+dependencies: {  }
+name: partner_logo_sm
+label: 'Partner logo SM (120×48 max)'
+effects:
+  f8091121-3243-4567-e890-1234abcdef05:
+    uuid: f8091121-3243-4567-e890-1234abcdef05
+    id: image_scale
+    weight: 0
+    data:
+      width: 120
+      height: 48
+      upscale: false
+  09112213-4354-5678-f901-2345abcdef06:
+    uuid: 09112213-4354-5678-f901-2345abcdef06
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__

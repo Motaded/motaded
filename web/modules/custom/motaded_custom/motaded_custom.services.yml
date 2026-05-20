@@ -1,10 +1,6 @@
 services:
   Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper:
     autowire: true
-  Drupal\motaded_custom\Hook\MetatagSanitizeHooks:
-    autowire: true
-  Drupal\motaded_custom\Hook\MetatagTitleHooks:
-    autowire: true
   Drupal\motaded_custom\Hook\PageTitleHooks:
     autowire: true
   Drupal\motaded_custom\Hook\WebformMetatagHooks:

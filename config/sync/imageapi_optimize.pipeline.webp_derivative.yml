@@ -11,6 +11,6 @@ processors:
   b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7:
     id: imageapi_optimize_webp
     data:
-      quality: 82
+      quality: 78
     weight: 0
     uuid: b8e9f0a1-2c3d-4e5f-6071-8293a4b5c6d7

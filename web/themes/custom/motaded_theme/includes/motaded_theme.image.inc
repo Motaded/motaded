@@ -134,6 +134,78 @@ function motaded_theme_responsive_teaser_image_metadata(?string $file_uri): arra
 }
 
 /**
+ * Publications & Updates (insights_updates) grid cards — 3-col / 2-col / 1-col.
+ *
+ * @return array{src: string, srcset: string, width: int, height: int}
+ */
+function motaded_theme_publication_card_image_metadata(?string $file_uri): array {
+  $fallback = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 400,
+    'height' => 250,
+  ];
+  if ($file_uri === NULL || $file_uri === '') {
+    return $fallback;
+  }
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $original_url = $file_url_generator->generateString($file_uri);
+
+  if (str_ends_with(strtolower($file_uri), '.svg')) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 400,
+      'height' => 250,
+    ];
+  }
+
+  $image = \Drupal::service('image.factory')->get($file_uri);
+  if (!$image->isValid()) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 400,
+      'height' => 250,
+    ];
+  }
+
+  $w_orig = $image->getWidth();
+  $h_orig = $image->getHeight();
+
+  $srcset_parts = [];
+  foreach (['max_325x325' => 325, 'max_480x480' => 480, 'max_650x650' => 650] as $style_id => $descriptor_w) {
+    $style = ImageStyle::load($style_id);
+    if ($style) {
+      $srcset_parts[] = motaded_theme_image_style_root_relative_url($file_uri, $style) . ' ' . $descriptor_w . 'w';
+    }
+  }
+
+  $src = $original_url;
+  $style_325 = ImageStyle::load('max_325x325');
+  if ($style_325) {
+    $src = motaded_theme_image_style_root_relative_url($file_uri, $style_325);
+  }
+  else {
+    $style_650 = ImageStyle::load('max_650x650');
+    if ($style_650) {
+      $src = motaded_theme_image_style_root_relative_url($file_uri, $style_650);
+    }
+  }
+
+  $display_w = min(420, $w_orig);
+  $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+
+  return [
+    'src' => $src,
+    'srcset' => implode(', ', $srcset_parts),
+    'width' => $display_w,
+    'height' => $display_h,
+  ];
+}
+
+/**
  * Blog listing (/blog) card image: smaller default + tighter srcset than teasers.
  *
  * Uses max_325x325 as the default `src` when available so mobile rows do not
@@ -199,6 +271,152 @@ function motaded_theme_blog_listing_card_image_metadata(?string $file_uri): arra
 
   $display_w = min(325, $w_orig);
   $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+
+  return [
+    'src' => $src,
+    'srcset' => implode(', ', $srcset_parts),
+    'width' => $display_w,
+    'height' => $display_h,
+  ];
+}
+
+/**
+ * Partner marquee logos: small derivatives matching on-screen size (~180×48).
+ *
+ * @return array{src: string, srcset: string, width: int, height: int}
+ */
+function motaded_theme_partner_logo_image_metadata(?string $file_uri): array {
+  $fallback = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 180,
+    'height' => 48,
+  ];
+  if ($file_uri === NULL || $file_uri === '') {
+    return $fallback;
+  }
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $original_url = $file_url_generator->generateString($file_uri);
+
+  if (str_ends_with(strtolower($file_uri), '.svg')) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 180,
+      'height' => 48,
+    ];
+  }
+
+  $image = \Drupal::service('image.factory')->get($file_uri);
+  if (!$image->isValid()) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 180,
+      'height' => 48,
+    ];
+  }
+
+  $w_orig = $image->getWidth();
+  $h_orig = $image->getHeight();
+
+  $srcset_parts = [];
+  foreach (['partner_logo_sm' => 120, 'partner_logo' => 180] as $style_id => $descriptor_w) {
+    $style = ImageStyle::load($style_id);
+    if ($style) {
+      $srcset_parts[] = motaded_theme_image_style_root_relative_url($file_uri, $style) . ' ' . $descriptor_w . 'w';
+    }
+  }
+
+  $src = $original_url;
+  $style_sm = ImageStyle::load('partner_logo_sm');
+  if ($style_sm) {
+    $src = motaded_theme_image_style_root_relative_url($file_uri, $style_sm);
+  }
+  else {
+    $style_lg = ImageStyle::load('partner_logo');
+    if ($style_lg) {
+      $src = motaded_theme_image_style_root_relative_url($file_uri, $style_lg);
+    }
+  }
+
+  $display_w = min(180, $w_orig);
+  $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+  $display_h = min(48, $display_h);
+
+  return [
+    'src' => $src,
+    'srcset' => implode(', ', $srcset_parts),
+    'width' => $display_w,
+    'height' => $display_h,
+  ];
+}
+
+/**
+ * Platform logos (investor journey, systems list, teasers): ~44–128px on screen.
+ *
+ * @return array{src: string, srcset: string, width: int, height: int}
+ */
+function motaded_theme_platform_logo_image_metadata(?string $file_uri): array {
+  $fallback = [
+    'src' => '',
+    'srcset' => '',
+    'width' => 64,
+    'height' => 64,
+  ];
+  if ($file_uri === NULL || $file_uri === '') {
+    return $fallback;
+  }
+
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $original_url = $file_url_generator->generateString($file_uri);
+
+  if (str_ends_with(strtolower($file_uri), '.svg')) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 128,
+      'height' => 128,
+    ];
+  }
+
+  $image = \Drupal::service('image.factory')->get($file_uri);
+  if (!$image->isValid()) {
+    return [
+      'src' => $original_url,
+      'srcset' => '',
+      'width' => 128,
+      'height' => 128,
+    ];
+  }
+
+  $w_orig = $image->getWidth();
+  $h_orig = $image->getHeight();
+
+  $srcset_parts = [];
+  foreach (['platform_logo_sm' => 64, 'platform_logo' => 128] as $style_id => $descriptor_w) {
+    $style = ImageStyle::load($style_id);
+    if ($style) {
+      $srcset_parts[] = motaded_theme_image_style_root_relative_url($file_uri, $style) . ' ' . $descriptor_w . 'w';
+    }
+  }
+
+  $src = $original_url;
+  $style_sm = ImageStyle::load('platform_logo_sm');
+  if ($style_sm) {
+    $src = motaded_theme_image_style_root_relative_url($file_uri, $style_sm);
+  }
+  else {
+    $style_lg = ImageStyle::load('platform_logo');
+    if ($style_lg) {
+      $src = motaded_theme_image_style_root_relative_url($file_uri, $style_lg);
+    }
+  }
+
+  $display_w = min(128, $w_orig);
+  $display_h = (int) max(1, round($h_orig * ($display_w / max(1, $w_orig))));
+  $display_h = min(128, $display_h);
 
   return [
     'src' => $src,

@@ -116,6 +116,9 @@
   function scheduleCalendarPatchRetries(root, attemptsDone) {
     let n = attemptsDone || 0;
     patchAsideCalendarsInDirectory(root);
+    if (Drupal.motadedEventsCalendar && typeof Drupal.motadedEventsCalendar.patchAll === 'function') {
+      Drupal.motadedEventsCalendar.patchAll(root);
+    }
     if (n > 36) {
       return;
     }

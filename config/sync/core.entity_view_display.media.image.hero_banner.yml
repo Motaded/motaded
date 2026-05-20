@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.media.image.field_media_image
-    - image.style.max_1300x1300
-    - image.style.max_2600x2600
     - image.style.max_650x650
     - media.type.image
     - responsive_image.styles.hero_banner

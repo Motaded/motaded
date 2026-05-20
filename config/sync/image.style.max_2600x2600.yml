@@ -1,6 +1,6 @@
 uuid: 418b3b10-57ea-48ce-ac51-5e328f170a93
 langcode: en
-status: true
+status: false
 dependencies:
   enforced:
     module:
@@ -24,3 +24,4 @@ effects:
     weight: 2
     data:
       extension: webp
+pipeline: __default__

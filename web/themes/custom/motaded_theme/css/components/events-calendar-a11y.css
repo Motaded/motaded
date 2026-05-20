@@ -1,0 +1,40 @@
+/**
+ * FullCalendar grid text contrast (day headers + day numbers).
+ */
+.events-home__calendar-shell .fc,
+.events-directory__calendar-shell .fc {
+  --fc-neutral-text-color: var(--mot-text-secondary, #475569);
+}
+
+.events-home__calendar-shell .fc .fc-col-header-cell-cushion,
+.events-directory__calendar-shell .fc .fc-col-header-cell-cushion {
+  color: var(--mot-text-secondary, #475569);
+  font-weight: 600;
+}
+
+.events-home__calendar-shell .fc a.fc-daygrid-day-number,
+.events-home__calendar-shell .fc a.fc-day-number,
+.events-directory__calendar-shell .fc a.fc-daygrid-day-number,
+.events-directory__calendar-shell .fc a.fc-day-number {
+  color: var(--mot-slate-700, #334155);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.events-home__calendar-shell .fc .fc-day-other a.fc-daygrid-day-number,
+.events-home__calendar-shell .fc .fc-day-other a.fc-day-number,
+.events-directory__calendar-shell .fc .fc-day-other a.fc-daygrid-day-number,
+.events-directory__calendar-shell .fc .fc-day-other a.fc-day-number {
+  color: var(--mot-text-muted, #64748b);
+}
+
+.events-home__calendar-shell .fc a.fc-daygrid-day-number:hover,
+.events-home__calendar-shell .fc a.fc-daygrid-day-number:focus-visible,
+.events-home__calendar-shell .fc a.fc-day-number:hover,
+.events-home__calendar-shell .fc a.fc-day-number:focus-visible,
+.events-directory__calendar-shell .fc a.fc-daygrid-day-number:hover,
+.events-directory__calendar-shell .fc a.fc-daygrid-day-number:focus-visible,
+.events-directory__calendar-shell .fc a.fc-day-number:hover,
+.events-directory__calendar-shell .fc a.fc-day-number:focus-visible {
+  color: var(--mot-text, #0f172a);
+}

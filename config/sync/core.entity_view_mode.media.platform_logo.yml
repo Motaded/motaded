@@ -1,0 +1,11 @@
+uuid: a5b6c7d8-e9f0-4123-a456-7890abcdef18
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.platform_logo
+label: 'Platform logo'
+description: 'Small logo for platform cards and listings.'
+targetEntityType: media
+cache: true

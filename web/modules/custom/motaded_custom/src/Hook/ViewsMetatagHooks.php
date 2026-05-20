@@ -11,11 +11,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Fixes canonical language prefix on localized listing pages.
+ * Fixes canonical language prefix on localized pages (views, front, nodes).
  *
- * Views page routes may emit canonical URLs in default language without the
- * active language URL prefix. We override canonical with current request path
- * so canonical always matches the localized route being rendered.
+ * Metatag may emit canonical URLs in the default language without the active
+ * language URL prefix (e.g. /ar → canonical https://example.com/). We override
+ * canonical with the current request path so each language URL is self-canonical.
  *
  * Appends " | Page N" to title and description on paginated views (blog, news,
  * services) to avoid duplicate meta tags across pages.
@@ -91,18 +91,13 @@ class ViewsMetatagHooks {
   }
 
   /**
-   * Rewrites canonical in final head attachments for Views page routes.
+   * Rewrites canonical when the active UI language uses a URL prefix.
    *
    * @param array $metatag_attachments
    *   The metatag attachments array.
    */
   #[Hook('metatags_attachments_alter')]
-  public function fixViewsCanonicalAttachment(array &$metatag_attachments): void {
-    $route_name = (string) $this->routeMatch->getRouteName();
-    if (!str_starts_with($route_name, 'view.')) {
-      return;
-    }
-
+  public function fixLocalizedCanonicalAttachment(array &$metatag_attachments): void {
     $request = $this->requestStack->getCurrentRequest();
     if ($request === NULL) {
       return;
@@ -113,13 +108,17 @@ class ViewsMetatagHooks {
     }
 
     $path = $request->getPathInfo();
+    if ($path === '' || $path === '/') {
+      return;
+    }
+
     $parts = explode('/', trim($path, '/'));
     $prefix = $parts[0] ?? '';
     if ($prefix === '' || $this->languageManager->getLanguage($prefix) === NULL) {
       return;
     }
 
-      $localized_canonical = $request->getSchemeAndHttpHost() . $path;
+    $localized_canonical = $request->getSchemeAndHttpHost() . $path;
     $query_string = $request->getQueryString();
     $include_query = $query_string !== null && $query_string !== '';
     if ($include_query) {

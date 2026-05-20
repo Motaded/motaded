@@ -1,25 +1,25 @@
-uuid: c5e0a3b4-6d7f-8a9b-1e2f-3a4b5c6d7e8f
+uuid: b6c7d8e9-f012-4234-b567-8901abcdef19
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.chamber_card
+    - core.entity_view_mode.media.platform_logo
     - field.field.media.image.field_media_image
-    - responsive_image.styles.chamber_card
+    - image.style.platform_logo
     - media.type.image
   module:
-    - responsive_image
-id: media.image.chamber_card
+    - image
+id: media.image.platform_logo
 targetEntityType: media
 bundle: image
-mode: chamber_card
+mode: platform_logo
 content:
   field_media_image:
-    type: responsive_image
+    type: image
     label: visually_hidden
     settings:
-      responsive_image_style: chamber_card
       image_link: ''
+      image_style: platform_logo
       image_loading:
         attribute: lazy
     third_party_settings: {  }

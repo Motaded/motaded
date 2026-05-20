@@ -77,7 +77,7 @@
       <section class="glance-block__market" aria-label="{{ 'Market data'|t }}">
         <div class="glance-block__market-split">
           <div class="glance-block__market-col glance-block__market-col--table">
-            <h4 class="glance-block__market-subtitle">{{ 'Key economic indicators'|t }}</h4>
+            <h3 class="glance-block__market-subtitle">{{ 'Key economic indicators'|t }}</h3>
             <div class="glance-block__market-table-wrap">
               <table class="glance-block__market-table">
                 <thead>
@@ -111,7 +111,7 @@
             </p>
           </div>
           <div class="glance-block__market-col glance-block__market-col--chart">
-            <h4 class="glance-block__market-subtitle">{{ 'GDP growth trend'|t }} ({{ market_indicators.chart_year_min }}–{{ market_indicators.chart_year_max }})</h4>
+            <h3 class="glance-block__market-subtitle">{{ 'GDP growth trend'|t }} ({{ market_indicators.chart_year_min }}–{{ market_indicators.chart_year_max }})</h3>
             {% if market_indicators.chart_svg %}
               <figure class="glance-block__market-chart">
                 {{ market_indicators.chart_svg }}

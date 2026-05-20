@@ -4,11 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.storage.node.field_category
-    - field.storage.node.field_featured
-    - field.storage.node.field_region
-    - field.storage.node.field_sector
-    - field.storage.node.field_year
     - node.type.market_insight
     - taxonomy.vocabulary.market_insight_category
     - taxonomy.vocabulary.region
@@ -93,7 +88,6 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: ''
-                  sort_options_unsupported: ''
               field_category_target_id:
                 plugin_id: default
                 advanced:
@@ -898,7 +892,13 @@ display:
       display_description: ''
       display_extenders:
         metatag_display_extender:
-          metatags: {  }
+          metatags:
+            title: 'Market insights | Motaded'
+            description: 'Browse market insights, analysis, and sector updates for businesses in Saudi Arabia. Filter by category, sector, and region on Motaded.'
+            canonical_url: '[site:base-url]/insights'
+            hreflang_xdefault: '[site:base-url]/insights'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/insights'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/insights'
           tokenize: false
       path: insights
     cache_metadata:

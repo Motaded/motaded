@@ -1,0 +1,25 @@
+uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - responsive_image
+name: max_480x480
+label: 'Max 480x480'
+effects:
+  1a2b3c4d-5e6f-7890-abcd-ef1234567891:
+    uuid: 1a2b3c4d-5e6f-7890-abcd-ef1234567891
+    id: image_scale
+    weight: 1
+    data:
+      width: 480
+      height: 480
+      upscale: false
+  2b3c4d5e-6f70-8901-bcde-f12345678902:
+    uuid: 2b3c4d5e-6f70-8901-bcde-f12345678902
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp
+pipeline: __default__

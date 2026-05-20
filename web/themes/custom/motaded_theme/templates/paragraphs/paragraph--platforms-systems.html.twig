@@ -48,7 +48,7 @@
                     <a class="ps-list__link" href="{{ item.url }}">
                       <span class="ps-list__mini" aria-hidden="true">
                         {% if item.logo is defined and item.logo.src %}
-                          <img class="ps-list__logo" src="{{ item.logo.src }}" alt="" loading="lazy" decoding="async">
+                          <img class="ps-list__logo" src="{{ item.logo.src }}" {% if item.logo.srcset %}srcset="{{ item.logo.srcset }}" sizes="30px" {% endif %}{% if item.logo.width %}width="{{ item.logo.width }}" {% endif %}{% if item.logo.height %}height="{{ item.logo.height }}" {% endif %}alt="" loading="lazy" decoding="async">
                         {% else %}
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>

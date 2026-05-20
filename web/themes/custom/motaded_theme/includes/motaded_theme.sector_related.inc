@@ -366,7 +366,7 @@ function _motaded_theme_sector_row_platform(NodeInterface $node, $em, string $la
   if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
     $media = $node->get('field_logo')->entity;
     if ($media instanceof MediaInterface) {
-      $logo = $em->getViewBuilder('media')->view($media, 'default');
+      $logo = $em->getViewBuilder('media')->view($media, 'platform_logo');
     }
   }
 
