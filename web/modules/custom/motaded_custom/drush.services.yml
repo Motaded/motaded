@@ -183,3 +183,9 @@ services:
       - '@motaded_custom.homepage_migrator'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.webp_sidecar_commands:
+    class: Drupal\motaded_custom\Drush\Commands\WebpSidecarCommands
+    arguments:
+      - '@motaded_custom.webp_sidecar'
+    tags:
+      - { name: drush.command }

@@ -27,6 +27,17 @@ services:
     tags:
       - { name: event_subscriber }
 
+  motaded_custom.webp_sidecar:
+    class: Drupal\motaded_custom\Image\WebpSidecarGenerator
+    arguments:
+      - '@file_system'
+
+  Drupal\motaded_custom\EventSubscriber\WebpSidecarImageStyleSubscriber:
+    arguments:
+      - '@motaded_custom.webp_sidecar'
+    tags:
+      - { name: event_subscriber }
+
   motaded_custom.node_logo_importer:
     class: Drupal\motaded_custom\Logo\NodeLogoImporter
     arguments:

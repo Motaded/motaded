@@ -2019,3 +2019,27 @@ function motaded_custom_sync_all_event_ar_shared_fields(): int {
 function motaded_custom_market_insight_ar_sync_path_alias(NodeInterface $node): bool {
   return motaded_custom_node_ar_sync_path_alias($node, ['market_insight']);
 }
+
+/**
+ * Implements hook_file_insert().
+ */
+function motaded_custom_file_insert(\Drupal\file\FileInterface $file): void {
+  _motaded_custom_ensure_webp_sidecar($file->getFileUri());
+}
+
+/**
+ * Implements hook_file_update().
+ */
+function motaded_custom_file_update(\Drupal\file\FileInterface $file): void {
+  _motaded_custom_ensure_webp_sidecar($file->getFileUri());
+}
+
+/**
+ * Creates imageapi_optimize_webp sidecar for new raster uploads.
+ */
+function _motaded_custom_ensure_webp_sidecar(string $uri): void {
+  if (!\Drupal::moduleHandler()->moduleExists('imageapi_optimize_webp')) {
+    return;
+  }
+  \Drupal::service('motaded_custom.webp_sidecar')->ensureSidecar($uri);
+}
