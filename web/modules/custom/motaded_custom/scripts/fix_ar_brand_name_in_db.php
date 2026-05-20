@@ -5,7 +5,8 @@
  * Find / fix wrong Arabic brand spellings stored in the database.
  *
  * Scans: nodes (AR), paragraphs (AR), block content (AR), menu links, taxonomy terms,
- * language.ar config. Includes link fields (button labels: field_link, field_cta_link, …).
+ * language.ar config, node field_meta / field_meta_tags (metatag JSON).
+ * Includes link fields (button labels: field_link, field_cta_link, …).
  *
  * Correct brand: متعدد (not معتد, موتاد).
  *
@@ -80,6 +81,30 @@ function motaded_ar_brand_find_in_value(mixed $value): array {
   return $hits;
 }
 
+/**
+ * Recursively fixes brand spellings in metatag field JSON (arrays / strings).
+ *
+ * @return array{0: mixed, 1: bool}
+ *   Fixed structure and whether anything changed.
+ */
+function motaded_ar_brand_fix_metatag_value(mixed $data): array {
+  if (is_string($data)) {
+    return motaded_ar_brand_fix_text($data);
+  }
+  if (!is_array($data)) {
+    return [$data, FALSE];
+  }
+  $changed = FALSE;
+  foreach ($data as $key => $value) {
+    [$new, $did] = motaded_ar_brand_fix_metatag_value($value);
+    if ($did) {
+      $data[$key] = $new;
+      $changed = TRUE;
+    }
+  }
+  return [$data, $changed];
+}
+
 $entity_type_manager = \Drupal::entityTypeManager();
 $entity_field_manager = \Drupal::service('entity_field.manager');
 $found = 0;
@@ -108,6 +133,49 @@ $process_entity = static function (EntityInterface $entity, string $label) use (
       continue;
     }
     $type = $definition->getType();
+    if ($type === 'metatag') {
+      $field = $ar->get($field_name);
+      if (!$field instanceof FieldItemListInterface || $field->isEmpty()) {
+        continue;
+      }
+      foreach ($field as $delta => $item) {
+        $raw = (string) ($item->value ?? '');
+        if ($raw === '') {
+          continue;
+        }
+        $decoded = json_decode($raw, TRUE);
+        if (!is_array($decoded)) {
+          continue;
+        }
+        // Brand may appear as UTF-8 or as \u0645… JSON escapes in stored value.
+        $probe = json_encode($decoded, JSON_UNESCAPED_UNICODE);
+        if ($probe === FALSE || !preg_match('/موتاد|معتد(?!ل)/u', $probe)) {
+          continue;
+        }
+        [$fixed_data, $did] = motaded_ar_brand_fix_metatag_value($decoded);
+        if (!$did) {
+          continue;
+        }
+        $found++;
+        print sprintf(
+          "[%s] %s ar %s[%d] (metatag JSON)\n  was: %s\n",
+          $entity->getEntityTypeId(),
+          $label,
+          $field_name,
+          (int) $delta,
+          mb_substr($raw, 0, 120),
+        );
+        if ($fix) {
+          $new_json = json_encode($fixed_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+          if ($new_json !== FALSE) {
+            $field->set($delta, ['value' => $new_json]);
+            $changed = TRUE;
+          }
+        }
+      }
+      continue;
+    }
+
     if (!in_array($type, [
       'string',
       'string_long',
@@ -174,11 +242,10 @@ foreach ($bundles as $bundle) {
   $nids = $entity_type_manager->getStorage('node')->getQuery()
     ->accessCheck(FALSE)
     ->condition('type', $bundle)
-    ->condition('langcode', 'ar')
     ->execute();
   foreach ($nids as $nid) {
     $node = $entity_type_manager->getStorage('node')->load((int) $nid);
-    if ($node === NULL) {
+    if ($node === NULL || !$node->hasTranslation('ar')) {
       continue;
     }
     $process_entity($node, 'node/' . $bundle . ':' . $nid);
@@ -239,14 +306,17 @@ foreach ($tids as $tid) {
   }
 }
 
-// Config overrides in DB (language.ar.*) — optional scan.
+// Config overrides in DB (language.ar.* and metatag defaults).
 $config_factory = \Drupal::configFactory();
 $storage = \Drupal::database();
 if ($storage->schema()->tableExists('config')) {
-  $rows = $storage->select('config', 'c')
-    ->fields('c', ['name', 'data'])
+  $config_query = $storage->select('config', 'c')
+    ->fields('c', ['name', 'data']);
+  $or = $config_query->orConditionGroup()
     ->condition('name', 'language.ar.%', 'LIKE')
-    ->execute();
+    ->condition('name', 'metatag.metatag_defaults.%', 'LIKE');
+  $config_query->condition($or);
+  $rows = $config_query->execute();
   foreach ($rows as $row) {
     $raw = (string) ($row->data ?? '');
     if ($raw === '' || !preg_match('/موتاد|معتد(?!ل)/u', $raw)) {
