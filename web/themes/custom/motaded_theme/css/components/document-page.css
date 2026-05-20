@@ -38,6 +38,7 @@ main:has(.doc-page--redesign),
   margin-inline: calc(50% - 50vw);
   isolation: isolate;
   overflow-x: clip;
+  overflow-y: visible;
   margin-block-end: 0;
   border: 0;
   border-radius: 0;
@@ -203,6 +204,7 @@ main:has(.doc-page--redesign),
   .doc-page--redesign .doc-page__hero .services-page-hero__split {
     grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.94fr);
     min-height: min(280px, 42vh);
+    align-items: start;
   }
 
   [dir='rtl'] .doc-page--redesign .doc-page__hero .services-page-hero__split,
@@ -553,6 +555,7 @@ main:has(.doc-page--redesign),
   border: 1px solid var(--doc-border);
   border-radius: var(--doc-radius);
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  overflow: visible;
 }
 
 .doc-page__details .doc-page__section-title {
@@ -621,6 +624,13 @@ main:has(.doc-page--redesign),
 
 .doc-page__detail-body {
   min-width: 0;
+  overflow: visible;
+}
+
+@media (min-width: 640px) {
+  .doc-page__detail--links {
+    grid-column: 1 / -1;
+  }
 }
 
 .doc-page__detail-label {

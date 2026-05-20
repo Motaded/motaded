@@ -42,6 +42,20 @@ display:
         motaded_event_date_to:
           expose:
             label: إلى
+  attachment_home_list:
+    display_options:
+      footer:
+        area:
+          content:
+            value: '<div class="events-home__footer-more"><a class="events-home__view-all" href="/ar/events">عرض جميع الفعاليات ←</a></div>'
+            format: full_html
+  block_home:
+    display_options:
+      footer:
+        area:
+          content:
+            value: '<div class="events-home__footer-more"><a class="events-home__view-all" href="/ar/events">عرض جميع الفعاليات ←</a></div>'
+            format: full_html
   block_calendar:
     display_title: 'الرئيسية — التقويم'
     display_options:
@@ -66,7 +80,7 @@ display:
       footer:
         area:
           content:
-            value: '<aside class="events-home-cta" aria-label="دعوة للتواصل"><span class="events-home-cta__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></span><div class="events-home-cta__text"><h3 class="events-home-cta__title">تخطّط للحضور؟</h3><p class="events-home-cta__body">أخبرنا بأي فعاليات تهتم وسيتابع معك فريقنا.</p></div><a class="events-home-cta__btn" href="/contact-us">تواصل مع فريقنا ←</a></aside>'
+            value: '<aside class="events-home-cta" aria-label="دعوة للتواصل"><span class="events-home-cta__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></span><div class="events-home-cta__text"><h3 class="events-home-cta__title">تخطّط للحضور؟</h3><p class="events-home-cta__body">أخبرنا بأي فعاليات تهتم وسيتابع معك فريقنا.</p></div><a class="events-home-cta__btn" href="/ar/contact-us">تواصل مع فريقنا ←</a></aside>'
             format: full_html
   page_1:
     display_title: 'صفحة الفعاليات'

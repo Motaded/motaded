@@ -116,6 +116,7 @@ hidden:
   field_insight_shell: true
   field_key_takeaways: true
   field_media: true
+  field_meta_tags: true
   field_order: true
   field_region: true
   field_sector: true

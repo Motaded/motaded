@@ -4,13 +4,15 @@
  * @file
  * Seeds Arabic translations for setup cost calculator landing and profile UI.
  *
- * Usage: drush php:script web/modules/custom/motaded_setup_cost/scripts/seed_setup_cost_landing_ar.php
+ * Usage:
+ *   ddev drush php:script web/modules/custom/motaded_setup_cost/scripts/seed_setup_cost_landing_ar.php
  */
 
 declare(strict_types=1);
 
 use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\ParagraphInterface;
 
 $data = require dirname(__DIR__) . '/data/setup_cost_landing_ar.dataset.php';
 
@@ -36,16 +38,36 @@ $node->setPublished(TRUE);
 $node->save();
 echo "Node 535 AR title and metatags updated.\n";
 
-// Hero + stats.
-$hero = Paragraph::load(3607);
+$en = $node->hasTranslation('en') ? Node::load(535)->getTranslation('en') : Node::load(535);
+$hero = NULL;
+$cards = NULL;
+$accordions = NULL;
+$pricing_section = NULL;
+
+foreach ($en->get('field_paragraphs') as $item) {
+  $paragraph = $item->entity;
+  if (!$paragraph instanceof ParagraphInterface) {
+    continue;
+  }
+  match ($paragraph->bundle()) {
+    'hero_split_banner' => $hero = $paragraph,
+    'cards' => $cards = $paragraph,
+    'accordions' => $accordions = $paragraph,
+    'section' => $pricing_section = $paragraph,
+    default => NULL,
+  };
+}
+
 if ($hero) {
+  $link_secondary = $data['hero']['field_link_secondary'];
+  $link_secondary['uri'] = 'internal:/ar/contact-us';
   _motaded_setup_cost_save_paragraph_translation($hero, 'ar', [
     'field_hero_split_eyebrow' => $data['hero']['field_hero_split_eyebrow'],
     'field_hero_split_headline_prefix' => $data['hero']['field_hero_split_headline_prefix'],
     'field_hero_split_headline_accent' => $data['hero']['field_hero_split_headline_accent'],
     'field_body' => $data['hero']['field_body'],
     'field_link' => $data['hero']['field_link'],
-    'field_link_secondary' => $data['hero']['field_link_secondary'],
+    'field_link_secondary' => $link_secondary,
   ]);
   $stat_ids = [];
   foreach ($hero->get('field_hero_split_stats') as $item) {
@@ -64,11 +86,12 @@ if ($hero) {
       ]);
     }
   }
-  echo "Hero paragraph AR saved.\n";
+  echo "Hero paragraph {$hero->id()} AR saved.\n";
+}
+else {
+  echo "Warning: hero_split_banner paragraph not found on node 535.\n";
 }
 
-// SEO cards.
-$cards = Paragraph::load(3614);
 if ($cards) {
   _motaded_setup_cost_save_paragraph_translation($cards, 'ar', [
     'field_title' => $data['cards']['field_title'],
@@ -89,11 +112,12 @@ if ($cards) {
       ]);
     }
   }
-  echo "Cards section AR saved.\n";
+  echo "Cards section {$cards->id()} AR saved.\n";
+}
+else {
+  echo "Warning: cards paragraph not found on node 535.\n";
 }
 
-// FAQ accordions.
-$accordions = Paragraph::load(3620);
 if ($accordions) {
   $accordion_children = $accordions->get('field_paragraphs')->getValue();
   _motaded_setup_cost_save_paragraph_translation($accordions, 'ar', [
@@ -116,10 +140,12 @@ if ($accordions) {
       ]);
     }
   }
-  echo "FAQ AR saved.\n";
+  echo "FAQ accordions {$accordions->id()} AR saved.\n";
+}
+else {
+  echo "Warning: accordions paragraph not found on node 535.\n";
 }
 
-// Pricing packages (shared section 1597).
 foreach ($data['pricing'] as $pid => $pricing_data) {
   $pricing = Paragraph::load((int) $pid);
   if (!$pricing) {
@@ -146,8 +172,15 @@ foreach ($data['pricing'] as $pid => $pricing_data) {
   echo "Pricing paragraph {$pid} AR saved.\n";
 }
 
+// Ensure AR landing references the same paragraph structure as EN.
+$ar_node = Node::load(535)->getTranslation('ar');
+$paragraph_refs = $en->get('field_paragraphs')->getValue();
+$ar_node->set('field_paragraphs', $paragraph_refs);
+$ar_node->save();
+echo "Node 535 AR field_paragraphs synced with EN.\n";
+
 \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:535']);
-echo "Done. Import AR profile config with: drush cim -y\n";
+echo "Done. Import AR profile UI: ddev drush cim -y (language/ar/motaded_setup_cost.profile.default.yml)\n";
 
 /**
  * Saves or updates a paragraph translation.

@@ -67,21 +67,8 @@ function motaded_custom_document_sector_page_nids_from_sector(NodeInterface $doc
  *   One of: updated, skipped_has_pages, skipped_no_sector, skipped_no_hub, skipped_no_field.
  */
 function motaded_custom_document_apply_sector_pages_from_sector(NodeInterface $document, bool $only_if_empty = TRUE): string {
-  if ($document->bundle() !== 'document' || !$document->hasField('field_sector_pages')) {
-    return 'skipped_no_field';
-  }
-  if ($only_if_empty && !$document->get('field_sector_pages')->isEmpty()) {
-    return 'skipped_has_pages';
-  }
-  $nids = motaded_custom_document_sector_page_nids_from_sector($document);
-  if ($document->get('field_sector')->isEmpty()) {
-    return 'skipped_no_sector';
-  }
-  if ($nids === []) {
-    return 'skipped_no_hub';
-  }
-  $document->set('field_sector_pages', array_map(static fn (int $nid): array => ['target_id' => $nid], $nids));
-  return 'updated';
+  require_once __DIR__ . '/motaded_custom.document_links.inc';
+  return motaded_custom_document_apply_sector_pages($document, $only_if_empty);
 }
 
 /**

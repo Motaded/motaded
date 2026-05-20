@@ -3,5 +3,5 @@ _core:
 policy: per_language
 strip_if_redirect: true
 strip_if_missing_translation: true
-strip_all_if_any_bad: false
 overrides: {  }
+strip_all_if_any_bad: false

@@ -183,7 +183,7 @@ return array_merge([
     'field_featured' => '1',
   ],
   [
-    'action' => 'update',
+    'action' => 'create',
     'title' => 'VAT Registration Guide',
     'source_url' => 'https://zatca.gov.sa/en/RulesRegulations/Taxes/Documents/Implmenting%20Regulations%20of%20the%20VAT%20Law_EN.pdf',
     'file_basename' => 'zatca-vat-implementing-regulations-en.pdf',
@@ -197,7 +197,7 @@ return array_merge([
     'field_featured' => '0',
   ],
   [
-    'action' => 'update',
+    'action' => 'create',
     'title' => 'Excise Tax Guide',
     'source_url' => 'https://zatca.gov.sa/ar/HelpCenter/guidelines/Documents/GCC_Unilateral_Agreement_for_Excise_Tax_Arabic.pdf',
     'file_basename' => 'zatca-gcc-excise-tax-agreement-ar.pdf',
@@ -213,7 +213,7 @@ return array_merge([
 
   // —— Meras / business setup ——
   [
-    'action' => 'update',
+    'action' => 'create',
     'title' => 'Company Incorporation Guide',
     'source_url' => 'https://misa.gov.sa/app/uploads/2026/01/Investor-Guide_12-05-compressed.pdf',
     'file_basename' => 'misa-investor-guide-en.pdf',
@@ -985,4 +985,7 @@ return array_merge([
     'field_short_description' => 'Transfer pricing bylaws — related-party transactions and documentation requirements.',
     'field_featured' => '0',
   ],
-], require __DIR__ . '/document_import_official.catalog.additions.php');
+], array_merge(
+  require __DIR__ . '/document_import_official.catalog.additions.php',
+  require __DIR__ . '/document_import_official.catalog.templates.php',
+));

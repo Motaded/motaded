@@ -78,7 +78,7 @@
                 <span class="services-page-hero__stat-value services-page-hero__stat-value--cta">{{ 'Filters'|t }}</span>
                 <span class="services-page-hero__stat-label">{{ 'Find events'|t }}</span>
               </a>
-              <a class="services-page-hero__stat" href="/contact-us" aria-label="{{ 'Contact us — speak to our team'|t }}">
+              <a class="services-page-hero__stat" href="{{ motaded_events_contact_url|default('/contact-us') }}" aria-label="{{ 'Contact us — speak to our team'|t }}">
                 <span class="services-page-hero__stat-icon" aria-hidden="true">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m4 8 8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </span>
@@ -110,18 +110,11 @@
           <aside class="events-directory__featured-aside" aria-label="{{ 'Quick links'|t }}">
             <p class="events-directory__aside-title">{{ 'Quick links'|t }}</p>
             <ul class="events-directory__aside-list">
-              <li>
-                <a href="/contact-us">{{ 'Contact us'|t }}</a>
-              </li>
-              <li>
-                <a href="/services">{{ 'Our services'|t }}</a>
-              </li>
-              <li>
-                <a href="/blog">{{ 'Blog & insights'|t }}</a>
-              </li>
-              <li>
-                <a href="/search/content">{{ 'Search site'|t }}</a>
-              </li>
+              {% for link in motaded_events_quick_links|default([]) %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.label }}</a>
+                </li>
+              {% endfor %}
             </ul>
           </aside>
         </div>

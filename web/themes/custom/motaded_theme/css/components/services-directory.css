@@ -834,19 +834,19 @@
   filter: saturate(0.88) contrast(0.98);
 }
 
-[dir="rtl"] .services-directory--page-redesign .services-page-hero__visual-photo {
+[dir="rtl"] .services-directory--page-redesign:not(.events-directory--page):not(.library-directory--page):not(.platforms-directory--page):not(.sectors-directory--page):not(.blog-listing--page) .services-page-hero__visual-photo {
   transform: scaleX(-1);
-  transform-origin: center;
+  transform-origin: 100% 50%;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
-    url("../../images/services-bg.png") no-repeat center left / cover;
+    url("../../images/services-bg.png") no-repeat 100% center / cover;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     image-set(
       url("../../images/services-bg.webp") type("image/webp"),
       url("../../images/services-bg.png") type("image/png")
-    ) no-repeat center left / cover;
-  background-position: center, center left;
+    ) no-repeat 100% center / cover;
+  background-position: center, 100% center;
 }
 
 .services-directory--page-redesign .services-page-hero__visual-arcs {

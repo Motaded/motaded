@@ -260,6 +260,41 @@ final class DocumentImportOfficialCommands extends DrushCommands {
         $node->set('field_platforms', $targets ?: NULL);
       }
 
+      $explicit_sectors = trim((string) ($row['field_sector_pages'] ?? ''));
+      if ($explicit_sectors !== '') {
+        require_once \Drupal::root() . '/modules/custom/motaded_custom/includes/motaded_custom.document_links.inc';
+        $sector_index = motaded_custom_document_sector_page_index();
+        $sector_nids = motaded_custom_document_resolve_nids_by_titles(
+          preg_split('/\s*;\s*/', $explicit_sectors, -1, PREG_SPLIT_NO_EMPTY) ?: [],
+          $sector_index['by_title'],
+        );
+        if ($sector_nids !== []) {
+          $node->set('field_sector_pages', array_map(static fn (int $nid): array => ['target_id' => $nid], $sector_nids));
+        }
+      }
+
+      $explicit_services = trim((string) ($row['field_services'] ?? ''));
+      if ($explicit_services !== '') {
+        require_once \Drupal::root() . '/modules/custom/motaded_custom/includes/motaded_custom.document_links.inc';
+        $service_index = motaded_custom_document_service_page_index();
+        $service_nids = motaded_custom_document_resolve_nids_by_titles(
+          preg_split('/\s*;\s*/', $explicit_services, -1, PREG_SPLIT_NO_EMPTY) ?: [],
+          $service_index['by_title'],
+        );
+        if ($service_nids !== []) {
+          $node->set('field_services', array_map(static fn (int $nid): array => ['target_id' => $nid], $service_nids));
+        }
+      }
+      elseif ($node->hasField('field_taxonomy') && !$node->get('field_taxonomy')->isEmpty()) {
+        require_once \Drupal::root() . '/modules/custom/motaded_custom/includes/motaded_custom.document_links.inc';
+        motaded_custom_document_apply_services($node, FALSE);
+      }
+
+      if ($explicit_sectors === '' && $node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+        require_once \Drupal::root() . '/modules/custom/motaded_custom/includes/motaded_custom.document_links.inc';
+        motaded_custom_document_apply_sector_pages($node, FALSE);
+      }
+
       if ($has_file && !$metadata_only) {
         $binary = file_get_contents($local_path);
         if ($binary === FALSE) {

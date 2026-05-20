@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Service page — related Library documents (field_services).
+ *
+ * @see motaded_theme_service_documents_build()
+ */
+#}
+<section class="service-docs scroll-mt-28" id="service-documents" aria-labelledby="service-documents-title">
+  <div class="service-docs__inner">
+    <header class="service-page__section-head">
+      <h2 id="service-documents-title" class="service-page__section-head-badge service-page__section-head-badge--snapshot">
+        {{ 'Related documents'|t }}
+      </h2>
+      <span class="service-page__section-head-rule" aria-hidden="true"></span>
+    </header>
+    <ul class="service-docs__grid" role="list">
+      {% for doc in service_documents %}
+        <li class="service-docs__item">
+          <a class="service-docs__card" href="{{ doc.url }}">
+            <span class="service-docs__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            </span>
+            <span class="service-docs__body">
+              <span class="service-docs__card-head">
+                <span class="service-docs__card-title">{{ doc.title }}</span>
+                {% if doc.badge %}
+                  <span class="service-docs__badge">{{ doc.badge }}</span>
+                {% endif %}
+              </span>
+              {% if doc.excerpt %}
+                <span class="service-docs__excerpt">{{ doc.excerpt }}</span>
+              {% endif %}
+              {% if doc.meta %}
+                <span class="service-docs__meta">{{ doc.meta }}</span>
+              {% endif %}
+            </span>
+            <span class="service-docs__chev" aria-hidden="true">→</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% if service_documents_more_url and service_documents_has_more %}
+      <div class="service-docs__footer">
+        <a class="service-docs__more" href="{{ service_documents_more_url }}">
+          {{ service_documents_more_label|default('See more'|t) }}
+          <span aria-hidden="true"> →</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>

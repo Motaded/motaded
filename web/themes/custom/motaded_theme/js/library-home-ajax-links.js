@@ -11,6 +11,17 @@
     }
   }
 
+  function isLibrarySectionTab(anchor) {
+    return !!(
+      anchor &&
+      anchor.closest('.library-home-view__tab-cards, .library-directory__tab-cards')
+    );
+  }
+
+  function isLibraryHomeHub() {
+    return !!document.getElementById('library-home');
+  }
+
   function isLibraryNavLink(anchor) {
     if (!anchor || anchor.tagName !== 'A') {
       return false;
@@ -39,15 +50,36 @@
     );
   }
 
-  function syncFormFromUrl(form, url) {
+  function librarySectionFromAnchor(anchor, url) {
     var sec = url.searchParams.get('library_section');
     if (sec !== null && sec !== '') {
-      var sel =
-        form.querySelector('select[name="library_section"]') ||
-        form.querySelector('input[name="library_section"]');
-      if (sel) {
-        sel.value = sec;
-      }
+      return sec;
+    }
+    var name = anchor.getAttribute('name') || '';
+    var match = name.match(/library_section\[(\d+)\]/);
+    return match ? match[1] : null;
+  }
+
+  function setLibrarySectionValue(form, sec) {
+    if (sec === null || sec === '') {
+      return;
+    }
+    var sel =
+      form.querySelector('select[name="library_section"]') ||
+      form.querySelector('input[name="library_section"]');
+    if (sel) {
+      sel.value = sec;
+      return;
+    }
+    form.querySelectorAll('input[type="radio"][name="library_section"]').forEach(function (radio) {
+      radio.checked = String(radio.value) === String(sec);
+    });
+  }
+
+  function syncFormFromUrl(form, url, anchor) {
+    var sec = anchor ? librarySectionFromAnchor(anchor, url) : url.searchParams.get('library_section');
+    if (sec !== null && sec !== '') {
+      setLibrarySectionValue(form, sec);
     }
 
     var catVal = url.searchParams.get('library_category');
@@ -90,7 +122,8 @@
             if (!a || !isLibraryNavLink(a)) {
               return;
             }
-            if (!samePath(a.href, window.location.href)) {
+            var onHomeLibrary = isLibraryHomeHub() && isLibrarySectionTab(a);
+            if (!samePath(a.href, window.location.href) && !onHomeLibrary) {
               return;
             }
             if (!viewAjaxAvailable(settings)) {
@@ -116,8 +149,24 @@
             }
 
             e.preventDefault();
-            syncFormFromUrl(form, url);
-            window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+            e.stopPropagation();
+            syncFormFromUrl(form, url, a);
+            if (onHomeLibrary) {
+              var homeUrl = new URL(window.location.href);
+              var sec = librarySectionFromAnchor(a, url);
+              if (sec !== null && sec !== '') {
+                homeUrl.searchParams.set('library_section', sec);
+              } else {
+                homeUrl.searchParams.delete('library_section');
+              }
+              window.history.replaceState(
+                null,
+                '',
+                homeUrl.pathname + homeUrl.search + homeUrl.hash,
+              );
+            } else {
+              window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+            }
             submit.click();
           },
           true,

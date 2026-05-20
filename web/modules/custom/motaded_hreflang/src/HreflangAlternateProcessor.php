@@ -64,15 +64,46 @@ final class HreflangAlternateProcessor {
       }
     }
 
-    foreach ($refs as $ref_key => $info) {
-      if (isset($remove[$ref_key])) {
-        continue;
+    // Node pages: metatag tokens like [node:url:absolute] resolve in the current
+    // language, so en/ar/x-default all get the same href. Rewrite each alternate
+    // to the correct translation URL (x-default → site default language, usually EN).
+    if ($node instanceof NodeInterface) {
+      foreach ($refs as $ref_key => $info) {
+        if (isset($remove[$ref_key])) {
+          continue;
+        }
+        $code = self::normalizeHreflangCode($info['hreflang']);
+        $langcode = self::hreflangToCanonicalLangcode($node, $code);
+        if ($langcode === NULL) {
+          if ($strip_missing && $code !== 'x-default') {
+            $remove[$ref_key] = TRUE;
+          }
+          continue;
+        }
+        try {
+          $translation = $node->getTranslation($langcode);
+          $language = \Drupal::languageManager()->getLanguage($langcode);
+          $url = $translation->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
+          self::setHrefForRef($attached, $info, $url);
+        }
+        catch (\Throwable $e) {
+          if ($strip_missing && $code !== 'x-default') {
+            $remove[$ref_key] = TRUE;
+          }
+        }
       }
-      $href = self::getHrefForRef($attached, $info);
-      $code = self::normalizeHreflangCode($info['hreflang']);
-      $rewritten = self::rewriteNodeCanonicalHref($href, $code);
-      if ($rewritten !== NULL) {
-        self::setHrefForRef($attached, $info, $rewritten);
+    }
+    else {
+      foreach ($refs as $ref_key => $info) {
+        if (isset($remove[$ref_key])) {
+          continue;
+        }
+        $href = self::getHrefForRef($attached, $info);
+        $code = self::normalizeHreflangCode($info['hreflang']);
+        $rewritten = self::rewriteNodeCanonicalHref($href, $code);
+        if ($rewritten !== NULL) {
+          self::setHrefForRef($attached, $info, $rewritten);
+        }
       }
     }
 

@@ -151,6 +151,10 @@ services:
     class: Drupal\motaded_custom\Drush\Commands\DocumentSectorPagesCommands
     tags:
       - { name: drush.command }
+  motaded_custom.drush.document_links_commands:
+    class: Drupal\motaded_custom\Drush\Commands\DocumentLinksCommands
+    tags:
+      - { name: drush.command }
   motaded_custom.drush.event_status_commands:
     class: Drupal\motaded_custom\Drush\Commands\EventStatusCommands
     tags:
@@ -165,5 +169,17 @@ services:
       - { name: drush.command }
   motaded_custom.drush.sectors_ar_commands:
     class: Drupal\motaded_custom\Drush\Commands\SectorsArCommands
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.main_menu_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\MainMenuImportCommands
+    arguments:
+      - '@motaded_custom.main_menu_migrator'
+    tags:
+      - { name: drush.command }
+  motaded_custom.drush.homepage_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\HomepageImportCommands
+    arguments:
+      - '@motaded_custom.homepage_migrator'
     tags:
       - { name: drush.command }

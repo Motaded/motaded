@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.document.field_document_type
     - field.field.node.document.field_featured
     - field.field.node.document.field_platforms
+    - field.field.node.document.field_services
     - field.field.node.document.field_sector
     - field.field.node.document.field_sector_pages
     - field.field.node.document.field_short_description
@@ -67,6 +68,14 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
+  field_services:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
+    region: content
   field_sector_pages:
     type: entity_reference_label
     label: hidden
@@ -119,6 +128,7 @@ content:
 hidden:
   addtoany: true
   field_featured: true
+  field_meta_tags: true
   field_sector: true
   langcode: true
   search_api_excerpt: true

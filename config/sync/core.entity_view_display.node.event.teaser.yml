@@ -79,20 +79,30 @@ content:
 hidden:
   addtoany: true
   field_agenda: true
+  field_attendance_type: true
   field_category: true
+  field_city: true
+  field_country: true
   field_cta_link: true
   field_cta_text: true
   field_cta_type: true
+  field_documents: true
   field_event_end: true
+  field_event_format: true
+  field_event_status: true
   field_featured: true
   field_gallery: true
   field_hero_image: true
   field_location: true
   field_meeting_enabled: true
   field_meta: true
+  field_official_website: true
+  field_organizer: true
   field_partner_logos: true
+  field_price_range: true
   field_region: true
   field_secondary_cta: true
+  field_sector_pages: true
   field_tags: true
   field_what_we_offer: true
   field_who_should_attend: true
