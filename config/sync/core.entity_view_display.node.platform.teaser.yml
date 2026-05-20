@@ -54,10 +54,13 @@ hidden:
   field_featured: true
   field_hero_image: true
   field_how_we_help: true
+  field_meta_tags: true
   field_partner_logos: true
   field_process_steps: true
   field_region: true
+  field_related_platforms: true
   field_requirements: true
+  field_resources: true
   field_sector: true
   field_source_link: true
   field_source_text: true

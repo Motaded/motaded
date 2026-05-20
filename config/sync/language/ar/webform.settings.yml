@@ -11,8 +11,6 @@ settings:
   default_confirmation_back_label: 'العودة إلى النموذج'
   default_previous_submissions_message: 'عرض التقديمات السابقة الخاصة بك <a href="#">عرض التقديمات السابقة الخاصة بك</a>. *'
   dialog_options:
-    narrow:
-      title: Narrow
     normal:
       title: طبيعي
     wide:

@@ -13,7 +13,8 @@ bind_all_interfaces: true
 host_webserver_port: "8087"
 use_dns_when_possible: true
 composer_version: "2"
-web_environment: []
+web_environment:
+  - DRUPAL_DB=prod
 corepack_enable: false
 
 # Key features of DDEV's config.yaml:

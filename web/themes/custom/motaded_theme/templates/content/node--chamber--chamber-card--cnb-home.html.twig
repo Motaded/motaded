@@ -6,8 +6,7 @@
  */
 #}
 {% set featured = cnb_is_featured|default(false) %}
-{% set card_href = cnb_external_url|default(url) %}
-{% set card_cta = cnb_external_url ? (cnb_external_label|default('Visit website'|t)) : ('Learn more'|t) %}
+{% set card_cta = 'Learn more'|t %}
 {%
   set classes = [
     'node',
@@ -23,7 +22,7 @@
   {{ title_suffix }}
 
   {% if featured %}
-    <a class="cnb-card__link-hit cnb-card__link-hit--hero" href="{{ card_href }}"{% if cnb_external_url %} target="_blank" rel="noopener noreferrer"{% else %} rel="bookmark"{% endif %} aria-label="{{ (label|render|striptags ~ ' — ' ~ card_cta)|e('html_attr') }}">
+    <a class="cnb-card__link-hit cnb-card__link-hit--hero" href="{{ url }}" rel="bookmark" aria-label="{{ (label|render|striptags ~ ' — ' ~ card_cta)|e('html_attr') }}">
       <div class="cnb-card__hero">
         <div class="cnb-card__hero-bg" aria-hidden="true">
           <picture>

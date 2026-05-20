@@ -830,6 +830,18 @@ main:has(.events-directory.events-directory-page),
     gap: 1.5rem;
     padding: 1.35rem 1.35rem 1.35rem 1.5rem;
   }
+
+  [dir='rtl'] .events-directory__featured {
+    grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  }
+
+  [dir='rtl'] .events-directory__featured-main {
+    order: 2;
+  }
+
+  [dir='rtl'] .events-directory__featured-aside {
+    order: 1;
+  }
 }
 
 .events-directory__featured-main {
@@ -838,7 +850,7 @@ main:has(.events-directory.events-directory-page),
 
 /* Featured teaser on dark chrome */
 .events-directory__featured-main .event-teaser--featured-hero .event-teaser__link {
-  /* Макет як у дизайні: текстова зона зліва + фото справа */
+  /* Text column + photo column (LTR: text start, photo end). */
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 48%);
   grid-template-areas: "body media";
@@ -956,6 +968,13 @@ main:has(.events-directory.events-directory-page),
 /* Ліву частину робимо більш “суцільною” (без окремої підкладки) */
 .events-directory__featured-main .event-teaser--featured-hero .event-teaser__excerpt {
   max-width: 32rem;
+}
+
+@media (min-width: 900px) {
+  [dir='rtl'] .events-directory__featured-main .event-teaser--featured-hero .event-teaser__link {
+    grid-template-columns: minmax(320px, 48%) minmax(0, 1fr);
+    grid-template-areas: "media body";
+  }
 }
 
 @media (max-width: 899px) {
@@ -1542,14 +1561,14 @@ main:has(.events-directory.events-directory-page),
 .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
-    url('../../images/events-bg.png') no-repeat right center / auto 92%;
+    url('../../images/events-bg.png') no-repeat inline-end center / auto 92%;
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     image-set(
       url('../../images/events-bg.webp') type('image/webp'),
       url('../../images/events-bg.png') type('image/png')
-    ) no-repeat right center / auto 92%;
-  background-position: 0 0, right center;
+    ) no-repeat inline-end center / auto 92%;
+  background-position: 0 0, inline-end center;
   background-size: auto, auto 92%;
 }
 
@@ -1565,19 +1584,21 @@ main:has(.events-directory.events-directory-page),
   }
 }
 
+/* AR/RTL: PNG has figures on its right — clip layer to the left half, anchor image to that edge. */
 [dir='rtl'] .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
-  transform: scaleX(-1);
-  transform-origin: center;
+  transform: none;
+  inset: 0 auto 0 0;
+  width: min(58%, 42rem);
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
-    url('../../images/events-bg.png') no-repeat left center / auto 92%;
+    url('../../images/events-bg.png') no-repeat 100% center / auto 92%;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     image-set(
       url('../../images/events-bg.webp') type('image/webp'),
       url('../../images/events-bg.png') type('image/png')
-    ) no-repeat left center / auto 92%;
-  background-position: 0 0, left center;
+    ) no-repeat 100% center / auto 92%;
+  background-position: 0 0, 100% center;
   background-size: auto, auto 92%;
 }
 

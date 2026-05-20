@@ -6,8 +6,6 @@ display:
     display_options:
       title: الأشخاص
       fields:
-        user_bulk_form:
-          label: 'Bulk update'
         name:
           label: 'اسم المستخدم'
         status:

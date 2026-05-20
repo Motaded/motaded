@@ -37,3 +37,6 @@ elements: |
     '#title': 'معرّف الملف'
 settings:
   confirmation_message: '<p>شكراً لك. سنرسل تقديرك المفصل قريباً.</p>'
+handlers:
+  email:
+    label: Email

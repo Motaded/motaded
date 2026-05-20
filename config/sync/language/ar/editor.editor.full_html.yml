@@ -2,31 +2,11 @@ settings:
   plugins:
     ckeditor5_codeBlock:
       languages:
-        -
+        0:
           label: 'نص عادي'
-        -
-          label: C
-        -
-          label: 'C#'
-        -
-          label: C++
-        -
-          label: CSS
-        -
+        5:
           label: 'الفروقات (Diff)'
-        -
+        6:
           label: HTML
-        -
-          label: Java
-        -
-          label: JavaScript
-        -
+        9:
           label: PHP
-        -
-          label: Python
-        -
-          label: Ruby
-        -
-          label: TypeScript
-        -
-          label: XML

@@ -1,9 +1,7 @@
 last_updated: 'مايو 2026'
 methodology_source: 'استناداً إلى جداول الرسوم المنشورة وعملاء متعدد المعتادين.'
 ui:
-  lead_cta_label: 'احصل على تقدير مفصل'
   cta_advisor_url: /ar/contact-us
-  timeline_weeks_suffix: ' أسابيع'
   progress_label: 'الخطوة @current من @total'
   result_setup_label: 'التكلفة الأولية المقدرة'
   result_monthly_label: 'التشغيل الشهري المقدر'

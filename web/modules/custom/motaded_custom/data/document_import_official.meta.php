@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-return array (
+return array_merge([
   'Investment Law' => 
   array (
     'field_taxonomy' => 'Business Support',
@@ -495,4 +495,4 @@ return array (
     'field_taxonomy' => 'Business Support',
     'field_short_description' => 'MISA publishes English implementing regulations for the Updated Investment Law to help international investors understand registration steps, excluded activities, and authority procedures alongside Arabic legal text. Boards use this with the executive summary and Arabic regulations for diligence. Confirm the latest PDF on misa.gov.sa before reliance.',
   ),
-);
+], require __DIR__ . '/document_import_official.meta.templates.php');

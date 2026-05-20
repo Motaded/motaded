@@ -94,3 +94,15 @@ services:
     arguments:
       - '@entity_type.manager'
       - '@motaded_custom.gastat_statistics_client'
+
+  motaded_custom.main_menu_migrator:
+    class: Drupal\motaded_custom\Menu\MainMenuMigrator
+    arguments:
+      - '@entity_type.manager'
+
+  motaded_custom.homepage_migrator:
+    class: Drupal\motaded_custom\Homepage\HomepageMigrator
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'

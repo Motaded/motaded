@@ -28,27 +28,30 @@ main:has(.library-directory.library-directory-page),
 .library-directory.library-directory--page .services-page-hero__visual-photo.library-directory__hero-photo {
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
-    url('../../images/library-bg.png') no-repeat center right 0.75rem / auto 100%;
+    url('../../images/library-bg.png') no-repeat center inline-end 0.75rem / auto 100%;
   background:
     linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     image-set(
       url('../../images/library-bg.webp') type('image/webp'),
       url('../../images/library-bg.png') type('image/png')
-    ) no-repeat center right 0.75rem / auto 100%;
+    ) no-repeat center inline-end 0.75rem / auto 100%;
 }
 
+/* AR/RTL: PNG has figures on its right — clip layer to the left half, anchor image to that edge. */
 [dir='rtl'] .library-directory.library-directory--page .services-page-hero__visual-photo.library-directory__hero-photo {
+  transform: none;
+  inset: 0 auto 0 0;
+  width: min(58%, 42rem);
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
-    url('../../images/library-bg.png') no-repeat center left 0.75rem / auto 100%;
+    url('../../images/library-bg.png') no-repeat 100% center / auto 100%;
   background:
     linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
     image-set(
       url('../../images/library-bg.webp') type('image/webp'),
       url('../../images/library-bg.png') type('image/png')
-    ) no-repeat center left 0.75rem / auto 100%;
-  transform: scaleX(-1);
-  transform-origin: center;
+    ) no-repeat 100% center / auto 100%;
+  background-position: 0 0, 100% center;
 }
 
 @media (min-width: 1280px) {
@@ -424,6 +427,7 @@ main:has(.library-directory.library-directory-page),
 }
 
 .library-directory-page nav.library-directory__tab-cards .bef-links > ul > li {
+  display: flex;
   min-width: 0;
   width: 100%;
 }
@@ -436,13 +440,17 @@ main:has(.library-directory.library-directory-page),
 
 .library-directory-page nav.library-directory__tab-cards .bef-link {
   display: flex;
+  flex: 1 1 auto;
+  align-self: stretch;
   align-items: flex-start;
   gap: 1rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  min-height: 100%;
   box-sizing: border-box;
   padding: 1.1rem 1.25rem;
+  cursor: pointer;
   border-radius: 1rem;
   border: 2px solid var(--mot-border, #e2e8f0);
   background: var(--mot-surface, #fff);
@@ -510,6 +518,15 @@ main:has(.library-directory.library-directory-page),
   letter-spacing: normal;
   text-transform: none;
   color: var(--mot-text-muted, #64748b);
+}
+
+.library-directory-page nav.library-directory__tab-cards .bef-link .library-directory__tab-card-body,
+.library-directory-page nav.library-directory__tab-cards .bef-link .library-directory__tab-card-title,
+.library-directory-page nav.library-directory__tab-cards .bef-link .library-directory__tab-card-desc,
+.library-directory__tab-cards .bef-link .library-directory__tab-card-body,
+.library-directory__tab-cards .bef-link .library-directory__tab-card-title,
+.library-directory__tab-cards .bef-link .library-directory__tab-card-desc {
+  pointer-events: none;
 }
 
 .library-directory-page nav.library-directory__tab-cards .bef-link:hover {

@@ -47,6 +47,7 @@ hidden:
   addtoany: true
   body: true
   field_media: true
+  field_meta_tags: true
   field_sector_card_icon: true
   field_sector_card_icon_media: true
   field_sector_highlights: true

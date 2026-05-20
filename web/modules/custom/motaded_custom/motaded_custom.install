@@ -932,3 +932,43 @@ function motaded_custom_update_10037(): void {
   motaded_custom_clear_event_field_category();
 }
 
+/**
+ * Library view: distinct query + dedupe fix for translated taxonomy joins.
+ */
+function motaded_custom_update_10038(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.library';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Library documents: field_services + internal link sync (services, sector pages).
+ */
+function motaded_custom_update_10039(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  foreach ([
+    'field.storage.node.field_services',
+    'field.field.node.document.field_services',
+    'core.entity_form_display.node.document.default',
+    'core.entity_view_display.node.document.default',
+  ] as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      \Drupal::service('config.storage')->write($name, $data);
+    }
+  }
+  require_once __DIR__ . '/includes/motaded_custom.document_links.inc';
+  motaded_custom_document_sync_all_links(FALSE, TRUE);
+}
+

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.document.field_featured
     - field.field.node.document.field_meta_tags
     - field.field.node.document.field_platforms
+    - field.field.node.document.field_services
     - field.field.node.document.field_sector
     - field.field.node.document.field_sector_pages
     - field.field.node.document.field_short_description
@@ -85,6 +86,16 @@ content:
   field_platforms:
     type: entity_reference_autocomplete
     weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_services:
+    type: entity_reference_autocomplete
+    weight: 14
     region: content
     settings:
       match_operator: CONTAINS
@@ -182,6 +193,11 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete

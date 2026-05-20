@@ -5,6 +5,7 @@ require_once __DIR__ . '/includes/motaded_theme.text.inc';
 require_once __DIR__ . '/includes/motaded_theme.menu.inc';
 require_once __DIR__ . '/includes/motaded_theme.sector_related.inc';
 require_once __DIR__ . '/includes/motaded_theme.platform_related.inc';
+require_once __DIR__ . '/includes/motaded_theme.service_related.inc';
 
 use Drupal\block\BlockInterface;
 use Drupal\block\Entity\Block;
@@ -69,8 +70,17 @@ function motaded_theme_views_replace_area_markup(array &$variables, string $area
     return;
   }
   foreach ($variables[$area_key] as $key => $item) {
-    if (is_array($item) && array_key_exists('#markup', $item)) {
+    if (!is_array($item)) {
+      continue;
+    }
+    if (array_key_exists('#markup', $item)) {
       $variables[$area_key][$key]['#markup'] = Markup::create($markup);
+      continue;
+    }
+    // Views area "text" plugin uses processed_text, not #markup.
+    if (($item['#type'] ?? '') === 'processed_text' && array_key_exists('#text', $item)) {
+      $variables[$area_key][$key]['#text'] = $markup;
+      $variables[$area_key][$key]['#format'] = $item['#format'] ?? 'full_html';
     }
   }
 }
@@ -125,7 +135,7 @@ function _motaded_theme_sector_directory_tag_labels(NodeInterface $node, int $ma
   if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
     $term = $node->get('field_sector')->entity;
     if ($term instanceof TermInterface) {
-      $tags[] = $term->getName();
+      $tags[] = motaded_theme_entity_label_in_language($term, $node->language()->getId());
     }
   }
   if ($node->hasField('field_sector_highlights') && !$node->get('field_sector_highlights')->isEmpty()) {
@@ -672,6 +682,46 @@ function _motaded_theme_events_directory_stats(): array {
 }
 
 /**
+ * Language-aware quick links for /events featured aside.
+ *
+ * @return array<int, array{url: string, label: string}>
+ */
+function _motaded_theme_events_directory_quick_links(): array {
+  $langcode = motaded_theme_interface_langcode();
+  $t_opts = ['langcode' => $langcode];
+  try {
+    $language = \Drupal::languageManager()->getLanguage($langcode);
+  }
+  catch (\Throwable $e) {
+    $language = NULL;
+  }
+  $url_opts = $language ? ['language' => $language] : [];
+  $paths = [
+    '/contact-us',
+    '/services',
+    '/blog',
+    '/search/content',
+  ];
+  $labels = [
+    (string) t('Contact us', [], $t_opts),
+    (string) t('Our services', [], $t_opts),
+    (string) t('Blog & insights', [], $t_opts),
+    (string) t('Search site', [], $t_opts),
+  ];
+  $links = [];
+  foreach ($paths as $i => $path) {
+    try {
+      $url = Url::fromUserInput($path, $url_opts)->toString();
+    }
+    catch (\Throwable $e) {
+      $url = $langcode === 'ar' ? '/ar' . $path : $path;
+    }
+    $links[] = ['url' => $url, 'label' => $labels[$i]];
+  }
+  return $links;
+}
+
+/**
  * Hero stat strip for /platforms (counts from content + taxonomies).
  */
 function _motaded_theme_platforms_directory_stats(): array {
@@ -852,18 +902,16 @@ function motaded_theme_preprocess_views_view_library_tabs(array &$variables): vo
   }
   unset($query_all['library_section'], $query_all['q']);
   $query_scoped = $query_all + ['library_section' => (string) $active_tid];
-  try {
-    $variables['library_url_templates'] = Url::fromRoute('<current>', [], [
-      'query' => $query_all + ['library_section' => (string) $templates_tid],
-    ])->toString();
-    $variables['library_url_regulations'] = Url::fromRoute('<current>', [], [
-      'query' => $query_all + ['library_section' => (string) $regulations_tid],
-    ])->toString();
-  }
-  catch (\Throwable $e) {
-    $variables['library_url_templates'] = '';
-    $variables['library_url_regulations'] = '';
-  }
+  $library_page_url = static function (array $query): string {
+    try {
+      return Url::fromRoute('view.library.page_1', [], ['query' => $query])->toString();
+    }
+    catch (\Throwable $e) {
+      return '/library' . ($query !== [] ? '?' . http_build_query($query) : '');
+    }
+  };
+  $variables['library_url_templates'] = $library_page_url($query_all + ['library_section' => (string) $templates_tid]);
+  $variables['library_url_regulations'] = $library_page_url($query_all + ['library_section' => (string) $regulations_tid]);
 
   $type_tids = function_exists('motaded_custom_document_type_tids_for_library_section_tid')
     ? motaded_custom_document_type_tids_for_library_section_tid($active_tid)
@@ -889,33 +937,18 @@ function motaded_theme_preprocess_views_view_library_tabs(array &$variables): vo
     $tid = (string) $row['tid'];
     $q_cat = $query_scoped;
     $q_cat['library_category'] = $tid;
-    try {
-      $sidebar[] = [
-        'label' => $row['label'],
-        'count' => $row['count'],
-        'active' => $active_cat !== '' && $active_cat === $tid,
-        'url' => Url::fromRoute('<current>', [], ['query' => $q_cat])->toString(),
-      ];
-    }
-    catch (\Throwable $e) {
-      $sidebar[] = [
-        'label' => $row['label'],
-        'count' => $row['count'],
-        'active' => FALSE,
-        'url' => '',
-      ];
-    }
+    $sidebar[] = [
+      'label' => $row['label'],
+      'count' => $row['count'],
+      'active' => $active_cat !== '' && $active_cat === $tid,
+      'url' => $library_page_url($q_cat),
+    ];
   }
   $variables['library_sidebar_links'] = $sidebar;
 
-  try {
-    $q_all = $query_scoped;
-    unset($q_all['library_category'], $q_all['field_category_target_id']);
-    $variables['library_category_all_url'] = Url::fromRoute('<current>', [], ['query' => $q_all])->toString();
-  }
-  catch (\Throwable $e) {
-    $variables['library_category_all_url'] = '';
-  }
+  $q_all = $query_scoped;
+  unset($q_all['library_category'], $q_all['field_category_target_id']);
+  $variables['library_category_all_url'] = $library_page_url($q_all);
   $variables['library_category_all_active'] = $active_cat === '';
 
   $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
@@ -951,6 +984,15 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
     $variables['motaded_events_hero_bg_url'] = base_path() . $theme_path . '/images/events-bg.png';
     $variables['motaded_events_stats'] = _motaded_theme_events_directory_stats();
+    $langcode = motaded_theme_interface_langcode();
+    try {
+      $language = \Drupal::languageManager()->getLanguage($langcode);
+      $variables['motaded_events_contact_url'] = Url::fromUserInput('/contact-us', ['language' => $language])->toString();
+    }
+    catch (\Throwable $e) {
+      $variables['motaded_events_contact_url'] = $langcode === 'ar' ? '/ar/contact-us' : '/contact-us';
+    }
+    $variables['motaded_events_quick_links'] = _motaded_theme_events_directory_quick_links();
     $featured_nid = _motaded_theme_events_directory_next_featured_nid();
     \Drupal::request()->attributes->set('motaded_events_featured_nid', $featured_nid);
     $variables['motaded_events_featured_nid'] = $featured_nid;
@@ -987,7 +1029,7 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     }
   }
 
-  if ($view->id() === 'events' && in_array($display_id, ['attachment_home_list', 'block_home'], TRUE)) {
+  if ($view->id() === 'events' && in_array($display_id, ['attachment_home_list', 'block_home', 'block_calendar'], TRUE)) {
     $langcode = motaded_theme_interface_langcode();
     $t_opts = ['langcode' => $langcode];
     try {
@@ -1002,7 +1044,31 @@ function motaded_theme_preprocess_views_view(&$variables): void {
     $arrow = $langcode === 'ar' ? '←' : '→';
     $footer_markup = '<div class="events-home__footer-more"><a class="events-home__view-all" href="'
       . Html::escape($events_path) . '">' . Html::escape($label) . ' ' . $arrow . '</a></div>';
-    motaded_theme_views_replace_area_markup($variables, 'footer', $footer_markup);
+    if (in_array($display_id, ['attachment_home_list', 'block_home'], TRUE)) {
+      motaded_theme_views_replace_area_markup($variables, 'footer', $footer_markup);
+    }
+
+    if ($display_id === 'block_calendar') {
+      $language = \Drupal::languageManager()->getLanguage($langcode);
+      try {
+        $contact_path = Url::fromUserInput('/contact-us', ['language' => $language])->toString();
+      }
+      catch (\Throwable $e) {
+        $contact_path = $langcode === 'ar' ? '/ar/contact-us' : '/contact-us';
+      }
+      $cta_aria = (string) t('Planning CTA', [], $t_opts);
+      $cta_title = (string) t('Planning to attend?', [], $t_opts);
+      $cta_body = (string) t('Tell us which events matter to you and our team will follow up.', [], $t_opts);
+      $cta_btn = (string) t('Contact our team', [], $t_opts);
+      $cta_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg>';
+      $cta_markup = '<aside class="events-home-cta" aria-label="' . Html::escape($cta_aria)
+        . '"><span class="events-home-cta__icon" aria-hidden="true">' . $cta_svg
+        . '</span><div class="events-home-cta__text"><h3 class="events-home-cta__title">'
+        . Html::escape($cta_title) . '</h3><p class="events-home-cta__body">'
+        . Html::escape($cta_body) . '</p></div><a class="events-home-cta__btn" href="'
+        . Html::escape($contact_path) . '">' . Html::escape($cta_btn) . ' ' . $arrow . '</a></aside>';
+      motaded_theme_views_replace_area_markup($variables, 'footer', $cta_markup);
+    }
 
     if ($display_id === 'block_home') {
       $eyebrow = (string) t('Business events', [], $t_opts);
@@ -2347,6 +2413,16 @@ function motaded_theme_preprocess_node(&$variables) {
       $plain_len = mb_strlen(trim(strip_tags((string) $item->value)));
       $variables['service_body_use_readmore'] = $plain_len > 2499;
     }
+
+    $doc_build = motaded_theme_service_documents_build($node, 3);
+    $variables['service_documents'] = $doc_build['rows'];
+    $variables['service_documents_more_url'] = $doc_build['more_url'];
+    $variables['service_documents_more_label'] = $doc_build['more_label'];
+    $variables['service_documents_has_more'] = $doc_build['has_more'];
+    $variables['#cache']['tags'] = Cache::mergeTags(
+      $variables['#cache']['tags'] ?? [],
+      $doc_build['cache_tags']
+    );
   }
 
   // Event (full): hide fields rendered manually in node--event--full.html.twig.
@@ -6566,6 +6642,26 @@ function _motaded_theme_preprocess_document_node_full(array &$variables, NodeInt
       ];
     }
   }
+  if ($node->hasField('field_services') && !$node->get('field_services')->isEmpty()) {
+    $links = [];
+    foreach ($node->get('field_services')->referencedEntities() as $ref) {
+      if ($ref instanceof NodeInterface) {
+        $ref = \Drupal::service('entity.repository')->getTranslationFromContext($ref, $langcode);
+        $links[] = [
+          'title' => $ref->label(),
+          'url' => $ref->toUrl()->toString(),
+        ];
+      }
+    }
+    if ($links !== []) {
+      $variables['document_meta_items'][] = [
+        'icon' => 'service',
+        'label' => (string) t('Related services', [], $t_opts),
+        'value' => '',
+        'links' => $links,
+      ];
+    }
+  }
   if ($node->hasField('field_sector_pages') && !$node->get('field_sector_pages')->isEmpty()) {
     $links = [];
     foreach ($node->get('field_sector_pages')->referencedEntities() as $ref) {
@@ -6580,7 +6676,7 @@ function _motaded_theme_preprocess_document_node_full(array &$variables, NodeInt
     if ($links !== []) {
       $variables['document_meta_items'][] = [
         'icon' => 'sector',
-        'label' => (string) t('Sector page', [], $t_opts),
+        'label' => (string) t('Related sectors', [], $t_opts),
         'value' => '',
         'links' => $links,
       ];
@@ -6600,7 +6696,7 @@ function _motaded_theme_preprocess_document_node_full(array &$variables, NodeInt
     if ($links !== []) {
       $variables['document_meta_items'][] = [
         'icon' => 'platform',
-        'label' => (string) t('Platforms', [], $t_opts),
+        'label' => (string) t('Related platforms', [], $t_opts),
         'value' => '',
         'links' => $links,
       ];

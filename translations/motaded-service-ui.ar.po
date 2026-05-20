@@ -186,6 +186,15 @@ msgstr "من التسجيل إلى التشغيل والامتثال، نقدّ�
 msgid "Quick links"
 msgstr "روابط سريعة"
 
+msgid "Our services"
+msgstr "خدماتنا"
+
+msgid "Blog & insights"
+msgstr "المدونة والرؤى"
+
+msgid "Search site"
+msgstr "بحث في الموقع"
+
 msgid "Browse all services in this directory"
 msgstr "تصفّح جميع الخدمات في هذا الدليل"
 
@@ -1195,6 +1204,18 @@ msgstr "استكشف القطاع"
 
 msgid "View all events"
 msgstr "عرض جميع الفعاليات"
+
+msgid "Planning CTA"
+msgstr "دعوة للتواصل"
+
+msgid "Planning to attend?"
+msgstr "تخطّط للحضور؟"
+
+msgid "Tell us which events matter to you and our team will follow up."
+msgstr "أخبرنا بأي فعاليات تهتم وسيتابع معك فريقنا."
+
+msgid "Contact our team"
+msgstr "تواصل مع فريقنا"
 
 msgid "View details"
 msgstr "عرض التفاصيل"

@@ -204,7 +204,8 @@
     {% set _nav_areas = content.field_areas_of_work['#items'] is not empty %}
     {% set _nav_extra = content.field_basic_paragraphs['#items'] is defined and content.field_basic_paragraphs['#items'] is not empty %}
     {% set _nav_faqs = content.field_keywords['#items'] is not empty %}
-    {% if _nav_body or _nav_snapshot or _nav_objectives or _nav_work_tracks or _nav_steps or _nav_areas or _nav_extra or _nav_faqs %}
+    {% set _nav_documents = service_documents is defined and service_documents is not empty %}
+    {% if _nav_body or _nav_snapshot or _nav_objectives or _nav_work_tracks or _nav_steps or _nav_areas or _nav_extra or _nav_documents or _nav_faqs %}
       <nav class="service-page__section-tabs" aria-label="{{ 'On this page'|t }}">
         {% if _nav_body %}
           <a href="#service-details" class="service-page__section-tab">{{ 'Overview'|t }}</a>
@@ -226,6 +227,9 @@
         {% endif %}
         {% if _nav_extra %}
           <a href="#service-extra-data" class="service-page__section-tab">{{ 'Extra data'|t }}</a>
+        {% endif %}
+        {% if _nav_documents %}
+          <a href="#service-documents" class="service-page__section-tab">{{ 'Related documents'|t }}</a>
         {% endif %}
         {% if _nav_faqs %}
           <a href="#faqs" class="service-page__section-tab">{{ 'FAQs'|t }}</a>
@@ -392,6 +396,10 @@
           {% endfor %}
         </div>
       </section>
+    {% endif %}
+
+    {% if service_documents is defined and service_documents is not empty %}
+      {% include '@motaded_theme/service-page/service-documents.html.twig' %}
     {% endif %}
 
     <!-- FAQs -->

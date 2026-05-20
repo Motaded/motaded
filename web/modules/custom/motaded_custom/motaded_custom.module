@@ -716,6 +716,12 @@ function motaded_custom_metatags_alter(array &$metatags, array &$context) {
   if ($entity->bundle() === 'sector_page') {
     require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
     motaded_custom_sector_page_metatags_alter($metatags, $entity);
+    return;
+  }
+
+  if ($entity->bundle() === 'event') {
+    require_once __DIR__ . '/includes/motaded_custom.event_metatag.inc';
+    motaded_custom_event_metatags_alter($metatags, $entity);
   }
 }
 
@@ -1305,10 +1311,34 @@ function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
  *
  * Events directory (/events): optional motaded_event_date_from / motaded_event_date_to (Y-m-d).
  *
- * Library view: section filter is an exposed Views filter on library_section terms.
+ * Library view: match translated taxonomy term rows to the node language so
+ * field_document_type / field_category joins do not duplicate results.
  */
 function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
   $view_id = $view->id() ?? '';
+
+  if ($view_id === 'library') {
+    if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+      return;
+    }
+    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+      return;
+    }
+    $node_alias = $query->ensureTable('node_field_data');
+    $ref = new \ReflectionClass($query);
+    if (!$ref->hasProperty('tableQueue')) {
+      return;
+    }
+    $prop = $ref->getProperty('tableQueue');
+    $prop->setAccessible(TRUE);
+    $queue = $prop->getValue($query);
+    foreach ($queue as $alias => $info) {
+      if (($info['table'] ?? '') === 'taxonomy_term_field_data') {
+        $query->addWhereExpression(0, "$alias.langcode = $node_alias.langcode");
+      }
+    }
+    return;
+  }
 
   if ($view_id === 'events') {
     $display_id = $view->current_display ?? '';

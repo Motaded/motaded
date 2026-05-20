@@ -1,0 +1,31 @@
+uuid: f1f1f1f1-1111-4111-8111-111111111102
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_services
+    - node.type.document
+    - node.type.page
+  module:
+    - node
+id: node.document.field_services
+field_name: field_services
+entity_type: node
+bundle: document
+label: Services
+description: 'Related Motaded service pages (internal links for SEO).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page: page
+    sort:
+      field: title
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
