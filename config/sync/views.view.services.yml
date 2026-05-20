@@ -1003,6 +1003,8 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                scrollable: false
+                scrollable_height: 300
       empty:
         area:
           id: area
@@ -2067,7 +2069,6 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: search-all
-                  sort_options_unsupported: ''
               field_beneficiaries_target_id:
                 plugin_id: bef
                 advanced:
@@ -2089,6 +2090,8 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                scrollable: false
+                scrollable_height: 300
               field_taxonomy_target_id:
                 plugin_id: bef
                 advanced:
@@ -2110,6 +2113,8 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                scrollable: false
+                scrollable_height: 300
               field_sector_target_id:
                 plugin_id: bef
                 advanced:
@@ -2131,6 +2136,8 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                scrollable: false
+                scrollable_height: 300
               field_tags_target_id:
                 plugin_id: bef
                 advanced:
@@ -2152,6 +2159,8 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                scrollable: false
+                scrollable_height: 300
       empty:
         area:
           id: area

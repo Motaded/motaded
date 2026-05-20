@@ -1,10 +1,6 @@
 services:
   Drupal\motaded_custom\Seo\MetatagTitleSuffixHelper:
     autowire: true
-  Drupal\motaded_custom\Hook\MetatagSanitizeHooks:
-    autowire: true
-  Drupal\motaded_custom\Hook\MetatagTitleHooks:
-    autowire: true
   Drupal\motaded_custom\Hook\PageTitleHooks:
     autowire: true
   Drupal\motaded_custom\Hook\WebformMetatagHooks:
@@ -24,6 +20,17 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\motaded_custom\EventSubscriber\ImageAltFallbackSubscriber:
+    tags:
+      - { name: event_subscriber }
+
+  motaded_custom.webp_sidecar:
+    class: Drupal\motaded_custom\Image\WebpSidecarGenerator
+    arguments:
+      - '@file_system'
+
+  Drupal\motaded_custom\EventSubscriber\WebpSidecarImageStyleSubscriber:
+    arguments:
+      - '@motaded_custom.webp_sidecar'
     tags:
       - { name: event_subscriber }
 

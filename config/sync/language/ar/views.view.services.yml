@@ -72,14 +72,6 @@ display:
               field_taxonomy_target_id:
                 soft_limit_label_less: أقل
                 soft_limit_label_more: المزيد
-              field_sector_target_id:
-                advanced:
-                  rewrite:
-                    filter_rewrite_values: 'All|كل القطاعات'
-              field_tags_target_id:
-                advanced:
-                  rewrite:
-                    filter_rewrite_values: 'All|كل الوسوم'
       sorts:
         title:
           expose:

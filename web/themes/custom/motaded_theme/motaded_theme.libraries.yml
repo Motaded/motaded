@@ -499,6 +499,18 @@ event_page:
   dependencies:
     - motaded_theme/base
 
+events_calendar_crawlable:
+  version: 20260520fca11y
+  css:
+    component:
+      css/components/events-calendar-a11y.css:
+        weight: 5
+  js:
+    js/events-calendar-crawlable-days.js: {}
+  dependencies:
+    - core/drupal
+    - motaded_theme/base
+
 events_directory:
   version: 20260520eventsherortl6
   css:
@@ -511,6 +523,7 @@ events_directory:
     - core/drupal
     - core/once
     - motaded_theme/event_page
+    - motaded_theme/events_calendar_crawlable
     - motaded_theme/services-directory
     - motaded_theme/hero_split_banner
     - views/views.ajax
@@ -590,6 +603,7 @@ events_home:
     js/events-home.js: {}
   dependencies:
     - motaded_theme/event_page
+    - motaded_theme/events_calendar_crawlable
     - views/views.ajax
 
 insights-updates:
@@ -605,7 +619,7 @@ insights-updates:
     - core/once
 
 glance_block:
-  version: 20260520glancebodyp
+  version: 20260520glancecontrast
   css:
     component:
       css/components/glance-block.css:

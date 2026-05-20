@@ -1,0 +1,22 @@
+uuid: b4c5d6e7-f809-4123-a456-7890abcdef01
+langcode: en
+status: true
+dependencies: {  }
+name: partner_logo
+label: 'Partner logo (180×72 max)'
+effects:
+  c5d6e7f8-0910-4234-b567-8901abcdef02:
+    uuid: c5d6e7f8-0910-4234-b567-8901abcdef02
+    id: image_scale
+    weight: 0
+    data:
+      width: 180
+      height: 72
+      upscale: false
+  d6e7f809-1121-4345-c678-9012abcdef03:
+    uuid: d6e7f809-1121-4345-c678-9012abcdef03
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__

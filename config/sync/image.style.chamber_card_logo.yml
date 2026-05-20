@@ -3,15 +3,15 @@ langcode: en
 status: true
 dependencies: {  }
 name: chamber_card_logo
-label: 'Chamber card logo (128×128)'
+label: 'Chamber card logo (96×96 max)'
 effects:
   7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c:
     uuid: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
     id: image_scale
     weight: 0
     data:
-      width: 128
-      height: 128
+      width: 96
+      height: 96
       upscale: false
   8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d:
     uuid: 8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d

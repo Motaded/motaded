@@ -5,21 +5,21 @@ dependencies:
   config:
     - core.entity_view_mode.media.chamber_card
     - field.field.media.image.field_media_image
-    - image.style.chamber_card_logo
+    - responsive_image.styles.chamber_card
     - media.type.image
   module:
-    - image
+    - responsive_image
 id: media.image.chamber_card
 targetEntityType: media
 bundle: image
 mode: chamber_card
 content:
   field_media_image:
-    type: image
+    type: responsive_image
     label: visually_hidden
     settings:
+      responsive_image_style: chamber_card
       image_link: ''
-      image_style: chamber_card_logo
       image_loading:
         attribute: lazy
     third_party_settings: {  }

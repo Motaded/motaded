@@ -116,7 +116,7 @@
                   <a href="{{ p.url }}" class="investor-journey__platform-card">
                     <span class="investor-journey__platform-card-media">
                       {% if p.logo.src %}
-                        <img class="investor-journey__platform-logo" src="{{ p.logo.src }}" {% if p.logo.srcset %}srcset="{{ p.logo.srcset }}" {% endif %}{% if p.logo.width %}width="{{ p.logo.width }}" {% endif %}{% if p.logo.height %}height="{{ p.logo.height }}" {% endif %}alt="{{ (p.logo.alt|default(p.title))|e('html_attr') }}" loading="lazy" decoding="async">
+                        <img class="investor-journey__platform-logo" src="{{ p.logo.src }}" {% if p.logo.srcset %}srcset="{{ p.logo.srcset }}" sizes="44px" {% endif %}{% if p.logo.width %}width="{{ p.logo.width }}" {% endif %}{% if p.logo.height %}height="{{ p.logo.height }}" {% endif %}alt="{{ (p.logo.alt|default(p.title))|e('html_attr') }}" loading="lazy" decoding="async">
                       {% else %}
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                           <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>

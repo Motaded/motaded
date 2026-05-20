@@ -1,0 +1,11 @@
+uuid: a2b3c4d5-e6f7-4890-abcd-ef0123456789
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.event_teaser
+label: 'Event teaser'
+description: 'Small thumbnail for event cards (home list, directory grid).'
+targetEntityType: media
+cache: true

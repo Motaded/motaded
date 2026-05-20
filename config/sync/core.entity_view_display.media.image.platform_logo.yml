@@ -1,0 +1,34 @@
+uuid: b6c7d8e9-f012-4234-b567-8901abcdef19
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.platform_logo
+    - field.field.media.image.field_media_image
+    - image.style.platform_logo
+    - media.type.image
+  module:
+    - image
+id: media.image.platform_logo
+targetEntityType: media
+bundle: image
+mode: platform_logo
+content:
+  field_media_image:
+    type: image
+    label: visually_hidden
+    settings:
+      image_link: ''
+      image_style: platform_logo
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

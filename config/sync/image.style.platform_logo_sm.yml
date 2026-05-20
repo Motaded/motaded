@@ -1,0 +1,22 @@
+uuid: f6071829-3041-2567-d890-123abcdef015
+langcode: en
+status: true
+dependencies: {  }
+name: platform_logo_sm
+label: 'Platform logo SM (64×64 max)'
+effects:
+  0718293a-4152-3678-e901-234abcdef016:
+    uuid: 0718293a-4152-3678-e901-234abcdef016
+    id: image_scale
+    weight: 0
+    data:
+      width: 64
+      height: 64
+      upscale: false
+  18293a4b-5263-4789-f012-345abcdef017:
+    uuid: 18293a4b-5263-4789-f012-345abcdef017
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__

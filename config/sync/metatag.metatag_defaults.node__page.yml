@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - metatag_hreflang
     - metatag_open_graph
     - metatag_twitter_cards
 id: node__page
@@ -19,3 +20,6 @@ tags:
   schema_service_offers: 'a:5:{s:5:"@type";s:5:"Offer";s:5:"price";s:25:"[node:field_service_cost]";s:13:"priceCurrency";s:3:"SAR";s:3:"url";s:19:"[node:url:absolute]";s:12:"availability";s:26:"https://schema.org/InStock";}'
   schema_service_type: Service
   title: '[node:title] | [site:name]'
+  hreflang_xdefault: '[node:url:absolute]'
+  'hreflang_per_language:hreflang_en': '[node:url:absolute]'
+  'hreflang_per_language:hreflang_ar': '[node:url:absolute]'

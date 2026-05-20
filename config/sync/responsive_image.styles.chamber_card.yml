@@ -1,0 +1,23 @@
+uuid: a4b5c6d7-e8f9-4012-b345-678901abcdef27
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.chamber_card_logo
+    - image.style.chamber_card_logo_lg
+    - image.style.chamber_card_logo_sm
+id: chamber_card
+label: 'Chamber card logo'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: '(min-width: 900px) 120px, 88px'
+      sizes_image_styles:
+        - chamber_card_logo_sm
+        - chamber_card_logo
+        - chamber_card_logo_lg
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: chamber_card_logo_sm

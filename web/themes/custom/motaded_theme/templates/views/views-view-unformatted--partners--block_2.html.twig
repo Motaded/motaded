@@ -16,7 +16,7 @@
   <h3>{{ title }}</h3>
 {% endif %}
 
-{% set total = view.result|length %}
+{% set total = partner_items|length %}
 
 {% if total > 0 %}
   {{ attach_library('motaded_theme/partner_carousel') }}
@@ -29,28 +29,20 @@
     <div class="partners-showcase__rail-wrap">
       <div class="partners-showcase__rail-track">
         {% for pass in [1, 2] %}
-          {% for result_row in view.result %}
-            {% set entity = result_row._entity %}
-            {% set media = (entity.hasField('field_media') and not entity.field_media.isEmpty) ? entity.field_media.entity : null %}
-            {% set image = (media and media.field_media_image is defined and not media.field_media_image.isEmpty) ? media.field_media_image.entity : null %}
-            {% set logo_uri = image ? image.uri.value : '' %}
-            {% set logo_url = logo_uri ? file_url(logo_uri) : '' %}
-            {% set logo_alt = (media and not media.field_media_image.isEmpty) ? media.field_media_image.alt : '' %}
-            {% set partner_name = (entity.hasField('field_partner_name') and not entity.field_partner_name.isEmpty) ? entity.field_partner_name.value : entity.label %}
-            {% set role = (entity.hasField('field_one_line_role') and not entity.field_one_line_role.isEmpty) ? entity.field_one_line_role.value : '' %}
-
-            <article class="partners-showcase__logo-card" aria-label="{{ partner_name }}{% if role %} — {{ role }}{% endif %}">
-              {% if logo_url %}
+          {% for item in partner_items %}
+            <article class="partners-showcase__logo-card" aria-label="{{ item.name }}{% if item.role %} — {{ item.role }}{% endif %}">
+              {% if item.src %}
                 <img
-                  src="{{ logo_url }}"
-                  alt="{{ logo_alt|default(partner_name)|e }}"
+                  src="{{ item.src }}"
+                  {% if item.srcset %}srcset="{{ item.srcset }}"{% endif %}
+                  alt="{{ item.alt|e }}"
                   class="partners-showcase__logo-img"
                   loading="lazy"
                   decoding="async"
                   fetchpriority="low"
-                  width="180"
-                  height="72"
-                  sizes="(min-width: 1024px) 180px, 42vw"
+                  width="{{ item.width }}"
+                  height="{{ item.height }}"
+                  sizes="(min-width: 1024px) 180px, min(42vw, 160px)"
                 />
               {% endif %}
             </article>
@@ -61,28 +53,21 @@
 
     <div class="partners-showcase__mobile-swiper partners-swiper swiper" aria-label="{{ 'Partners'|t }}">
       <div class="swiper-wrapper">
-        {% for result_row in view.result %}
-          {% set entity = result_row._entity %}
-          {% set media = (entity.hasField('field_media') and not entity.field_media.isEmpty) ? entity.field_media.entity : null %}
-          {% set image = (media and media.field_media_image is defined and not media.field_media_image.isEmpty) ? media.field_media_image.entity : null %}
-          {% set logo_uri = image ? image.uri.value : '' %}
-          {% set logo_url = logo_uri ? file_url(logo_uri) : '' %}
-          {% set logo_alt = (media and not media.field_media_image.isEmpty) ? media.field_media_image.alt : '' %}
-          {% set partner_name = (entity.hasField('field_partner_name') and not entity.field_partner_name.isEmpty) ? entity.field_partner_name.value : entity.label %}
-          {% set role = (entity.hasField('field_one_line_role') and not entity.field_one_line_role.isEmpty) ? entity.field_one_line_role.value : '' %}
+        {% for item in partner_items %}
           <div class="swiper-slide">
-            <article class="partners-showcase__logo-card partners-showcase__logo-card--slide" aria-label="{{ partner_name }}{% if role %} — {{ role }}{% endif %}">
-              {% if logo_url %}
+            <article class="partners-showcase__logo-card partners-showcase__logo-card--slide" aria-label="{{ item.name }}{% if item.role %} — {{ item.role }}{% endif %}">
+              {% if item.src %}
                 <img
-                  src="{{ logo_url }}"
-                  alt="{{ logo_alt|default(partner_name)|e }}"
+                  src="{{ item.src }}"
+                  {% if item.srcset %}srcset="{{ item.srcset }}"{% endif %}
+                  alt="{{ item.alt|e }}"
                   class="partners-showcase__logo-img"
                   loading="lazy"
                   decoding="async"
                   fetchpriority="low"
-                  width="160"
-                  height="64"
-                  sizes="(max-width: 1023px) 42vw"
+                  width="{{ item.width }}"
+                  height="{{ item.height }}"
+                  sizes="min(42vw, 160px)"
                 />
               {% endif %}
             </article>

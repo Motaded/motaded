@@ -4,6 +4,7 @@ entity_type_groups:
   front:
     '':
       basic: basic
+      hreflang: hreflang
       open_graph: open_graph
       twitter_cards: twitter_cards
       schema_organization: schema_organization
@@ -25,11 +26,13 @@ entity_type_groups:
       schema_article: schema_article
     landing_page:
       basic: basic
+      hreflang: hreflang
       open_graph: open_graph
       twitter_cards: twitter_cards
       schema_web_page: schema_web_page
     page:
       basic: basic
+      hreflang: hreflang
       open_graph: open_graph
       twitter_cards: twitter_cards
       schema_qa_page: schema_qa_page

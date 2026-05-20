@@ -1,0 +1,22 @@
+uuid: d4e5f607-8192-0345-b678-901abcdef021
+langcode: en
+status: true
+dependencies: {  }
+name: chamber_card_logo_sm
+label: 'Chamber card logo SM (64×64 max)'
+effects:
+  e5f60718-9203-1456-c789-012abcdef022:
+    uuid: e5f60718-9203-1456-c789-012abcdef022
+    id: image_scale
+    weight: 0
+    data:
+      width: 64
+      height: 64
+      upscale: false
+  f6071829-3041-2567-d890-123abcdef023:
+    uuid: f6071829-3041-2567-d890-123abcdef023
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__
