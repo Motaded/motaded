@@ -26,3 +26,83 @@ services:
   Drupal\motaded_custom\EventSubscriber\ImageAltFallbackSubscriber:
     tags:
       - { name: event_subscriber }
+
+  motaded_custom.node_logo_importer:
+    class: Drupal\motaded_custom\Logo\NodeLogoImporter
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+
+  motaded_custom.world_bank_indicator_client:
+    class: Drupal\motaded_custom\MarketIndicators\WorldBankIndicatorClient
+    arguments: ['@http_client', '@logger.factory']
+
+  motaded_custom.market_indicator_normalizer:
+    class: Drupal\motaded_custom\MarketIndicators\MarketIndicatorNormalizer
+
+  motaded_custom.market_indicator_repository:
+    class: Drupal\motaded_custom\MarketIndicators\MarketIndicatorRepository
+    arguments: ['@database', '@logger.factory']
+
+  motaded_custom.market_indicators_importer:
+    class: Drupal\motaded_custom\MarketIndicators\MarketIndicatorsImporter
+    arguments:
+      - '@motaded_custom.world_bank_indicator_client'
+      - '@motaded_custom.market_indicator_normalizer'
+      - '@motaded_custom.market_indicator_repository'
+      - '@config.factory'
+      - '@logger.factory'
+      - '@datetime.time'
+      - '@cache_tags.invalidator'
+
+  motaded_custom.sector_indicator_repository:
+    class: Drupal\motaded_custom\SectorIndicators\SectorIndicatorRepository
+    arguments: ['@database', '@logger.factory']
+
+  motaded_custom.gastat_statistics_client:
+    class: Drupal\motaded_custom\SectorIndicators\GastatStatisticsClient
+    arguments: ['@http_client', '@logger.factory']
+
+  motaded_custom.sector_indicators_importer:
+    class: Drupal\motaded_custom\SectorIndicators\SectorIndicatorsImporter
+    arguments:
+      - '@motaded_custom.world_bank_indicator_client'
+      - '@motaded_custom.market_indicator_normalizer'
+      - '@motaded_custom.sector_indicator_repository'
+      - '@motaded_custom.gastat_statistics_client'
+      - '@logger.factory'
+      - '@datetime.time'
+      - '@cache_tags.invalidator'
+
+  motaded_custom.sector_page_key_stats_builder:
+    class: Drupal\motaded_custom\SectorKeyStats\SectorPageKeyStatsBuilder
+    arguments:
+      - '@motaded_custom.world_bank_indicator_client'
+      - '@motaded_custom.market_indicator_normalizer'
+      - '@motaded_custom.sector_indicator_repository'
+      - '@string_translation'
+
+  motaded_custom.logistics_trade_volume_chart_builder:
+    class: Drupal\motaded_custom\SectorKeyStats\TradeVolumeChartBuilder
+    arguments:
+      - '@entity_type.manager'
+      - '@motaded_custom.world_bank_indicator_client'
+
+  motaded_custom.sector_gastat_activity_chart_builder:
+    class: Drupal\motaded_custom\SectorKeyStats\SectorGastatActivityGrowthChartBuilder
+    arguments:
+      - '@entity_type.manager'
+      - '@motaded_custom.gastat_statistics_client'
+
+  motaded_custom.main_menu_migrator:
+    class: Drupal\motaded_custom\Menu\MainMenuMigrator
+    arguments:
+      - '@entity_type.manager'
+
+  motaded_custom.homepage_migrator:
+    class: Drupal\motaded_custom\Homepage\HomepageMigrator
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'

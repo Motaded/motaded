@@ -1,0 +1,58 @@
+uuid: a1111111-1111-4111-8111-111111110051
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.why_opportunities.field_body
+    - field.field.paragraph.why_opportunities.field_media
+    - field.field.paragraph.why_opportunities.field_why_eyebrow
+    - field.field.paragraph.why_opportunities.field_why_features
+    - field.field.paragraph.why_opportunities.field_why_stat_items
+    - field.field.paragraph.why_opportunities.field_why_title_accent
+    - field.field.paragraph.why_opportunities.field_why_title_prefix
+    - field.field.paragraph.why_opportunities.field_why_trust_line
+    - paragraphs.paragraphs_type.why_opportunities
+  module:
+    - text
+id: paragraph.why_opportunities.default
+targetEntityType: paragraph
+bundle: why_opportunities
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_why_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_why_title_accent:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_why_title_prefix:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_media: true
+  field_why_features: true
+  field_why_stat_items: true
+  field_why_trust_line: true
+  search_api_excerpt: true

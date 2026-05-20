@@ -1,0 +1,10 @@
+uuid: a1000001-0000-4000-8000-0000000000f1
+langcode: en
+status: true
+dependencies: {  }
+id: platform_resource
+label: 'Platform resource'
+icon_uuid: null
+icon_default: null
+description: 'Single resource link (title + URL + icon) shown in the platform Resources panel.'
+behavior_plugins: {  }

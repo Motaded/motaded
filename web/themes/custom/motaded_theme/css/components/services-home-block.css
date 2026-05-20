@@ -1,0 +1,569 @@
+/* Homepage services block: paragraph + view services / block_2.
+ * Weight in libraries.yml > main.css — overrides Tailwind + main.css where needed. */
+
+.paragraph--view-block--services-home {
+  background: var(--mot-surface, #ffffff);
+  padding-top: clamp(3.75rem, 9vw, 6rem);
+  padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+/* -------------------------------------------------------------------------
+   Header: intro + team aside
+   ------------------------------------------------------------------------- */
+.services-home-header--split {
+  margin-bottom: 0;
+}
+
+.services-home-header-actions {
+  margin-top: 0;
+}
+
+/* Team aside: same card pattern as Library hero note (library-home-block.css is not loaded here). */
+.paragraph--view-block--services-home .services-home-team-note.library-home-hero__note {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-shrink: 0;
+  max-width: 22rem;
+  padding: 1rem 1.125rem;
+  border-radius: var(--mot-radius-lg, 1rem);
+  background: var(--mot-surface-muted, #f8fafc);
+  border: 1px solid var(--mot-border, #e2e8f0);
+}
+
+.paragraph--view-block--services-home .services-home-team-note .library-home-hero__note-badge {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background: var(--mot-emerald-surface, #f0f7f4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.paragraph--view-block--services-home .services-home-team-note .library-home-hero__note-badge svg {
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.paragraph--view-block--services-home .services-home-team-note .library-home-hero__note-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--mot-text-secondary, #475569);
+}
+
+/* Intro typography (field_body: eyebrow, title, subtitle) */
+.services-home-header {
+  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.services-home-header .view-block-intro-wrap {
+  padding-left: 0;
+}
+
+/* First line = section eyebrow (same as .mot-eyebrow / “Business events”) */
+.paragraph--view-block--services-home .services-home-intro > p:nth-of-type(1) {
+  display: block !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 0 0.75rem !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  font-size: var(--mot-font-eyebrow) !important;
+  font-weight: 700 !important;
+  letter-spacing: var(--mot-font-eyebrow-ls) !important;
+  text-transform: uppercase !important;
+  line-height: 1.35 !important;
+  color: var(--mot-brand, #0f766e) !important;
+}
+
+.paragraph--view-block--services-home .services-home-intro > p:nth-of-type(2) {
+  margin: 0 0 0.65rem !important;
+  font-size: clamp(1.5rem, 2.4vw, 2.125rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--mot-text, #0f172a) !important;
+}
+
+.paragraph--view-block--services-home .services-home-intro > p:nth-of-type(3) {
+  margin: 0 !important;
+  max-width: 52ch;
+  font-size: 0.9375rem !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  color: var(--mot-text-muted, #64748b) !important;
+}
+
+.paragraph--view-block--services-home .services-home-intro .h-3 {
+  display: none !important;
+}
+
+.services-home-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 1.2rem;
+  border-radius: 9999px;
+  border: 1px solid var(--mot-brand, #0f766e);
+  background: transparent;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.services-home-view-all:hover {
+  background: rgb(240 253 250 / 85%);
+  border-color: var(--mot-accent-strong, #0d9488);
+  color: var(--mot-accent-strong, #0d9488);
+}
+
+.services-home-view-all:focus-visible {
+  outline: 2px solid var(--mot-accent-strong, #0d9488);
+  outline-offset: 2px;
+}
+
+.services-home-view-all::after {
+  content: "→";
+  font-size: 1em;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------------
+   View shell: sidebar + detail
+   ------------------------------------------------------------------------- */
+.paragraph--view-block--services-home .view-display-id-block_2 .services-home-shell {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .paragraph--view-block--services-home .view-display-id-block_2 .services-home-shell {
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    gap: 2rem 2.5rem;
+  }
+}
+
+.paragraph--view-block--services-home .services-home-sidebar__filters {
+  margin: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .bef-exposed-form {
+  margin: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .fieldset-legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .fieldset-wrapper {
+  padding: 0;
+}
+
+/*
+ * Sidebar radios: BEF outputs icon #prefix as a sibling BEFORE each .form-type-radio
+ * (span.services-home-sidebar-radio__icon + div.form-type-radio). Use a 2-col grid.
+ * Also undo main.css .exposed-filter-tabs tab pills (hidden input, label colours, child div).
+ */
+.paragraph--view-block--services-home .services-home-sidebar fieldset .form-radios:not(.form--inline) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* BEF output can be either `.form-radios.form--inline` OR `.form-radios > .form-radios` (nested wrapper).
+ * Target both to avoid broken styling. */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios {
+  display: grid !important;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0 !important;
+  padding: 0 !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+  border-radius: 0.75rem;
+  border: 1px solid var(--mot-border, #e2e8f0);
+  background: var(--mot-surface, #fff);
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline::after,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* main.css hides radios — restore focusable clipping so keyboard works */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios.form--inline input.form-radio,
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-radios > .form-radios input.form-radio {
+  display: block !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  opacity: 0 !important;
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio > div {
+  display: revert !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon {
+  grid-column: 1;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding: 0.75rem 0 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--mot-border, #e2e8f0);
+  background: var(--mot-surface, #fff);
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon img {
+  width: 1.375rem;
+  height: 1.375rem;
+  object-fit: contain;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio {
+  position: relative;
+  grid-column: 2;
+  display: flex !important;
+  align-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid var(--mot-border, #e2e8f0);
+  transition: background-color 0.15s ease;
+}
+
+/* Rounded corners for the first/last pair (icon + radio). */
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:first-child,
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:first-child + .form-type-radio {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar fieldset .form-type-radio:last-child,
+.paragraph--view-block--services-home .services-home-sidebar fieldset .services-home-sidebar-radio__icon:has(+ .form-type-radio:last-child) {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:last-of-type {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:last-of-type {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio label.option {
+  flex: 1 1 auto;
+  margin: 0 !important;
+  padding: 0.85rem 1rem 0.85rem 0 !important;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mot-slate-700, #334155) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  transition:
+    color 0.12s ease,
+    background-color 0.12s ease;
+}
+
+/* Undo main.css pill + white-on-green checked label */
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio:hover {
+  background: rgb(248 250 252 / 95%);
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio:hover) {
+  background: rgb(248 250 252 / 95%);
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:hover label.option {
+  color: var(--mot-text, #0f172a) !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked),
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio input:checked) {
+  background: rgb(236 253 245 / 72%) !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) {
+  border-bottom: 2px solid var(--mot-brand, #0f766e);
+}
+
+.paragraph--view-block--services-home .services-home-sidebar-radio__icon:has(+ .form-type-radio input:checked) {
+  border-bottom: 2px solid var(--mot-brand, #0f766e);
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio:has(input:checked) label.option {
+  color: var(--mot-text, #0f172a) !important;
+  font-weight: 600;
+  background: transparent !important;
+}
+
+.paragraph--view-block--services-home .exposed-filter-tabs.view-display-id-block_2 .form-type-radio:has(input:checked)::after {
+  content: none !important;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .form-type-radio input:focus-visible + label.option {
+  outline: 2px solid var(--mot-accent-strong, #0d9488);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.paragraph--view-block--services-home .services-home-sidebar .view-filters #edit-actions {
+  display: none;
+}
+
+/* Detail column */
+.paragraph--view-block--services-home .services-home-category-intro {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.75rem;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro--stacked {
+  align-items: flex-start;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__icon {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(236 253 245 / 90%);
+  border: 1px solid rgb(167 243 208 / 60%);
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__icon img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--mot-text, #0f172a);
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description p {
+  margin: 0 0 0.5rem;
+}
+
+.paragraph--view-block--services-home .services-home-category-intro__description p:last-child {
+  margin-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-offer-heading {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mot-brand, #0f766e);
+}
+
+.paragraph--view-block--services-home .services-home-offer-list {
+  border: 1px solid var(--mot-border, #e2e8f0);
+  border-radius: 0.875rem;
+  background: var(--mot-surface, #fff);
+  overflow: hidden;
+}
+
+.paragraph--view-block--services-home .services-home-row.services-home-row__link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 1.25rem;
+  align-items: center;
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--mot-border, #e2e8f0);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.paragraph--view-block--services-home .services-home-row.services-home-row__link:last-child {
+  border-bottom: 0;
+}
+
+.paragraph--view-block--services-home .services-home-row.services-home-row__link:hover {
+  background: rgb(236 253 245 / 55%);
+}
+
+.paragraph--view-block--services-home .services-home-row.services-home-row__link:focus-visible {
+  outline: 2px solid var(--mot-brand, #0f766e);
+  outline-offset: -2px;
+  background: rgb(236 253 245 / 65%);
+}
+
+.paragraph--view-block--services-home .services-home-row__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgb(236 253 245 / 85%);
+}
+
+.paragraph--view-block--services-home .services-home-row__icon img {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.paragraph--view-block--services-home .services-home-row__main {
+  display: block;
+  min-width: 0;
+}
+
+.paragraph--view-block--services-home .services-home-row__title {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mot-text, #0f172a);
+}
+
+.paragraph--view-block--services-home .services-home-row__title a {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.paragraph--view-block--services-home .services-home-row__body {
+  display: block;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.paragraph--view-block--services-home .services-home-row__body p {
+  margin: 0;
+}
+
+.paragraph--view-block--services-home .services-home-row__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.paragraph--view-block--services-home .services-home-row.services-home-row__link:hover .services-home-row__cta,
+.paragraph--view-block--services-home .services-home-row.services-home-row__link:focus-visible .services-home-row__cta {
+  color: var(--mot-accent-strong, #0d9488);
+}
+
+.paragraph--view-block--services-home .services-home-category-more-wrap {
+  margin: 1.35rem 0 0;
+}
+
+.paragraph--view-block--services-home .services-home-category-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+}
+
+.paragraph--view-block--services-home .services-home-category-more:hover {
+  color: var(--mot-accent-strong, #0d9488);
+}
+
+.paragraph--view-block--services-home .services-home-empty {
+  padding: 1.5rem;
+  border: 1px dashed var(--mot-border, #cbd5e1);
+  border-radius: 0.75rem;
+  color: var(--mot-text-muted, #64748b);
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 767px) {
+  .paragraph--view-block--services-home .services-home-row.services-home-row__link {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .paragraph--view-block--services-home .services-home-row.services-home-row__link .services-home-row__icon {
+    grid-row: 1 / span 2;
+  }
+
+  .paragraph--view-block--services-home .services-home-row.services-home-row__link .services-home-row__cta {
+    grid-column: 1 / -1;
+    justify-self: flex-start;
+    padding-inline-start: calc(2.75rem + 1.25rem);
+  }
+}
+
+[dir="rtl"] .paragraph--view-block--services-home .services-home-row__cta-arrow,
+[dir="rtl"] .paragraph--view-block--services-home .services-home-category-more__arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}

@@ -1,0 +1,463 @@
+uuid: 7160fc44-a025-4274-b230-0ad2234f8e26
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 34AeJohZsIzctHBCvQwXQMVq7l4eLVBbwMKfFp_rKzg
+id: default
+label: 'Saudi business setup (default)'
+currency: SAR
+webform_id: setup_cost_estimate_lead
+global_setup_buffer_min: 0.95
+global_setup_buffer_max: 1.08
+disclaimer: 'Indicative estimate only. Actual government fees, office leases, and professional charges vary by activity, ownership, and service scope. Not legal or tax advice.'
+last_updated: 'May 2026'
+methodology_source: 'Based on published fee schedules and typical Motaded client engagements.'
+steps:
+  -
+    id: activity
+    label: 'Business activity'
+    type: cards
+    weight: 0
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options:
+      -
+        id: it
+        label: 'IT / Software'
+        weight: 0
+      -
+        id: trading
+        label: Trading
+        weight: 1
+      -
+        id: consulting
+        label: Consulting
+        weight: 2
+      -
+        id: industrial
+        label: Industrial
+        weight: 3
+      -
+        id: ecommerce
+        label: E-commerce
+        weight: 4
+      -
+        id: marketing
+        label: Marketing
+        weight: 5
+      -
+        id: logistics
+        label: Logistics
+        weight: 6
+      -
+        id: other
+        label: Other
+        weight: 7
+  -
+    id: structure
+    label: 'Company structure'
+    type: cards
+    weight: 1
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options:
+      -
+        id: llc
+        label: LLC
+        weight: 0
+      -
+        id: branch
+        label: 'Foreign company branch'
+        weight: 1
+      -
+        id: sole
+        label: 'Sole establishment'
+        weight: 2
+      -
+        id: rhq
+        label: 'Regional HQ'
+        weight: 3
+  -
+    id: ownership
+    label: Ownership
+    type: cards
+    weight: 2
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options:
+      -
+        id: saudi
+        label: Saudi-owned
+        weight: 0
+      -
+        id: gcc
+        label: GCC-owned
+        weight: 1
+      -
+        id: foreign
+        label: 'Foreign investor'
+        weight: 2
+  -
+    id: employees
+    label: 'Employees / visas'
+    type: slider
+    weight: 3
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options: {  }
+  -
+    id: office
+    label: 'Office type'
+    type: cards
+    weight: 4
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options:
+      -
+        id: virtual
+        label: Virtual
+        weight: 0
+      -
+        id: coworking
+        label: Coworking
+        weight: 1
+      -
+        id: private
+        label: 'Private office'
+        weight: 2
+      -
+        id: hq
+        label: Headquarters
+        weight: 3
+  -
+    id: services
+    label: 'Additional services'
+    type: checkboxes
+    weight: 5
+    slider_min: 1
+    slider_max: 50
+    slider_step: 1
+    options:
+      -
+        id: accounting
+        label: Accounting
+        weight: 0
+      -
+        id: vat
+        label: 'VAT registration'
+        weight: 1
+      -
+        id: hr
+        label: 'HR / payroll'
+        weight: 2
+      -
+        id: legal
+        label: 'Legal support'
+        weight: 3
+      -
+        id: trademark
+        label: 'Trademark registration'
+        weight: 4
+      -
+        id: pro
+        label: 'PRO services'
+        weight: 5
+      -
+        id: gm
+        label: 'GM services'
+        weight: 6
+line_items:
+  -
+    id: misa_license
+    label: 'MISA license'
+    base_min: 12000.0
+    base_max: 22000.0
+    weight: 0
+  -
+    id: commercial_registration
+    label: 'Commercial registration'
+    base_min: 3500.0
+    base_max: 8000.0
+    weight: 1
+  -
+    id: office_setup
+    label: 'Office setup'
+    base_min: 2000.0
+    base_max: 15000.0
+    weight: 2
+  -
+    id: visas
+    label: 'Visas & immigration'
+    base_min: 4000.0
+    base_max: 12000.0
+    weight: 3
+  -
+    id: compliance
+    label: 'Compliance & filings'
+    base_min: 2500.0
+    base_max: 6000.0
+    weight: 4
+modifiers:
+  -
+    line_item_id: misa_license
+    dimension: ownership
+    value: foreign
+    value_min: ''
+    value_max: ''
+    add_min: 8000.0
+    add_max: 18000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: misa_license
+    dimension: structure
+    value: rhq
+    value_min: ''
+    value_max: ''
+    add_min: 15000.0
+    add_max: 35000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: misa_license
+    dimension: structure
+    value: branch
+    value_min: ''
+    value_max: ''
+    add_min: 5000.0
+    add_max: 12000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: office_setup
+    dimension: office
+    value: virtual
+    value_min: ''
+    value_max: ''
+    add_min: 0.0
+    add_max: 2000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: office_setup
+    dimension: office
+    value: coworking
+    value_min: ''
+    value_max: ''
+    add_min: 3000.0
+    add_max: 8000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: office_setup
+    dimension: office
+    value: private
+    value_min: ''
+    value_max: ''
+    add_min: 8000.0
+    add_max: 25000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: office_setup
+    dimension: office
+    value: hq
+    value_min: ''
+    value_max: ''
+    add_min: 20000.0
+    add_max: 60000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: visas
+    dimension: employees
+    value: ''
+    value_min: '1'
+    value_max: '3'
+    add_min: 0.0
+    add_max: 0.0
+    multiply_min: 1.0
+    multiply_max: 1.0
+  -
+    line_item_id: visas
+    dimension: employees
+    value: ''
+    value_min: '4'
+    value_max: '10'
+    add_min: 6000.0
+    add_max: 15000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: visas
+    dimension: employees
+    value: ''
+    value_min: '11'
+    value_max: '50'
+    add_min: 18000.0
+    add_max: 45000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: compliance
+    dimension: services
+    value: vat
+    value_min: ''
+    value_max: ''
+    add_min: 1500.0
+    add_max: 4000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+  -
+    line_item_id: compliance
+    dimension: services
+    value: accounting
+    value_min: ''
+    value_max: ''
+    add_min: 2000.0
+    add_max: 5000.0
+    multiply_min: 0.0
+    multiply_max: 0.0
+monthly:
+  base_min: 3500.0
+  base_max: 7000.0
+  per_employee_min: 450.0
+  per_employee_max: 900.0
+  office:
+    -
+      option_id: virtual
+      add_min: 500.0
+      add_max: 1500.0
+    -
+      option_id: coworking
+      add_min: 2000.0
+      add_max: 5000.0
+    -
+      option_id: private
+      add_min: 6000.0
+      add_max: 18000.0
+    -
+      option_id: hq
+      add_min: 15000.0
+      add_max: 45000.0
+  service:
+    -
+      option_id: accounting
+      add_min: 1500.0
+      add_max: 4000.0
+    -
+      option_id: vat
+      add_min: 500.0
+      add_max: 1200.0
+    -
+      option_id: hr
+      add_min: 800.0
+      add_max: 2500.0
+    -
+      option_id: legal
+      add_min: 1000.0
+      add_max: 5000.0
+    -
+      option_id: pro
+      add_min: 1200.0
+      add_max: 3500.0
+    -
+      option_id: gm
+      add_min: 8000.0
+      add_max: 20000.0
+timelines:
+  -
+    label: 'Saudi LLC — typical'
+    min_weeks: 2
+    max_weeks: 4
+    conditions:
+      -
+        dimension: structure
+        value: llc
+      -
+        dimension: ownership
+        value: saudi
+  -
+    label: 'Foreign investor'
+    min_weeks: 4
+    max_weeks: 8
+    conditions:
+      -
+        dimension: ownership
+        value: foreign
+  -
+    label: 'Regional HQ'
+    min_weeks: 6
+    max_weeks: 12
+    conditions:
+      -
+        dimension: structure
+        value: rhq
+timeline_default:
+  min_weeks: 2
+  max_weeks: 6
+packages:
+  -
+    id: starter
+    label: Starter
+    description: 'Lean setup for small teams and virtual presence.'
+    min_points: 0
+    rules:
+      -
+        dimension: office
+        value: virtual
+        points: 2
+  -
+    id: growth
+    label: Growth
+    description: 'Balanced setup for growing teams with compliance support.'
+    min_points: 4
+    rules:
+      -
+        dimension: office
+        value: coworking
+        points: 3
+      -
+        dimension: office
+        value: private
+        points: 4
+      -
+        dimension: structure
+        value: llc
+        points: 2
+  -
+    id: enterprise
+    label: Enterprise
+    description: 'Complex structures, foreign ownership, or HQ-scale operations.'
+    min_points: 8
+    rules:
+      -
+        dimension: ownership
+        value: foreign
+        points: 4
+      -
+        dimension: structure
+        value: rhq
+        points: 5
+      -
+        dimension: office
+        value: hq
+        points: 4
+ui:
+  progress_label: 'Step @current of @total'
+  result_setup_label: 'Estimated initial cost'
+  result_monthly_label: 'Estimated monthly operations'
+  result_timeline_label: 'Estimated timeline'
+  result_breakdown_title: 'Cost breakdown'
+  packages_title: 'Recommended package'
+  lead_title: 'Get your detailed estimate'
+  lead_description: 'We will email a summary with breakdown and next steps. Indicative only.'
+  cta_advisor_label: 'Talk to an advisor'
+  cta_advisor_url: /contact-us
+  empty_selection_hint: 'Complete the steps to see your estimate.'

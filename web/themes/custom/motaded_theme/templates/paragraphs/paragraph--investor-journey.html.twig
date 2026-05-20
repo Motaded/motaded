@@ -1,0 +1,162 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+  Investor journey: horizontal stepper, step columns, per-step platform cards.
+#}
+{{ attach_library('motaded_theme/investor_journey') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'investor-journey',
+  ]
+%}
+<section{{ attributes.addClass(classes).setAttribute('data-investor-journey', '') }}{% if content.field_title %} aria-labelledby="{{ investor_journey_heading_id }}"{% endif %}>
+  <header class="investor-journey__header">
+    {% if content.field_investor_journey_eyebrow %}
+      <div class="investor-journey__eyebrow-wrap mot-eyebrow">
+        {{ content.field_investor_journey_eyebrow }}
+      </div>
+    {% endif %}
+    {% if content.field_title %}
+      <h2 id="{{ investor_journey_heading_id }}" class="investor-journey__title mot-heading-2">{{ content.field_title }}</h2>
+    {% endif %}
+    {% if content.field_sub_title %}
+      <div class="investor-journey__subtitle mot-lead">{{ content.field_sub_title }}</div>
+    {% endif %}
+  </header>
+
+  {% if investor_journey_steps is not empty %}
+    {# --- Horizontal numbered stepper --- #}
+    <div class="investor-journey__stepper" role="tablist" aria-label="{{ 'Registration steps'|t }}">
+      {% for step in investor_journey_steps %}
+        {% set tid = investor_journey_heading_id ~ '-tab-' ~ loop.index0 %}
+        {% set pid = investor_journey_heading_id ~ '-panel-' ~ loop.index0 %}
+        {% if not loop.first %}
+          <span class="investor-journey__stepper-line" aria-hidden="true"></span>
+        {% endif %}
+        <button
+          type="button"
+          class="investor-journey__stepper-tab{% if loop.first %} is-active{% endif %}"
+          id="{{ tid }}"
+          role="tab"
+          aria-selected="{{ loop.first ? 'true' : 'false' }}"
+          aria-controls="{{ pid }}"
+          tabindex="{{ loop.first ? '0' : '-1' }}"
+          data-ij-tab="{{ loop.index0 }}"
+        >
+          <span class="investor-journey__stepper-num">{{ loop.index }}</span>
+        </button>
+      {% endfor %}
+      <span class="investor-journey__stepper-arrow" aria-hidden="true"></span>
+    </div>
+
+    {# --- Columns: icon + title + body --- #}
+    <div class="investor-journey__columns">
+      {% for step in investor_journey_steps %}
+        <button
+          type="button"
+          class="investor-journey__col{% if loop.first %} is-active{% endif %}"
+          data-ij-col="{{ loop.index0 }}"
+          aria-label="{{ step.title ?: ('Step @n'|t({'@n': loop.index})) }}"
+        >
+          <div class="investor-journey__icon-wrap">
+            <div class="investor-journey__icon" aria-hidden="true">
+              {% if step.icon == 'building' %}
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                  <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9v12M15 9v12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              {% elseif step.icon == 'bank' %}
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                  <path d="M3 10h18M5 10V8l7-4 7 4v2M6 10v10M10 10v10M14 10v10M18 10v10M4 22h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8 14h8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                </svg>
+              {% elseif step.icon == 'briefcase' %}
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                  <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M4 9h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 12v3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                </svg>
+              {% else %}
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 2v6h6M8 13h8M8 17h8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                </svg>
+              {% endif %}
+            </div>
+          </div>
+          {% if step.title %}
+            <h3 class="investor-journey__step-title">{{ step.title }}</h3>
+          {% endif %}
+          {% if step.body %}
+            <div class="investor-journey__step-body">{{ step.body }}</div>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+
+    {% if investor_journey_has_platforms %}
+      <div class="investor-journey__platforms-block">
+        <p class="investor-journey__platforms-kicker">{{ 'Platforms used in this step'|t }}</p>
+        {% for step in investor_journey_steps %}
+          {% set pid = investor_journey_heading_id ~ '-panel-' ~ loop.index0 %}
+          {% set tid = investor_journey_heading_id ~ '-tab-' ~ loop.index0 %}
+          <div
+            class="investor-journey__platforms-panel"
+            id="{{ pid }}"
+            role="tabpanel"
+            aria-labelledby="{{ tid }}"
+            data-ij-panel="{{ loop.index0 }}"
+            {% if not loop.first %}hidden{% endif %}
+          >
+            {% if step.platforms is not empty %}
+              <div class="investor-journey__platforms-grid">
+                {% for p in step.platforms %}
+                  <a href="{{ p.url }}" class="investor-journey__platform-card">
+                    <span class="investor-journey__platform-card-media">
+                      {% if p.logo.src %}
+                        <img class="investor-journey__platform-logo" src="{{ p.logo.src }}" {% if p.logo.srcset %}srcset="{{ p.logo.srcset }}" {% endif %}{% if p.logo.width %}width="{{ p.logo.width }}" {% endif %}{% if p.logo.height %}height="{{ p.logo.height }}" {% endif %}alt="{{ (p.logo.alt|default(p.title))|e('html_attr') }}" loading="lazy" decoding="async">
+                      {% else %}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                          <path d="M3 21h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                          <path d="M7 9h2M7 13h2M11 9h2M11 13h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        </svg>
+                      {% endif %}
+                    </span>
+                    <span class="investor-journey__platform-card-main">
+                      <span class="investor-journey__platform-card-title">{{ p.title }}</span>
+                      {% if p.description %}
+                        <span class="investor-journey__platform-card-desc">{{ p.description }}</span>
+                      {% endif %}
+                    </span>
+                    <span class="investor-journey__platform-card-arrow" aria-hidden="true">→</span>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if investor_journey_cta is not empty %}
+    <div class="investor-journey__footer">
+      <a href="{{ investor_journey_cta.url }}" class="investor-journey__cta">{{ investor_journey_cta.title }}</a>
+    </div>
+  {% endif %}
+
+  {% if investor_journey_note %}
+    <p class="investor-journey__note">
+      <span class="investor-journey__note-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="investor-journey__note-text">{{ investor_journey_note }}</span>
+    </p>
+  {% endif %}
+</section>

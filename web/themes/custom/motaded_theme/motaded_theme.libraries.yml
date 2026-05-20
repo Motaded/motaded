@@ -16,11 +16,50 @@ fontawesome_async:
   js:
     js/load-fontawesome.js:
       preprocess: false
+      minified: false
       scope: footer
       attributes:
         defer: true
   dependencies:
     - core/drupal
+
+global_cta:
+  version: 20260515ctaminimal
+  css:
+    component:
+      css/components/global-cta-card.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+menu_main_nav:
+  version: 20260515nav992
+  css:
+    component:
+      css/components/menu-main-nav.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/site_header
+
+site_header:
+  version: 20260515mobiledrawer
+  css:
+    component:
+      css/components/site-header-layout.css: {}
+  js:
+    js/site-header-autohide.js: {}
+  dependencies:
+    - core/drupal
+
+mobile_header:
+  version: 20260515mobilemenu
+  css:
+    component:
+      css/components/mobile-header.css: {}
+  dependencies:
+    - motaded_theme/site_header
+    - motaded_theme/alpine
 
 base:
   version: VERSION
@@ -30,6 +69,10 @@ base:
         weight: -11
      css/language-switcher.css: {}
     component:
+      css/components/mot-design-tokens.css:
+        weight: -12
+      css/components/mot-ui-primitives.css:
+        weight: -11
       css/components/action-links.css:
         weight: -10
       css/components/breadcrumb.css:
@@ -62,6 +105,8 @@ base:
         weight: -10
       css/components/pager.css:
         weight: -10
+      css/components/partners-showcase.css:
+        weight: -10
       css/components/tabledrag.css:
         weight: -10
       css/components/tableselect.css:
@@ -76,6 +121,7 @@ base:
         weight: -8
   js:
     js/lang-switcher.js: {}
+    js/external-links.js: {}
   dependencies:
     - core/drupal
     - core/once
@@ -125,12 +171,110 @@ node:
     - core/drupal
     - core/once
 
-blog_listing:
+service_page_detail:
+  version: 20260519servicedocs
+  css:
+    component:
+      css/components/service-page-detail.css: {}
+  js:
+    js/service-page-detail-tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - motaded_theme/node
+
+platform_page:
+  version: 20260519miar3
+  css:
+    component:
+      css/components/platform-page.css: {}
+  dependencies:
+    - motaded_theme/node
+
+platform_node:
+  version: 20260514platformhero2
+  css:
+    component:
+      css/components/platform-node.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+
+sector_page:
   version: VERSION
+  css:
+    component:
+      css/components/sector-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+
+sector_trade_volume_chart:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-trade-volume-chart.css: {}
+  js:
+    js/sector-trade-volume-chart.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+sector_logistics_gdp_chart:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-logistics-gdp-chart.css: {}
+  js:
+    js/sector-logistics-gdp-chart.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+document_page:
+  version: 20260519docdetails
+  css:
+    component:
+      css/components/document-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+    - motaded_theme/hero_split_banner
+
+sector_card:
+  version: VERSION
+  css:
+    component:
+      css/components/sector-card.css: {}
+  dependencies:
+    - motaded_theme/base
+
+chamber_page:
+  version: 20260513typepanel
+  css:
+    component:
+      css/components/chamber-page.css: {}
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/node
+
+key_sectors:
+  version: VERSION
+  css:
+    component:
+      css/components/key-sectors.css: {}
+  dependencies:
+    - motaded_theme/base
+
+blog_listing:
+  version: 20260513blognewsheroart
   css:
     component:
       css/components/blog-listing.css:
         weight: -8
+  dependencies:
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner
 progress:
   version: VERSION
   css:
@@ -170,6 +314,20 @@ alpine:
     # Registers Alpine.data() in alpine:init; must run before alpine.min.js.
     js/alpine-components.js: { weight: -50 }
     js/alpine.min.js: { defer: true, weight: 0 }
+
+# Non-aggregated Alpine for setup cost calculator (avoids broken JS aggregates for anonymous).
+setup_cost_alpine:
+  version: 3.15.0
+  license:
+    name: MIT
+    url: https://github.com/alpinejs/alpine/blob/main/LICENSE.md
+    gpl-compatible: true
+  dependencies:
+    - core/drupal
+  js:
+    js/alpine-components.js: { weight: -50, preprocess: false, minified: false }
+    js/alpine.min.js: { defer: true, weight: 0, preprocess: false, minified: true }
+
 toc:
   js:
     js/toc.js: {}
@@ -179,7 +337,7 @@ search-page:
   js:
     js/content-search.js: {}
 services-directory:
-  version: VERSION
+  version: 20260520herortlorigin
   css:
     component:
       css/components/services-directory.css:
@@ -188,6 +346,20 @@ services-directory:
     js/services-directory-filters.js: {}
   dependencies:
     - motaded_theme/base
+    - motaded_theme/hero_split_banner
+    - core/drupal
+    - core/once
+
+sectors-directory:
+  version: 20260513sectorsrtlflipactions
+  css:
+    component:
+      css/components/sectors-directory.css:
+        weight: -8
+  js:
+    js/sectors-directory-filters.js: {}
+  dependencies:
+    - motaded_theme/services-directory
     - core/drupal
     - core/once
 
@@ -195,20 +367,289 @@ quick-links:
   js:
     js/quick-links.js: {}
 steps:
+  version: VERSION
+  css:
+    component:
+      css/components/steps-section.css: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
     - motaded_theme/alpine
+swiper:
+  remote: https://cdn.jsdelivr.net/npm/swiper@11
+  version: 11.2.8
+  license:
+    name: MIT
+    url: https://github.com/nolimits4web/swiper/blob/master/LICENSE
+    gpl-compatible: true
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css: { type: external, minified: true }
+  js:
+    https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js: { type: external, minified: true }
+
 partner-carousel:
+  version: 20260515partnersslider2
   js:
     js/partner-carousel.js: {}
   dependencies:
     - core/drupal
     - core/once
+    - motaded_theme/swiper
 news-carousel:
   dependencies:
     - motaded_theme/alpine
 
+latest_news_block:
+  version: VERSION
+  css:
+    component:
+      css/components/latest-news-block.css:
+        weight: -9
+
+services_home_block:
+  version: 20260515svchomerowlink
+  css:
+    component:
+      css/components/services-home-block.css:
+        weight: 50
+  js:
+    js/services-home-exposed.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+media_lead:
+  version: VERSION
+  css:
+    component:
+      css/components/media-lead.css:
+        weight: -9
+
+split_promo:
+  version: VERSION
+  css:
+    component:
+      css/components/split-promo.css:
+        weight: -9
+
+business_cost_estimation:
+  version: 20260512h
+  css:
+    component:
+      css/components/business-cost-estimation.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+promo_split:
+  version: 20260515g
+  css:
+    component:
+      css/components/promo-split.css:
+        weight: -9
+
+investor_journey:
+  version: VERSION
+  css:
+    component:
+      css/components/investor-journey.css:
+        weight: -9
+  js:
+    js/investor-journey.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+hero_split_banner:
+  version: VERSION
+  css:
+    component:
+      css/components/hero-split-banner.css:
+        weight: -9
+
+why_opportunities:
+  version: VERSION
+  css:
+    component:
+      css/components/why-opportunities.css:
+        weight: -9
+
+business_setup_section:
+  version: VERSION
+  css:
+    component:
+      css/components/business-setup-section.css:
+        weight: -9
+
 featured-contents:
+  css:
+    component:
+      css/components/featured-contents.css:
+        weight: -9
   dependencies:
     - motaded_theme/alpine
+
+event_page:
+  version: 20260519eventpast
+  css:
+    component:
+      css/components/event-page.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+events_directory:
+  version: 20260520eventsherortl6
+  css:
+    component:
+      css/components/events-directory.css:
+        weight: -9
+  js:
+    js/events-directory.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - motaded_theme/event_page
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner
+    - views/views.ajax
+
+insights_directory:
+  version: 20260518herortl
+  css:
+    component:
+      css/components/insights-directory.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/event_page
+    - views/views.ajax
+
+library_directory:
+  version: 20260520libherortl4
+  css:
+    component:
+      css/components/library-directory.css:
+        weight: -9
+  js:
+    js/library-exposed-ajax-submit-bridge.js: {}
+    js/library-home-ajax-links.js: {}
+  dependencies:
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner
+    - motaded_theme/event_page
+    - views/views.ajax
+    - core/drupal
+    - core/once
+
+homepage_ui_system:
+  version: 20260511ui
+  css:
+    component:
+      css/components/homepage-ui-system.css:
+        weight: -6
+  dependencies:
+    - motaded_theme/base
+
+library_home_block:
+  version: 20260518librowhit
+  css:
+    component:
+      css/components/library-home-block.css:
+        weight: 50
+  js:
+    js/library-exposed-ajax-submit-bridge.js: {}
+    js/library-home-scroll.js: {}
+    js/library-home-ajax-links.js: {}
+  dependencies:
+    - motaded_theme/base
+    - core/drupal
+    - core/once
+    - core/jquery
+    - views/views.ajax
+
+platforms_directory:
+  version: 20260519platformlogocenter
+  css:
+    component:
+      css/components/platforms-directory.css:
+        weight: -8
+  dependencies:
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner
+    - motaded_theme/event_page
+    - views/views.ajax
+
+events_home:
+  version: 20260505d
+  css:
+    component:
+      css/components/events-home.css:
+        weight: -9
+  js:
+    js/events-home.js: {}
+  dependencies:
+    - motaded_theme/event_page
+    - views/views.ajax
+
+insights-updates:
+  version: 20260511iu
+  css:
+    component:
+      css/components/insights-updates.css:
+        weight: -9
+  js:
+    js/insights-updates-tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+glance_block:
+  version: 20260520glancebodyp
+  css:
+    component:
+      css/components/glance-block.css:
+        weight: -9
+
+gateway_block:
+  version: VERSION
+  css:
+    component:
+      css/components/gateway-block.css:
+        weight: -9
+
+gateway_hub_block:
+  version: VERSION
+  css:
+    component:
+      css/components/gateway-hub-block.css:
+        weight: -9
+
+system_masthead:
+  version: VERSION
+  css:
+    component:
+      css/components/system-masthead.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+platforms_systems:
+  version: VERSION
+  css:
+    component:
+      css/components/platforms-systems.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+
+chambers_network:
+  version: 20260515chambercardlink
+  css:
+    component:
+      css/components/chambers-network.css:
+        weight: -9
+  dependencies:
+    - motaded_theme/base
+    - motaded_theme/services-directory
+    - motaded_theme/hero_split_banner

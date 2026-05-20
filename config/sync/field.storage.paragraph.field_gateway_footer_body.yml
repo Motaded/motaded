@@ -1,0 +1,19 @@
+uuid: 4d2d11c9-b0b0-4d4c-a4bd-9a1a2d8c6b0e
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_gateway_footer_body
+field_name: field_gateway_footer_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

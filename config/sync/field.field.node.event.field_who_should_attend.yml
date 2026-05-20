@@ -1,0 +1,27 @@
+uuid: c1a1a1a1-1111-4111-8111-111111111113
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_who_should_attend
+    - node.type.event
+    - paragraphs.paragraphs_type.event_content_item
+  module:
+    - entity_reference_revisions
+id: node.event.field_who_should_attend
+field_name: field_who_should_attend
+entity_type: node
+bundle: event
+label: 'Who should attend'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      event_content_item: event_content_item
+    negate: 0
+field_type: entity_reference_revisions

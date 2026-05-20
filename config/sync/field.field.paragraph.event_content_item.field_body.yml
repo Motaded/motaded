@@ -1,0 +1,28 @@
+uuid: bae5d34b-0fb7-43fe-ba40-08534897d5cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.event_content_item
+  module:
+    - text
+id: paragraph.event_content_item.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: event_content_item
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - plain_text
+    - basic_html
+    - full_html
+field_type: text_long

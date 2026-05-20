@@ -1,0 +1,232 @@
+{#
+/**
+ * @file
+ * Document — full page (split hero, download card, details grid, notice, related).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'doc-page',
+    'doc-page--redesign',
+    document_is_rtl ? 'doc-page--rtl',
+    not node.isPublished() ? 'node--unpublished',
+  ]
+%}
+{% set doc_t = {'langcode': document_langcode|default('en')} %}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="services-page-hero services-page-hero--split-banner doc-page__hero" aria-labelledby="doc-page-title">
+    <div class="services-page-hero__bg" aria-hidden="true">
+      <div class="services-page-hero__visual-base"></div>
+      <div class="services-page-hero__visual-photo doc-page__hero-photo"></div>
+      <div class="services-page-hero__visual-arcs"></div>
+      <div class="services-page-hero__visual-semi"></div>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--tr"></span>
+      <span class="services-page-hero__visual-dots services-page-hero__visual-dots--br"></span>
+    </div>
+    <div class="services-page-hero__split">
+      <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
+        <div class="services-page-hero__copy-inner hero-split-banner__copy">
+          <nav class="doc-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t({}, doc_t) }}">
+            <ol class="doc-page__breadcrumb-list">
+              <li class="doc-page__breadcrumb-item"><a class="doc-page__breadcrumb-link" href="{{ path('<front>') }}">{{ 'Home'|t({}, doc_t) }}</a></li>
+              <li class="doc-page__breadcrumb-sep" aria-hidden="true">/</li>
+              <li class="doc-page__breadcrumb-item"><a class="doc-page__breadcrumb-link" href="{{ document_library_url|default('/library') }}">{{ 'Library'|t({}, doc_t) }}</a></li>
+              <li class="doc-page__breadcrumb-sep" aria-hidden="true">/</li>
+              <li class="doc-page__breadcrumb-item doc-page__breadcrumb-item--current" aria-current="page">
+                <span class="doc-page__breadcrumb-current">{{ document_breadcrumb_title }}</span>
+              </li>
+            </ol>
+          </nav>
+
+          {% if document_type_label or document_category_label %}
+            <div class="doc-page__chips">
+              {% if document_type_label %}
+                <span class="doc-page__chip">{{ document_type_label }}</span>
+              {% endif %}
+              {% if document_category_label %}
+                <span class="doc-page__chip">{{ document_category_label }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if page and label %}
+            <h1{{ title_attributes.addClass('doc-page__title').setAttribute('id', 'doc-page-title') }}>{{ label }}</h1>
+          {% endif %}
+
+          {% if content.field_short_description|render|trim is not empty %}
+            <div class="doc-page__lead">{{ content.field_short_description }}</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="services-page-hero__col services-page-hero__col--visual" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <div class="doc-page__shell">
+    <div class="doc-page__inner">
+      {% if document_file_url %}
+        <section class="doc-page__download" aria-labelledby="doc-page-download-heading">
+          <h2 id="doc-page-download-heading" class="visually-hidden">{{ 'Document file'|t({}, doc_t) }}</h2>
+          <div class="doc-page__download-card">
+            <div class="doc-page__download-icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="doc-page__download-body">
+              <p class="doc-page__download-kicker">{{ document_download_kicker|default('Download'|t({}, doc_t)) }}</p>
+              <p class="doc-page__download-filename">{{ document_file_name }}</p>
+              <ul class="doc-page__download-meta" aria-label="{{ 'File information'|t({}, doc_t) }}">
+                {% if document_file_mime_label %}
+                  <li class="doc-page__download-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    <span>{{ document_file_mime_label }}</span>
+                  </li>
+                {% endif %}
+                {% if document_file_size %}
+                  <li class="doc-page__download-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span>{{ document_file_size }}</span>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+            <div class="doc-page__download-actions">
+              <a href="{{ document_file_url|e('html_attr') }}" class="doc-page__download-btn doc-page__download-btn--view" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" stroke="currentColor" stroke-width="1.75"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.75"/></svg>
+                <span>{{ 'View'|t({}, doc_t) }}</span>
+              </a>
+              <a href="{{ document_file_url|e('html_attr') }}" class="doc-page__download-btn doc-page__download-btn--download" download rel="noopener noreferrer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12M8 11l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>{{ 'Download'|t({}, doc_t) }}</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      {% endif %}
+
+      {% if document_meta_items is not empty %}
+        <section class="doc-page__details" aria-labelledby="doc-page-details-heading">
+          <h2 id="doc-page-details-heading" class="doc-page__section-title">{{ 'Document details'|t({}, doc_t) }}</h2>
+          <div class="doc-page__details-grid">
+            {% for item in document_meta_items %}
+              <div class="doc-page__detail{{ item.links is defined and item.links ? ' doc-page__detail--links' : '' }}">
+                <span class="doc-page__detail-icon" aria-hidden="true">
+                    {% if item.icon == 'globe' %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18M12 3c2.5 2.8 4 6 4 9s-1.5 6.2-4 9M12 3c-2.5 2.8-4 6-4 9s1.5 6.2 4 9" stroke="currentColor" stroke-width="1.5"/></svg>
+                    {% elseif item.icon == 'calendar' %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    {% elseif item.icon == 'link' %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.41a5 5 0 1 0 7.07 7.07L14 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    {% elseif item.icon == 'sector' %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20V10l8-6 8 6v10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    {% elseif item.icon == 'service' %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    {% else %}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                    {% endif %}
+                </span>
+                <div class="doc-page__detail-body">
+                  <p class="doc-page__detail-label">{{ item.label }}</p>
+                  <div class="doc-page__detail-value">
+                  {% if item.links is defined and item.links %}
+                    <ul class="doc-page__detail-links">
+                      {% for link in item.links %}
+                        <li><a href="{{ link.url|e('html_attr') }}">{{ link.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  {% elseif item.url %}
+                    <a href="{{ item.url|e('html_attr') }}" class="doc-page__detail-link" target="_blank" rel="noopener noreferrer">
+                      <span>{{ item.value }}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                  {% else %}
+                    {{ item.value }}
+                  {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      <aside class="doc-page__notice" aria-labelledby="doc-page-notice-heading">
+        <div class="doc-page__notice-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="doc-page__notice-copy">
+          <h2 id="doc-page-notice-heading" class="doc-page__notice-title">{{ 'Important notice'|t({}, doc_t) }}</h2>
+          <p class="doc-page__notice-text">{{ 'This resource is for general guidance. Always confirm current requirements with the official authority.'|t({}, doc_t) }}</p>
+        </div>
+      </aside>
+
+      {% if document_related is not empty %}
+        <section class="doc-page__related" aria-labelledby="doc-page-related-heading">
+          <div class="doc-page__related-head">
+            <h2 id="doc-page-related-heading" class="doc-page__section-title">{{ 'More resources you might find useful'|t({}, doc_t) }}</h2>
+            <a class="doc-page__related-all" href="{{ document_library_url|default('/library') }}">{{ 'View all resources'|t({}, doc_t) }}<span aria-hidden="true"> {{ document_related_arrow|default('→') }}</span></a>
+          </div>
+          <ul class="doc-page__related-grid">
+            {% for card in document_related %}
+              <li class="doc-page__related-item">
+                <a class="doc-page__resource-card" href="{{ card.url|e('html_attr') }}">
+                  <span class="doc-page__resource-card-top">
+                    <span class="doc-page__resource-icon" aria-hidden="true">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    </span>
+                    {% if card.category_label %}
+                      <span class="doc-page__resource-tag">{{ card.category_label }}</span>
+                    {% endif %}
+                  </span>
+                  <span class="doc-page__resource-title">{{ card.title }}</span>
+                  {% if card.summary %}
+                    <span class="doc-page__resource-summary">{{ card.summary }}</span>
+                  {% endif %}
+                  {% if card.mime_label or card.size_label %}
+                    <span class="doc-page__resource-file">
+                      {% if card.mime_label %}{{ card.mime_label }}{% endif %}
+                      {% if card.mime_label and card.size_label %} • {% endif %}
+                      {% if card.size_label %}{{ card.size_label }}{% endif %}
+                    </span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+    </div>
+  </div>
+
+  {% set doc_excluded = [
+    'field_document_type',
+    'field_category',
+    'field_short_description',
+    'field_document',
+    'field_country',
+    'field_year',
+    'field_source_link',
+    'field_sector_pages',
+    'field_services',
+    'field_taxonomy',
+    'field_platforms',
+    'links',
+  ] %}
+  {% set doc_rest = content|without(doc_excluded) %}
+  {% if doc_rest|render|trim is not empty %}
+    <div{{ content_attributes.addClass('node__content', 'doc-page__rest') }}>
+      {{ doc_rest }}
+    </div>
+  {% endif %}
+
+  {% if content.links %}
+    <footer class="doc-page__admin-links">
+      {{ content.links }}
+    </footer>
+  {% endif %}
+</article>

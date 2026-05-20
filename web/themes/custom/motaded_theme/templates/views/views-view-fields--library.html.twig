@@ -1,0 +1,40 @@
+{#
+/**
+ * Library row: full card links to the document node (canonical URL).
+ */
+#}
+{% if library_row_node_url %}
+  <a href="{{ library_row_node_url|e('html_attr') }}" class="library-row library-row--hit rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-primary-200 hover:shadow-md">
+    <div class="library-row__main min-w-0">
+      <div class="library-row__heading flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <h3 class="library-row__title m-0 text-base font-semibold leading-snug text-slate-900">
+          {{ library_row_title }}
+        </h3>
+        {% if library_row_category_label %}
+          <span class="library-row__badge inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-900">{{ library_row_category_label }}</span>
+        {% elseif fields.field_category.content %}
+          <span class="library-row__badge inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-900">{{ fields.field_category.content }}</span>
+        {% endif %}
+      </div>
+
+      {% if fields.field_short_description.content or library_row_file_url or fields.field_document.content %}
+        <div class="library-row__summary-row">
+          {% if fields.field_short_description.content %}
+            <div class="library-row__summary text-sm leading-snug text-slate-600">{{ fields.field_short_description.content }}</div>
+          {% endif %}
+          {% if library_row_file_url or fields.field_document.content %}
+            <div class="library-row__asset">
+              <span class="library-row__cta">{{ library_row_file_label|default('Open document'|t) }}</span>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </a>
+{% else %}
+  <article class="library-row rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div class="library-row__main min-w-0">
+      {{ fields.title.content }}
+    </div>
+  </article>
+{% endif %}

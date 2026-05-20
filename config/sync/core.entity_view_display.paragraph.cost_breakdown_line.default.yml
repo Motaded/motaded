@@ -1,0 +1,30 @@
+uuid: e9f0a1b2-b2b2-4b2b-8b2b-b2b2b2b2b2b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_max
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_min
+    - field.field.paragraph.cost_breakdown_line.field_bce_line_percentage
+    - field.field.paragraph.cost_breakdown_line.field_bce_row_key
+    - field.field.paragraph.cost_breakdown_line.field_title
+    - paragraphs.paragraphs_type.cost_breakdown_line
+id: paragraph.cost_breakdown_line.default
+targetEntityType: paragraph
+bundle: cost_breakdown_line
+mode: default
+content:
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_bce_line_max: true
+  field_bce_line_min: true
+  field_bce_line_percentage: true
+  field_bce_row_key: true
+  search_api_excerpt: true

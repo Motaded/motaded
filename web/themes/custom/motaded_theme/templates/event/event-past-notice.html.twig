@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Past event notice — replaces registration UI when the event has ended.
+ *
+ * @var bool compact Sidebar / compact layout.
+ * @var array event_lang Translation options (langcode).
+ * @var string event_events_directory_url Events directory URL.
+ */
+#}
+{% set t_opts = event_lang|default({}) %}
+<div class="event-page__past-notice{% if compact %} event-page__past-notice--compact{% endif %}" role="status">
+  <p class="event-page__past-notice-eyebrow">{{ 'Event ended'|t({}, t_opts) }}</p>
+  {% if compact %}
+    <p class="event-page__past-notice-title">{{ 'This event has ended'|t({}, t_opts) }}</p>
+  {% else %}
+    <h2 id="event-help-heading" class="event-page__past-notice-title event-page__section-title">{{ 'This event has ended'|t({}, t_opts) }}</h2>
+  {% endif %}
+  {% if compact %}
+    <p class="event-page__past-notice-lead">
+      {{ 'This event has already taken place. Registration is closed.'|t({}, t_opts) }}
+    </p>
+  {% else %}
+    <p class="event-page__past-notice-lead">
+      {{ 'Registration for this event is now closed. The event has already taken place, but you can still explore event details and related resources below.'|t({}, t_opts) }}
+    </p>
+    <p class="event-page__past-notice-body">
+      {{ 'Discover upcoming business conferences, exhibitions, forums, and workshops across Saudi Arabia and the GCC on our events calendar.'|t({}, t_opts) }}
+    </p>
+  {% endif %}
+  <p class="event-page__past-notice-cta-wrap">
+    <a class="event-page__btn event-page__btn--primary event-page__past-notice-cta" href="{{ event_events_directory_url|e('html_attr') }}">
+      {{ 'Browse upcoming events'|t({}, t_opts) }}
+    </a>
+  </p>
+</div>

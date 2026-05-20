@@ -1,0 +1,6 @@
+services:
+  motaded_setup_cost.calculator:
+    class: Drupal\motaded_setup_cost\Calculator\SetupCostCalculator
+  motaded_setup_cost.data_builder:
+    class: Drupal\motaded_setup_cost\SetupCostDataBuilder
+    arguments: ['@motaded_setup_cost.calculator', '@entity_type.manager', '@config.factory', '@language_manager']

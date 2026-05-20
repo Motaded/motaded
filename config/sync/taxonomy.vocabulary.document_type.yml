@@ -1,0 +1,9 @@
+uuid: a1000002-1001-4000-8000-000000000001
+langcode: en
+status: true
+dependencies: {  }
+name: 'Document type'
+vid: document_type
+description: 'Template, Form, Guide, Regulation, Law, Policy — distinguishes Library vs Regulations-style listings via Views.'
+weight: 0
+new_revision: false

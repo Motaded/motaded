@@ -1,0 +1,23 @@
+uuid: 8f31a2b0-0c00-4000-8000-000000000029
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_source_link
+    - node.type.market_insight
+  module:
+    - link
+id: node.market_insight.field_source_link
+field_name: field_source_link
+entity_type: node
+bundle: market_insight
+label: 'Source link'
+description: 'Optional URL to the source.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

@@ -1,0 +1,29 @@
+uuid: c1a1a1a1-1111-4111-8111-111111111103
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category
+    - node.type.event
+    - taxonomy.vocabulary.taxonomy
+id: node.event.field_category
+field_name: field_category
+entity_type: node
+bundle: event
+label: Category
+description: 'Deprecated. Use field_sector_pages (sector_page nodes). Cleared by motaded_custom_update_10036().'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      taxonomy: taxonomy
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

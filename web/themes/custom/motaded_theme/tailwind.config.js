@@ -18,6 +18,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        /* Desktop header + horizontal nav from 992px; ≤991px = mobile drawer. */
+        "nav-desktop": "992px",
+      },
       colors: {
         primary: {
           50: "#F0F7F4",

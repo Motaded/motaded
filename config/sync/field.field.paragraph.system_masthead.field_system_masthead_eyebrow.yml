@@ -1,0 +1,19 @@
+uuid: 162f5844-2fe6-4b2f-97e9-d462e40790ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_system_masthead_eyebrow
+    - paragraphs.paragraphs_type.system_masthead
+id: paragraph.system_masthead.field_system_masthead_eyebrow
+field_name: field_system_masthead_eyebrow
+entity_type: paragraph
+bundle: system_masthead
+label: Eyebrow
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

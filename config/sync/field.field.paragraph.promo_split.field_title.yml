@@ -1,0 +1,19 @@
+uuid: b51a83c5-d10c-408b-9747-06f5d98ed91a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.promo_split
+id: paragraph.promo_split.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: promo_split
+label: Title
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

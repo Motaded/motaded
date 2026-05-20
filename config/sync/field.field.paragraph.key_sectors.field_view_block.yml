@@ -1,0 +1,42 @@
+uuid: 531468eb-147d-4154-92e4-78febac69a5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_view_block
+    - paragraphs.paragraphs_type.key_sectors
+  module:
+    - viewsreference
+id: paragraph.key_sectors.field_view_block
+field_name: field_view_block
+entity_type: paragraph
+bundle: key_sectors
+label: 'Sectors cards view'
+description: 'Select “Sectors cards” → Homepage cards (block display).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:view'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+  plugin_types:
+    block: block
+  preselect_views:
+    chambers: chambers
+    events: events
+    news: news
+    partners: partners
+    related_similar: related_similar
+    services: services
+    sectors_card_strip: sectors_card_strip
+  enabled_settings:
+    argument: argument
+    header: header
+    limit: limit
+    offset: offset
+    title: title
+    pager: pager
+field_type: viewsreference

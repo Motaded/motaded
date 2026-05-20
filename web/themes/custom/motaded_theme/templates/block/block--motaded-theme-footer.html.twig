@@ -9,7 +9,7 @@
     'menu--footer',
   ]
 %}
-{% set heading_id = attributes.id ~ '-menu'|clean_id %}
+{% set heading_id = (attributes.id ~ '-menu')|clean_id %}
 <div class="hidden md:block text-white">
   <nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('role', 'aria-labelledby') }}>
     {{ title_prefix }}
@@ -37,7 +37,7 @@
       <div class="mb-4">{{ footer_cta_block }}</div>
     {% endif %}
 
-    <p class="text-md font-semibold block mb-3 leading-[1.6]">
+    <p id="{{ heading_id }}" class="text-md font-semibold block mb-3 leading-[1.6]">
       {{ configuration.label }}
     </p>
     {{ title_suffix }}

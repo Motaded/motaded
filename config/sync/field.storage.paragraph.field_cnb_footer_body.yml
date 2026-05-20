@@ -1,0 +1,19 @@
+uuid: 6fa4a7c1-eebf-4269-8173-24af8c364836
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_cnb_footer_body
+field_name: field_cnb_footer_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

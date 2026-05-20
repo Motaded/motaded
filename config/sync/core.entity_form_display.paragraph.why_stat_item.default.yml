@@ -1,0 +1,44 @@
+uuid: a1111111-1111-4111-8111-111111110054
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.why_stat_item.field_why_stat_icon
+    - field.field.paragraph.why_stat_item.field_why_stat_label
+    - field.field.paragraph.why_stat_item.field_why_stat_value
+    - paragraphs.paragraphs_type.why_stat_item
+id: paragraph.why_stat_item.default
+targetEntityType: paragraph
+bundle: why_stat_item
+mode: default
+content:
+  field_why_stat_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_why_stat_label:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_why_stat_value:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

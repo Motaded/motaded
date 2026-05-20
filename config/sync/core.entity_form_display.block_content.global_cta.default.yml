@@ -5,6 +5,9 @@ dependencies:
   config:
     - block_content.type.global_cta
     - field.field.block_content.global_cta.field_email_link
+    - field.field.block_content.global_cta.field_global_cta_intro
+    - field.field.block_content.global_cta.field_global_cta_primary
+    - field.field.block_content.global_cta.field_global_cta_secondary
     - field.field.block_content.global_cta.field_phone
     - field.field.block_content.global_cta.field_show_title_on_button
     - field.field.block_content.global_cta.field_subtitle
@@ -21,6 +24,30 @@ content:
   field_email_link:
     type: link_default
     weight: 27
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_global_cta_intro:
+    type: text_textarea
+    weight: 32
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_global_cta_primary:
+    type: link_default
+    weight: 33
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_global_cta_secondary:
+    type: link_default
+    weight: 34
     region: content
     settings:
       placeholder_url: ''

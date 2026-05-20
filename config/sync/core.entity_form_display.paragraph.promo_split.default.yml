@@ -1,0 +1,89 @@
+uuid: c1000001-0001-4001-8001-000000000001
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.promo_split.field_body
+    - field.field.paragraph.promo_split.field_link
+    - field.field.paragraph.promo_split.field_media
+    - field.field.paragraph.promo_split.field_promo_split_item
+    - field.field.paragraph.promo_split.field_promo_split_list_style
+    - field.field.paragraph.promo_split.field_promo_split_logo
+    - field.field.paragraph.promo_split.field_promo_split_side
+    - field.field.paragraph.promo_split.field_title
+    - paragraphs.paragraphs_type.promo_split
+  module:
+    - link
+    - media_library
+    - text
+id: paragraph.promo_split.default
+targetEntityType: paragraph
+bundle: promo_split
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_promo_split_item:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_promo_split_list_style:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_promo_split_logo:
+    type: media_library_widget
+    weight: 7
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_promo_split_side:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

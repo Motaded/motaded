@@ -1,0 +1,7 @@
+_core:
+  default_config_hash: yaLe_v9MfNSzRTFPDckZGKhLyE19U4aymPSPcxAQqQc
+policy: per_language
+strip_if_redirect: true
+strip_if_missing_translation: true
+overrides: {  }
+strip_all_if_any_bad: false

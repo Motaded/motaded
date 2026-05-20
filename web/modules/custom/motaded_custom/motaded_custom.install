@@ -6,6 +6,200 @@
  */
 
 /**
+ * Defines tables for normalized market indicators (World Bank + manual).
+ */
+function motaded_custom_schema(): array {
+  $schema['market_indicators'] = [
+    'description' => 'Latest normalized values per indicator and year.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'label' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'value_raw' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => FALSE,
+      ],
+      'value_display' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'period' => [
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+      ],
+      'period_type' => [
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => 'annual',
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'source_url' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'provider' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'indicator_year' => ['indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'indicator_key' => ['indicator_key'],
+    ],
+  ];
+
+  $schema['market_indicator_series'] = [
+    'description' => 'Time series points for charts (e.g. GDP growth).',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'value' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'indicator_series_year' => ['indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'indicator_key' => ['indicator_key'],
+    ],
+  ];
+
+  $schema['sector_indicator_points'] = [
+    'description' => 'World Bank (and future manual) time series per sector and indicator.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'sector_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'indicator_key' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'wb_code' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'year' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+      ],
+      'value_raw' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => FALSE,
+      ],
+      'value_display' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ],
+      'source_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'source_url' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ],
+      'provider' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'sector_indicator_year' => ['sector_key', 'indicator_key', 'year'],
+    ],
+    'indexes' => [
+      'sector_indicator' => ['sector_key', 'indicator_key'],
+      'sector_key' => ['sector_key'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
  * Adds Arabic translations for taxonomy terms in the "beneficiaries" vocabulary.
  *
  * Terms are content (not config-exportable by default). Keeping translations in
@@ -159,3 +353,622 @@ function motaded_custom_update_10004(): void {
     }
   }
 }
+
+/**
+ * Seeds default terms for Document type and Document category vocabularies.
+ */
+function motaded_custom_update_10005(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if ($voc_storage->load('document_type')) {
+    _motaded_custom_install_ensure_taxonomy_terms('document_type', [
+      'Template',
+      'Form',
+      'Guide',
+      'Regulation',
+      'Law',
+      'Policy',
+    ]);
+  }
+
+  if ($voc_storage->load('document_category')) {
+    _motaded_custom_install_ensure_taxonomy_terms('document_category', [
+      'Business Setup',
+      'HR',
+      'Tax',
+      'Compliance',
+      'Licensing',
+    ]);
+  }
+}
+
+/**
+ * Seeds default terms for City and Country vocabularies (events UX filters).
+ */
+function motaded_custom_update_10006(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if ($voc_storage->load('city')) {
+    _motaded_custom_install_ensure_taxonomy_terms('city', [
+      'Riyadh',
+      'Jeddah',
+      'Dammam',
+      'Dubai',
+    ]);
+  }
+  if ($voc_storage->load('country')) {
+    _motaded_custom_install_ensure_taxonomy_terms('country', [
+      'Saudi Arabia',
+      'United Arab Emirates',
+    ]);
+  }
+}
+
+/**
+ * Creates taxonomy terms when missing (matches by exact default label).
+ *
+ * @param string $vid
+ *   Vocabulary ID.
+ * @param array<int, string> $names
+ *   Term names in display order (weight).
+ */
+function _motaded_custom_install_ensure_taxonomy_terms(string $vid, array $names): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $weight = 0;
+  foreach ($names as $name) {
+    $name = trim($name);
+    if ($name === '') {
+      continue;
+    }
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if ($ids) {
+      $weight++;
+      continue;
+    }
+
+    $term = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => $vid,
+      'name' => $name,
+      'weight' => $weight,
+      'langcode' => 'en',
+    ]);
+    $term->save();
+    $weight++;
+  }
+}
+
+/**
+ * Creates market indicator tables and default config for World Bank import (v1).
+ */
+function motaded_custom_update_10007(): void {
+  $db_schema = \Drupal::database()->schema();
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'install');
+  if (!function_exists('motaded_custom_schema')) {
+    return;
+  }
+  $schema = motaded_custom_schema();
+  foreach (['market_indicators', 'market_indicator_series'] as $table) {
+    if (!$db_schema->tableExists($table)) {
+      $db_schema->createTable($table, $schema[$table]);
+    }
+  }
+
+  $config = \Drupal::configFactory()->get('motaded_custom.market_indicators');
+  if ($config->isNew()) {
+    $module_path = \Drupal::service('extension.list.module')->getPath('motaded_custom');
+    $path = $module_path . '/config/install/motaded_custom.market_indicators.yml';
+    if (is_readable($path)) {
+      $raw = file_get_contents($path);
+      if ($raw !== FALSE) {
+        $data = \Drupal\Component\Serialization\Yaml::decode($raw);
+        if (is_array($data)) {
+          \Drupal::configFactory()->getEditable('motaded_custom.market_indicators')->setData($data)->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Creates sector_indicator_points table for World Bank sector card import (v1).
+ */
+function motaded_custom_update_10008(): void {
+  $db_schema = \Drupal::database()->schema();
+  \Drupal::moduleHandler()->loadInclude('motaded_custom', 'install');
+  if (!function_exists('motaded_custom_schema')) {
+    return;
+  }
+  $schema = motaded_custom_schema();
+  $table = 'sector_indicator_points';
+  if (!$db_schema->tableExists($table) && isset($schema[$table])) {
+    $db_schema->createTable($table, $schema[$table]);
+  }
+}
+
+/**
+ * Seeds library_section terms and field_library_section on document_type terms.
+ *
+ * Nodes do not store this value: they reference document_type, which now points
+ * to a library_section term (Templates vs Regulations).
+ */
+function motaded_custom_update_10009(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('taxonomy')) {
+    return;
+  }
+  $voc_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if (!$voc_storage->load('library_section') || !$voc_storage->load('document_type')) {
+    return;
+  }
+
+  _motaded_custom_install_ensure_taxonomy_terms('library_section', [
+    'Templates',
+    'Regulations',
+  ]);
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $tid_by_name = static function (string $vid, string $name) use ($term_storage): ?int {
+    $name = trim($name);
+    if ($name === '') {
+      return NULL;
+    }
+    $ids = $term_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if (!$ids) {
+      return NULL;
+    }
+    return (int) reset($ids);
+  };
+
+  $templates_section_tid = $tid_by_name('library_section', 'Templates');
+  $regulations_section_tid = $tid_by_name('library_section', 'Regulations');
+  if ($templates_section_tid === NULL || $regulations_section_tid === NULL) {
+    return;
+  }
+
+  $map_templates = ['Template', 'Form', 'Guide'];
+  $map_regulations = ['Regulation', 'Law', 'Policy'];
+
+  foreach ($map_templates as $type_name) {
+    $tid = $tid_by_name('document_type', $type_name);
+    if ($tid === NULL) {
+      continue;
+    }
+    $term = $term_storage->load($tid);
+    if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+      continue;
+    }
+    $term->set('field_library_section', $templates_section_tid);
+    $term->setNewRevision(FALSE);
+    $term->save();
+  }
+
+  foreach ($map_regulations as $type_name) {
+    $tid = $tid_by_name('document_type', $type_name);
+    if ($tid === NULL) {
+      continue;
+    }
+    $term = $term_storage->load($tid);
+    if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+      continue;
+    }
+    $term->set('field_library_section', $regulations_section_tid);
+    $term->setNewRevision(FALSE);
+    $term->save();
+  }
+
+  $all_doc_type_ids = $term_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'document_type')
+    ->execute();
+  if (is_array($all_doc_type_ids)) {
+    foreach ($term_storage->loadMultiple($all_doc_type_ids) as $term) {
+      if (!$term instanceof \Drupal\taxonomy\TermInterface || !$term->hasField('field_library_section')) {
+        continue;
+      }
+      if (!$term->get('field_library_section')->isEmpty()) {
+        continue;
+      }
+      $term->set('field_library_section', $templates_section_tid);
+      $term->setNewRevision(FALSE);
+      $term->save();
+    }
+  }
+}
+
+/**
+ * Imports /translations/motaded-service-ui.ar.po into the locale DB.
+ *
+ * Shared helper used by individual `_update_NNNN` hooks below. Drupal does not
+ * pick up changes to PO files automatically — Gettext::fileToDatabase() writes
+ * msgid/msgstr pairs into locales_source/locales_target. We only overwrite
+ * non-customized translations to preserve any manual edits made via
+ * Configuration → Translate interface.
+ */
+function _motaded_custom_import_ar_locale_po(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('locale')) {
+    return;
+  }
+  $absolute_path = \Drupal::root() . '/../translations/motaded-service-ui.ar.po';
+  if (!is_file($absolute_path) || !is_readable($absolute_path)) {
+    \Drupal::logger('motaded_custom')->warning('Skipping locale import: @path not readable.', ['@path' => $absolute_path]);
+    return;
+  }
+  $languages = \Drupal::languageManager()->getLanguages();
+  if (!isset($languages['ar'])) {
+    \Drupal::logger('motaded_custom')->notice('Skipping locale import: Arabic language is not enabled.');
+    return;
+  }
+
+  $file = (object) [
+    'filename' => basename($absolute_path),
+    'uri' => $absolute_path,
+    'langcode' => 'ar',
+    'timestamp' => filemtime($absolute_path) ?: \Drupal::time()->getRequestTime(),
+  ];
+
+  $options = [
+    'customized' => 0,
+    'overwrite_options' => [
+      'not_customized' => TRUE,
+      'customized' => FALSE,
+    ],
+  ];
+
+  try {
+    \Drupal\locale\Gettext::fileToDatabase($file, $options);
+    \Drupal::logger('motaded_custom')->info('Imported Arabic locale file @file.', ['@file' => $file->filename]);
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('motaded_custom')->error('Failed to import @file: @msg', [
+      '@file' => $file->filename,
+      '@msg' => $e->getMessage(),
+    ]);
+  }
+}
+
+/**
+ * Initial Arabic UI strings import (hero copy, quick links, aria labels).
+ *
+ * Re-run manually: drush ev '\Drupal::moduleHandler()->loadInclude("motaded_custom", "install"); _motaded_custom_import_ar_locale_po();' && drush cr
+ */
+function motaded_custom_update_10012(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding /platforms filter placeholders.
+ */
+function motaded_custom_update_10013(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after the full audit of /services, /sectors,
+ * /platforms (card CTAs, sidebar accordion summaries, aria labels, stats).
+ */
+function motaded_custom_update_10014(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding directory form / empty-state labels
+ * and global CTA copy used on /services, /sectors and /platforms.
+ */
+function motaded_custom_update_10015(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding the split-banner hero copy and
+ * quick-link labels used on the /events listing page.
+ */
+function motaded_custom_update_10016(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding hero/quick-link/filter labels
+ * for /chambers and /library, plus runtime form_alter placeholders.
+ */
+function motaded_custom_update_10017(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after moving library tab descriptions from CSS
+ * into real markup and adding missing events/library/webform labels.
+ */
+function motaded_custom_update_10018(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after adding hero copy, quick-link labels,
+ * and exposed-filter strings for /blog (view: news, display: page_1) and
+ * /news (view: news, display: page_2). Aligns with new metatag titles and
+ * descriptions populated for those displays and ensures Arabic search
+ * placeholders/buttons load at render time on Arabic listing pages.
+ */
+function motaded_custom_update_10019(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings after platform node labels, glance taxonomy keys,
+ * and field_source_text glossary entries were added to motaded-service-ui.ar.po.
+ */
+function motaded_custom_update_10020(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Enables homepage paragraph translation, applies node 374 Arabic copy, re-imports PO.
+ */
+function motaded_custom_update_10021(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_node_374_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Re-imports Arabic UI strings for investor journey labels.
+ */
+function motaded_custom_update_10022(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Homepage AR: sector/event content translations + UI strings for cards/calendar.
+ */
+function motaded_custom_update_10023(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_homepage_sectors_events_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Applies Arabic translations for all taxonomy terms (full site vocabulary map).
+ */
+function motaded_custom_update_10024(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_taxonomy_terms_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Enable document content translation and apply Arabic node translations.
+ */
+function motaded_custom_update_10025(): void {
+  $config_factory = \Drupal::configFactory();
+  $settings = $config_factory->getEditable('language.content_settings.node.document');
+  if ($settings->isNew()) {
+    $settings->set('id', 'node.document');
+    $settings->set('target_entity_type_id', 'node');
+    $settings->set('target_bundle', 'document');
+    $settings->set('default_langcode', 'site_default');
+    $settings->set('language_alterable', TRUE);
+  }
+  $settings->set('third_party_settings', [
+    'content_translation' => [
+      'enabled' => TRUE,
+      'bundle_settings' => [
+        'untranslatable_fields_hide' => '0',
+      ],
+    ],
+  ]);
+  $settings->save(TRUE);
+
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_documents_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Re-imports Arabic UI strings for document full page labels and buttons.
+ */
+function motaded_custom_update_10026(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Applies Arabic translations for menu_link_content (header, footer, quick links).
+ */
+function motaded_custom_update_10027(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_menu_links_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Applies Arabic translations for sector taxonomy and sector_page nodes.
+ */
+function motaded_custom_update_10028(): void {
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_sectors_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Re-imports Arabic UI strings for sector page labels, KPIs, and charts.
+ */
+function motaded_custom_update_10029(): void {
+  _motaded_custom_import_ar_locale_po();
+}
+
+/**
+ * Imports event registration help webform + Arabic translation.
+ */
+function motaded_custom_update_10031(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'webform.webform.event_registration_help';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+  $lang_sync_dir = $sync_dir . '/language/ar';
+  if (is_dir($lang_sync_dir)) {
+    $lang_sync = new \Drupal\Core\Config\FileStorage($lang_sync_dir);
+    $lang_data = $lang_sync->read($name);
+    if (is_array($lang_data)) {
+      \Drupal::languageManager()->getLanguageConfigOverrideStorage('ar')->write($name, $lang_data);
+    }
+  }
+}
+
+/**
+ * Arabic sector_page metatag defaults + AR field_meta_tags on sector nodes.
+ */
+function motaded_custom_update_10032(): void {
+  $lang_sync_dir = dirname(\Drupal::root()) . '/config/sync/language/ar';
+  if (is_dir($lang_sync_dir)) {
+    $lang_sync = new \Drupal\Core\Config\FileStorage($lang_sync_dir);
+    $name = 'metatag.metatag_defaults.node__sector_page';
+    $lang_data = $lang_sync->read($name);
+    if (is_array($lang_data)) {
+      \Drupal::languageManager()->getLanguageConfigOverrideStorage('ar')->write($name, $lang_data);
+    }
+  }
+  _motaded_custom_import_ar_locale_po();
+  $script = \Drupal::root() . '/modules/custom/motaded_custom/scripts/translate_sectors_ar.php';
+  if (is_readable($script)) {
+    require $script;
+  }
+}
+
+/**
+ * Imports events view: language filter on homepage calendar block.
+ */
+function motaded_custom_update_10033(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.events';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Homepage AR UI strings + library view rendering language for current interface.
+ */
+function motaded_custom_update_10034(): void {
+  _motaded_custom_import_ar_locale_po();
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.library';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Apply SEO meta keywords to events, documents, and sector_page nodes (EN + AR).
+ */
+function motaded_custom_update_10035(): void {
+  $scripts = [
+    'apply_sector_page_seo.php',
+    'translate_events_official_ar.php',
+    'translate_documents_ar.php',
+    'translate_sectors_ar.php',
+  ];
+  $root = \Drupal::root() . '/modules/custom/motaded_custom/scripts';
+  foreach ($scripts as $script) {
+    $path = $root . '/' . $script;
+    if (is_readable($path)) {
+      require $path;
+    }
+  }
+}
+
+/**
+ * Canonical Service types, document remap, event field_category cleanup, Events view.
+ */
+function motaded_custom_update_10036(): void {
+  require_once __DIR__ . '/includes/motaded_custom.service_type.inc';
+  motaded_custom_ensure_service_type_terms();
+  motaded_custom_remap_document_service_types();
+  motaded_custom_clear_event_field_category();
+  motaded_custom_patch_events_view_sector_filter();
+}
+
+/**
+ * Re-clear event field_category (10036 used wrong translation set).
+ */
+function motaded_custom_update_10037(): void {
+  require_once __DIR__ . '/includes/motaded_custom.service_type.inc';
+  motaded_custom_clear_event_field_category();
+}
+
+/**
+ * Library view: distinct query + dedupe fix for translated taxonomy joins.
+ */
+function motaded_custom_update_10038(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $name = 'views.view.library';
+  $data = $sync->read($name);
+  if (is_array($data)) {
+    \Drupal::service('config.storage')->write($name, $data);
+  }
+}
+
+/**
+ * Library documents: field_services + internal link sync (services, sector pages).
+ */
+function motaded_custom_update_10039(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  foreach ([
+    'field.storage.node.field_services',
+    'field.field.node.document.field_services',
+    'core.entity_form_display.node.document.default',
+    'core.entity_view_display.node.document.default',
+  ] as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      \Drupal::service('config.storage')->write($name, $data);
+    }
+  }
+  require_once __DIR__ . '/includes/motaded_custom.document_links.inc';
+  motaded_custom_document_sync_all_links(FALSE, TRUE);
+}
+

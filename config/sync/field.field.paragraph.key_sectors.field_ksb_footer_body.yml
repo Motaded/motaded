@@ -1,0 +1,25 @@
+uuid: f271cae0-1a6e-4275-bb6a-31c23d610b21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_ksb_footer_body
+    - filter.format.basic_html
+    - paragraphs.paragraphs_type.key_sectors
+  module:
+    - text
+id: paragraph.key_sectors.field_ksb_footer_body
+field_name: field_ksb_footer_body
+entity_type: paragraph
+bundle: key_sectors
+label: 'Footer description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - restricted_html
+field_type: text_long

@@ -1,0 +1,27 @@
+uuid: cde2859e-daa8-42e6-94a5-aff5eb683945
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.insights_updates.field_body
+    - field.field.paragraph.insights_updates.field_iu_insights
+    - field.field.paragraph.insights_updates.field_iu_news
+    - paragraphs.paragraphs_type.insights_updates
+  module:
+    - text
+id: paragraph.insights_updates.default
+targetEntityType: paragraph
+bundle: insights_updates
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_iu_insights: true
+  field_iu_news: true
+  search_api_excerpt: true

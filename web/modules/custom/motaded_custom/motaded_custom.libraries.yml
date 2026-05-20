@@ -13,6 +13,15 @@ gin-custom:
     component:
       css/gin-custom.css: {}
 
+toolbar_frontend_stack_fix:
+  version: 1.0
+  css:
+    theme:
+      css/toolbar_frontend_stack_fix.css:
+        weight: 200
+  dependencies:
+    - toolbar/toolbar
+
 tasheer_visa_appointment:
   css:
     theme:

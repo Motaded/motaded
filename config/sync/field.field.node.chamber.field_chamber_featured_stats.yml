@@ -1,0 +1,19 @@
+uuid: d5f9b012-3c8a-5b2d-8e1f-7a6b5c4d3e21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_chamber_featured_stats
+    - node.type.chamber
+id: node.chamber.field_chamber_featured_stats
+field_name: field_chamber_featured_stats
+entity_type: node
+bundle: chamber
+label: 'Featured card stats (homepage)'
+description: 'Up to three lines for the wide Business Network card only (first row in the chambers list). Icons: people, briefcase, shield — in this order.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

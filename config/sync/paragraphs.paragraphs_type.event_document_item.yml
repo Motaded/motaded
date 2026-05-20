@@ -1,0 +1,10 @@
+uuid: b2b2b2b2-2222-4222-8222-222222222220
+langcode: en
+status: true
+dependencies: {  }
+id: event_document_item
+label: 'Event document'
+icon_uuid: null
+icon_default: null
+description: 'Document row for an event: title + one or more document media items.'
+behavior_plugins: {  }

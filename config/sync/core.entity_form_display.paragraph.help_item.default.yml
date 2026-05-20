@@ -1,0 +1,42 @@
+uuid: a1000001-0000-4000-8000-000000000042
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.help_item.field_body
+    - field.field.paragraph.help_item.field_icon
+    - field.field.paragraph.help_item.field_title
+    - paragraphs.paragraphs_type.help_item
+  module:
+    - options
+    - text
+id: paragraph.help_item.default
+targetEntityType: paragraph
+bundle: help_item
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

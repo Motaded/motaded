@@ -1,0 +1,21 @@
+uuid: 3907a2e7-13e9-4482-b83d-bae9c693ca63
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type
+    - node.type.chamber
+  module:
+    - options
+id: node.chamber.field_type
+field_name: field_type
+entity_type: node
+bundle: chamber
+label: Type
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

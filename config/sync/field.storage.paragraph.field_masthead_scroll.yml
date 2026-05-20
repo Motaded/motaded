@@ -1,0 +1,18 @@
+uuid: eef3042f-3104-4b85-8b1c-cd99d68e0fd0
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_masthead_scroll
+field_name: field_masthead_scroll
+entity_type: paragraph
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

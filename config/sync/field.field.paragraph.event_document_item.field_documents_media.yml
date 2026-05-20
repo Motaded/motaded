@@ -1,0 +1,31 @@
+uuid: b2b2b2b2-2222-4222-8222-222222222223
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_documents_media
+    - media.type.document
+    - paragraphs.paragraphs_type.event_document_item
+  module:
+    - media
+id: paragraph.event_document_item.field_documents_media
+field_name: field_documents_media
+entity_type: paragraph
+bundle: event_document_item
+label: Files
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

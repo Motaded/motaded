@@ -1,0 +1,11 @@
+name: 'Motaded sector data'
+type: module
+description: 'Admin-configurable external data sources (World Bank, GASTAT, etc.) for sector pages and related features.'
+package: Motaded
+core_version_requirement: ^10 || ^11
+configure: entity.sector_data_source.collection
+
+dependencies:
+  - drupal:node
+  - drupal:user
+  - drupal:config

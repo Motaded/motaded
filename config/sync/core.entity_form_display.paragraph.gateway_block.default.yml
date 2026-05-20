@@ -1,0 +1,94 @@
+uuid: 3c4d5e6f-7081-4a92-9b0c-1d2e3f4a5b6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.gateway_block.field_body
+    - field.field.paragraph.gateway_block.field_gateway_eyebrow
+    - field.field.paragraph.gateway_block.field_gateway_footer_body
+    - field.field.paragraph.gateway_block.field_gateway_footer_link
+    - field.field.paragraph.gateway_block.field_gateway_footer_title
+    - field.field.paragraph.gateway_block.field_gateway_items
+    - field.field.paragraph.gateway_block.field_title
+    - paragraphs.paragraphs_type.gateway_block
+    - paragraphs.paragraphs_type.gateway_item
+  module:
+    - link
+    - paragraphs
+    - text
+id: paragraph.gateway_block.default
+targetEntityType: paragraph
+bundle: gateway_block
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_footer_body:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_footer_link:
+    type: link_default
+    weight: 6
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_gateway_footer_title:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_items:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: 'Gateway item'
+      title_plural: 'Gateway items'
+      edit_mode: closed
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: gateway_item
+      features:
+        collapse_edit_all: '0'
+        duplicate: '0'
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

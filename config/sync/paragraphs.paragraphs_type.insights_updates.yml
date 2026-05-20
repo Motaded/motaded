@@ -1,0 +1,10 @@
+uuid: 74c79d72-f28c-4793-8825-4f5732fb884a
+langcode: en
+status: true
+dependencies: {  }
+id: insights_updates
+label: 'Publications & Updates'
+icon_uuid: null
+icon_default: null
+description: 'Homepage grid: curated blog (insights) and news with optional All / Blog / News filter. No pager.'
+behavior_plugins: {  }

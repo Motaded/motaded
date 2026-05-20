@@ -1,0 +1,86 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/promo_split') }}
+{%
+  set layout_class = promo_split_media_side == 'image_left' ? 'promo-split--media-start' : 'promo-split--media-end'
+%}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'promo-split',
+    layout_class,
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if content.field_title %} aria-labelledby="{{ promo_split_heading_id }}"{% endif %}>
+  <div class="promo-split__shell">
+    <div class="promo-split__body">
+      {% if content.field_title %}
+        <h2 id="{{ promo_split_heading_id }}" class="promo-split__title">{{ content.field_title }}</h2>
+      {% endif %}
+      {% if content.field_body %}
+        <div class="promo-split__text">{{ content.field_body }}</div>
+      {% endif %}
+
+      {% if promo_split_features is not empty %}
+        {% if promo_split_list_style == 'checklist' %}
+          <div class="promo-split__checks">
+            {% for line in promo_split_features %}
+              <div class="promo-split__check-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{{ line }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="promo-split__icons">
+            {% for line in promo_split_features %}
+              {% set icon = promo_split_icon_keys[loop.index0] ?? 'user' %}
+              <div class="promo-split__icon-item">
+                {% if icon == 'shield' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+                  </svg>
+                {% elseif icon == 'globe' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.75"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="1.75"/>
+                  </svg>
+                {% else %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75"/>
+                  </svg>
+                {% endif %}
+                <p class="promo-split__icon-label">{{ line }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if promo_split_cta is not empty %}
+        <div class="promo-split__cta-wrap">
+          <a href="{{ promo_split_cta.url }}" class="promo-split__cta">{{ promo_split_cta.title }}</a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if promo_split_media is not empty %}
+      <div class="promo-split__media">
+        <div class="promo-split__media-inner promo-split__media--fade-inner">
+          {% if promo_split_logo is not empty %}
+            <div class="promo-split__logo">{{ promo_split_logo }}</div>
+          {% endif %}
+          {{ promo_split_media }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>

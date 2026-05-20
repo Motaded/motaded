@@ -1,0 +1,36 @@
+uuid: e26d68cb-7d34-4897-ba75-3c26dc571b95
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_psg_icon
+field_name: field_psg_icon
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: licensing
+      label: 'Licensing & Registration'
+    -
+      value: workforce
+      label: 'Workforce & Employment'
+    -
+      value: tax
+      label: 'Tax & Finance'
+    -
+      value: operations
+      label: Operations
+    -
+      value: compliance
+      label: 'Compliance & Trade'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

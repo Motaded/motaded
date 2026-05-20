@@ -1,0 +1,85 @@
+uuid: 265593a7-bc8f-4694-a4f2-fa3cb173c5c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.chambers_network.field_body
+    - field.field.paragraph.chambers_network.field_cnb_chambers
+    - field.field.paragraph.chambers_network.field_cnb_eyebrow
+    - field.field.paragraph.chambers_network.field_cnb_footer_body
+    - field.field.paragraph.chambers_network.field_cnb_footer_link
+    - field.field.paragraph.chambers_network.field_cnb_footer_title
+    - field.field.paragraph.chambers_network.field_title
+    - paragraphs.paragraphs_type.chambers_network
+  module:
+    - link
+    - text
+id: paragraph.chambers_network.default
+targetEntityType: paragraph
+bundle: chambers_network
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_cnb_chambers:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_cnb_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_cnb_footer_body:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_cnb_footer_link:
+    type: link_default
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_cnb_footer_title:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

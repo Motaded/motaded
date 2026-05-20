@@ -193,12 +193,6 @@
   word-break: break-word;
 }
 
-/* Service hero + breadcrumb band (see .bread--service-hero-band in page.html.twig). */
-.service-hero--fullbleed,
-.bread.bread--service-hero-band {
-  background-color: oklch(98.2% 0.018 155.826);
-}
-
 /* Service hero: band breaks out of .layout-content to viewport width (see main.css .banner-hero-fullbleed). */
 .service-hero--fullbleed {
   width: 100vw;
@@ -809,19 +803,7 @@
   background: linear-gradient(to inline-end, rgb(99 102 241) 0%, rgb(0 122 77) 100%);
 }
 
-.node--article-full .article-inline-cta__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  margin: 0;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgb(236 253 245);
-  color: rgb(6 95 70);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+/* Inline CTA kicker: `.mot-eyebrow.mot-eyebrow--pill-solo` (see toc.js) */
 
 .node--article-full .article-inline-cta__title {
   margin: 0;
@@ -1785,79 +1767,156 @@
 }
 
 /* About us landing: view block spacing + cards polish (loaded via node library). */
-body.page-about-us .paragraph--type--view-block {
+body.path-frontpage .paragraph--type--view-block,
+body.page-front .paragraph--type--view-block {
   padding-top: 1rem;
 }
 
-body.page-about-us .paragraph--type--cards .sector {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+body.path-frontpage .paragraph--type--cards .sector,
+body.page-front .paragraph--type--cards .sector {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  grid-template-areas:
+    "title media"
+    "body media"
+    "cta media";
+  align-items: center;
+  column-gap: clamp(1.5rem, 2.6vw, 2.8rem);
+  row-gap: 0.75rem;
   height: 100%;
-  border: 1px solid #dbe4ea;
-  border-radius: 0.9rem;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  padding: 1.15rem 1.15rem 1.05rem;
-  box-shadow: 0 8px 20px rgb(15 23 42 / 5%);
+  border: 1px solid #d9e2ec;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #eef3f8 0%, #ffffff 100%);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  box-shadow: 0 10px 26px rgb(15 23 42 / 6%);
 }
 
-body.page-about-us .paragraph--type--cards .sector-title {
+body.path-frontpage .paragraph--type--cards .grid.md\:grid-cols-3 > .sector:nth-child(even),
+body.page-front .paragraph--type--cards .grid.md\:grid-cols-3 > .sector:nth-child(even) {
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+  grid-template-areas:
+    "media title"
+    "media body"
+    "media cta";
+}
+
+body.path-frontpage .paragraph--type--cards .sector-title,
+body.page-front .paragraph--type--cards .sector-title {
+  grid-area: title;
   margin: 0;
-  font-size: clamp(1.05rem, 1.45vw, 1.18rem);
-  line-height: 1.35;
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 1.25;
+  font-weight: 750;
+  color: #0f172a;
   letter-spacing: -0.01em;
 }
 
-body.page-about-us .paragraph--type--cards .sector p {
+body.path-frontpage .paragraph--type--cards .sector p,
+body.page-front .paragraph--type--cards .sector p {
+  grid-area: body;
   margin: 0;
-  color: #374151;
-  line-height: 1.65;
+  color: #334155;
+  line-height: 1.7;
+  max-width: 56ch;
 }
 
-body.page-about-us .paragraph--type--cards .sector ul {
+body.path-frontpage .paragraph--type--cards .sector ul,
+body.page-front .paragraph--type--cards .sector ul {
   margin: 0.15rem 0 0;
   padding-inline-start: 1.1rem;
   list-style-position: outside;
 }
 
-body.page-about-us .paragraph--type--cards .sector .btn-secondary {
-  margin-top: auto;
+body.path-frontpage .paragraph--type--cards .sector .btn-secondary,
+body.page-front .paragraph--type--cards .sector .btn-secondary {
+  grid-area: cta;
+  margin-top: 0.2rem;
   width: fit-content;
-  border-color: #007a4d;
-  color: #065f46;
+  border-color: #0f766e;
+  color: #0f766e;
+  background: #ffffff;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
   font-weight: 600;
   transition:
     background-color 0.16s ease,
     border-color 0.16s ease,
     color 0.16s ease,
-    box-shadow 0.16s ease,
-    transform 0.16s ease;
+    box-shadow 0.16s ease;
 }
 
 @media (hover: hover) {
-  body.page-about-us .paragraph--type--cards .sector .btn-secondary:hover {
-    background-color: #007a4d;
-    border-color: #007a4d;
+  body.path-frontpage .paragraph--type--cards .sector .btn-secondary:hover,
+  body.page-front .paragraph--type--cards .sector .btn-secondary:hover {
+    background-color: #0f766e;
+    border-color: #0f766e;
     color: #fff;
-    box-shadow: 0 8px 18px rgb(0 122 77 / 25%);
-    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgb(15 118 110 / 25%);
   }
 }
 
 /* In this section there are two cards; make them split width 50/50 on md+. */
 @media (min-width: 768px) {
-  body.page-about-us .paragraph--type--cards .grid.md\:grid-cols-3 {
+  body.path-frontpage .paragraph--type--cards .grid.md\:grid-cols-3,
+  body.page-front .paragraph--type--cards .grid.md\:grid-cols-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
   }
 
   /* Keep CTA card in native 3-column layout so action button stays right. */
-  body.page-about-us .paragraph--type--cards .rounded-2xl.grid.md\:grid-cols-3 {
+  body.path-frontpage .paragraph--type--cards .rounded-2xl.grid.md\:grid-cols-3,
+  body.page-front .paragraph--type--cards .rounded-2xl.grid.md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  body.page-about-us .paragraph--type--cards .rounded-2xl .flex.md\:justify-end {
+  body.path-frontpage .paragraph--type--cards .rounded-2xl .flex.md\:justify-end,
+  body.page-front .paragraph--type--cards .rounded-2xl .flex.md\:justify-end {
     justify-content: flex-end;
+  }
+}
+
+body.path-frontpage .paragraph--type--cards .sector-img,
+body.page-front .paragraph--type--cards .sector-img {
+  grid-area: media;
+  width: 100%;
+  height: clamp(180px, 18vw, 220px);
+  object-fit: cover;
+  border-radius: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  body.path-frontpage .paragraph--type--cards .sector,
+  body.page-front .paragraph--type--cards .sector {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "title"
+      "body"
+      "cta";
+    row-gap: 0.7rem;
+    padding: 1rem;
+  }
+
+  body.path-frontpage .paragraph--type--cards .grid.md\:grid-cols-3 > .sector:nth-child(even),
+  body.page-front .paragraph--type--cards .grid.md\:grid-cols-3 > .sector:nth-child(even) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "title"
+      "body"
+      "cta";
+  }
+
+  body.path-frontpage .paragraph--type--cards .sector-title,
+  body.page-front .paragraph--type--cards .sector-title {
+    font-size: 1.4rem;
+  }
+
+  body.path-frontpage .paragraph--type--cards .sector-img,
+  body.page-front .paragraph--type--cards .sector-img {
+    height: 200px;
+    border-radius: 0.8rem;
   }
 }
 

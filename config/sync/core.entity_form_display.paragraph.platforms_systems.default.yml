@@ -1,0 +1,93 @@
+uuid: 12fbef02-193d-4551-987e-da188501331d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.platforms_systems.field_ps_body
+    - field.field.paragraph.platforms_systems.field_ps_eyebrow
+    - field.field.paragraph.platforms_systems.field_ps_footer_body
+    - field.field.paragraph.platforms_systems.field_ps_footer_link
+    - field.field.paragraph.platforms_systems.field_ps_footer_title
+    - field.field.paragraph.platforms_systems.field_ps_groups
+    - field.field.paragraph.platforms_systems.field_title
+    - paragraphs.paragraphs_type.platforms_system_group
+    - paragraphs.paragraphs_type.platforms_systems
+  module:
+    - entity_reference_revisions
+    - link
+    - paragraphs
+    - text
+id: paragraph.platforms_systems.default
+targetEntityType: paragraph
+bundle: platforms_systems
+mode: default
+content:
+  field_ps_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_ps_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ps_footer_body:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_ps_footer_link:
+    type: link_default
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ps_footer_title:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ps_groups:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: Group
+      title_plural: Groups
+      edit_mode: open
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: platforms_system_group
+      features:
+        collapse_edit_all: '0'
+        duplicate: '0'
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

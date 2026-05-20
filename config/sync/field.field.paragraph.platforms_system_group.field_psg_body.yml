@@ -1,0 +1,22 @@
+uuid: f730a04c-0360-43b5-9e23-4a65180ae669
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_psg_body
+    - paragraphs.paragraphs_type.platforms_system_group
+  module:
+    - text
+id: paragraph.platforms_system_group.field_psg_body
+field_name: field_psg_body
+entity_type: paragraph
+bundle: platforms_system_group
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

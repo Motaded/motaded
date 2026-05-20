@@ -52,20 +52,20 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-    'pb-12 mt-[140px]'
+    'featured-contents-modern pb-12 mt-[140px]'
   ]
 %}
 {% block paragraph %}
   <div{{attributes.addClass(classes)}}>
     {% block content %}
       <!-- Header -->
-      <div class="max-w-[1320px] mx-auto px-4 mb-8">
-        <div class="flex flex-wrap md:flex-nowrap justify-between items-start gap-3">
-          <div class="text-base md:w-2/3">
+      <div class="mot-shell mb-8">
+        <div class="featured-contents__header">
+          <div class="featured-contents__intro text-base md:w-2/3">
             {{ content.field_body.0 }}
           </div>
           {% if content.field_link is not empty %}
-            <a href="{{ content.field_link.0['#url'] }}" class="ml-auto md:ml-0 inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
+            <a href="{{ content.field_link.0['#url'] }}" class="featured-contents__view-all ml-auto md:ml-0 inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
               {{ content.field_link.0['#title'] }}
             </a>
           {% endif %}
@@ -74,15 +74,15 @@
 
       <!-- Content -->
       <div
-        class="max-w-[1320px] mx-auto px-4" x-data="articlesCarousel" data-articles-length="{{ fc_count }}">
+        class="mot-shell" x-data="articlesCarousel" data-articles-length="{{ fc_count }}">
         <!-- Desktop / Tablet grid -->
         <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5">
           {% for key, item in paragraph.field_contents %}
             {% set article = content.field_contents[key]['#node'] %}
             {% set card_img = featured_card_images[article.id()] ?? {} %}
-            <a href="{{ path('entity.node.canonical', {'node': article.id()}) }}" class="group">
-              <article class="bg-white border border-gray-200 rounded-lg mx-2 mt-2 mb-4 p-4 flex flex-col h-full transition hover:shadow-md">
-                <div class="mb-4 rounded-md overflow-hidden aspect-[16/9]">
+            <a href="{{ path('entity.node.canonical', {'node': article.id()}) }}" class="featured-contents__card-link group">
+              <article class="featured-contents__card bg-white border border-gray-200 rounded-lg p-4 flex flex-col h-full transition hover:shadow-md">
+                <div class="featured-contents__media mb-4 rounded-md overflow-hidden aspect-[16/9]">
                   {% if card_img.src %}
                     {% if card_img.srcset %}
                       <img loading="lazy" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="(max-width: 767px) 100vw, (min-width: 768px) 33vw" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}" class="w-full h-full object-cover group-hover:opacity-95 transition"/>
@@ -91,17 +91,15 @@
                     {% endif %}
                   {% endif %}
                 </div>
-                <h3 class="font-bold text-lg mb-2">{{ article.label }}</h3>
-                <div
-                  class="text-black/80 mb-4">
-                  {# Example: summary or trimmed body text #}
+                <h3 class="featured-contents__title font-bold text-lg mb-2">{{ article.label }}</h3>
+                <div class="featured-contents__excerpt text-black/80 mb-4">
                   {% if article.body.summary %}
                     {{ article.body.summary|striptags|truncate(120) ~ "..." }}
-                  {% else %}
+                  {% elseif article.body.value %}
                     {{ article.body.value|striptags|truncate(120) }}
                   {% endif %}
                 </div>
-                <span class="inline-flex items-center gap-2 text-sm underline">
+                <span class="featured-contents__readmore inline-flex items-center gap-2 text-sm underline mt-auto">
                   {{ "Read More" | t }}
                   <img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" alt="Arrow icon" width="18" height="18" class="rtl:rotate-90 ltr:-rotate-90 -scale-x-100"/>
                 </span>
@@ -122,9 +120,9 @@
                   {% set card_img = featured_card_images[article.id()] ?? {} %}
                   <div class="min-w-full px-1">
                     <a href="{{ path('entity.node.canonical', {'node': article.id()}) }}" class="block min-h-72">
-                      <article class="bg-white border rounded-xl p-4 h-full hover:border-primary-600 transition">
+                      <article class="featured-contents__card bg-white border rounded-xl p-4 h-full hover:border-primary-600 transition">
                         <div class="flex flex-col h-full">
-                          <div class="w-full rounded-lg overflow-hidden aspect-[16/9]">
+                          <div class="featured-contents__media w-full rounded-lg overflow-hidden aspect-[16/9]">
                             {% if card_img.src %}
                               {% if card_img.srcset %}
                                 <img loading="lazy" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="100vw" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}" class="w-full h-full object-cover"/>
@@ -133,9 +131,19 @@
                               {% endif %}
                             {% endif %}
                           </div>
-                          <div class="mt-5 flex-1">
-                            <p class="font-bold text-base leading-[1.6]">{{ article.label }}</p>
-                            <p class="text-black/80 mt-2">{{ article.body.summary|striptags|truncate(150) }}</p>
+                          <div class="mt-5 flex-1 flex flex-col">
+                            <p class="featured-contents__title font-bold text-base leading-[1.6]">{{ article.label }}</p>
+                            <p class="featured-contents__excerpt text-black/80 mt-2">
+                              {% if article.body.summary %}
+                                {{ article.body.summary|striptags|truncate(150) }}
+                              {% elseif article.body.value %}
+                                {{ article.body.value|striptags|truncate(150) }}
+                              {% endif %}
+                            </p>
+                            <span class="featured-contents__readmore inline-flex items-center gap-2 text-sm underline mt-4">
+                              {{ "Read More" | t }}
+                              <img src="/themes/custom/motaded_theme/img/icon-arrow-down.svg" alt="Arrow icon" width="18" height="18" class="rtl:rotate-90 ltr:-rotate-90 -scale-x-100"/>
+                            </span>
                           </div>
                         </div>
                       </article>

@@ -1,0 +1,113 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{% import '@motaded_theme/includes/hero-split-banner-icons.html.twig' as hs_icons %}
+{{ attach_library('motaded_theme/hero_split_banner') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'hero-split-banner',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  {% if hero_split_media is not empty %}
+    <div class="hero-split-banner__bg" aria-hidden="true">
+      <div class="hero-split-banner__media">
+        <div class="hero-split-banner__media-fade" aria-hidden="true"></div>
+        {{ hero_split_media }}
+      </div>
+    </div>
+  {% endif %}
+  <div class="hero-split-banner__layout">
+    <div class="hero-split-banner__copy-col">
+      <div class="hero-split-banner__copy">
+        {% if content.field_hero_split_eyebrow %}
+          <div class="hero-split-banner__eyebrow mot-eyebrow mot-eyebrow--rail">
+            {{ content.field_hero_split_eyebrow }}
+          </div>
+        {% endif %}
+
+        {% if hero_split_headline_prefix or hero_split_headline_accent %}
+          <h1 id="{{ hero_split_banner_heading_id }}" class="hero-split-banner__title">
+            {% if hero_split_headline_prefix %}
+              <span class="hero-split-banner__title-line">{{ hero_split_headline_prefix }}</span>
+            {% endif %}
+            {% if hero_split_headline_accent %}
+              <span class="hero-split-banner__title-accent">{{ hero_split_headline_accent }}</span>
+            {% endif %}
+          </h1>
+        {% endif %}
+
+        {% if content.field_body %}
+          <div class="hero-split-banner__intro">{{ content.field_body }}</div>
+        {% endif %}
+      </div>
+
+      {% if hero_split_highlights is not empty %}
+        <ul class="hero-split-banner__highlights" role="list">
+          {% for row in hero_split_highlights|slice(0, 4) %}
+            <li class="hero-split-banner__highlight">
+              <span class="hero-split-banner__highlight-text">{{ row.label }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if hero_split_cta is not empty or hero_split_cta_secondary is not empty %}
+        <div class="hero-split-banner__copy">
+          <div class="hero-split-banner__actions">
+            {% if hero_split_cta is not empty %}
+              <a href="{{ hero_split_cta.url|e('html_attr') }}" class="hero-split-banner__cta hero-split-banner__cta--primary">
+                {{ hero_split_cta.title }}
+                <svg class="hero-split-banner__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if hero_split_cta_secondary is not empty %}
+              <a href="{{ hero_split_cta_secondary.url|e('html_attr') }}" class="hero-split-banner__cta hero-split-banner__cta--secondary">
+                {{ hero_split_cta_secondary.title }}
+                <svg class="hero-split-banner__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="hero-split-banner__visual">
+      {% if hero_split_features is not empty %}
+        <div class="hero-split-banner__feature-cards" aria-label="{{ 'Highlights'|t }}">
+          <div class="hero-split-banner__feature-panel" role="list">
+            {% for f in hero_split_features|slice(0, 3) %}
+              {% set row_url = f.link.url|default('') %}
+              {% set row_tag = row_url ? 'a' : 'div' %}
+              <{{ row_tag }}
+                class="hero-split-banner__feature-row{% if not loop.last %} hero-split-banner__feature-row--border{% endif %}"
+                {% if row_url %}href="{{ row_url|e('html_attr') }}"{% endif %}
+                role="listitem"
+              >
+                <span class="hero-split-banner__feature-icon" aria-hidden="true">{{ hs_icons.why_icon(f.icon, 20)|raw }}</span>
+                <span class="hero-split-banner__feature-main">
+                  {% if f.title %}<span class="hero-split-banner__feature-title">{{ f.title }}</span>{% endif %}
+                  {% if f.body %}<span class="hero-split-banner__feature-body">{{ f.body|striptags|trim }}</span>{% endif %}
+                </span>
+                {% if row_url %}
+                  <span class="hero-split-banner__feature-chevron" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                {% endif %}
+              </{{ row_tag }}>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

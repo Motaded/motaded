@@ -1,0 +1,31 @@
+uuid: c7d8e9f0-9090-4909-8909-909090909090
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_bce_breakdown
+    - paragraphs.paragraphs_type.business_cost_estimation
+    - paragraphs.paragraphs_type.cost_breakdown_line
+  module:
+    - entity_reference_revisions
+id: paragraph.business_cost_estimation.field_bce_breakdown
+field_name: field_bce_breakdown
+entity_type: paragraph
+bundle: business_cost_estimation
+label: 'Cost breakdown'
+description: 'Rows shown inside the right-hand card.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      cost_breakdown_line: cost_breakdown_line
+    negate: 0
+    target_bundles_drag_drop:
+      cost_breakdown_line:
+        weight: 0
+        enabled: true
+field_type: entity_reference_revisions

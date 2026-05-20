@@ -1,0 +1,174 @@
+/**
+ * Sector page — homepage metric cards (Key sectors), aligned to KPI + sparkline reference.
+ */
+
+.node--type-sector-page.node--view-mode-sector-card {
+  --sc-brand: var(--mot-brand-hover, #065f46);
+  --sc-brand-mid: var(--mot-accent-strong, #0d9488);
+  --sc-brand-ring: color-mix(in srgb, var(--sc-brand) 28%, transparent);
+  --sc-text: var(--mot-text, #0f172a);
+  --sc-muted: var(--mot-text-muted, #64748b);
+  --sc-border: var(--mot-border, #e2e8f0);
+  --sc-icon-bg: var(--mot-surface-muted, #f1f5f9);
+  height: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  background: var(--mot-surface, #ffffff);
+  border: 1px solid var(--sc-border);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card:hover,
+.node--type-sector-page.node--view-mode-sector-card .sector-card:focus-visible {
+  border-color: color-mix(in oklab, var(--sc-brand) 22%, var(--sc-border));
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card:focus-visible {
+  outline: 2px solid var(--sc-brand);
+  outline-offset: 2px;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 1.1rem 1.15rem 0.5rem;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--sc-brand);
+  background: var(--sc-icon-bg);
+  border: 1px solid rgba(148, 163, 184, 0.55);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom .media,
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom .field {
+  margin: 0;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__icon-custom :where(img, svg) {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__head-text {
+  min-width: 0;
+  flex: 1;
+  padding-top: 0.12rem;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.28;
+  color: var(--sc-text);
+  letter-spacing: -0.02em;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__title .field {
+  display: block;
+  margin: 0;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__metric {
+  padding: 0.15rem 1.15rem 0.35rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__metric-value {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.6vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--sc-brand-mid);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__metric-caption {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--sc-muted);
+  font-weight: 500;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__spark {
+  margin-top: 0.35rem;
+  min-height: 5.5rem;
+  overflow: visible;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__spark-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__spark-xlabel {
+  fill: var(--sc-muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__foot {
+  margin-top: auto;
+  padding: 0.65rem 1.15rem 1.1rem;
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card__link-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--sc-brand);
+}
+
+.node--type-sector-page.node--view-mode-sector-card .sector-card:hover .sector-card__link-text,
+.node--type-sector-page.node--view-mode-sector-card .sector-card:focus-visible .sector-card__link-text {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}

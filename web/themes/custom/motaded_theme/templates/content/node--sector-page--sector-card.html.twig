@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Sector page — homepage card (Key sectors): whole card is one link to the sector page.
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <a href="{{ sector_card_url }}" class="sector-card{{ sector_card_wb ? ' sector-card--has-metric' : '' }}" aria-label="{{ (node.label() ~ ' — ' ~ ('Explore sector'|t))|e('html_attr') }}">
+    <div class="sector-card__head">
+      <div class="sector-card__icon" aria-hidden="true">
+        {% if sector_card_wb %}
+          {{ sector_card_wb.icon_markup }}
+        {% elseif sector_card_has_custom_icon %}
+          <span class="sector-card__icon-custom">{{ sector_card_icon_custom }}</span>
+        {% else %}
+          {{ sector_card_icon_markup }}
+        {% endif %}
+      </div>
+      <div class="sector-card__head-text">
+        <h3 class="sector-card__title">{{ label }}</h3>
+      </div>
+    </div>
+
+    {% if sector_card_wb %}
+      <div class="sector-card__metric">
+        <p class="sector-card__metric-value">{{ sector_card_wb.value_display }}</p>
+        <p class="sector-card__metric-caption">
+          {% if sector_card_wb.year > 0 %}
+            {{ sector_card_wb.kpi_label }} ({{ sector_card_wb.year }})
+          {% else %}
+            {{ sector_card_wb.kpi_label }}
+          {% endif %}
+        </p>
+        {% if sector_card_wb.sparkline_svg %}
+          <div class="sector-card__spark">{{ sector_card_wb.sparkline_svg }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="sector-card__foot">
+      <span class="sector-card__link-text">{{ 'Explore sector'|t }}<span aria-hidden="true"> →</span></span>
+    </div>
+  </a>
+</article>

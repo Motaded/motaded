@@ -1,0 +1,518 @@
+/**
+ * Main header navigation + Services mega panel (desktop).
+ */
+/* id="site-header.site-header-root" wraps spacer + <header> (see site-header-region.html.twig). */
+#site-header.site-header-root > header.site-header-bar {
+  --mot-header-bar-bg: var(--color-white, var(--mot-surface, #ffffff));
+  background-color: var(--mot-header-bar-bg);
+}
+
+#site-header .mot-header-main-nav {
+  position: relative;
+}
+
+html.mot-menu-open,
+html.mot-menu-open body {
+  overflow: hidden;
+}
+
+/* Drupal admin toolbar (+ Gin secondary strip): offsets on body.user-logged-in.toolbar-fixed
+   are defined in site-header-layout.css (--mot-toolbar-stack-offset, default 110px). */
+body.user-logged-in.toolbar-fixed .mot-dropdown,
+body.user-logged-in.toolbar-fixed .mot-mega {
+  top: calc(var(--mot-header-h, 80px) + var(--mot-toolbar-stack-offset, 110px));
+}
+
+body.user-logged-in.toolbar-fixed.toolbar-tray-open.toolbar-horizontal .mot-dropdown,
+body.user-logged-in.toolbar-fixed.toolbar-tray-open.toolbar-horizontal .mot-mega {
+  top: calc(var(--mot-header-h, 80px) + var(--mot-toolbar-stack-offset, 150px));
+}
+
+/* Override legacy menu.css hover fill inside header */
+#site-header ul.menu .menu-item:hover,
+#site-header ul.menu .menu-item:hover span {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+#site-header .mot-main-menu__link,
+#site-header .mot-main-menu__trigger,
+#site-header .mot-main-menu__trigger--mega {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.75rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--mot-text, #0f172a);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* 992–1279px: compact nav links so menu fits beside logo + header CTAs. */
+@media (min-width: 992px) and (max-width: 1279px) {
+  #site-header .mot-main-menu__link,
+  #site-header .mot-main-menu__trigger,
+  #site-header .mot-main-menu__trigger--mega {
+    min-height: 2.125rem;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.75rem;
+    gap: 0.15rem;
+    letter-spacing: -0.015em;
+  }
+
+  #site-header .mot-main-menu__link::after,
+  #site-header .mot-main-menu__trigger::after,
+  #site-header .mot-main-menu__trigger--mega::after {
+    left: 0.35rem;
+    right: 0.35rem;
+    bottom: -0.3rem;
+  }
+
+  #site-header .mot-header-main-nav {
+    padding-inline: 0.125rem;
+  }
+
+  #site-header ul.mot-main-menu {
+    gap: 0.125rem !important;
+  }
+
+  #site-header .mot-main-menu__chev svg {
+    width: 0.65rem;
+    height: 0.65rem;
+  }
+}
+
+#site-header .mot-main-menu__link::after,
+#site-header .mot-main-menu__trigger::after,
+#site-header .mot-main-menu__trigger--mega::after {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  bottom: -0.5rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--mot-brand, #0f766e);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-main-menu__link:hover,
+#site-header .mot-main-menu__trigger:hover,
+#site-header .mot-main-menu__trigger--mega:hover {
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-main-menu__link.is-active,
+#site-header .mot-main-menu__trigger.is-active,
+#site-header .mot-main-menu__trigger.is-open,
+#site-header .mot-main-menu__trigger--mega.is-active,
+#site-header .mot-main-menu__trigger--mega.is-open {
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-main-menu__link.is-active::after,
+#site-header .mot-main-menu__trigger.is-active::after,
+#site-header .mot-main-menu__trigger.is-open::after,
+#site-header .mot-main-menu__trigger--mega.is-active::after,
+#site-header .mot-main-menu__trigger--mega.is-open::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.mot-main-menu__chev svg {
+  display: block;
+  transition: transform 0.18s ease;
+}
+
+/* Standard dropdown (non-mega) — full-bleed panel like Services.
+   Panel background matches the header (no border-top) so it reads as a
+   visual continuation of the header bar; soft shadow is below the panel
+   only. */
+.mot-dropdown {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--mot-header-h, 72px);
+  z-index: 200;
+}
+
+.mot-dropdown__panel {
+  background-color: var(--mot-header-bar-bg, var(--color-white, var(--mot-surface, #fff)));
+  box-shadow: 0 18px 48px rgb(15 23 42 / 10%);
+}
+
+.mot-dropdown__inner {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.mot-dropdown__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+@media (min-width: 1024px) {
+  .mot-dropdown__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem 3.5rem;
+  }
+}
+
+/* Each grid cell sizes to its own content — otherwise a tall group cell
+   stretches sibling link cells and the link's hover background floods
+   the empty space. */
+.mot-dropdown__cell {
+  display: flex;
+  align-self: start;
+}
+
+/* Group cell mirrors a Services mega column: icon row + nested list. */
+.mot-dropdown__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+}
+
+.mot-dropdown__group-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2rem;
+}
+
+#site-header .mot-dropdown__group-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-title:hover {
+  color: var(--mot-brand, #0f766e);
+}
+
+.mot-dropdown__group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 1.25rem;
+}
+
+@media (max-width: 1023px) {
+  .mot-dropdown__group-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+#site-header .mot-dropdown__group-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.35rem 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-link::after {
+  content: "›";
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0;
+  margin-inline-start: auto;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-dropdown__group-link:hover {
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-dropdown__group-link:hover::after {
+  opacity: 0.85;
+  transform: translateX(2px);
+}
+
+[dir='rtl'] #site-header .mot-dropdown__group-link::after {
+  content: "‹";
+}
+
+[dir='rtl'] #site-header .mot-dropdown__group-link:hover::after {
+  transform: translateX(-2px);
+}
+
+[dir='rtl'] .mot-dropdown__grid {
+  text-align: right;
+}
+
+#site-header .mot-main-menu__dropdown-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+#site-header .mot-main-menu__dropdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+  color: var(--mot-brand, #0f766e);
+  background: rgb(236 253 245 / 70%);
+  border: 1px solid rgb(167 243 208 / 50%);
+}
+
+#site-header .mot-main-menu__dropdown-icon svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+#site-header .mot-main-menu__dropdown-text {
+  min-width: 0;
+}
+
+#site-header .mot-main-menu__dropdown-link::after {
+  content: "›";
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.45;
+  margin-inline-start: auto;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#site-header .mot-main-menu__dropdown-link:hover {
+  background: rgb(240 253 250 / 60%);
+  color: var(--mot-brand, #0f766e);
+}
+
+#site-header .mot-main-menu__dropdown-link:hover::after {
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+
+[dir='rtl'] #site-header .mot-main-menu__dropdown-link::after {
+  content: "‹";
+}
+
+[dir='rtl'] #site-header .mot-main-menu__dropdown-link:hover::after {
+  transform: translateX(-2px);
+}
+
+@media (max-width: 767px) {
+  .mot-dropdown {
+    display: none !important;
+  }
+}
+
+/* Full-bleed mega under header */
+.mot-mega {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--mot-header-h, 72px);
+  /* Below sticky header (z-201), above typical page chrome */
+  z-index: 200;
+}
+
+.mot-mega__panel {
+  background-color: var(--mot-header-bar-bg, var(--color-white, var(--mot-surface, #fff)));
+  box-shadow: 0 18px 48px rgb(15 23 42 / 10%);
+}
+
+/* Mega content stretches across the full 1320px container so it lines up
+   with the rest of the page chrome. */
+.mot-mega__inner {
+  max-width: 1320px;
+}
+
+.mot-mega__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .mot-mega__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    column-gap: 3rem;
+  }
+}
+
+/* One category per column. */
+.mot-mega__col-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.mot-mega__group-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2rem;
+}
+
+.mot-mega__group-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 1.9rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.5rem;
+  color: var(--mot-brand, #0f766e);
+  background: rgb(236 253 245 / 70%);
+  border: 1px solid rgb(167 243 208 / 50%);
+}
+
+.mot-mega__group-icon svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.mot-mega__group-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--mot-text, #0f172a);
+}
+
+.mot-mega__group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgb(226 232 240 / 80%);
+}
+
+.mot-mega__group-list li {
+  display: flex;
+}
+
+.mot-mega__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mot-text, #0f172a);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mot-mega__link:hover {
+  color: var(--mot-brand, #0f766e);
+}
+
+.mot-mega__link::after {
+  content: "›";
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.45;
+  margin-inline-start: auto;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.mot-mega__link:hover::after {
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+
+[dir='rtl'] .mot-mega__link::after {
+  content: "‹";
+}
+
+[dir='rtl'] .mot-mega__link:hover::after {
+  transform: translateX(-2px);
+}
+
+.mot-mega__group-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(20 184 166 / 35%);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mot-brand, #0f766e);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mot-mega__group-view:hover {
+  background: rgb(240 253 250 / 85%);
+  color: var(--mot-brand-hover, #0d5f59);
+  text-decoration: none;
+}
+
+.mot-mega__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(226 232 240 / 80%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mot-mega__link,
+  .mot-mega__link::after,
+  .mot-main-menu__chev svg {
+    transition: none;
+  }
+}

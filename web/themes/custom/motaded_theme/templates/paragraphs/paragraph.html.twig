@@ -52,9 +52,13 @@
   ]
 %}
 {% block paragraph %}
-  <div{{ attributes.addClass(classes) }}>
-    {% block content %}
-      {{ content }}
-    {% endblock %}
-  </div>
+  {% if paragraph.bundle() == 'business_cost_estimation' %}
+    {{ include('@motaded_theme/paragraphs/paragraph--business-cost-estimation.html.twig') }}
+  {% else %}
+    <div{{ attributes.addClass(classes) }}>
+      {% block content %}
+        {{ content }}
+      {% endblock %}
+    </div>
+  {% endif %}
 {% endblock paragraph %}

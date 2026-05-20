@@ -1,0 +1,4 @@
+administer sector data sources:
+  title: 'Administer Motaded sector data sources'
+  description: 'Create, edit, and delete sector data source definitions (API mappings).'
+  restrict access: true

@@ -1,0 +1,10 @@
+uuid: d4e5f6a7-1111-4111-8111-111111111001
+langcode: en
+status: true
+dependencies: {  }
+id: cost_breakdown_line
+label: 'Cost breakdown line'
+icon_uuid: null
+icon_default: null
+description: 'Single cost row for the business cost estimation card (used only inside that block).'
+behavior_plugins: {  }

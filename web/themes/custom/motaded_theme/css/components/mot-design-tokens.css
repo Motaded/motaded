@@ -1,0 +1,40 @@
+/**
+ * Global design tokens (Motaded). Loaded with base — safe fallbacks in components via var(--mot-*, fallback).
+ */
+:root {
+  --mot-home-max: 1320px;
+  --mot-pad-x: clamp(1rem, 2.5vw, 1.5rem);
+  --mot-brand: #0f766e;
+  --mot-brand-hover: #0d5f59;
+  --mot-brand-soft: rgba(15, 118, 110, 0.1);
+  --mot-accent: #14b8a6;
+  --mot-accent-strong: #0d9488;
+  --mot-text: #0f172a;
+  --mot-text-heading: #1e293b;
+  --mot-text-muted: #64748b;
+  --mot-text-secondary: #475569;
+  --mot-slate-700: #334155;
+  --mot-icon-muted: #94a3b8;
+  --mot-border: #e2e8f0;
+  --mot-surface: #ffffff;
+  --mot-surface-muted: #f8fafc;
+  /* Emerald / mint (sections, partner pills, trust banners) */
+  --mot-emerald-50: #ecfdf5;
+  --mot-emerald-100: #d1fae5;
+  --mot-emerald-200: #bbf7d0;
+  --mot-emerald-surface: #f7fbf9;
+  --mot-emerald-accent-border: #9fcfbb;
+  --mot-emerald-accent-border-hover: #b8dfcf;
+  --mot-green-50: #f0fdf4;
+  --mot-radius-lg: 12px;
+  --mot-radius-md: 10px;
+  --mot-radius-pill: 999px;
+  --mot-control-h: 2.6875rem;
+  --mot-font-eyebrow: 0.6875rem;
+  --mot-font-eyebrow-ls: 0.12em;
+  --mot-section-y: clamp(2.5rem, 5vw, 4rem);
+  /* Cards / rows (shared across news, events, library, etc.) */
+  --mot-shadow-card: 0 1px 2px rgb(15 23 42 / 4%), 0 10px 28px rgb(15 23 42 / 7%);
+  --mot-shadow-card-hover: 0 1px 2px rgb(15 23 42 / 5%), 0 12px 32px rgb(15 23 42 / 9%);
+  --mot-shadow-soft: 0 6px 18px rgb(15 23 42 / 5%);
+}

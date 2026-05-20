@@ -14,3 +14,24 @@ links:
   -
     path: /services
     priority: '0.5'
+    changefreq: ''
+  -
+    path: /sectors
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /platforms
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /library
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /events
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /insights
+    priority: '0.5'
+    changefreq: weekly

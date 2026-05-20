@@ -1,0 +1,7 @@
+manual_indicators:
+  non_oil_gdp_growth:
+    enabled: false
+    label: 'Non-oil GDP Growth'
+    value_display: ''
+    source_name: ''
+    source_url: ''

@@ -1,0 +1,177 @@
+/* Media lead: image left, mint icon + headline + rich text + CTA on white card. */
+
+.media-lead {
+  --media-lead-radius: 1rem;
+  --media-lead-teal: var(--mot-accent-strong, #0d9488);
+  --media-lead-teal-hover: var(--mot-brand, #0f766e);
+  --media-lead-mint: var(--mot-emerald-50, #ecfdf5);
+  box-sizing: border-box;
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.media-lead__inner {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--media-lead-radius);
+  background: var(--mot-surface, #ffffff);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 4%),
+    0 12px 32px rgb(15 23 42 / 8%);
+}
+
+.media-lead__media {
+  position: relative;
+  min-width: 0;
+  min-height: 200px;
+  background: var(--mot-border, #e5e5e5);
+}
+
+.media-lead__media .field--name-field-media-image,
+.media-lead__media .field--name-field-media-image .field__item,
+.media-lead__media picture {
+  display: block;
+  height: 100%;
+  min-height: inherit;
+}
+
+.media-lead__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.media-lead__content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  min-width: 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.media-lead__content > * {
+  margin: 0;
+}
+
+/* Decorative “users” tile (no field). */
+.media-lead__kicker {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.625rem;
+  background-color: var(--media-lead-mint);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f766e' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 58% 58%;
+}
+
+.media-lead__headline {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--mot-text, #0f172a);
+  text-wrap: balance;
+}
+
+.media-lead__body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--mot-text-secondary, #404040);
+  max-width: 40rem;
+}
+
+.media-lead__body p {
+  margin: 0;
+}
+
+.media-lead__body p + p {
+  margin-top: 0.65em;
+}
+
+.media-lead__actions .field {
+  margin: 0;
+}
+
+.media-lead__actions .field__item {
+  display: block;
+}
+
+.media-lead__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  box-sizing: border-box;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--mot-surface, #ffffff);
+  background: var(--media-lead-teal);
+  border: 1px solid var(--media-lead-teal);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.media-lead__actions a::after {
+  content: "";
+  display: block;
+  width: 1.05em;
+  height: 1.05em;
+  margin-inline-start: 0.15em;
+  flex-shrink: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='M13 5l7 7-7 7'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transition: margin-inline-start 0.22s ease;
+}
+
+.media-lead__actions a:hover::after {
+  margin-inline-start: 0.4em;
+}
+
+.media-lead__actions a:hover {
+  background: var(--media-lead-teal-hover);
+  border-color: var(--media-lead-teal-hover);
+  box-shadow: 0 6px 18px rgb(13 148 136 / 25%);
+}
+
+.media-lead__actions a:focus-visible {
+  outline: 2px solid var(--media-lead-teal);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .media-lead__inner {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 300px;
+  }
+
+  .media-lead__media {
+    flex: 0 1 44%;
+    max-width: 50%;
+    min-height: 100%;
+  }
+
+  .media-lead__media img {
+    min-height: 100%;
+  }
+
+  .media-lead__content {
+    flex: 1 1 56%;
+    justify-content: center;
+    padding-block: clamp(1.75rem, 4vw, 2.75rem);
+    padding-inline: clamp(1.75rem, 4vw, 2.75rem);
+  }
+}

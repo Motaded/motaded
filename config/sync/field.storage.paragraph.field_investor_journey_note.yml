@@ -1,0 +1,19 @@
+uuid: d9e6a0b3-4c1f-6e5a-0233-2c3d4e5f6071
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_investor_journey_note
+field_name: field_investor_journey_note
+entity_type: paragraph
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

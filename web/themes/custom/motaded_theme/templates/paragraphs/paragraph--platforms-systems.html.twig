@@ -1,0 +1,108 @@
+{#
+/**
+ * @file
+ * Platforms systems block (paragraph: platforms_systems).
+ */
+#}
+{{ attach_library('motaded_theme/platforms_systems') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'platforms-systems',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="platforms-systems__inner mot-shell">
+    <header class="platforms-systems__masthead">
+      {% if content.field_ps_eyebrow is not empty %}
+        <div class="platforms-systems__eyebrow mot-eyebrow">{{ content.field_ps_eyebrow }}</div>
+      {% endif %}
+      {% if content.field_title is not empty %}
+        <h2 class="platforms-systems__title">{{ content.field_title }}</h2>
+      {% endif %}
+      {% if content.field_ps_body is not empty %}
+        <div class="platforms-systems__subtitle">{{ content.field_ps_body }}</div>
+      {% endif %}
+    </header>
+
+    {% if ps_groups is not empty %}
+      <div class="platforms-systems__grid" aria-label="{{ 'Key government systems'|t }}">
+        {% for g in ps_groups %}
+          <article class="ps-card">
+            <div class="ps-card__head">
+              <div class="ps-card__icon" aria-hidden="true">{{ g.icon }}</div>
+              <div>
+                <h3 class="ps-card__title">{{ g.title }}</h3>
+                {% if g.body %}<p class="ps-card__body">{{ g.body }}</p>{% endif %}
+              </div>
+            </div>
+
+            {% if g.items is not empty %}
+              <ul class="ps-list" aria-label="{{ g.title }}">
+                {% for item in g.items|slice(0,3) %}
+                  <li class="ps-list__item">
+                    <a class="ps-list__link" href="{{ item.url }}">
+                      <span class="ps-list__mini" aria-hidden="true">
+                        {% if item.logo is defined and item.logo.src %}
+                          <img class="ps-list__logo" src="{{ item.logo.src }}" alt="" loading="lazy" decoding="async">
+                        {% else %}
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                            <path d="M3 21h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            <path d="M7 9h2M7 13h2M11 9h2M11 13h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                          </svg>
+                        {% endif %}
+                      </span>
+                      <span class="ps-list__label">{{ item.title }}</span>
+                      <span class="ps-list__arrow" aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if g.view_all_url %}
+              <a class="ps-card__cta" href="{{ g.view_all_url }}">
+                {{ g.view_all_title ?: 'View all'|t }} <span aria-hidden="true">→</span>
+              </a>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="platforms-systems__footer mot-cta-bar" aria-label="{{ 'Platforms directory'|t }}">
+      <div class="platforms-systems__footer-icon mot-cta-bar__icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M12 3a14 14 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="platforms-systems__footer-copy">
+        {% if content.field_ps_footer_title is not empty %}
+          <p class="platforms-systems__footer-title">{{ content.field_ps_footer_title }}</p>
+        {% endif %}
+        {% if content.field_ps_footer_body is not empty %}
+          <div class="platforms-systems__footer-body">{{ content.field_ps_footer_body }}</div>
+        {% endif %}
+      </div>
+      {% if content.field_ps_footer_link is not empty %}
+        <div class="platforms-systems__footer-cta">{{ content.field_ps_footer_link }}</div>
+      {% endif %}
+      <div class="platforms-systems__footer-decor" aria-hidden="true"></div>
+    </div>
+
+    <div class="platforms-systems__cue" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M7 15l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+

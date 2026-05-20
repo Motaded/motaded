@@ -1,0 +1,273 @@
+/* Split promo: conversion card — text | image with soft blend (no badge). */
+
+.split-promo {
+  --split-promo-radius: 1rem;
+  --split-promo-teal: var(--mot-accent-strong, #0d9488);
+  --split-promo-teal-hover: var(--mot-brand, #0f766e);
+  --split-promo-icon-bg: var(--mot-emerald-50, #ecfdf5);
+  --split-promo-icon-fg: var(--mot-brand, #0f766e);
+  --split-promo-icon-col: 2.5rem;
+  --split-promo-icon-gap: 0.75rem;
+  --split-promo-copy-max: min(38rem, 100%);
+  box-sizing: border-box;
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, 1rem);
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.split-promo__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: var(--split-promo-radius);
+  background: var(--mot-surface, #ffffff);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 4%),
+    0 12px 32px rgb(15 23 42 / 8%);
+}
+
+.split-promo__content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.125rem;
+  min-width: 0;
+  max-width: var(--split-promo-copy-max);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+}
+
+.split-promo__content > * {
+  margin: 0;
+}
+
+.split-promo__headline {
+  font-size: clamp(1.65rem, 2.4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--mot-text, #0a0a0a);
+  text-wrap: balance;
+}
+
+.split-promo__sub {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--mot-text-secondary, #525252);
+}
+
+.split-promo__bullets {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.split-promo__bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--split-promo-icon-gap);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--mot-text-secondary, #262626);
+}
+
+/* Light rounded tile + simple mark (no per-line icon fields). */
+.split-promo__bullet::before {
+  content: "";
+  flex: 0 0 var(--split-promo-icon-col);
+  width: var(--split-promo-icon-col);
+  height: var(--split-promo-icon-col);
+  margin-top: calc(0.5lh - 0.5 * var(--split-promo-icon-col));
+  border-radius: 0.625rem;
+  background-color: var(--split-promo-icon-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f766e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 55% 55%;
+}
+
+@supports not (height: 1lh) {
+  .split-promo__bullet::before {
+    margin-top: 0.2em;
+  }
+}
+
+/* Drupal link field: no extra vertical offset vs copy. */
+.split-promo__actions .field {
+  margin: 0;
+}
+
+.split-promo__actions .field__item {
+  display: block;
+}
+
+.split-promo__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 22rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 9999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--mot-surface, #ffffff);
+  background: var(--split-promo-teal);
+  border: 1px solid var(--split-promo-teal);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Line + chevron arrow (SVG); slides toward inline-end on hover (LTR + RTL). */
+.split-promo__actions a::after {
+  content: "";
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  margin-inline-start: 0.2em;
+  flex-shrink: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='M13 5l7 7-7 7'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transition: margin-inline-start 0.22s ease;
+}
+
+.split-promo__actions a:hover::after {
+  margin-inline-start: 0.45em;
+}
+
+[dir="rtl"] .split-promo__actions a::after {
+  transform: scaleX(-1);
+}
+
+.split-promo__actions a:hover {
+  background: var(--split-promo-teal-hover);
+  border-color: var(--split-promo-teal-hover);
+  box-shadow: 0 8px 20px rgb(13 148 136 / 28%);
+}
+
+.split-promo__actions a:focus-visible {
+  outline: 2px solid var(--split-promo-teal);
+  outline-offset: 3px;
+}
+
+.split-promo__trust {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--split-promo-icon-gap);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mot-text-muted, #737373);
+}
+
+.split-promo__trust::before {
+  content: "";
+  flex: 0 0 var(--split-promo-icon-col);
+  width: var(--split-promo-icon-col);
+  height: var(--split-promo-icon-col);
+  margin-top: calc(0.5lh - 0.5 * var(--split-promo-icon-col));
+  opacity: 0.9;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E")
+    center / 42% 42% no-repeat;
+}
+
+@supports not (height: 1lh) {
+  .split-promo__trust::before {
+    margin-top: 0.12em;
+  }
+}
+
+.split-promo__media {
+  position: relative;
+  min-width: 0;
+  min-height: 220px;
+  background: var(--mot-border, #e5e5e5);
+}
+
+/* White wash from the text side so the photo blends into the card. */
+.split-promo__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    var(--mot-surface, #ffffff) 0%,
+    rgba(255, 255, 255, 0.92) 14%,
+    rgba(255, 255, 255, 0.35) 38%,
+    transparent 58%
+  );
+}
+
+[dir="rtl"] .split-promo__media::after {
+  background: linear-gradient(
+    to left,
+    var(--mot-surface, #ffffff) 0%,
+    rgba(255, 255, 255, 0.92) 14%,
+    rgba(255, 255, 255, 0.35) 38%,
+    transparent 58%
+  );
+}
+
+.split-promo__media .field--name-field-media-image,
+.split-promo__media .field--name-field-media-image .field__item,
+.split-promo__media picture {
+  display: block;
+  height: 100%;
+  min-height: inherit;
+}
+
+.split-promo__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .split-promo__inner {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 320px;
+  }
+
+  .split-promo__content {
+    flex: 1 1 52%;
+    max-width: min(56%, 42rem);
+    padding-block: clamp(2rem, 4vw, 2.75rem);
+    padding-inline: clamp(1.75rem, 4vw, 3rem) clamp(1rem, 2vw, 1.5rem);
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .split-promo__media {
+    flex: 1 1 48%;
+    min-height: 100%;
+    align-self: stretch;
+  }
+
+  .split-promo__media img {
+    min-height: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .split-promo {
+    --split-promo-radius: 1.125rem;
+  }
+
+  .split-promo__content {
+    flex-basis: 50%;
+    max-width: min(54%, 42rem);
+  }
+}

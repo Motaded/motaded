@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * Business Network & Chambers (paragraph: chambers_network).
+ */
+#}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'chambers-network',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="chambers-network__inner mot-shell">
+    <header class="chambers-network__masthead">
+      <div class="chambers-network__masthead-copy">
+        {% if content.field_cnb_eyebrow is not empty %}
+          <div class="chambers-network__eyebrow mot-eyebrow mot-eyebrow--rail">
+            {{ content.field_cnb_eyebrow }}
+          </div>
+        {% endif %}
+        {% if content.field_title is not empty %}
+          <h2 class="chambers-network__title">{{ content.field_title }}</h2>
+        {% endif %}
+        {% if content.field_body is not empty %}
+          <div class="chambers-network__intro">{{ content.field_body }}</div>
+        {% endif %}
+      </div>
+    </header>
+
+    {# Grid: View chambers / homepage (embed). Optional NIDs from field_cnb_chambers. #}
+    {% if cnb_chambers_view is not empty %}
+      <div class="chambers-network__view-mount">
+        {{ cnb_chambers_view }}
+      </div>
+    {% endif %}
+
+    {% if content.field_cnb_footer_title is not empty or content.field_cnb_footer_body is not empty or content.field_cnb_footer_link is not empty %}
+      <div class="chambers-network__footer-banner mot-cta-bar" aria-label="{{ 'Chambers and councils'|t }}">
+        <div class="chambers-network__footer-icon mot-cta-bar__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M12 3a15 15 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="chambers-network__footer-copy">
+          {% if content.field_cnb_footer_title is not empty %}
+            <p class="chambers-network__footer-title">{{ content.field_cnb_footer_title }}</p>
+          {% endif %}
+          {% if content.field_cnb_footer_body is not empty %}
+            <div class="chambers-network__footer-body">{{ content.field_cnb_footer_body }}</div>
+          {% endif %}
+        </div>
+        {% if content.field_cnb_footer_link is not empty %}
+          <div class="chambers-network__footer-cta">{{ content.field_cnb_footer_link }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>

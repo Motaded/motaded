@@ -1,0 +1,31 @@
+uuid: b1000005-1003-4000-8000-000000000001
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_library_section
+    - taxonomy.vocabulary.document_type
+    - taxonomy.vocabulary.library_section
+  module:
+    - taxonomy
+id: taxonomy_term.document_type.field_library_section
+field_name: field_library_section
+entity_type: taxonomy_term
+bundle: document_type
+label: 'Library section'
+description: 'Whether this document type appears under templates or regulations in the Library.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      library_section: library_section
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

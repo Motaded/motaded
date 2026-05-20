@@ -1,0 +1,23 @@
+uuid: 8f31a2b0-0c00-4000-8000-00000000002b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured
+    - node.type.market_insight
+id: node.market_insight.field_featured
+field_name: field_featured
+entity_type: node
+bundle: market_insight
+label: Featured
+description: 'Show on homepage blocks.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Featured
+  off_label: 'Not featured'
+field_type: boolean

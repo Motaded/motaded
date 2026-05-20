@@ -1,0 +1,34 @@
+uuid: 7c1a4ee5-1b2c-4f63-8c0a-f1c5e7a91106
+langcode: en
+status: true
+dependencies:
+  module:
+    - metatag_hreflang
+    - metatag_open_graph
+    - metatag_twitter_cards
+    - schema_metatag
+    - schema_web_page
+id: node__sector_page
+label: 'Content: Sector page'
+tags:
+  title: '[node:title] | Investment sectors in Saudi Arabia | [site:name]'
+  description: '[node:field_short_description]'
+  canonical_url: '[node:url]'
+  hreflang_xdefault: '[node:url:absolute]'
+  'hreflang_per_language:hreflang_en': '[node:url:absolute]'
+  'hreflang_per_language:hreflang_ar': '[node:url:absolute]'
+  og_title: '[node:title]'
+  og_description: '[node:field_short_description]'
+  og_url: '[node:url:absolute]'
+  og_type: website
+  og_site_name: '[site:name]'
+  og_image: '[node:field_media:entity:field_media_image:entity:url]'
+  og_image_alt: '[node:title]'
+  twitter_cards_type: summary_large_image
+  twitter_cards_title: '[node:title]'
+  twitter_cards_description: '[node:field_short_description]'
+  twitter_cards_image: '[node:field_media:entity:field_media_image:entity:url]'
+  schema_web_page_type: AboutPage
+  schema_web_page_id: '[node:url:absolute]#webpage'
+  schema_web_page_description: '[node:field_short_description]'
+  schema_web_page_in_language: '[node:langcode]'

@@ -1,0 +1,139 @@
+{#
+/**
+ * @file
+ * Gateway hub (rich) block.
+ */
+#}
+{{ attach_library('motaded_theme/gateway_hub_block') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'gateway-hub',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="gateway-hub__inner mot-shell">
+    <div class="gateway-hub__shell">
+      <header class="gateway-hub__masthead">
+        {% if hub_eyebrow %}<p class="gateway-hub__eyebrow mot-eyebrow">{{ hub_eyebrow }}</p>{% endif %}
+        {% if hub_title %}<h2 class="gateway-hub__title">{{ hub_title }}</h2>{% endif %}
+        {% if content.field_body is not empty %}
+          <div class="gateway-hub__lede">{{ content.field_body }}</div>
+        {% endif %}
+      </header>
+
+      <div class="gateway-hub__grid">
+        <article class="hub-card">
+          <div class="hub-card__icon" aria-hidden="true">{{ hub_icons.platforms }}</div>
+          <p class="hub-card__kicker">{{ 'Primary access'|t }}</p>
+          <h3 class="hub-card__title">{{ 'Platforms'|t }}</h3>
+          <p class="hub-card__body">{{ 'Access official government systems and digital platforms required to operate in Saudi Arabia.'|t }}</p>
+          {% if hub_platforms is not empty %}
+            <p class="hub-card__kicker hub-card__kicker--sub">{{ 'Popular platforms'|t }}</p>
+            <ul class="hub-list">
+              {% for p in hub_platforms %}
+                <li class="hub-list__item">
+                  <a class="hub-list__link" href="{{ p.url }}">
+                    <div>
+                      <p class="hub-list__title">{{ p.title }}</p>
+                      {% if p.meta %}<p class="hub-list__meta">{{ p.meta }}</p>{% endif %}
+                    </div>
+                    <span class="hub-list__arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <a class="hub-card__cta" href="/platforms">{{ 'Access Platforms Directory'|t }} <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="hub-card">
+          <div class="hub-card__icon" aria-hidden="true">{{ hub_icons.sectors }}</div>
+          <h3 class="hub-card__title">{{ 'Sectors'|t }}</h3>
+          <p class="hub-card__body">{{ 'Explore key industries and high-potential sectors driving economic growth.'|t }}</p>
+          {% if hub_sectors is not empty %}
+            <p class="hub-card__kicker hub-card__kicker--sub">{{ 'Top sectors'|t }}</p>
+            <ul class="hub-list">
+              {% for s in hub_sectors %}
+                <li class="hub-list__item">
+                  <a class="hub-list__link" href="{{ s.url }}">
+                    <div><p class="hub-list__title">{{ s.title }}</p></div>
+                    <span class="hub-list__arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <a class="hub-card__cta" href="/sectors">{{ 'Explore All Sectors'|t }} <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="hub-card">
+          <div class="hub-card__icon" aria-hidden="true">{{ hub_icons.events }}</div>
+          <h3 class="hub-card__title">{{ 'Events'|t }}</h3>
+          <p class="hub-card__body">{{ 'Stay informed about upcoming conferences, exhibitions, and business events.'|t }}</p>
+          {% if hub_events is not empty %}
+            <p class="hub-card__kicker hub-card__kicker--sub">{{ 'Upcoming events'|t }}</p>
+            <ul class="hub-list">
+              {% for e in hub_events %}
+                <li class="hub-list__item">
+                  <a class="hub-list__link" href="{{ e.url }}">
+                    <div>
+                      <p class="hub-list__title">{{ e.title }}</p>
+                      {% if e.meta %}<p class="hub-list__meta">{{ e.meta }}</p>{% endif %}
+                    </div>
+                    <span class="hub-list__arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <a class="hub-card__cta" href="/events">{{ 'View All Events'|t }} <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="hub-card">
+          <div class="hub-card__icon" aria-hidden="true">{{ hub_icons.insights }}</div>
+          <h3 class="hub-card__title">{{ 'Insights'|t }}</h3>
+          <p class="hub-card__body">{{ 'Access the latest market data, reports, and analysis to make informed decisions.'|t }}</p>
+          {% if hub_insights is not empty %}
+            <p class="hub-card__kicker hub-card__kicker--sub">{{ 'Latest insights'|t }}</p>
+            <ul class="hub-list">
+              {% for i in hub_insights %}
+                <li class="hub-list__item">
+                  <a class="hub-list__link" href="{{ i.url }}">
+                    <div>
+                      <p class="hub-list__title">{{ i.title }}</p>
+                      {% if i.meta %}<p class="hub-list__meta">{{ i.meta }}</p>{% endif %}
+                    </div>
+                    <span class="hub-list__arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <a class="hub-card__cta" href="/insights">{{ 'View All Insights'|t }} <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+
+      <div class="gateway-hub__support" aria-label="{{ 'Support'|t }}">
+        <div class="gateway-hub__support-lead">
+          <p class="gateway-hub__support-title">{{ 'How Motaded supports you'|t }}</p>
+          <p class="gateway-hub__support-body">{{ 'We provide trusted guidance, practical solutions, and local expertise to help you navigate, establish, and grow your business in Saudi Arabia.'|t }}</p>
+        </div>
+        <div class="gateway-hub__badges" aria-label="{{ 'Support highlights'|t }}">
+          {% for b in hub_support_badges|slice(0, 3) %}
+            <div class="gateway-hub__badge">
+              {% if b.title %}<p class="gateway-hub__badge-title">{{ b.title }}</p>{% endif %}
+              {% if b.body %}<p class="gateway-hub__badge-body">{{ b.body }}</p>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <a class="gateway-hub__support-cta" href="/contact-us">{{ 'Speak with Our Team'|t }} <span class="gateway-hub__support-cta-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+

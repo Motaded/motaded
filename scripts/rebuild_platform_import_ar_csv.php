@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Генерує platform_import_ar_ready.csv з platform_import_ar.dataset.php.
+ *
+ *   php scripts/rebuild_platform_import_ar_csv.php
+ */
+
+declare(strict_types=1);
+
+$repo = dirname(__DIR__);
+$dataFile = $repo . '/web/modules/custom/motaded_custom/data/platform_import_ar.dataset.php';
+$outFile = $repo . '/platform_import_ar_ready.csv';
+
+if (!is_readable($dataFile)) {
+  fwrite(STDERR, "Missing: {$dataFile}\n");
+  exit(1);
+}
+
+/** @var list<array<string, string>> $rows */
+$rows = require $dataFile;
+if ($rows === []) {
+  fwrite(STDERR, "Empty dataset.\n");
+  exit(1);
+}
+
+$header = array_keys($rows[0]);
+$fh = fopen($outFile, 'wb');
+if ($fh === FALSE) {
+  fwrite(STDERR, "Cannot write {$outFile}\n");
+  exit(1);
+}
+fwrite($fh, "\xEF\xBB\xBF");
+fputcsv($fh, $header, ',', '"', '\\');
+foreach ($rows as $r) {
+  $line = [];
+  foreach ($header as $col) {
+    $line[] = $r[$col] ?? '';
+  }
+  fputcsv($fh, $line, ',', '"', '\\');
+}
+fclose($fh);
+
+echo "Wrote {$outFile} (" . count($rows) . " rows)\n";

@@ -10,9 +10,9 @@ display:
           label: 'نوع الصندوق'
           separator: ', '
         changed:
-          label: التحديث
+          label: 'آخر تحديث'
         operations:
-          label: عمليات
+          label: العمليات
       pager:
         options:
           tags:
@@ -25,8 +25,8 @@ display:
       exposed_form:
         options:
           submit_button: تطبيق
-          reset_button_label: 'إعادة الضبط'
-          exposed_sorts_label: 'الترتيب حسب'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'ترتيب حسب'
           sort_asc_label: تصاعدي
           sort_desc_label: تنازلي
       filters:

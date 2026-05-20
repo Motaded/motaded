@@ -1,0 +1,74 @@
+uuid: b1111111-1111-4111-8111-111111111042
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_setup_card.field_body
+    - field.field.paragraph.business_setup_card.field_business_setup_icon
+    - field.field.paragraph.business_setup_card.field_business_setup_popular
+    - field.field.paragraph.business_setup_card.field_link
+    - field.field.paragraph.business_setup_card.field_media
+    - field.field.paragraph.business_setup_card.field_title
+    - paragraphs.paragraphs_type.business_setup_card
+  module:
+    - link
+    - media_library
+    - paragraphs
+    - text
+id: paragraph.business_setup_card.default
+targetEntityType: paragraph
+bundle: business_setup_card
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_business_setup_icon:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_business_setup_popular:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 4
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 0
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

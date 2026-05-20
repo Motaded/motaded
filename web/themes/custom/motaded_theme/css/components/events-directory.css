@@ -1,0 +1,2001 @@
+/*
+ * Events listing (/events): hero + filter bar + responsive grid + calendar toggle.
+ */
+
+/* Негативний margin фільтрів не має обрізатись батьками layout */
+.events-directory.events-directory-page {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.main-wrapper:has(.events-directory.events-directory-page),
+main:has(.events-directory.events-directory-page),
+.layout-content:has(.events-directory.events-directory-page) {
+  overflow: visible;
+}
+
+/* Half of the exposed filter bar height — straddle hero vs page-gray */
+.events-directory-page.events-directory {
+  --edb-filter-straddle: clamp(3.5rem, 6.5vw, 5rem);
+}
+
+@media (max-width: 1100px) {
+  .events-directory-page.events-directory {
+    --edb-filter-straddle: clamp(4.25rem, 9vw, 6rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .events-directory-page.events-directory {
+    --edb-filter-straddle: clamp(5rem, 14vw, 7rem);
+  }
+}
+
+/* —— Full-bleed hero —— */
+.events-directory__hero {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: clamp(2.25rem, 5vw, 3.5rem) clamp(1rem, 3vw, 1.5rem) clamp(0.85rem, 2vw, 1.25rem);
+  margin-bottom: 0;
+  /* clip по X давав приховане обрізання straddle у частини браузерів */
+  overflow: visible;
+}
+
+.events-directory__hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: var(--events-hero-bg, none);
+  background-size: cover;
+  background-position: 78% 35%;
+  z-index: 0;
+}
+
+.events-directory__hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    92deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.98) 34%,
+    rgba(255, 255, 255, 0.58) 56%,
+    rgba(248, 250, 252, 0.22) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.events-directory__hero-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: min(26vh, 480px);
+}
+
+.events-directory__hero-top {
+  display: grid;
+  gap: 1.85rem 2.5rem;
+  align-items: start;
+  flex: 1 1 auto;
+}
+
+@media (min-width: 1024px) {
+  .events-directory__hero-top {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 680px);
+  }
+}
+
+.events-directory__hero-copy {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+}
+
+.events-directory__hero-top .events-directory__stats-card {
+  justify-self: stretch;
+  width: 100%;
+  max-width: 680px;
+}
+
+@media (min-width: 1024px) {
+  .events-directory__hero-top .events-directory__stats-card {
+    justify-self: end;
+    width: 100%;
+  }
+}
+
+.events-directory__masthead--hero {
+  margin-bottom: 0;
+  max-width: 44rem;
+}
+
+.events-directory__hero-filters {
+  position: relative;
+  z-index: 3;
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 3.5vw, 2.5rem);
+  flex-shrink: 0;
+  /* ~50 % панелі на фоні hero, ~50 % — на світлій зоні під ним */
+  margin-bottom: calc(-1 * var(--edb-filter-straddle, 3rem));
+}
+
+.events-directory-page .events-directory > .events-directory__shell {
+  padding-top: calc(
+    var(--edb-filter-straddle, 3rem) + clamp(0.85rem, 2.2vw, 1.4rem)
+  );
+}
+
+/* BEF / Views wrappers: flatten so flex row controls real .form-items + .form-actions */
+.events-directory__hero-filters .views-exposed-form fieldset:not(.form-composite) {
+  display: contents !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  min-inline-size: 0 !important;
+}
+
+.events-directory__hero-filters .views-exposed-form > .fieldset-wrapper,
+.events-directory__hero-filters .views-exposed-form > div.bef,
+.events-directory__hero-filters .views-exposed-form > .bef-secondary-options,
+.events-directory__hero-filters .views-exposed-form > .bef-exposed-form,
+.events-directory__hero-filters .views-exposed-form > .details-wrapper,
+.events-directory__hero-filters .views-exposed-form > .bef--combined {
+  display: contents !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.events-directory__hero-filters fieldset.form-wrapper > .fieldset-wrapper,
+.events-directory__hero-filters .bef-primary-options,
+.events-directory__hero-filters .bef-secondary-options {
+  display: contents !important;
+}
+
+.events-directory__hero-filters .fieldset-legend.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* Views wraps fields in .form--inline — flatten so flex row applies to inputs */
+.events-directory__hero-filters .views-exposed-form .form--inline {
+  display: contents !important;
+}
+
+.events-directory__hero-filters .views-exposed-form .form--inline.clearfix::after {
+  content: none;
+  display: none;
+}
+
+/* —— Hero filter bar (single row desktop; items are flex siblings of form) —— */
+.events-directory__hero-filters .views-exposed-form {
+  --edb-control-h: 2.6875rem;
+  --edb-gap: 0.75rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-end;
+  gap: var(--edb-gap);
+  margin-bottom: 0;
+  padding: 1.05rem 1.25rem 1.1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+  min-width: 0;
+}
+
+.events-directory__hero-filters .views-exposed-form .form-item-title {
+  flex: 3 1 220px;
+  min-width: 200px;
+  max-width: none;
+  overflow: visible !important;
+}
+
+@media (min-width: 1200px) {
+  .events-directory__hero-filters .views-exposed-form .form-item-title {
+    min-width: min(340px, 32vw);
+  }
+}
+
+.events-directory__hero-filters .views-exposed-form .form-item-field-event-type-target-id,
+.events-directory__hero-filters .views-exposed-form .form-item-field-sector-pages-target-id,
+.events-directory__hero-filters .views-exposed-form .form-item-field-region-target-id {
+  flex: 0 1 132px;
+  min-width: 6.75rem;
+  max-width: 11rem;
+}
+
+.events-directory__hero-filters .views-exposed-form .form-item-motaded-event-date-from,
+.events-directory__hero-filters .views-exposed-form .form-item-motaded-event-date-to {
+  flex: 0 1 9.25rem;
+  min-width: 7.75rem;
+  max-width: 10rem;
+}
+
+.events-directory__hero-filters .views-exposed-form .form-actions {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
+  gap: 0.5rem;
+  margin: 0 !important;
+  margin-inline-start: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+}
+
+.events-directory__hero-filters .views-exposed-form .form-actions input.button,
+.events-directory__hero-filters .views-exposed-form .form-actions button {
+  flex-shrink: 0;
+  min-height: var(--edb-control-h, 2.6875rem);
+  padding-block: 0.45rem;
+  padding-inline: 1rem;
+  font-size: 0.835rem;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Пошук: підпис «Search» лишається для a11y, візуально прибираємо — вирівнювання як у полів з label. */
+.events-directory__hero-filters .form-item.form-item-title {
+  position: relative;
+  padding-top: 1.25rem;
+}
+
+.events-directory__hero-filters .form-item-title > label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Плоский wrapper для текстового поля пошуку (без другого шару bg/border із input.html.twig). */
+.events-directory__hero-filters .form-item-title .form-el-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  width: 100%;
+  display: block !important;
+}
+
+/* Allow wrap only on narrow viewports */
+@media (max-width: 1100px) {
+  .events-directory__hero-filters .views-exposed-form {
+    flex-flow: row wrap;
+  }
+
+  .events-directory__hero-filters .views-exposed-form .form-item-title {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .events-directory__hero-filters .views-exposed-form .form-actions {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .events-directory__hero-inner {
+    min-height: unset;
+  }
+
+  .events-directory__hero-filters .views-exposed-form .form-actions input,
+  .events-directory__hero-filters .views-exposed-form .form-actions .button {
+    flex: 1 1 calc(50% - 0.35rem);
+  }
+}
+
+.events-directory-page .events-directory__hero-filters .form-item-title input[type="text"],
+.events-directory-page .events-directory__hero-filters .form-item-title input.form-text {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: var(--edb-control-h, 2.6875rem);
+  padding: 0.5rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  background-color: #fff;
+  box-sizing: border-box;
+  box-shadow: none;
+  background-image: none;
+  text-overflow: clip;
+}
+
+.events-directory-page .events-directory__hero-filters .form-item-title .form-el-wrapper input[type="text"] {
+  min-height: var(--edb-control-h, 2.6875rem);
+}
+
+/* Twig: лупа + img справа — без фонового дублю, місце під іконку */
+.events-directory__hero-filters .form-item-title:has(img) input[type="text"],
+.events-directory__hero-filters .form-item-title:has(img) input.form-text {
+  background-image: none;
+  padding-left: 0.9rem !important;
+}
+
+.events-directory__hero-filters .form-item-title:has(img) img {
+  display: none !important;
+}
+
+.events-directory__hero-filters .form-item-title.form-item.relative {
+  overflow: visible !important;
+}
+
+.events-directory__hero-filters .form-item-title input::placeholder {
+  text-overflow: clip;
+}
+
+.events-directory-page .events-directory__hero-filters .views-exposed-form select {
+  max-width: none;
+  height: var(--edb-control-h, 2.6875rem);
+  min-height: var(--edb-control-h, 2.6875rem);
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* padding справа під стрілку, щоб не прилипала до бордера */
+  padding-inline: 0.7rem 2.25rem;
+  padding-block: 0;
+  line-height: 1.25rem;
+  font-size: 0.875rem;
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%236b7280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.875rem;
+}
+
+[dir="rtl"] .events-directory-page .events-directory__hero-filters .views-exposed-form select {
+  background-position: left 0.7rem center;
+}
+
+/* Обгортка дати (input.html.twig): одна видима рамка; inner без border (без «подвійного» контуру). */
+.events-directory__hero-filters .views-exposed-form .form-item-motaded-event-date-from .form-el-wrapper,
+.events-directory__hero-filters .views-exposed-form .form-item-motaded-event-date-to .form-el-wrapper {
+  min-height: var(--edb-control-h, 2.6875rem) !important;
+  height: var(--edb-control-h, 2.6875rem) !important;
+  align-items: center !important;
+  background: #fff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  padding-inline: 0.45rem !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+.events-directory__hero-filters .form-item-motaded-event-date-from .form-el-wrapper:focus-within,
+.events-directory__hero-filters .form-item-motaded-event-date-to .form-el-wrapper:focus-within {
+  border-color: #94a3b8 !important;
+  outline: 2px solid rgba(0, 71, 63, 0.22);
+  outline-offset: 1px;
+}
+
+.events-directory__hero-filters .form-item-motaded-event-date-from .form-el-wrapper input[type="date"],
+.events-directory__hero-filters .form-item-motaded-event-date-to .form-el-wrapper input[type="date"],
+.events-directory__hero-filters .form-item-motaded-event-date-from input.form-date,
+.events-directory__hero-filters .form-item-motaded-event-date-to input.form-date {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  appearance: none;
+  min-height: 0 !important;
+  height: 100%;
+  padding: 0.2rem 0.35rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  color: #0f172a !important;
+  flex: 1 1 auto;
+}
+
+/* Safety: якщо десь прилітає іконка/фон — для From/To завжди прибираємо. */
+.events-directory__hero-filters .form-item-motaded-event-date-from input,
+.events-directory__hero-filters .form-item-motaded-event-date-to input {
+  background-image: none !important;
+}
+
+.events-directory__hero-filters .form-item-motaded-event-date-from img,
+.events-directory__hero-filters .form-item-motaded-event-date-to img {
+  display: none !important;
+}
+
+.events-directory .views-exposed-form .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.events-directory .views-exposed-form label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.events-directory__hero-filters .views-exposed-form .form-item label:not(.visually-hidden):not(.sr-only) {
+  margin-bottom: 0.42rem;
+  line-height: 1.2;
+}
+
+.events-directory .views-exposed-form select,
+.events-directory .views-exposed-form input[type="date"] {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.5rem 2rem 0.5rem 0.65rem;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #fff;
+  color: #0f172a;
+}
+
+.events-directory__hero-filters .views-exposed-form select {
+  border-radius: 12px;
+}
+
+.events-directory .views-exposed-form input[type="date"] {
+  padding: 0.5rem 0.65rem;
+  min-height: 2.5rem;
+}
+
+.events-directory .views-exposed-form .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.events-directory .views-exposed-form .button,
+.events-directory .views-exposed-form input[type="submit"] {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.events-directory .views-exposed-form .button:not([data-drupal-selector*="reset"]),
+.events-directory .views-exposed-form input[type="submit"]:not([data-drupal-selector*="reset"]) {
+  background: var(--event-brand, #00473f);
+  color: #fff;
+  border-color: var(--event-brand, #00473f);
+}
+
+.events-directory .views-exposed-form .button[data-drupal-selector*="reset"],
+.events-directory .views-exposed-form input[data-drupal-selector*="reset"] {
+  background: transparent;
+  color: var(--event-brand, #00473f);
+  border-color: rgba(0, 71, 63, 0.35);
+}
+
+/* Після загальних правил форми: екшени тільки в hero залишаються на нижній лінії контролів */
+.events-directory__hero-filters .views-exposed-form.form--inline .form-actions {
+  align-items: center;
+}
+
+.events-directory__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.35rem 1.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 1280px) {
+  .events-directory__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .events-directory__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .events-directory__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.events-directory__pager .pager {
+  margin-top: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.events-directory .pager {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.events-directory .pager__items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.events-directory .pager__item a,
+.events-directory .pager__item span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.events-directory .pager__item.is-active a {
+  background: var(--event-brand, #00473f);
+  color: #fff;
+}
+
+.events-directory .pager__item a {
+  color: var(--event-brand, #00473f);
+  text-decoration: none;
+  border: 1px solid rgba(0, 71, 63, 0.2);
+}
+
+.events-directory .pager__item a:hover,
+.events-directory .pager__item a:focus-visible {
+  border-color: var(--event-brand, #00473f);
+}
+
+.events-directory__empty {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: #475569;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #fafafa;
+}
+
+/* —— Page shell —— */
+.events-directory-page.events-directory {
+  padding-bottom: 3rem;
+}
+
+.events-directory__shell {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+}
+
+.events-directory__breadcrumb {
+  margin: 0 0 1.25rem;
+}
+
+.events-directory__breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.events-directory__breadcrumb-item:not(.events-directory__breadcrumb-item--current)::after {
+  content: "›";
+  margin-inline-start: 0.5rem;
+  color: #94a3b8;
+}
+
+.events-directory__breadcrumb-item a {
+  color: var(--event-brand, #00473f);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.events-directory__breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.events-directory__breadcrumb-item--current {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* —— Page masthead —— */
+.events-directory__masthead {
+  max-width: 52rem;
+  margin: 0 0 1.75rem;
+}
+
+.events-directory__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--event-brand, #00473f);
+}
+
+.events-directory__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.events-directory__lede {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.events-directory__filters {
+  margin-bottom: 1.5rem;
+}
+
+/* Hero stats — компактна картка (іконка → число → підпис) */
+.events-directory__stats-card {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  padding: clamp(1.1rem, 2.2vw, 1.45rem) clamp(1.25rem, 2.8vw, 2rem);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.1);
+}
+
+.events-directory__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(0.65rem, 2vw, 1.05rem);
+  row-gap: 0;
+  text-align: center;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .events-directory__stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: unset;
+    row-gap: 1rem;
+  }
+
+  .events-directory__stats-card {
+    min-height: unset;
+  }
+}
+
+.events-directory__stat-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  min-width: 0;
+  padding-block: 0.25rem;
+  padding-inline: 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .events-directory__stat-col {
+    min-height: unset;
+    padding-block: 0.35rem;
+  }
+}
+
+.events-directory__stat-col .events-directory__stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.875rem;
+  height: 2.875rem;
+  margin: 0 0 0.52rem;
+  border-radius: 10px;
+  background: rgba(0, 71, 63, 0.08);
+  color: var(--event-brand, #00473f);
+  flex: 0 0 auto;
+}
+
+.events-directory__stat-col .events-directory__stat-value {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.3rem, 2.75vw, 1.72rem);
+  font-weight: 800;
+  line-height: 1.08;
+  color: #0f172a;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.events-directory__stat-col .events-directory__stat-label {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 0.1rem;
+  font-size: 0.72rem;
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: 0.008em;
+  color: #475569;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 901px) {
+  .events-directory__stat-col .events-directory__stat-label {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 900px) {
+  .events-directory__stat-col .events-directory__stat-label {
+    white-space: normal;
+    font-size: 0.78rem;
+    min-height: unset;
+  }
+}
+
+/* BEF / Views sometimes wrap fields: keep one visual row. */
+.events-directory-page .events-directory .views-exposed-form > .fieldset-wrapper,
+.events-directory-page .events-directory .views-exposed-form > div.bef,
+.events-directory-page .events-directory .views-exposed-form > .bef-secondary-options {
+  display: contents;
+}
+
+/* —— Featured “happening next” (dark band + sidebar) —— */
+.events-directory__featured-wrap {
+  margin: 6rem 0 2.5rem;
+}
+
+.events-directory__featured-header {
+  margin-bottom: 0.85rem;
+}
+
+.events-directory__featured-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--event-brand, #00473f);
+}
+
+.events-directory__featured-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.events-directory__featured {
+  display: grid;
+  gap: 1.25rem;
+  align-items: stretch;
+  padding: 1.25rem;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #003930 0%, #00473f 45%, #055a50 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 40, 35, 0.35);
+}
+
+@media (min-width: 980px) {
+  .events-directory__featured {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
+    gap: 1.5rem;
+    padding: 1.35rem 1.35rem 1.35rem 1.5rem;
+  }
+
+  [dir='rtl'] .events-directory__featured {
+    grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  }
+
+  [dir='rtl'] .events-directory__featured-main {
+    order: 2;
+  }
+
+  [dir='rtl'] .events-directory__featured-aside {
+    order: 1;
+  }
+}
+
+.events-directory__featured-main {
+  min-width: 0;
+}
+
+/* Featured teaser on dark chrome */
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__link {
+  /* Text column + photo column (LTR: text start, photo end). */
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 48%);
+  grid-template-areas: "body media";
+  /* Не даємо featured-hero “роздувати” секцію */
+  height: clamp(240px, 26vw, 340px);
+  align-items: stretch;
+  border-radius: 14px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #f1f5f9;
+  overflow: hidden;
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__link:hover,
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__link:focus-visible {
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__title {
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  color: #fff;
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__excerpt,
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__meta-item,
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__date-row {
+  color: rgba(241, 245, 249, 0.88);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__date-icon,
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__meta-icon {
+  color: rgba(167, 243, 208, 0.95);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__chip {
+  color: #ecfdf5;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__type-pill {
+  color: var(--event-brand, #00473f);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__date-text {
+  color: rgba(241, 245, 249, 0.92);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__more {
+  margin-top: 0.85rem;
+  padding-top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: fit-content;
+  background: #fff;
+  color: var(--event-brand, #00473f);
+  font-weight: 800;
+  font-size: 0.88rem;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__badge {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--event-brand, #00473f);
+  border-radius: 12px;
+  padding: 0.5rem 0.6rem;
+}
+
+.events-directory__featured-main .event-teaser--has-media .event-teaser__media-inner::after {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    transparent 45%,
+    rgba(0, 24, 20, 0.55) 100%
+  );
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__media {
+  /* права частина — повна висота карточки */
+  grid-area: media;
+  align-self: stretch;
+  width: 100%;
+  height: 100% !important;
+  min-height: 0;
+  aspect-ratio: auto !important;
+  position: relative;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Base teaser CSS sets aspect-ratio + absolute media inner. Override for featured grid. */
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__media-inner {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__body {
+  grid-area: body;
+  align-self: stretch;
+  padding: 1.35rem 1.55rem 1.55rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Ліву частину робимо більш “суцільною” (без окремої підкладки) */
+.events-directory__featured-main .event-teaser--featured-hero .event-teaser__excerpt {
+  max-width: 32rem;
+}
+
+@media (min-width: 900px) {
+  [dir='rtl'] .events-directory__featured-main .event-teaser--featured-hero .event-teaser__link {
+    grid-template-columns: minmax(320px, 48%) minmax(0, 1fr);
+    grid-template-areas: "media body";
+  }
+}
+
+@media (max-width: 899px) {
+  .events-directory__featured-main .event-teaser--featured-hero .event-teaser__link {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .events-directory__featured-main .event-teaser--featured-hero .event-teaser__body {
+    grid-column: auto;
+    padding: 1.15rem 1.25rem 1.25rem;
+  }
+
+  .events-directory__featured-main .event-teaser--featured-hero .event-teaser__media {
+    grid-column: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.events-directory__featured-aside {
+  align-self: stretch;
+  padding: 1rem 1.05rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+}
+
+.events-directory__aside-title {
+  margin: 0 0 0.85rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.events-directory__aside-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.events-directory__aside-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.55rem 0.05rem;
+  font-size: 0.9125rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.events-directory__aside-list a::after {
+  content: "›";
+  opacity: 0.75;
+  font-size: 1.05rem;
+}
+
+.events-directory__aside-list a:hover,
+.events-directory__aside-list a:focus-visible {
+  opacity: 0.92;
+  text-decoration: underline;
+}
+
+.events-directory__aside-list li:last-child a {
+  border-bottom: none;
+}
+
+/* —— List / calendar toolbar —— */
+.events-directory__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem 1.25rem;
+  margin: 0 0 1.35rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.events-directory__toolbar-intro {
+  min-width: 0;
+}
+
+.events-directory__grid-heading {
+  margin: 0 0 0.2rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.events-directory__grid-lede {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.events-directory__toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+}
+
+.events-directory__toolbar-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.events-directory__toggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: #e8eeec;
+  border: 1px solid #d0ded9;
+}
+
+.events-directory__toggle-btn {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.45rem 1rem;
+  border-radius: 9px;
+  color: #475569;
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.events-directory__toggle-btn.is-active {
+  background: #fff;
+  color: var(--event-brand, #00473f);
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.12);
+}
+
+.events-directory__toggle-btn:focus-visible {
+  outline: 2px solid var(--event-brand, #00473f);
+  outline-offset: 2px;
+}
+
+.events-directory__panel--calendar {
+  margin-bottom: 1.5rem;
+}
+
+.events-directory__calendar-attachment .events-directory__calendar-shell,
+.events-directory__calendar-attachment.events-directory__calendar-shell {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1rem 1rem 1.25rem;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.05);
+}
+
+.events-directory-page .fc {
+  --fc-page-bg-color: transparent;
+}
+
+/* FullCalendar — стилізація як на homepage */
+.events-directory__calendar-shell .fc-toolbar.fc-header-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.15rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid #e8edf2;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-right {
+  display: none !important;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-left {
+  flex: 0 0 auto;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-center {
+  flex: 1 1 auto;
+  margin-inline-start: auto;
+  text-align: right;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-center h2,
+.events-directory__calendar-shell .fc-header-toolbar .fc-toolbar-title {
+  margin: 0;
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--event-brand, #00473f);
+  line-height: 1.25;
+  background: rgba(0, 71, 63, 0.07);
+  border: 1px solid rgba(0, 71, 63, 0.18);
+  border-radius: 999px;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-button-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border: 0;
+  border-radius: 12px;
+  background: #f1f5f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  vertical-align: middle;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-button-group > .fc-button {
+  margin: 0 !important;
+  border-radius: 9px !important;
+  padding: 0.42rem 0.78rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  border-width: 1px !important;
+  text-transform: capitalize;
+  box-shadow: none !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-prev-button,
+.events-directory__calendar-shell .fc-header-toolbar .fc-next-button {
+  padding-left: 0.48rem !important;
+  padding-right: 0.48rem !important;
+  min-width: 2.4rem;
+  background: #fff !important;
+  color: var(--event-brand, #00473f) !important;
+  border-color: rgba(0, 71, 63, 0.28) !important;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-prev-button:hover,
+.events-directory__calendar-shell .fc-header-toolbar .fc-prev-button:focus-visible,
+.events-directory__calendar-shell .fc-header-toolbar .fc-next-button:hover,
+.events-directory__calendar-shell .fc-header-toolbar .fc-next-button:focus-visible {
+  background: #fff !important;
+  border-color: var(--event-brand, #00473f) !important;
+  color: var(--event-brand, #00473f) !important;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-today-button {
+  background: var(--event-brand, #00473f) !important;
+  border-color: var(--event-brand, #00473f) !important;
+  color: #fff !important;
+}
+
+.events-directory__calendar-shell .fc-header-toolbar .fc-today-button:hover,
+.events-directory__calendar-shell .fc-header-toolbar .fc-today-button:focus-visible {
+  filter: brightness(1.08);
+}
+
+.events-directory__calendar-shell .fc-button-primary {
+  background: var(--event-brand, #00473f);
+  border-color: var(--event-brand, #00473f);
+}
+
+.events-directory__calendar-shell .js-drupal-fullcalendar {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0;
+}
+
+.events-directory__calendar-shell .fc .fc-daygrid-event {
+  white-space: normal;
+  align-items: stretch;
+}
+
+.events-directory__calendar-shell .fc .fc-daygrid-event .fc-event-time {
+  font-weight: 800;
+  margin-right: 0.35rem;
+}
+
+.events-directory__calendar-shell .fc .fc-daygrid-event .fc-event-title {
+  white-space: normal;
+}
+
+/* Row spacing inside grid */
+.events-directory__grid .views-row {
+  display: flex;
+  min-height: 0;
+}
+
+.events-directory__grid .views-row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.events-directory__pager {
+  margin-top: 2rem;
+}
+
+/* —— Newsletter / lead capture strip —— */
+.events-directory__newsletter {
+  margin: 2.5rem 0 0;
+  padding: 1.25rem 1.25rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f4f6f5 0%, #eef2f0 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 22px rgba(15, 23, 42, 0.04);
+}
+
+.events-directory__newsletter-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem 1.25rem;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.events-directory__newsletter-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.events-directory__newsletter-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.events-directory__newsletter-lede {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.events-directory__newsletter-form {
+  width: 100%;
+  max-width: 560px;
+  flex: 0 0 auto;
+}
+
+.events-directory__newsletter-form .webform-submission-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  margin: 0;
+}
+
+/* Webform markup uses Tailwind-ish utility classes; neutralize widths/backgrounds inside this strip. */
+.events-directory__newsletter-form .webform-submission-form :where(label, .option) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-email,
+.events-directory__newsletter-form .webform-submission-form .form-item-consent {
+  align-items: stretch !important;
+  gap: 0.35rem !important;
+  flex: 1 1 auto !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-email .form-el-wrapper {
+  background: #fff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  height: 2.75rem !important;
+  min-height: 2.75rem !important;
+  padding-inline: 0.65rem !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-email input[type="email"] {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  color: #0f172a !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-email input[type="email"]::placeholder {
+  color: #94a3b8;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-consent {
+  display: grid !important;
+  grid-template-columns: 0.95rem minmax(0, 1fr);
+  gap: 0.35rem 0.55rem !important;
+  align-items: center !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-consent input[type="checkbox"] {
+  margin: 0 !important;
+  width: 0.9rem;
+  height: 0.9rem;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid rgba(100, 116, 139, 0.55);
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-consent input[type="checkbox"]:checked {
+  border-color: rgba(0, 71, 63, 0.65);
+  background-color: var(--event-brand, #00473f);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.3 4.9 9l4.9-6' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-consent input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgba(0, 71, 63, 0.22);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 71, 63, 0.08);
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item-consent label {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #334155 !important;
+  margin: 0 !important;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-item {
+  margin: 0;
+}
+
+.events-directory__newsletter-form .webform-submission-form label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.events-directory__newsletter-form .webform-submission-form input[type="email"] {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.events-directory__newsletter-form .webform-submission-form input[type="email"]:focus-visible {
+  outline: 2px solid rgba(0, 71, 63, 0.22);
+  outline-offset: 2px;
+  border-color: rgba(0, 71, 63, 0.35);
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-type-checkboxes .form-checkboxes,
+.events-directory__newsletter-form .webform-submission-form .form-type-checkbox .form-checkbox {
+  margin-top: 0.35rem;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-type-checkboxes .form-item,
+.events-directory__newsletter-form .webform-submission-form .form-type-checkbox .form-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-type-checkboxes label,
+.events-directory__newsletter-form .webform-submission-form .form-type-checkbox label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #334155;
+  margin: 0;
+}
+
+.events-directory__newsletter-form .webform-submission-form .form-actions {
+  margin: 0;
+  padding: 0;
+}
+
+.events-directory__newsletter-form .webform-submission-form input[type="submit"],
+.events-directory__newsletter-form .webform-submission-form button[type="submit"] {
+  width: 100%;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.62rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: #fff;
+  background: var(--event-brand, #00473f);
+  border-radius: 12px;
+  border: 2px solid transparent;
+  box-shadow: 0 6px 20px rgba(0, 71, 63, 0.22);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.events-directory__newsletter-form .webform-submission-form input[type="submit"]:hover,
+.events-directory__newsletter-form .webform-submission-form input[type="submit"]:focus-visible,
+.events-directory__newsletter-form .webform-submission-form button[type="submit"]:hover,
+.events-directory__newsletter-form .webform-submission-form button[type="submit"]:focus-visible {
+  background: #00352d;
+  box-shadow: 0 10px 28px rgba(0, 71, 63, 0.28);
+  color: #fff;
+}
+
+.events-directory__newsletter-form .webform-submission-form input[type="submit"]:focus-visible,
+.events-directory__newsletter-form .webform-submission-form button[type="submit"]:focus-visible {
+  outline: 2px solid var(--event-brand, #00473f);
+  outline-offset: 3px;
+}
+
+@media (min-width: 980px) {
+  .events-directory__newsletter-inner {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .events-directory__newsletter-form .webform-submission-form {
+    grid-template-columns: minmax(0, 1fr) 11.5rem;
+    grid-template-areas:
+      "email submit"
+      "consent consent";
+    align-items: end;
+  }
+
+  .events-directory__newsletter-form .webform-submission-form .form-item-email {
+    grid-area: email;
+  }
+
+  .events-directory__newsletter-form .webform-submission-form .form-item-consent {
+    grid-area: consent;
+  }
+
+  .events-directory__newsletter-form .webform-submission-form .form-actions {
+    grid-area: submit;
+    grid-column: 2;
+  }
+}
+
+/* =====================================================================
+ * Split-banner hero (consistent with /services, /sectors, /platforms,
+ * /library). Old `.events-directory__hero` styles above are no longer
+ * applied — the redesigned page uses `.events-directory__split-hero`.
+ * ===================================================================== */
+
+/* Dedicated events artwork on the visual side of the split banner.
+ * Loads WebP with PNG fallback through image-set(). The photo is rendered at
+ * ~92% of the column height (not cover) so the silhouette stays compact and
+ * never bleeds into the copy column. */
+.events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/events-bg.png') no-repeat inline-end center / auto 92%;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/events-bg.webp') type('image/webp'),
+      url('../../images/events-bg.png') type('image/png')
+    ) no-repeat inline-end center / auto 92%;
+  background-position: 0 0, inline-end center;
+  background-size: auto, auto 92%;
+}
+
+@media (min-width: 1280px) {
+  .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+    background-size: auto, auto 86%;
+  }
+}
+
+@media (max-width: 1023px) {
+  .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+    background-size: auto, auto 82%;
+  }
+}
+
+/* AR/RTL: PNG has figures on its right — clip layer to the left half, anchor image to that edge. */
+[dir='rtl'] .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+  transform: none;
+  inset: 0 auto 0 0;
+  width: min(58%, 42rem);
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/events-bg.png') no-repeat 100% center / auto 92%;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/events-bg.webp') type('image/webp'),
+      url('../../images/events-bg.png') type('image/png')
+    ) no-repeat 100% center / auto 92%;
+  background-position: 0 0, 100% center;
+  background-size: auto, auto 92%;
+}
+
+@media (min-width: 1280px) {
+  [dir='rtl'] .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+    background-size: auto, auto 86%;
+  }
+}
+
+@media (max-width: 1023px) {
+  [dir='rtl'] .events-directory.events-directory--page .services-page-hero__visual-photo.events-directory__hero-photo {
+    background-size: auto, auto 82%;
+  }
+}
+
+/* Reset full-bleed / sidebar inherited from /services skin. */
+.events-directory.events-directory--page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Hero stat strip with 4 quick links: even distribution on wide screens. */
+@media (min-width: 720px) {
+  .events-directory .services-page-hero__stats-strip--four .services-page-hero__stat {
+    flex: 1 1 25%;
+  }
+}
+
+@media (max-width: 719px) {
+  .events-directory .services-page-hero__stats-strip--four .services-page-hero__stat {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+}
+
+/* =====================================================================
+ * Filters band — same architecture as /platforms and /sectors: a single
+ * card below the hero, where the `.form--inline` (Views' real flex
+ * container) is forced into a wrap-row of equally-styled fields and the
+ * actions are pushed to the end of the row.
+ * ===================================================================== */
+.events-directory.events-directory--page .events-directory__filters-band {
+  width: 100%;
+  max-width: var(--mot-home-max, 1320px);
+  margin: clamp(1rem, 2.5vw, 1.75rem) auto clamp(1rem, 2.5vw, 1.5rem);
+  padding-inline: var(--mot-pad-x, 1rem);
+  box-sizing: border-box;
+}
+
+/* Outer card. */
+.events-directory.events-directory--page #events-directory-filters .views-exposed-form {
+  background: #fff;
+  border: 1px solid rgba(0, 71, 63, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 16px 36px -28px rgba(0, 71, 63, 0.35);
+  padding: clamp(0.85rem, 2vw, 1.15rem) clamp(0.85rem, 2vw, 1.25rem);
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* The real flex row lives on .form--inline; force it (and the form
+ * wrapper itself) to be a wrap row with end-aligned items. */
+.events-directory.events-directory--page #events-directory-filters .views-exposed-form,
+.events-directory.events-directory--page #events-directory-filters .views-exposed-form > .form--inline,
+.events-directory.events-directory--page #events-directory-filters .form--inline.clearfix {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start !important;
+  gap: 0.75rem 1rem;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Prevent the legacy clearfix pseudo from breaking flex alignment. */
+.events-directory.events-directory--page #events-directory-filters .form--inline.clearfix::after,
+.events-directory.events-directory--page #events-directory-filters .form--inline.clearfix::before {
+  content: none;
+  display: none;
+}
+
+/* Reset stray inline margins from form-items so gap controls spacing. */
+.events-directory.events-directory--page #events-directory-filters .form-item {
+  margin: 0;
+}
+
+/* Field sizing on desktop: search grows, selects + date inputs share
+ * one fixed track each, actions float to the end. */
+.events-directory.events-directory--page #events-directory-filters .form-item-title {
+  flex: 2 1 18rem;
+  min-width: min(100%, 14rem);
+  max-width: 100%;
+  position: relative;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-field-event-type-target-id,
+.events-directory.events-directory--page #events-directory-filters .form-item-field-sector-pages-target-id,
+.events-directory.events-directory--page #events-directory-filters .form-item-field-region-target-id {
+  flex: 1 1 9.5rem;
+  min-width: 8rem;
+  max-width: 13rem;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to {
+  flex: 1 1 8.5rem;
+  min-width: 7.5rem;
+  max-width: 10rem;
+}
+
+/* Labels: subtle, brand-toned, uppercase — match the look used on
+ * /platforms and /sectors filter bars. */
+.events-directory.events-directory--page #events-directory-filters .form-item > label {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64758b;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from > label,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to > label {
+  cursor: pointer;
+}
+
+/* Hide search label visually (it's already implied by placeholder). */
+.events-directory.events-directory--page #events-directory-filters .form-item-title > label.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Search input: drop the Tailwind utility look that bled in from the
+ * shared input template, normalize to the same height/border as
+ * selects and date inputs. */
+.events-directory.events-directory--page #events-directory-filters .form-item-title input.form-text {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  min-height: 2.6875rem;
+  padding: 0.55rem 2.35rem 0.55rem 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #fff;
+  color: #0f172a;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-title input.form-text:focus-visible {
+  outline: none;
+  border-color: #1a7344;
+  box-shadow: 0 0 0 3px rgba(26, 115, 68, 0.14);
+}
+
+/* Position the search icon inside the input. */
+.events-directory.events-directory--page #events-directory-filters .form-item-title img {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.8rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+[dir='rtl'] .events-directory.events-directory--page #events-directory-filters .form-item-title img {
+  right: auto;
+  left: 0.75rem;
+}
+
+/* Sector (BEF textfield): match select height; icon centers via .mot-views-filter-input. */
+.events-directory.events-directory--page #events-directory-filters .form-item-field-sector-pages-target-id .mot-views-filter-input input.form-text {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 2.6875rem;
+  padding: 0.55rem 2.35rem 0.55rem 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #fff;
+  color: #0f172a;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-field-sector-pages-target-id .mot-views-filter-input input.form-text:focus-visible {
+  outline: none;
+  border-color: #1a7344;
+  box-shadow: 0 0 0 3px rgba(26, 115, 68, 0.14);
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-field-sector-pages-target-id .mot-views-filter-input__icon {
+  opacity: 0.55;
+}
+
+/* Selects — single coherent style. */
+.events-directory.events-directory--page #events-directory-filters select.form-select {
+  width: 100%;
+  min-height: 2.6875rem;
+  padding: 0.55rem 2.35rem 0.55rem 0.95rem;
+  border-radius: 0.75rem;
+  border: 1px solid #cbd5e1;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%2364758b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 0.875rem;
+  color: #0f172a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  appearance: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+[dir='rtl'] .events-directory.events-directory--page #events-directory-filters select.form-select {
+  background-position: left 0.8rem center;
+  padding: 0.55rem 0.95rem 0.55rem 2.35rem;
+}
+
+.events-directory.events-directory--page #events-directory-filters select.form-select:hover {
+  border-color: #94a3b8;
+}
+
+.events-directory.events-directory--page #events-directory-filters select.form-select:focus-visible {
+  outline: none;
+  border-color: #1a7344;
+  box-shadow: 0 0 0 3px rgba(26, 115, 68, 0.14);
+}
+
+/* Date inputs — neutralize the Tailwind utility wrapper from the
+ * shared input.html.twig (.form-el-wrapper.bg-gray-100…) so the
+ * controls visually match selects/search. */
+.events-directory.events-directory--page #events-directory-filters .form-item .form-el-wrapper {
+  display: block;
+  position: static;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from .form-el-wrapper,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to .form-el-wrapper {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  min-height: 2.6875rem !important;
+  height: auto !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from input.form-date,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to input.form-date,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from input[type='date'],
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to input[type='date'] {
+  display: block !important;
+  width: 100% !important;
+  min-height: 2.6875rem !important;
+  height: 2.6875rem !important;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid #cbd5e1;
+  background-color: #fff;
+  color: #0f172a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+  cursor: pointer !important;
+  position: relative;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+/* WebKit: calendar opens from the whole field, not only the icon strip. */
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from input[type='date']::-webkit-calendar-picker-indicator,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to input[type='date']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-from input.form-date:focus-visible,
+.events-directory.events-directory--page #events-directory-filters .form-item-motaded-event-date-to input.form-date:focus-visible {
+  outline: none;
+  border-color: #1a7344;
+  box-shadow: 0 0 0 3px rgba(26, 115, 68, 0.14);
+}
+
+/* Actions: push to the end of the row, full width on mobile. */
+.events-directory.events-directory--page #events-directory-filters .form-actions,
+.events-directory.events-directory--page #events-directory-filters [data-drupal-selector^='edit-actions'] {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 0.5rem;
+  width: auto !important;
+  margin: 0 !important;
+  margin-inline-start: auto !important;
+}
+
+@media (max-width: 47.99rem) {
+  .events-directory.events-directory--page #events-directory-filters .form-actions,
+  .events-directory.events-directory--page #events-directory-filters [data-drupal-selector^='edit-actions'] {
+    flex: 1 1 100%;
+    margin-inline-start: 0 !important;
+    justify-content: flex-start !important;
+  }
+}
+
+/* Brand buttons: Submit = filled green, Reset = ghost. */
+.events-directory.events-directory--page #events-directory-filters .form-actions .button,
+.events-directory.events-directory--page #events-directory-filters .form-actions input[type='submit'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6875rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.625rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='submit'] {
+  background-color: #1a7344;
+  border-color: #1a7344;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(26, 115, 68, 0.18);
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='submit']:hover,
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='submit']:focus-visible {
+  background-color: #145c38;
+  border-color: #145c38;
+  box-shadow: 0 10px 22px rgba(26, 115, 68, 0.24);
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='submit']:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 10px rgba(26, 115, 68, 0.22);
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='reset'],
+.events-directory.events-directory--page #events-directory-filters .form-actions input[name='reset'] {
+  background-color: #fff;
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='reset']:hover,
+.events-directory.events-directory--page #events-directory-filters .form-actions input[name='reset']:hover,
+.events-directory.events-directory--page #events-directory-filters .form-actions input[data-drupal-selector*='reset']:focus-visible,
+.events-directory.events-directory--page #events-directory-filters .form-actions input[name='reset']:focus-visible {
+  border-color: #1a7344;
+  color: #1a7344;
+  background-color: #f0faf4;
+}
+
+/* The full-bleed events shell stays gray below the hero. */
+.events-directory.events-directory--page .events-directory__shell {
+  position: relative;
+}
+

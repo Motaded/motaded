@@ -1,0 +1,68 @@
+title: 'مساعدة تسجيل الفعالية'
+elements: |
+  email:
+    '#title': 'البريد الإلكتروني'
+    '#placeholder': 'أدخل البريد الإلكتروني'
+    '#required_error': 'البريد الإلكتروني مطلوب'
+  first_name:
+    '#title': 'الاسم الأول'
+    '#placeholder': 'أدخل الاسم الأول'
+    '#required_error': 'الاسم الأول مطلوب'
+  last_name:
+    '#title': 'اسم العائلة'
+    '#placeholder': 'أدخل اسم العائلة'
+    '#required_error': 'اسم العائلة مطلوب'
+  job_title:
+    '#title': 'المسمى الوظيفي'
+  company_name:
+    '#title': 'اسم الشركة'
+  city:
+    '#title': 'المدينة'
+    '#placeholder': 'أدخل المدينة'
+  country:
+    '#title': 'الدولة'
+    '#empty_option': 'يُرجى الاختيار'
+    '#required_error': 'يُرجى اختيار الدولة'
+  mobile:
+    '#title': 'الجوال'
+  register_as:
+    '#title': 'أرغب بالتسجيل كـ'
+    '#empty_option': 'يُرجى الاختيار'
+    '#required_error': 'يُرجى اختيار نوع التسجيل'
+    '#options':
+      'Trade visitor': 'زائر تجاري'
+      'Buyer visitor': 'زائر مشتري'
+      'Media attendee': 'مشارك إعلامي'
+      'Student/Tutor': 'طالب / مدرّس'
+      'Public visitor': 'زائر عام'
+      'Hosted Buyer': 'مشتري مدعو'
+  nature_of_business:
+    '#title': 'طبيعة النشاط'
+    '#empty_option': 'يُرجى الاختيار'
+    '#required_error': 'يُرجى اختيار طبيعة النشاط'
+    '#options':
+      'Government / Tourism Board': 'جهة حكومية / مجلس سياحي'
+      'Destination Management Organization (DMO)': 'منظمة إدارة الوجهات (DMO)'
+      'Travel Agency / Tour Operator': 'وكالة سفر / مشغّل سياحي'
+      'Hotel / Accommodation Provider': 'فندق / مزود إقامة'
+      'Airline / Transportation': 'خطوط جوية / نقل'
+      'Cruise Line': 'خط رحلات بحرية'
+      'Event Planning / MICE (Meetings, Incentives, Conferences, Exhibitions)': 'تنظيم فعاليات / MICE (اجتماعات، حوافز، مؤتمرات، معارض)'
+      'Tourism Marketing / Advertising Agency': 'وكالة تسويق سياحي / إعلان'
+      'Technology Solutions Provider': 'مزود حلول تقنية'
+      'Hospitality Consultant': 'استشاري ضيافة'
+      'Visitor Attraction / Entertainment': 'وجهة سياحية / ترفيه'
+      'Travel Insurance Provider': 'مزود تأمين سفر'
+      'Food & Beverage / Restaurant': 'أغذية ومشروبات / مطعم'
+      'Educational Institution (Tourism/Hospitality)': 'مؤسسة تعليمية (سياحة/ضيافة)'
+      'Sustainability / Ecotourism Initiatives': 'مبادرات استدامة / سياحة بيئية'
+      'Media / Publications': 'إعلام / منشورات'
+      'Retail / Souvenirs': 'تجزئة / هدايا تذكارية'
+      'Travel Blogger / Influencer': 'مدوّن سفر / مؤثر'
+      'Corporate / Business Travel Services': 'خدمات سفر شركات / أعمال'
+      'Wellness / Health Tourism Provider': 'مزود سياحة صحية / عافية'
+      Other: أخرى
+  actions:
+    '#submit__label': 'طلب المساعدة'
+settings:
+  form_submitted_message: 'شكراً — سنساعدك على التسجيل في هذه الفعالية.'

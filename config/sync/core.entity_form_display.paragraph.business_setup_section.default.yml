@@ -1,0 +1,88 @@
+uuid: b1111111-1111-4111-8111-111111111040
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.business_setup_section.field_body
+    - field.field.paragraph.business_setup_section.field_setup_banner_line1
+    - field.field.paragraph.business_setup_section.field_setup_banner_line2
+    - field.field.paragraph.business_setup_section.field_business_setup_cards
+    - field.field.paragraph.business_setup_section.field_business_setup_eyebrow
+    - field.field.paragraph.business_setup_section.field_title
+    - paragraphs.paragraphs_type.business_setup_section
+  module:
+    - paragraphs
+    - text
+id: paragraph.business_setup_section.default
+targetEntityType: paragraph
+bundle: business_setup_section
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_business_setup_cards:
+    type: paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: Card
+      title_plural: Cards
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: business_setup_card
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings: {  }
+  field_business_setup_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 80
+      placeholder: ''
+    third_party_settings: {  }
+  field_setup_banner_line1:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 100
+      placeholder: ''
+    third_party_settings: {  }
+  field_setup_banner_line2:
+    type: string_textfield
+    weight: 5
+    region: content
+    settings:
+      size: 80
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 80
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

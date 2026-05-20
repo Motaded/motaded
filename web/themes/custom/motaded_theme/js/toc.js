@@ -59,7 +59,7 @@ function articlePageEN() {
         const inlineCta = document.createElement("div");
         inlineCta.className = "article-inline-cta";
         inlineCta.innerHTML = `
-          <div class="article-inline-cta__eyebrow">${inlineCtaCopy.eyebrow}</div>
+          <div class="article-inline-cta__eyebrow mot-eyebrow mot-eyebrow--pill-solo">${inlineCtaCopy.eyebrow}</div>
           <h3 class="article-inline-cta__title">${inlineCtaCopy.title}</h3>
           <p class="article-inline-cta__text">
             ${inlineCtaCopy.text}

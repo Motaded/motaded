@@ -1,0 +1,44 @@
+uuid: f2222222-2222-4222-8222-222222222231
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hero_stat.field_hero_stat_icon
+    - field.field.paragraph.hero_stat.field_hero_stat_label
+    - field.field.paragraph.hero_stat.field_hero_stat_value
+    - paragraphs.paragraphs_type.hero_stat
+id: paragraph.hero_stat.default
+targetEntityType: paragraph
+bundle: hero_stat
+mode: default
+content:
+  field_hero_stat_icon:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hero_stat_label:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hero_stat_value:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

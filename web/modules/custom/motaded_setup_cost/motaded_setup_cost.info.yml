@@ -1,0 +1,10 @@
+name: 'Motaded setup cost calculator'
+type: module
+description: 'Configurable business setup cost estimator with Webform lead capture.'
+package: Custom
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:block
+  - drupal:language
+  - email_verification:email_verification
+  - webform:webform

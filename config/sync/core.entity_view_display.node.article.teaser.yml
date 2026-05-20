@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.article.field_image
     - field.field.node.article.field_media
     - field.field.node.article.field_meta
+    - field.field.node.article.field_sector
     - field.field.node.article.field_tags
     - field.field.node.article.field_taxonomy
     - node.type.article
@@ -48,6 +49,7 @@ hidden:
   field_faq: true
   field_image: true
   field_meta: true
+  field_sector: true
   field_tags: true
   field_taxonomy: true
   langcode: true

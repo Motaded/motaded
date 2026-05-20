@@ -376,7 +376,8 @@ html[lang="es"] #site-header .menu-item ul a p {
   }
 }
 
-.view-services.view-display-id-page_1 {
+/* Legacy services exposed layout only — page redesign uses toolbar grid in services-directory.css */
+.view-services.view-display-id-page_1:not(.services-directory--page-redesign) {
   .js-form-type-textfield label ~ img.absolute {
     --tw-translate-y: 0 !important;
   }
@@ -574,6 +575,9 @@ html[lang="es"] #site-header .menu-item ul a p {
 
 @source "./**/*.html";
 @source "./partials/**/*.html";
+/* Drupal templates: utilities used in *.html.twig must be scanned or they never reach dist/main.css */
+@source "../templates/**/*.html.twig";
+@source "../components/**/*.twig";
 
 .main-wrapper:has(.page-green) {
   @apply !bg-green-50;
@@ -1415,6 +1419,11 @@ table {
   height: 14px;
 }
 
+/* Desktop mega menu — hub CTA width (replaces inline style on link). */
+.menu-main-mega-hub-cta {
+  min-width: 180px;
+}
+
 /* CTA icon-only mode — icons only, larger buttons */
 .block-cta--icon-only .block-cta__btn {
   padding: 0.5rem;
@@ -1440,10 +1449,6 @@ table {
   padding-left: 16px;
 }
 
-#block-motaded-theme-ctaservicesblog-2 .block-cta__buttons {
-  margin-bottom: 1rem;
-}
-
 /* Block CTA heading — base style */
 .block-cta__heading {
   margin: 0 0 1rem 0;
@@ -1457,63 +1462,107 @@ table {
 }
 /* Hide badge in header and drawer */
 #site-header .block-cta__badge,
-[aria-label="Mobile menu"] .block-cta__badge {
+[aria-label="Mobile menu"] .block-cta__badge,
+.mot-mobile-drawer .block-cta__badge {
   display: none;
 }
 
-/* Pre-footer CTA — matches hero / packages vibe */
+/* Pre-footer CTA — flush with page surface; card inside provides elevation. */
 .pre-footer-band {
-  border-top: 1px solid oklch(0.92 0.02 175);
+  background: var(--mot-surface, #ffffff);
+  border-top: 1px solid var(--mot-border, #e2e8f0);
 }
+
+.pre-footer-band__panel {
+  text-align: center;
+  padding: clamp(2rem, 5vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 1.125rem;
+  border: 1px solid rgb(226 232 240 / 0.95);
+  background: #ffffff;
+  box-shadow: 0 10px 36px rgb(15 61 54 / 0.07);
+}
+
+/* Global CTA card layout: drop nested panel chrome — avoid card-in-card. */
+.pre-footer-band__panel:has(.global-cta-card) {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pre-footer-band__panel:has(.global-cta-card) .region-pre-footer,
+.pre-footer-band__panel:has(.global-cta-card) .block-cta--card {
+  max-width: none;
+  margin-inline: 0;
+}
+
 .pre-footer-band .block-cta {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.35rem;
 }
-/* Split heading: line1 = question, line2 = softer subtext */
+
+.pre-footer-band .block-cta__badge {
+  border: 1px solid #e2e8f0 !important;
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%) !important;
+  color: #475569 !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.95rem !important;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+
+/* Split heading: line1 + line2 (dark on light). */
 .pre-footer-band .block-cta__heading {
   display: block;
   margin: 0 0 0.5rem 0;
 }
 .pre-footer-band .block-cta__heading-line1 {
   display: block;
-  font-size: 2.25rem;
-  font-weight: 600;
-  color: #1f2937;
-  line-height: 1.3;
+  font-size: clamp(1.6rem, 3.8vw, 2.15rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 .pre-footer-band .block-cta__heading-line2 {
   display: block;
-  font-size: 1.375rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: 400;
-  color: #6b7280;
-  line-height: 1.4;
-  margin-top: 0.25rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-top: 0.35rem;
 }
 .pre-footer-band .block-cta__heading-single {
-  font-size: 2rem;
-  font-weight: 500;
-  color: #1f2937;
+  font-size: clamp(1.6rem, 3.2vw, 2rem);
+  font-weight: 700;
+  color: #0f172a;
   margin: 0 0 0.5rem 0;
-  line-height: 1.4;
+  line-height: 1.25;
   text-wrap: balance;
+  letter-spacing: -0.02em;
 }
 .pre-footer-band .block-cta__buttons {
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
+
+/* Same palette as header — global .block-cta__btn--*; only scale up here. */
 .pre-footer-band .block-cta__btn {
-  padding: 0.625rem 1.25rem;
-  font-size: 0.9375rem;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.875rem;
   font-weight: 600;
   border-radius: 9999px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: transform 0.15s;
+  border-style: none;
+  box-shadow: none;
+  transition: background-color 0.15s;
 }
-.pre-footer-band .block-cta__btn:hover {
-  transform: translateY(-1px);
-}
+
 .pre-footer-band .block-cta__icon {
   width: 20px;
   height: 20px;

@@ -1,0 +1,17 @@
+uuid: 0d4bf0a5-e0a9-4e98-9040-9a10a4a4d6c6
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Chamber
+type: chamber
+description: 'Chambers, business councils, and trade associations.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

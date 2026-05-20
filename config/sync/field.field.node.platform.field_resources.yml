@@ -1,0 +1,27 @@
+uuid: a1000001-0000-4000-8000-0000000000fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_resources
+    - node.type.platform
+    - paragraphs.paragraphs_type.platform_resource
+  module:
+    - entity_reference_revisions
+id: node.platform.field_resources
+field_name: field_resources
+entity_type: node
+bundle: platform
+label: Resources
+description: 'Useful links shown in the Resources panel (e.g. official site, user guide, FAQs, downloads).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      platform_resource: platform_resource
+    negate: 0
+field_type: entity_reference_revisions

@@ -1,0 +1,82 @@
+uuid: 18f73009-a80a-4087-9ef1-01f72626e032
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.platforms_systems.field_ps_body
+    - field.field.paragraph.platforms_systems.field_ps_eyebrow
+    - field.field.paragraph.platforms_systems.field_ps_footer_body
+    - field.field.paragraph.platforms_systems.field_ps_footer_link
+    - field.field.paragraph.platforms_systems.field_ps_footer_title
+    - field.field.paragraph.platforms_systems.field_ps_groups
+    - field.field.paragraph.platforms_systems.field_title
+    - paragraphs.paragraphs_type.platforms_systems
+  module:
+    - link
+    - text
+id: paragraph.platforms_systems.default
+targetEntityType: paragraph
+bundle: platforms_systems
+mode: default
+content:
+  field_ps_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_ps_eyebrow:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ps_footer_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_ps_footer_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_ps_footer_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ps_groups:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

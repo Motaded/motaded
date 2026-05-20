@@ -1,0 +1,29 @@
+uuid: a1000001-0000-4000-8000-000000000064
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category
+    - node.type.platform
+    - taxonomy.vocabulary.platform_category
+id: node.platform.field_category
+field_name: field_category
+entity_type: node
+bundle: platform
+label: 'Platform category'
+description: 'Type of platform (Investment, Licensing, Tax, etc.).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      platform_category: platform_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

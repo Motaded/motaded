@@ -1,0 +1,65 @@
+uuid: dcc92910-80e8-4e5a-ba8f-37f924f8a474
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.chamber.body
+    - field.field.node.chamber.field_country
+    - field.field.node.chamber.field_logo
+    - field.field.node.chamber.field_short_description
+    - field.field.node.chamber.field_type
+    - node.type.chamber
+  module:
+    - user
+id: node.chamber.teaser
+targetEntityType: node
+bundle: chamber
+mode: teaser
+content:
+  field_country:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_logo:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_short_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_type:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  body: true
+  field_chamber_featured_stats: true
+  field_external_link: true
+  field_featured: true
+  field_meta_tags: true
+  field_priority: true
+  field_relationship_focus: true
+  langcode: true
+  search_api_excerpt: true

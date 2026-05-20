@@ -1,0 +1,31 @@
+uuid: b2b2b2b2-2222-4222-8222-222222222229
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector_pages
+    - node.type.event
+    - node.type.sector_page
+  module:
+    - node
+id: node.event.field_sector_pages
+field_name: field_sector_pages
+entity_type: node
+bundle: event
+label: Sector
+description: 'Link this event to one or more sector pages.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      sector_page: sector_page
+    sort:
+      field: title
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

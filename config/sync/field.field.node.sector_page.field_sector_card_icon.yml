@@ -1,0 +1,21 @@
+uuid: fd5f49a5-c8a6-4d52-9b4f-80f699fc75f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector_card_icon
+    - node.type.sector_page
+  module:
+    - options
+id: node.sector_page.field_sector_card_icon
+field_name: field_sector_card_icon
+entity_type: node
+bundle: sector_page
+label: 'Card icon (preset)'
+description: 'Built-in line icon for homepage tiles. Used only when “Custom card icon (SVG)” is empty.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

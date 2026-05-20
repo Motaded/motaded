@@ -1,0 +1,19 @@
+uuid: a1000001-0000-4000-8000-00000000006f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_source_text
+    - node.type.platform
+id: node.platform.field_source_text
+field_name: field_source_text
+entity_type: node
+bundle: platform
+label: 'Source label'
+description: 'Attribution or data source name.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

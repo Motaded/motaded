@@ -1,0 +1,102 @@
+{#
+/**
+ * @file
+ * Publications & Updates: masthead + optional tabs (All / Blog / News), card grid, view-all links.
+ */
+#}
+{{ attach_library('motaded_theme/insights-updates') }}
+{% set iu_hid = 'iu-heading-' ~ (paragraph.id() ?: 'new') %}
+{% set has_items = iu_grid_items|length > 0 %}
+{% set iu_show_tabs = iu_has_blog and iu_has_news %}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'insights-updates',
+    'iu-blog-news',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if iu_show_tabs %} data-iu-tabs="1" data-iu-active-filter="all"{% endif %} aria-labelledby="{{ iu_hid }}">
+  <div class="iu-bn__inner mot-shell">
+    <header class="iu-bn__masthead">
+      <div class="iu-bn__masthead-stack">
+        <p class="iu-bn__eyebrow mot-eyebrow mot-eyebrow--rail">{{ 'Insights'|t }}</p>
+        <div class="iu-bn__heading">
+          <div class="iu-bn__heading-text">
+            <h2 id="{{ iu_hid }}" class="iu-bn__title mot-heading-2">
+              {{ 'Publications & Updates'|t }}
+            </h2>
+            <div class="iu-bn__intro mot-lead">
+              {% if paragraph.field_body is not empty %}
+                {{ content.field_body }}
+              {% else %}
+                <p>{{ 'Access expert insights, regulatory updates, and practical guidance to navigate business operations in Saudi Arabia.'|t }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% if iu_show_tabs %}
+          <div class="iu-bn__tabs-wrap" role="presentation">
+            <div class="iu-bn__tabs" role="tablist" aria-label="{{ 'Filter by type'|t }}">
+              <button type="button" class="iu-bn__tab is-active" role="tab" aria-selected="true" data-iu-tab="all" id="{{ iu_hid }}-tab-all" aria-controls="{{ iu_hid }}-panel">{{ 'All'|t }}</button>
+              <button type="button" class="iu-bn__tab" role="tab" aria-selected="false" data-iu-tab="blog" id="{{ iu_hid }}-tab-blog" aria-controls="{{ iu_hid }}-panel">{{ 'Blog'|t }}</button>
+              <button type="button" class="iu-bn__tab" role="tab" aria-selected="false" data-iu-tab="news" id="{{ iu_hid }}-tab-news" aria-controls="{{ iu_hid }}-panel">{{ 'News'|t }}</button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if has_items %}
+      {% if iu_show_tabs %}
+        <div id="{{ iu_hid }}-panel" class="iu-bn__panel" role="tabpanel" aria-labelledby="{{ iu_hid }}-tab-all">
+      {% endif %}
+      <div class="iu-bn__grid" role="list">
+        {% for item in iu_grid_items %}
+          {% set node = item.node %}
+          {% set nid = node.id %}
+          {% set card_img = iu_card_images[nid] ?? {} %}
+          {% set kind = item.kind %}
+          <div class="iu-bn__cell" role="listitem" data-iu-kind="{{ kind }}">
+            <a href="{{ item.url }}" class="iu-bn__card">
+              <div class="iu-bn__card-media">
+                {% if card_img.src %}
+                  {% if card_img.srcset %}
+                    <img loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" srcset="{{ card_img.srcset }}" sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                  {% else %}
+                    <img loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async" src="{{ card_img.src }}" width="{{ card_img.width }}" height="{{ card_img.height }}" alt="{{ card_img.alt }}"/>
+                  {% endif %}
+                {% endif %}
+                <span class="iu-bn__pill">{{ kind == 'blog' ? ('Blog'|t) : ('News'|t) }}</span>
+              </div>
+              <div class="iu-bn__card-body">
+                <time class="iu-bn__date" datetime="{{ iu_item_dates_iso[nid] ?? '' }}">{{ iu_item_dates[nid] ?? '' }}</time>
+                <h3 class="iu-bn__card-title">{{ node.label }}</h3>
+                {% if item.excerpt %}
+                  <p class="iu-bn__excerpt">{{ item.excerpt }}</p>
+                {% endif %}
+                <span class="iu-bn__read">{{ 'Read more'|t }}<span class="iu-bn__read-arrow" aria-hidden="true"> →</span></span>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      {% if iu_show_tabs %}
+        </div>
+      {% endif %}
+
+      <footer class="iu-bn__footer">
+        {% if iu_has_blog %}
+          <a href="{{ iu_insights_list_url }}" class="iu-bn__cta iu-bn__cta--blog" data-iu-footer-link="blog">{{ 'View all blog'|t }}<span aria-hidden="true"> →</span></a>
+        {% endif %}
+        {% if iu_has_news %}
+          <a href="{{ iu_news_list_url }}" class="iu-bn__cta iu-bn__cta--news" data-iu-footer-link="news">{{ 'View all news'|t }}<span aria-hidden="true"> →</span></a>
+        {% endif %}
+      </footer>
+    {% else %}
+      <p class="iu-bn__empty">{{ 'No articles or news selected yet.'|t }}</p>
+    {% endif %}
+  </div>
+</section>

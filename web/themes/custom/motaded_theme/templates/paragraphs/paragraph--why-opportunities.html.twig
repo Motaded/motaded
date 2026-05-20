@@ -1,0 +1,140 @@
+{#
+  Theme: Muin (Custom Licensed Version)
+  © Banafsijy.com – Single Project License – Do Not Redistribute
+#}
+{{ attach_library('motaded_theme/why_opportunities') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'why-opportunities',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  <div class="why-opportunities__container mot-shell">
+  <div class="why-opportunities__inner">
+    <header class="why-opportunities__header">
+      {% if content.field_why_eyebrow %}
+        <div class="why-opportunities__eyebrow mot-eyebrow--pill mot-eyebrow--pill-center">{{ content.field_why_eyebrow }}</div>
+      {% endif %}
+      {% if content.field_why_title_prefix or content.field_why_title_accent %}
+        <h2 id="{{ why_opportunities_heading_id }}" class="why-opportunities__title">
+          {% if content.field_why_title_prefix %}
+            <span class="why-opportunities__title-line">{{ content.field_why_title_prefix }}</span>
+          {% endif %}
+          {% if content.field_why_title_accent %}
+            <span class="why-opportunities__title-accent">{{ content.field_why_title_accent }}</span>
+          {% endif %}
+        </h2>
+      {% endif %}
+      {% if content.field_body %}
+        <div class="why-opportunities__intro">{{ content.field_body }}</div>
+      {% endif %}
+    </header>
+
+    {% if why_opportunities_features is not empty %}
+      <div class="why-opportunities__cards">
+        {% for card in why_opportunities_features %}
+          <article class="why-opportunities__card">
+            <div class="why-opportunities__card-top">
+              <div class="why-opportunities__card-icon" aria-hidden="true">
+                {% if card.icon == 'clock' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                {% elseif card.icon == 'chart' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 19h16M7 15v4M12 11v8M17 7v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                {% elseif card.icon == 'globe' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                {% elseif card.icon == 'trend' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 19h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="m4 14 5-5 4 4 6-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15 4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% else %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                {% endif %}
+              </div>
+              <span class="why-opportunities__card-index">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</span>
+            </div>
+            {% if card.title %}
+              <h3 class="why-opportunities__card-title">{{ card.title }}</h3>
+            {% endif %}
+            {% if card.body is not empty %}
+              <div class="why-opportunities__card-body">{{ card.body }}</div>
+            {% endif %}
+            {% if card.link is not empty %}
+              <a href="{{ card.link.url }}" class="why-opportunities__card-link">
+                {{ card.link.title }}
+                <span class="why-opportunities__card-link-arrow" aria-hidden="true">→</span>
+              </a>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if why_opportunities_stats is not empty %}
+      <div class="why-opportunities__stats" role="group" aria-label="{{ 'Key figures'|t }}">
+        {% for stat in why_opportunities_stats %}
+          <div class="why-opportunities__stat{% if not loop.last %} why-opportunities__stat--divider{% endif %}">
+            <div class="why-opportunities__stat-icon" aria-hidden="true">
+              {% if stat.icon == 'document' %}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M14 2v6h6M8 13h8M8 17h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              {% elseif stat.icon == 'shield' %}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+              {% elseif stat.icon == 'pin' %}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 21s7-4.35 7-10a7 7 0 1 0-14 0c0 5.65 7 10 7 10z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              {% else %}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M2.05 12h19.9M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              {% endif %}
+            </div>
+            {% if stat.value %}
+              <p class="why-opportunities__stat-value">{{ stat.value }}</p>
+            {% endif %}
+            {% if stat.label %}
+              <p class="why-opportunities__stat-label">{{ stat.label }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if why_opportunities_trust %}
+      <p class="why-opportunities__trust">
+        <span class="why-opportunities__trust-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>{{ why_opportunities_trust }}</span>
+      </p>
+    {% endif %}
+  </div>
+  </div>
+</section>

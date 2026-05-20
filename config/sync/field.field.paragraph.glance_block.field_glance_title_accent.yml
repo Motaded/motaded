@@ -1,0 +1,19 @@
+uuid: 4f6b2ce2-5b58-4c7e-9c39-5f8ee75c7e1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_glance_title_accent
+    - paragraphs.paragraphs_type.glance_block
+id: paragraph.glance_block.field_glance_title_accent
+field_name: field_glance_title_accent
+entity_type: paragraph
+bundle: glance_block
+label: 'Title accent'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

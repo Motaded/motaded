@@ -1,0 +1,30 @@
+uuid: 864e7f31-0db7-4f87-8013-6c57c766b49a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_cta_type
+field_name: field_cta_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: register
+      label: Register
+    -
+      value: meeting
+      label: Meeting
+    -
+      value: external
+      label: External
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

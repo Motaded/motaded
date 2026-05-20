@@ -1,0 +1,37 @@
+uuid: 7a0b1c2d-3e4f-4a5b-8c6d-7e8f9a0b1c2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.gateway_hub_block.field_body
+    - field.field.paragraph.gateway_hub_block.field_gateway_eyebrow
+    - field.field.paragraph.gateway_hub_block.field_gateway_events
+    - field.field.paragraph.gateway_hub_block.field_gateway_insights
+    - field.field.paragraph.gateway_hub_block.field_gateway_platforms
+    - field.field.paragraph.gateway_hub_block.field_gateway_sectors
+    - field.field.paragraph.gateway_hub_block.field_gateway_support_items
+    - field.field.paragraph.gateway_hub_block.field_title
+    - paragraphs.paragraphs_type.gateway_hub_block
+  module:
+    - text
+id: paragraph.gateway_hub_block.default
+targetEntityType: paragraph
+bundle: gateway_hub_block
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_gateway_events: true
+  field_gateway_eyebrow: true
+  field_gateway_insights: true
+  field_gateway_platforms: true
+  field_gateway_sectors: true
+  field_gateway_support_items: true
+  field_title: true
+  search_api_excerpt: true

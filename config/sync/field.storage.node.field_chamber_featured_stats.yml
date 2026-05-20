@@ -1,0 +1,19 @@
+uuid: c4e8a901-2b7f-4a1c-9d0e-6f5a4b3c2d10
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_chamber_featured_stats
+field_name: field_chamber_featured_stats
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 3
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

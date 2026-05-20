@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Sector page: GASTAT YoY GDP growth by economic activity (%), bar chart.
+ */
+#}
+{% set sector_t = {'langcode': sector_langcode|default('en')} %}
+{{ attach_library('motaded_theme/sector_logistics_gdp_chart') }}
+{% set g = sector_logistics_gdp_chart %}
+<section
+  class="sector-gdp-chart"
+  data-sector-logistics-gdp-chart
+  data-chart="{{ g.encoded|e('html_attr') }}"
+  data-chart-uid="{{ g.chart_uid|e('html_attr') }}"
+  dir="ltr"
+  aria-labelledby="sector-gdp-chart-title"
+>
+  <div class="sector-gdp-chart__inner">
+    <header class="sector-gdp-chart__head">
+      <h2 id="sector-gdp-chart-title" class="sector-gdp-chart__title">{{ 'GDP growth by economic activity (GASTAT, % year-on-year)'|t({}, sector_t) }}</h2>
+    </header>
+    <div class="sector-gdp-chart__panel">
+      <svg class="sector-gdp-chart__svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ 'Year-on-year GDP growth for transport, storage and communication'|t({}, sector_t) }}"></svg>
+    </div>
+    <footer class="sector-gdp-chart__foot">
+      <p class="sector-gdp-chart__source">{{ 'Source: GASTAT'|t({}, sector_t) }}</p>
+      <a class="sector-gdp-chart__method" href="https://www.stats.gov.sa/en" rel="noopener noreferrer" target="_blank">{{ 'View methodology'|t({}, sector_t) }}</a>
+    </footer>
+  </div>
+</section>

@@ -1,0 +1,112 @@
+uuid: 537fb7f3-ba7b-4e10-a8c6-01c372091443
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.key_sectors.field_body
+    - field.field.paragraph.key_sectors.field_ksb_eyebrow
+    - field.field.paragraph.key_sectors.field_ksb_footer_body
+    - field.field.paragraph.key_sectors.field_ksb_footer_title
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_body
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_icon
+    - field.field.paragraph.key_sectors.field_ksb_sidebar_title
+    - field.field.paragraph.key_sectors.field_link
+    - field.field.paragraph.key_sectors.field_title
+    - field.field.paragraph.key_sectors.field_view_block
+    - paragraphs.paragraphs_type.glance_stat_item
+    - paragraphs.paragraphs_type.key_sectors
+  module:
+    - link
+    - paragraphs
+    - text
+    - views
+    - viewsreference
+id: paragraph.key_sectors.default
+targetEntityType: paragraph
+bundle: key_sectors
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_ksb_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ksb_footer_body:
+    type: text_textarea
+    weight: 9
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_ksb_footer_title:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_ksb_sidebar_body:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_ksb_sidebar_icon:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_ksb_sidebar_title:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 10
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_view_block:
+    type: viewsreference_select
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  translation:
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

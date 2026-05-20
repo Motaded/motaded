@@ -47,8 +47,15 @@
 .file--text-plain {
   background-image: url(../../images/icons/text-plain.png);
 }
+/* PDF: no raster icon — avoids duplicate icons when links are styled as buttons */
 .file--application-pdf {
-  background-image: url(../../images/icons/application-pdf.png);
+  background-image: none;
+  padding-left: 0;
+}
+
+[dir="rtl"] .file--application-pdf {
+  padding-right: 0;
+  padding-left: inherit;
 }
 .file--application-x-executable {
   background-image: url(../../images/icons/application-x-executable.png);

@@ -10,6 +10,6 @@ definitions:
   standard__front_page:
     menu_name: main
     parent: ''
-    weight: -50
+    weight: -53
     expanded: false
     enabled: true

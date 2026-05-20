@@ -1,0 +1,17 @@
+uuid: c5a0b1d2-e3f4-5678-9abc-def012345607
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hero_split_highlight.field_title
+    - field.field.paragraph.hero_split_highlight.field_why_feature_icon
+    - paragraphs.paragraphs_type.hero_split_highlight
+id: paragraph.hero_split_highlight.default
+targetEntityType: paragraph
+bundle: hero_split_highlight
+mode: default
+content: {  }
+hidden:
+  field_title: true
+  field_why_feature_icon: true
+  search_api_excerpt: true

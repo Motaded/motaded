@@ -1,0 +1,42 @@
+uuid: 7c1a4ee5-1b2c-4f63-8c0a-f1c5e7a91105
+langcode: en
+status: true
+dependencies:
+  module:
+    - metatag_hreflang
+    - metatag_open_graph
+    - metatag_twitter_cards
+    - schema_metatag
+    - schema_organization
+    - schema_web_page
+id: node__platform
+label: 'Content: Platform'
+tags:
+  title: '[node:title] | Government platforms in Saudi Arabia | [site:name]'
+  description: '[node:field_short_description]'
+  canonical_url: '[node:url]'
+  hreflang_xdefault: '[node:url:absolute]'
+  'hreflang_per_language:hreflang_en': '[node:url:absolute]'
+  'hreflang_per_language:hreflang_ar': '[node:url:absolute]'
+  og_title: '[node:title]'
+  og_description: '[node:field_short_description]'
+  og_url: '[node:url:absolute]'
+  og_type: website
+  og_site_name: '[site:name]'
+  og_image: '[node:field_hero_image:entity:field_media_image:entity:url]'
+  og_image_alt: '[node:title]'
+  twitter_cards_type: summary_large_image
+  twitter_cards_title: '[node:title]'
+  twitter_cards_description: '[node:field_short_description]'
+  twitter_cards_image: '[node:field_hero_image:entity:field_media_image:entity:url]'
+  schema_web_page_type: WebPage
+  schema_web_page_id: '[node:url:absolute]#webpage'
+  schema_web_page_name: '[node:title]'
+  schema_web_page_description: '[node:field_short_description]'
+  schema_web_page_url: '[node:url:absolute]'
+  schema_organization_type: GovernmentService
+  schema_organization_id: '[node:url:absolute]#government-service'
+  schema_organization_name: '[node:title]'
+  schema_organization_description: '[node:field_short_description]'
+  schema_organization_url: '[node:url:absolute]'
+  schema_organization_logo: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:48:"[node:field_logo:entity:field_media_image:entity:url]";s:5:"width";s:43:"[node:field_logo:entity:field_media_image:width]";s:6:"height";s:44:"[node:field_logo:entity:field_media_image:height]";}'

@@ -1,0 +1,6 @@
+motaded_hreflang.settings:
+  title: 'Motaded hreflang'
+  description: 'Override or strip Metatag hreflang alternate links.'
+  parent: system.admin_config_search
+  route_name: motaded_hreflang.settings
+  weight: 50

@@ -28,6 +28,7 @@ dependencies:
     - field.field.node.page.field_phone_number
     - field.field.node.page.field_provided_languages
     - field.field.node.page.field_requirements
+    - field.field.node.page.field_sector
     - field.field.node.page.field_seo_checker
     - field.field.node.page.field_service_channels
     - field.field.node.page.field_service_cost
@@ -545,6 +546,16 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
+  field_sector:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_seo_checker:
     type: yoast_seo_widget
     weight: 42
@@ -699,7 +710,7 @@ content:
             selector: ''
   field_taxonomy:
     type: options_select
-    weight: 3
+    weight: 5
     region: content
     settings: {  }
     third_party_settings:

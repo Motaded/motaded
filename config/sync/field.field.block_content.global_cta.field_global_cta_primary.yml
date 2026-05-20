@@ -1,0 +1,23 @@
+uuid: 12cd0e7f-bde0-4edf-aff2-6e7805819f6e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.global_cta
+    - field.storage.block_content.field_global_cta_primary
+  module:
+    - link
+id: block_content.global_cta.field_global_cta_primary
+field_name: field_global_cta_primary
+entity_type: block_content
+bundle: global_cta
+label: 'Primary button'
+description: 'Solid CTA (e.g. Request support). Card layout only.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

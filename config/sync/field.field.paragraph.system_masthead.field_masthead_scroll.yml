@@ -1,0 +1,23 @@
+uuid: 0698ac27-b9f4-4cc7-86c0-30e661acb787
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_masthead_scroll
+    - paragraphs.paragraphs_type.system_masthead
+id: paragraph.system_masthead.field_masthead_scroll
+field_name: field_masthead_scroll
+entity_type: paragraph
+bundle: system_masthead
+label: 'Show scroll cue'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

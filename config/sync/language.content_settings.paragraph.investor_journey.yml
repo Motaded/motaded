@@ -1,0 +1,18 @@
+uuid: 7510d823-e983-4a95-b7ea-21efc1bb6fae
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.investor_journey
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: paragraph.investor_journey
+target_entity_type_id: paragraph
+target_bundle: investor_journey
+default_langcode: site_default
+language_alterable: true

@@ -1,0 +1,11 @@
+uuid: 2f6694fc-f42c-49a7-bb9f-f4f1f3d5980d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.sector_directory_card
+label: 'Sector directory card'
+description: 'Card on the /sectors directory (title, KPIs, highlights, link).'
+targetEntityType: node
+cache: true

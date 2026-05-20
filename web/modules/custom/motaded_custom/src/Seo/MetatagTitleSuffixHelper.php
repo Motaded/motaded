@@ -340,6 +340,9 @@ class MetatagTitleSuffixHelper {
     $title = preg_replace('/\s*(\|\s*\[site:name\])\s*$/iu', '', $title) ?? $title;
     $title = preg_replace('/\s*(-\s*Motaded)\s*$/iu', '', $title) ?? $title;
     $title = preg_replace('/\s*(\|\s*Motaded)\s*$/iu', '', $title) ?? $title;
+    $title = preg_replace('/\s*(\|\s*متعدد)\s*$/u', '', $title) ?? $title;
+    $title = preg_replace('/\s*(\|\s*موتاد)\s*$/u', '', $title) ?? $title;
+    $title = preg_replace('/\s*(\|\s*معتد)\s*$/u', '', $title) ?? $title;
     return trim($title);
   }
 

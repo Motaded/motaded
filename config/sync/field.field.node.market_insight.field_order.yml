@@ -1,0 +1,25 @@
+uuid: 8f31a2b0-0c00-4000-8000-00000000002d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_order
+    - node.type.market_insight
+id: node.market_insight.field_order
+field_name: field_order
+entity_type: node
+bundle: market_insight
+label: Order
+description: 'Manual sort weight (lower first).'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

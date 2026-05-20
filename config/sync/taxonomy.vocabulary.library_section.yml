@@ -1,0 +1,9 @@
+uuid: b1000005-1001-4000-8000-000000000001
+langcode: en
+status: true
+dependencies: {  }
+name: 'Library section'
+vid: library_section
+description: 'Maps document types to Library tabs (templates vs regulations).'
+weight: 0
+new_revision: false

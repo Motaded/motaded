@@ -1,0 +1,45 @@
+motaded_hreflang.settings:
+  type: config_object
+  label: 'Motaded hreflang settings'
+  mapping:
+    policy:
+      type: string
+      label: 'Removal policy when any language fails checks'
+    strip_if_redirect:
+      type: boolean
+    strip_if_missing_translation:
+      type: boolean
+    parse_htaccess_redirects:
+      type: boolean
+      label: 'Treat mod_alias Redirect rules in web/.htaccess as redirect sources'
+    overrides:
+      type: sequence
+      label: 'Manual overrides'
+      sequence:
+        type: motaded_hreflang.override
+        label: 'Override'
+
+motaded_hreflang.override:
+  type: mapping
+  mapping:
+    label:
+      type: string
+      label: 'Label'
+    match_path:
+      type: string
+      label: 'Match path'
+    match_type:
+      type: string
+      label: 'Match type'
+    hreflang_en:
+      type: string
+      label: 'hreflang en'
+      nullable: true
+    hreflang_ar:
+      type: string
+      label: 'hreflang ar'
+      nullable: true
+    hreflang_x_default:
+      type: string
+      label: 'hreflang x-default'
+      nullable: true

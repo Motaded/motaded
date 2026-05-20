@@ -1,0 +1,18 @@
+uuid: d3db7887-b8b1-4e47-9f5c-572eddee3b5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.business_cost_estimation
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: paragraph.business_cost_estimation
+target_entity_type_id: paragraph
+target_bundle: business_cost_estimation
+default_langcode: site_default
+language_alterable: true

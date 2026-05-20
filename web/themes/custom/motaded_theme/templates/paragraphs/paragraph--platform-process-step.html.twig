@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Paragraph: platform_process_step.
+ *
+ * Rendered inside <li class="pf2-step"> on the platform node template
+ * (the numeric badge is emitted by the parent template via loop.index).
+ */
+#}
+<div class="pf2-step__body">
+  {% if content.field_title|render|trim is not empty %}
+    <h3 class="pf2-step__title">{{ content.field_title }}</h3>
+  {% endif %}
+  {% if content.field_body|render|trim is not empty %}
+    <div class="pf2-step__text">{{ content.field_body }}</div>
+  {% endif %}
+</div>

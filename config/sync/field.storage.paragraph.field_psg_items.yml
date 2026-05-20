@@ -1,0 +1,19 @@
+uuid: 456cac50-17fe-4c98-bd62-919e919906f5
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_psg_items
+field_name: field_psg_items
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

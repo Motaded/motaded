@@ -5,33 +5,7 @@
 {#
 /**
  * @file
- * Theme override for a main view template.
- *
- * Available variables:
- * - attributes: Remaining HTML attributes for the element.
- * - css_name: A CSS-safe version of the view name.
- * - css_class: The user-specified classes names, if any.
- * - header: The optional header.
- * - footer: The optional footer.
- * - rows: The results of the view query, if any.
- * - empty: The content to display if there are no rows.
- * - pager: The optional pager next/prev links to display.
- * - exposed: Exposed widget form/info to display.
- * - feed_icons: Optional feed icons to display.
- * - more: An optional link to the next page of results.
- * - title: Title of the view, only used when displaying in the admin preview.
- * - title_prefix: Additional output populated by modules, intended to be
- *   displayed in front of the view title.
- * - title_suffix: Additional output populated by modules, intended to be
- *   displayed after the view title.
- * - attachment_before: An optional attachment view to be displayed before the
- *   view content.
- * - attachment_after: An optional attachment view to be displayed after the
- *   view content.
- * - dom_id: Unique id for every view being printed to give unique class for
- *   JavaScript.
- *
- * @see template_preprocess_views_view()
+ * Services view — home block: sidebar categories + detail column.
  */
 #}
 {%
@@ -54,43 +28,89 @@
       {{ header }}
     </div>
   {% endif %}
-  {% if exposed %}
-    <div class="view-filters">
-      {{ exposed }}
-    </div>
-  {% endif %}
-  {% if attachment_before %}
-    <div class="attachment attachment-before">
-      {{ attachment_before }}
-    </div>
-  {% endif %}
 
-  {% if rows %}
-    <div class="view-content grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6">
-      {{ rows }}
-    </div>
-  {% elseif empty %}
-    <div class="view-empty">
-      {{ empty }}
-    </div>
-  {% endif %}
+  <div class="services-home-shell">
+    {% if exposed %}
+      <aside class="services-home-sidebar" aria-label="{{ 'Service categories'|t }}">
+        <div class="view-filters services-home-sidebar__filters">
+          {{ exposed }}
+        </div>
+      </aside>
+    {% endif %}
 
-  {% if pager %}
-    {{ pager }}
-  {% endif %}
-  {% if attachment_after %}
-    <div class="attachment attachment-after">
-      {{ attachment_after }}
+    <div class="services-home-detail">
+      <div class="services-home-category-intro{% if services_home_term_description %} services-home-category-intro--stacked{% endif %}">
+        <div class="services-home-category-intro__icon" aria-hidden="true">
+          <img
+            src="{{ services_home_category_icon_url }}"
+            alt="{{ services_home_term_name|default('Services'|t)|e('html_attr') }}"
+            width="48"
+            height="48"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="services-home-category-intro__text">
+          <p class="services-home-category-intro__title">
+            {{ services_home_term_name|default('Services'|t) }}
+          </p>
+          {% if services_home_term_description %}
+            <div class="services-home-category-intro__description text-body">
+              {{ services_home_term_description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if attachment_before %}
+        <div class="attachment attachment-before">
+          {{ attachment_before }}
+        </div>
+      {% endif %}
+
+      <h3 class="services-home-offer-heading">{{ 'What we offer'|t }}</h3>
+
+      {% if services_home_offer_has_rows %}
+        <div class="services-home-offer-list">
+          {{ rows }}
+        </div>
+      {% else %}
+        <div class="services-home-empty view-empty">
+          {% if empty %}
+            {{ empty }}
+          {% else %}
+            {{ 'No services found for this category yet.'|t }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if pager %}
+        {{ pager }}
+      {% endif %}
+      {% if attachment_after %}
+        <div class="attachment attachment-after">
+          {{ attachment_after }}
+        </div>
+      {% endif %}
+      {% if more %}
+        {{ more }}
+      {% endif %}
+
+      <p class="services-home-category-more-wrap">
+        <a href="{{ services_home_category_more_url }}" class="services-home-category-more">
+          {{ 'View all services in this category'|t }}
+          <span class="services-home-category-more__arrow" aria-hidden="true">{{ services_home_list_arrow|default('→') }}</span>
+        </a>
+      </p>
+
+      {% if footer %}
+        <div class="view-footer">
+          {{ footer }}
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-  {% if more %}
-    {{ more }}
-  {% endif %}
-  {% if footer %}
-    <div class="view-footer">
-      {{ footer }}
-    </div>
-  {% endif %}
+  </div>
+
   {% if feed_icons %}
     <div class="feed-icons">
       {{ feed_icons }}

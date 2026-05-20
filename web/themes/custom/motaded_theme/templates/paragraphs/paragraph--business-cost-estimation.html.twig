@@ -1,0 +1,143 @@
+{#
+  Business cost estimation — left: copy + CTA; right: cost card from fields; bottom: three highlights.
+#}
+{{ attach_library('motaded_theme/business_cost_estimation') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    'bce',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}{% if paragraph.field_title is not empty %} aria-labelledby="{{ bce_heading_id }}"{% endif %}>
+  <div class="bce__shell mot-shell">
+    <div class="bce__card">
+      {# SVG as <img>: avoids fragile multi-layer background-image in inline styles. #}
+      <div class="bce__card-art" aria-hidden="true">
+        <img
+          class="bce__card-art-img"
+          src="{{ bce_cost_bg_url|e('html_attr') }}"
+          alt="{{ 'Business cost estimation — decorative illustration'|t }}"
+          width="600"
+          height="420"
+          decoding="async"
+        />
+      </div>
+      <div class="bce__card-scrim" aria-hidden="true"></div>
+      <div class="bce__card-body">
+        <div class="bce__top">
+        <div class="bce__copy">
+          {% if content.field_glance_eyebrow is defined and content.field_glance_eyebrow|render|striptags|trim %}
+            <div class="bce__eyebrow mot-eyebrow mot-eyebrow--rail">
+              {{ content.field_glance_eyebrow }}
+            </div>
+          {% endif %}
+          {% if bce_title is not empty %}
+            <h2 id="{{ bce_heading_id }}" class="bce__title">{{ bce_title }}</h2>
+          {% endif %}
+          {% if bce_lead is not empty %}
+            <div class="bce__lead mot-lead">{{ bce_lead }}</div>
+          {% endif %}
+          {% if bce_cta is not empty %}
+            <a href="{{ bce_cta.url }}" class="bce__cta">{{ bce_cta.title }}<span class="bce__cta-arrow" aria-hidden="true">→</span></a>
+          {% endif %}
+          {% if content.field_bce_footnote is defined and content.field_bce_footnote|render|striptags|trim %}
+            <p class="bce__note">
+              <span class="bce__note-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M12 10v5M12 7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </span>
+              <span class="bce__note-text">{{ content.field_bce_footnote }}</span>
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="bce__aside">
+          <div class="bce__cost-card">
+            {% if bce_cost_card.show_range %}
+              <p class="bce__cost-range-label">{{ 'Estimated cost range'|t }}</p>
+              <p class="bce__cost-range-value">
+                <span class="bce__cost-currency">{{ bce_cost_card.currency }}</span>
+                {{ bce_cost_card.min_f }}<span class="bce__cost-sep"> – </span>{{ bce_cost_card.max_f }}
+              </p>
+              <div class="bce__cost-rule" role="presentation"></div>
+            {% endif %}
+
+            {% if bce_cost_card.rows is not empty %}
+              <ul class="bce__cost-rows list-none m-0 p-0">
+                {% for row in bce_cost_card.rows %}
+                  <li class="bce__cost-row">
+                    <span class="bce__cost-row-icon" aria-hidden="true">
+                      {% if row.icon == 'document' %}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6M9 13h6M9 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                      {% elseif row.icon == 'user' %}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+                      {% else %}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h4l1-2h6l1 2h4v12H4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+                      {% endif %}
+                    </span>
+                    <span class="bce__cost-row-main">
+                      <span class="bce__cost-row-label">{{ row.label }}</span>
+                      {% if row.pct > 0 %}
+                        <span class="bce__cost-bar" aria-hidden="true"><span class="bce__cost-bar-fill" style="width: {{ row.pct }}%"></span></span>
+                      {% endif %}
+                    </span>
+                    <span class="bce__cost-row-amt">{{ bce_cost_card.currency }} {{ row.min_f }} – {{ row.max_f }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if bce_cost_card.note != '' %}
+              <div class="bce__cost-foot">
+                <span class="bce__cost-foot-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 16l4-4 4 4 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <p class="bce__cost-foot-text">{{ bce_cost_card.note }}</p>
+              </div>
+            {% endif %}
+
+            {% if bce_meta.updated != '' or bce_meta.source != '' %}
+              <div class="bce__cost-meta">
+                {% if bce_meta.updated != '' %}
+                  <span class="bce__cost-meta-item">{{ 'Updated'|t }}: {{ bce_meta.updated }}</span>
+                {% endif %}
+                {% if bce_meta.source != '' %}
+                  <span class="bce__cost-meta-item">{{ bce_meta.source }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if bce_highlights is not empty %}
+        <div class="bce__divider" role="presentation"></div>
+        <div class="bce__highlights">
+          {% for row in bce_highlights %}
+            <div class="bce__hi">
+              <div class="bce__hi-icon" aria-hidden="true">
+                {% if row.icon == 'document' %}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                {% elseif row.icon == 'refresh' %}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 1 1-2.64-6.36" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21 3v6h-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% else %}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% endif %}
+              </div>
+              <div class="bce__hi-text">
+                {% if row.title != '' %}
+                  <h3 class="bce__hi-title">{{ row.title }}</h3>
+                {% endif %}
+                {% if row.body is not empty %}
+                  <div class="bce__hi-body">{{ row.body }}</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

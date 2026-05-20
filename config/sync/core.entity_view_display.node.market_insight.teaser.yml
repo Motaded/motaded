@@ -1,0 +1,125 @@
+uuid: c3d4e5f6-a7b8-4901-c234-567890abcdef
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.market_insight.body
+    - field.field.node.market_insight.field_category
+    - field.field.node.market_insight.field_insight_thumbnail
+    - field.field.node.market_insight.field_featured
+    - field.field.node.market_insight.field_insight_shell
+    - field.field.node.market_insight.field_highlight
+    - field.field.node.market_insight.field_order
+    - field.field.node.market_insight.field_region
+    - field.field.node.market_insight.field_sector
+    - field.field.node.market_insight.field_source_link
+    - field.field.node.market_insight.field_source_text
+    - field.field.node.market_insight.field_stat_label
+    - field.field.node.market_insight.field_stat_prefix
+    - field.field.node.market_insight.field_stat_suffix
+    - field.field.node.market_insight.field_stat_value
+    - field.field.node.market_insight.field_year
+    - node.type.market_insight
+  module:
+    - media
+    - text
+    - user
+id: node.market_insight.teaser
+targetEntityType: node
+bundle: market_insight
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 200
+    third_party_settings: {  }
+    weight: 4
+    region: hidden
+  field_category:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 5
+    region: hidden
+  field_insight_thumbnail:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: news
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: hidden
+  field_source_text:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 7
+    region: hidden
+  field_stat_label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: hidden
+  field_stat_prefix:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: hidden
+  field_stat_suffix:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: hidden
+  field_stat_value:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: hidden
+  field_year:
+    type: number_integer
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 6
+    region: hidden
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  field_featured: true
+  field_highlight: true
+  field_insight_shell: true
+  field_key_takeaways: true
+  field_media: true
+  field_meta_tags: true
+  field_order: true
+  field_region: true
+  field_sector: true
+  field_source_link: true
+  langcode: true
+  search_api_excerpt: true

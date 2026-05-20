@@ -1,0 +1,163 @@
+/**
+ * Key sectors paragraph — homepage strip (reference: card grid + CTA bar).
+ */
+
+.paragraph--type--key-sectors.key-sectors {
+  --ks-brand: var(--mot-brand-hover, #065f46);
+  --ks-brand-border: color-mix(in srgb, var(--mot-brand, #0f766e) 35%, transparent);
+  --ks-muted: var(--mot-text-muted, #64748b);
+  --ks-text: var(--mot-text, #0b1220);
+  --ks-border: var(--mot-border, #e2e8f0);
+  --ks-max: var(--mot-home-max, 1320px);
+  --ks-aside-bg: var(--mot-surface-muted, #f1f5f9);
+  width: 100vw;
+  max-width: 100%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: clamp(2.5rem, 5.5vw, 3.75rem) 0 clamp(2.75rem, 5vw, 4rem);
+  background: var(--mot-surface, #ffffff);
+  border-block: 1px solid var(--ks-border);
+}
+
+.paragraph--type--key-sectors .key-sectors__shell {
+  max-width: var(--ks-max);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, clamp(1rem, 4vw, 1.5rem));
+}
+
+.paragraph--type--key-sectors .key-sectors__shell .field--name-field-view-block {
+  margin-top: clamp(1.75rem, 3.5vw, 2.6rem);
+}
+
+.paragraph--type--key-sectors .key-sectors__hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 0;
+}
+
+@media (min-width: 980px) {
+  .paragraph--type--key-sectors .key-sectors__hero {
+    grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+    align-items: start;
+  }
+}
+
+/* Eyebrow: `.mot-eyebrow` */
+
+.paragraph--type--key-sectors .key-sectors__heading {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.65rem, 3.4vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--ks-text);
+  max-width: 34rem;
+}
+
+.paragraph--type--key-sectors .key-sectors__intro {
+  max-width: 40rem;
+}
+
+.paragraph--type--key-sectors .key-sectors__intro :where(p) {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ks-muted);
+}
+
+.paragraph--type--key-sectors .key-sectors__intro :where(p:last-child) {
+  margin-bottom: 0;
+}
+
+.paragraph--type--key-sectors .key-sectors__aside {
+  border-radius: 18px;
+  border: 1px solid var(--ks-border);
+  background: var(--ks-aside-bg);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  padding: 1.2rem 1.2rem 1.3rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem 1rem;
+  align-items: start;
+}
+
+.paragraph--type--key-sectors .key-sectors__aside-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--ks-brand);
+  background: var(--mot-surface, #ffffff);
+  border: 1.5px solid var(--ks-brand-border);
+}
+
+.paragraph--type--key-sectors .key-sectors__aside-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.paragraph--type--key-sectors .key-sectors__aside-copy {
+  min-width: 0;
+}
+
+.paragraph--type--key-sectors .key-sectors__aside-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--ks-text);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+}
+
+.paragraph--type--key-sectors .key-sectors__aside-body :where(p) {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ks-muted);
+}
+
+/* Card grid: max 4 columns per row on wide screens. */
+.paragraph--type--key-sectors .key-sectors__grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 560px) {
+  .paragraph--type--key-sectors .key-sectors__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 880px) {
+  .paragraph--type--key-sectors .key-sectors__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1180px) {
+  .paragraph--type--key-sectors .key-sectors__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.paragraph--type--key-sectors .key-sectors__grid > * {
+  min-width: 0;
+}
+
+.paragraph--type--key-sectors .key-sectors__cell {
+  display: flex;
+}
+
+.paragraph--type--key-sectors .key-sectors__cell > .node {
+  flex: 1;
+}
+
+/* Views wrapper: remove extra default margins. */
+.paragraph--type--key-sectors .view-id-sectors_card_strip .view-content {
+  margin: 0;
+}
+
+/* Footer strip: shared `.mot-cta-bar` in mot-ui-primitives.css */

@@ -1,0 +1,59 @@
+{#
+/**
+ * Homepage Library block: section tabs, filters + rows.
+ */
+#}
+{{ attach_library('motaded_theme/library_home_block') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'library-home-view',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if title %}
+    {{ title }}
+  {% endif %}
+  {{ title_suffix }}
+
+  <div class="library-home-view__layout library-home-view__layout--main-only">
+    <div class="library-home-view__main min-w-0">
+      {% if exposed %}
+        <div class="library-home-view__filters view-filters mb-5 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+          {{ exposed }}
+        </div>
+      {% endif %}
+
+      {% if header %}
+        <div class="view-header library-home-view__summary">
+          {{ header }}
+        </div>
+      {% endif %}
+
+      {% if rows %}
+        <div class="library-home-view__rows view-content space-y-3">
+          {{ rows }}
+        </div>
+      {% elseif empty %}
+        <div class="view-empty rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-600">
+          {{ empty }}
+        </div>
+      {% endif %}
+
+      {% if library_view_all_url %}
+        <div class="library-home-view__view-all-row">
+          <a href="{{ library_view_all_url }}" class="library-home-hero__view-all">{{ 'View all'|t }}</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if footer %}
+    <div class="view-footer">{{ footer }}</div>
+  {% endif %}
+</div>

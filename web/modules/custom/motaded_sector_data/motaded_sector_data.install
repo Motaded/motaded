@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for Motaded sector data.
+ */
+
+declare(strict_types=1);
+
+use Drupal\motaded_sector_data\Entity\SectorDataSource;
+
+/**
+ * Adds default GASTAT “GDP share” source for Logistics sector page chart.
+ */
+function motaded_sector_data_update_9001(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('sector_data_source');
+  if ($storage->load('logistics_gastat_gdp_share_chart')) {
+    return;
+  }
+  /** @var \Drupal\motaded_sector_data\Entity\SectorDataSource $entity */
+  $entity = SectorDataSource::create([
+    'uuid' => \Drupal::service('uuid')->generate(),
+    'langcode' => 'en',
+    'status' => TRUE,
+    'id' => 'logistics_gastat_gdp_share_chart',
+    'label' => 'Logistics — GASTAT GDP share (sector / total)',
+    'description' => 'GASTAT DPV_NA_ISIC_Y_EFNA0201: year-on-year GDP growth (%) for transport, storage & communication. Optional API URL override; leave empty for default.',
+    'weight' => 0,
+    'sector_key' => 'logistics',
+    'usage_key' => 'logistics_gdp_share_chart',
+    'provider' => 'gastat',
+    'wb_country_iso3' => 'SAU',
+    'wb_indicator_primary' => '',
+    'wb_indicator_secondary' => '',
+    'wb_api_base_url' => '',
+    'merge_mode' => 'none',
+    'value_scale' => 'none',
+    'max_years' => 24,
+    'cache_max_age' => 43200,
+    'gastat_api_url' => '',
+  ]);
+  $entity->save();
+}

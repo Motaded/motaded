@@ -1,0 +1,17 @@
+uuid: 79709939-f219-4b96-96c4-f7b232d23303
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Sector page'
+type: sector_page
+description: 'Dedicated sector landing (eyebrow, overview, highlights, stats) linked to a Sector taxonomy term.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

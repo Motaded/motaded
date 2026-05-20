@@ -2,13 +2,16 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeInterface;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\webform\Entity\WebformOptions;
 
 /**
@@ -54,6 +57,13 @@ function motaded_custom_page_attachments(array &$attachments) {
   // Check if we are on node edit form.
   if (in_array(\Drupal::routeMatch()->getRouteName(), ['entity.node.edit_form', 'node.add'])) {
     $attachments['#attached']['library'][] = 'motaded_custom/gin-custom';
+  }
+
+  // Frontend + Toolbar + Gin Toolbar: secondary meta row must clear the fixed toolbar.
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()
+    && \Drupal::moduleHandler()->moduleExists('toolbar')
+    && \Drupal::currentUser()->hasPermission('access toolbar')) {
+    $attachments['#attached']['library'][] = 'motaded_custom/toolbar_frontend_stack_fix';
   }
 }
 
@@ -191,6 +201,11 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
       }
     }
   }
+
+  require_once __DIR__ . '/includes/motaded_custom.platform_metatag.inc';
+  require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
+  motaded_custom_platform_page_jsonld_alter($html_head);
+  motaded_custom_sector_page_page_jsonld_alter($html_head);
 
   // If no @graph script exists (e.g. taxonomy, search), add standalone BreadcrumbList.
   if (!empty($breadcrumb_list) && !$breadcrumb_added) {
@@ -401,6 +416,14 @@ function _motaded_custom_build_breadcrumb_list_schema() {
     $url = $link->getUrl();
     $url->setAbsolute(TRUE);
     $url_string = $url->toString();
+    if ($url_string === '' || $url_string === '#') {
+      try {
+        $url_string = \Drupal\Core\Url::fromRoute('<current>', [], ['absolute' => TRUE])->toString();
+      }
+      catch (\Throwable) {
+        $url_string = '';
+      }
+    }
     $text = $link->getText();
     if (is_object($text) && method_exists($text, '__toString')) {
       $text = (string) $text;
@@ -669,19 +692,36 @@ function _motaded_custom_get_accessible_translation_langcodes(): ?array {
  */
 function motaded_custom_metatags_alter(array &$metatags, array &$context) {
   $entity = $context['entity'] ?? NULL;
-  if (!$entity || !$entity instanceof NodeInterface) {
-    return;
-  }
-  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'page') {
+  if (!$entity || !$entity instanceof NodeInterface || $entity->getEntityTypeId() !== 'node') {
     return;
   }
 
-  $faq = _motaded_custom_extract_faq_from_node($entity);
-  if (!empty($faq)) {
-    $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+  if ($entity->bundle() === 'page') {
+    $faq = _motaded_custom_extract_faq_from_node($entity);
+    if (!empty($faq)) {
+      $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+    }
+    else {
+      unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+    }
+    return;
   }
-  else {
-    unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+
+  if ($entity->bundle() === 'platform') {
+    require_once __DIR__ . '/includes/motaded_custom.platform_metatag.inc';
+    motaded_custom_platform_metatags_alter($metatags, $entity);
+    return;
+  }
+
+  if ($entity->bundle() === 'sector_page') {
+    require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
+    motaded_custom_sector_page_metatags_alter($metatags, $entity);
+    return;
+  }
+
+  if ($entity->bundle() === 'event') {
+    require_once __DIR__ . '/includes/motaded_custom.event_metatag.inc';
+    motaded_custom_event_metatags_alter($metatags, $entity);
   }
 }
 
@@ -1068,4 +1108,914 @@ function _motaded_custom_is_social_host(string $host): bool {
   }
 
   return FALSE;
+}
+
+/**
+ * Implements hook_ajax_render_alter().
+ *
+ * Views AJAX adds ScrollTop whenever pager_element is present (often 0), which
+ * jumps the viewport on exposed-filter updates. Strip it for homepage events blocks.
+ *
+ * @see \Drupal\views\Controller\ViewAjaxController::ajaxView()
+ */
+function motaded_custom_ajax_render_alter(array &$commands): void {
+  if (\Drupal::routeMatch()->getRouteName() !== 'views.ajax') {
+    return;
+  }
+  $request = \Drupal::request();
+  $view_name = (string) ($request->get('view_name') ?? '');
+  $display_id = (string) ($request->get('view_display_id') ?? '');
+
+  $should_strip_scroll = FALSE;
+
+  // Events: homepage blocks + directory/calendar.
+  if ($view_name === 'events' && in_array($display_id, [
+    'block_home',
+    'block_calendar',
+    'page_1',
+    'attachment_page_calendar',
+  ], TRUE)) {
+    $should_strip_scroll = TRUE;
+  }
+
+  // Library: homepage Library block exposed filters should not jump the viewport.
+  if ($view_name === 'library' && $display_id === 'block_1') {
+    $should_strip_scroll = TRUE;
+  }
+
+  if (!$should_strip_scroll) {
+    return;
+  }
+
+  foreach ($commands as $index => $command) {
+    if (!is_array($command)) {
+      continue;
+    }
+    $cmd = $command['command'] ?? '';
+    if ($cmd === 'scrollTop' || $cmd === 'viewsScrollTop') {
+      unset($commands[$index]);
+    }
+  }
+}
+
+/**
+ * Whether an event's end datetime is in the past (UTC), for display logic.
+ */
+function motaded_custom_event_is_past(\Drupal\node\NodeInterface $node): bool {
+  if ($node->bundle() !== 'event') {
+    return FALSE;
+  }
+  $date_node = $node;
+  if ($node->hasField('field_event_end') && $node->get('field_event_end')->isEmpty()
+    && $node->hasField('field_event_start') && $node->get('field_event_start')->isEmpty()
+    && $node->hasTranslation('en')) {
+    $date_node = $node->getTranslation('en');
+  }
+  $end_raw = '';
+  if ($date_node->hasField('field_event_end') && !$date_node->get('field_event_end')->isEmpty()) {
+    $end_raw = (string) $date_node->get('field_event_end')->value;
+  }
+  elseif ($date_node->hasField('field_event_start') && !$date_node->get('field_event_start')->isEmpty()) {
+    $end_raw = (string) $date_node->get('field_event_start')->value;
+  }
+  if ($end_raw === '') {
+    return FALSE;
+  }
+  try {
+    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
+    return \Drupal::time()->getRequestTime() > $end->getTimestamp();
+  }
+  catch (\Throwable $e) {
+    return FALSE;
+  }
+}
+
+/**
+ * Computes event status (upcoming / ongoing / past) from start/end datetimes (UTC).
+ *
+ * @return 'upcoming'|'ongoing'|'past'|null
+ *   NULL when dates are missing or invalid.
+ */
+function motaded_custom_event_compute_status(\Drupal\node\NodeInterface $node): ?string {
+  if ($node->bundle() !== 'event') {
+    return NULL;
+  }
+  if (!$node->hasField('field_event_status') || !$node->hasField('field_event_start') || !$node->hasField('field_event_end')) {
+    return NULL;
+  }
+  if ($node->get('field_event_start')->isEmpty() || $node->get('field_event_end')->isEmpty()) {
+    return NULL;
+  }
+
+  $start_raw = (string) ($node->get('field_event_start')->value ?? '');
+  $end_raw = (string) ($node->get('field_event_end')->value ?? '');
+  if ($start_raw === '' || $end_raw === '') {
+    return NULL;
+  }
+
+  try {
+    $start = new DrupalDateTime($start_raw, new \DateTimeZone('UTC'));
+    $end = new DrupalDateTime($end_raw, new \DateTimeZone('UTC'));
+    $now_ts = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->getTimestamp();
+    $start_ts = $start->getTimestamp();
+    $end_ts = $end->getTimestamp();
+
+    if ($now_ts < $start_ts) {
+      return 'upcoming';
+    }
+    if ($now_ts > $end_ts) {
+      return 'past';
+    }
+    return 'ongoing';
+  }
+  catch (\Throwable $e) {
+    return NULL;
+  }
+}
+
+/**
+ * Sets field_event_status on all translations when it differs from computed value.
+ *
+ * @return bool
+ *   TRUE if the node was saved.
+ */
+function motaded_custom_event_sync_status_on_node(\Drupal\node\NodeInterface $node): bool {
+  $status = motaded_custom_event_compute_status($node);
+  if ($status === NULL) {
+    return FALSE;
+  }
+
+  $changed = FALSE;
+  foreach (array_keys($node->getTranslationLanguages()) as $langcode) {
+    $translation = $node->getTranslation($langcode);
+    if (!$translation->hasField('field_event_status')) {
+      continue;
+    }
+    if ((string) $translation->get('field_event_status')->value !== $status) {
+      $translation->set('field_event_status', $status);
+      $changed = TRUE;
+    }
+  }
+
+  if ($changed) {
+    $node->save();
+  }
+  return $changed;
+}
+
+/**
+ * Recomputes field_event_status for every event node (cron / Drush).
+ *
+ * @return int
+ *   Number of nodes saved.
+ */
+function motaded_custom_sync_all_event_statuses(): int {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->execute();
+  if ($nids === []) {
+    return 0;
+  }
+
+  $updated = 0;
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if ($node instanceof \Drupal\node\NodeInterface && motaded_custom_event_sync_status_on_node($node)) {
+      $updated++;
+    }
+  }
+  return $updated;
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Auto-compute Event status (upcoming/ongoing/past) from start/end datetimes.
+ */
+function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $entity): void {
+  if (!$entity instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+  if ($entity->bundle() !== 'event') {
+    return;
+  }
+  $status = motaded_custom_event_compute_status($entity);
+  if ($status !== NULL) {
+    $entity->set('field_event_status', $status);
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Events directory (/events): optional motaded_event_date_from / motaded_event_date_to (Y-m-d).
+ *
+ * Library view: match translated taxonomy term rows to the node language so
+ * field_document_type / field_category joins do not duplicate results.
+ */
+function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
+  $view_id = $view->id() ?? '';
+
+  if ($view_id === 'library') {
+    if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+      return;
+    }
+    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+      return;
+    }
+    $node_alias = $query->ensureTable('node_field_data');
+    $ref = new \ReflectionClass($query);
+    if (!$ref->hasProperty('tableQueue')) {
+      return;
+    }
+    $prop = $ref->getProperty('tableQueue');
+    $prop->setAccessible(TRUE);
+    $queue = $prop->getValue($query);
+    foreach ($queue as $alias => $info) {
+      if (($info['table'] ?? '') === 'taxonomy_term_field_data') {
+        $query->addWhereExpression(0, "$alias.langcode = $node_alias.langcode");
+      }
+    }
+    return;
+  }
+
+  if ($view_id === 'events') {
+    $display_id = $view->current_display ?? '';
+    if (in_array($display_id, ['block_calendar', 'attachment_home_list'], TRUE)) {
+      if ($query instanceof \Drupal\views\Plugin\views\query\Sql) {
+        $langcode = \Drupal::languageManager()
+          ->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)
+          ->getId();
+        if ($langcode !== '') {
+          $table = $query->ensureTable('node_field_data');
+          $query->addWhere(0, $table . '.langcode', $langcode, '=');
+        }
+      }
+    }
+    if (!in_array($display_id, ['page_1', 'attachment_page_calendar'], TRUE)) {
+      return;
+    }
+    if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+      return;
+    }
+    $req = \Drupal::request();
+    $from = $req->query->get('motaded_event_date_from');
+    $to = $req->query->get('motaded_event_date_to');
+    if (!is_string($from) && !is_string($to)) {
+      return;
+    }
+    $info = $query->getTableInfo('node__field_event_start');
+    if (empty($info['alias'])) {
+      return;
+    }
+    $alias = $info['alias'];
+    $col = $alias . '.field_event_start_value';
+    if (is_string($from) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $from)) {
+      $query->addWhere(0, $col, $from . 'T00:00:00', '>=');
+    }
+    if (is_string($to) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $to)) {
+      $query->addWhere(0, $col, $to . 'T23:59:59', '<=');
+    }
+    return;
+  }
+}
+
+/**
+ * Returns taxonomy term ID in vocabulary library_section by exact name.
+ */
+function motaded_custom_library_section_group_tid_by_name(string $name): ?int {
+  $name = trim($name);
+  if ($name === '') {
+    return NULL;
+  }
+  $ids = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'library_section')
+    ->condition('name', $name)
+    ->range(0, 1)
+    ->execute();
+  if (!$ids) {
+    return NULL;
+  }
+  return (int) reset($ids);
+}
+
+/**
+ * Document type term IDs assigned to a library section group term.
+ *
+ * @return int[]
+ */
+function motaded_custom_document_type_tids_for_library_section_tid(int $section_tid): array {
+  if ($section_tid < 1) {
+    return [];
+  }
+  $ids = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'document_type')
+    ->condition('field_library_section', $section_tid)
+    ->execute();
+  if (!is_array($ids) || $ids === []) {
+    return [];
+  }
+  return array_values(array_map('intval', $ids));
+}
+
+/**
+ * Legacy slug → group term ID (for old bookmarks).
+ */
+function motaded_custom_library_section_tid_from_slug(string $slug, int $templates_tid, int $regulations_tid): int {
+  return $slug === 'regulations' ? $regulations_tid : $templates_tid;
+}
+
+/**
+ * Normalizes exposed library_section (tid or legacy slug) to a valid group tid.
+ */
+function motaded_custom_library_section_normalize_input(mixed $raw, int $templates_tid, int $regulations_tid): int {
+  if (is_string($raw)) {
+    $raw = trim($raw);
+    if ($raw === 'templates' || $raw === 'regulations') {
+      return motaded_custom_library_section_tid_from_slug($raw, $templates_tid, $regulations_tid);
+    }
+    if ($raw !== '' && ctype_digit($raw)) {
+      $tid = (int) $raw;
+      if ($tid === $templates_tid || $tid === $regulations_tid) {
+        return $tid;
+      }
+    }
+  }
+  elseif (is_int($raw) || is_float($raw)) {
+    $tid = (int) $raw;
+    if ($tid === $templates_tid || $tid === $regulations_tid) {
+      return $tid;
+    }
+  }
+  elseif (is_array($raw)) {
+    $first = reset($raw);
+    return motaded_custom_library_section_normalize_input($first, $templates_tid, $regulations_tid);
+  }
+  return $templates_tid;
+}
+
+/**
+ * Document type term IDs for a library section tab (legacy slug API for theme).
+ *
+ * @return int[]
+ */
+function motaded_custom_library_section_document_type_tids(string $section): array {
+  $templates_tid = motaded_custom_library_section_group_tid_by_name('Templates');
+  $regulations_tid = motaded_custom_library_section_group_tid_by_name('Regulations');
+  if ($templates_tid === NULL || $regulations_tid === NULL) {
+    return motaded_custom_taxonomy_tids_by_exact_names('document_type', $section === 'regulations'
+      ? ['Regulation', 'Law', 'Policy']
+      : ['Template', 'Form', 'Guide']);
+  }
+  $group_tid = $section === 'regulations' ? $regulations_tid : $templates_tid;
+  return motaded_custom_document_type_tids_for_library_section_tid($group_tid);
+}
+
+/**
+ * Taxonomy term IDs by vocabulary and exact default labels.
+ *
+ * @return int[]
+ */
+function motaded_custom_taxonomy_tids_by_exact_names(string $vid, array $names): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $tids = [];
+  foreach ($names as $name) {
+    $name = trim((string) $name);
+    if ($name === '') {
+      continue;
+    }
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('vid', $vid)
+      ->condition('name', $name)
+      ->range(0, 1)
+      ->execute();
+    if ($ids) {
+      $tids[] = (int) reset($ids);
+    }
+  }
+  return array_values(array_unique($tids));
+}
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * Ensures Library block/page always get Views AJAX settings even if active
+ * config drifted from exported defaults (use_ajax).
+ */
+function motaded_custom_views_pre_build(\Drupal\views\ViewExecutable $view): void {
+  if (($view->id() ?? '') !== 'library') {
+    return;
+  }
+  if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+    return;
+  }
+  if (empty($view->is_attachment) && empty($view->live_preview)) {
+    $view->setAjaxEnabled(TRUE);
+  }
+
+  $templates_tid = motaded_custom_library_section_group_tid_by_name('Templates');
+  $regulations_tid = motaded_custom_library_section_group_tid_by_name('Regulations');
+  if ($templates_tid === NULL || $regulations_tid === NULL) {
+    return;
+  }
+
+  $req = \Drupal::request();
+  $input = $view->getExposedInput();
+  $raw = $input['library_section'] ?? NULL;
+  if ($raw === NULL || $raw === '') {
+    $raw = $req->query->get('library_section');
+  }
+  if ($raw === NULL || $raw === '') {
+    $raw = $req->request->get('library_section');
+  }
+  $tid = motaded_custom_library_section_normalize_input($raw, $templates_tid, $regulations_tid);
+  $input['library_section'] = (string) $tid;
+  $view->setExposedInput($input);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function motaded_custom_views_pre_render(\Drupal\views\ViewExecutable $view): void {
+  if (($view->id() ?? '') !== 'library') {
+    return;
+  }
+  if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
+    return;
+  }
+  $view->element['#cache']['contexts'][] = 'url.query_args:library_section';
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Queues a daily World Bank import (processed by queue worker; see
+ * MarketIndicatorsImportQueueWorker).
+ */
+function motaded_custom_cron(): void {
+  $day = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
+  $state = \Drupal::state();
+  if ($state->get('motaded_custom.market_indicators_queue_day') !== $day) {
+    $queue = \Drupal::queue('market_indicators_import');
+    if ($queue->numberOfItems() === 0) {
+      $queue->createItem([]);
+      $state->set('motaded_custom.market_indicators_queue_day', $day);
+    }
+  }
+  if ($state->get('motaded_custom.sector_indicators_queue_day') !== $day) {
+    $queue_sector = \Drupal::queue('sector_indicators_import');
+    if ($queue_sector->numberOfItems() === 0) {
+      $queue_sector->createItem([]);
+      $state->set('motaded_custom.sector_indicators_queue_day', $day);
+    }
+  }
+  if ($state->get('motaded_custom.event_status_sync_day') !== $day) {
+    $updated = motaded_custom_sync_all_event_statuses();
+    $state->set('motaded_custom.event_status_sync_day', $day);
+    if ($updated > 0) {
+      \Drupal::logger('motaded_custom')->info('Event status cron: updated @count node(s).', ['@count' => $updated]);
+    }
+  }
+}
+
+/**
+ * Returns market indicator rows for the v1 homepage table order.
+ *
+ * @return list<array<string, mixed>>
+ *   Rows from {market_indicators}, keys ordered for display.
+ */
+function motaded_custom_market_indicators_table_rows(): array {
+  $keys = [
+    'gdp_growth',
+    'population',
+    'fdi_inflow',
+    'inflation',
+    'unemployment',
+  ];
+  return \Drupal::service('motaded_custom.market_indicator_repository')->loadLatestRowsOrdered($keys);
+}
+
+/**
+ * GDP growth series for chart (last 6 calendar years, local DB only).
+ *
+ * @return list<array{year: int, value: float}>
+ */
+function motaded_custom_market_indicators_gdp_growth_series(): array {
+  $current_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+  $year_min = $current_year - 5;
+  return \Drupal::service('motaded_custom.market_indicator_repository')->loadSeries('gdp_growth', $year_min, $current_year);
+}
+
+/**
+ * Homepage sector cards from {sector_indicator_points} (headline KPI + sparkline data).
+ *
+ * @return list<array<string, mixed>>
+ *   Each card: sector_key, sector_title, kpi_label, value_display, year,
+ *   explore_url, explore_label, icon_key, sparkline_points (list of year/value).
+ */
+function motaded_custom_sector_homepage_cards(): array {
+  if (!\Drupal::hasService('motaded_custom.sector_indicator_repository')) {
+    return [];
+  }
+  /** @var \Drupal\motaded_custom\SectorIndicators\SectorIndicatorRepository $repo */
+  $repo = \Drupal::service('motaded_custom.sector_indicator_repository');
+  $calendar_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+
+  $cards = [];
+  foreach (\Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::headlineRows() as $def) {
+    $latest = $repo->loadLatest($def['sector_key'], $def['indicator_key']);
+    if ($latest === NULL) {
+      continue;
+    }
+    $value_display = isset($latest['value_display']) ? trim((string) $latest['value_display']) : '';
+    if ($value_display === '') {
+      continue;
+    }
+    [$year_min, $year_max] = _motaded_custom_sector_sparkline_year_bounds((int) ($latest['year'] ?? 0), $calendar_year);
+    $series = $repo->loadSeries($def['sector_key'], $def['indicator_key'], $year_min, $year_max);
+    $kpi_card = trim((string) ($def['card_kpi_label'] ?? ''));
+    if ($kpi_card === '') {
+      $kpi_card = trim((string) ($def['kpi_label'] ?? ''));
+    }
+    $cards[] = [
+      'sector_key' => $def['sector_key'],
+      'sector_title' => $def['sector_label'],
+      'kpi_label' => $kpi_card,
+      'value_display' => $value_display,
+      'year' => (int) ($latest['year'] ?? 0),
+      'explore_url' => Url::fromUri('internal:/sectors')->toString(),
+      'explore_label' => (string) t('Explore sector'),
+      'icon_key' => (string) ($def['icon_key'] ?? $def['sector_key']),
+      'sparkline_points' => $series,
+    ];
+  }
+  return $cards;
+}
+
+/**
+ * Maps a sector_page node title / sector term to a canonical sector_key (WB definitions).
+ */
+function _motaded_custom_sector_key_from_sector_page(NodeInterface $node): ?string {
+  if ($node->bundle() !== 'sector_page') {
+    return NULL;
+  }
+  $candidates = [trim($node->getTitle())];
+  if ($node->hasField('field_sector') && !$node->get('field_sector')->isEmpty()) {
+    $term = $node->get('field_sector')->entity;
+    if ($term instanceof \Drupal\taxonomy\TermInterface) {
+      $candidates[] = trim($term->label());
+    }
+  }
+  static $map = [
+    'Tourism' => 'tourism',
+    'Energy' => 'energy',
+    'Manufacturing' => 'manufacturing',
+    'Technology' => 'technology',
+    'Finance & Fintech' => 'finance',
+    'Finance and Fintech' => 'finance',
+    'Logistics & Transport' => 'logistics',
+    'Logistics Transport' => 'logistics',
+    'Healthcare' => 'healthcare',
+    'Construction & Infrastructure' => 'construction',
+    'Construction and Infrastructure' => 'construction',
+  ];
+  foreach ($candidates as $c) {
+    if ($c !== '' && isset($map[$c])) {
+      return $map[$c];
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Sparkline loads up to 6 years ending at the headline year (not “calendar last 6 years”).
+ *
+ * @return array{0: int, 1: int}
+ *   Tuple year_min, year_max for DB BETWEEN.
+ */
+function _motaded_custom_sector_sparkline_year_bounds(int $latest_row_year, int $calendar_year): array {
+  if ($latest_row_year < 1960) {
+    $latest_row_year = $calendar_year;
+  }
+  $year_max = min($calendar_year, $latest_row_year);
+  $year_min = max(1960, $year_max - 5);
+  return [$year_min, $year_max];
+}
+
+/**
+ * World Bank headline KPI + series for homepage sector cards (when DB has data).
+ *
+ * @return array<string, mixed>|null
+ *   Keys: sector_key, value_display, year, kpi_label, icon_key, sparkline_points.
+ */
+function motaded_custom_sector_wb_overlay_for_node(NodeInterface $node): ?array {
+  $sector_key = _motaded_custom_sector_key_from_sector_page($node);
+  if ($sector_key === NULL || !\Drupal::hasService('motaded_custom.sector_indicator_repository')) {
+    return NULL;
+  }
+  $def = \Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::headlineForSectorKey($sector_key);
+  if ($def === NULL) {
+    return NULL;
+  }
+  /** @var \Drupal\motaded_custom\SectorIndicators\SectorIndicatorRepository $repo */
+  $repo = \Drupal::service('motaded_custom.sector_indicator_repository');
+  $latest = $repo->loadLatest($sector_key, $def['indicator_key']);
+  if ($latest === NULL) {
+    return NULL;
+  }
+  $value_display = isset($latest['value_display']) ? trim((string) $latest['value_display']) : '';
+  if ($value_display === '') {
+    return NULL;
+  }
+  $calendar_year = (int) gmdate('Y', \Drupal::time()->getRequestTime());
+  [$year_min, $year_max] = _motaded_custom_sector_sparkline_year_bounds((int) ($latest['year'] ?? 0), $calendar_year);
+  $series = $repo->loadSeries($sector_key, $def['indicator_key'], $year_min, $year_max);
+  $kpi_card = trim((string) ($def['card_kpi_label'] ?? ''));
+  if ($kpi_card === '') {
+    $kpi_card = trim((string) ($def['kpi_label'] ?? ''));
+  }
+  if ($kpi_card !== '') {
+    $kpi_card = (string) t($kpi_card);
+  }
+  return [
+    'sector_key' => $sector_key,
+    'value_display' => $value_display,
+    'year' => (int) ($latest['year'] ?? 0),
+    'kpi_label' => $kpi_card,
+    'icon_key' => (string) ($def['icon_key'] ?? $sector_key),
+    'sparkline_points' => $series,
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ *
+ * sector_page (full): Key stats (WB + GASTAT), trade volume chart, GASTAT activity growth chart.
+ */
+function motaded_custom_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() !== 'sector_page' || ($variables['view_mode'] ?? '') !== 'full' || empty($variables['page'])) {
+    return;
+  }
+  $sector_key = _motaded_custom_sector_key_from_sector_page($node);
+  if ($sector_key === NULL) {
+    return;
+  }
+  $allowed = \Drupal\motaded_custom\SectorIndicators\SectorIndicatorDefinitions::sectorPageKeys();
+  if (!in_array($sector_key, $allowed, TRUE)) {
+    return;
+  }
+  $langcode = $node->language()->getId();
+  $variables['#cache']['contexts'][] = 'languages:language_content';
+  $variables['#cache']['contexts'][] = 'languages:language_interface';
+  $variables['#cache']['tags'][] = 'node:' . $node->id();
+  $api_max_age = 43200;
+  $has_api_layer = FALSE;
+
+  if (\Drupal::hasService('motaded_custom.sector_page_key_stats_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\SectorPageKeyStatsBuilder $builder */
+    $builder = \Drupal::service('motaded_custom.sector_page_key_stats_builder');
+    $rows = $builder->build($sector_key, $langcode);
+    if ($rows !== []) {
+      $years = array_filter(array_map(
+        static fn(array $r): int => (int) ($r['year'] ?? 0),
+        $rows
+      ));
+      $title_year = $years !== [] ? max($years) : (int) gmdate('Y', \Drupal::time()->getRequestTime());
+      $variables['sector_api_key_stats'] = $rows;
+      $variables['sector_api_key_stats_year'] = $title_year;
+      $variables['sector_api_key_stats_more_url'] = 'https://data.worldbank.org/country/saudi-arabia';
+      $has_api_layer = TRUE;
+    }
+  }
+
+  if (\Drupal::hasService('motaded_custom.logistics_trade_volume_chart_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\TradeVolumeChartBuilder $chartBuilder */
+    $chartBuilder = \Drupal::service('motaded_custom.logistics_trade_volume_chart_builder');
+    $chart = $chartBuilder->build($sector_key, 'trade_volume_chart');
+    if ($chart !== NULL) {
+      $chart['gradient_id'] = 'stc-fill-' . $node->id();
+      $variables['sector_trade_volume_chart'] = $chart;
+      $has_api_layer = TRUE;
+      $api_max_age = min($api_max_age, (int) ($chart['cache_max_age'] ?? $api_max_age));
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $chart['cache_tags'] ?? []);
+    }
+  }
+
+  if (\Drupal::hasService('motaded_custom.sector_gastat_activity_chart_builder')) {
+    /** @var \Drupal\motaded_custom\SectorKeyStats\SectorGastatActivityGrowthChartBuilder $gdpChart */
+    $gdpChart = \Drupal::service('motaded_custom.sector_gastat_activity_chart_builder');
+    $gdp = $gdpChart->build($sector_key);
+    if ($gdp !== NULL) {
+      $gdp['chart_uid'] = 'sgastat-' . $node->id();
+      $variables['sector_logistics_gdp_chart'] = $gdp;
+      $has_api_layer = TRUE;
+      $api_max_age = min($api_max_age, (int) ($gdp['cache_max_age'] ?? $api_max_age));
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'] ?? [], $gdp['cache_tags'] ?? []);
+    }
+  }
+
+  if ($has_api_layer) {
+    $prev_max = $variables['#cache']['max-age'] ?? NULL;
+    if ($prev_max === NULL || $prev_max === Cache::PERMANENT) {
+      $variables['#cache']['max-age'] = $api_max_age;
+    }
+    else {
+      $variables['#cache']['max-age'] = min((int) $prev_max, $api_max_age);
+    }
+  }
+}
+
+/**
+ * Reuse the English document path alias for the Arabic translation.
+ *
+ * Pathauto transliteration strips Arabic titles to empty slugs, which leaves
+ * /node/{nid} for ar. Language negotiation adds the /ar URL prefix; the stored
+ * alias should match EN (e.g. /documents/investment-law), not /ar/documents/….
+ */
+function motaded_custom_node_ar_sync_path_alias(NodeInterface $node, array $bundles = ['document', 'sector_page']): bool {
+  if (!in_array($node->bundle(), $bundles, TRUE) || !$node->hasTranslation('en') || !$node->hasTranslation('ar')) {
+    return FALSE;
+  }
+
+  $nid = (int) $node->id();
+  $system_path = '/node/' . $nid;
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $en_alias = $alias_manager->getAliasByPath($system_path, 'en');
+
+  if ($en_alias === $system_path && \Drupal::moduleHandler()->moduleExists('pathauto')) {
+    \Drupal::service('pathauto.generator')->updateEntityAlias($node->getTranslation('en'), 'update');
+    $en_alias = $alias_manager->getAliasByPath($system_path, 'en');
+  }
+
+  if ($en_alias === $system_path) {
+    return FALSE;
+  }
+
+  $alias = $en_alias;
+  if (strncmp($alias, '/ar/', 4) === 0) {
+    $alias = substr($alias, 3) ?: $alias;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  foreach ($storage->loadByProperties(['path' => $system_path, 'langcode' => 'ar']) as $entity) {
+    $entity->delete();
+  }
+
+  PathAlias::create([
+    'path' => $system_path,
+    'alias' => $alias,
+    'langcode' => 'ar',
+  ])->save();
+
+  return TRUE;
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (document nodes).
+ */
+function motaded_custom_document_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['document']);
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (sector_page nodes).
+ */
+function motaded_custom_sector_page_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['sector_page']);
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (event nodes).
+ */
+function motaded_custom_event_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['event']);
+}
+
+/**
+ * Applies meta_title, meta_description, meta_keywords to a node metatag field.
+ *
+ * @param array<string, mixed> $row
+ *   Catalog row with optional meta_title, meta_description, meta_keywords.
+ * @param string $field_name
+ *   field_meta_tags (most bundles) or field_meta (event).
+ */
+function motaded_custom_apply_node_metatags(NodeInterface $node, array $row, string $field_name = 'field_meta_tags'): void {
+  if (!$node->hasField($field_name)) {
+    return;
+  }
+  $meta = array_filter([
+    'title' => trim((string) ($row['meta_title'] ?? '')),
+    'description' => trim((string) ($row['meta_description'] ?? '')),
+    'keywords' => trim((string) ($row['meta_keywords'] ?? '')),
+  ], static fn (string $v): bool => $v !== '');
+  if ($meta === []) {
+    return;
+  }
+  $encoded = json_encode($meta, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  if ($encoded === FALSE) {
+    return;
+  }
+  $node->set($field_name, [['value' => $encoded]]);
+}
+
+/**
+ * Copies field values from the English translation onto Arabic (shared refs/scalars).
+ *
+ * Use for media, taxonomy, flags, and other values that stay the same across languages.
+ *
+ * @param string[] $field_names
+ *   Field machine names on the node bundle.
+ */
+function motaded_custom_node_ar_copy_shared_field_values(NodeInterface $ar, NodeInterface $en, array $field_names): void {
+  foreach ($field_names as $field_name) {
+    if (!$ar->hasField($field_name) || !$en->hasField($field_name)) {
+      continue;
+    }
+    $ar->set($field_name, $en->get($field_name)->getValue());
+  }
+}
+
+/**
+ * Market insight fields copied from EN when creating/updating the AR translation.
+ *
+ * @return string[]
+ */
+function motaded_custom_market_insight_ar_shared_field_names(): array {
+  return [
+    'field_media',
+    'field_insight_thumbnail',
+    'field_category',
+    'field_sector',
+    'field_region',
+    'field_year',
+    'field_featured',
+    'field_order',
+  ];
+}
+
+/**
+ * Event fields copied from EN when creating/updating the AR translation.
+ *
+ * @return string[]
+ */
+function motaded_custom_event_ar_shared_field_names(): array {
+  return [
+    'field_event_start',
+    'field_event_end',
+    'field_event_status',
+    'field_event_type',
+    'field_event_format',
+    'field_region',
+    'field_city',
+    'field_country',
+    'field_sector_pages',
+    'field_featured_image',
+    'field_hero_image',
+    'field_meeting_enabled',
+    'field_cta_type',
+    'field_price_range',
+    'field_attendance_type',
+  ];
+}
+
+/**
+ * Copies shared EN field values onto every event AR translation.
+ *
+ * @return int
+ *   Number of nodes updated.
+ */
+function motaded_custom_sync_all_event_ar_shared_fields(): int {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->execute();
+  $field_names = motaded_custom_event_ar_shared_field_names();
+  $updated = 0;
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if (!$node instanceof \Drupal\node\NodeInterface || !$node->hasTranslation('en') || !$node->hasTranslation('ar')) {
+      continue;
+    }
+    $en = $node->getTranslation('en');
+    $ar = $node->getTranslation('ar');
+    motaded_custom_node_ar_copy_shared_field_values($ar, $en, $field_names);
+    $node->save();
+    $updated++;
+  }
+  return $updated;
+}
+
+/**
+ * Copies the English path alias onto the Arabic translation (market_insight nodes).
+ */
+function motaded_custom_market_insight_ar_sync_path_alias(NodeInterface $node): bool {
+  return motaded_custom_node_ar_sync_path_alias($node, ['market_insight']);
 }

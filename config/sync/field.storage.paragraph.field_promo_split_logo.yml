@@ -1,0 +1,20 @@
+uuid: a48f9a88-5a1e-4b2d-9c0f-8e7d6c5b4a36
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - paragraphs
+id: paragraph.field_promo_split_logo
+field_name: field_promo_split_logo
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

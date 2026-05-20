@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Filters Metatag alternate/hreflang links and applies configured overrides.
+ */
+
+use Drupal\motaded_hreflang\HreflangAlternateProcessor;
+
+/**
+ * Implements hook_page_attachments_alter().
+ *
+ * Runs after Metatag and content_translation so both html_head (Metatag hreflang)
+ * and html_head_link (core translation alternates) are present.
+ */
+function motaded_hreflang_page_attachments_alter(array &$attachments): void {
+  HreflangAlternateProcessor::process($attachments, \Drupal::configFactory());
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Ensures this alter runs last so all head_link entries are attached.
+ */
+function motaded_hreflang_module_implements_alter(array &$implementations, string $hook): void {
+  if ($hook === 'page_attachments_alter' && isset($implementations['motaded_hreflang'])) {
+    $group = $implementations['motaded_hreflang'];
+    unset($implementations['motaded_hreflang']);
+    $implementations['motaded_hreflang'] = $group;
+  }
+}

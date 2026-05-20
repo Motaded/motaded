@@ -1,0 +1,19 @@
+uuid: c5e9babb-38b8-42c2-8f4c-64007a9c4f62
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cnb_footer_title
+    - paragraphs.paragraphs_type.chambers_network
+id: paragraph.chambers_network.field_cnb_footer_title
+field_name: field_cnb_footer_title
+entity_type: paragraph
+bundle: chambers_network
+label: 'Footer title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,23 @@
+uuid: e9b8c7a6-3333-4222-8333-444455556702
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_insight_shell
+    - node.type.market_insight
+  module:
+    - options
+id: node.market_insight.field_insight_shell
+field_name: field_insight_shell
+entity_type: node
+bundle: market_insight
+label: 'Page layout'
+description: 'Platform (MISA-style): teal shell and typographic layout for full insight pages.'
+required: false
+translatable: false
+default_value:
+  -
+    value: standard
+default_value_callback: ''
+settings: {  }
+field_type: list_string

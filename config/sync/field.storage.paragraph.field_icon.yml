@@ -1,0 +1,84 @@
+uuid: a1000001-0000-4000-8000-0000000000f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_icon
+field_name: field_icon
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: briefcase
+      label: 'Briefcase (business)'
+    -
+      value: building
+      label: Building
+    -
+      value: users
+      label: Users
+    -
+      value: shield
+      label: Shield
+    -
+      value: document
+      label: Document
+    -
+      value: globe
+      label: Globe
+    -
+      value: search
+      label: Search
+    -
+      value: chart
+      label: Chart
+    -
+      value: check
+      label: Check
+    -
+      value: cog
+      label: 'Cog (settings)'
+    -
+      value: map_pin
+      label: 'Map pin'
+    -
+      value: target
+      label: Target
+    -
+      value: lamp
+      label: Lamp
+    -
+      value: star
+      label: Star
+    -
+      value: link
+      label: Link
+    -
+      value: list_check
+      label: 'List with check'
+    -
+      value: lightbulb
+      label: Lightbulb
+    -
+      value: scale
+      label: Scale
+    -
+      value: sparkles
+      label: Sparkles
+    -
+      value: clock
+      label: Clock
+    -
+      value: info
+      label: Info
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

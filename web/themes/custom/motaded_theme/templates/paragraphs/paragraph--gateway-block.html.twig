@@ -1,0 +1,92 @@
+{#
+/**
+ * @file
+ * Gateway: centered masthead + up to five columns (icon, title, rich body, view-all) + support strip.
+ */
+#}
+{{ attach_library('motaded_theme/gateway_block') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'gateway-block',
+  ]
+%}
+
+<section{{ attributes.addClass(classes) }}>
+  <div class="gateway-block__inner mot-shell">
+    <div class="gateway-block__shell">
+      <header class="gateway-block__masthead">
+        {% if gateway_eyebrow %}
+          <p class="gateway-block__eyebrow mot-eyebrow">{{ gateway_eyebrow }}</p>
+        {% endif %}
+        {% if gateway_title %}
+          <h2 class="gateway-block__title">{{ gateway_title }}</h2>
+        {% endif %}
+        {% if content.field_body is not empty %}
+          <div class="gateway-block__lede">{{ content.field_body }}</div>
+        {% endif %}
+      </header>
+
+      {% if gateway_items is not empty %}
+        <div class="gateway-block__columns" role="navigation" aria-label="{{ 'Explore'|t }}">
+          {% for item in gateway_items|slice(0, 5) %}
+            <article class="gateway-col">
+              <div class="gateway-col__icon" aria-hidden="true">{{ item.icon_svg }}</div>
+              {% if item.title %}
+                <h3 class="gateway-col__title">{{ item.title }}</h3>
+              {% endif %}
+              {% if item.body_html %}
+                <div class="gateway-col__body{% if item.body_has_list %} gateway-col__body--list{% endif %}">
+                  {{ item.body_html }}
+                </div>
+              {% endif %}
+              {% if item.link_url %}
+                <a class="gateway-col__view-all" href="{{ item.link_url }}">
+                  {% if item.link_title %}
+                    {{ item.link_title }}
+                  {% else %}
+                    {{ 'View all @label'|t({'@label': item.title}) }}
+                  {% endif %}
+                  <span class="gateway-col__view-all-arrow" aria-hidden="true">→</span>
+                </a>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="gateway-block__footer" aria-label="{{ 'Support'|t }}">
+        <div class="gateway-block__footer-lead">
+          {% if gateway_footer_title %}
+            <p class="gateway-block__footer-title">{{ gateway_footer_title }}</p>
+          {% endif %}
+          {% if gateway_footer_body_html %}
+            <div class="gateway-block__footer-copy">{{ gateway_footer_body_html }}</div>
+          {% endif %}
+        </div>
+        {% if gateway_footer_pillars is not empty %}
+          <div class="gateway-block__footer-pillars" role="list">
+            {% for pillar in gateway_footer_pillars %}
+              <div class="gateway-block__footer-pillar" role="listitem">
+                <span class="gateway-block__footer-pillar-icon" aria-hidden="true">{{ pillar.icon }}</span>
+                <div class="gateway-block__footer-pillar-text">
+                  <p class="gateway-block__footer-pillar-title">{{ pillar.title }}</p>
+                  <p class="gateway-block__footer-pillar-desc">{{ pillar.text }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if gateway_footer_link_url %}
+          <a class="gateway-block__footer-cta" href="{{ gateway_footer_link_url }}">
+            {{ gateway_footer_link_title|default('Speak with our team'|t) }}
+            <span class="gateway-block__footer-cta-arrow" aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

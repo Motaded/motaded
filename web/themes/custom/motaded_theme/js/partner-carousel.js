@@ -1,86 +1,91 @@
 /*
-  Partners carousel — Swiper loaded only when the block is near the viewport.
-*/
+ * Partners carousel — tablet/mobile (<1024px). Desktop uses CSS marquee.
+ */
+(function (Drupal, once) {
+  'use strict';
 
-(function (Drupal, drupalSettings, once) {
-  const SWIPER_CSS =
-    'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
-  const SWIPER_JS =
-    'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+  const MOBILE_CAROUSEL_MQ = '(max-width: 1023px)';
 
-  let swiperPromise = null;
-
-  function ensureSwiper() {
-    if (typeof Swiper !== 'undefined') {
-      return Promise.resolve();
-    }
-    if (!swiperPromise) {
-      swiperPromise = new Promise((resolve, reject) => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = SWIPER_CSS;
-        document.head.appendChild(link);
-
-        const script = document.createElement('script');
-        script.src = SWIPER_JS;
-        script.async = true;
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error('Swiper failed to load'));
-        document.body.appendChild(script);
-      });
-    }
-    return swiperPromise;
+  function isMobileCarouselViewport() {
+    return window.matchMedia(MOBILE_CAROUSEL_MQ).matches;
   }
 
   function initPartnersCarousel(element) {
-    if (typeof Swiper === 'undefined') return;
+    if (typeof Swiper === 'undefined' || !isMobileCarouselViewport()) {
+      return;
+    }
+    if (element.swiper) {
+      element.swiper.update();
+      return;
+    }
+
+    const slideCount = element.querySelectorAll('.swiper-slide').length;
+    if (slideCount < 1) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
 
     new Swiper(element, {
-      slidesPerView: 2,
+      slidesPerView: 2.15,
       spaceBetween: 12,
-      loop: true,
-      autoplay: {
-        delay: 3500,
-        disableOnInteraction: false,
-      },
+      loop: slideCount > 2,
+      watchOverflow: true,
+      observer: true,
+      observeParents: true,
+      autoplay: prefersReducedMotion
+        ? false
+        : {
+            delay: 3500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          },
       pagination: {
         el: element.querySelector('.swiper-pagination'),
         clickable: true,
       },
       grabCursor: true,
-      touchEventsTarget: 'container',
       breakpoints: {
+        480: { slidesPerView: 2.5 },
         640: { slidesPerView: 3 },
-        768: { slidesPerView: 4 },
-        1024: { slidesPerView: 5 },
-        1280: { slidesPerView: 6 },
+        768: { slidesPerView: 3.5 },
       },
     });
   }
 
+  function destroyPartnersCarousel(element) {
+    if (element.swiper) {
+      element.swiper.destroy(true, true);
+    }
+  }
+
+  function syncPartnersCarousel(element) {
+    if (isMobileCarouselViewport()) {
+      initPartnersCarousel(element);
+    } else {
+      destroyPartnersCarousel(element);
+    }
+  }
+
   Drupal.behaviors.partnersCarousel = {
     attach(context) {
-      once('partners-carousel-io', '.partners-swiper', context).forEach(
+      once('partners-carousel', '.partners-swiper', context).forEach(
         (element) => {
-          const observer = new IntersectionObserver(
-            (entries, io) => {
-              entries.forEach((entry) => {
-                if (!entry.isIntersecting) return;
-                io.disconnect();
-                ensureSwiper()
-                  .then(() => {
-                    initPartnersCarousel(element);
-                  })
-                  .catch(() => {
-                    // Swiper unavailable; carousel stays static.
-                  });
-              });
-            },
-            { rootMargin: '140px 0px', threshold: 0.01 },
-          );
-          observer.observe(element);
+          const run = () => syncPartnersCarousel(element);
+
+          run();
+
+          if (typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(run);
+          }
+
+          window
+            .matchMedia(MOBILE_CAROUSEL_MQ)
+            .addEventListener('change', run);
         },
       );
     },
   };
-})(Drupal, drupalSettings, once);
+})(Drupal, once);

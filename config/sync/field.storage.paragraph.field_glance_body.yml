@@ -1,0 +1,19 @@
+uuid: 394c59f0-2d41-4f6d-98b1-6cd9828f5a2c
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_glance_body
+field_name: field_glance_body
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

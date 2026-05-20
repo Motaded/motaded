@@ -1,0 +1,7 @@
+motaded_hreflang.settings:
+  path: '/admin/config/search/motaded-hreflang'
+  defaults:
+    _form: '\Drupal\motaded_hreflang\Form\MotadedHreflangSettingsForm'
+    _title: 'Hreflang overrides'
+  requirements:
+    _permission: 'administer motaded hreflang'

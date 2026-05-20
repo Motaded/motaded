@@ -48,6 +48,9 @@
  */
 #}
 {% set service_page_full_bleed = service_page_full_bleed|default(false) %}
+{% set platform_page_full_bleed = platform_page_full_bleed|default(false) %}
+{% set document_page_full_bleed = document_page_full_bleed|default(false) %}
+{% set use_content_full_bleed = service_page_full_bleed or platform_page_full_bleed or document_page_full_bleed %}
 {# Two-column layout + narrow content only when the service sidebar is actually shown (see <aside> below). #}
 {% set show_service_side = false %}
 {% if node and node.bundle == 'page' %}
@@ -62,7 +65,7 @@
   ]
 %}
 
-{% if service_page_full_bleed %}
+{% if use_content_full_bleed %}
   {% set main_classes = [
     'w-full max-w-none pb-10 px-0 flex flex-col gap-0',
   ] %}
@@ -86,21 +89,17 @@
 
 {% if node and node.type.value[0]["target_id"] == 'page' %}
   {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-gray-50']) %}
+{% elseif node and node.bundle == 'document' %}
+  {# No bg utility: document layout uses hero + muted shell; body gray-50 must show through. #}
 {% else %}
   {% set main_wrapper_classes = main_wrapper_classes|merge(['bg-white']) %}
 {% endif %}
 
 
-{# <div id="site-topbar">
-  {{ include('@motaded_theme/includes/topbar.html.twig') }}
-</div> #}
-
-<div id="site-header">
-  {{ include('@motaded_theme/includes/header.html.twig') }}
-</div>
+{{ include('@motaded_theme/includes/site-header-region.html.twig') }}
 
 {% if page.breadcrumb %}
-  <div class="bread{% if service_page_full_bleed %} bread--service-hero-band{% endif %}">
+  <div class="bread{% if use_content_full_bleed %} bread--service-hero-band{% endif %}">
     {{ page.breadcrumb }}
   </div>
 {% endif %}
@@ -136,16 +135,10 @@
 {% endif %}
 
 {% if page.pre_footer %}
-<section class="pre-footer-band relative overflow-hidden bg-gradient-to-br from-[#e4f4ef] via-white to-[#f2f8ff]">
-  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-    <div class="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-100 blur-3xl opacity-60"></div>
-    <div class="absolute right-0 bottom-0 h-40 w-40 translate-x-1/2 rounded-full bg-primary-200 blur-3xl opacity-40"></div>
-  </div>
-  <div class="relative max-w-[1320px] mx-auto px-4 py-16 lg:py-24">
-    <div class="pre-footer-cta-inner max-w-xl mx-auto">
-      <div class="rounded-3xl border border-white/70 bg-white/75 px-8 py-10 shadow-xl backdrop-blur-sm text-center lg:px-12 lg:py-14">
-        {{ page.pre_footer }}
-      </div>
+<section class="pre-footer-band">
+  <div class="pre-footer-band__wrap max-w-[1320px] mx-auto px-4 py-8 lg:py-11">
+    <div class="pre-footer-cta-inner max-w-4xl mx-auto w-full">
+      {{ page.pre_footer }}
     </div>
   </div>
 </section>

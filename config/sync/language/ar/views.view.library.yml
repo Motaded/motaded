@@ -1,0 +1,55 @@
+label: المكتبة
+display:
+  default:
+    display_options:
+      title: المكتبة
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          bef:
+            general:
+              secondary_label: 'مرشحات إضافية'
+            sort:
+              advanced:
+                collapsible_label: 'خيارات الترتيب'
+      filters:
+        combine:
+          expose:
+            placeholder: 'البحث في الوثائق…'
+        field_library_section_target_id:
+          expose:
+            label: القسم
+        field_category_target_id:
+          expose:
+            label: الفئة
+      empty:
+        area_text_custom:
+          content: '<p class="library-directory__empty" role="status">لا توجد وثائق مطابقة لهذه المرشحات.</p>'
+      header:
+        result:
+          content: 'عرض @start–@end من أصل @total وثيقة'
+  block_1:
+    display_title: 'المكتبة — الرئيسية'
+  page_1:
+    display_title: 'صفحة المكتبة'
+    display_options:
+      title: المكتبة
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'المكتبة — قوالب ونماذج ولوائح للأعمال في السعودية | متعدد'
+            description: 'مركز مختار للقوالب والنماذج وقوائم التحقق والأدلة خطوة بخطوة واللوائح الرسمية لمساعدتك على بدء أعمالك وتشغيلها وتنميتها بشكل متوافق في المملكة العربية السعودية.'
+            canonical_url: '[site:base-url]/ar/library'
+            hreflang_xdefault: '[site:base-url]/library'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/library'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/library'

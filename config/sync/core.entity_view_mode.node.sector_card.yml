@@ -1,0 +1,11 @@
+uuid: f6d69e3e-8600-4227-8e7e-4fb0f85ff041
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.sector_card
+label: 'Sector card'
+description: 'Homepage / directory sector tile (image + KPI strip + link).'
+targetEntityType: node
+cache: true

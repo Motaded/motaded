@@ -1,0 +1,430 @@
+{#
+/**
+ * @file
+ * Event — full page layout (hero, two-column body, sidebar, related).
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    'node--view-mode-' ~ view_mode|clean_class,
+    'event-page',
+  ]
+%}
+{{ attach_library('motaded_theme/node') }}
+<article{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="event-page__hero">
+    <div class="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
+      <div class="event-page__hero-inner">
+        <div class="event-page__hero-copy">
+          <span class="event-page__eyebrow mot-eyebrow mot-eyebrow--pill-solo">{{ 'Event'|t }}</span>
+          {% if view_mode == 'full' and label %}
+            <h1{{ title_attributes.addClass('event-page__title') }}>{{ label }}</h1>
+          {% endif %}
+          {% if summary %}
+            <div class="event-page__summary">{{ summary }}</div>
+          {% elseif motaded_body_excerpt %}
+            <div class="event-page__summary">{{ motaded_body_excerpt }}</div>
+          {% endif %}
+
+          {% if event_hero_chips is not empty %}
+            <div class="event-page__chips" role="list" aria-label="{{ 'Key facts'|t }}">
+              {% for chip in event_hero_chips %}
+                {% if chip.url %}
+                  <a class="event-page__chip event-page__chip--link" role="listitem" href="{{ chip.url }}">{{ chip.value }}</a>
+                {% else %}
+                  <span class="event-page__chip" role="listitem">{{ chip.value }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="event-page__quickfacts" aria-label="{{ 'Event facts'|t }}">
+            {% if event_date_line %}
+              <div class="event-page__fact">
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <span>
+                  {% if event_datetime_iso_start %}<time datetime="{{ event_datetime_iso_start }}">{% endif %}
+                  {{ event_date_line }}
+                  {% if event_datetime_iso_start %}</time>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+            {% if event_location_plain %}
+              <div class="event-page__fact">
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-4.35 7-10a7 7 0 10-14 0c0 5.65 7 10 7 10z"/><circle cx="12" cy="11" r="2.5"/></svg>
+                <span>{{ event_location_plain }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="event-page__hero-ctas">
+            {% if event_is_past %}
+              <a class="event-page__btn event-page__btn--primary" href="{{ event_events_directory_url|e('html_attr') }}">{{ 'Browse upcoming events'|t({}, event_lang|default({})) }}</a>
+              {% if event_secondary_url %}
+                <a class="event-page__btn event-page__btn--ghost" href="{{ event_secondary_url }}">{{ event_secondary_title }}</a>
+              {% endif %}
+            {% else %}
+              {% if event_register_url %}
+                <a class="event-page__btn event-page__btn--primary" href="{{ event_register_url }}">{{ event_register_title }}</a>
+              {% endif %}
+              {% if event_registration_help_form is not empty %}
+                <a class="event-page__btn event-page__btn--ghost" href="#event-registration-help">{{ 'Register'|t }}</a>
+              {% endif %}
+              {% if event_secondary_url %}
+                <a class="event-page__btn event-page__btn--ghost" href="{{ event_secondary_url }}">{{ event_secondary_title }}</a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="event-page__hero-media-wrap">
+          {% if event_hero_media is not empty %}
+            <div class="event-page__hero-media">
+              {{ event_hero_media }}
+            </div>
+          {% endif %}
+          {% if event_hero_stats is not empty %}
+            <div class="event-page__stats{% if event_hero_media is empty %} event-page__stats--standalone{% endif %}" role="group" aria-label="{{ 'Event highlights'|t }}">
+              {% for row in event_hero_stats %}
+                <div class="event-page__stat">
+                  <span class="event-page__stat-figure">{{ row.figure }}</span>
+                  <span class="event-page__stat-caption">{{ row.caption }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="event-page__layout" id="event-main">
+    <div class="event-page__main">
+      {% if event_body is not empty %}
+        <section class="event-page__section" id="event-about" aria-labelledby="event-about-heading">
+          <h2 id="event-about-heading" class="event-page__section-title">{{ 'About the event'|t }}</h2>
+          <div class="event-page__prose prose prose-neutral max-w-none text-base leading-relaxed text-slate-700">
+            {{ event_body }}
+          </div>
+        </section>
+      {% endif %}
+
+      {% if event_why is not empty %}
+        <section class="event-page__section event-page__why" id="event-why" aria-labelledby="event-why-heading">
+          <h2 id="event-why-heading" class="event-page__section-title">{{ 'Why attend'|t }}</h2>
+          {{ event_why }}
+        </section>
+      {% endif %}
+
+      {% if event_highlights is not empty %}
+        <section class="event-page__section event-page__highlights" id="event-highlights" aria-labelledby="event-highlights-heading">
+          <h2 id="event-highlights-heading" class="event-page__section-title">{{ 'Key highlights'|t }}</h2>
+          {{ event_highlights }}
+        </section>
+      {% endif %}
+
+      {% if event_audience is not empty %}
+        <section class="event-page__section event-page__audience" id="event-audience" aria-labelledby="event-audience-heading">
+          <h2 id="event-audience-heading" class="event-page__section-title">{{ 'Who should attend'|t }}</h2>
+          {{ event_audience }}
+        </section>
+      {% endif %}
+
+      {% if event_agenda is not empty %}
+        <section class="event-page__section event-page__agenda" id="event-agenda" aria-labelledby="event-agenda-heading">
+          <h2 id="event-agenda-heading" class="event-page__section-title">{{ 'Agenda overview'|t }}</h2>
+          {{ event_agenda }}
+        </section>
+      {% endif %}
+
+      {% if event_gallery is not empty %}
+        <section class="event-page__section event-page__gallery" aria-labelledby="event-gallery-heading">
+          <h2 id="event-gallery-heading" class="event-page__section-title">{{ 'Gallery'|t }}</h2>
+          {{ event_gallery }}
+        </section>
+      {% endif %}
+
+      {% if event_partners is not empty %}
+        <section class="event-page__section event-page__partners" aria-labelledby="event-partners-heading">
+          <h2 id="event-partners-heading" class="event-page__section-title">{{ 'Partners'|t }}</h2>
+          {{ event_partners }}
+        </section>
+      {% endif %}
+    </div>
+
+    <aside class="event-page__aside" aria-label="{{ 'Event sidebar'|t }}">
+      <div class="event-page__aside-card event-page__aside-card--meta">
+        <h3>{{ 'Event details'|t }}</h3>
+        <ul class="event-page__detail-list">
+          {% if event_date_line %}
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <span>{{ event_date_line }}</span>
+            </li>
+          {% endif %}
+          {% if event_time_line %}
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <span>{{ event_time_line }}</span>
+            </li>
+          {% endif %}
+          {% if event_location_plain %}
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-4.35 7-10a7 7 0 10-14 0c0 5.65 7 10 7 10z"/><circle cx="12" cy="11" r="2.5"/></svg>
+              <span>
+                {{ event_location_plain }}
+                {% if event_maps_url %}
+                  <br><a href="{{ event_maps_url }}" class="text-sm font-semibold text-[#00473f] underline-offset-2 hover:underline">{{ 'View on map'|t }}</a>
+                {% endif %}
+              </span>
+            </li>
+          {% endif %}
+          {% if event_type_label %}
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              <span>{{ event_type_label }}</span>
+            </li>
+          {% endif %}
+          {% if event_region_label or event_category_label %}
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2C8.5 2 6 4.5 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.5-2.5-6-6-6z"/><circle cx="12" cy="8" r="2"/></svg>
+              <span>
+                {% if event_region_label %}{{ event_region_label }}{% endif %}
+                {% if event_region_label and event_category_label %} · {% endif %}
+                {% if event_category_label %}{{ event_category_label }}{% endif %}
+              </span>
+            </li>
+          {% endif %}
+        </ul>
+        {% if event_facts is not empty %}
+          <div class="event-page__aside-divider" aria-hidden="true"></div>
+          <dl class="event-page__facts-list">
+            {% for fact in event_facts %}
+              <div class="event-page__fact-row">
+                <dt>{{ fact.label }}</dt>
+                <dd>
+                  {% if fact.url %}
+                    <a href="{{ fact.url }}" class="event-page__fact-link">{{ fact.value }}</a>
+                  {% else %}
+                    {{ fact.value }}
+                  {% endif %}
+                </dd>
+              </div>
+            {% endfor %}
+          </dl>
+        {% endif %}
+      </div>
+
+      {% if event_share_block is not empty %}
+        <div class="event-page__aside-card">
+          <h3>{{ 'Share event'|t }}</h3>
+          <div class="event-page__share-row">
+            {{ event_share_block }}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="event-page__aside-card event-page__reg">
+        <h3>{{ 'Registration'|t }}</h3>
+        {% if event_is_past %}
+          {% include '@motaded_theme/event/event-past-notice.html.twig' with {
+            compact: true,
+            event_lang: event_lang|default({}),
+            event_events_directory_url: event_events_directory_url,
+          } only %}
+        {% else %}
+          {% if event_register_kind != 'external' and event_cta_blurb %}
+            <p class="m-0 text-sm leading-relaxed text-slate-600">{{ event_cta_blurb }}</p>
+          {% endif %}
+          {% if event_register_kind != 'external' and (event_meeting_enabled or event_register_url) %}
+            <ul class="event-page__reg-list">
+              {% if event_meeting_enabled %}
+                <li>{{ 'Meeting requests available'|t }}</li>
+              {% endif %}
+              {% if event_register_url %}
+                <li>{{ 'Secure online registration'|t }}</li>
+              {% endif %}
+            </ul>
+          {% endif %}
+          {% if event_register_url %}
+            <a class="event-page__btn event-page__btn--primary w-full text-center" href="{{ event_register_url }}">{{ event_register_title }}</a>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="event-page__aside-card">
+        <h3>{{ 'Contact'|t }}</h3>
+        <p class="m-0 text-sm text-slate-600">{{ 'Questions about this event? Our team can help.'|t }}</p>
+        <p class="mt-3 mb-0">
+          <a class="event-page__btn event-page__btn--ghost w-full text-center" href="{{ event_contact_url }}">{{ 'Contact us'|t }}</a>
+        </p>
+      </div>
+
+      {% if event_tags is not empty %}
+        <div class="event-page__aside-card">
+          <h3>{{ 'Tags'|t }}</h3>
+          <div class="flex flex-wrap gap-2 text-sm">
+            {{ event_tags }}
+          </div>
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+
+  {% if event_documents is not empty %}
+    <section class="event-page__documents" aria-labelledby="event-documents-heading">
+      <div class="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
+        <h2 id="event-documents-heading" class="event-page__section-title">{{ 'Documents'|t }}</h2>
+        {{ event_documents }}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if event_is_past or event_registration_help_form is not empty %}
+    <section id="event-registration-help" class="event-page__help" aria-labelledby="event-help-heading">
+      <div class="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
+        <div class="event-page__help-card{% if event_is_past %} event-page__help-card--past{% endif %}">
+          {% if event_is_past %}
+            {% include '@motaded_theme/event/event-past-notice.html.twig' with {
+              compact: false,
+              event_lang: event_lang|default({}),
+              event_events_directory_url: event_events_directory_url,
+            } only %}
+          {% else %}
+          <div class="event-help__head">
+            <div class="event-help__head-left">
+              <div class="event-help__badge" aria-hidden="true"></div>
+              <div>
+                <h2 id="event-help-heading" class="event-page__section-title event-help__title">{{ 'We’ll help you register'|t }}</h2>
+                <p class="event-page__help-lede">{{ 'Share your details and our team will contact you with the next steps.'|t }}</p>
+              </div>
+            </div>
+            <div class="event-help__head-right" aria-label="{{ 'Your information is secure'|t }}">
+              <span class="event-help__secure-icon" aria-hidden="true"></span>
+              <div class="event-help__secure-copy">
+                <div class="event-help__secure-title">{{ 'Your information is secure'|t }}</div>
+                <div class="event-help__secure-sub">{{ 'We respect your privacy'|t }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-help__grid">
+            <div class="event-help__form">
+              {{ event_registration_help_form }}
+              <div class="event-help__fineprint">{{ 'Your details will only be used for registration purposes.'|t }}</div>
+            </div>
+
+            <aside class="event-help__aside" aria-label="{{ 'Registration help info'|t }}">
+              <div class="event-help__aside-card">
+                <div class="event-help__aside-title">{{ 'What to expect'|t }}</div>
+                <ul class="event-help__aside-list">
+                  <li><span class="event-help__aside-ico event-help__aside-ico--assist" aria-hidden="true"></span><strong>{{ 'Personal assistance'|t }}</strong><span>{{ 'Our team will contact you to guide you through the registration process.'|t }}</span></li>
+                  <li><span class="event-help__aside-ico event-help__aside-ico--updates" aria-hidden="true"></span><strong>{{ 'Timely updates'|t }}</strong><span>{{ 'Receive important event information and next steps.'|t }}</span></li>
+                  <li><span class="event-help__aside-ico event-help__aside-ico--smooth" aria-hidden="true"></span><strong>{{ 'Smooth experience'|t }}</strong><span>{{ 'We’ll help ensure your participation is confirmed.'|t }}</span></li>
+                </ul>
+              </div>
+              <div class="event-help__aside-card">
+                <div class="event-help__aside-title">{{ 'Need immediate help?'|t }}</div>
+                <p class="event-help__aside-p">{{ 'If you have any questions, our team is here to assist you.'|t }}</p>
+                <a class="event-help__aside-link" href="/contact-us">{{ 'Contact us'|t }}</a>
+              </div>
+            </aside>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if connected_related_events is not empty or connected_sectors is not empty or connected_insights is not empty %}
+    <section class="event-connected" aria-labelledby="event-connected-heading">
+      <div class="event-connected__head">
+        <div>
+          <div class="event-connected__eyebrow mot-eyebrow">{{ connected_market_label }}</div>
+          <h2 id="event-connected-heading" class="event-connected__title">{{ 'Connected to this event'|t }}</h2>
+          <p class="event-connected__sub">{{ connected_market_subtitle }}</p>
+        </div>
+      </div>
+
+      <div class="event-connected__section">
+        <div class="event-connected__section-head">
+          <div class="event-connected__section-title">
+            <span class="event-connected__icon event-connected__icon--events" aria-hidden="true"></span>
+            <h3 class="m-0">{{ 'Related events'|t }}</h3>
+          </div>
+          <a class="event-connected__viewall" href="{{ connected_all_events_url }}">{{ 'View all events'|t }} <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="event-connected__cards">
+          {% for item in connected_related_events|slice(0, 3) %}
+            <article class="event-connected__card">
+              <h4 class="event-connected__card-title"><a href="{{ item.url }}">{{ item.title }}</a></h4>
+              {% if item.meta %}
+                <div class="event-connected__card-meta">{{ item.meta }}</div>
+              {% endif %}
+              {% if item.sector %}
+                <div class="event-connected__card-chip">{{ item.sector }}</div>
+              {% endif %}
+              <a class="event-connected__card-cta" href="{{ item.url }}">{{ 'View event'|t }} <span aria-hidden="true">→</span></a>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if connected_sectors is not empty %}
+        <div class="event-connected__divider" role="presentation"></div>
+        <div class="event-connected__section">
+          <div class="event-connected__section-head">
+            <div class="event-connected__section-title">
+              <span class="event-connected__icon event-connected__icon--sectors" aria-hidden="true"></span>
+              <h3 class="m-0">{{ 'Relevant sectors'|t }}</h3>
+            </div>
+            <a class="event-connected__viewall" href="{{ connected_all_sectors_url }}">{{ 'View all sectors'|t }} <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="event-connected__chips" role="list">
+            {% for s in connected_sectors|slice(0, 6) %}
+              <a class="event-connected__chip" role="listitem" href="{{ s.url }}">{{ s.title }} <span aria-hidden="true">→</span></a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if connected_insights is not empty %}
+        <div class="event-connected__divider" role="presentation"></div>
+        <div class="event-connected__section">
+          <div class="event-connected__section-head">
+            <div class="event-connected__section-title">
+              <span class="event-connected__icon event-connected__icon--insights" aria-hidden="true"></span>
+              <h3 class="m-0">{{ 'Insights'|t }}</h3>
+            </div>
+            <a class="event-connected__viewall" href="{{ connected_all_insights_url }}">{{ 'View all insights'|t }} <span aria-hidden="true">→</span></a>
+          </div>
+
+          <div class="event-connected__insights">
+            {% for in in connected_insights|slice(0, 3) %}
+              <div class="event-connected__insight">
+                <div class="event-connected__insight-main">
+                  <div class="event-connected__insight-title"><a href="{{ in.url }}">{{ in.title }}</a></div>
+                  {% if in.excerpt %}
+                    <div class="event-connected__insight-excerpt">{{ in.excerpt }}</div>
+                  {% endif %}
+                </div>
+                <a class="event-connected__insight-cta" href="{{ in.url }}">{{ 'Read insight'|t }} <span aria-hidden="true">→</span></a>
+              </div>
+              {% if not loop.last %}
+                <div class="event-connected__insight-divider" role="presentation"></div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  {{ content }}
+</article>

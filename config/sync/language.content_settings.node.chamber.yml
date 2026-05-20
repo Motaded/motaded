@@ -1,0 +1,18 @@
+uuid: c4e8b2a1-7f3d-4c91-9b62-8e7f1a2b3c4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.chamber
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: node.chamber
+target_entity_type_id: node
+target_bundle: chamber
+default_langcode: site_default
+language_alterable: true

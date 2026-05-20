@@ -1,0 +1,110 @@
+uuid: 9f1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.gateway_hub_block.field_body
+    - field.field.paragraph.gateway_hub_block.field_gateway_eyebrow
+    - field.field.paragraph.gateway_hub_block.field_gateway_events
+    - field.field.paragraph.gateway_hub_block.field_gateway_insights
+    - field.field.paragraph.gateway_hub_block.field_gateway_platforms
+    - field.field.paragraph.gateway_hub_block.field_gateway_sectors
+    - field.field.paragraph.gateway_hub_block.field_gateway_support_items
+    - field.field.paragraph.gateway_hub_block.field_title
+    - paragraphs.paragraphs_type.gateway_hub_block
+    - paragraphs.paragraphs_type.why_feature_card
+  module:
+    - paragraphs
+    - text
+id: paragraph.gateway_hub_block.default
+targetEntityType: paragraph
+bundle: gateway_hub_block
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_events:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_eyebrow:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_insights:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_platforms:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_sectors:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_gateway_support_items:
+    type: paragraphs
+    weight: 7
+    region: content
+    settings:
+      title: 'Support badge'
+      title_plural: 'Support badges'
+      edit_mode: closed
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: why_feature_card
+      features:
+        collapse_edit_all: '0'
+        duplicate: '0'
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

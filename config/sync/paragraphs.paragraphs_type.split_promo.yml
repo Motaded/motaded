@@ -1,0 +1,10 @@
+uuid: b7c0170b-930a-4af5-861f-8a7ef31373b1
+langcode: en
+status: true
+dependencies: {  }
+id: split_promo
+label: 'Split promo'
+icon_uuid: null
+icon_default: null
+description: 'Two-column promo: headline, subhead, bullets, CTA, optional trust line, and responsive image.'
+behavior_plugins: {  }

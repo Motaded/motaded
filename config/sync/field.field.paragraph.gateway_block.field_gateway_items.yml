@@ -1,0 +1,31 @@
+uuid: 5e4d3c2b-1a0f-4e9d-8c7b-6a5d4c3b2a1f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_items
+    - paragraphs.paragraphs_type.gateway_block
+    - paragraphs.paragraphs_type.gateway_item
+  module:
+    - entity_reference_revisions
+id: paragraph.gateway_block.field_gateway_items
+field_name: field_gateway_items
+entity_type: paragraph
+bundle: gateway_block
+label: 'Gateway items'
+description: '4 cards recommended.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      gateway_item: gateway_item
+    negate: 0
+    target_bundles_drag_drop:
+      gateway_item:
+        weight: 1
+        enabled: true
+field_type: entity_reference_revisions

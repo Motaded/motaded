@@ -1,0 +1,35 @@
+uuid: b9d1b2b8-8a48-4b5e-bd8f-77c0a1e1f25b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.glance_block.field_body
+    - field.field.paragraph.glance_block.field_glance_eyebrow
+    - field.field.paragraph.glance_block.field_glance_features
+    - field.field.paragraph.glance_block.field_glance_highlight
+    - field.field.paragraph.glance_block.field_glance_stats
+    - field.field.paragraph.glance_block.field_glance_title
+    - field.field.paragraph.glance_block.field_glance_title_accent
+    - paragraphs.paragraphs_type.glance_block
+  module:
+    - text
+id: paragraph.glance_block.default
+targetEntityType: paragraph
+bundle: glance_block
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_glance_eyebrow: true
+  field_glance_features: true
+  field_glance_highlight: true
+  field_glance_stats: true
+  field_glance_title: true
+  field_glance_title_accent: true
+  search_api_excerpt: true

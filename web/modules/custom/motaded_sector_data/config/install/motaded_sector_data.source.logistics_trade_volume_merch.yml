@@ -1,0 +1,20 @@
+uuid: 5d7a8b9c-0e1f-4a2b-9c3d-6e7f8091a2b3
+langcode: en
+status: true
+dependencies: {  }
+id: logistics_trade_volume_merch
+label: 'Logistics — Trade volume over time (chart)'
+description: "World Bank WDI merchandise exports plus imports for Saudi Arabia, merged by calendar year. Value tab: USD billion (÷10⁹). Growth tab: year-over-year % change in combined trade. Edit codes or cache here; changes invalidate sector page cache."
+weight: 0
+sector_key: logistics
+usage_key: trade_volume_chart
+provider: worldbank
+wb_country_iso3: SAU
+wb_indicator_primary: TX.VAL.MRCH.CD.WT
+wb_indicator_secondary: TM.VAL.MRCH.CD.WT
+wb_api_base_url: ''
+merge_mode: sum_series_by_year
+value_scale: divide_1e9
+max_years: 24
+cache_max_age: 43200
+gastat_api_url: ''

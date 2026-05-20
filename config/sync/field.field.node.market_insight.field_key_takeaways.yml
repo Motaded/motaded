@@ -1,0 +1,26 @@
+uuid: b1c2d3e4-f5a6-4789-a012-345678901105
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_key_takeaways
+    - filter.format.basic_html
+    - filter.format.full_html
+    - node.type.market_insight
+  module:
+    - text
+id: node.market_insight.field_key_takeaways
+field_name: field_key_takeaways
+entity_type: node
+bundle: market_insight
+label: 'Key takeaways'
+description: 'Short highlighted bullets or summary (shown in a callout on the platform layout).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - full_html
+field_type: text_long

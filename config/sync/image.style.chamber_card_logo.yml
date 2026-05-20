@@ -1,0 +1,22 @@
+uuid: a3c8e1f2-4b5d-6e7a-9c0d-1f2e3d4c5b6a
+langcode: en
+status: true
+dependencies: {  }
+name: chamber_card_logo
+label: 'Chamber card logo (128×128)'
+effects:
+  7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c:
+    uuid: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
+    id: image_scale
+    weight: 0
+    data:
+      width: 128
+      height: 128
+      upscale: false
+  8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d:
+    uuid: 8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__

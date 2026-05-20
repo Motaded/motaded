@@ -1,0 +1,508 @@
+/**
+ * @file
+ * /platforms directory: extends services-directory split-banner hero +
+ * sectors-like full-width layout. Self-contained styles below cover the
+ * platform-specific bits only (hero photo, filter band, results grid, cards).
+ *
+ * Note: the Grid/List toggle has been removed — the listing is now always a
+ * responsive 4-column grid (2-col on tablet, single column on mobile).
+ */
+
+/* Hero visual: dedicated platforms artwork (overrides services-bg on this view).
+ * Loads optimized WebP via image-set() with PNG fallback for older browsers. */
+.platforms-directory.platforms-directory--page .services-page-hero__visual-photo.platforms-directory__hero-photo {
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/platforms-bg.png') no-repeat center right / cover;
+  background:
+    linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/platforms-bg.webp') type('image/webp'),
+      url('../../images/platforms-bg.png') type('image/png')
+    ) no-repeat center right / cover;
+}
+
+[dir='rtl'] .platforms-directory.platforms-directory--page .services-page-hero__visual-photo.platforms-directory__hero-photo {
+  transform: scaleX(-1);
+  transform-origin: center;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    url('../../images/platforms-bg.png') no-repeat center left / cover;
+  background:
+    linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0.55) 22%, transparent 48%),
+    image-set(
+      url('../../images/platforms-bg.webp') type('image/webp'),
+      url('../../images/platforms-bg.png') type('image/png')
+    ) no-repeat center left / cover;
+  background-position: center, center left;
+}
+
+/* Full-width rail: override services-directory max-width + sidebar grid. */
+.platforms-directory.platforms-directory--page.services-directory {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.platforms-directory__page-inner {
+  width: 100%;
+  max-width: var(--mot-home-max, 1320px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--mot-pad-x, 1rem);
+  padding-right: var(--mot-pad-x, 1rem);
+  box-sizing: border-box;
+}
+
+/* Kill “sidebar | content” grid inherited from /services. */
+@media (min-width: 1024px) {
+  .platforms-directory.platforms-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+  }
+
+  .platforms-directory.platforms-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed
+    .platforms-directory__exposed-wrap,
+  .platforms-directory.platforms-directory--page
+    .services-directory__main.services-directory__main--integrated-exposed
+    > .services-directory__results-column {
+    grid-column: unset !important;
+    grid-row: unset !important;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.platforms-directory.platforms-directory--page .platforms-directory__exposed-wrap,
+.platforms-directory.platforms-directory--page .platforms-directory__exposed-wrap form {
+  width: 100%;
+  max-width: none;
+}
+
+.platforms-directory.platforms-directory--page .platforms-directory__results,
+.platforms-directory.platforms-directory--page .platforms-directory__grid {
+  width: 100%;
+  max-width: none;
+}
+
+/* Hero stat strip: three columns on wide screens. */
+@media (min-width: 720px) {
+  .platforms-directory .services-page-hero__stats-strip--three .services-page-hero__stat {
+    flex: 1 1 33.333%;
+  }
+}
+
+.platforms-directory__exposed-wrap {
+  margin-bottom: 1rem;
+}
+
+/* Exposed filter band: same row pattern as /sectors (search grows, selects fixed). */
+.platforms-directory.platforms-directory--page .views-exposed-form {
+  width: 100%;
+  max-width: none;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters.services-directory__exposed-top
+  > form,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters.services-directory__exposed-top
+  .views-exposed-form,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters.services-directory__exposed-top
+  .form--inline {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start !important;
+  gap: 0.75rem 1rem;
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-title {
+  flex: 1 1 18rem;
+  min-width: min(100%, 12rem);
+  max-width: 100%;
+  margin: 0;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-title
+  input.form-text {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-category-target-id,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-region-target-id,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-sort-by,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-sort-order {
+  flex: 0 1 13rem;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-category-target-id
+  > label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-category-target-id
+  select {
+  min-width: 11.5rem;
+  min-height: 2.6875rem;
+  width: 100%;
+  padding: 0.55rem 2.35rem 0.55rem 0.95rem;
+  border-radius: 0.75rem;
+  border: 1px solid #cbd5e1;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%2364758b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 0.875rem;
+  color: #0f172a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  appearance: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-category-target-id
+  select:hover {
+  border-color: #94a3b8;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-item-field-category-target-id
+  select:focus-visible {
+  outline: none;
+  border-color: #1a7344;
+  box-shadow: 0 0 0 3px rgba(26, 115, 68, 0.14);
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  [data-drupal-selector^='edit-actions'],
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 0.5rem;
+  width: auto !important;
+  margin: 0 !important;
+  margin-inline-start: auto;
+}
+
+@media (max-width: 47.99rem) {
+  .platforms-directory.platforms-directory--page
+    #platforms-directory-filters
+    [data-drupal-selector^='edit-actions'],
+  .platforms-directory.platforms-directory--page
+    #platforms-directory-filters
+    .form-actions {
+    margin-inline-start: 0;
+    flex: 1 1 100%;
+    justify-content: flex-start !important;
+  }
+}
+
+/* Apply / Reset buttons — match /services brand styling.
+ * Submit = filled brand green, Reset = outlined ghost. */
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions .button,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6875rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.625rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="submit"] {
+  background-color: #1a7344;
+  border-color: #1a7344;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(26, 115, 68, 0.18);
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="submit"]:hover,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="submit"]:focus-visible {
+  background-color: #145c38;
+  border-color: #145c38;
+  box-shadow: 0 10px 22px rgba(26, 115, 68, 0.24);
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="submit"]:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 10px rgba(26, 115, 68, 0.22);
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="reset"],
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[name="reset"] {
+  background-color: #fff;
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="reset"]:hover,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[name="reset"]:hover,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[data-drupal-selector*="reset"]:focus-visible,
+.platforms-directory.platforms-directory--page
+  #platforms-directory-filters
+  .form-actions input[name="reset"]:focus-visible {
+  border-color: #1a7344;
+  color: #1a7344;
+  background-color: #f0faf4;
+}
+
+/* Visually hide sort labels (kept for a11y) — same trick as /sectors. */
+#platforms-directory-filters .form-item-sort-by > label,
+#platforms-directory-filters .form-item-sort-order > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Toolbar — heading + optional results count.
+ * Grid/List toggle removed: platforms always render as a responsive grid. */
+.platforms-directory__toolbar {
+  margin: 0.85rem 0 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.platforms-directory__toolbar-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.platforms-directory__grid-heading {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--mot-text, #0f172a);
+}
+
+/* Results grid — fixed 4-column responsive layout. */
+.platforms-directory__grid {
+  display: grid;
+  gap: 1.15rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1180px) {
+  .platforms-directory__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .platforms-directory__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card polish. */
+.platforms-directory__grid .pf-teaser__link {
+  border-radius: 14px;
+  border: 1px solid #e8ece9;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.platforms-directory__grid .pf-teaser__link:hover,
+.platforms-directory__grid .pf-teaser__link:focus-visible {
+  border-color: #c5ddcf;
+  box-shadow: 0 8px 28px rgba(15, 118, 110, 0.08);
+  transform: translateY(-2px);
+}
+
+.platforms-directory__grid .pf-teaser__inner {
+  padding: 1.25rem;
+  gap: 0.9rem;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.platforms-directory__grid .pf-teaser__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+/* Drupal field wrappers — fill the logo box so images center consistently. */
+.platforms-directory__grid .pf-teaser__logo :where(.field, .field__item, .contextual-region) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.platforms-directory__grid .pf-teaser__logo :where(img, picture) {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 76%;
+  max-height: 76%;
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.platforms-directory__grid .pf-teaser__logo :where(picture img) {
+  margin: 0 auto;
+}
+
+.platforms-directory__grid .pf-teaser__title {
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.platforms-directory__grid .pf-teaser__desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.platforms-directory__grid .pf-teaser__meta {
+  margin-top: 0.25rem;
+  font-size: 0;
+}
+
+/* Category field rendered as a pill — also hides the "Platform category" label. */
+.platforms-directory__grid .pf-teaser__meta .field__label {
+  display: none;
+}
+
+.platforms-directory__grid .pf-teaser__meta .field__item,
+.platforms-directory__grid .pf-teaser__meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #14532d;
+  background: #e8f7ef;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.platforms-directory__grid .pf-teaser__cta {
+  margin-top: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 800;
+  color: #166534;
+}
+
+.platforms-directory__pager {
+  margin-top: 2rem;
+}

@@ -1,0 +1,29 @@
+uuid: 5d6e7f80-91a2-4b3c-8d4e-5f6a7b8c9d0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gateway_events
+    - node.type.event
+    - paragraphs.paragraphs_type.gateway_hub_block
+id: paragraph.gateway_hub_block.field_gateway_events
+field_name: field_gateway_events
+entity_type: paragraph
+bundle: gateway_hub_block
+label: 'Upcoming events'
+description: 'Select 3 events.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      event: event
+    sort:
+      field: field_event_start
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

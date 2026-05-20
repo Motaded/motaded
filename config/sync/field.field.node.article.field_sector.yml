@@ -1,0 +1,29 @@
+uuid: d2222222-2222-4222-8222-222222222202
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sector
+    - node.type.article
+    - taxonomy.vocabulary.sector
+id: node.article.field_sector
+field_name: field_sector
+entity_type: node
+bundle: article
+label: Sector
+description: 'Industry sector for listings (e.g. sector landing pages).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      sector: sector
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

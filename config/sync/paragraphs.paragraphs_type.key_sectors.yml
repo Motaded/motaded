@@ -1,0 +1,10 @@
+uuid: 6d75084f-046a-4111-a04a-92a6b6d50872
+langcode: en
+status: true
+dependencies: {  }
+id: key_sectors
+label: 'Key sectors (home)'
+icon_uuid: null
+icon_default: null
+description: 'Homepage sectors strip: headline, sidebar insights, Views sector cards grid, footer CTA.'
+behavior_plugins: {  }

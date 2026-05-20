@@ -1,0 +1,42 @@
+label: 'رؤى السوق'
+display:
+  default:
+    display_options:
+      title: 'رؤى السوق'
+      empty:
+        area_text_custom:
+          content: '<p class="insights-directory__empty" role="status">لا توجد رؤى مطابقة لهذه المرشحات. جرّب إعادة الضبط أو اختر خيارات أخرى.</p>'
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+          text_input_required: 'اختر المرشحات ثم انقر «تطبيق» لعرض الرؤى المطابقة.'
+          bef:
+            general:
+              secondary_label: 'مرشحات إضافية'
+      filters:
+        title:
+          expose:
+            label: بحث
+        field_category_target_id:
+          expose:
+            label: الفئة
+        field_sector_target_id:
+          expose:
+            label: القطاع
+        field_region_target_id:
+          expose:
+            label: المنطقة
+  attachment_featured:
+    display_title: 'رؤى مميزة'
+  page_1:
+    display_title: 'صفحة الرؤى'

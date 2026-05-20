@@ -1,0 +1,48 @@
+label: 'الغرف والمجالس'
+display:
+  default:
+    display_options:
+      title: 'الغرف التجارية'
+      empty:
+        area_text_custom:
+          content: '<p class="chambers-view__empty" role="status">لا توجد غرف مطابقة لهذا الاختيار.</p>'
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+  page_1:
+    display_title: 'دليل الغرف'
+    display_options:
+      title: 'الغرف والمجالس'
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'عدد العناصر في الصفحة'
+            items_per_page_options_all_label: '- الكل -'
+            offset_label: الإزاحة
+      exposed_form:
+        options:
+          submit_button: 'تطبيق المرشحات'
+          reset_button_label: 'إعادة ضبط'
+          exposed_sorts_label: 'الترتيب حسب'
+          sort_asc_label: تصاعدي
+          sort_desc_label: تنازلي
+      filters:
+        title:
+          expose:
+            label: بحث
+        field_type_value:
+          expose:
+            label: 'نوع المنظمة'
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'الغرف التجارية والمجالس في المملكة العربية السعودية | متعدد'
+            description: 'دليل الغرف التجارية ومجالس الأعمال والشبكات القطاعية في المملكة العربية السعودية ودول الخليج. اعثر على المنظمة المناسبة للعضوية والشراكات والوصول إلى السوق داخل المملكة.'
+            canonical_url: '[site:base-url]/ar/chambers'
+            hreflang_xdefault: '[site:base-url]/chambers'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/chambers'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/chambers'

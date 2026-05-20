@@ -32,12 +32,16 @@ display:
                   </p>
               </div>
             format: full_html
-      title: 'أحدث المقالات'
+      title: 'رؤى ومقالات لممارسة الأعمال في المملكة العربية السعودية'
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'أحدث المقالات | معتد'
-            description: 'أحدث المقالات. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
+            title: 'رؤى ومقالات لممارسة الأعمال في المملكة العربية السعودية | متعدد'
+            description: 'أدلة عملية وتحليلات للسوق وشروحات تفصيلية تغطّي تأسيس الشركات والمنصات الحكومية والأنظمة والقطاعات المحفّزة للنمو في المملكة العربية السعودية.'
+            canonical_url: '[site:base-url]/ar/blog'
+            hreflang_xdefault: '[site:base-url]/blog'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/blog'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/blog'
       exposed_form:
         options:
           submit_button: تطبيق
@@ -46,7 +50,7 @@ display:
       filters:
         combine:
           expose:
-            placeholder: بحث
+            placeholder: 'ابحث في المقالات، المواضيع أو الكلمات المفتاحية…'
     display_title: 'أحدث المقالات'
   page_2:
     display_options:
@@ -76,12 +80,16 @@ display:
                   </p>
               </div>
             format: full_html
-      title: 'أحدث الأخبار'
+      title: 'الأخبار وآخر المستجدّات'
       display_extenders:
         metatag_display_extender:
           metatags:
-            title: 'أحدث الأخبار | معتد'
-            description: 'آخر الأخبار. رؤى وتحليلات معمّقة للمستثمرين ورواد الأعمال والشركات التي تبني أعمالها في السعودية.'
+            title: 'الأخبار وآخر المستجدّات من متعدد | أخبار الأعمال في المملكة العربية السعودية'
+            description: 'آخر إعلانات متعدد وتحديثات السوق السعودي والأنظمة والشراكات وتطوّرات القطاع العام التي تهمّ المستثمرين والشركات النامية في المملكة العربية السعودية.'
+            canonical_url: '[site:base-url]/ar/news'
+            hreflang_xdefault: '[site:base-url]/news'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/news'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/news'
       exposed_form:
         options:
           submit_button: تطبيق
@@ -89,7 +97,7 @@ display:
       filters:
         combine:
           expose:
-            placeholder: 'بحث في الأخبار'
+            placeholder: 'ابحث في الأخبار…'
   block_2:
     display_options:
       header:

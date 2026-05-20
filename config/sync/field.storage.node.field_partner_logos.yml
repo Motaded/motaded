@@ -1,0 +1,20 @@
+uuid: 8d499d9b-eb7f-4d0d-9499-c21cab52eaf1
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - node
+id: node.field_partner_logos
+field_name: field_partner_logos
+entity_type: node
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

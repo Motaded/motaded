@@ -6,41 +6,7 @@
 {#
 /**
  * @file
- * Default theme implementation to display a paragraph.
- *
- * Available variables:
- * - paragraph: Full paragraph entity.
- *   Only method names starting with "get", "has", or "is" and a few common
- *   methods such as "id", "label", and "bundle" are available. For example:
- *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
- *   - paragraph.id(): The paragraph ID.
- *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
- *   - paragraph.getOwnerId(): The user ID of the paragraph author.
- *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
- *   and methods for the paragraph object.
- * - content: All paragraph items. Use {{ content }} to print them all,
- *   or print a subset such as {{ content.field_example }}. Use
- *   {{ content|without('field_example') }} to temporarily suppress the printing
- *   of a given child element.
- * - attributes: HTML attributes for the containing element.
- *   The attributes.class element may contain one or more of the following
- *   classes:
- *   - paragraphs: The current template type (also known as a "theming hook").
- *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
- *     "Image" it would result in "paragraphs--type--image". Note that the machine
- *     name will often be in a short form of the human readable label.
- *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
- *     preview would result in: "paragraphs--view-mode--preview", and
- *     default: "paragraphs--view-mode--default".
- * - view_mode: View mode; for example, "preview" or "full".
- * - logged_in: Flag for authenticated user status. Will be true when the
- *   current user is a logged-in member.
- * - is_admin: Flag for admin user status. Will be true when the current user
- *   is an administrator.
- *
- * @see template_preprocess_paragraph()
- *
- * @ingroup themeable
+ * Paragraph view_block: intro + embedded view + optional link.
  */
 #}
 {%
@@ -49,28 +15,135 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-    "bg-white pb-14 pt-28"
-  ]
+  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar or view_block_library_home or view_block_partners_marquee) ? [] : ['bg-white'])|merge(
+    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : (view_block_library_home ? ['pb-14'] : (view_block_partners_marquee ? ['pb-12', 'pt-0'] : ['pb-14', 'pt-28'])))
+  )|merge([
+    view_block_news_latest ? 'paragraph--view-block--news-latest',
+    view_block_services_home ? 'paragraph--view-block--services-home',
+    view_block_library_home ? 'paragraph--view-block--library-home',
+    view_block_events_home_list ? 'paragraph--view-block--events-home-list',
+    view_block_events_home_calendar ? 'paragraph--view-block--events-home-calendar',
+    view_block_events_home_list or view_block_events_home_calendar ? 'events-home-strip',
+    view_block_partners_marquee ? 'paragraph--view-block--partners-marquee',
+  ])
 %}
+{% if view_block_library_home %}
+  {% set attributes = attributes.setAttribute('id', 'library-home') %}
+{% endif %}
 {% block paragraph %}
-  <section{{attributes.addClass(classes)}} aria-labelledby="{{content.field_title.0}}">
+  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : (view_block_library_home ? ('Library'|t) : (view_block_events_home_list or view_block_events_home_calendar ? ('Business events'|t) : (view_block_partners_marquee ? ('Partners'|t) : ('Content block'|t))))) }}">
     {% block content %}
-      <div
-        class="max-w-[1320px] mx-auto px-4">
-        <!-- Header -->
-            <div class="flex justify-between items-start flex-wrap gap-2">
-              <div class="text-base md:w-2/3">
+      <div class="view-block-shell mot-shell">
+        {% if view_block_news_latest %}
+          <div class="view-block-header view-block-header--news-latest max-w-2xl mx-auto mb-6 max-md:mb-5 text-center">
+            <div class="view-block-intro-wrap relative w-full">
+              <div class="view-block-intro text-base text-gray-800 leading-relaxed">
                 {{ content.field_body.0 }}
               </div>
-              {% if content.field_link.0 is not empty %}
-                <a href="{{ content.field_link.0['#url'] }}" class="view-all inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-gray-50 border-gray-300">
-                  {{ content.field_link.0['#title'] }}
-                </a>
-              {% endif %}
             </div>
+          </div>
 
+          {{ content.field_view_block.0 }}
 
-        {{content.field_view_block.0}}
+          {% if content.field_link.0 is not empty %}
+            {% set news_link_title = content.field_link.0['#title']|default('')|trim %}
+            {% set news_link_label = (news_link_title|lower == 'news') ? ('View All'|t) : news_link_title %}
+            <div class="latest-news-footer">
+              <a href="{{ content.field_link.0['#url'] }}" class="latest-news-footer__link">
+                {{ news_link_label }}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          {% endif %}
+        {% elseif view_block_events_home_list or view_block_events_home_calendar %}
+          {% set events_home_combo = view_block_events_home_calendar or view_block_events_home_list %}
+          <div class="events-home-paragraph-inner{{ events_home_combo ? ' events-home events-home__grid' : '' }}">
+            {% if content.field_body.0 is not empty %}
+              <div class="view-block-intro events-home-strip__intro text-base leading-relaxed text-slate-700">{{ content.field_body.0 }}</div>
+            {% endif %}
+            {{ content.field_view_block }}
+          </div>
+        {% elseif view_block_library_home %}
+          <header class="library-home-hero">
+            <div class="library-home-hero__grid">
+              <div class="library-home-hero__copy">
+                <p class="library-home-hero__eyebrow mot-eyebrow">{{ 'Library'|t }}</p>
+                <h2 class="library-home-hero__title">{{ 'Knowledge. Documents. Resources.'|t }}</h2>
+                {% if content.field_body.0 is not empty %}
+                  <div class="library-home-hero__intro text-base leading-relaxed text-slate-700">
+                    {{ content.field_body.0 }}
+                  </div>
+                {% else %}
+                  <p class="library-home-hero__lede">{{ 'Access official templates, forms, guides, and regulations to help your business operate in Saudi Arabia with confidence.'|t }}</p>
+                {% endif %}
+              </div>
+              <aside class="library-home-hero__note" aria-label="{{ 'About this library'|t }}">
+                <div class="library-home-hero__note-badge" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <path d="m9 15 2 2 4-4"/>
+                  </svg>
+                </div>
+                <p class="library-home-hero__note-text">{{ 'Our library is continuously updated to ensure you have the latest documents and references from official sources.'|t }}</p>
+              </aside>
+            </div>
+            {% if content.field_link.0 is not empty %}
+              <div class="library-home-hero__link-row">
+                <a href="{{ content.field_link.0['#url'] }}" class="library-home-hero__view-all">{{ 'View all documents'|t }}</a>
+              </div>
+            {% endif %}
+          </header>
+
+          {{ content.field_view_block.0 }}
+        {% elseif view_block_services_home %}
+          <div class="services-home-header services-home-header--split flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+            <div class="services-home-header__copy view-block-intro-wrap relative w-full min-w-0 flex-1">
+              <div class="view-block-intro services-home-intro text-base text-gray-800 leading-relaxed">
+                {{ content.field_body.0 }}
+              </div>
+            </div>
+            <aside class="library-home-hero__note services-home-team-note shrink-0 w-full sm:w-auto" aria-label="{{ 'About our team'|t }}">
+              <div class="library-home-hero__note-badge" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 48 48" fill="none" focusable="false">
+                  <circle cx="24" cy="24" r="24" fill="#0f766e"/>
+                  <path d="M24 14c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm-7 18v-1.5c0-2.5 2-4.5 4.5-4.5h5c2.5 0 4.5 2 4.5 4.5V32" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M15 22c-1.7 0-3 1.3-3 3v3M33 22c1.7 0 3 1.3 3 3v3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="15" cy="18" r="2.5" stroke="#fff" stroke-width="1.6"/>
+                  <circle cx="33" cy="18" r="2.5" stroke="#fff" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <p class="library-home-hero__note-text">{{ 'Our multidisciplinary team combines regulatory insight with hands-on business experience to guide your journey in Saudi Arabia.'|t }}</p>
+            </aside>
+          </div>
+          {% if content.field_link.0 is not empty %}
+            <div class="services-home-header-actions flex justify-end mb-6 lg:mb-8">
+              <a href="{{ content.field_link.0['#url'] }}" class="services-home-view-all">
+                {{ 'View all services'|t }}
+              </a>
+            </div>
+          {% endif %}
+
+          {{ content.field_view_block.0 }}
+        {% elseif view_block_partners_marquee %}
+          {{ content.field_view_block.0 }}
+        {% else %}
+          <div class="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
+            <div class="view-block-intro-wrap relative w-full pl-4">
+              <span class="absolute left-0 top-1 h-10 w-1.5 rounded-full bg-primary-600" aria-hidden="true"></span>
+              <div class="view-block-intro text-base text-gray-800 leading-relaxed">
+                {{ content.field_body.0 }}
+              </div>
+            </div>
+            {% if content.field_link.0 is not empty %}
+              <a href="{{ content.field_link.0['#url'] }}" class="view-all inline-flex items-center justify-center rounded-full border border-primary-200 bg-primary-50 px-5 py-2.5 text-sm font-semibold text-primary-800 transition hover:border-primary-300 hover:bg-primary-100">
+                {{ content.field_link.0['#title'] }}
+              </a>
+            {% endif %}
+          </div>
+
+          {{ content.field_view_block.0 }}
+        {% endif %}
       </div>
 
     {% endblock %}

@@ -5,6 +5,9 @@ package: Custom
 core_version_requirement: ^9 || ^10 || ^11
 weight: 10
 dependencies:
+  - drupal:menu_link_content
+  - drupal:views
+  - fullcalendar_view:fullcalendar_view
   - drupal:node
   - drupal:path_alias
   - drupal:redirect
@@ -14,3 +17,4 @@ dependencies:
   - drupal:taxonomy
   - drupal:webform
   - schema_metatag:schema_metatag
+  - motaded_sector_data:motaded_sector_data
