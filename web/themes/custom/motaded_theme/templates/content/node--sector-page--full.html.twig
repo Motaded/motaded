@@ -22,9 +22,9 @@
   {% set has_stats = (content.field_sector_stats|render|trim is not empty) or (sector_api_key_stats is defined and sector_api_key_stats is not empty) %}
   {% set has_overview = content.body|render|trim is not empty %}
 
-  <header class="sector-page__hero{% if sector_hero_bg_url %} sector-page__hero--has-media{% endif %}">
+  <header class="sector-page__hero{% if sector_hero_media is not empty %} sector-page__hero--has-media{% endif %}">
     <div class="sector-page__hero-pattern" aria-hidden="true"></div>
-    <div class="sector-page__hero-row{% if sector_hero_bg_url %} sector-page__hero-row--has-media{% endif %}">
+    <div class="sector-page__hero-row{% if sector_hero_media is not empty %} sector-page__hero-row--has-media{% endif %}">
       <div class="sector-page__hero-copy-col">
         <div class="sector-page__hero-copy">
           <nav class="sector-page__breadcrumb" aria-label="{{ 'Breadcrumb'|t({}, sector_t) }}">
@@ -76,19 +76,10 @@
         </div>
       </div>
 
-      {% if sector_hero_bg_url %}
+      {% if sector_hero_media is not empty %}
         <div class="sector-page__hero-aside">
           <div class="sector-page__hero-aside-frame">
-            <img
-              class="sector-page__hero-img"
-              src="{{ sector_hero_bg_url|e('html_attr') }}"
-              alt="{{ node.label()|e('html_attr') }}"
-              width="1200"
-              height="800"
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-            />
+            {{ sector_hero_media }}
           </div>
         </div>
       {% endif %}

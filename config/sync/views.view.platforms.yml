@@ -7,14 +7,14 @@ dependencies:
     - node.type.platform
     - taxonomy.vocabulary.platform_category
   content:
-    - 'taxonomy_term:platform_category:037df13b-bd21-409f-b5ac-b07e590dc45e'
-    - 'taxonomy_term:platform_category:72168355-df2e-4e1e-97c9-5a93eed525bf'
-    - 'taxonomy_term:platform_category:827f9f07-886f-4f48-9f78-85ad415d5559'
-    - 'taxonomy_term:platform_category:9379aa04-09e0-4757-a69e-b1efe3de739f'
-    - 'taxonomy_term:platform_category:bebba861-973b-43da-8931-332f150c9d0b'
-    - 'taxonomy_term:platform_category:bf15397a-34df-4f72-b461-69277544ad4c'
-    - 'taxonomy_term:platform_category:c06a3939-8b6b-4314-b358-32caaa78ed88'
-    - 'taxonomy_term:platform_category:d12ef5ec-97ee-4ae8-b206-c878c16a5bb3'
+    - 'taxonomy_term:country:71336ef3-c664-42d6-9efe-d714f8a38006'
+    - 'taxonomy_term:document_category:1995334e-20e6-4660-ae48-993ce1aa6314'
+    - 'taxonomy_term:document_category:539c62ca-f1d4-45d7-b11a-ac5f258bb55c'
+    - 'taxonomy_term:document_category:ac472d67-5cfd-4154-b7a2-3a57f25921ec'
+    - 'taxonomy_term:document_category:d47d6f9e-1653-4fe6-aa93-0fba19e3f7f3'
+    - 'taxonomy_term:document_category:d546e5bf-41c6-4cfd-aee2-da3f1efb986b'
+    - 'taxonomy_term:document_type:40ab6d0a-bf0a-40b1-b4a8-c72c0ad0b929'
+    - 'taxonomy_term:document_type:f2245515-8acb-4099-bd54-b92e17b8393b'
   module:
     - better_exposed_filters
     - node
@@ -95,7 +95,6 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: ''
-                  sort_options_unsupported: ''
               field_category_target_id:
                 plugin_id: default
                 advanced:

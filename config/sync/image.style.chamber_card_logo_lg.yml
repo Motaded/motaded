@@ -1,0 +1,22 @@
+uuid: 0718293a-4152-3678-e901-234abcdef024
+langcode: en
+status: true
+dependencies: {  }
+name: chamber_card_logo_lg
+label: 'Chamber card logo LG (120×48 max, featured)'
+effects:
+  18293a4b-5263-4789-f012-345abcdef025:
+    uuid: 18293a4b-5263-4789-f012-345abcdef025
+    id: image_scale
+    weight: 0
+    data:
+      width: 120
+      height: 48
+      upscale: false
+  293a4b5c-6374-5890-a123-456abcdef026:
+    uuid: 293a4b5c-6374-5890-a123-456abcdef026
+    id: image_convert
+    weight: 1
+    data:
+      extension: webp
+pipeline: __default__

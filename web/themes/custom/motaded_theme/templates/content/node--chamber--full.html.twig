@@ -181,14 +181,14 @@
         <section class="chamber-aside-card chamber-aside-card--help" aria-label="{{ 'Need help'|t }}">
           <h3 class="chamber-aside-card__title">{{ 'Need Help?'|t }}</h3>
           <p class="chamber-aside-card__text">{{ 'Our team can introduce you to the right chamber and help arrange membership or partnership opportunities.'|t }}</p>
-          <a class="chamber-aside-card__btn chamber-aside-card__btn--ghost" href="{{ path('<front>') ~ 'contact-us' }}">{{ 'Talk to our team'|t }}<span aria-hidden="true"> →</span></a>
+          <a class="chamber-aside-card__btn chamber-aside-card__btn--ghost" href="{{ chamber_contact_url|default('/contact-us') }}">{{ 'Talk to our team'|t }}<span aria-hidden="true"> →</span></a>
         </section>
 
         <section class="chamber-aside-card" aria-label="{{ 'Explore'|t }}">
           <h3 class="chamber-aside-card__title">{{ 'Explore'|t }}</h3>
           <ul class="chamber-aside-card__quicklinks">
             <li><a class="chamber-aside-card__quicklink" href="{{ path('view.chambers.page_1') }}">{{ 'Browse all chambers'|t }}</a></li>
-            <li><a class="chamber-aside-card__quicklink" href="{{ path('<front>') ~ 'sectors' }}">{{ 'Saudi industry sectors'|t }}</a></li>
+            <li><a class="chamber-aside-card__quicklink" href="{{ chamber_sectors_url|default('/sectors') }}">{{ 'Saudi industry sectors'|t }}</a></li>
           </ul>
         </section>
       </aside>

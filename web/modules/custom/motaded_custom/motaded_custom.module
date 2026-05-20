@@ -228,6 +228,7 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
   // (e.g. /fr/blog?page=0, /ar/contact-us?package=basic&plan=annual).
   _motaded_custom_ensure_x_default_hreflang($html_head);
   _motaded_custom_fix_canonical_and_hreflang_query_string($html_head);
+  _motaded_custom_normalize_front_links_in_head($html_head);
 }
 
 /**
@@ -317,9 +318,13 @@ function _motaded_custom_ensure_x_default_hreflang(array &$html_head): void {
 }
 
 /**
- * Normalizes front-page alias in absolute URLs from /front to /.
+ * Normalizes front-page alias in URLs (/front, /ar/front) to public homepage paths.
  */
 function _motaded_custom_normalize_front_href(string $href): string {
+  if (class_exists(\Drupal\motaded_hreflang\HreflangAlternateProcessor::class)) {
+    return \Drupal\motaded_hreflang\HreflangAlternateProcessor::normalizeHomepageHref($href);
+  }
+
   if ($href === '' || !str_contains($href, '/front')) {
     return $href;
   }
@@ -330,7 +335,13 @@ function _motaded_custom_normalize_front_href(string $href): string {
   }
 
   $path = $parts['path'] ?? '';
-  if ($path !== '/front') {
+  if ($path === '/front') {
+    $path = '/';
+  }
+  elseif (preg_match('#^/([a-z]{2,3}(?:-[a-z0-9]+)?)/front/?$#i', $path, $m)) {
+    $path = '/' . $m[1] . '/';
+  }
+  else {
     return $href;
   }
 
@@ -338,7 +349,7 @@ function _motaded_custom_normalize_front_href(string $href): string {
   if (isset($parts['port'])) {
     $normalized .= ':' . $parts['port'];
   }
-  $normalized .= '/';
+  $normalized .= $path;
   if (!empty($parts['query'])) {
     $normalized .= '?' . $parts['query'];
   }
@@ -347,6 +358,39 @@ function _motaded_custom_normalize_front_href(string $href): string {
   }
 
   return $normalized;
+}
+
+/**
+ * Normalizes canonical and hreflang link hrefs that still use /front aliases.
+ */
+function _motaded_custom_normalize_front_links_in_head(array &$html_head): void {
+  foreach ($html_head as $id => &$attachment) {
+    $element = is_array($attachment) && isset($attachment[0]) ? $attachment[0] : $attachment;
+    if (!is_array($element) || ($element['#tag'] ?? '') !== 'link') {
+      continue;
+    }
+    $attrs = $element['#attributes'] ?? [];
+    $rel = strtolower((string) ($attrs['rel'] ?? ''));
+    $href = (string) ($attrs['href'] ?? '');
+    if ($href === '') {
+      continue;
+    }
+    $is_canonical = $rel === 'canonical';
+    $is_hreflang = $rel === 'alternate' && !empty($attrs['hreflang']);
+    if (!$is_canonical && !$is_hreflang) {
+      continue;
+    }
+    $normalized = _motaded_custom_normalize_front_href($href);
+    if ($normalized === $href) {
+      continue;
+    }
+    if (isset($attachment[0]['#attributes'])) {
+      $attachment[0]['#attributes']['href'] = $normalized;
+    }
+    else {
+      $attachment['#attributes']['href'] = $normalized;
+    }
+  }
 }
 
 /**

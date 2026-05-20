@@ -40,3 +40,13 @@ display:
     display_title: 'رؤى مميزة'
   page_1:
     display_title: 'صفحة الرؤى'
+    display_options:
+      display_extenders:
+        metatag_display_extender:
+          metatags:
+            title: 'رؤى السوق | متعدد'
+            canonical_url: '[site:base-url]/ar/insights'
+            hreflang_xdefault: '[site:base-url]/insights'
+            'hreflang_per_language:hreflang_en': '[site:base-url]/insights'
+            'hreflang_per_language:hreflang_ar': '[site:base-url]/ar/insights'
+          tokenize: false

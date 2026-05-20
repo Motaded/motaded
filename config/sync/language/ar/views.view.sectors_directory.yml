@@ -6,39 +6,6 @@ display:
   page_1:
     display_title: 'صفحة القطاعات'
     display_options:
-      empty:
-        area_text_custom:
-          content: '<p class="sectors-directory__empty" role="status">لا توجد صفحات قطاعات مطابقة لهذه المرشحات. جرّب إعادة الضبط أو عدّل بحثك.</p>'
-      pager:
-        options:
-          expose:
-            items_per_page_label: 'عدد العناصر في الصفحة'
-            items_per_page_options_all_label: '- الكل -'
-            offset_label: الإزاحة
-      exposed_form:
-        options:
-          submit_button: بحث
-          reset_button_label: 'إعادة تعيين المرشحات'
-          exposed_sorts_label: ترتيب
-          sort_asc_label: أ-ي
-          sort_desc_label: ي-أ
-          text_input_required: 'استخدم المرشحات في الأعلى للعثور على القطاعات.'
-          bef:
-            general:
-              secondary_label: 'مرشحات إضافية'
-            filter:
-              field_sector_target_id:
-                advanced:
-                  rewrite:
-                    filter_rewrite_values: '- Any -|كل القطاعات'
-      filters:
-        title:
-          expose:
-            label: بحث
-            placeholder: 'ابحث في القطاعات…'
-      header:
-        result:
-          content: '@total نتيجة'
       display_extenders:
         metatag_display_extender:
           metatags:

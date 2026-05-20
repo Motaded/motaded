@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - image.style.max_1300x1300
     - image.style.max_325x325
     - image.style.max_650x650
     - image.style.max_768x768
@@ -19,7 +18,6 @@ image_style_mappings:
     image_mapping:
       sizes: "(min-width: 1290px) 100vw, 50vw\r\n"
       sizes_image_styles:
-        - max_1300x1300
         - max_325x325
         - max_650x650
         - max_768x768

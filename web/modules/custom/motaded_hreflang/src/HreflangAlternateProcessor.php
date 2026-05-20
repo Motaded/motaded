@@ -27,8 +27,11 @@ final class HreflangAlternateProcessor {
     $attached = &$build['#attached'];
     $refs = self::collectAlternateRefs($attached);
     if ($refs === []) {
+      self::normalizeCanonicalFrontUrl($attached);
       return;
     }
+
+    self::normalizeAlternateFrontUrls($attached, $refs);
 
     $config = $config_factory->get('motaded_hreflang.settings');
     $policy = $config->get('policy') ?: 'per_language';
@@ -73,24 +76,14 @@ final class HreflangAlternateProcessor {
           continue;
         }
         $code = self::normalizeHreflangCode($info['hreflang']);
-        $langcode = self::hreflangToCanonicalLangcode($node, $code);
-        if ($langcode === NULL) {
+        $url = self::resolveAlternateUrl($node, $code);
+        if ($url === NULL || $url === '') {
           if ($strip_missing && $code !== 'x-default') {
             $remove[$ref_key] = TRUE;
           }
           continue;
         }
-        try {
-          $translation = $node->getTranslation($langcode);
-          $language = \Drupal::languageManager()->getLanguage($langcode);
-          $url = $translation->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString();
-          self::setHrefForRef($attached, $info, $url);
-        }
-        catch (\Throwable $e) {
-          if ($strip_missing && $code !== 'x-default') {
-            $remove[$ref_key] = TRUE;
-          }
-        }
+        self::setHrefForRef($attached, $info, $url);
       }
     }
     else {
@@ -102,10 +95,12 @@ final class HreflangAlternateProcessor {
         $code = self::normalizeHreflangCode($info['hreflang']);
         $rewritten = self::rewriteNodeCanonicalHref($href, $code);
         if ($rewritten !== NULL) {
-          self::setHrefForRef($attached, $info, $rewritten);
+          self::setHrefForRef($attached, $info, self::normalizeHomepageHref($rewritten));
         }
       }
     }
+
+    self::normalizeAlternateFrontUrls($attached, $refs);
 
     // x-default: if it points at a redirect source or the site default language
     // has no published translation, replace with redirect destination (Redirect
@@ -124,9 +119,15 @@ final class HreflangAlternateProcessor {
         }
         $replacement = self::resolveXDefaultReplacement($node, $href);
         if ($replacement !== NULL && $replacement !== '') {
-          self::setHrefForRef($attached, $info, $replacement);
+          self::setHrefForRef($attached, $info, self::normalizeHomepageHref($replacement));
         }
       }
+    }
+
+    self::normalizeAlternateFrontUrls($attached, $refs);
+
+    if ($node instanceof NodeInterface) {
+      self::ensureNodeLanguageAlternates($attached, $refs, $node, $remove);
     }
 
     foreach ($refs as $ref_key => &$info) {
@@ -142,10 +143,19 @@ final class HreflangAlternateProcessor {
     foreach ($refs as $ref_key => $info) {
       $lang_attr = self::normalizeHreflangCode($info['hreflang']);
       if ($strip_missing && $node instanceof NodeInterface && $lang_attr !== '' && $lang_attr !== 'x-default') {
-        if (!self::hasPublishedTranslation($node, $lang_attr)) {
+        if (self::resolveAlternateUrl($node, $lang_attr) === NULL) {
           $bad[$ref_key] = TRUE;
           continue;
         }
+      }
+
+      if ($node instanceof NodeInterface
+        && $lang_attr !== ''
+        && $lang_attr !== 'x-default'
+        && $info['href'] !== ''
+        && !self::isPublicHreflangUrl($info['href'])) {
+        $bad[$ref_key] = TRUE;
+        continue;
       }
 
       if ($strip_redirect && $info['href'] !== '') {
@@ -181,6 +191,113 @@ final class HreflangAlternateProcessor {
     }
     if (isset($attached['html_head_link'])) {
       $attached['html_head_link'] = array_values($attached['html_head_link']);
+    }
+
+    self::normalizeCanonicalFrontUrl($attached);
+  }
+
+  /**
+   * Rewrites /front and /{lang}/front homepage aliases to public homepage paths.
+   *
+   * Drupal often stores the front page alias as /front (301 → /). Hreflang must
+   * never point at redirecting URLs.
+   */
+  public static function normalizeHomepageHref(string $href): string {
+    if ($href === '' || !str_contains($href, 'front')) {
+      return $href;
+    }
+
+    $parts = parse_url($href);
+    if ($parts === FALSE) {
+      return $href;
+    }
+
+    $path = $parts['path'] ?? '';
+    if ($path === '' && !str_starts_with($href, '/')) {
+      return $href;
+    }
+
+    $base_path = \Drupal::request()->getBasePath();
+    if ($base_path !== '' && $path !== '' && str_starts_with($path, $base_path)) {
+      $path = substr($path, strlen($base_path)) ?: '/';
+    }
+    $path = '/' . ltrim((string) $path, '/');
+
+    $normalized_path = NULL;
+    if ($path === '/front' || $path === '/front/') {
+      $normalized_path = '/';
+    }
+    elseif (preg_match('#^/([a-z]{2,3}(?:-[a-z0-9]+)?)/front/?$#i', $path, $m)) {
+      $normalized_path = '/' . $m[1] . '/';
+    }
+
+    if ($normalized_path === NULL) {
+      return $href;
+    }
+
+    if (!isset($parts['scheme'], $parts['host'])) {
+      $out = $normalized_path;
+      if (!empty($parts['query'])) {
+        $out .= '?' . $parts['query'];
+      }
+      if (!empty($parts['fragment'])) {
+        $out .= '#' . $parts['fragment'];
+      }
+      return $out;
+    }
+
+    $out = $parts['scheme'] . '://' . $parts['host'];
+    if (isset($parts['port'])) {
+      $out .= ':' . $parts['port'];
+    }
+    $out .= $normalized_path;
+    if (!empty($parts['query'])) {
+      $out .= '?' . $parts['query'];
+    }
+    if (!empty($parts['fragment'])) {
+      $out .= '#' . $parts['fragment'];
+    }
+
+    return $out;
+  }
+
+  /**
+   * @param array<string, array{bucket: string, idx: int|string, hreflang: string, href: string}> $refs
+   */
+  private static function normalizeAlternateFrontUrls(array &$attached, array $refs): void {
+    foreach ($refs as $info) {
+      $href = self::getHrefForRef($attached, $info);
+      $normalized = self::normalizeHomepageHref($href);
+      if ($normalized !== $href) {
+        self::setHrefForRef($attached, $info, $normalized);
+      }
+    }
+  }
+
+  /**
+   * Normalizes canonical link href when it uses the /front alias.
+   */
+  private static function normalizeCanonicalFrontUrl(array &$attached): void {
+    if (empty($attached['html_head']) || !is_array($attached['html_head'])) {
+      return;
+    }
+
+    foreach ($attached['html_head'] as $idx => $item) {
+      if (!is_array($item) || !isset($item[0]) || !is_array($item[0])) {
+        continue;
+      }
+      $tag = $item[0];
+      if (($tag['#tag'] ?? '') !== 'link') {
+        continue;
+      }
+      $attrs = $tag['#attributes'] ?? [];
+      if (($attrs['rel'] ?? '') !== 'canonical' || empty($attrs['href'])) {
+        continue;
+      }
+      $normalized = self::normalizeHomepageHref((string) $attrs['href']);
+      if ($normalized !== $attrs['href']) {
+        $attached['html_head'][$idx][0]['#attributes']['href'] = $normalized;
+      }
     }
   }
 
@@ -290,20 +407,192 @@ final class HreflangAlternateProcessor {
       return NULL;
     }
 
-    $langcode = self::hreflangToCanonicalLangcode($node, $normalized_hreflang);
-    if ($langcode === NULL) {
+    $url = self::resolveAlternateUrl($node, $normalized_hreflang);
+    return $url !== NULL ? self::normalizeHomepageHref($url) : NULL;
+  }
+
+  /**
+   * Absolute canonical URL for an alternate hreflang (translation or language URL).
+   */
+  private static function resolveAlternateUrl(NodeInterface $node, string $normalized_hreflang): ?string {
+    if ($normalized_hreflang === 'x-default') {
+      $langcode = self::hreflangToCanonicalLangcode($node, 'x-default');
+      return $langcode !== NULL ? self::buildLocalizedNodeUrl($node, $langcode) : NULL;
+    }
+
+    $languages = \Drupal::languageManager()->getLanguages();
+    if (!isset($languages[$normalized_hreflang])) {
       return NULL;
     }
 
-    $translation = $node->getTranslation($langcode);
+    if (!self::hasPublishedTranslation($node, $normalized_hreflang)) {
+      return NULL;
+    }
+
+    return self::buildLocalizedNodeUrl($node, $normalized_hreflang);
+  }
+
+  /**
+   * Builds a language-specific absolute URL using aliases and path prefixes.
+   *
+   * Drupal's toUrl() often omits the /ar/ prefix when EN/AR aliases share the same
+   * path (e.g. /privacy-policy), which causes missing or duplicate hreflang tags.
+   */
+  private static function buildLocalizedNodeUrl(NodeInterface $node, string $langcode): ?string {
+    $languages = \Drupal::languageManager()->getLanguages();
+    if (!isset($languages[$langcode]) || !self::hasPublishedTranslation($node, $langcode)) {
+      return NULL;
+    }
+
+    $language = $languages[$langcode];
+    $system_path = '/node/' . $node->id();
+
     try {
-      $language = \Drupal::languageManager()->getLanguage($langcode);
-      $url = $translation->toUrl('canonical', ['absolute' => TRUE, 'language' => $language]);
-      return $url->toString();
+      $alias = \Drupal::service('path_alias.manager')->getAliasByPath($system_path, $langcode);
+      if ($alias === $system_path) {
+        return NULL;
+      }
+
+      $internal = self::applyPathPrefixForLanguage('/' . ltrim($alias, '/'), $langcode);
+      $url = self::normalizeHomepageHref(
+        Url::fromUri('internal:' . $internal, ['absolute' => TRUE, 'language' => $language])->toString()
+      );
+      return self::isPublicHreflangUrl($url) ? $url : NULL;
     }
     catch (\Throwable $e) {
       return NULL;
     }
+  }
+
+  /**
+   * Hreflang must use a public alias, never an internal /node/{nid} system path.
+   */
+  private static function isPublicHreflangUrl(string $url): bool {
+    $path = parse_url($url, PHP_URL_PATH);
+    if ($path === FALSE || $path === NULL || $path === '') {
+      return FALSE;
+    }
+
+    $base_path = \Drupal::request()->getBasePath();
+    if ($base_path !== '' && str_starts_with($path, $base_path)) {
+      $path = substr($path, strlen($base_path)) ?: '/';
+    }
+
+    return !preg_match('#(?:^|/)node/\d+/?$#', $path);
+  }
+
+  /**
+   * Applies a language path prefix to an internal alias path.
+   */
+  private static function applyPathPrefixForLanguage(string $path, string $langcode): string {
+    $default = \Drupal::languageManager()->getDefaultLanguage()->getId();
+    if ($langcode === $default) {
+      return $path;
+    }
+
+    $prefixes = \Drupal::config('language.negotiation')->get('url.prefixes');
+    if (!is_array($prefixes) || !array_key_exists($langcode, $prefixes)) {
+      return $path;
+    }
+
+    $prefix = (string) $prefixes[$langcode];
+    if ($prefix === '') {
+      return $path;
+    }
+
+    $path = '/' . ltrim($path, '/');
+    $prefix_segment = '/' . $prefix;
+    if ($path === $prefix_segment || str_starts_with($path, $prefix_segment . '/')) {
+      return $path;
+    }
+
+    return $prefix_segment . ($path === '/' ? '' : $path);
+  }
+
+  /**
+   * Adds missing en/ar alternates when Metatag omitted them but URLs are resolvable.
+   *
+   * @param array<string, array{bucket: string, idx: int|string, hreflang: string, href: string}> $refs
+   * @param array<string, true> $remove
+   */
+  private static function ensureNodeLanguageAlternates(array &$attached, array &$refs, NodeInterface $node, array $remove): void {
+    $present = [];
+    foreach ($refs as $ref_key => $info) {
+      if (isset($remove[$ref_key])) {
+        continue;
+      }
+      $code = self::normalizeHreflangCode($info['hreflang']);
+      if ($code !== '') {
+        $present[$code] = TRUE;
+      }
+    }
+
+    if (!isset($attached['html_head']) || !is_array($attached['html_head'])) {
+      $attached['html_head'] = [];
+    }
+
+    $langcodes = ['en'];
+    $prefixes = \Drupal::config('language.negotiation')->get('url.prefixes');
+    if (is_array($prefixes)) {
+      $langcodes = array_values(array_unique(array_merge($langcodes, array_keys($prefixes))));
+    }
+
+    foreach ($langcodes as $code) {
+      if ($code === '' || isset($present[$code]) || !self::hasPublishedTranslation($node, $code)) {
+        continue;
+      }
+      $url = self::resolveAlternateUrl($node, $code);
+      if ($url === NULL || $url === '' || !self::isPublicHreflangUrl($url)) {
+        continue;
+      }
+      $idx = count($attached['html_head']);
+      $attached['html_head'][$idx] = [
+        [
+          '#type' => 'html_tag',
+          '#tag' => 'link',
+          '#attributes' => [
+            'rel' => 'alternate',
+            'hreflang' => $code,
+            'href' => $url,
+          ],
+        ],
+        'motaded_hreflang_' . $code,
+      ];
+      $refs['html_head:ensure:' . $code] = [
+        'bucket' => 'html_head',
+        'idx' => $idx,
+        'hreflang' => $code,
+        'href' => $url,
+      ];
+    }
+  }
+
+  /**
+   * Whether an absolute/relative href matches the current request path.
+   */
+  private static function hrefMatchesCurrentRequest(string $href): bool {
+    $request = \Drupal::request();
+    $current = rtrim($request->getSchemeAndHttpHost() . $request->getBasePath() . $request->getPathInfo(), '/');
+    $parts = parse_url($href);
+    if (!is_array($parts)) {
+      return FALSE;
+    }
+
+    if (!empty($parts['host'])) {
+      $compare = ($parts['scheme'] ?? 'https') . '://' . $parts['host'];
+      if (isset($parts['port'])) {
+        $compare .= ':' . $parts['port'];
+      }
+      $compare .= $parts['path'] ?? '/';
+      if (!empty($parts['query'])) {
+        $compare .= '?' . $parts['query'];
+      }
+      return rtrim($compare, '/') === $current;
+    }
+
+    $path = rtrim($parts['path'] ?? '', '/');
+    $current_path = rtrim((string) parse_url($current, PHP_URL_PATH), '/');
+    return $path !== '' && $path === $current_path;
   }
 
   /**
@@ -428,6 +717,10 @@ final class HreflangAlternateProcessor {
   }
 
   private static function hrefHasRedirect(string $href, string $hreflang_code): bool {
+    if (self::hrefMatchesCurrentRequest($href)) {
+      return FALSE;
+    }
+
     $path = self::hrefToInternalSourcePath($href);
     if ($path === '') {
       return FALSE;

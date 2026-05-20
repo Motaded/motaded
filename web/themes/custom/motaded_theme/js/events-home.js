@@ -159,6 +159,9 @@
     patchPollerId = window.setInterval(function () {
       attempts++;
       patchAsideCalendarsEventHtml();
+      if (Drupal.motadedEventsCalendar && typeof Drupal.motadedEventsCalendar.patchAll === 'function') {
+        Drupal.motadedEventsCalendar.patchAll();
+      }
       if (attempts > 40) {
         window.clearInterval(patchPollerId);
         patchPollerId = null;

@@ -91,7 +91,6 @@ display:
                   is_secondary: false
                   hide_label: true
                   field_classes: ''
-                  sort_options_unsupported: ''
               field_event_type_target_id:
                 plugin_id: default
                 advanced:
@@ -147,7 +146,6 @@ display:
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  sort_options_unsupported: ''
               motaded_event_date_to:
                 plugin_id: default
                 advanced:
@@ -158,7 +156,6 @@ display:
                   is_secondary: false
                   hide_label: false
                   field_classes: ''
-                  sort_options_unsupported: ''
       access:
         type: perm
         options:
