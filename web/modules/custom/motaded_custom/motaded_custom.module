@@ -1835,7 +1835,7 @@ function motaded_custom_preprocess_node(array &$variables): void {
       $title_year = $years !== [] ? max($years) : (int) gmdate('Y', \Drupal::time()->getRequestTime());
       $variables['sector_api_key_stats'] = $rows;
       $variables['sector_api_key_stats_year'] = $title_year;
-      $variables['sector_api_key_stats_more_url'] = 'https://data.worldbank.org/country/saudi-arabia';
+      $variables['sector_api_key_stats_more_url'] = '';
       $has_api_layer = TRUE;
     }
   }

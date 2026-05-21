@@ -106,16 +106,18 @@
                 </tbody>
               </table>
             </div>
-            <p class="glance-block__market-foot">
-              <a href="{{ market_indicators.more_url }}" class="glance-block__market-more" target="_blank" rel="noopener noreferrer">{{ 'View all indicators'|t }} <span aria-hidden="true">→</span></a>
-            </p>
+            {% if market_indicators.more_url %}
+              <p class="glance-block__market-foot">
+                <a href="{{ market_indicators.more_url }}" class="glance-block__market-more" target="_blank" rel="noopener noreferrer">{{ 'View all indicators'|t }} <span aria-hidden="true">→</span></a>
+              </p>
+            {% endif %}
           </div>
           <div class="glance-block__market-col glance-block__market-col--chart">
             <h3 class="glance-block__market-subtitle">{{ 'GDP growth trend'|t }} ({{ market_indicators.chart_year_min }}–{{ market_indicators.chart_year_max }})</h3>
             {% if market_indicators.chart_svg %}
               <figure class="glance-block__market-chart">
                 {{ market_indicators.chart_svg }}
-                <figcaption class="glance-block__market-chart-caption">{{ 'Source: World Bank'|t }}</figcaption>
+                <figcaption class="glance-block__market-chart-caption">{{ 'Source: @label'|t({'@label': market_indicators.chart_source_label|default('Data Saudi')}) }}</figcaption>
               </figure>
             {% else %}
               <p class="glance-block__market-chart-empty">{{ 'Chart data is not available yet. It will appear after the next successful import.'|t }}</p>
