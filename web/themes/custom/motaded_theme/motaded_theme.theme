@@ -172,14 +172,23 @@ function _motaded_theme_sector_directory_tag_labels(NodeInterface $node, int $ma
 /**
  * Builds variables for the “Market indicators” strip under Glance KPI cards.
  */
+/**
+ * Display label for homepage market indicators (glance block), no external link.
+ */
+function _motaded_theme_market_indicator_public_source(): string {
+  return (string) t('Data Saudi');
+}
+
 function _motaded_theme_glance_market_indicators_variables(): array {
+  $source_label = _motaded_theme_market_indicator_public_source();
   $fallback = [
     'show' => FALSE,
     'rows' => [],
     'chart_year_min' => 0,
     'chart_year_max' => 0,
     'chart_svg' => NULL,
-    'more_url' => 'https://data.worldbank.org/country/saudi-arabia',
+    'chart_source_label' => $source_label,
+    'more_url' => '',
   ];
   if (!\Drupal::moduleHandler()->moduleExists('motaded_custom') || !function_exists('motaded_custom_market_indicators_table_rows')) {
     return $fallback;
@@ -204,13 +213,12 @@ function _motaded_theme_glance_market_indicators_variables(): array {
     $r = $by_key[$key] ?? NULL;
     $value_display = ($r !== NULL && isset($r['value_display'])) ? trim((string) $r['value_display']) : '';
     $label = ($r !== NULL && isset($r['label']) && trim((string) $r['label']) !== '') ? trim((string) $r['label']) : $default_label;
-    $source = ($r !== NULL && isset($r['source_name'])) ? trim((string) $r['source_name']) : '';
     $rows[] = [
       'indicator' => (string) t($label),
       'value' => $value_display !== '' ? $value_display : '—',
       'year' => ($r !== NULL && isset($r['year'])) ? (string) (int) $r['year'] : '—',
-      'source' => $source !== '' ? (string) t($source) : '',
-      'source_url' => ($r !== NULL && isset($r['source_url'])) ? trim((string) $r['source_url']) : '',
+      'source' => $source_label,
+      'source_url' => '',
     ];
   }
   $time = \Drupal::time()->getRequestTime();
@@ -224,6 +232,7 @@ function _motaded_theme_glance_market_indicators_variables(): array {
   $fallback['chart_year_min'] = $chart_year_min;
   $fallback['chart_year_max'] = $chart_year_max;
   $fallback['chart_svg'] = _motaded_theme_glance_market_chart_svg_markup($series, $chart_year_min, $chart_year_max);
+  $fallback['chart_source_label'] = $source_label;
   return $fallback;
 }
 
@@ -4775,7 +4784,8 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
       'chart_year_min' => 0,
       'chart_year_max' => 0,
       'chart_svg' => NULL,
-      'more_url' => 'https://data.worldbank.org/country/saudi-arabia',
+      'chart_source_label' => _motaded_theme_market_indicator_public_source(),
+      'more_url' => '',
     ];
   }
   $variables['#cache']['tags'][] = 'market_indicators';

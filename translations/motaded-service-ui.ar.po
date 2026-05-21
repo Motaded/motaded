@@ -1157,6 +1157,15 @@ msgstr "اتجاه نمو الناتج المحلي"
 msgid "Source: World Bank"
 msgstr "المصدر: البنك الدولي"
 
+msgid "Data Saudi"
+msgstr "بيانات السعودية"
+
+msgid "Source: Data Saudi"
+msgstr "المصدر: بيانات السعودية"
+
+msgid "Source: @label"
+msgstr "المصدر: @label"
+
 msgid "GDP Growth"
 msgstr "نمو الناتج المحلي"
 

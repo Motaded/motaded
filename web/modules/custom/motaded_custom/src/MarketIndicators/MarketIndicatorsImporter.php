@@ -15,9 +15,9 @@ use Psr\Log\LoggerInterface;
  */
 final class MarketIndicatorsImporter {
 
-  private const SOURCE_NAME = 'World Bank';
+  private const SOURCE_NAME = 'Data Saudi';
 
-  private const SOURCE_URL = 'https://data.worldbank.org';
+  private const SOURCE_URL = '';
 
   /**
    * World Bank-backed rows (v1 table order subset).

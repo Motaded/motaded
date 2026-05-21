@@ -101,6 +101,20 @@ function motaded_setup_cost_preprocess_page(array &$variables): void {
       'packages' => $packages,
     ];
   }
+  $promos = motaded_setup_cost_build_landing_promo_splits($node);
+  if ($promos !== []) {
+    $promo_build = [
+      '#type' => 'container',
+      '#weight' => -6.25,
+      '#attributes' => [
+        'class' => ['setup-cost-landing__promos'],
+      ],
+    ];
+    foreach ($promos as $index => $render) {
+      $promo_build['promo_' . $index] = $render;
+    }
+    $variables['page']['content']['setup_cost_landing_promos'] = $promo_build;
+  }
   $faq = motaded_setup_cost_build_landing_faq($node);
   if ($faq !== NULL) {
     $variables['page']['content']['setup_cost_landing_faq'] = [
@@ -115,7 +129,12 @@ function motaded_setup_cost_preprocess_page(array &$variables): void {
 }
 
 /**
- * Removes paragraphs rendered after the estimator block (packages, FAQ).
+ * Removes paragraphs rendered after the estimator block (packages, promos, FAQ).
+ *
+ * Packages, promo_split blocks after the packages section, and FAQ are injected
+ * in hook_preprocess_page() so they appear below the calculator. Remaining
+ * paragraph children are re-indexed (0..n) so the field formatter still renders
+ * non-sequential deltas after unset().
  *
  * @param array<string, mixed> $variables
  */
@@ -123,15 +142,44 @@ function motaded_setup_cost_strip_landing_deferred_paragraphs(array &$variables)
   if (empty($variables['content']['field_paragraphs']) || !is_array($variables['content']['field_paragraphs'])) {
     return;
   }
-  foreach (Element::children($variables['content']['field_paragraphs']) as $key) {
-    $element = $variables['content']['field_paragraphs'][$key];
+  $field = &$variables['content']['field_paragraphs'];
+  $after_packages = FALSE;
+  foreach (Element::children($field) as $key) {
+    $element = $field[$key];
     $paragraph = $element['#paragraph'] ?? NULL;
     if (!$paragraph instanceof ParagraphInterface) {
       continue;
     }
-    if ($paragraph->bundle() === 'accordions' || motaded_setup_cost_is_packages_section($paragraph)) {
-      unset($variables['content']['field_paragraphs'][$key]);
+    if (motaded_setup_cost_is_packages_section($paragraph)) {
+      $after_packages = TRUE;
+      unset($field[$key]);
+      continue;
     }
+    if ($paragraph->bundle() === 'accordions') {
+      unset($field[$key]);
+      continue;
+    }
+    if ($after_packages && $paragraph->bundle() === 'promo_split') {
+      unset($field[$key]);
+    }
+  }
+  motaded_setup_cost_reindex_field_paragraph_children($field);
+}
+
+/**
+ * Re-indexes paragraph render children to 0..n (required after unset gaps).
+ *
+ * @param array<string, mixed> $field_build
+ *   field_paragraphs render array.
+ */
+function motaded_setup_cost_reindex_field_paragraph_children(array &$field_build): void {
+  $children = [];
+  foreach (Element::children($field_build) as $key) {
+    $children[] = $field_build[$key];
+    unset($field_build[$key]);
+  }
+  foreach ($children as $index => $child) {
+    $field_build[$index] = $child;
   }
 }
 
@@ -168,6 +216,37 @@ function motaded_setup_cost_build_landing_packages(NodeInterface $node): ?array 
     }
   }
   return NULL;
+}
+
+/**
+ * Promo split blocks placed after the packages section (e.g. HR packages).
+ *
+ * @return list<array<string, mixed>>
+ */
+function motaded_setup_cost_build_landing_promo_splits(NodeInterface $node): array {
+  if (!$node->hasField('field_paragraphs')) {
+    return [];
+  }
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('paragraph');
+  $renders = [];
+  $after_packages = FALSE;
+  foreach ($node->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface) {
+      continue;
+    }
+    if (motaded_setup_cost_is_packages_section($paragraph)) {
+      $after_packages = TRUE;
+      continue;
+    }
+    if ($paragraph->bundle() === 'accordions') {
+      break;
+    }
+    if ($after_packages && $paragraph->bundle() === 'promo_split') {
+      $renders[] = $view_builder->view($paragraph, 'default');
+    }
+  }
+  return $renders;
 }
 
 /**
