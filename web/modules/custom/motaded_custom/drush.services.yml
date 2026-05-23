@@ -139,6 +139,14 @@ services:
       - '@file.repository'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.article_import_official_commands:
+    class: Drupal\motaded_custom\Drush\Commands\ArticleImportOfficialCommands
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+    tags:
+      - { name: drush.command }
   motaded_custom.drush.market_insight_ar_official_commands:
     class: Drupal\motaded_custom\Drush\Commands\MarketInsightArOfficialCommands
     tags:
