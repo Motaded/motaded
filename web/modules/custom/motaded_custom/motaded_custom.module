@@ -499,10 +499,92 @@ function _motaded_custom_build_breadcrumb_list_schema() {
  *   Array of Question schema items for FAQPage mainEntity.
  */
 function _motaded_custom_extract_faq_from_node(NodeInterface $node) {
+  if ($node->hasField('field_faq') && !$node->get('field_faq')->isEmpty()) {
+    $items = [];
+    foreach ($node->get('field_faq') as $item) {
+      $question = trim((string) ($item->question ?? ''));
+      $answer = trim(strip_tags((string) ($item->answer ?? '')));
+      if ($question !== '' && $answer !== '') {
+        $items[] = [
+          '@type' => 'Question',
+          'name' => $question,
+          'acceptedAnswer' => [
+            '@type' => 'Answer',
+            'text' => $answer,
+          ],
+        ];
+      }
+    }
+    if ($items !== []) {
+      return $items;
+    }
+  }
   if (!$node->hasField('field_keywords') || $node->get('field_keywords')->isEmpty()) {
     return [];
   }
   return _motaded_custom_extract_faq_from_ckeditor_accordion($node->get('field_keywords')->value);
+}
+
+/**
+ * Splits embedded FAQ Q/A blocks from article body HTML into field_faq items.
+ *
+ * @return array{body: string, items: list<array{question: string, answer: string}>}
+ */
+function motaded_custom_split_faq_from_article_body(string $html, string $langcode = 'en'): array {
+  $result = [
+    'body' => $html,
+    'items' => [],
+  ];
+  if ($html === '') {
+    return $result;
+  }
+
+  $heading_pattern = ($langcode === 'ar')
+    ? '/<h2>\s*الأسئلة الشائعة[^<]*<\/h2>/u'
+    : '/<h2>\s*Frequently Asked Questions[^<]*<\/h2>/i';
+
+  if (!preg_match($heading_pattern, $html, $heading_match, PREG_OFFSET_CAPTURE)) {
+    return $result;
+  }
+
+  $start = (int) $heading_match[0][1];
+  $after_heading = $start + strlen($heading_match[0][0]);
+  $rest = substr($html, $after_heading);
+
+  if (preg_match('/<h2\b/i', $rest, $next_h2, PREG_OFFSET_CAPTURE)) {
+    $section = substr($rest, 0, (int) $next_h2[0][1]);
+    $after_section = substr($rest, (int) $next_h2[0][1]);
+  }
+  else {
+    $section = $rest;
+    $after_section = '';
+  }
+
+  $q_prefix = ($langcode === 'ar') ? 'س:\s*' : 'Q:\s*';
+  $a_tag = ($langcode === 'ar') ? 'ج:' : 'A:';
+  $pair_pattern = '/<h3>\s*' . $q_prefix . '(.*?)<\/h3>\s*<p>(?:\s*<strong>' . preg_quote($a_tag, '/') . '<\/strong>\s*)?(.*?)<\/p>/uis';
+
+  $items = [];
+  if (preg_match_all($pair_pattern, $section, $matches, PREG_SET_ORDER)) {
+    foreach ($matches as $match) {
+      $question = trim(html_entity_decode(strip_tags($match[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+      $answer = trim(html_entity_decode(strip_tags($match[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+      if ($question !== '' && $answer !== '') {
+        $items[] = [
+          'question' => $question,
+          'answer' => $answer,
+        ];
+      }
+    }
+  }
+
+  if ($items === []) {
+    return $result;
+  }
+
+  $result['body'] = substr($html, 0, $start) . $after_section;
+  $result['items'] = $items;
+  return $result;
 }
 
 /**
