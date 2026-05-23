@@ -194,6 +194,109 @@ final class HreflangAlternateProcessor {
     }
 
     self::normalizeCanonicalFrontUrl($attached);
+
+    if (\Drupal::service('path.matcher')->isFrontPage()) {
+      self::stripArabicHomepageAlternateTrailingSlash($attached);
+    }
+  }
+
+  /**
+   * Front page only: hreflang="ar" alternate uses /ar, not /ar/.
+   */
+  private static function stripArabicHomepageAlternateTrailingSlash(array &$attached): void {
+    if (!empty($attached['html_head']) && is_array($attached['html_head'])) {
+      foreach ($attached['html_head'] as $idx => $item) {
+        if (!is_array($item) || !isset($item[0]) || !is_array($item[0])) {
+          continue;
+        }
+        $tag = $item[0];
+        if (($tag['#tag'] ?? '') !== 'link') {
+          continue;
+        }
+        $attrs = $tag['#attributes'] ?? [];
+        if (($attrs['rel'] ?? '') !== 'alternate' || self::normalizeHreflangCode((string) ($attrs['hreflang'] ?? '')) !== 'ar') {
+          continue;
+        }
+        $href = (string) ($attrs['href'] ?? '');
+        $fixed = self::stripTrailingSlashFromArHomepagePath($href);
+        if ($fixed !== $href) {
+          $attached['html_head'][$idx][0]['#attributes']['href'] = $fixed;
+        }
+      }
+    }
+
+    if (!empty($attached['html_head_link']) && is_array($attached['html_head_link'])) {
+      foreach ($attached['html_head_link'] as $idx => $item) {
+        if (!is_array($item) || !isset($item[0]) || !is_array($item[0])) {
+          continue;
+        }
+        $attrs = $item[0];
+        if (($attrs['rel'] ?? '') !== 'alternate' || self::normalizeHreflangCode((string) ($attrs['hreflang'] ?? '')) !== 'ar') {
+          continue;
+        }
+        $href = (string) ($attrs['href'] ?? '');
+        $fixed = self::stripTrailingSlashFromArHomepagePath($href);
+        if ($fixed !== $href) {
+          $attached['html_head_link'][$idx][0]['href'] = $fixed;
+        }
+      }
+    }
+  }
+
+  /**
+   * Strips the trailing slash when the path is exactly the Arabic homepage (/ar/).
+   */
+  private static function stripTrailingSlashFromArHomepagePath(string $href): string {
+    if ($href === '') {
+      return $href;
+    }
+
+    $parts = parse_url($href);
+    if ($parts === FALSE) {
+      return $href;
+    }
+
+    $path = $parts['path'] ?? '';
+    if ($path === '') {
+      return $href;
+    }
+
+    $base_path = \Drupal::request()->getBasePath();
+    $relative = $path;
+    if ($base_path !== '' && str_starts_with($path, $base_path)) {
+      $relative = substr($path, strlen($base_path)) ?: '/';
+    }
+    $relative = '/' . ltrim($relative, '/');
+    if ($relative !== '/ar/') {
+      return $href;
+    }
+
+    $new_path = ($base_path !== '' ? rtrim($base_path, '/') : '') . '/ar';
+
+    if (!isset($parts['scheme'], $parts['host'])) {
+      $out = $new_path;
+      if (!empty($parts['query'])) {
+        $out .= '?' . $parts['query'];
+      }
+      if (!empty($parts['fragment'])) {
+        $out .= '#' . $parts['fragment'];
+      }
+      return $out;
+    }
+
+    $out = $parts['scheme'] . '://' . $parts['host'];
+    if (isset($parts['port'])) {
+      $out .= ':' . $parts['port'];
+    }
+    $out .= $new_path;
+    if (!empty($parts['query'])) {
+      $out .= '?' . $parts['query'];
+    }
+    if (!empty($parts['fragment'])) {
+      $out .= '#' . $parts['fragment'];
+    }
+
+    return $out;
   }
 
   /**
