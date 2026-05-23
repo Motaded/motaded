@@ -22,6 +22,8 @@ final class ArticleImportOfficialCommands extends DrushCommands {
 
   private const PUBLIC_IMAGE_DIR = 'public://articles/official';
 
+  private const BODY_TEXT_FORMAT = 'full_html';
+
   private const TAXONOMY_CSV_REL = '/data/article_import_taxonomy.csv';
 
   public function __construct(
@@ -370,7 +372,7 @@ final class ArticleImportOfficialCommands extends DrushCommands {
     $translation->set('body', [
       'value' => $this->normalizeBodyHtml($faq_split['body']),
       'summary' => $summary,
-      'format' => 'basic_html',
+      'format' => self::BODY_TEXT_FORMAT,
     ]);
 
     if ($translation->hasField('field_faq')) {
