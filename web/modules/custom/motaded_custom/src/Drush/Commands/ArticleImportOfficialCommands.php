@@ -365,12 +365,26 @@ final class ArticleImportOfficialCommands extends DrushCommands {
     $translation->setTitle($row['title']);
     $translation->set('status', 0);
 
-    $summary = $this->extractBodySummary($row['body']);
+    $faq_split = motaded_custom_split_faq_from_article_body($row['body'], $langcode);
+    $summary = $this->extractBodySummary($faq_split['body']);
     $translation->set('body', [
-      'value' => $this->normalizeBodyHtml($row['body']),
+      'value' => $this->normalizeBodyHtml($faq_split['body']),
       'summary' => $summary,
       'format' => 'basic_html',
     ]);
+
+    if ($translation->hasField('field_faq')) {
+      if ($faq_split['items'] !== []) {
+        $translation->set('field_faq', array_map(static fn (array $item): array => [
+          'question' => $item['question'],
+          'answer' => $item['answer'],
+          'answer_format' => 'plain_text',
+        ], $faq_split['items']));
+      }
+      else {
+        $translation->set('field_faq', []);
+      }
+    }
 
     $this->validateMetatags($row, $row['title']);
     motaded_custom_apply_required_node_metatags($translation, $row, 'field_meta');
