@@ -1971,6 +1971,111 @@ function motaded_custom_apply_node_metatags(NodeInterface $node, array $row, str
 }
 
 /**
+ * Builds meta_title, meta_description, meta_keywords for article imports.
+ *
+ * @return array{meta_title: string, meta_description: string, meta_keywords: string}
+ */
+function motaded_custom_article_seo_from_content(string $title, string $body_html, string $langcode): array {
+  require_once \Drupal::service('extension.list.module')->getPath('motaded_custom')
+    . '/data/motaded_custom_seo.helpers.php';
+  $plain = trim((string) preg_replace('/\s+/u', ' ', strip_tags($body_html)));
+  $description = $plain;
+  if (mb_strlen($plain) > 155) {
+    $description = mb_substr($plain, 0, 155);
+    $description = (string) preg_replace('/\s+\S*$/u', '', $description);
+    if ($description === '') {
+      $description = mb_substr($plain, 0, 155);
+    }
+    $description .= '…';
+  }
+  if ($description === '') {
+    $description = $title;
+  }
+  $suffix = $langcode === 'ar'
+    ? ' | متعدد'
+    : ' | Motaded';
+  $extra = $langcode === 'ar'
+    ? ['السعودية', 'تأسيس الأعمال', 'متعدد']
+    : ['Saudi Arabia', 'business setup KSA', 'Motaded'];
+  return motaded_custom_seo_row($title, $description, $suffix, $extra);
+}
+
+/**
+ * Normalizes a path alias from import spreadsheets (strips /ar prefix for ar).
+ */
+function motaded_custom_normalize_import_path_alias(string $alias, string $langcode): string {
+  $alias = '/' . ltrim(trim($alias), '/');
+  if ($langcode === 'ar' && str_starts_with($alias, '/ar/')) {
+    $alias = substr($alias, 3) ?: $alias;
+  }
+  return $alias;
+}
+
+/**
+ * Saves or replaces a path alias for a node translation.
+ */
+function motaded_custom_save_node_path_alias(NodeInterface $node, string $alias, string $langcode): void {
+  $alias = motaded_custom_normalize_import_path_alias($alias, $langcode);
+  if ($alias === '' || $alias === '/') {
+    return;
+  }
+  $nid = (int) $node->id();
+  $system_path = '/node/' . $nid;
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  foreach ($storage->loadByProperties(['path' => $system_path, 'langcode' => $langcode]) as $entity) {
+    $entity->delete();
+  }
+  PathAlias::create([
+    'path' => $system_path,
+    'alias' => $alias,
+    'langcode' => $langcode,
+  ])->save();
+}
+
+/**
+ * Finds a node nid by canonical path alias and bundle.
+ */
+function motaded_custom_nid_by_path_alias(string $alias, string $bundle, string $langcode = 'en'): ?int {
+  $alias = motaded_custom_normalize_import_path_alias($alias, $langcode);
+  if ($alias === '' || $alias === '/') {
+    return NULL;
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $entities = $storage->loadByProperties(['alias' => $alias, 'langcode' => $langcode]);
+  if ($entities === []) {
+    return NULL;
+  }
+  $path = (string) reset($entities)->get('path')->value;
+  if (!preg_match('#^/node/(\d+)$#', $path, $matches)) {
+    return NULL;
+  }
+  $node = \Drupal\node\Entity\Node::load((int) $matches[1]);
+  if ($node === NULL || $node->bundle() !== $bundle) {
+    return NULL;
+  }
+  return (int) $node->id();
+}
+
+/**
+ * Applies metatags and throws if any required value is missing.
+ *
+ * @param array<string, mixed> $row
+ *
+ * @throws \InvalidArgumentException
+ */
+function motaded_custom_apply_required_node_metatags(NodeInterface $node, array $row, string $field_name = 'field_meta'): void {
+  foreach (['meta_title', 'meta_description', 'meta_keywords'] as $key) {
+    if (trim((string) ($row[$key] ?? '')) === '') {
+      throw new \InvalidArgumentException(sprintf('Missing required %s for node "%s".', $key, $node->label()));
+    }
+  }
+  motaded_custom_apply_node_metatags($node, $row, $field_name);
+  if ($node->get($field_name)->isEmpty()) {
+    throw new \InvalidArgumentException(sprintf('Metatag field %s is empty after apply for "%s".', $field_name, $node->label()));
+  }
+}
+
+/**
  * Copies field values from the English translation onto Arabic (shared refs/scalars).
  *
  * Use for media, taxonomy, flags, and other values that stay the same across languages.
