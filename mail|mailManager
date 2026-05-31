@@ -1,0 +1,815 @@
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:56:    $instance->typedConfigManager = $container->get('config.typed');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:57:    $instance->tokenManager = $container->get('webform.token_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:65:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:66:    $setting_definitions = $this->getSettingsDefinitions();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:67:    $setting_override = $this->getSettingsOverride();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:111:      '#title' => $this->t('Preview settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:113:      '#access' => !empty($this->configuration['preview_title']) || !empty($this->configuration['preview_message']) || $this->getWebform()->hasPreview(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:117:      '#title' => $this->t('Preview page title'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:118:      '#description' => $this->t('The title displayed on the preview page.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:119:      '#default_value' => $this->configuration['preview_title'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:123:      '#title' => $this->t('Preview message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:124:      '#description' => $this->t('A message to be displayed on the preview page.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:125:      '#default_value' => $this->configuration['preview_message'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:127:    $form['preview_settings']['token_tree_link'] = $this->buildTokenTreeElement();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:130:    $confirmation_type = $this->getWebform()->getSetting('confirmation_type');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:136:      '#title' => $this->t('Confirmation settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:141:      '#title' => $this->t('Confirmation URL'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:142:      '#description' => $this->t('The URL or path to redirect the user to upon successful submission.') .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:143:      '<br/>' . $this->t('Paths beginning with a forward slash (/) will redirect be treated as root-relative. Paths without a forward slash (/) will redirect be treated as Drupal relative path.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:144:      '#default_value' => $this->configuration['confirmation_url'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:145:      '#access' => !empty($this->configuration['confirmation_url']) || $has_confirmation_url,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:150:      '#title' => $this->t('Confirmation title'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:151:      '#description' => $this->t('Page title to be shown upon successful submission.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:152:      '#default_value' => $this->configuration['confirmation_title'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:153:      '#access' => !empty($this->configuration['confirmation_title']) || $has_confirmation_title,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:157:      '#title' => $this->t('Confirmation message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:158:      '#description' => $this->t('Message to be shown upon successful submission.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:159:      '#default_value' => $this->configuration['confirmation_message'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:160:      '#access' => !empty($this->configuration['confirmation_message']) || $has_confirmation_message,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:162:    $form['confirmation_settings']['token_tree_link'] = $this->buildTokenTreeElement();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:165:    $custom_settings = $this->configuration;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:167:    $custom_settings = array_diff_key($custom_settings, $this->defaultConfiguration());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:170:      '#title' => $this->t('Custom settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:176:      '#title' => $this->t('Custom settings (YAML)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:177:      '#description' => $this->t('Enter the setting name and value as YAML.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:187:      '#title' => $this->t('Available custom settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:190:    $webform_config_settings = $this->getSettingsDefinitions();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:201:      '#message_message' => $this->t('All of the below webform settings can be overridden but overriding certain settings can trigger unexpected results.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:206:        'name' => $this->t('Name'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:207:        'label' => $this->t('Label'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:208:        'type' => $this->t('Type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:216:      '#title' => $this->t('Development settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:220:      '#title' => $this->t('Enable debugging'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:221:      '#description' => $this->t('If checked, settings will be displayed onscreen to all users.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:223:      '#default_value' => $this->configuration['debug'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:226:    $this->elementTokenValidate($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:228:    return $this->setSettingsParents($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:235:    if ($form_state->hasAnyErrors()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:240:    $custom = $form_state->getValue('custom');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:243:      $form_state->setErrorByName('custom', $this->t('Unknown custom %name setting(s).', $t_args));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:253:    $this->configuration = $this->defaultConfiguration();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:256:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:259:    $this->configuration = array_filter($this->configuration);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:262:    $this->configuration['debug'] = (bool) $form_state->getValue('debug');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:265:    $this->configuration += $form_state->getValue('custom');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:272:    $settings_override = $this->getSubmissionSettingsOverride($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:277:    $this->displayDebug($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:288:    if (!$this->configuration['debug']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:292:    $settings_definitions = $this->getSettingsDefinitions();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:293:    $settings_override = $this->getSettingsOverride();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:294:    $submission_settings_override = $this->getSubmissionSettingsOverride($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:298:      'name' => $this->t('Name'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:300:        'data' => $this->t('Label'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:304:        'data' => $this->t('Type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:308:        'data' => $this->t('Setting Value'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:311:      'submission' => $this->t('Submission Value'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:328:      '#title' => $this->t('Debug: Settings: @title', ['@title' => $this->label()]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:336:    $this->messenger()->addWarning($this->renderer->renderInIsolation($build));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:350:    $definition = $this->typedConfigManager->getDefinition('webform.webform.*');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:361:    $settings = $this->configuration;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:363:    $default_configuration = $this->defaultConfiguration();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:384:    $settings_definitions = $this->getSettingsDefinitions();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:385:    $settings_override = $this->getSettingsOverride();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/SettingsWebformHandler.php:394:        $value = $this->replaceTokens($value, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:119:    $instance->moduleHandler = $container->get('module_handler');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:120:    $instance->httpClient = $container->get('http_client');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:121:    $instance->tokenManager = $container->get('webform.token_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:122:    $instance->messageManager = $container->get('webform.message_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:123:    $instance->elementManager = $container->get('plugin.manager.webform.element');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:124:    $instance->request = $container->get('request_stack')->getCurrentRequest();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:125:    $instance->requestStack = $container->get('request_stack');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:126:    $instance->kernel = $container->get('kernel');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:134:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:136:    if (!$this->isResultsEnabled()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:140:    if (!$this->isDraftEnabled()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:144:    if (!$this->isConvertEnabled()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:164:    $field_names = array_keys($entity_field_manager->getBaseFieldDefinitions('webform_submission'));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:168:      'type' => 'x-www-form-urlencoded',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:201:    $webform = $this->getWebform();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:206:        'state' => $this->t('completed'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:207:        'label' => $this->t('Completed'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:208:        'description' => $this->t('Post data when <b>submission is completed</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:212:        'state' => $this->t('updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:213:        'label' => $this->t('Updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:214:        'description' => $this->t('Post data when <b>submission is updated</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:215:        'access' => $this->isResultsEnabled(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:218:        'state' => $this->t('deleted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:219:        'label' => $this->t('Deleted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:220:        'description' => $this->t('Post data when <b>submission is deleted</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:221:        'access' => $this->isResultsEnabled(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:224:        'state' => $this->t('draft created'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:225:        'label' => $this->t('Draft created'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:226:        'description' => $this->t('Post data when <b>draft is created.</b>'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:227:        'access' => $this->isDraftEnabled(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:230:        'state' => $this->t('draft updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:231:        'label' => $this->t('Draft updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:232:        'description' => $this->t('Post data when <b>draft is updated.</b>'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:233:        'access' => $this->isDraftEnabled(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:236:        'state' => $this->t('converted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:237:        'label' => $this->t('Converted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:238:        'description' => $this->t('Post data when anonymous <b>submission is converted</b> to authenticated.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:239:        'access' => $this->isConvertEnabled(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:259:        '#title' => $this->t('@title URL', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:260:        '#description' => $this->t('The full URL to POST to when an existing webform submission is @state. (e.g. @url)', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:263:        '#default_value' => $this->configuration[$state_url],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:268:        '#title' => $this->t('@title custom data', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:269:        '#description' => $this->t('Enter custom data that will be included when a webform submission is @state.', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:271:        '#default_value' => $this->configuration[$state_custom_data],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:276:          '#message_message' => $this->t('Response data can be passed to the submission data using [webform:handler:{machine_name}:{state}:{key}] tokens. (i.e. [webform:handler:remote_post:completed:confirmation_number])'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:285:      '#title' => $this->t('Additional settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:289:      '#title' => $this->t('Method'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:290:      '#description' => $this->t('The <b>POST</b> request method requests that a web server accept the data enclosed in the body of the request message. It is often used when uploading a file or when submitting a completed webform. In contrast, the HTTP <b>GET</b> request method retrieves information from the server.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:300:      '#default_value' => $this->configuration['method'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:304:      '#title' => $this->t('Post type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:305:      '#description' => $this->t('Use x-www-form-urlencoded if unsure, as it is the default format for HTML webforms. You also have the option to post data in <a href="http://www.json.org/">JSON</a> format.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:307:        'x-www-form-urlencoded' => $this->t('x-www-form-urlencoded'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:308:        'json' => $this->t('JSON'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:314:      '#default_value' => $this->configuration['type'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:318:      '#title' => $this->t('Include files as Base64 encoded post data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:319:      '#description' => $this->t('If checked, uploaded and attached file data will be included using Base64 encoding.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:321:      '#default_value' => $this->configuration['file_data'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:322:      '#access' => $this->getWebform()->hasAttachments(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:326:      '#title' => $this->t('Cast posted element value and custom data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:327:      '#description' => $this->t('If checked, posted element values will be cast to integers, floats, and booleans as needed. Custom data can be cast by placing the desired type in parentheses before the value or token. (i.e. "(int) [webform_submission:value:total]" or "(int) 100")') .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:330:      $this->t('For custom data, the casts allowed are:') .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:332:      '<li>' . $this->t('@cast - cast to @type', ['@cast' => '(int)', '@type' => 'integer']) . '</li>' .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:333:      '<li>' . $this->t('@cast - cast to @type', ['@cast' => '(float)', '@type' => 'float']) . '</li>' .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:334:      '<li>' . $this->t('@cast - cast to @type', ['@cast' => '(bool)', '@type' => 'boolean']) . '</li>' .
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:337:      '#default_value' => $this->configuration['cast'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:342:      '#title' => $this->t('Custom data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:343:      '#description' => $this->t('Enter custom data that will be included in all remote CRUD requests.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:344:      '#default_value' => $this->configuration['custom_data'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:349:      '#title' => $this->t('Custom options'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:350:      '#description' => $this->t('Enter custom <a href=":href">request options</a> that will be used by the Guzzle HTTP client. Request options can include custom headers.', [':href' => 'https://docs.guzzlephp.org/en/stable/request-options.html']),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:351:      '#default_value' => $this->configuration['custom_options'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:355:      '#title' => $this->t('Custom error response message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:356:      '#description' => $this->t('This message is displayed when the response status code is not 2xx.') . '<br/><br/>' . $this->t('Defaults to: %value', ['%value' => $this->messageManager->render(WebformMessageManagerInterface::SUBMISSION_EXCEPTION_MESSAGE)]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:357:      '#default_value' => $this->configuration['message'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:361:      '#message_message' => $this->t('Response data can be passed to response message using [webform:handler:{machine_name}:{key}] tokens. (i.e. [webform:handler:remote_post:message])'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:366:      '#title' => $this->t('Custom response messages'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:367:      '#description' => $this->t('Enter custom response messages for specific status codes.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:369:      '#no_items_message' => $this->t('No error response messages entered. Please add messages below.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:374:          '#title' => $this->t('Response status code'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:376:            '200' => $this->t('200 OK'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:377:            '201' => $this->t('201 Created'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:378:            '204' => $this->t('204 No Content'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:379:            '400' => $this->t('400 Bad Request'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:380:            '401' => $this->t('401 Unauthorized'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:381:            '403' => $this->t('403 Forbidden'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:382:            '404' => $this->t('404 Not Found'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:383:            '444' => $this->t('444 No Response'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:384:            '500' => $this->t('500 Internal Server Error'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:385:            '502' => $this->t('502 Bad Gateway'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:386:            '503' => $this->t('503 Service Unavailable'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:387:            '504' => $this->t('504 Gateway Timeout'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:390:          '#other__description' => $this->t('<a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">List of HTTP status codes</a>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:394:          '#title' => $this->t('Response message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:397:      '#default_value' => $this->configuration['messages'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:401:      '#title' => $this->t('Custom error response redirect URL'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:402:      '#description' => $this->t('The URL or path to redirect to when a remote fails.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:403:      '#default_value' => $this->configuration['error_url'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:410:      '#title' => $this->t('Development settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:414:      '#title' => $this->t('Enable debugging'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:415:      '#description' => $this->t('If checked, posted submissions will be displayed onscreen to all users.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:417:      '#default_value' => $this->configuration['debug'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:423:      '#title' => $this->t('Submission data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:426:    if ($this->getWebform()->hasManagedFile()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:429:        '#message_message' => $this->t('Upload files will include the file\'s id, name, uri, and data (<a href=":href">Base64</a> encode).', [':href' => 'https://en.wikipedia.org/wiki/Base64']),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:442:        '#message_message' => $this->t("Upload files will include the file's id, name and uri."),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:456:      '#title' => $this->t('Posted data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:458:      '#webform_id' => $webform->id(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:460:      '#default_value' => $this->configuration['excluded_data'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:464:      '#title' => $this->t('Check if an element is displayed'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:465:      '#description' => $this->t("If checked, elements with 'Display element' unchecked (i.e., <code>'#access': false</code> will not be included in the request data."),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:466:      '#default_value' => $this->configuration['check_access'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:470:    $this->elementTokenValidate($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:472:    return $this->setSettingsParents($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:480:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:481:    if ($this->configuration['method'] === 'GET') {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:482:      $this->configuration['type'] = '';
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:490:    $state = $webform_submission->getWebform()->getSetting('results_disabled') ? WebformSubmissionInterface::STATE_COMPLETED : $webform_submission->getState();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:491:    $this->remotePost($state, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:498:    $this->remotePost(WebformSubmissionInterface::STATE_DELETED, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:516:    if (empty($this->configuration[$state_url])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:520:    $this->messageManager->setWebformSubmission($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:522:    $request_url = $this->configuration[$state_url];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:523:    $request_url = $this->replaceTokens($request_url, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:524:    $request_method = (!empty($this->configuration['method'])) ? $this->configuration['method'] : 'POST';
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:525:    $request_type = ($request_method !== 'GET') ? $this->configuration['type'] : NULL;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:528:    $request_options = (!empty($this->configuration['custom_options'])) ? Yaml::decode($this->configuration['custom_options']) : [];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:529:    $request_options = $this->replaceTokens($request_options, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:534:        $query = $this->getRequestData($state, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:535:        $request_url = Url::fromUri($request_url, ['query' => $query])->toString();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:536:        $response = $this->httpClient->get($request_url, $request_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:540:        $request_options[($request_type === 'json' ? 'json' : 'form_params')] = $this->getRequestData($state, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:541:        $response = $this->httpClient->$method($request_url, $request_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:546:        $response = $request_exception->getResponse();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:553:      $message = $request_exception->getMessage();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:556:      $this->handleError($state, $message, $request_url, $request_method, $request_type, $request_options, $response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:561:    if ($this->responseHasError($response)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:562:      $t_args = ['@status_code' => $this->getStatusCode($response)];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:563:      $message = $this->t('Remote CRUD request return @status_code status code.', $t_args);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:564:      $this->handleError($state, $message, $request_url, $request_method, $request_type, $request_options, $response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:568:      $this->displayCustomResponseMessage($response, FALSE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:572:    $this->debug($this->t('Remote HTTP operation successful!'), $state, $request_url, $request_method, $request_type, $request_options, $response, 'warning');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:576:    $submission_data = $webform_submission->getData();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:577:    $submission_has_token = str_contains(print_r($submission_data, TRUE), '[webform:handler:' . $this->getHandlerId() . ':');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:579:      $response_data = $this->getResponseData($response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:580:      $token_data = ['webform_handler' => [$this->getHandlerId() => [$state => $response_data]]];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:581:      $submission_data = $this->replaceTokens($submission_data, $webform_submission, $token_data);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:582:      $webform_submission->setData($submission_data);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:585:      if ($this->isResultsEnabled()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:586:        $webform_submission->resave();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:607:    $data = $webform_submission->toArray(TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:611:    $unsupported_properties = array_combine($this->unsupportedProperties, $this->unsupportedProperties);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:621:    $data = array_diff_key($data, $this->configuration['excluded_data']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:624:    $webform = $this->getWebform();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:626:      $element = $webform->getElement($element_key);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:632:      if ($this->configuration['check_access']
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:640:      // @see https://stackoverflow.com/questions/732979/php-whats-an-alternative-to-empty-where-string-0-is-not-treated-as-empty
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:651:      $element_plugin = $this->elementManager->getElementInstance($element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:654:        if ($element_plugin->hasMultipleValues($element)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:656:            $data['_' . $element_key][] = $this->getRequestFileData($fid);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:660:          $data['_' . $element_key] = $this->getRequestFileData($element_value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:663:      elseif (!empty($this->configuration['cast'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:665:        $data[$element_key] = $this->castRequestValues($element, $element_plugin, $element_value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:670:    $data = $this->replaceTokens($data, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:673:    if (!empty($this->configuration['custom_data'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:674:      $custom_data = Yaml::decode($this->configuration['custom_data']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:676:      $custom_data = $this->replaceTokens($custom_data, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:678:      $custom_data = $this->castCustomData($custom_data);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:683:    if (!empty($this->configuration[$state . '_custom_data'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:684:      $state_custom_data = Yaml::decode($this->configuration[$state . '_custom_data']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:686:      $state_custom_data = $this->replaceTokens($state_custom_data, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:688:      $state_custom_data = $this->castCustomData($state_custom_data);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:709:    $element_plugin->initialize($element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:710:    if ($element_plugin->hasMultipleValues($element)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:712:        $value[$index] = $this->castRequestValue($element, $element_plugin, $item);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:717:      return $this->castRequestValue($element, $element_plugin, $value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:744:        : $element_plugin->getCompositeElements();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:747:          $composite_element_plugin = $this->elementManager->getElementInstance($composite_element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:748:          $value[$key] = $this->castRequestValue($composite_element, $composite_element_plugin, $value[$key]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:768:    if (empty($this->configuration['cast'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:774:        $data[$key] = $this->castCustomData($value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:820:    $data[$prefix . 'id'] = (int) $file->id();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:821:    $data[$prefix . 'name'] = $file->getFilename();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:822:    $data[$prefix . 'uri'] = $file->getFileUri();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:823:    $data[$prefix . 'mime'] = $file->getMimeType();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:824:    $data[$prefix . 'uuid'] = $file->uuid();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:825:    if ($this->configuration['file_data']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:826:      $data[$prefix . 'data'] = base64_encode(file_get_contents($file->getFileUri()));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:841:    $body = (string) $response->getBody();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:861:        $tokens = array_merge($tokens, $this->getResponseTokens($value, array_merge($parents, [$key])));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:877:    return ($this->getWebform()->getSetting('results_disabled') === FALSE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:887:    return $this->isResultsEnabled() && ($this->getWebform()->getSetting('draft') !== WebformInterface::DRAFT_NONE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:897:    return $this->isDraftEnabled() && ($this->getWebform()->getSetting('form_convert_anonymous') === TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:928:    if (empty($this->configuration['debug'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:934:      '#title' => $this->t('Debug: Remote HTTP operation: @title [@state]', ['@title' => $this->label(), '@state' => $state]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:940:      '#title' => $this->t('Submission state/operation:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:942:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:949:      '#title' => $this->t('Request URL'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:951:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:955:      '#title' => $this->t('Request method'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:957:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:961:      '#title' => $this->t('Request type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:963:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:967:      '#title' => $this->t('Request options'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:981:        '#title' => $this->t('Response status code:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:982:        '#markup' => $response->getStatusCode(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:983:        '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:987:        '#title' => $this->t('Response header:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:990:          '#markup' => Html::escape(Yaml::encode($response->getHeaders())),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:998:        '#title' => $this->t('Response body:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1000:          '#markup' => Html::escape($response->getBody()),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1005:      $response_data = $this->getResponseData($response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1010:          '#title' => $this->t('Response data:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1018:      if ($tokens = $this->getResponseTokens($response_data, ['webform', 'handler', $this->getHandlerId(), $state])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1023:          '#title' => $this->t('Response tokens:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1024:          'description' => ['#markup' => $this->t('Below tokens can ONLY be used to insert response data into value and hidden elements.')],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1035:        '#markup' => $this->t('No response. Please see the recent log messages.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1046:      '#title' => $this->t('Message:'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1050:    $this->messenger()->addMessage($this->renderer->renderInIsolation($build), $type);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1078:    $this->debug($message, $state, $request_url, $request_method, $request_type, $request_options, $response, 'error');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1082:      '@form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1087:      'webform_submission' => $this->getWebformSubmission(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1088:      'handler_id' => $this->getHandlerId(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1090:      'link' => $this->getWebform()
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1091:        ->toLink($this->t('Edit'), 'handlers')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1092:        ->toString(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1094:    $this->getLogger('webform_submission')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1095:      ->error('@form webform remote @type post (@state) to @url failed. @message', $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1098:    if (!$this->displayCustomResponseMessage($response, TRUE)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1099:      $this->messageManager->display(WebformMessageManagerInterface::SUBMISSION_EXCEPTION_MESSAGE, 'error');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1103:    $error_url = $this->replaceTokens($this->configuration['error_url'], $this->getWebformSubmission());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1110:      $request = $this->requestStack->getCurrentRequest();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1113:      $wrapper_format = $request->get(MainContentViewSubscriber::WRAPPER_FORMAT);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1117:        $response->addCommand(new RedirectCommand($error_url));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1118:        $response->setData($response->getCommands());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1124:      $request->getSession()->save();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1125:      $response->prepare($request);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1127:      $this->kernel->terminate($request, $response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1128:      $response->send();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1145:    if (!empty($this->configuration['messages'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1146:      $status_code = $this->getStatusCode($response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1147:      foreach ($this->configuration['messages'] as $message_item) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1149:          return $this->replaceTokens($message_item['message'], $this->getWebformSubmission());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1153:    return (!empty($this->configuration['message']) && $default)
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1154:      ? $this->replaceTokens($this->configuration['message'], $this->getWebformSubmission())
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1170:    $custom_response_message = $this->getCustomResponseMessage($response, $default);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1180:          $this->getHandlerId() => $this->getResponseData($response),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1186:      '#markup' => $this->replaceTokens($custom_response_message, $this->getWebform(), $token_data),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1188:    $message = \Drupal::service('renderer')->renderInIsolation($build_message);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1189:    $type = ($this->responseHasError($response)) ? MessengerInterface::TYPE_ERROR : MessengerInterface::TYPE_STATUS;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1190:    $this->messenger()->addMessage($message, $type);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1204:    $status_code = $this->getStatusCode($response);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1219:      ? $response->getStatusCode()
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/RemotePostWebformHandler.php:1227:    $description = $description ?: $this->t('Use [webform_submission:values:ELEMENT_KEY:raw] to get plain text values.');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:142:    $instance->currentUser = $container->get('current_user');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:143:    $instance->moduleHandler = $container->get('module_handler');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:144:    $instance->languageManager = $container->get('language_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:145:    $instance->mailManager = $container->get('plugin.manager.mail');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:146:    $instance->themeManager = $container->get('webform.theme_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:147:    $instance->tokenManager = $container->get('webform.token_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:148:    $instance->translationManager = $container->get('webform.translation_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:149:    $instance->elementManager = $container->get('plugin.manager.webform.element');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:157:    $settings = $this->getEmailConfiguration();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:174:      WebformSubmissionInterface::STATE_DRAFT_CREATED => $this->t('Draft created'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:175:      WebformSubmissionInterface::STATE_DRAFT_UPDATED => $this->t('Draft updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:176:      WebformSubmissionInterface::STATE_CONVERTED => $this->t('Converted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:177:      WebformSubmissionInterface::STATE_COMPLETED => $this->t('Completed'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:178:      WebformSubmissionInterface::STATE_UPDATED => $this->t('Updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:179:      WebformSubmissionInterface::STATE_DELETED => $this->t('Deleted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:185:      $settings['theme_name'] = $this->themeManager->getThemeName($settings['theme_name']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:190:      $language = $this->languageManager->getLanguage($settings['langcode']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:191:      $settings['langcode'] = ($language) ? $language->getName() : $settings['langcode'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:242:    if (isset($this->defaultValues)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:243:      return $this->defaultValues;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:246:    $webform_settings = $this->configFactory->get('webform.settings');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:247:    $site_settings = $this->configFactory->get('system.site');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:248:    $body_format = ($this->configuration['html']) ? 'html' : 'text';
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:249:    $default_to_mail = $webform_settings->get('mail.default_to_mail') ?: $site_settings->get('mail') ?: ini_get('sendmail_from');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:250:    $default_from_mail = $webform_settings->get('mail.default_from_mail') ?: $site_settings->get('mail') ?: ini_get('sendmail_from');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:252:    $this->defaultValues = [
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:262:      'from_name' => $webform_settings->get('mail.default_from_name') ?: $site_settings->get('name'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:263:      'subject' => $webform_settings->get('mail.default_subject') ?: 'Webform submission from: [webform_submission:source-entity]',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:264:      'body' => $this->getBodyDefaultValues($body_format),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:265:      'reply_to' => $webform_settings->get('mail.default_reply_to') ?: '',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:266:      'return_path' => $webform_settings->get('mail.default_return_path') ?: '',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:267:      'sender_mail' => $webform_settings->get('mail.default_sender_mail') ?: '',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:268:      'sender_name' => $webform_settings->get('mail.default_sender_name') ?: '',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:273:    return $this->defaultValues;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:286:    $default_values = $this->getDefaultConfigurationValues();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:298:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:301:      $email[$key] = ($value === static::DEFAULT_VALUE) ? $this->getDefaultConfigurationValue($key) : $value;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:310:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:319:    $elements = $this->webform->getElementsInitializedAndFlattened();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:321:      $element_plugin = $this->elementManager->getElementInstance($element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:322:      if (!$element_plugin->isInput($element) || !isset($element['#type'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:335:      if ($element_plugin->hasMultipleValues($element)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:339:      if (!$element_plugin->isComposite()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:368:        $composite_elements = $element_plugin->getCompositeElements();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:370:          $composite_element_plugin = $this->elementManager->getElementInstance($element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:371:          if (!$composite_element_plugin->isInput($element) || !isset($composite_element['#type'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:402:    if ($roles = $this->configFactory->get('webform.settings')->get('mail.roles')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:415:      '[current-user:mail]' => 'Current user email address [Authenticated only]',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:421:      '[current-user:display-name]' => 'Current user display name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:422:      '[current-user:account-name]' => 'Current user account name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:423:      '[webform:author:display-name]' => 'Webform author display name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:424:      '[webform:author:account-name]' => 'Webform author account name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:425:      '[webform_submission:user:display-name]' => 'Webform submission author display name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:426:      '[webform_submission:user:account-name]' => 'Webform submission author account name',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:429:    // Disable client-side HTML5 validation which is having issues with hidden
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:431:    // @see http://stackoverflow.com/questions/22148080/an-invalid-form-control-with-name-is-not-focusable
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:437:      '#title' => $this->t('Send to'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:438:      '#help' => $this->t('This is the "To:" email header which will be the person(s) responsible for receiving this webform.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:441:    $form['to']['to_mail'] = $this->buildElement('to_mail', $this->t('To email'), $this->t('To email address'), TRUE, $mail_element_options, $options_element_options, $roles_element_options, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:442:    $form['to']['cc_mail'] = $this->buildElement('cc_mail', $this->t('CC email'), $this->t('CC email address'), FALSE, $mail_element_options, $options_element_options, $roles_element_options, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:443:    $form['to']['bcc_mail'] = $this->buildElement('bcc_mail', $this->t('BCC email'), $this->t('BCC email address'), FALSE, $mail_element_options, $options_element_options, $roles_element_options, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:449:    if ($this->moduleHandler->moduleExists('webform_access')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:452:    if ($this->moduleHandler->moduleExists('webform_group')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:455:    $form['to']['token_tree_link'] = $this->buildTokenTreeElement($token_types);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:457:    if (empty($roles_element_options) && $this->currentUser->hasPermission('administer webform')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:459:      $route_destination = Url::fromRoute('entity.webform.handlers', ['webform' => $this->getWebform()->id()])->toString();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:461:      $t_args = [':href' => Url::fromRoute($route_name, [], $route_options)->toString()];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:465:        '#message_message' => $this->t('Please note: You can select which <strong>user roles</strong> are available to receive webform emails by going to the Webform module\'s <a href=":href">admin settings</a> form.', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:475:      '#title' => $this->t('Send from (website/domain)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:476:      '#help' => $this->t('This is the "From:" email header which should come from <em>you</em>.  It should be your brand, company, organization, or website entity.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:479:    $form['from']['from_mail'] = $this->buildElement('from_mail', $this->t('From email'), $this->t('From email address'), TRUE, $mail_element_options, $options_element_options, NULL, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:480:    $form['from']['from_name'] = $this->buildElement('from_name', $this->t('From name'), $this->t('From name'), FALSE, $name_element_options, NULL, NULL, $other_element_name_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:481:    $form['from']['token_tree_link'] = $this->buildTokenTreeElement();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:489:    // Settings: Reply-to.
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:492:      '#title' => $this->t('Reply to (individual/organization)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:493:      '#help' => $this->t('The "Reply-To:" email header is used for replying to the email that is received.  For example, if you collect a customers email, you would want to reply-to them. If you collect a lead generation form and want to reply to the coordinator, you would reply-to them.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:496:    $form['reply_to']['reply_to'] = $this->buildElement('reply_to', $this->t('Reply-to email'), $this->t('Reply-to email address'), FALSE, $mail_element_options, NULL, NULL, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:497:    $form['reply_to']['token_tree_link'] = $this->buildTokenTreeElement($token_types);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:502:      '#title' => $this->t('Message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:505:    $form['message'] += $this->buildElement('subject', $this->t('Subject'), $this->t('subject'), FALSE, $text_element_options_raw);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:507:    $has_edit_twig_access = (WebformTwigExtension::hasEditTwigAccess() || $this->configuration['twig']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:514:    $body_options[WebformSelectOther::OTHER_OPTION] = $this->t('Custom body…');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:516:      $body_options['twig'] = $this->t('Twig template…');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:518:    $body_options[static::DEFAULT_VALUE] = $this->t('Default');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:519:    $body_options[(string) $this->t('Elements')] = $text_element_options_value;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:522:    $body_default_format = ($this->configuration['html']) ? 'html' : 'text';
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:525:    $body_default_values = $this->getBodyDefaultValues();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:528:    $body_custom_default_values = $this->getBodyDefaultValues();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:539:    if (WebformOptionsHelper::hasOption($this->configuration['body'], $body_options)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:540:      $body_select_default_value = $this->configuration['body'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:542:    elseif ($this->configuration['twig']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:544:      $body_custom_default_values['twig'] = $this->configuration['body'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:548:      $body_custom_default_values[$body_default_format] = $this->configuration['body'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:554:      '#title' => $this->t('Body'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:563:          '#format' => $this->configFactory->get('webform.settings')->get('html_editor.mail_format'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:573:        '#title' => $this->t('Body custom value (@format)', ['@format' => $format]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:595:        '#title' => $this->t('Body default value (@format)', ['@format' => $format]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:611:      '#title' => $this->t('Body custom value (Twig)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:636:    $form['message']['token_tree_link'] = $this->buildTokenTreeElement();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:641:      '#title' => $this->t('Included email values/markup'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:642:      '#description' => $this->t('The selected elements will be included in the [webform_submission:values] token. Individual values may still be printed if explicitly specified as a [webform_submission:values:?] in the email body template.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:643:      '#open' => $this->configuration['excluded_elements'] ? TRUE : FALSE,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:648:      '#webform_id' => $this->webform->id(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:649:      '#default_value' => $this->configuration['excluded_elements'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:653:      '#title' => $this->t('Always include elements with private and restricted access'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:654:      '#description' => $this->t('If checked, access controls for included element will be ignored.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:656:      '#default_value' => $this->configuration['ignore_access'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:660:      '#title' => $this->t('Exclude empty elements'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:661:      '#description' => $this->t('If checked, empty elements will be excluded from the email values.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:663:      '#default_value' => $this->configuration['exclude_empty'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:667:      '#title' => $this->t('Exclude unselected checkboxes'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:668:      '#description' => $this->t('If checked, empty checkboxes will be excluded from the email values.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:670:      '#default_value' => $this->configuration['exclude_empty_checkbox'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:674:      '#title' => $this->t('Exclude file elements with attachments'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:676:      '#description' => $this->t('If checked, file attachments will be excluded from the email values, but the selected element files will still be attached to the email.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:677:      '#default_value' => $this->configuration['exclude_attachments'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:678:      '#access' => $this->getWebform()->hasAttachments(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:679:      '#disabled' => !$this->supportsAttachments(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:684:    $elements = $this->webform->getElementsInitializedFlattenedAndHasValue();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:689:          '#message_message' => $this->t('This webform contains private and/or restricted access elements, which will only be included if the user submitting the form has access to these elements.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:702:      '#title' => $this->t('Attachments'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:703:      '#access' => $this->getWebform()->hasAttachments(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:705:    if (!$this->supportsAttachments()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:714:        '#message_message' => $this->t('To send email attachments, please install and configure the <a href=":href_smtp">SMTP Authentication Support</a> module, the <a href=":href_mailsystem">Mail System</a> and <a href=":href_swiftmailer">SwiftMailer</a> module or the <a href=":href_symfony_mailer">Symfony Mailer</a> module.', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:722:      '#title' => $this->t('Include files as attachments'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:723:      '#description' => $this->t('If checked, only file upload elements selected in the above included email values will be attached to the email.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:725:      '#disabled' => !$this->supportsAttachments(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:726:      '#default_value' => $this->configuration['attachments'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:730:    $results_disabled = $this->getWebform()->getSetting('results_disabled');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:733:      '#title' => $this->t('Additional settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:738:      '#title' => $this->t('Send email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:740:        WebformSubmissionInterface::STATE_DRAFT_CREATED => $this->t('…when <b>draft is created</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:741:        WebformSubmissionInterface::STATE_DRAFT_UPDATED => $this->t('…when <b>draft is updated</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:742:        WebformSubmissionInterface::STATE_CONVERTED => $this->t('…when anonymous <b>submission is converted</b> to authenticated.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:743:        WebformSubmissionInterface::STATE_COMPLETED => $this->t('…when <b>submission is completed</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:744:        WebformSubmissionInterface::STATE_UPDATED => $this->t('…when <b>submission is updated</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:745:        WebformSubmissionInterface::STATE_DELETED => $this->t('…when <b>submission is deleted</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:746:        WebformSubmissionInterface::STATE_LOCKED => $this->t('…when <b>submission is locked</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:749:      '#default_value' => $results_disabled ? [WebformSubmissionInterface::STATE_COMPLETED] : $this->configuration['states'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:753:      '#message_message' => $this->t("Because no submission state is checked, this email can only be sent using the 'Resend' form and/or custom code."),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:762:    $form['additional']['return_path'] = $this->buildElement('return_path', $this->t('Return path'), $this->t('Return path email address'), FALSE, $mail_element_options, NULL, NULL, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:764:    $form['additional']['sender_mail'] = $this->buildElement('sender_mail', $this->t('Sender email'), $this->t('Sender email address'), FALSE, $mail_element_options, $options_element_options, NULL, $other_element_email_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:766:    $form['additional']['sender_name'] = $this->buildElement('sender_name', $this->t('Sender name'), $this->t('Sender name'), FALSE, $name_element_options, NULL, NULL, $other_element_name_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:771:      '#title' => $this->t('Send email as HTML'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:773:      '#access' => $this->supportsHtml(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:774:      '#default_value' => $this->configuration['html'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:780:      '#title' => $this->t('Theme to render this email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:781:      '#description' => $this->t('Select the theme that will be used to render this email.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:782:      '#options' => $this->themeManager->getThemeNames(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:783:      '#default_value' => $this->configuration['theme_name'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:790:      '#empty_option' => $this->t('Current'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:791:      '#title' => $this->t('Language to render this email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:792:      '#description' => $this->t('Select the language that will be used to render this email.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:793:      '#default_value' => $this->configuration['langcode'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:799:      '#title' => $this->t('Custom parameters'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:800:      '#description' => $this->t('Enter additional custom parameters to be appended to the email message\'s parameters. Custom parameters are used by <a href=":href">email related add-on modules</a>.', [':href' => 'https://www.drupal.org/docs/8/modules/webform/webform-add-ons#mail']),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:801:      '#default_value' => $this->configuration['parameters'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:807:      '#title' => $this->t('Development settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:811:      '#title' => $this->t('Enable debugging'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:812:      '#description' => $this->t('If checked, sent emails will be displayed onscreen to all users.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:814:      '#default_value' => $this->configuration['debug'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:821:    $this->elementTokenValidate($form, $token_types);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:823:    return $this->setSettingsParents($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:832:    $values = $form_state->getValues();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:848:    $form_state->setValues($values);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:849:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:858:    $values = $form_state->getValues();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:863:    foreach ($this->configuration as $name => $value) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:868:          $this->configuration[$name] = WebformOptionsHelper::encodeConfig($values[$name]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:871:          $this->configuration[$name] = $values[$name];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:877:    $this->configuration['debug'] = (bool) $this->configuration['debug'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:884:    $state = $webform_submission->getWebform()->getSetting('results_disabled') ? WebformSubmissionInterface::STATE_COMPLETED : $webform_submission->getState();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:885:    if ($this->configuration['states'] && in_array($state, $this->configuration['states'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:886:      $message = $this->getMessage($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:887:      $this->sendMessage($webform_submission, $message);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:895:    if (in_array(WebformSubmissionInterface::STATE_DELETED, $this->configuration['states'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:896:      $message = $this->getMessage($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:897:      $this->sendMessage($webform_submission, $message);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:907:    $theme_name = $this->configuration['theme_name'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:908:    $this->themeManager->setCurrentTheme($theme_name);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:911:    $custom_langcode = $this->configuration['langcode'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:912:    $current_langcode = $this->languageManager->getCurrentLanguage()->getId();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:914:      $this->setWebformTranslation($custom_langcode);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:919:      'excluded_elements' => $this->configuration['excluded_elements'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:920:      'ignore_access' => $this->configuration['ignore_access'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:921:      'exclude_empty' => $this->configuration['exclude_empty'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:922:      'exclude_empty_checkbox' => $this->configuration['exclude_empty_checkbox'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:923:      'exclude_attachments' => $this->configuration['exclude_attachments'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:924:      'html' => ($this->configuration['html'] && $this->supportsHtml()),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:932:    foreach ($this->configuration as $configuration_key => $configuration_value) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:948:        $configuration_value = $this->getDefaultConfigurationValue($configuration_key);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:953:        $emails = $this->getMessageEmails($webform_submission, $configuration_name, $configuration_value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:958:      if ($configuration_key === 'body' && $this->configuration['twig']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:966:        $token_value = $this->replaceTokens($configuration_value, $webform_submission, $token_data, $token_options);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:981:    if ($this->configuration['html'] && $this->supportsHtml()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:983:      // NOTE: $message['body'] is not passed-thru Xss::filter() to allow
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:985:      $format = $this->configFactory->get('webform.settings')->get('html_editor.mail_format');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:992:        $message['body'] = $this->themeManager->renderPlain($build);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:997:    $message['attachments'] = $this->getMessageAttachments($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1007:      $this->setWebformTranslation($current_langcode);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1011:    $this->themeManager->setActiveTheme();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1023:    $this->languageManager->setConfigOverrideLanguage(
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1024:      $this->languageManager->getLanguage($langcode)
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1027:    $webform_submission = $this->getWebformSubmission();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1030:    $webform = $this->entityTypeManager
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1031:      ->getStorage('webform')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1032:      ->loadUnchanged($this->getWebform()->id());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1033:    $webform->applyVariants($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1036:    $config = $this->configFactory
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1037:      ->reset($webform->getConfigDependencyName())
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1038:      ->get($webform->getConfigDependencyName());
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1039:    $handler_settings = $config->get('handlers.' . $this->getHandlerId() . '.settings');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1040:    $this->configuration = $handler_settings;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1043:    $webform_submission->setWebform($webform);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1044:    $this->setWebform($webform);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1064:    $element_name = $this->getElementKeyFromToken($configuration_value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1065:    $element = ($element_name) ? $this->webform->getElement($element_name) : NULL;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1069:    $email_has_options = (!empty($this->configuration[$configuration_name . '_options'])) ? TRUE : FALSE;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1073:      $email_options = WebformOptionsHelper::decodeConfig($this->configuration[$configuration_name . '_options']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1081:      $options_element_value = $webform_submission->getElementData($element_name);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1120:      $roles = $this->configFactory->get('webform.settings')->get('mail.roles');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1123:      if ($this->moduleHandler->moduleExists('webform_access')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1126:      if ($this->moduleHandler->moduleExists('webform_group')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1129:      $emails = $this->replaceTokens($emails, $webform_submission, $token_data);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1155:    if (empty($this->configuration['attachments']) || !$this->supportsAttachments()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1160:    $elements = $this->getWebform()->getElementsInitializedAndFlattened();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1161:    $element_attachments = $this->getWebform()->getElementsAttachments();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1164:      if (isset($this->configuration['excluded_elements'][$element_attachment])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1170:      $element_plugin = $this->elementManager->getElementInstance($element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1171:      $attachments = array_merge($attachments, $element_plugin->getEmailAttachments($element, $webform_submission));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1178:    if ($this->moduleHandler->moduleExists('swiftmailer')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1179:      || $this->moduleHandler->moduleExists('mimemail')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1195:    if (!$this->validateMessage($webform_submission, $message)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1201:    $current_langcode = $this->languageManager->getCurrentLanguage()->getId();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1205:      '#theme' => 'webform_email_message_' . (($this->configuration['html']) ? 'html' : 'text'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1212:    $theme_name = $this->configuration['theme_name'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1213:    $message['body'] = trim((string) $this->themeManager->renderPlain($build, $theme_name));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1218:    if ($this->configuration['html']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1223:    $key = $this->getWebform()->id() . '_' . $this->getHandlerId();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1232:    if (!empty($this->configuration['parameters'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1233:      $message += $this->replaceTokens($this->configuration['parameters'], $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1238:    $result = $this->mailManager->mail('webform', $key, $to, $current_langcode, $message, $from);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1240:    if ($webform_submission->getWebform()->hasSubmissionLog()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1247:        'link' => ($webform_submission->id()) ? $webform_submission->toLink($this->t('View'))->toString() : NULL,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1249:        'handler_id' => $this->getHandlerId(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1252:      $this->getLogger('webform_submission')->notice("'@subject' sent to '@to_mail' from '@from_name' [@from_mail]'.", $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1257:        '@form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1258:        '@title' => $this->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1259:        'link' => $this->getWebform()->toLink($this->t('Edit'), 'handlers')->toString(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1261:      $this->getLogger('webform')->notice('@form webform sent @title email.', $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1265:    if ($this->configuration['debug']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1272:      $this->messenger()->addWarning($this->t("%subject sent to %to_mail from %from_name [%from_mail].", $t_args), TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1273:      $debug_message = $this->buildDebugMessage($webform_submission, $message);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1274:      $this->messenger()->addWarning($this->themeManager->renderPlain($debug_message), TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1297:      'from_mail' => $this->t('From'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1298:      'to_mail' => $this->t('To'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1299:      'cc_mail' => $this->t('Cc'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1300:      'bcc_mail' => $this->t('Bcc'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1301:      'reply_to' => $this->t('Reply-to'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1302:      'return_path' => $this->t('Return path'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1303:      'sender_mail' => $this->t('Sender'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1327:        if ($this->configuration['debug']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1330:            '%form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1331:            '%handler' => $this->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1335:            $this->messenger()->addWarning($this->t('%form: Email not sent for %handler handler because the <em>@type</em> email (%email) is not valid.', $t_args));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1338:            $this->messenger()->addWarning($this->t('%form: The <em>@type</em> email address (%email) for %handler handler  is not valid.', $t_args));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1344:          '@form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1345:          '@handler' => $this->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1349:          $this->getLogger('webform_submission')->error("@form: Email not sent for '@handler' handler because the '@type' email (@email) is not valid.", $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1353:          $this->getLogger('webform_submission')->error("@form: The '@type' email address (@email) for '@handler' handler is not valid.", $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1362:    if (!$this->hasRecipient($webform_submission, $message)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1364:      if ($this->configuration['debug']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1366:          '%form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1367:          '%handler' => $this->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1369:        $this->messenger()->addWarning($this->t('%form: Email not sent for %handler handler because a <em>To</em>, <em>CC</em>, or <em>BCC</em> email was not provided.', $t_args), TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1373:        '@form' => $this->getWebform()->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1374:        '@handler' => $this->label(),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1376:      $this->getLogger('webform_submission')->error("@form: Email not sent for @handler handler because a To, CC, or BCC email was not provided", $context);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1403:      '#title' => $this->t('To email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1408:      '#title' => $this->t('CC email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1413:      '#title' => $this->t('BCC email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1419:      '#title' => $this->t('From email'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1425:      '#title' => $this->t('From name'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1432:      '#title' => $this->t('Reply to'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1438:      '#title' => $this->t('Subject'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1443:      '#title' => $this->t('Message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1462:        '#title' => $this->t('Attachments'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1463:      ] + $this->buildAttachments($message['attachments']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1500:    if ($this->configFactory->get('system.mail')->get('interface.default') === 'test_mail_collector') {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1506:    if (strpos($this->getWebform()->id(), 'test_') === 0
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1507:      && $this->moduleHandler->moduleExists('webform_test')) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1513:    $mailsystem_installed = $this->moduleHandler->moduleExists('mailsystem');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1514:    $smtp_enabled = $this->moduleHandler->moduleExists('smtp')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1515:      && $this->configFactory->get('smtp.settings')->get('smtp_on');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1516:    $symfony_mailer_installed = $this->moduleHandler->moduleExists('symfony_mailer');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1535:      '#title' => $this->t('Debug: Email: @title', ['@title' => $this->label()]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1540:      'from_name' => $this->t('From name'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1541:      'from_mail' => $this->t('From mail'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1542:      'to_mail' => $this->t('To mail'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1543:      'cc_mail' => $this->t('Cc mail'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1544:      'bcc_mail' => $this->t('Bcc mail'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1545:      'reply_to' => $this->t('Reply-to'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1546:      'return_path' => $this->t('Return path'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1547:      '---' => '---',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1548:      'subject' => $this->t('Subject'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1551:      if ($title === '---') {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1559:          '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1566:      '#title' => $this->t('Body'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1575:        '#title' => $this->t('Attachments'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1577:        'files' => $this->buildAttachments($message['attachments']),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1590:    $mailsystem_config = $this->configFactory->get('mailsystem.settings');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1592:    $mailsystem_formatter = $mailsystem_config->get('defaults.formatter');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1594:    $mailsystem_formatter = $mailsystem_config->get('modules.webform.none.formatter') ?: $mailsystem_formatter;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1596:    $key = 'email_' . $this->getHandlerId();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1597:    $mailsystem_formatter = $mailsystem_config->get("modules.webform.$key.formatter") ?: $mailsystem_formatter;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1614:    $webform_settings = $this->configFactory->get('webform.settings');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1616:      'text' => $webform_settings->get('mail.default_body_text') ?: '[webform_submission:values]',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1617:      'html' => $webform_settings->get('mail.default_body_html') ?: '[webform_submission:values]',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1648:    $default_option = $this->getDefaultConfigurationValue($name);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1651:    $options[WebformSelectOther::OTHER_OPTION] = $this->t('Custom @label…', ['@label' => $label]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1653:      $options[(string) $this->t('Default')] = [static::DEFAULT_VALUE => $default_option];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1656:      $options[(string) $this->t('Elements')] = $element_options;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1659:      $options[(string) $this->t('Options')] = $options_options;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1662:      $options[(string) $this->t('Roles')] = $role_options;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1665:      $options[(string) $this->t('Other')] = $other_options;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1674:      '#empty_option' => (!$required) ? $this->t('- None -') : NULL,
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1677:      '#other__placeholder' => $this->t('Enter @label…', ['@label' => $label]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1681:      '#default_value' => $this->configuration[$name],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1686:      $element[$name]['#empty_option'] = $this->t('- Default -');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1697:        $element[$name]['#other__description'] = $this->t('Multiple email addresses may be separated by commas. Emails are only sent to cc and bcc addresses if a To email address is provided.')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1699:          . $this->t("If multiple email addresses are entered the '@name' will be not included in the email.", ['@name' => $this->t('From name')]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1703:        $element[$name]['#description'] = $this->t('The email address that a recipient will see when they replying to an email.');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1707:        $element[$name]['#description'] = $this->t('The email address to which bounce messages are delivered.');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1711:        $element[$name]['#description'] = $this->t('The email address submitting the message, if other than shown by the From header');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1722:      if ($default_email = $this->getDefaultConfigurationValue($name)) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1724:        $element[$name]['#description'] .= ' ' . $this->t("Leave blank to use %email as the '@title' email.", $t_args);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1727:        $element[$name]['#description'] .= ' ' . $this->t("Leave blank to automatically use the 'From' address.", $t_args);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1736:    $ajax_id = 'webform-email-handler-' . $name;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1737:    $this->buildAjaxElementTrigger($ajax_id, $element[$name]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1738:    $this->buildAjaxElementUpdate($ajax_id, $element);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1743:    if (isset($options_options[$this->configuration[$name]]) && ($token_element_name = $this->getElementKeyFromToken($this->configuration[$name]))) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1745:      $options_element = $this->webform->getElement($token_element_name);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1753:        $mapping_options[static::OTHER_OPTION] = $this->t("Other (Used when 'other' value is entered)");
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1756:        $mapping_options[static::EMPTY_OPTION] = $this->t('Empty (Used when no option is selected)');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1758:      $mapping_options[static::DEFAULT_OPTION] = $this->t('Default (This email address will always be included)');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1768:        '#title' => $this->t('@title options', ['@title' => $title]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1769:        '#description' => $this->t('The selected element has multiple options. You may enter email addresses for each choice. When that choice is selected, an email will be sent to the corresponding addresses. If a field is left blank, no email will be sent for that option. You may use tokens.') . '<br /><br />',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1772:        '#default_value' => WebformOptionsHelper::decodeConfig($this->configuration[$options_name]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1775:        '#source__title' => $this->t('Option'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1779:        '#destination__title' => $this->t('Email addresses'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1791:    $this->buildAjaxElementWrapper($ajax_id, $element[$options_name]);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1815:        $build[] = ['#markup' => $this->t('<strong><a href=":href">@filename</a></strong> (@filemime) - @filesize', $t_args)];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1818:        $build[] = ['#markup' => $this->t('<strong>@filename</strong> (@filemime) - @filesize', $t_args)];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/EmailWebformHandler.php:1848:    $description = $description ?: $this->t('Use [webform_submission:values:ELEMENT_KEY:raw] to get plain text values.');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/BrokenWebformHandler.php:40:    $t_args = ['%plugin_id' => $this->getPluginId()];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/BrokenWebformHandler.php:43:        '#markup' => $this->t('This %plugin_id handler is broken or missing. You might need to enable the original module and/or clear the cache.', $t_args),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/BrokenWebformHandler.php:59:    $this->pluginId = $plugin_id;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:40:    $instance->tokenManager = $container->get('webform.token_manager');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:48:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:52:      WebformSubmissionInterface::STATE_DRAFT_CREATED => $this->t('Draft created'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:53:      WebformSubmissionInterface::STATE_DRAFT_UPDATED => $this->t('Draft updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:54:      WebformSubmissionInterface::STATE_CONVERTED => $this->t('Converted'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:55:      WebformSubmissionInterface::STATE_COMPLETED => $this->t('Completed'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:56:      WebformSubmissionInterface::STATE_UPDATED => $this->t('Updated'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:57:      WebformSubmissionInterface::STATE_LOCKED => $this->t('Locked'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:63:      'status' => $this->t('Status'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:64:      'error' => $this->t('Error'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:65:      'warning' => $this->t('Warning'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:66:      'info' => $this->t('Info'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:100:    $results_disabled = $this->getWebform()->getSetting('results_disabled');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:104:      '#title' => $this->t('Trigger'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:108:      '#title' => $this->t('Execute'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:110:        WebformSubmissionInterface::STATE_DRAFT_CREATED => $this->t('…when <b>draft is created</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:111:        WebformSubmissionInterface::STATE_DRAFT_UPDATED => $this->t('…when <b>draft is updated</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:112:        WebformSubmissionInterface::STATE_CONVERTED => $this->t('…when anonymous <b>submission is converted</b> to authenticated.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:113:        WebformSubmissionInterface::STATE_COMPLETED => $this->t('…when <b>submission is completed</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:114:        WebformSubmissionInterface::STATE_UPDATED => $this->t('…when <b>submission is updated</b>.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:118:      '#default_value' => $results_disabled ? [WebformSubmissionInterface::STATE_COMPLETED] : $this->configuration['states'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:123:      '#title' => $this->t('Actions'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:127:      '#title' => $this->t('Change status'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:128:      '#empty_option' => $this->t('- None -'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:130:        '1' => $this->t('Flag/Star'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:131:        '0' => $this->t('Unflag/Unstar'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:133:      '#default_value' => ($this->configuration['sticky'] === NULL) ? '' : ($this->configuration['sticky'] ? '1' : '0'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:137:      '#title' => $this->t('Change lock'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:138:      '#description' => $this->t('Webform submissions can only be unlocked programmatically.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:139:      '#empty_option' => $this->t('- None -'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:142:        '1' => $this->t('Lock'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:143:        '0' => $this->t('Unlock'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:145:      '#default_value' => ($this->configuration['locked'] === NULL) ? '' : ($this->configuration['locked'] ? '1' : '0'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:150:      '#title' => $this->t('Append the below text to notes (Plain text)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:151:      '#default_value' => $this->configuration['notes'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:155:      '#title' => $this->t('Display message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:156:      '#default_value' => $this->configuration['message'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:160:      '#title' => $this->t('Display message type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:162:        'status' => $this->t('Status'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:163:        'error' => $this->t('Error'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:164:        'warning' => $this->t('Warning'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:165:        'info' => $this->t('Info'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:167:      '#default_value' => $this->configuration['message_type'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:172:      '#title' => $this->t('Update the below submission data. (YAML)'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:173:      '#default_value' => $this->configuration['data'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:177:    $elements = $this->getWebform()->getElementsInitializedFlattenedAndHasValue();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:186:      '#title' => $this->t('Available element keys'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:189:        '#header' => [$this->t('Element key'), $this->t('Element title')],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:193:    $form['actions']['token_tree_link'] = $this->buildTokenTreeElement();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:198:      '#title' => $this->t('Development settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:202:      '#title' => $this->t('Enable debugging'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:203:      '#description' => $this->t('If checked, trigger actions will be displayed onscreen to all users.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:205:      '#default_value' => $this->configuration['debug'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:208:    $this->elementTokenValidate($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:210:    return $this->setSettingsParents($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:217:    if ($form_state->hasAnyErrors()) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:222:    $elements = $this->getWebform()->getElementsInitializedFlattenedAndHasValue();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:223:    $data = Yaml::decode($form_state->getValue('data')) ?: [];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:226:        $form_state->setErrorByName('data', $this->t('%key is not valid element key.', ['%key' => $key]));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:236:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:239:    $this->configuration['states'] = array_values(array_filter($this->configuration['states']));
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:242:    if ($form_state->getValue('sticky') === '') {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:243:      $this->configuration['sticky'] = NULL;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:247:    if ($form_state->getValue('locked') === '') {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:248:      $this->configuration['locked'] = NULL;
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:256:    $state = $webform_submission->getWebform()->getSetting('results_disabled') ? WebformSubmissionInterface::STATE_COMPLETED : $webform_submission->getState();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:257:    if (in_array($state, $this->configuration['states'])) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:258:      $this->executeAction($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:274:    if ($this->configuration['sticky'] !== NULL) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:275:      $webform_submission->setSticky($this->configuration['sticky']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:279:    if ($this->configuration['locked'] !== NULL) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:280:      $webform_submission->setLocked($this->configuration['locked']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:284:    if ($this->configuration['notes']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:285:      $notes = $webform_submission->getNotes() ?? '';
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:287:      $notes .= ($notes ? PHP_EOL . PHP_EOL : '') . $this->replaceTokens($this->configuration['notes'], $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:288:      $webform_submission->setNotes($notes);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:292:    if ($this->configuration['data']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:293:      $data = Yaml::decode($this->configuration['data']);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:294:      $data = $this->replaceTokens($data, $webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:296:        $webform_submission->setElementData($key, $value);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:301:    if ($this->configuration['message']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:303:        $this->replaceTokens($this->configuration['message'], $webform_submission)
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:305:      $message_type = $this->configuration['message_type'];
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:306:      $this->messenger()->addMessage($this->renderer->renderInIsolation($message), $message_type);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:310:    $webform_submission->resave();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:313:    $this->displayDebug($webform_submission);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:323:    if (!$this->configuration['debug']) {
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:329:      '#title' => $this->t('Debug: Action: @title', ['@title' => $this->label()]),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:333:    $state = $webform_submission->getWebform()->getSetting('results_disabled') ? WebformSubmissionInterface::STATE_COMPLETED : $webform_submission->getState();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:336:      '#title' => $this->t('State'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:338:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:343:      '#title' => $this->t('Status'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:344:      '#markup' => ($this->configuration['sticky'] === NULL) ? '' : ($this->configuration['sticky'] ? $this->t('Flagged/Starred') : $this->t('Unflagged/Unstarred')),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:345:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:350:      '#title' => $this->t('Lock'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:351:      '#markup' => ($this->configuration['locked'] === NULL) ? '' : ($this->configuration['locked'] ? $this->t('Locked') : $this->t('Unlocked')),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:352:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:357:      '#title' => $this->t('Notes'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:358:      '#markup' => $this->configuration['notes'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:359:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:364:      '#title' => $this->t('Data'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:365:      '#markup' => $this->configuration['notes'] ? '<pre>' . htmlentities($this->configuration['notes']) . '</pre>' : '',
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:366:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:371:      '#title' => $this->t('Message'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:372:      '#markup' => $this->configuration['message'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:373:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:378:      '#title' => $this->t('Message type'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:379:      '#markup' => $this->configuration['message_type'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:380:      '#wrapper_attributes' => ['class' => ['container-inline'], 'style' => 'margin: 0'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/ActionWebformHandler.php:383:    $this->messenger()->addWarning($this->renderer->renderInIsolation($build), TRUE);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:49:    $instance->renderer = $container->get('renderer');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:67:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:70:        $settings['format'] = $this->t('JSON');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:75:        $settings['format'] = $this->t('YAML');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:89:      '#title' => $this->t('Debug settings'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:93:      '#title' => $this->t('Data format'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:95:        static::FORMAT_YAML => $this->t('YAML'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:96:        static::FORMAT_JSON => $this->t('JSON'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:98:      '#default_value' => $this->configuration['format'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:102:      '#title' => $this->t('Include submission properties'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:103:      '#description' => $this->t('If checked, all submission properties and values  will be included in the displayed debug information. This includes sid, created, updated, completed, and more.'),
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:105:      '#default_value' => $this->configuration['submission'],
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:107:    return $this->setSettingsParents($form);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:115:    $this->applyFormStateToConfiguration($form_state);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:122:    $settings = $this->getSettings();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:125:      ? $webform_submission->toArray(TRUE)
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:126:      : $webform_submission->getData();
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:130:      ? $this->t('Submitted properties and values are:')
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:131:      : $this->t('Submitted values are:');
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:143:    $message = $this->renderer->renderInIsolation($build);
+/var/www/html/web/modules/contrib/webform/src/Plugin/WebformHandler/DebugWebformHandler.php:145:    $this->messenger()->addWarning($message);

@@ -7,6 +7,39 @@ services:
     autowire: true
   Drupal\motaded_custom\Hook\ViewsMetatagHooks:
     autowire: true
+  motaded_custom.crm_lead_webhook_settings:
+    class: Drupal\motaded_custom\Crm\CrmLeadWebhookSettings
+    factory: ['Drupal\motaded_custom\Crm\CrmLeadWebhookSettings', 'create']
+    arguments: ['@config.factory', '@settings']
+
+  Drupal\motaded_custom\Crm\CrmLeadAttributionCollector:
+    arguments: ['@request_stack']
+
+  Drupal\motaded_custom\Crm\CrmLeadPayloadBuilder:
+    arguments:
+      - '@Drupal\motaded_custom\Crm\CrmLeadAttributionCollector'
+      - '@motaded_custom.crm_lead_webhook_settings'
+
+  Drupal\motaded_custom\Crm\CrmLeadWebhookUrlResolver: ~
+
+  Drupal\motaded_custom\Crm\CrmLeadWebhookClient:
+    arguments:
+      - '@http_client'
+      - '@logger.factory'
+      - '@motaded_custom.crm_lead_webhook_settings'
+      - '@Drupal\motaded_custom\Crm\CrmLeadWebhookUrlResolver'
+
+  Drupal\motaded_custom\EventSubscriber\CrmUtmSessionSubscriber:
+    arguments: ['@Drupal\motaded_custom\Crm\CrmLeadAttributionCollector']
+    tags:
+      - { name: event_subscriber }
+
+  Drupal\motaded_custom\Hook\CrmWebformSubmissionHooks:
+    arguments:
+      - '@motaded_custom.crm_lead_webhook_settings'
+      - '@Drupal\motaded_custom\Crm\CrmLeadPayloadBuilder'
+      - '@Drupal\motaded_custom\Crm\CrmLeadWebhookClient'
+
   Drupal\motaded_custom\EventSubscriber\ContactUsNoindexSubscriber:
     tags:
       - { name: event_subscriber }

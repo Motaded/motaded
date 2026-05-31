@@ -89,6 +89,7 @@
                       or platform_external_url
                       or (related_children|length > 0) %}
   {% set has_documents = platform_documents is defined and platform_documents is not empty %}
+  {% set has_faq = content.field_faq|render|trim is not empty %}
 
   {% set hero_eyebrow = '' %}
   {% if node.field_category.entity %}
@@ -168,6 +169,7 @@
       {% if has_trust %}<a class="pf2-tabs__link" href="#pf2-trust">{{ 'Partners'|t }}</a>{% endif %}
       {% if has_resources %}<a class="pf2-tabs__link" href="#pf2-resources">{{ 'Resources'|t }}</a>{% endif %}
       {% if has_documents %}<a class="pf2-tabs__link" href="#pf2-documents">{{ 'Documents'|t }}</a>{% endif %}
+      {% if has_faq %}<a class="pf2-tabs__link" href="#pf2-faq">{{ 'FAQ'|t }}</a>{% endif %}
     </nav>
 
     <div class="pf2-layout">
@@ -282,6 +284,15 @@
                   <a class="pf2-resgrid__all" href="{{ platform_listing_url|default('/platforms') }}">{{ 'View all platforms'|t }} →</a>
                 </div>
               {% endif %}
+            </div>
+          </section>
+        {% endif %}
+
+        {% if has_faq %}
+          <section class="pf2-section pf2-section--faq" id="pf2-faq" aria-labelledby="pf2-faq-title">
+            <h2 id="pf2-faq-title" class="pf2-section__title">{% if node.langcode.value == 'ar' %}الأسئلة الشائعة{% else %}{{ 'Frequently asked questions'|t }}{% endif %}</h2>
+            <div class="pf2-faq">
+              {{ content.field_faq }}
             </div>
           </section>
         {% endif %}

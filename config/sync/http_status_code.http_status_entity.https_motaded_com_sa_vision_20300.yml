@@ -1,0 +1,8 @@
+uuid: 58b69935-1770-4bea-a87e-cb94e4413a90
+langcode: en
+status: true
+dependencies: {  }
+id: https_motaded_com_sa_vision_20300
+label: 'https://motaded.com.sa/vision-20300'
+url: 'https://motaded.com.sa/vision-20300'
+status_code: '410'

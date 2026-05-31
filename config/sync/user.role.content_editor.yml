@@ -24,11 +24,13 @@ dependencies:
     - conditional_fields
     - content_translation
     - contextual
+    - entity_export_csv
     - eu_cookie_compliance
     - field_ui
     - file
     - image
     - media
+    - menu_link_content
     - node
     - path
     - system
@@ -48,12 +50,15 @@ permissions:
   - 'access files overview'
   - 'access toolbar'
   - 'administer block content'
+  - 'administer content translation'
   - 'administer display modes'
+  - 'administer entity export csv'
   - 'administer image styles'
   - 'administer url aliases'
   - 'create article content'
   - 'create basic block content'
   - 'create business_activity block content'
+  - 'create content translations'
   - 'create counter_block_type block content'
   - 'create featured_card block content'
   - 'create head_office block content'
@@ -67,6 +72,7 @@ permissions:
   - 'create terms in tags'
   - 'create url aliases'
   - 'create why_saudi_arabia block content'
+  - 'delete any article content'
   - 'delete any basic block content'
   - 'delete any basic block content revisions'
   - 'delete any business_activity block content'
@@ -88,6 +94,7 @@ permissions:
   - 'delete any why_saudi_arabia block content'
   - 'delete any why_saudi_arabia block content revisions'
   - 'delete article revisions'
+  - 'delete content translations'
   - 'delete own article content'
   - 'delete own files'
   - 'delete own image media'
@@ -125,8 +132,14 @@ permissions:
   - 'revert any pro_gro_services block content revisions'
   - 'revert any sectors block content revisions'
   - 'revert any why_saudi_arabia block content revisions'
+  - 'revert article revisions'
+  - 'translate any entity'
+  - 'translate article node'
+  - 'translate block_content'
   - 'translate editable entities'
+  - 'translate menu_link_content'
   - 'update content translations'
+  - 'use entity export csv'
   - 'view all revisions'
   - 'view any basic block content history'
   - 'view any business_activity block content history'
@@ -138,5 +151,6 @@ permissions:
   - 'view any pro_gro_services block content history'
   - 'view any sectors block content history'
   - 'view any why_saudi_arabia block content history'
+  - 'view article revisions'
   - 'view own unpublished content'
   - 'view the administration theme'

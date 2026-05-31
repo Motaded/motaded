@@ -8,19 +8,20 @@ dependencies:
     - field.field.node.platform.field_cta_link
     - field.field.node.platform.field_cta_text
     - field.field.node.platform.field_external_link
+    - field.field.node.platform.field_faq
     - field.field.node.platform.field_featured
     - field.field.node.platform.field_hero_image
     - field.field.node.platform.field_how_we_help
-    - core.entity_view_mode.media.platform_logo
     - field.field.node.platform.field_logo
+    - field.field.node.platform.field_meta_tags
     - field.field.node.platform.field_partner_logos
     - field.field.node.platform.field_process_steps
     - field.field.node.platform.field_region
     - field.field.node.platform.field_related_platforms
     - field.field.node.platform.field_requirements
     - field.field.node.platform.field_resources
-    - field.field.node.platform.field_short_description
     - field.field.node.platform.field_sector
+    - field.field.node.platform.field_short_description
     - field.field.node.platform.field_source_link
     - field.field.node.platform.field_source_text
     - field.field.node.platform.field_subtitle
@@ -28,8 +29,8 @@ dependencies:
     - node.type.platform
   module:
     - entity_reference_revisions
+    - faqfield
     - link
-    - media
     - text
     - user
 id: node.platform.default
@@ -83,6 +84,13 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 12
+    region: content
+  field_faq:
+    type: faqfield_details
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 30
     region: content
   field_hero_image:
     type: entity_reference_entity_view

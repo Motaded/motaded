@@ -176,32 +176,32 @@ line_items:
   -
     id: misa_license
     label: 'MISA license'
-    base_min: 12000.0
-    base_max: 22000.0
+    base_min: 0.0
+    base_max: 0.0
     weight: 0
   -
     id: commercial_registration
     label: 'Commercial registration'
-    base_min: 3500.0
-    base_max: 8000.0
+    base_min: 1875.0
+    base_max: 2100.0
     weight: 1
   -
     id: office_setup
     label: 'Office setup'
     base_min: 2000.0
-    base_max: 15000.0
+    base_max: 9500.0
     weight: 2
   -
     id: visas
     label: 'Visas & immigration'
-    base_min: 4000.0
-    base_max: 12000.0
+    base_min: 13000.0
+    base_max: 15000.0
     weight: 3
   -
     id: compliance
     label: 'Compliance & filings'
-    base_min: 2500.0
-    base_max: 6000.0
+    base_min: 10000.0
+    base_max: 25000.0
     weight: 4
 modifiers:
   -

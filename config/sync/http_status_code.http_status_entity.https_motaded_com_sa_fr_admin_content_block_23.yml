@@ -1,0 +1,8 @@
+uuid: 06547797-6314-42bf-9f52-a7b677bad125
+langcode: en
+status: true
+dependencies: {  }
+id: https_motaded_com_sa_fr_admin_content_block_23
+label: 'https://motaded.com.sa/fr/admin/content/block/23'
+url: 'https://motaded.com.sa/fr/admin/content/block/23'
+status_code: '410'

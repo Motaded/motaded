@@ -914,8 +914,8 @@ display:
         pager: false
       css_class: 'library-block library-home-block view-library-home'
       use_ajax: true
-      rendering_language: '***LANGUAGE_language_interface***'
       display_description: ''
+      rendering_language: '***LANGUAGE_language_interface***'
       display_extenders:
         metatag_display_extender:
           metatags: {  }

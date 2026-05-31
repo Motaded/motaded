@@ -56,6 +56,7 @@ if (!function_exists('_motaded_pi_row')) {
       'field_process_steps_json' => $enc($r['steps_json'] ?? []),
       'field_requirements_json' => $enc($r['req_json'] ?? []),
       'field_resources_json' => $enc($r['resources_json'] ?? []),
+      'field_faq_json' => $enc($r['faq_json'] ?? []),
       'field_related_platforms_titles' => (string) ($r['field_related_platforms_titles'] ?? ''),
       'path_alias' => (string) ($r['path_alias'] ?? ''),
     ];

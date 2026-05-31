@@ -4,3 +4,10 @@ motaded_custom.tasheer_visa_settings:
   route_name: motaded_custom.tasheer_visa_settings
   parent: system.admin_config_development
   weight: 50
+
+motaded_custom.crm_webhook_settings:
+  title: 'CRM lead webhook'
+  description: 'Send Contact us and calculator leads to your CRM API.'
+  route_name: motaded_custom.crm_webhook_settings
+  parent: system.admin_config_services
+  weight: 15

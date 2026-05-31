@@ -49,6 +49,39 @@ motaded_custom.tasheer_visa:
           type: string
           label: 'No options available message'
 
+motaded_custom.crm_webhook:
+  type: config_object
+  label: 'CRM lead webhook'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enabled'
+    url:
+      type: string
+      label: 'Webhook URL'
+    token:
+      type: string
+      label: 'Bearer token'
+    country:
+      type: string
+      label: 'Default country code'
+    priority_slug:
+      type: string
+      label: 'Default priority slug'
+    timeout:
+      type: float
+      label: 'HTTP timeout (seconds)'
+    lead_service_slug:
+      type: mapping
+      label: 'Lead service slugs by webform'
+      mapping:
+        contact:
+          type: string
+          label: 'Contact us webform'
+        setup_cost_estimate_lead:
+          type: string
+          label: 'Setup cost calculator webform'
+
 motaded_custom.market_indicators:
   type: config_object
   label: 'Market indicators (manual fallbacks)'
