@@ -894,9 +894,19 @@
 }
 
 /* Accordions / FAQ block */
+.platform-page #pf2-faq .pf2-section__title,
 .platform-page #faq .h2,
 .platform-page .paragraph--type--accordions .h2 {
   color: var(--color-primary-600);
+}
+
+.platform-page #pf2-faq .field--type-faqfield > .field__label {
+  display: none;
+}
+
+.platform-page #pf2-faq .field--type-faqfield .field__items {
+  display: grid;
+  gap: 0.75rem;
 }
 
 /* Bottom multi-CTA strip (cards paragraph cta_block) */

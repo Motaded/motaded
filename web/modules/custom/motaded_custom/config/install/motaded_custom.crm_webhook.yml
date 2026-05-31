@@ -1,0 +1,9 @@
+enabled: false
+url: ''
+token: ''
+country: SA
+priority_slug: medium
+timeout: 10
+lead_service_slug:
+  contact: contact-us
+  setup_cost_estimate_lead: company-setup

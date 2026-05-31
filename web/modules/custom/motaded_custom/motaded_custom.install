@@ -972,3 +972,40 @@ function motaded_custom_update_10039(): void {
   motaded_custom_document_sync_all_links(FALSE, TRUE);
 }
 
+/**
+ * Installs default CRM webhook config (admin form at /admin/config/services/motaded-crm-webhook).
+ */
+function motaded_custom_update_10040(): void {
+  $name = 'motaded_custom.crm_webhook';
+  if (!\Drupal::configFactory()->get($name)->isNew()) {
+    return;
+  }
+  $install = new \Drupal\Core\Config\FileStorage(\Drupal::service('extension.list.module')->getPath('motaded_custom') . '/config/install');
+  $data = $install->read($name);
+  if (is_array($data)) {
+    \Drupal::configFactory()->getEditable($name)->setData($data)->save();
+  }
+}
+
+/**
+ * Adds field_faq to platform nodes (reuses Article faqfield storage).
+ */
+function motaded_custom_update_10041(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  foreach ([
+    'field.field.node.platform.field_faq',
+    'core.entity_form_display.node.platform.default',
+    'core.entity_view_display.node.platform.default',
+    'core.entity_view_display.node.platform.teaser',
+  ] as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      \Drupal::service('config.storage')->write($name, $data);
+    }
+  }
+}
+

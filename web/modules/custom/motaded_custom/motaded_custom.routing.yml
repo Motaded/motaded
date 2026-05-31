@@ -14,3 +14,11 @@ motaded_custom.tasheer_visa_settings:
   requirements:
     _permission: 'administer site configuration'
 
+motaded_custom.crm_webhook_settings:
+  path: '/admin/config/services/motaded-crm-webhook'
+  defaults:
+    _form: '\Drupal\motaded_custom\Form\CrmWebhookSettingsForm'
+    _title: 'CRM lead webhook'
+  requirements:
+    _permission: 'administer site configuration'
+

@@ -1,0 +1,8 @@
+uuid: a6379833-a535-4394-95bd-8c6ea619598d
+langcode: en
+status: true
+dependencies: {  }
+id: https_motaded_com_sa_es_node_105
+label: 'https://motaded.com.sa/es/node/105'
+url: 'https://motaded.com.sa/es/node/105'
+status_code: '410'

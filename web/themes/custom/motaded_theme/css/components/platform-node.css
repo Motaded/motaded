@@ -356,6 +356,34 @@ body.page-node-type-platform .bread {
   color: var(--mot-text, #0f172a);
 }
 
+.node--type-platform.node--view-mode-full .pf2-prose table {
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.node--type-platform.node--view-mode-full .pf2-prose table td,
+.node--type-platform.node--view-mode-full .pf2-prose table th {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #e2e8f0;
+  vertical-align: top;
+  text-align: start;
+}
+
+.node--type-platform.node--view-mode-full .pf2-prose table tr:first-child td {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.node--type-platform.node--view-mode-full .pf2-prose table a {
+  color: var(--color-primary-600, #0d9488);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .node--type-platform.node--view-mode-full .pf2-cards {
   display: grid;
   gap: 1.35rem;

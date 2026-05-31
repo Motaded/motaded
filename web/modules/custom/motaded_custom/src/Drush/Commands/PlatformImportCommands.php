@@ -59,6 +59,7 @@ final class PlatformImportCommands extends DrushCommands {
     'field_hero_image',
     'field_partner_logos',
     'field_meta_tags',
+    'field_faq',
     'field_why_matters',
     'field_how_we_help',
     'field_process_steps',
@@ -206,12 +207,22 @@ final class PlatformImportCommands extends DrushCommands {
           throw new \InvalidArgumentException('Empty body_summary.');
         }
 
+        $faq_items = $this->resolveFaqItems(
+          $get($indexes, $row, 'field_faq_json'),
+          $body_raw,
+          $row_lang,
+        );
+        if ($faq_items['body'] !== $body_raw) {
+          $body_raw = $faq_items['body'];
+        }
+
         if ($dry_run) {
           $this->decodeJsonList($get($indexes, $row, 'field_why_matters_json'), 'field_why_matters_json');
           $this->decodeJsonList($get($indexes, $row, 'field_how_we_help_json'), 'field_how_we_help_json');
           $this->decodeJsonList($get($indexes, $row, 'field_process_steps_json'), 'field_process_steps_json');
           $this->decodeJsonList($get($indexes, $row, 'field_requirements_json'), 'field_requirements_json');
           $this->decodeResourcesJson($get($indexes, $row, 'field_resources_json'));
+          $this->decodeFaqJson($get($indexes, $row, 'field_faq_json'));
           $meta_raw = $get($indexes, $row, 'field_meta_tags_json');
           if ($meta_raw !== '') {
             $decoded = json_decode($meta_raw, TRUE);
@@ -277,9 +288,9 @@ final class PlatformImportCommands extends DrushCommands {
           'uid' => 1,
           'promote' => 0,
           'body' => [
-            'value' => $this->normalizeBodyHtml($body_raw),
-            'summary' => $this->normalizeBodyHtml($summary),
-            'format' => 'basic_html',
+            'value' => $this->applyPlatformInternalLinks($this->normalizeBodyHtml($body_raw), $row_lang),
+            'summary' => $this->applyPlatformInternalLinks($this->normalizeBodyHtml($summary), $row_lang),
+            'format' => 'full_html',
           ],
           'field_short_description' => $get($indexes, $row, 'field_short_description'),
           'field_subtitle' => $get($indexes, $row, 'field_subtitle'),
@@ -391,6 +402,16 @@ final class PlatformImportCommands extends DrushCommands {
             $encoded = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $values['field_meta_tags'] = [['value' => $encoded]];
           }
+        }
+
+        if ($faq_items['items'] !== []) {
+          $values['field_faq'] = array_map(function (array $item) use ($row_lang): array {
+            return [
+              'question' => $item['question'],
+              'answer' => $this->normalizeFaqAnswer($item['answer'], $row_lang),
+              'answer_format' => 'basic_html',
+            ];
+          }, $faq_items['items']);
         }
 
         $alias = $get($indexes, $row, 'path_alias');
@@ -808,6 +829,130 @@ final class PlatformImportCommands extends DrushCommands {
       ->range(0, 1)
       ->execute();
     return $tids ? (int) reset($tids) : NULL;
+  }
+
+  /**
+   * Resolves FAQ items from explicit JSON or by splitting the body HTML.
+   *
+   * @return array{body: string, items: list<array{question: string, answer: string}>}
+   */
+  private function resolveFaqItems(string $faq_json, string $body, string $langcode): array {
+    if ($faq_json !== '') {
+      $items = $this->decodeFaqJson($faq_json);
+      return [
+        'body' => $body,
+        'items' => $items,
+      ];
+    }
+
+    return motaded_custom_split_faq_from_article_body($body, $langcode);
+  }
+
+  /**
+   * @return list<array{question: string, answer: string}>
+   */
+  private function decodeFaqJson(string $json): array {
+    if ($json === '') {
+      return [];
+    }
+    $decoded = json_decode($json, TRUE);
+    if (!is_array($decoded)) {
+      throw new \InvalidArgumentException('Invalid JSON in field_faq_json');
+    }
+    $items = [];
+    foreach ($decoded as $item) {
+      if (!is_array($item)) {
+        continue;
+      }
+      $question = trim((string) ($item['question'] ?? $item['title'] ?? ''));
+      $answer = trim((string) ($item['answer'] ?? $item['text'] ?? $item['body'] ?? ''));
+      if ($question === '' || $answer === '') {
+        continue;
+      }
+      $items[] = [
+        'question' => $question,
+        'answer' => $answer,
+      ];
+    }
+    return $items;
+  }
+
+  /**
+   * Ensures FAQ answers render as HTML (not escaped plain text).
+   */
+  private function normalizeFaqAnswer(string $answer, string $langcode): string {
+    $answer = trim($answer);
+    if ($answer === '') {
+      return '';
+    }
+    if (!str_contains($answer, '<')) {
+      $answer = '<p>' . htmlspecialchars($answer, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+    }
+    return $this->applyPlatformInternalLinks($answer, $langcode);
+  }
+
+  /**
+   * Adds inline links to platform pages and official sites (Word inline-anchor spec).
+   */
+  private function applyPlatformInternalLinks(string $html, string $langcode): string {
+    if ($html === '') {
+      return '';
+    }
+    $is_ar = str_starts_with($langcode, 'ar');
+    $links = $is_ar ? [
+      'وزارة الاستثمار (MISA)' => '/platforms/misa',
+      'هيئة مدن' => '/platforms/modon',
+      'منصة قوى' => '/platforms/qiwa',
+      'صندوق التنمية الصناعية السعودي (SIDF)' => 'https://www.sidf.gov.sa',
+      'صندوق التنمية الصناعية' => 'https://www.sidf.gov.sa',
+      'منصة بلدي' => '/platforms/balady',
+      'بلدي' => '/platforms/balady',
+      'منصة سلامة' => '/platforms/salamah',
+      'سلامة' => '/platforms/salamah',
+      'المركز السعودي للأعمال' => '/platforms/saudi-business-center-meras',
+    ] : [
+      'Ministry of Investment (MISA)' => '/platforms/misa',
+      'Modon Authority' => '/platforms/modon',
+      'Qiwa Platform' => '/platforms/qiwa',
+      'Saudi Industrial Development Fund (SIDF)' => 'https://www.sidf.gov.sa',
+      'Saudi Industrial Development Fund' => 'https://www.sidf.gov.sa',
+      'Balady Platform' => '/platforms/balady',
+      'Balady' => '/platforms/balady',
+      'Salamah Platform' => '/platforms/salamah',
+      'Salamah' => '/platforms/salamah',
+      'Balady platform' => '/platforms/balady',
+      'Saudi Business Center' => '/platforms/saudi-business-center-meras',
+    ];
+    foreach ($links as $phrase => $uri) {
+      $html = $this->linkPhraseOnce($html, $phrase, $uri);
+    }
+    return $html;
+  }
+
+  /**
+   * Wraps the first occurrence of a phrase outside existing anchors.
+   */
+  private function linkPhraseOnce(string $html, string $phrase, string $uri): string {
+    if ($phrase === '' || !str_contains($html, $phrase)) {
+      return $html;
+    }
+    $parts = preg_split('/(<a\b[^>]*>.*?<\/a>)/is', $html, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [$html];
+    $linked = FALSE;
+    foreach ($parts as &$part) {
+      if ($linked || preg_match('/^<a\b/i', $part)) {
+        continue;
+      }
+      $pos = strpos($part, $phrase);
+      if ($pos === FALSE) {
+        continue;
+      }
+      $replacement = '<a href="' . htmlspecialchars($uri, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">'
+        . $phrase . '</a>';
+      $part = substr_replace($part, $replacement, $pos, strlen($phrase));
+      $linked = TRUE;
+    }
+    unset($part);
+    return implode('', $parts);
   }
 
 }

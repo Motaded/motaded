@@ -1,0 +1,8 @@
+uuid: 90bdad12-5339-42b0-8b2e-f6a82d30d2ce
+langcode: en
+status: true
+dependencies: {  }
+id: https_motaded_com_sa_zh_hans_node_105
+label: 'https://motaded.com.sa/zh-hans/node/105'
+url: 'https://motaded.com.sa/zh-hans/node/105'
+status_code: '410'
