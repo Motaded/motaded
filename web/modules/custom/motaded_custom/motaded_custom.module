@@ -4,6 +4,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1412,6 +1413,16 @@ function motaded_custom_sync_all_event_statuses(): int {
     }
   }
   return $updated;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ *
+ * SVG logos in media.image must not use responsive_image (no raster width).
+ */
+function motaded_custom_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  require_once __DIR__ . '/includes/motaded_custom.media_svg.inc';
+  motaded_custom_media_svg_entity_view_alter($build, $entity, $display);
 }
 
 /**
