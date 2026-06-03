@@ -965,6 +965,13 @@
   object-fit: cover;
 }
 
+.node--article-full .article-hero-media img.media-image--svg {
+  object-fit: contain;
+  max-height: 10rem;
+  padding: 0.75rem;
+  background: #fff;
+}
+
 @media (min-width: 1024px) {
   .node--article-full .article-page-grid__rail {
     gap: 1rem;

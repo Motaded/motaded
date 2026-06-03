@@ -39,6 +39,10 @@ final class FilterDefaultResponsiveImageStyle extends FilterBase {
       if (strtolower($node->nodeName) !== 'img') {
         continue;
       }
+      $src = $node->getAttribute('src');
+      if ($src !== '' && preg_match('/\.svg(\?|$)/i', $src)) {
+        continue;
+      }
       $node->setAttribute('data-responsive-image-style', $default_style);
     }
 
