@@ -65,6 +65,9 @@
  *
  */
 #}
+{% set has_body = node.hasField('body') and not node.get('body').isEmpty() %}
+{% set has_paragraphs = content.field_paragraphs['#items'] is defined and content.field_paragraphs['#items'] is not empty %}
+{% set has_form = node.hasField('field_form') and not node.get('field_form').isEmpty() %}
 {%
   set classes = [
     'node',
@@ -74,13 +77,28 @@
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
     'body-bg-white',
+    has_form and not has_paragraphs ? 'node--page-basic',
   ]
 %}
+{% if has_form and not has_paragraphs %}
+  {% set classes = classes|merge(['landing-page--form']) %}
+{% endif %}
 {{ attach_library('motaded_theme/node') }}
 <article{{ attributes.addClass(classes) }}>
-  {% set has_body = node.hasField('body') and not node.get('body').isEmpty() %}
-  {% set has_paragraphs = content.field_paragraphs['#items'] is defined and content.field_paragraphs['#items'] is not empty %}
-  {% if has_body and not has_paragraphs %}
+  {% if has_form and not has_paragraphs %}
+    <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+      {{ title_prefix }}
+      {% if page and label %}
+        <header class="page-basic-hero mx-auto w-full max-w-[52rem] pt-8 text-center sm:pt-12">
+          <h1{{ title_attributes.addClass('page-basic-hero__title', 'm-0', 'font-extrabold', 'text-gray-900') }}>{{ label }}</h1>
+        </header>
+      {% endif %}
+      {{ title_suffix }}
+      <div{{ content_attributes.addClass('page-basic-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none', 'mx-auto', 'mt-10', 'w-full', 'max-w-[52rem]', 'text-left', 'sm:mt-12', 'landing-page__form') }}>
+        {{ content|without('field_paragraphs', 'addtoany', 'body') }}
+      </div>
+    </div>
+  {% elseif has_body and not has_paragraphs %}
     <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
       {{ title_prefix }}
       {% if page and label %}

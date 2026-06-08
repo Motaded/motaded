@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.landing_page.body
+    - field.field.node.landing_page.field_form
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
     - node.type.landing_page
@@ -12,6 +13,7 @@ dependencies:
     - metatag
     - text
     - user
+    - webform
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page
@@ -23,6 +25,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_form:
+    type: webform_entity_reference_entity_view
+    label: hidden
+    settings:
+      source_entity: true
+      lazy: false
+    third_party_settings: {  }
+    weight: 10
     region: content
   field_meta:
     type: metatag_empty_formatter
