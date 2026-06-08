@@ -1566,7 +1566,6 @@
 /* --- Basic page (Display on services = off): band + large title + centered column (Motaded / news-adjacent) --- */
 .node--page-basic {
   margin-bottom: 3rem;
-  border-bottom: 1px solid rgb(226 232 240 / 0.95);
   background: linear-gradient(
     185deg,
     rgb(255 251 235 / 0.55) 0%,
@@ -1605,6 +1604,21 @@
   overflow-x: clip;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+/* Career / form-only landing pages: breathing room on narrow viewports */
+.node--type-landing-page.node--page-basic .page-basic-body.landing-page__form {
+  padding-inline: clamp(1.25rem, 5vw, 2.75rem);
+}
+
+.node--type-landing-page.node--page-basic .field--name-field-form.field--type-webform.field__item {
+  padding: 10px;
+}
+
+@media (min-width: 640px) {
+  .node--type-landing-page.node--page-basic .page-basic-body.landing-page__form {
+    padding-inline: clamp(2rem, 6vw, 3.5rem);
+  }
 }
 
 .node--page-basic .page-basic-body :where(img, video, iframe) {

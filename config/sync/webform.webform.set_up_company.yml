@@ -67,6 +67,8 @@ elements: |-
     '#placeholder': Email
     '#required': true
     '#required_error': 'The email field is required'
+    '#pattern': '^[a-zA-Z0-9._%+-]+@(?!.*(example\.com|gmail\.com|yahoo\.com|rambler\.ru|mail\.ru|outlook\.com|hotmail\.com|aol\.com|protonmail\.com|icloud\.com|mail2world\.com|tutanota\.com|juno\.com|atmail\.com|fastmail\.com|gmxmail\.com|hushmail\.com|lycos\.com|mail\.com|yandex\.com|2mailcache\.com|3way3\.com|bk\.ru|1mailcache\.com|web\.de|bizopphand\.info|unlockrevenue\.info))([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$'
+    '#pattern_error': 'Please enter your official email address. If you don''t have one, <a href="/contact-us">click here</a>'
   website:
     '#type': textfield
     '#title': Website
