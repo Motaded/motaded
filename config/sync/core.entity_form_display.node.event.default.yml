@@ -29,6 +29,7 @@ dependencies:
     - field.field.node.event.field_organizer
     - field.field.node.event.field_partner_logos
     - field.field.node.event.field_price_range
+    - field.field.node.event.field_event_price
     - field.field.node.event.field_region
     - field.field.node.event.field_secondary_cta
     - field.field.node.event.field_sector_pages
@@ -271,10 +272,17 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_price_range:
-    type: options_select
+    type: options_buttons
     weight: 19
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_event_price:
+    type: number
+    weight: 20
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_region:
     type: entity_reference_autocomplete

@@ -53,4 +53,7 @@ function motaded_custom_event_metatags_alter(array &$metatags, NodeInterface $no
 
   $metatags['schema_event_event_attendance_mode'] = motaded_custom_event_attendance_mode_url($node);
   $metatags['schema_event_event_status'] = 'https://schema.org/EventScheduled';
+
+  require_once __DIR__ . '/motaded_custom.event_price.inc';
+  motaded_custom_event_price_metatags_alter($metatags, $node);
 }

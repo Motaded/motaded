@@ -205,8 +205,10 @@ function motaded_custom_page_attachments_alter(array &$attachments) {
 
   require_once __DIR__ . '/includes/motaded_custom.platform_metatag.inc';
   require_once __DIR__ . '/includes/motaded_custom.sector_page_metatag.inc';
+  require_once __DIR__ . '/includes/motaded_custom.event_price.inc';
   motaded_custom_platform_page_jsonld_alter($html_head);
   motaded_custom_sector_page_page_jsonld_alter($html_head);
+  motaded_custom_event_page_jsonld_alter($html_head);
 
   // If no @graph script exists (e.g. taxonomy, search), add standalone BreadcrumbList.
   if (!empty($breadcrumb_list) && !$breadcrumb_added) {
@@ -856,6 +858,11 @@ function motaded_custom_metatags_alter(array &$metatags, array &$context) {
  * Implements hook_form_alter().
  */
 function motaded_custom_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  if (($form['#entity_type'] ?? '') === 'node' && ($form['#bundle'] ?? '') === 'event') {
+    require_once __DIR__ . '/includes/motaded_custom.event_price.inc';
+    motaded_custom_event_price_form_alter($form, $form_state);
+  }
+
   $settings = \Drupal::config('motaded_custom.tasheer_visa');
   $targetWebform = (string) ($settings->get('webform_id') ?: 'tasheer_visa_appointment');
   if (($form['#webform_id'] ?? '') !== $targetWebform) {
@@ -1441,6 +1448,8 @@ function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
   if ($status !== NULL) {
     $entity->set('field_event_status', $status);
   }
+  require_once __DIR__ . '/includes/motaded_custom.event_price.inc';
+  motaded_custom_event_price_presave($entity);
 }
 
 /**

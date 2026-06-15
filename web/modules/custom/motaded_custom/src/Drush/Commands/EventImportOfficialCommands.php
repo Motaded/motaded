@@ -285,6 +285,10 @@ final class EventImportOfficialCommands extends DrushCommands {
         if ($price !== '') {
           $node->set('field_price_range', $price);
         }
+        $price_amount = trim((string) ($row['field_event_price'] ?? ''));
+        if ($price_amount !== '' && is_numeric($price_amount)) {
+          $node->set('field_event_price', $price_amount);
+        }
         $attendance = $this->normalizeAttendanceType((string) ($row['field_attendance_type'] ?? ''));
         if ($attendance !== '') {
           $node->set('field_attendance_type', $attendance);
