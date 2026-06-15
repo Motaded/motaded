@@ -2660,6 +2660,7 @@ function motaded_theme_preprocess_node(&$variables) {
       'field_event_format',
       'field_event_status',
       'field_price_range',
+      'field_event_price',
       'field_attendance_type',
       'field_official_website',
       'field_organizer',
@@ -3067,6 +3068,11 @@ function _motaded_theme_preprocess_event_node_full(array &$variables, NodeInterf
   }
   $add_fact($variables['event_facts'], (string) t('Event format'), $list_label($node, 'field_event_format'));
   $add_fact($variables['event_facts'], (string) t('Price range'), $list_label($node, 'field_price_range'));
+  if (\Drupal::moduleHandler()->moduleExists('motaded_custom')) {
+    require_once \Drupal::service('extension.list.module')->getPath('motaded_custom')
+      . '/includes/motaded_custom.event_price.inc';
+    $add_fact($variables['event_facts'], (string) t('Price'), motaded_custom_event_price_display($node));
+  }
   $add_fact($variables['event_facts'], (string) t('Attendance type'), $list_label($node, 'field_attendance_type'));
   $add_fact($variables['event_facts'], (string) t('Event status'), $list_label($node, 'field_event_status'));
   if ($node->hasField('field_official_website') && !$node->get('field_official_website')->isEmpty()) {

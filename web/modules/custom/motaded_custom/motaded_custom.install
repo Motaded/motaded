@@ -1009,3 +1009,201 @@ function motaded_custom_update_10041(): void {
   }
 }
 
+/**
+ * Event ticket price field + schema offers; migrate invite_only to paid.
+ */
+function motaded_custom_update_10042(): void {
+  $database = \Drupal::database();
+  foreach (['node__field_price_range', 'node_revision__field_price_range'] as $table) {
+    if ($database->schema()->tableExists($table)) {
+      $database->update($table)
+        ->fields(['field_price_range_value' => 'paid'])
+        ->condition('field_price_range_value', 'invite_only')
+        ->execute();
+    }
+  }
+
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  foreach ([
+    'field.storage.node.field_event_price',
+    'field.field.node.event.field_event_price',
+    'field.storage.node.field_price_range',
+    'field.field.node.event.field_price_range',
+    'core.entity_form_display.node.event.default',
+    'core.entity_view_display.node.event.default',
+  ] as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      \Drupal::service('config.storage')->write($name, $data);
+    }
+  }
+
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_manager->clearCachedFieldDefinitions();
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->execute();
+  if ($nids === []) {
+    return;
+  }
+
+  require_once \Drupal::service('extension.list.module')->getPath('motaded_custom')
+    . '/includes/motaded_custom.event_price.inc';
+
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if (!$node instanceof \Drupal\node\NodeInterface) {
+      continue;
+    }
+    $changed = FALSE;
+    if ($node->hasField('field_price_range') && !$node->get('field_price_range')->isEmpty()) {
+      $type = (string) $node->get('field_price_range')->value;
+      if ($type === 'invite_only') {
+        $node->set('field_price_range', 'paid');
+        $changed = TRUE;
+      }
+    }
+    if ($node->hasField('field_event_price')) {
+      $before = $node->get('field_event_price')->isEmpty() ? NULL : $node->get('field_event_price')->value;
+      motaded_custom_event_price_presave($node);
+      $after = $node->get('field_event_price')->isEmpty() ? NULL : $node->get('field_event_price')->value;
+      if ($before !== $after) {
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $node->save();
+    }
+  }
+}
+
+/**
+ * Restore Invite only price type and require Price type on events.
+ */
+function motaded_custom_update_10043(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  foreach ([
+    'field.storage.node.field_price_range',
+    'field.field.node.event.field_price_range',
+  ] as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      \Drupal::service('config.storage')->write($name, $data);
+    }
+  }
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+}
+
+/**
+ * Restore invite_only for events that were migrated to paid in 10042.
+ */
+function motaded_custom_update_10044(): void {
+  require_once \Drupal::service('extension.list.module')->getPath('motaded_custom')
+    . '/includes/motaded_custom.event_price.inc';
+
+  $invite_only_urls = [
+    'https://fii-institute.org/',
+    'https://www.worlddefenseshow.com/',
+  ];
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->condition('field_price_range', 'paid')
+    ->execute();
+  if ($nids === []) {
+    return;
+  }
+
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if (!$node instanceof \Drupal\node\NodeInterface) {
+      continue;
+    }
+    if (!motaded_custom_event_price_type_is_paid($node)) {
+      continue;
+    }
+
+    $url = '';
+    if ($node->hasField('field_official_website') && !$node->get('field_official_website')->isEmpty()) {
+      $url = (string) $node->get('field_official_website')->uri;
+    }
+    elseif ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+      $url = (string) $node->get('field_cta_link')->uri;
+    }
+    if (!in_array($url, $invite_only_urls, TRUE)) {
+      continue;
+    }
+
+    foreach ($node->getTranslationLanguages() as $langcode => $_language) {
+      $translation = $node->hasTranslation($langcode)
+        ? $node->getTranslation($langcode)
+        : $node;
+      $translation->set('field_price_range', 'invite_only');
+      motaded_custom_event_price_presave($translation);
+      $translation->save();
+    }
+  }
+}
+
+/**
+ * Ensure invite_only is set on all translations (10044 follow-up).
+ */
+function motaded_custom_update_10045(): void {
+  require_once \Drupal::service('extension.list.module')->getPath('motaded_custom')
+    . '/includes/motaded_custom.event_price.inc';
+
+  $invite_only_urls = [
+    'https://fii-institute.org/',
+    'https://www.worlddefenseshow.com/',
+  ];
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'event')
+    ->condition('field_price_range', ['paid', 'invite_only'], 'IN')
+    ->execute();
+  if ($nids === []) {
+    return;
+  }
+
+  foreach ($storage->loadMultiple($nids) as $node) {
+    if (!$node instanceof \Drupal\node\NodeInterface) {
+      continue;
+    }
+
+    $url = '';
+    if ($node->hasField('field_official_website') && !$node->get('field_official_website')->isEmpty()) {
+      $url = (string) $node->get('field_official_website')->uri;
+    }
+    elseif ($node->hasField('field_cta_link') && !$node->get('field_cta_link')->isEmpty()) {
+      $url = (string) $node->get('field_cta_link')->uri;
+    }
+    if (!in_array($url, $invite_only_urls, TRUE)) {
+      continue;
+    }
+
+    foreach ($node->getTranslationLanguages() as $langcode => $_language) {
+      $translation = $node->getTranslation($langcode);
+      if (motaded_custom_event_price_type($translation) === 'invite_only') {
+        continue;
+      }
+      $translation->set('field_price_range', 'invite_only');
+      motaded_custom_event_price_presave($translation);
+      $translation->save();
+    }
+  }
+}
+

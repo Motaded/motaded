@@ -39,4 +39,4 @@ settings:
   confirmation_message: '<p>شكراً لك. سنرسل تقديرك المفصل قريباً.</p>'
 handlers:
   email:
-    label: Email
+    label: 'البريد الإلكتروني'

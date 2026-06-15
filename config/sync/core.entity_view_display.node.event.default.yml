@@ -29,6 +29,7 @@ dependencies:
     - field.field.node.event.field_organizer
     - field.field.node.event.field_partner_logos
     - field.field.node.event.field_price_range
+    - field.field.node.event.field_event_price
     - field.field.node.event.field_region
     - field.field.node.event.field_sector_pages
     - field.field.node.event.field_secondary_cta
@@ -268,6 +269,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 9
+    region: content
+  field_event_price:
+    type: number_decimal
+    label: inline
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 0
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 10
     region: content
   field_region:
     type: entity_reference_label

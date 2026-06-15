@@ -100,7 +100,7 @@ return [
     'field_region' => 'Riyadh Region',
     'field_location' => 'King Abdulaziz International Conference Center, Riyadh',
     'field_event_format' => 'in_person',
-    'field_price_range' => 'invite_only',
+      'field_price_range' => 'invite_only',
     'field_attendance_type' => 'public',
     'field_featured' => '1',
     'field_meeting_enabled' => '1',

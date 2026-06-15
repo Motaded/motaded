@@ -1,0 +1,25 @@
+uuid: 5f9b2d3e-0a4c-4b8f-c7e2-3d608f0a1b2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_price
+    - node.type.event
+  module:
+    - field
+id: node.event.field_event_price
+field_name: field_event_price
+entity_type: node
+bundle: event
+label: Price
+description: 'Ticket price in SAR. Required when Price type is Paid.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0.0
+  max: null
+  prefix: ''
+  suffix: ' SAR'
+field_type: decimal
