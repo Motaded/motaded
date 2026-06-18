@@ -77,10 +77,10 @@
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
     'body-bg-white',
-    has_form and not has_paragraphs ? 'node--page-basic',
+    has_form ? 'node--page-basic',
   ]
 %}
-{% if has_form and not has_paragraphs %}
+{% if has_form %}
   {% set classes = classes|merge(['landing-page--form']) %}
 {% endif %}
 {{ attach_library('motaded_theme/node') }}
@@ -120,7 +120,21 @@
     {% endif %}
     {{ title_suffix }}
     <div{{ content_attributes.addClass('node__content') }}>
-      {{ content|without('addtoany') }}
+      {{ content|without('addtoany', 'field_form', 'body') }}
     </div>
+    {% if has_body %}
+      <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+        <div class="page-basic-body mx-auto mt-10 w-full max-w-[52rem] text-left prose prose-neutral max-w-none sm:mt-12">
+          {{ content.body }}
+        </div>
+      </div>
+    {% endif %}
+    {% if has_form %}
+      <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+        <div class="page-basic-body landing-page__form mx-auto mt-10 w-full max-w-[52rem] text-left sm:mt-12">
+          {{ content.field_form }}
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
 </article>

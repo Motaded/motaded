@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.sector_page.field_sector_kpis
     - field.field.node.sector_page.field_sector_stats
     - field.field.node.sector_page.field_short_description
+    - field.field.node.sector_page.field_faq
     - node.type.sector_page
   module:
     - user
@@ -23,6 +24,7 @@ bundle: sector_page
 mode: sector_directory_card
 content: {  }
 hidden:
+  field_faq: true
   addtoany: true
   body: true
   field_media: true

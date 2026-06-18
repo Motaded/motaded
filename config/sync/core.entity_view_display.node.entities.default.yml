@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.entities.field_partnership
     - field.field.node.entities.field_project_phases
     - field.field.node.entities.field_segment
+    - field.field.node.entities.field_faq
     - node.type.entities
   module:
     - text
@@ -63,4 +64,5 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   langcode: true

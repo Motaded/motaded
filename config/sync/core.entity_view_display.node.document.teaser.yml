@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.document.field_taxonomy
     - field.field.node.document.field_source_link
     - field.field.node.document.field_year
+    - field.field.node.document.field_faq
     - node.type.document
   module:
     - media
@@ -56,6 +57,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_country: true
   field_document: true

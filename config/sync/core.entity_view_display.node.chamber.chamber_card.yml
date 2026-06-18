@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.chamber.field_logo
     - field.field.node.chamber.field_short_description
     - field.field.node.chamber.field_type
+    - field.field.node.chamber.field_faq
     - node.type.chamber
   module:
     - user
@@ -36,6 +37,7 @@ content:
     weight: 1
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   body: true
   field_chamber_featured_stats: true

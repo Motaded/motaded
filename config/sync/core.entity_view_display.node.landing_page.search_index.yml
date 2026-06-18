@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.landing_page.body
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
+    - field.field.node.landing_page.field_faq
     - node.type.landing_page
   module:
     - entity_reference_revisions
@@ -39,6 +40,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   body: true
   langcode: true

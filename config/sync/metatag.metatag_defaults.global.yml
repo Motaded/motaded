@@ -1,17 +1,62 @@
 uuid: f8336700-fe1a-46f5-94b8-bda68b7d2e21
 langcode: en
 status: true
-dependencies:
-  module:
-    - metatag_open_graph
-    - metatag_twitter_cards
+dependencies: {  }
 _core:
   default_config_hash: sL588ui1E_8-2c_UupwyYxcqX2OVyMFp3HTLbbFqvPc
 id: global
 label: Global
 tags:
+  author: Motaded
   canonical_url: '[current-page:url]'
-  title: '[current-page:title] | [site:name]'
-  robots: 'index, follow'
+  geo_placename: Riyadh
+  geo_position: '24.7136; 46.6753'
+  geo_region: SA-01
+  'hreflang_per_language:hreflang_ar': '[node:url:absolute]'
+  'hreflang_per_language:hreflang_en': '[node:url:absolute]'
+  hreflang_xdefault: '[node:url:absolute]'
+  icbm: '24.7136, 46.6753'
+  og_country_name: 'Saudi Arabia'
+  og_email: info@motaded.com.sa
+  og_image: 'https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png'
+  og_image_alt: 'Motaded Consultancy - Business Setup in Saudi Arabia'
+  og_image_height: '630'
+  og_image_secure_url: 'https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png'
+  og_image_type: image/png
+  og_image_width: '1200'
+  og_locale: en_US
+  og_locale_alternative: ar_SA
+  og_locality: Riyadh
+  og_phone_number: '+966539797197'
+  og_postal_code: '13321'
+  og_region: 'Riyadh Region'
   og_site_name: '[site:name]'
   og_type: website
+  rights: '©2026 Motaded Consultancy. All rights reserved.'
+  robots: 'index, follow, max-snippet:-1'
+  schema_organization_id: Motaded
+  schema_organization_logo: 'a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:68:"https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png";s:5:"width";s:3:"600";s:6:"height";s:2:"60";}'
+  schema_organization_price_range: $$
+  schema_organization_same_as: 'https://x.com/MotadedConsult, https://www.linkedin.com/company/motaded-consultancy/?viewAsMember=true'
+  schema_organization_type: Organization
+  schema_organization_url: 'https://motaded.com.sa'
+  schema_place_address: 'a:6:{s:5:"@type";s:13:"PostalAddress";s:13:"streetAddress";s:48:"Address: King Fahd Road, Al Sahafa, Riyadh 13244";s:15:"addressLocality";s:6:"Riyadh";s:13:"addressRegion";s:13:"Riyadh Region";s:10:"postalCode";s:5:"13321";s:14:"addressCountry";s:2:"SA";}'
+  schema_place_description: 'Business setup and management consultancy in Riyadh, Saudi Arabia'
+  schema_place_geo: 'a:3:{s:5:"@type";s:14:"GeoCoordinates";s:8:"latitude";s:7:"24.7136";s:9:"longitude";s:7:"46.6753";}'
+  schema_place_image: 'a:4:{s:5:"@type";s:11:"ImageObject";s:3:"url";s:68:"https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png";s:5:"width";s:3:"600";s:6:"height";s:2:"60";}'
+  schema_place_name: Motaded
+  schema_place_telephone: '+966539797197'
+  schema_place_type: Place
+  schema_place_url: 'https://motaded.com.sa'
+  schema_web_page_author: 'a:6:{s:5:"@type";s:19:"ProfessionalService";s:3:"@id";s:22:"https://motaded.com.sa";s:4:"name";s:7:"Motaded";s:3:"url";s:22:"https://motaded.com.sa";s:6:"sameAs";s:101:"https://x.com/MotadedConsult, https://www.linkedin.com/company/motaded-consultancy/?viewAsMember=true";s:4:"logo";a:5:{s:5:"@type";s:11:"ImageObject";s:20:"representativeOfPage";s:4:"True";s:3:"url";s:68:"https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png";s:5:"width";s:3:"600";s:6:"height";s:2:"60";}}'
+  schema_web_page_breadcrumb: 'Yes'
+  schema_web_page_description: '[node:summary]'
+  schema_web_page_id: '[node:url:absolute]'
+  schema_web_page_publisher: 'a:6:{s:5:"@type";s:19:"ProfessionalService";s:3:"@id";s:22:"https://motaded.com.sa";s:4:"name";s:7:"Motaded";s:3:"url";s:22:"https://motaded.com.sa";s:6:"sameAs";s:101:"https://x.com/MotadedConsult, https://www.linkedin.com/company/motaded-consultancy/?viewAsMember=true";s:4:"logo";a:4:{s:5:"@type";s:11:"ImageObject";s:3:"url";s:68:"https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png";s:5:"width";s:3:"600";s:6:"height";s:2:"60";}}'
+  schema_web_page_speakable: 'a:3:{s:5:"@type";s:22:"SpeakableSpecification";s:5:"xpath";s:54:"/html/head/title, /html/head/meta[@name=''description'']";s:11:"cssSelector";s:25:"#title, .field--name-body";}'
+  schema_web_page_type: WebPage
+  title: '[current-page:title] | [site:name]'
+  twitter_cards_image: 'https://motaded.com.sa/sites/default/files/2025-12/PNG%20Motaded.png'
+  twitter_cards_image_alt: 'Motaded - Business Setup in Saudi Arabia'
+  twitter_cards_site: '@MotadedConsult'
+  twitter_cards_type: summary_large_image

@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.sector_page.field_sector_kpis
     - field.field.node.sector_page.field_sector_stats
     - field.field.node.sector_page.field_short_description
+    - field.field.node.sector_page.field_faq
     - node.type.sector_page
   module:
     - text
@@ -72,6 +73,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_media: true
   field_meta_tags: true

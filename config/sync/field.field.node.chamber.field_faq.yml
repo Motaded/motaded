@@ -1,0 +1,22 @@
+uuid: a6ecce36-533a-417a-b160-8783cbf848ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_faq
+    - node.type.chamber
+  module:
+    - faqfield
+id: node.chamber.field_faq
+field_name: field_faq
+entity_type: node
+bundle: chamber
+label: 'Frequently Asked Questions'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  default_format: plain_text
+field_type: faqfield

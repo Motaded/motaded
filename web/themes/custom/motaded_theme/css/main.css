@@ -447,6 +447,19 @@ html[lang="es"] #site-header .menu-item ul a p {
     }
   }
 
+  .form-type-checkbox,
+  .js-form-type-checkbox {
+    @apply flex flex-row items-start gap-3;
+
+    label.option {
+      @apply w-auto flex-1 min-w-0;
+    }
+
+    input[type="checkbox"] {
+      @apply shrink-0 mt-0.5;
+    }
+  }
+
   /* Hide default appearance and set base styles for custom design */
   input[type="radio"] {
     appearance: none;

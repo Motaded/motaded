@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.pricing.body
     - field.field.node.pricing.field_meta
     - field.field.node.pricing.field_pricing
+    - field.field.node.pricing.field_faq
     - node.type.pricing
   module:
     - text
@@ -30,6 +31,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   field_meta: true
   field_pricing: true
   langcode: true

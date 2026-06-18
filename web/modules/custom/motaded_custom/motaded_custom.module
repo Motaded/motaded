@@ -815,9 +815,24 @@ function _motaded_custom_get_accessible_translation_langcodes(): ?array {
 }
 
 /**
+ * Applies FAQPage schema metatags from field_faq (or page accordion fallback).
+ */
+function _motaded_custom_metatags_alter_faq(array &$metatags, NodeInterface $entity): void {
+  $faq = _motaded_custom_extract_faq_from_node($entity);
+  if ($faq !== []) {
+    $metatags['schema_qa_page_type'] = 'FAQPage';
+    $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
+    return;
+  }
+
+  // Page defaults always include FAQPage; strip when there is no FAQ data.
+  if ($entity->bundle() === 'page') {
+    unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
+  }
+}
+
+/**
  * Implements hook_metatags_alter().
- *
- * Inject FAQ schema (from accordions) for page nodes via schema_qa_page.
  */
 function motaded_custom_metatags_alter(array &$metatags, array &$context) {
   $entity = $context['entity'] ?? NULL;
@@ -825,15 +840,8 @@ function motaded_custom_metatags_alter(array &$metatags, array &$context) {
     return;
   }
 
-  if ($entity->bundle() === 'page') {
-    $faq = _motaded_custom_extract_faq_from_node($entity);
-    if (!empty($faq)) {
-      $metatags['schema_qa_page_main_entity'] = \Drupal\schema_metatag\SchemaMetatagManager::serialize($faq);
-    }
-    else {
-      unset($metatags['schema_qa_page_type'], $metatags['schema_qa_page_main_entity'], $metatags['schema_qa_page_id']);
-    }
-    return;
+  if ($entity->hasField('field_faq') || $entity->bundle() === 'page') {
+    _motaded_custom_metatags_alter_faq($metatags, $entity);
   }
 
   if ($entity->bundle() === 'platform') {

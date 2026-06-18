@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.event.field_what_we_offer
     - field.field.node.event.field_who_should_attend
     - field.field.node.event.field_why_attend
+    - field.field.node.event.field_faq
     - node.type.event
   module:
     - datetime
@@ -350,6 +351,7 @@ content:
     weight: 23
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_category: true
   langcode: true
