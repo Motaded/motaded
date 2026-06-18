@@ -1606,19 +1606,8 @@
   word-break: break-word;
 }
 
-/* Career / form-only landing pages: breathing room on narrow viewports */
-.node--type-landing-page.node--page-basic .page-basic-body.landing-page__form {
-  padding-inline: clamp(1.25rem, 5vw, 2.75rem);
-}
-
 .node--type-landing-page.node--page-basic .field--name-field-form.field--type-webform.field__item {
   padding: 10px;
-}
-
-@media (min-width: 640px) {
-  .node--type-landing-page.node--page-basic .page-basic-body.landing-page__form {
-    padding-inline: clamp(2rem, 6vw, 3.5rem);
-  }
 }
 
 .node--page-basic .page-basic-body :where(img, video, iframe) {

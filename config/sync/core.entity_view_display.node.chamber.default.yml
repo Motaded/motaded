@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.chamber.field_relationship_focus
     - field.field.node.chamber.field_short_description
     - field.field.node.chamber.field_type
+    - field.field.node.chamber.field_faq
     - node.type.chamber
   module:
     - link
@@ -87,6 +88,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_chamber_featured_stats: true
   field_featured: true

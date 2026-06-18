@@ -1,0 +1,22 @@
+uuid: 478cf8c4-160c-42ee-971e-74c47c746a88
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_faq
+    - node.type.landing_page
+  module:
+    - faqfield
+id: node.landing_page.field_faq
+field_name: field_faq
+entity_type: node
+bundle: landing_page
+label: 'Frequently Asked Questions'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  default_format: plain_text
+field_type: faqfield

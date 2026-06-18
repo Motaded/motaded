@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.partner.field_optional_category
     - field.field.node.partner.field_optional_link
     - field.field.node.partner.field_partner_name
+    - field.field.node.partner.field_faq
     - node.type.partner
   module:
     - link
@@ -77,6 +78,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   langcode: true
   search_api_excerpt: true

@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.chamber.field_relationship_focus
     - field.field.node.chamber.field_short_description
     - field.field.node.chamber.field_type
+    - field.field.node.chamber.field_faq
     - node.type.chamber
   module:
     - link
@@ -21,6 +22,7 @@ dependencies:
     - metatag
     - path
     - text
+    - faqfield
 id: node.chamber.default
 targetEntityType: node
 bundle: chamber
@@ -172,6 +174,22 @@ content:
     weight: 50
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_faq:
+    type: faqfield_default
+    weight: 30
+    region: content
+    settings:
+      answer_widget: text_format
+      question_title: Question
+      answer_title: Answer
+      question_field_required: false
+      answer_field_required: false
+      advanced:
+        question_length: 255
+        question_size: 100
+        question_rows: 0
+        answer_rows: 3
     third_party_settings: {  }
 hidden:
   promote: true

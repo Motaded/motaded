@@ -39,6 +39,7 @@ dependencies:
     - field.field.node.page.field_taxonomy
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
+    - field.field.node.page.field_faq
     - node.type.page
   module:
     - entity_reference_revisions
@@ -293,6 +294,7 @@ content:
     weight: 4
     region: content
 hidden:
+  field_faq: true
   field_comments: true
   field_default_page: true
   field_display_on_services: true

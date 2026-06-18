@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.news.field_source_scope
     - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
+    - field.field.node.news.field_faq
     - node.type.news
   module:
     - text
@@ -46,6 +47,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_applies_to: true
   field_comments: true

@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.document.field_taxonomy
     - field.field.node.document.field_source_link
     - field.field.node.document.field_year
+    - field.field.node.document.field_faq
     - node.type.document
   module:
     - link
@@ -126,6 +127,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_featured: true
   field_meta_tags: true

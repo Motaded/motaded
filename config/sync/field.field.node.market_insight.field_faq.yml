@@ -1,0 +1,22 @@
+uuid: 116025df-f3ba-490f-bad6-273fb5876263
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_faq
+    - node.type.market_insight
+  module:
+    - faqfield
+id: node.market_insight.field_faq
+field_name: field_faq
+entity_type: node
+bundle: market_insight
+label: 'Frequently Asked Questions'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  default_format: plain_text
+field_type: faqfield

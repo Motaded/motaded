@@ -37,6 +37,7 @@ dependencies:
     - field.field.node.event.field_what_we_offer
     - field.field.node.event.field_who_should_attend
     - field.field.node.event.field_why_attend
+    - field.field.node.event.field_faq
     - node.type.event
   module:
     - datetime
@@ -46,6 +47,7 @@ dependencies:
     - paragraphs
     - path
     - text
+    - faqfield
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -173,6 +175,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_event_price:
+    type: number
+    weight: 20
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_event_start:
     type: datetime_default
     weight: 2
@@ -194,6 +203,22 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_faq:
+    type: faqfield_default
+    weight: 30
+    region: content
+    settings:
+      answer_widget: text_format
+      question_title: Question
+      answer_title: Answer
+      question_field_required: false
+      answer_field_required: false
+      advanced:
+        question_length: 255
+        question_size: 100
+        question_rows: 0
+        answer_rows: 3
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
@@ -276,13 +301,6 @@ content:
     weight: 19
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_event_price:
-    type: number
-    weight: 20
-    region: content
-    settings:
-      placeholder: ''
     third_party_settings: {  }
   field_region:
     type: entity_reference_autocomplete

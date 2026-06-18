@@ -22,6 +22,7 @@ dependencies:
     - field.field.node.market_insight.field_stat_suffix
     - field.field.node.market_insight.field_stat_value
     - field.field.node.market_insight.field_year
+    - field.field.node.market_insight.field_faq
     - node.type.market_insight
   module:
     - link
@@ -30,6 +31,7 @@ dependencies:
     - options
     - path
     - text
+    - faqfield
 id: node.market_insight.default
 targetEntityType: node
 bundle: market_insight
@@ -60,6 +62,22 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_faq:
+    type: faqfield_default
+    weight: 30
+    region: content
+    settings:
+      answer_widget: text_format
+      question_title: Question
+      answer_title: Answer
+      question_field_required: false
+      answer_field_required: false
+      advanced:
+        question_length: 255
+        question_size: 100
+        question_rows: 0
+        answer_rows: 3
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox

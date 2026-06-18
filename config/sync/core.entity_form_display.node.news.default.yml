@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.news.field_source_scope
     - field.field.node.news.field_taxonomy
     - field.field.node.news.field_tags
+    - field.field.node.news.field_faq
     - node.type.news
   module:
     - comment
@@ -22,6 +23,7 @@ dependencies:
     - metatag
     - path
     - text
+    - faqfield
 id: node.news.default
 targetEntityType: node
 bundle: news
@@ -62,6 +64,22 @@ content:
     weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_faq:
+    type: faqfield_default
+    weight: 30
+    region: content
+    settings:
+      answer_widget: text_format
+      question_title: Question
+      answer_title: Answer
+      question_field_required: false
+      answer_field_required: false
+      advanced:
+        question_length: 255
+        question_size: 100
+        question_rows: 0
+        answer_rows: 3
     third_party_settings: {  }
   field_media:
     type: media_library_widget

@@ -40,6 +40,7 @@ dependencies:
     - field.field.node.page.field_taxonomy
     - field.field.node.page.field_top_overview_section
     - field.field.node.page.field_work_tracks
+    - field.field.node.page.field_faq
     - node.type.page
   module:
     - text
@@ -71,6 +72,7 @@ content:
     weight: 101
     region: content
 hidden:
+  field_faq: true
   addtoany: true
   field_advantages: true
   field_areas_of_work: true

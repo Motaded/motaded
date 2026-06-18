@@ -1207,3 +1207,43 @@ function motaded_custom_update_10045(): void {
   }
 }
 
+/**
+ * Adds field_faq to node bundles that lacked it; FAQ schema via metatags hook.
+ */
+function motaded_custom_update_10046(): void {
+  $sync_dir = dirname(\Drupal::root()) . '/config/sync';
+  if (!is_dir($sync_dir)) {
+    return;
+  }
+  $sync = new \Drupal\Core\Config\FileStorage($sync_dir);
+  $bundles = [
+    'page', 'landing_page', 'news', 'event', 'sector_page',
+    'market_insight', 'document', 'chamber', 'partner', 'pricing', 'entities',
+  ];
+  $names = [];
+  foreach ($bundles as $bundle) {
+    $names[] = "field.field.node.{$bundle}.field_faq";
+    $names[] = "core.entity_form_display.node.{$bundle}.default";
+  }
+  foreach (scandir($sync_dir) ?: [] as $file) {
+    if (!str_starts_with($file, 'core.entity_view_display.node.')) {
+      continue;
+    }
+    foreach ($bundles as $bundle) {
+      if (str_starts_with($file, "core.entity_view_display.node.{$bundle}.")) {
+        $names[] = substr($file, 0, -4);
+        break;
+      }
+    }
+  }
+  $storage = \Drupal::service('config.storage');
+  foreach (array_unique($names) as $name) {
+    $data = $sync->read($name);
+    if (is_array($data)) {
+      $storage->write($name, $data);
+    }
+  }
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+}
+

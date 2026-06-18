@@ -21,16 +21,25 @@
   set classes = [
     title_display == 'after' ? 'option',
     title_display == 'invisible' ? 'visually-hidden',
-    'flex flex-col items-start relative w-80',
+    title_display not in ['after', 'invisible'] ? 'flex flex-col items-start relative w-80',
   ]
 %}
 {% if title is not empty or required -%}
   <label{{ attributes.addClass(classes) }}>
+    {% if title_display == 'after' %}
+      <span class="inline-flex items-center gap-1">
+        {% if required %}
+          <span class="relative text-sm font-medium leading-5 text-red-700">*</span>
+        {% endif %}
+        <span class="relative text-sm font-medium leading-5 text-neutral-900">{{ title }}</span>
+      </span>
+    {% else %}
     <span class="flex relative gap-1 items-end">
       {% if required %}
         <span class="relative text-sm font-medium leading-5 text-red-700">*</span>
       {% endif %}
       <span class="relative text-sm font-medium leading-5 text-neutral-900">{{ title }}</span>
     </span>
+    {% endif %}
   </label>
 {%- endif %}

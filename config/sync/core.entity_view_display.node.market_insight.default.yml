@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.market_insight.field_stat_suffix
     - field.field.node.market_insight.field_stat_value
     - field.field.node.market_insight.field_year
+    - field.field.node.market_insight.field_faq
     - node.type.market_insight
   module:
     - addtoany
@@ -152,6 +153,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_faq: true
   field_featured: true
   field_highlight: true
   field_insight_shell: true
