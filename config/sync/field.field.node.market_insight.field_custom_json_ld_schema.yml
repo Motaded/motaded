@@ -1,0 +1,19 @@
+uuid: 2484f21d-13d5-4052-a8c7-962a9b3a4b7c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_custom_json_ld_schema
+    - node.type.market_insight
+id: node.market_insight.field_custom_json_ld_schema
+field_name: field_custom_json_ld_schema
+entity_type: node
+bundle: market_insight
+label: 'Custom JSON-LD Schema'
+description: 'لصق كود FAQPage Schema هنا فقط — بدون وسوم script. يُلصق الكود الصافي من { حتى }.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

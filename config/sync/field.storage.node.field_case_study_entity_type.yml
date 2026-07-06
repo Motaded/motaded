@@ -1,0 +1,36 @@
+uuid: e06b19cd-95b3-4f2b-99b2-467e04c65c64
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_case_study_entity_type
+field_name: field_case_study_entity_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: llc
+      label: LLC
+    -
+      value: branch_of_foreign_company
+      label: 'Branch of Foreign Company'
+    -
+      value: joint_stock_company_jsc
+      label: 'Joint Stock Company (JSC)'
+    -
+      value: regional_headquarters_rhq
+      label: 'Regional Headquarters (RHQ)'
+    -
+      value: professional_company
+      label: 'Professional Company'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

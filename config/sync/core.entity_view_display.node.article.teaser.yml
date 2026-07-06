@@ -45,10 +45,12 @@ content:
 hidden:
   addtoany: true
   comment: true
+  field_custom_json_ld_schema: true
   field_estimated_read_time: true
   field_faq: true
   field_image: true
   field_meta: true
+  field_meta_tags: true
   field_sector: true
   field_tags: true
   field_taxonomy: true

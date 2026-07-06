@@ -1,0 +1,21 @@
+uuid: bf58fae0-d993-4cf4-86b1-6699df79272b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_case_study_sector
+    - node.type.case_study
+  module:
+    - options
+id: node.case_study.field_case_study_sector
+field_name: field_case_study_sector
+entity_type: node
+bundle: case_study
+label: 'Case Study Sector'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

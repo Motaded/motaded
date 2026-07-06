@@ -85,8 +85,10 @@ content:
     weight: 4
     region: content
 hidden:
-  field_faq: true
   field_comments: true
+  field_custom_json_ld_schema: true
+  field_faq: true
+  field_meta_tags: true
   field_sector: true
   field_tags: true
   field_taxonomy: true

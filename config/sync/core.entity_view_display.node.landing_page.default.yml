@@ -11,6 +11,7 @@ dependencies:
     - node.type.landing_page
   module:
     - entity_reference_revisions
+    - faqfield
     - metatag
     - text
     - user
@@ -26,6 +27,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_faq:
+    type: faqfield_details
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 25
     region: content
   field_form:
     type: webform_entity_reference_entity_view
@@ -58,7 +66,6 @@ content:
     weight: 0
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   langcode: true
   search_api_excerpt: true

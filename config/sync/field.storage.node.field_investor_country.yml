@@ -1,0 +1,54 @@
+uuid: 6ad877a2-8978-4e1a-86cd-3f4aa576e04e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_investor_country
+field_name: field_investor_country
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: china
+      label: China
+    -
+      value: united_states
+      label: 'United States'
+    -
+      value: united_kingdom
+      label: 'United Kingdom'
+    -
+      value: united_arab_emirates_other
+      label: 'United Arab Emirates'
+    -
+      value: france
+      label: France
+    -
+      value: germany
+      label: Germany
+    -
+      value: singapore
+      label: Singapore
+    -
+      value: india
+      label: India
+    -
+      value: south_korea
+      label: 'South Korea'
+    -
+      value: japan
+      label: Japan
+    -
+      value: other
+      label: Other
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

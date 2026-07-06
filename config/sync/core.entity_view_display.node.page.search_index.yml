@@ -59,7 +59,6 @@ content:
     weight: 0
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   field_advantages: true
   field_areas_of_work: true
@@ -71,6 +70,7 @@ hidden:
   field_document: true
   field_download_user_guides: true
   field_email_address: true
+  field_faq: true
   field_form: true
   field_free_consultation: true
   field_icon: true
@@ -85,6 +85,7 @@ hidden:
   field_phone_number: true
   field_provided_languages: true
   field_requirements: true
+  field_sector: true
   field_seo_checker: true
   field_service_channels: true
   field_service_cost: true

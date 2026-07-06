@@ -1,0 +1,23 @@
+uuid: c29d4e00-157b-455d-a5f7-c564c0bfcb7a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_setup_year
+    - node.type.case_study
+id: node.case_study.field_setup_year
+field_name: field_setup_year
+entity_type: node
+bundle: case_study
+label: 'Setup Year'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 2017.0
+  max: 2999.0
+  prefix: ''
+  suffix: ''
+field_type: decimal

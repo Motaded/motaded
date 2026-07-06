@@ -24,9 +24,10 @@ bundle: sector_page
 mode: sector_directory_card
 content: {  }
 hidden:
-  field_faq: true
   addtoany: true
   body: true
+  field_custom_json_ld_schema: true
+  field_faq: true
   field_media: true
   field_meta_tags: true
   field_sector: true

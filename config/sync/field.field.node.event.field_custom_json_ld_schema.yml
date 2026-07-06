@@ -1,0 +1,19 @@
+uuid: a26dec4b-7e1a-4f61-9710-78ac4f06c7b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_custom_json_ld_schema
+    - node.type.event
+id: node.event.field_custom_json_ld_schema
+field_name: field_custom_json_ld_schema
+entity_type: node
+bundle: event
+label: 'Custom JSON-LD Schema'
+description: 'لصق كود FAQPage Schema هنا فقط — بدون وسوم script. يُلصق الكود الصافي من { حتى }.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

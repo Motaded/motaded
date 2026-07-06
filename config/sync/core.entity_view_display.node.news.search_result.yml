@@ -37,15 +37,18 @@ content:
     weight: 1
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   body: true
   field_applies_to: true
   field_comments: true
+  field_custom_json_ld_schema: true
   field_effective_date: true
+  field_faq: true
   field_media: true
   field_meta: true
+  field_meta_tags: true
   field_requirement: true
+  field_sector: true
   field_source_scope: true
   field_taxonomy: true
   langcode: true

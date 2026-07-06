@@ -353,5 +353,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_custom_json_ld_schema: true
   promote: true
   sticky: true

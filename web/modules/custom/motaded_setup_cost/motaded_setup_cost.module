@@ -159,7 +159,7 @@ function motaded_setup_cost_strip_landing_deferred_paragraphs(array &$variables)
       unset($field[$key]);
       continue;
     }
-    if ($after_packages && $paragraph->bundle() === 'promo_split') {
+    if ($after_packages && in_array($paragraph->bundle(), ['promo_split', 'cards'], TRUE)) {
       unset($field[$key]);
     }
   }
@@ -242,7 +242,7 @@ function motaded_setup_cost_build_landing_promo_splits(NodeInterface $node): arr
     if ($paragraph->bundle() === 'accordions') {
       break;
     }
-    if ($after_packages && $paragraph->bundle() === 'promo_split') {
+    if ($after_packages && in_array($paragraph->bundle(), ['promo_split', 'cards'], TRUE)) {
       $renders[] = $view_builder->view($paragraph, 'default');
     }
   }

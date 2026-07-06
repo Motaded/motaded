@@ -40,8 +40,9 @@ content:
     weight: 0
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   body: true
+  field_faq: true
+  field_form: true
   langcode: true
   search_api_excerpt: true

@@ -127,7 +127,6 @@ content:
     weight: 0
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   body: true
   field_advantages: true
@@ -137,6 +136,7 @@ hidden:
   field_comments: true
   field_default_page: true
   field_display_on_services: true
+  field_faq: true
   field_form: true
   field_free_consultation: true
   field_icon: true
@@ -148,6 +148,7 @@ hidden:
   field_meta_tags: true
   field_objectives: true
   field_requirements: true
+  field_sector: true
   field_seo_checker: true
   field_steps_to_obtain: true
   field_tags: true

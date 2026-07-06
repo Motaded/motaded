@@ -294,10 +294,10 @@ content:
     weight: 4
     region: content
 hidden:
-  field_faq: true
   field_comments: true
   field_default_page: true
   field_display_on_services: true
+  field_faq: true
   field_like_dislike: true
   field_media: true
   field_meta_tags: true

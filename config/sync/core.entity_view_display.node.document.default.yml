@@ -69,14 +69,6 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
-  field_services:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 9
-    region: content
   field_sector_pages:
     type: entity_reference_label
     label: hidden
@@ -84,6 +76,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 8
+    region: content
+  field_services:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_short_description:
     type: basic_string
@@ -127,8 +127,8 @@ content:
     weight: 100
     region: content
 hidden:
-  field_faq: true
   addtoany: true
+  field_faq: true
   field_featured: true
   field_meta_tags: true
   field_sector: true

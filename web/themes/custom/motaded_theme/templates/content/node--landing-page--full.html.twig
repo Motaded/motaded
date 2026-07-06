@@ -68,6 +68,7 @@
 {% set has_body = node.hasField('body') and not node.get('body').isEmpty() %}
 {% set has_paragraphs = content.field_paragraphs['#items'] is defined and content.field_paragraphs['#items'] is not empty %}
 {% set has_form = node.hasField('field_form') and not node.get('field_form').isEmpty() %}
+{% set has_faq = node.hasField('field_faq') and not node.get('field_faq').isEmpty() %}
 {%
   set classes = [
     'node',
@@ -108,8 +109,20 @@
       {% endif %}
       {{ title_suffix }}
       <div{{ content_attributes.addClass('page-basic-body', 'node__content', 'prose', 'prose-neutral', 'max-w-none', 'mx-auto', 'mt-10', 'w-full', 'max-w-[52rem]', 'text-left', 'sm:mt-12') }}>
-        {{ content|without('field_paragraphs', 'addtoany') }}
+        {{ content|without('field_paragraphs', 'addtoany', 'field_faq') }}
       </div>
+      {% if has_faq %}
+        <div class="page-basic-body mx-auto w-full max-w-[52rem] text-left">
+          <section class="landing-page__faq mt-12 sm:mt-14" id="faq" aria-labelledby="landing-page-faq-title">
+            <h2 id="landing-page-faq-title" class="m-0 text-2xl font-bold text-gray-900">
+              {% if node.langcode.value == 'ar' %}الأسئلة الشائعة{% else %}{{ 'Frequently Asked Questions'|t }}{% endif %}
+            </h2>
+            <div class="mt-6">
+              {{ content.field_faq }}
+            </div>
+          </section>
+        </div>
+      {% endif %}
     </div>
   {% else %}
     {{ title_prefix }}
@@ -120,12 +133,24 @@
     {% endif %}
     {{ title_suffix }}
     <div{{ content_attributes.addClass('node__content') }}>
-      {{ content|without('addtoany', 'field_form', 'body') }}
+      {{ content|without('addtoany', 'field_form', 'body', 'field_faq') }}
     </div>
-    {% if has_body %}
+    {% if has_body or has_faq %}
       <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
-        <div class="page-basic-body mx-auto mt-10 w-full max-w-[52rem] text-left prose prose-neutral max-w-none sm:mt-12">
-          {{ content.body }}
+        <div class="page-basic-body mx-auto mt-10 w-full max-w-[52rem] text-left sm:mt-12{% if has_body %} prose prose-neutral max-w-none{% endif %}">
+          {% if has_body %}
+            {{ content.body }}
+          {% endif %}
+          {% if has_faq %}
+            <section class="landing-page__faq{% if has_body %} mt-12 sm:mt-14{% endif %}" id="faq" aria-labelledby="landing-page-faq-title">
+              <h2 id="landing-page-faq-title" class="m-0 text-2xl font-bold text-gray-900">
+                {% if node.langcode.value == 'ar' %}الأسئلة الشائعة{% else %}{{ 'Frequently Asked Questions'|t }}{% endif %}
+              </h2>
+              <div class="mt-6">
+                {{ content.field_faq }}
+              </div>
+            </section>
+          {% endif %}
         </div>
       </div>
     {% endif %}

@@ -1,0 +1,21 @@
+uuid: 756a1fb5-3ede-4315-b49e-a58b2f94606b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_case_study_entity_type
+    - node.type.case_study
+  module:
+    - options
+id: node.case_study.field_case_study_entity_type
+field_name: field_case_study_entity_type
+entity_type: node
+bundle: case_study
+label: 'Case Study Entity Type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

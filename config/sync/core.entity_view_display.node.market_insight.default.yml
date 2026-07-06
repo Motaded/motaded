@@ -153,6 +153,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_custom_json_ld_schema: true
   field_faq: true
   field_featured: true
   field_highlight: true

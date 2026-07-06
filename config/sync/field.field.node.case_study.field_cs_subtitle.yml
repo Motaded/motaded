@@ -1,0 +1,19 @@
+uuid: 9b68a18d-a01b-48f5-9c1a-16c4d5e4fa9b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cs_subtitle
+    - node.type.case_study
+id: node.case_study.field_cs_subtitle
+field_name: field_cs_subtitle
+entity_type: node
+bundle: case_study
+label: field_subtitle
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1944,9 +1944,16 @@ body.page-front .paragraph--type--cards .sector-img {
   color: rgb(217 119 6);
 }
 
-.field--type-faqfield .field__items {
+.field--type-faqfield .field__items,
+.field--type-faqfield.field__items {
   display: grid;
   gap: 0.75rem;
+  width: 100%;
+}
+
+.field--type-faqfield.field__items > .field__item {
+  width: 100%;
+  min-width: 0;
 }
 
 .field--type-faqfield .faqfield-details {
@@ -2021,4 +2028,22 @@ body.page-front .paragraph--type--cards .sector-img {
 
 .field--type-faqfield .faqfield-answer > :last-child {
   margin-bottom: 0;
+}
+
+/* Package landing pages: FAQ matches body column width. */
+.node--type-landing-page .landing-page__faq {
+  width: 100%;
+}
+
+.node--type-landing-page .landing-page__faq .field--type-faqfield {
+  margin-top: 0;
+  width: 100%;
+}
+
+.node--type-landing-page .landing-page__faq .field--type-faqfield.field__items {
+  gap: 1rem;
+}
+
+.node--type-landing-page .landing-page__faq .faqfield-details {
+  width: 100%;
 }

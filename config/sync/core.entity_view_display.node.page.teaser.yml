@@ -72,7 +72,6 @@ content:
     weight: 101
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   field_advantages: true
   field_areas_of_work: true
@@ -84,6 +83,7 @@ hidden:
   field_document: true
   field_download_user_guides: true
   field_email_address: true
+  field_faq: true
   field_form: true
   field_free_consultation: true
   field_icon: true
