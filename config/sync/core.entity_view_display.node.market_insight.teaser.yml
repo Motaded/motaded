@@ -111,8 +111,9 @@ content:
     weight: 100
     region: content
 hidden:
-  field_faq: true
   addtoany: true
+  field_custom_json_ld_schema: true
+  field_faq: true
   field_featured: true
   field_highlight: true
   field_insight_shell: true

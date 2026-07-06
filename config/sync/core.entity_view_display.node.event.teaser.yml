@@ -78,7 +78,6 @@ content:
     weight: 100
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   field_agenda: true
   field_attendance_type: true
@@ -88,10 +87,13 @@ hidden:
   field_cta_link: true
   field_cta_text: true
   field_cta_type: true
+  field_custom_json_ld_schema: true
   field_documents: true
   field_event_end: true
   field_event_format: true
+  field_event_price: true
   field_event_status: true
+  field_faq: true
   field_featured: true
   field_gallery: true
   field_hero_image: true

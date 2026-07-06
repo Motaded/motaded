@@ -214,4 +214,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_custom_json_ld_schema: true
+  field_meta_tags: true

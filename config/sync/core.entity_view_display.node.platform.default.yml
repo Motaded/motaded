@@ -222,6 +222,7 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_custom_json_ld_schema: true
   field_featured: true
   field_meta_tags: true
   field_sector: true

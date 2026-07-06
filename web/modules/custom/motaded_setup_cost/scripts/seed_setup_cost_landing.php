@@ -148,6 +148,32 @@ if ($packages_section) {
   $paragraphs[] = $packages_section;
 }
 
+$promo_defs = [
+  [
+    'existing_id' => 2673,
+    'title_en' => 'HR & Workforce Support Packages',
+    'body_en' => 'Additional HR support services for hiring, onboarding, workforce management, payroll setup, and employee compliance in Saudi Arabia.',
+    'link_uri' => 'entity:node/400',
+    'link_title_en' => 'View HR Packages',
+    'title_ar' => 'حزم دعم الموارد البشرية وإدارة القوى العاملة',
+    'body_ar' => 'خدمات إضافية لدعم التوظيف، وإجراءات انضمام الموظفين، وإدارة القوى العاملة، وإعداد الرواتب، والامتثال الوظيفي في المملكة العربية السعودية.',
+    'link_title_ar' => 'عرض حزم الموارد البشرية',
+    'media_id' => 1260,
+    'side' => 'image_right',
+  ],
+];
+foreach ($promo_defs as $def) {
+  $promo = _motaded_setup_cost_seed_promo_split($def);
+  if ($promo) {
+    $paragraphs[] = $promo;
+  }
+}
+
+$service_packages_cards = _motaded_setup_cost_seed_service_package_cards();
+if ($service_packages_cards) {
+  $paragraphs[] = $service_packages_cards;
+}
+
 $faq_items = [
   [
     'q' => 'How much does it cost to open a company in Saudi Arabia?',
@@ -315,6 +341,169 @@ echo "Packages landing node: {$packages_nid}\n";
 \Drupal::service('router.builder')->rebuild();
 \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:' . $nid, 'node:' . $packages_nid]);
 echo "Done. Calculator: /business-setup-cost-calculator | Packages: /Company-Setup-Cost-Packages-In-Saudi-Arabia\n";
+
+/**
+ * Cards block linking to entrepreneur, RHQ, and office solution package pages.
+ */
+function _motaded_setup_cost_seed_service_package_cards(): ?Paragraph {
+  $card_defs = [
+    [
+      'title_en' => 'Entrepreneur License Package',
+      'body_en' => '<p>MISA Entrepreneur License for innovative startups — support letter, application, and virtual office in one package.</p>',
+      'link_uri' => 'entity:node/991',
+      'link_title_en' => 'View package',
+      'title_ar' => 'باقة ترخيص ريادة الأعمال',
+      'body_ar' => '<p>ترخيص ريادة الأعمال من وزارة الاستثمار — خطاب دعم، طلب، ومكتب افتراضيّ في باقة واحدة.</p>',
+      'link_title_ar' => 'عرض الباقة',
+    ],
+    [
+      'title_en' => 'Regional Headquarters (RHQ) Package',
+      'body_en' => '<p>Complete RHQ license and company formation for multinational corporations — end-to-end government and PRO services.</p>',
+      'link_uri' => 'entity:node/992',
+      'link_title_en' => 'View package',
+      'title_ar' => 'باقة المقرّ الإقليميّ (RHQ)',
+      'body_ar' => '<p>ترخيص المقرّ الإقليميّ وتأسيس الشركة الكامل — خدمات حكوميّة و PRO شاملة من البداية للنهاية.</p>',
+      'link_title_ar' => 'عرض الباقة',
+    ],
+    [
+      'title_en' => 'Office Solutions Packages',
+      'body_en' => '<p>Premium workspaces in Riyadh — coworking, private offices, virtual office, meeting rooms, and conference facilities.</p>',
+      'link_uri' => 'entity:node/993',
+      'link_title_en' => 'View packages',
+      'title_ar' => 'باقات حلول المكاتب',
+      'body_ar' => '<p>مساحات عمل مميّزة في الرياض — مساحات مشتركة، مكاتب خاصّة، مكتب افتراضيّ، وقاعات اجتماعات.</p>',
+      'link_title_ar' => 'عرض الباقات',
+    ],
+  ];
+
+  $card_refs = [];
+  foreach ($card_defs as $def) {
+    $card = Paragraph::create([
+      'type' => 'card',
+      'langcode' => 'en',
+      'field_title' => $def['title_en'],
+      'field_body' => [
+        'value' => $def['body_en'],
+        'format' => 'basic_html',
+      ],
+      'field_link' => [
+        'uri' => $def['link_uri'],
+        'title' => $def['link_title_en'],
+      ],
+    ]);
+    $card->save();
+    $card->addTranslation('ar', [
+      'field_title' => $def['title_ar'],
+      'field_body' => [
+        'value' => $def['body_ar'],
+        'format' => 'basic_html',
+      ],
+      'field_link' => [
+        'uri' => $def['link_uri'],
+        'title' => $def['link_title_ar'],
+      ],
+    ]);
+    $card->save();
+    $card_refs[] = [
+      'target_id' => $card->id(),
+      'target_revision_id' => $card->getRevisionId(),
+    ];
+  }
+
+  $cards = Paragraph::create([
+    'type' => 'cards',
+    'langcode' => 'en',
+    'field_card_type' => 'chips_card',
+    'field_title' => 'Specialized service packages',
+    'field_body' => [
+      'value' => '<p>Dedicated fixed packages for entrepreneur licenses, regional headquarters, and office solutions in Saudi Arabia.</p>',
+      'format' => 'basic_html',
+    ],
+    'field_paragraphs' => $card_refs,
+  ]);
+  $cards->save();
+  $cards->addTranslation('ar', [
+    'field_card_type' => 'chips_card',
+    'field_title' => 'باقات الخدمات المتخصّصة',
+    'field_body' => [
+      'value' => '<p>باقات ثابتة مخصّصة لتراخيص ريادة الأعمال، المقرّات الإقليميّة، وحلول المكاتب في المملكة العربية السعودية.</p>',
+      'format' => 'basic_html',
+    ],
+  ]);
+  $cards->save();
+
+  return Paragraph::load($cards->id());
+}
+
+/**
+ * Creates or updates a promo_split paragraph for calculator landing cross-links.
+ *
+ * @param array<string, mixed> $def
+ */
+function _motaded_setup_cost_seed_promo_split(array $def): ?Paragraph {
+  $promo = NULL;
+  if (!empty($def['existing_id'])) {
+    $promo = Paragraph::load((int) $def['existing_id']);
+    if ($promo && $promo->bundle() !== 'promo_split') {
+      $promo = NULL;
+    }
+  }
+  if (!$promo) {
+    $promo = Paragraph::create([
+      'type' => 'promo_split',
+      'langcode' => 'en',
+    ]);
+  }
+  elseif ($promo->hasTranslation('en')) {
+    $promo = $promo->getTranslation('en');
+  }
+
+  $promo->set('field_title', $def['title_en']);
+  $promo->set('field_body', [
+    'value' => '<p>' . $def['body_en'] . '</p>',
+    'format' => 'basic_html',
+  ]);
+  $promo->set('field_link', [
+    'uri' => $def['link_uri'],
+    'title' => $def['link_title_en'],
+  ]);
+  $promo->set('field_promo_split_side', $def['side'] ?? 'image_right');
+  $promo->set('field_promo_split_list_style', 'icons_row');
+  if (!empty($def['media_id'])) {
+    $promo->set('field_media', ['target_id' => (int) $def['media_id']]);
+  }
+  $promo->save();
+
+  if (!$promo->hasTranslation('ar')) {
+    $promo->addTranslation('ar', [
+      'field_title' => $def['title_ar'],
+      'field_body' => [
+        'value' => '<p>' . $def['body_ar'] . '</p>',
+        'format' => 'basic_html',
+      ],
+      'field_link' => [
+        'uri' => $def['link_uri'],
+        'title' => $def['link_title_ar'],
+      ],
+    ]);
+  }
+  else {
+    $ar = $promo->getTranslation('ar');
+    $ar->set('field_title', $def['title_ar']);
+    $ar->set('field_body', [
+      'value' => '<p>' . $def['body_ar'] . '</p>',
+      'format' => 'basic_html',
+    ]);
+    $ar->set('field_link', [
+      'uri' => $def['link_uri'],
+      'title' => $def['link_title_ar'],
+    ]);
+    $ar->save();
+  }
+  $promo->save();
+
+  return Paragraph::load($promo->id());
+}
 
 /**
  * Duplicates a packages section paragraph tree (pricing cards + CTAs).

@@ -30,6 +30,12 @@ content:
     weight: 100
     region: content
 hidden:
+  addtoany: true
   field_faq: true
   field_media: true
+  field_one_line_role: true
+  field_optional_category: true
+  field_optional_link: true
+  field_partner_name: true
   langcode: true
+  search_api_excerpt: true

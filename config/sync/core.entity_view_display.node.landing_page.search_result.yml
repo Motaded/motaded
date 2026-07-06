@@ -22,9 +22,10 @@ content:
     weight: 0
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   body: true
+  field_faq: true
+  field_form: true
   field_meta: true
   field_paragraphs: true
   langcode: true

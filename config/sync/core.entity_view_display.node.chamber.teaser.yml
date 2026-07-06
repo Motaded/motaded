@@ -54,11 +54,12 @@ content:
     weight: 100
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   body: true
   field_chamber_featured_stats: true
+  field_custom_json_ld_schema: true
   field_external_link: true
+  field_faq: true
   field_featured: true
   field_meta_tags: true
   field_priority: true

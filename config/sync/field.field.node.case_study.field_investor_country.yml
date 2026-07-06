@@ -1,0 +1,21 @@
+uuid: 8c15ae6f-58b4-4d68-a9d7-ed857b2d0aad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_investor_country
+    - node.type.case_study
+  module:
+    - options
+id: node.case_study.field_investor_country
+field_name: field_investor_country
+entity_type: node
+bundle: case_study
+label: 'Investor Country'
+description: "china|China\r\nusa|United States\r\nuk|United Kingdom\r\nuae|United Arab Emirates\r\nfrance|France\r\ngermany|Germany\r\nsingapore|Singapore\r\nindia|India\r\nkorea|South Korea\r\njapan|Japan\r\nitaly|Italy\r\nturkey|Turkey\r\nother|Other"
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

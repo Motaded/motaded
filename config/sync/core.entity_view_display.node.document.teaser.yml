@@ -57,10 +57,10 @@ content:
     weight: 100
     region: content
 hidden:
-  field_faq: true
   addtoany: true
   field_country: true
   field_document: true
+  field_faq: true
   field_featured: true
   field_meta_tags: true
   field_platforms: true

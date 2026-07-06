@@ -1,0 +1,115 @@
+uuid: 04654962-9c47-4720-b927-c36ba3ccab1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.case_study.field_body
+    - field.field.node.case_study.field_case_study_entity_type
+    - field.field.node.case_study.field_case_study_hero_image
+    - field.field.node.case_study.field_case_study_sector
+    - field.field.node.case_study.field_cs_subtitle
+    - field.field.node.case_study.field_custom_json_ld_schema
+    - field.field.node.case_study.field_investor_country
+    - field.field.node.case_study.field_issue_number
+    - field.field.node.case_study.field_publication_date
+    - field.field.node.case_study.field_setup_year
+    - node.type.case_study
+  module:
+    - datetime
+    - options
+    - text
+    - user
+id: node.case_study.default
+targetEntityType: node
+bundle: case_study
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_case_study_entity_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_case_study_hero_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_case_study_sector:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_cs_subtitle:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_custom_json_ld_schema:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_investor_country:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_issue_number:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_publication_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_setup_year:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  addtoany: true
+  langcode: true
+  search_api_excerpt: true
