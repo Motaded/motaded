@@ -121,7 +121,8 @@
             "mglaman/composer-drupal-lenient": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
-            "wikimedia/composer-merge-plugin": true
+            "wikimedia/composer-merge-plugin": true,
+            "symfony/runtime": true
         },
         "sort-packages": true
     },
@@ -169,6 +170,9 @@
             "drupal/imageapi_optimize_webp": {
                 "Drupal 11: use GDToolkit::getImage() (getResource removed)": "patches/imageapi_optimize_webp-drupal-11-gd-getimage.patch",
                 "Native .webp only: do not rewrite file query to extensionless URI": "patches/imageapi_optimize_webp-native-webp-source.patch"
+            },
+            "drupal/entity_reference_revisions": {
+                "3571637: Fix saving default paragraph revision as non-default": "https://www.drupal.org/files/issues/2026-03-20/fix_default_revision_sync-3571637-12.patch"
             }
         },
         "drupal-scaffold": {
