@@ -33,7 +33,10 @@
     <div class="services-page-hero__split">
       <div class="services-page-hero__col services-page-hero__col--copy hero-split-banner__copy-col">
         <div class="services-page-hero__copy-inner hero-split-banner__copy">
-          <h1 class="hero-split-banner__title">{{ 'Government-aligned services for every step of your business journey'|t }}</h1>
+          <h1 class="hero-split-banner__title">
+            {{ 'Government-aligned services for every step of your'|t }}
+            <a href="{{ services_hero_url_business_setup|default('/business-setup') }}" class="hero-split-banner__title-link">{{ 'Business Setup in Saudi Arabia'|t }}</a>
+          </h1>
           <div class="hero-split-banner__intro">
             <p>{{ 'From registration to operations and compliance, we provide integrated solutions aligned with Saudi systems to help you start, operate and grow with confidence.'|t }}</p>
           </div>

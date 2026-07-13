@@ -177,8 +177,14 @@ msgstr "وجدت هذا مفيدًا؟ شاركه ليبقى الزملاء وج
 
 # /services hero + quick links
 
+msgid "Government-aligned services for every step of your"
+msgstr "خدمات متوافقة مع الحكومة لكل خطوة في"
+
 msgid "Government-aligned services for every step of your business journey"
 msgstr "خدمات متوافقة مع الحكومة لكل خطوة في مسيرة عملك"
+
+msgid "Business Setup in Saudi Arabia"
+msgstr "تأسيس الأعمال في السعودية"
 
 msgid "From registration to operations and compliance, we provide integrated solutions aligned with Saudi systems to help you start, operate and grow with confidence."
 msgstr "من التسجيل إلى التشغيل والامتثال، نقدّم حلولاً متكاملة متوافقة مع الأنظمة السعودية لمساعدتك على الانطلاق والتشغيل والنمو بثقة."

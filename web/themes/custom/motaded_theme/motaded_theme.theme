@@ -5872,6 +5872,12 @@ function motaded_theme_preprocess_views_view__services__page_1(&$variables) {
   catch (\Throwable $e) {
     $variables['services_hero_url_platforms'] = '/platforms';
   }
+  try {
+    $variables['services_hero_url_business_setup'] = Url::fromRoute('entity.node.canonical', ['node' => 1], $url_options)->toString();
+  }
+  catch (\Throwable $e) {
+    $variables['services_hero_url_business_setup'] = '/business-setup';
+  }
 
   $variables['#cache']['contexts'] = Cache::mergeContexts($variables['#cache']['contexts'] ?? [], ['languages:language_interface']);
   $node_list_tags = \Drupal::entityTypeManager()->getDefinition('node')->getListCacheTags();

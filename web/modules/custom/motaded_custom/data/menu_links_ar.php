@@ -159,6 +159,7 @@ return [
   'Government platforms (@count)' => 'المنصات الحكومية (@count)',
   'Government-aligned services' => 'الخدمات المتوافقة مع الحكومة',
   'Government-aligned services (@count)' => 'الخدمات المتوافقة مع الحكومة (@count)',
+  'Government-aligned services for every step of your' => 'خدمات متوافقة مع الحكومة لكل خطوة في',
   'Government-aligned services for every step of your business journey' => 'خدمات متوافقة مع الحكومة لكل خطوة في مسيرة عملك',
   'Gross fixed capital formation (% GDP)' => 'تكوين رأس المال الثابت الإجمالي (% من الناتج المحلي)',
   'Gross fixed capital formation (% of GDP)' => 'تكوين رأس المال الثابت الإجمالي (% من الناتج المحلي)',
