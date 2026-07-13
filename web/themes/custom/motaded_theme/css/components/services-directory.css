@@ -670,6 +670,18 @@
   }
 }
 
+.services-directory--page-redesign .hero-split-banner__title-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 118, 110, 0.35);
+  text-underline-offset: 0.12em;
+}
+
+.services-directory--page-redesign .hero-split-banner__title-link:hover,
+.services-directory--page-redesign .hero-split-banner__title-link:focus-visible {
+  color: var(--mot-brand, #0f766e);
+}
+
 .services-directory--page-redesign .services-page-hero__copy-inner .hero-split-banner__intro {
   margin-bottom: clamp(1rem, 2vw, 1.35rem);
 }
