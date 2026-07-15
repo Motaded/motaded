@@ -120,23 +120,31 @@ function email_verification_validate_submission(array &$form, FormStateInterface
  * Implements hook_webform_submission_insert().
  */
 function email_verification_webform_submission_insert(WebformSubmissionInterface $webform_submission) {
-  $webform_id = $webform_submission->getWebform()->id();
-  /** @var \Drupal\email_verification\EmailVerificationOtpManager $otp_manager */
-  $otp_manager = \Drupal::service('email_verification.otp_manager');
-  if ($otp_manager->isWebformAllowed($webform_id)) {
-    $email_key = $otp_manager->getEmailElementKey($webform_id);
-    if ($email_key) {
-      $data = $webform_submission->getData();
-      $email = $data[$email_key] ?? '';
-      if ($email !== '') {
-        $otp_manager->clearVerification($webform_id, (string) $email);
+  try {
+    $webform_id = $webform_submission->getWebform()->id();
+    /** @var \Drupal\email_verification\EmailVerificationOtpManager $otp_manager */
+    $otp_manager = \Drupal::service('email_verification.otp_manager');
+    if ($otp_manager->isWebformAllowed($webform_id)) {
+      $email_key = $otp_manager->getEmailElementKey($webform_id);
+      if ($email_key) {
+        $data = $webform_submission->getData();
+        $email = $data[$email_key] ?? '';
+        if ($email !== '') {
+          $otp_manager->clearVerification($webform_id, (string) $email);
+        }
       }
     }
-  }
 
-  if ($webform_id === 'event_updates') {
-    \Drupal::service('email_verification.branded_email')
-      ->sendUpdatesSubscriptionConfirmation($webform_submission);
+    if ($webform_id === 'event_updates') {
+      \Drupal::service('email_verification.branded_email')
+        ->sendUpdatesSubscriptionConfirmation($webform_submission);
+    }
+  }
+  catch (\Throwable $e) {
+    \Drupal::logger('email_verification')->error('Post-submit hook failed for @webform: @message', [
+      '@webform' => $webform_submission->getWebform()->id(),
+      '@message' => $e->getMessage(),
+    ]);
   }
 }
 

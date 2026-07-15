@@ -4,6 +4,7 @@ namespace Drupal\email_verification;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\TempStoreException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -61,13 +62,22 @@ class EmailVerificationOtpManager {
     }
     $otp = (string) random_int(100000, 999999);
     $now = time();
-    $store = $this->tempStoreFactory->get('email_verification');
-    $data = [
-      'otp' => $otp,
-      'otp_expires' => $now + self::OTP_TTL,
-      'verified' => FALSE,
-    ];
-    $store->set($this->key($webformId, $email), $data);
+    try {
+      $store = $this->tempStoreFactory->get('email_verification');
+      $data = [
+        'otp' => $otp,
+        'otp_expires' => $now + self::OTP_TTL,
+        'verified' => FALSE,
+      ];
+      $store->set($this->key($webformId, $email), $data);
+    }
+    catch (TempStoreException $e) {
+      $this->logger->error('OTP tempstore write failed for @email: @message', [
+        '@email' => $email,
+        '@message' => $e->getMessage(),
+      ]);
+      return FALSE;
+    }
 
     $expiry_minutes = (int) (self::OTP_TTL / 60);
     $sent = $this->brandedEmail->sendOtp($email, $otp, $langcode, $expiry_minutes);
@@ -86,25 +96,34 @@ class EmailVerificationOtpManager {
     }
     $email = trim($email);
     $code = trim($code);
-    $store = $this->tempStoreFactory->get('email_verification');
-    $k = $this->key($webformId, $email);
-    $data = $store->get($k);
-    if (!$data || empty($data['otp'])) {
+    try {
+      $store = $this->tempStoreFactory->get('email_verification');
+      $k = $this->key($webformId, $email);
+      $data = $store->get($k);
+      if (!$data || empty($data['otp'])) {
+        return FALSE;
+      }
+      if ($data['otp_expires'] < time()) {
+        $store->delete($k);
+        return FALSE;
+      }
+      if (!hash_equals((string) $data['otp'], $code)) {
+        return FALSE;
+      }
+      $now = time();
+      $data['verified'] = TRUE;
+      $data['verified_expires'] = $now + self::VERIFIED_TTL;
+      unset($data['otp'], $data['otp_expires']);
+      $store->set($k, $data);
+      return TRUE;
+    }
+    catch (TempStoreException $e) {
+      $this->logger->error('OTP verify tempstore failed for @email: @message', [
+        '@email' => $email,
+        '@message' => $e->getMessage(),
+      ]);
       return FALSE;
     }
-    if ($data['otp_expires'] < time()) {
-      $store->delete($k);
-      return FALSE;
-    }
-    if (!hash_equals((string) $data['otp'], $code)) {
-      return FALSE;
-    }
-    $now = time();
-    $data['verified'] = TRUE;
-    $data['verified_expires'] = $now + self::VERIFIED_TTL;
-    unset($data['otp'], $data['otp_expires']);
-    $store->set($k, $data);
-    return TRUE;
   }
 
   /**
@@ -112,17 +131,26 @@ class EmailVerificationOtpManager {
    */
   public function isVerified(string $webformId, string $email): bool {
     $email = trim($email);
-    $store = $this->tempStoreFactory->get('email_verification');
-    $k = $this->key($webformId, $email);
-    $data = $store->get($k);
-    if (!$data || empty($data['verified'])) {
+    try {
+      $store = $this->tempStoreFactory->get('email_verification');
+      $k = $this->key($webformId, $email);
+      $data = $store->get($k);
+      if (!$data || empty($data['verified'])) {
+        return FALSE;
+      }
+      if (empty($data['verified_expires']) || $data['verified_expires'] < time()) {
+        $store->delete($k);
+        return FALSE;
+      }
+      return TRUE;
+    }
+    catch (TempStoreException $e) {
+      $this->logger->error('OTP isVerified tempstore failed for @email: @message', [
+        '@email' => $email,
+        '@message' => $e->getMessage(),
+      ]);
       return FALSE;
     }
-    if (empty($data['verified_expires']) || $data['verified_expires'] < time()) {
-      $store->delete($k);
-      return FALSE;
-    }
-    return TRUE;
   }
 
   /**
@@ -130,7 +158,15 @@ class EmailVerificationOtpManager {
    */
   public function clearVerification(string $webformId, string $email): void {
     $email = trim($email);
-    $this->tempStoreFactory->get('email_verification')->delete($this->key($webformId, $email));
+    try {
+      $this->tempStoreFactory->get('email_verification')->delete($this->key($webformId, $email));
+    }
+    catch (TempStoreException $e) {
+      $this->logger->warning('OTP clear tempstore failed for @email: @message', [
+        '@email' => $email,
+        '@message' => $e->getMessage(),
+      ]);
+    }
   }
 
 }

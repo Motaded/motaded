@@ -26,21 +26,30 @@ final class CrmWebformSubmissionHooks {
    */
   #[Hook('webform_submission_insert')]
   public function onSubmissionInsert(WebformSubmissionInterface $webform_submission): void {
-    if (!$this->settings->isEnabled()) {
-      return;
-    }
+    try {
+      if (!$this->settings->isEnabled()) {
+        return;
+      }
 
-    $webformId = $webform_submission->getWebform()->id();
-    if (!in_array($webformId, CrmLeadWebhookSettings::LEAD_WEBFORMS, TRUE)) {
-      return;
-    }
+      $webformId = $webform_submission->getWebform()->id();
+      if (!in_array($webformId, CrmLeadWebhookSettings::LEAD_WEBFORMS, TRUE)) {
+        return;
+      }
 
-    $payload = $this->payloadBuilder->build($webform_submission);
-    if ($payload === NULL) {
-      return;
-    }
+      $payload = $this->payloadBuilder->build($webform_submission);
+      if ($payload === NULL) {
+        return;
+      }
 
-    $this->webhookClient->sendLead($payload);
+      $this->webhookClient->sendLead($payload);
+    }
+    catch (\Throwable $e) {
+      // Never break the webform success page if CRM integration fails.
+      \Drupal::logger('motaded_custom')->error('CRM lead webhook hook failed for @webform: @message', [
+        '@webform' => $webform_submission->getWebform()->id(),
+        '@message' => $e->getMessage(),
+      ]);
+    }
   }
 
 }
