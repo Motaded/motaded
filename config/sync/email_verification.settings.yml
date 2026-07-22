@@ -3,8 +3,6 @@ _core:
 webforms:
   book_a_free_consultation:
     email_element: email
-  contact:
-    email_element: email
   event_registration_help:
     email_element: email
   event_updates:
@@ -14,7 +12,7 @@ webforms:
   set_up_company:
     email_element: email
   coworking_space_requirements:
-    email_element: email_address
+    email_element: email
   translation_services_requirement:
     email_element: email
   clints_form:
@@ -22,6 +20,8 @@ webforms:
   tasheer_visa_appointment:
     email_element: email
   request_a_consultation:
-    email_element: work_email
+    email_element: email
   career:
+    email_element: email
+  contact:
     email_element: email

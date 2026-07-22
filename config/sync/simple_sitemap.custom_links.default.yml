@@ -4,24 +4,16 @@ links:
     priority: '1.0'
     changefreq: daily
   -
-    path: /blog
-    priority: '0.5'
-    changefreq: ''
-  -
-    path: /news
-    priority: '0.5'
-    changefreq: ''
-  -
     path: /services
-    priority: '0.5'
-    changefreq: ''
+    priority: '0.7'
+    changefreq: weekly
   -
     path: /sectors
-    priority: '0.5'
+    priority: '0.6'
     changefreq: weekly
   -
     path: /platforms
-    priority: '0.5'
+    priority: '0.6'
     changefreq: weekly
   -
     path: /library
@@ -33,5 +25,13 @@ links:
     changefreq: weekly
   -
     path: /insights
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /blog
+    priority: '0.5'
+    changefreq: weekly
+  -
+    path: /news
     priority: '0.5'
     changefreq: weekly
