@@ -3,3 +3,4 @@
 /.eslintrc.json
 /autoload.php
 /example.gitignore
+/autoload_runtime.php

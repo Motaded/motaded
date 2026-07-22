@@ -79,12 +79,12 @@ elements: |-
     '#type': textarea
     '#required': true
     '#test': 'Please ignore this email.'
-  captcha:
-    '#type': captcha
-    '#captcha_type': recaptcha/reCAPTCHA
   service:
     '#type': hidden
     '#title': Service
+  captcha:
+    '#type': captcha
+    '#captcha_type': captcha/Math
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'

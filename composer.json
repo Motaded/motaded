@@ -140,7 +140,7 @@
         },
         "patches": {
             "drupal/core": {
-                "2916377: Allow colon in classes": "https://www.drupal.org/files/issues/2025-06-20/2916377.patch",
+                "2916377: Allow colon in classes": "patches/2916377-allow-colon-in-classes.patch",
                 "2802371: active language CSS class": "https://git.drupalcode.org/project/drupal/-/merge_requests/12862.diff"
             },
             "drupal/like_dislike": {
