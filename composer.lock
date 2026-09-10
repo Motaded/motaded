@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45113bf3be4f8d36449944e9e1a5bc75",
+    "content-hash": "32ba1fb0b494d5c39e35e404f42b7b8f",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -8689,6 +8689,15 @@
             "type": "drupal-library"
         },
         {
+            "name": "npm-asset/photoswipe",
+            "version": "5.4.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/dimsemenov/PhotoSwipe/archive/v5.4.4.zip"
+            },
+            "type": "drupal-library"
+        },
+        {
             "name": "pear/archive_tar",
             "version": "1.6.0",
             "source": {
@@ -13756,7 +13765,7 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
