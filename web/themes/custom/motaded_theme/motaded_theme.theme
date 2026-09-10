@@ -2039,6 +2039,10 @@ function _motaded_theme_landing_page_field_paragraphs_move_partners_after_first_
  */
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
+  if ($node->bundle() === 'landing_page' && motaded_theme_is_customs_clearance_node($node)) {
+    $variables['attributes']['class'][] = 'landing-page--customs';
+    $variables['#attached']['library'][] = 'motaded_theme/customs_clearance_landing';
+  }
   $variables['chamber_external_url'] = NULL;
   $variables['chamber_external_label'] = NULL;
   $variables['sector_page_show_eyebrow'] = FALSE;
@@ -3552,6 +3556,19 @@ function _motaded_theme_preprocess_market_insight_teaser(array &$variables, Node
 function motaded_theme_preprocess_paragraph(array &$variables): void {
   $paragraph = $variables['paragraph'];
 
+  if ($paragraph->bundle() === 'webform' && $paragraph->hasField('field_webform') && !$paragraph->get('field_webform')->isEmpty()) {
+    $webform_id = (string) $paragraph->get('field_webform')->target_id;
+    if ($webform_id === 'customs_clearance_quote') {
+      $variables['attributes']['id'] = 'assessment';
+    }
+  }
+  if ($paragraph->bundle() === 'cards' && $paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+    $cards_title = trim((string) $paragraph->get('field_title')->value);
+    if (strcasecmp($cards_title, 'Clearance Process') === 0) {
+      $variables['attributes']['id'] = 'process';
+    }
+  }
+
   // Platform paragraphs (help_item, benefit_item, platform_resource) carry an
   // optional `field_icon` (list_string). Expose its SVG markup to Twig.
   if ($paragraph->hasField('field_icon')) {
@@ -3707,6 +3724,12 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $variables['investor_journey_heading_id'] = Html::getUniqueId('investor-journey-heading-' . $paragraph->id());
+  if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+    $journey_title = (string) $paragraph->get('field_title')->value;
+    if (stripos($journey_title, 'shipment is cleared') !== FALSE) {
+      $variables['attributes']['id'] = 'process';
+    }
+  }
 
   $steps = [];
   $field = $paragraph->get('field_investor_journey_steps');
@@ -4448,6 +4471,37 @@ function motaded_theme_preprocess_paragraph__areas_of_work(array &$variables): v
 /**
  * Implements hook_theme_suggestions_page_alter().
  */
+/**
+ * True when the current node is the customs clearance landing page.
+ */
+function motaded_theme_is_customs_clearance_node($node): bool {
+  if (!$node instanceof \Drupal\node\NodeInterface) {
+    return FALSE;
+  }
+  $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $node->language()->getId());
+  return $alias === '/customs-clearance-saudi-arabia';
+}
+
+/**
+ * Implements hook_theme_suggestions_paragraph_alter().
+ */
+function motaded_theme_theme_suggestions_paragraph_alter(array &$suggestions, array $variables): void {
+  $paragraph = $variables['elements']['#paragraph'] ?? NULL;
+  if (!$paragraph) {
+    return;
+  }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!motaded_theme_is_customs_clearance_node($node)) {
+    return;
+  }
+  if ($paragraph->bundle() === 'cards') {
+    $suggestions[] = 'paragraph__cards__customs';
+  }
+  if ($paragraph->bundle() === 'webform') {
+    $suggestions[] = 'paragraph__webform__customs';
+  }
+}
+
 function motaded_theme_theme_suggestions_page_alter(array &$suggestions, array $variables) {
   // Core route /system/404 (system.404) is a normal route match, so Drupal does
   // not add page__404; use the same layout as for real 404 responses.

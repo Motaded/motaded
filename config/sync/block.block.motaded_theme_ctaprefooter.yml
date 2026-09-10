@@ -6,6 +6,7 @@ dependencies:
     - 'block_content:global_cta:9276a1b7-799d-4984-b7b5-5b14cc2102c1'
   module:
     - block_content
+    - system
   theme:
     - motaded_theme
 id: motaded_theme_ctaprefooter
@@ -20,4 +21,8 @@ settings:
   label_display: '0'
   provider: block_content
   view_mode: full
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    pages: "/customs-clearance-saudi-arabia\n/ar/customs-clearance-saudi-arabia"

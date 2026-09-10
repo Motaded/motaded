@@ -28,6 +28,7 @@ dependencies:
     - paragraphs.paragraphs_type.split_promo
     - paragraphs.paragraphs_type.steps
     - paragraphs.paragraphs_type.view_block
+    - paragraphs.paragraphs_type.webform
     - paragraphs.paragraphs_type.why_opportunities
     - paragraphs.paragraphs_type.business_setup_section
   module:
@@ -60,6 +61,7 @@ settings:
       cards: cards
       steps: steps
       view_block: view_block
+      webform: webform
       why_opportunities: why_opportunities
       hero_two_cols: hero_two_cols
       hero_split_banner: hero_split_banner
@@ -204,6 +206,9 @@ settings:
         enabled: false
       view_block:
         weight: 41
+        enabled: true
+      webform:
+        weight: 57
         enabled: true
       why_feature_card:
         weight: 46

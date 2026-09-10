@@ -426,6 +426,15 @@ media_lead:
       css/components/media-lead.css:
         weight: -9
 
+customs_clearance_landing:
+  version: 20260910j
+  css:
+    component:
+      css/components/customs-clearance-landing.css:
+        weight: -8
+  dependencies:
+    - motaded_theme/base
+
 split_promo:
   version: VERSION
   css:

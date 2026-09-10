@@ -1,0 +1,162 @@
+{#
+/**
+ * @file
+ * Distinct layouts per section on the customs clearance landing page.
+ */
+#}
+{{ attach_library('motaded_theme/customs_clearance_landing') }}
+{% set title = paragraph.field_title.value|default('') %}
+{% set items = [] %}
+{% for item in paragraph.field_paragraphs %}
+  {% if item.entity %}
+    {% set items = items|merge([item.entity]) %}
+  {% endif %}
+{% endfor %}
+{% if title == 'Clearance Process' %}
+  {% set layout = 'stack' %}
+{% elseif title == 'Scope of Services' %}
+  {% set layout = 'workstreams' %}
+{% elseif title == 'Relevant Authorities and Platforms' %}
+  {% set layout = 'directory' %}
+{% elseif title == 'Cargo Categories and Additional Requirements' %}
+  {% set layout = 'table' %}
+{% elseif title == 'Requirements and Documents' %}
+  {% set layout = 'lists' %}
+{% elseif title == 'Fees and Quotation' %}
+  {% set layout = 'fees' %}
+{% elseif title == 'Working with Motaded' %}
+  {% set layout = 'features' %}
+{% elseif title == 'Related Motaded pages' %}
+  {% set layout = 'related' %}
+{% else %}
+  {% set layout = 'features' %}
+{% endif %}
+
+<section{{ attributes.addClass('customs-svc', 'customs-svc--' ~ layout).removeClass('wrap') }}>
+  <div class="customs-svc__inner mot-shell">
+    {% if title %}
+      <header class="customs-svc__header">
+        <h2 class="customs-svc__title">{{ title }}</h2>
+        {% if paragraph.field_body.processed %}
+          <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if layout == 'stack' %}
+      <ol class="customs-svc__stages">
+        {% for card in items %}
+          <li class="customs-svc__stage">
+            <div class="customs-svc__stage-index" aria-hidden="true">{{ '%02d'|format(loop.index) }}</div>
+            <div class="customs-svc__stage-main">
+              <h3 class="customs-svc__stage-title">{{ card.field_title.value }}</h3>
+              <div class="customs-svc__stage-body">{{ card.field_body.processed }}</div>
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+
+    {% elseif layout == 'workstreams' %}
+      <ol class="customs-ws">
+        {% for card in items %}
+          <li class="customs-ws__item">
+            <span class="customs-ws__n" aria-hidden="true">{{ loop.index }}</span>
+            <h3 class="customs-ws__title">{{ card.field_title.value }}</h3>
+            <div class="customs-ws__body">{{ card.field_body.processed }}</div>
+          </li>
+        {% endfor %}
+      </ol>
+
+    {% elseif layout == 'directory' %}
+      <ul class="customs-dir">
+        {% for card in items %}
+          <li class="customs-dir__row">
+            <div class="customs-dir__copy">
+              <h3 class="customs-dir__name">{{ card.field_title.value }}</h3>
+              <div class="customs-dir__body">{{ card.field_body.processed }}</div>
+            </div>
+            {% if card.field_link.0 %}
+              <a class="customs-dir__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+
+    {% elseif layout == 'table' %}
+      <div class="customs-table-wrap">
+        <table class="customs-table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'Category'|t }}</th>
+              <th scope="col">{{ 'What may also apply'|t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for card in items %}
+              <tr>
+                <th scope="row">{{ card.field_title.value }}</th>
+                <td>{{ card.field_body.processed }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    {% elseif layout == 'lists' %}
+      <div class="customs-docs">
+        <div class="customs-docs__cols">
+          {% for card in items|slice(0, 2) %}
+            <div class="customs-docs__col">
+              <h3 class="customs-docs__title">{{ card.field_title.value }}</h3>
+              <div class="customs-docs__body">{{ card.field_body.processed }}</div>
+            </div>
+          {% endfor %}
+        </div>
+        {% if items|length > 2 %}
+          <p class="customs-docs__note">
+            <strong>{{ items[2].field_title.value }}</strong>
+            {{ items[2].field_body.value|striptags|trim }}
+          </p>
+        {% endif %}
+      </div>
+
+    {% elseif layout == 'related' %}
+      <ul class="customs-related">
+        {% for card in items %}
+          <li class="customs-related__item">
+            {% if card.field_link.0 %}
+              <a class="customs-related__title" href="{{ card.field_link.0.url.toString() }}">{{ card.field_title.value }}</a>
+            {% else %}
+              <span class="customs-related__title">{{ card.field_title.value }}</span>
+            {% endif %}
+            <div class="customs-related__body">{{ card.field_body.processed }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+
+    {% elseif layout == 'fees' %}
+      <div class="customs-fees">
+        {% for card in items %}
+          <div class="customs-fees__col customs-fees__col--{{ loop.index }}">
+            <h3 class="customs-fees__title">{{ card.field_title.value }}</h3>
+            <div class="customs-fees__body">{{ card.field_body.processed }}</div>
+            {% if card.field_link.0 %}
+              <a class="customs-fees__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="customs-feat">
+        {% for card in items %}
+          <div class="customs-feat__item">
+            <span class="customs-feat__n" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>
+            <h3 class="customs-feat__title">{{ card.field_title.value }}</h3>
+            <div class="customs-feat__body">{{ card.field_body.processed }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
