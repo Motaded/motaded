@@ -1,0 +1,43 @@
+title: 'تقييم التخليص'
+description: 'طلبات تقييم التخليص من صفحة التخليص الجمركي.'
+elements: |
+  first_name:
+    '#title': 'الاسم الأول'
+  last_name:
+    '#title': 'اسم العائلة'
+  email:
+    '#title': 'البريد الإلكتروني'
+  phone:
+    '#title': 'رقم الهاتف'
+  company_name:
+    '#title': 'اسم الشركة'
+  direction:
+    '#title': 'اتجاه التجارة'
+    '#options':
+      import: استيراد
+      export: تصدير
+  cargo_type:
+    '#title': 'فئة الشحنة'
+    '#empty_option': '- اختر -'
+    '#options':
+      general: 'بضائع عامة'
+      food: 'أغذية أو أغذية خاصة'
+      pharma: 'أدوية أو أجهزة طبية'
+      cosmetics: 'مستحضرات تجميل'
+      electronics: 'إلكترونيات أو سلع استهلاكية'
+      chemicals: 'كيماويات أو بضائع مقيدة'
+      other: أخرى
+  shipment_details:
+    '#title': 'تفاصيل الشحنة'
+    '#description': 'ما الذي تشحنونه، بلد المنشأ أو الوجهة، وما إذا كانت الشحنة قد وصلت.'
+  consent:
+    '#title': 'أوافق على التواصل معي بشأن طلب التقييم.'
+  actions:
+    '#submit__label': 'طلب تقييم'
+settings:
+  confirmation_message: '<p>شكراً لك. سيراجع متعدد المعلومات ويرد بتقييم العمل المطلوب وعرض سعر الخدمة.</p>'
+handlers:
+  email:
+    label: 'البريد الإلكتروني'
+    settings:
+      subject: 'تقييم تخليص: [webform_submission:values:company_name:raw]'

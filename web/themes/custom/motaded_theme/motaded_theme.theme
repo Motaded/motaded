@@ -2039,9 +2039,25 @@ function _motaded_theme_landing_page_field_paragraphs_move_partners_after_first_
  */
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
+  $variables['customs_related'] = [];
   if ($node->bundle() === 'landing_page' && motaded_theme_is_customs_clearance_node($node)) {
     $variables['attributes']['class'][] = 'landing-page--customs';
     $variables['#attached']['library'][] = 'motaded_theme/customs_clearance_landing';
+    if (!empty($variables['content']['field_paragraphs'])) {
+      foreach ($variables['content']['field_paragraphs'] as $key => $child) {
+        if (!is_numeric($key) || !is_array($child)) {
+          continue;
+        }
+        $paragraph = $child['#paragraph'] ?? NULL;
+        if (!$paragraph instanceof ParagraphInterface || !$paragraph->hasField('field_title')) {
+          continue;
+        }
+        if (motaded_theme_is_customs_related_title(trim((string) $paragraph->get('field_title')->value))) {
+          $variables['customs_related'] = $child;
+          unset($variables['content']['field_paragraphs'][$key]);
+        }
+      }
+    }
   }
   $variables['chamber_external_url'] = NULL;
   $variables['chamber_external_label'] = NULL;
@@ -3564,7 +3580,25 @@ function motaded_theme_preprocess_paragraph(array &$variables): void {
   }
   if ($paragraph->bundle() === 'cards' && $paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
     $cards_title = trim((string) $paragraph->get('field_title')->value);
-    if (strcasecmp($cards_title, 'Clearance Process') === 0) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (motaded_theme_is_customs_clearance_node($node)) {
+      $variables['customs_layout'] = motaded_theme_customs_cards_layout($cards_title);
+      $variables['customs_is_ar'] = \Drupal::languageManager()->getCurrentLanguage()->getId() === 'ar';
+      $repository = \Drupal::service('entity.repository');
+      $customs_items = [];
+      if ($paragraph->hasField('field_paragraphs')) {
+        foreach ($paragraph->get('field_paragraphs') as $item) {
+          if ($item->entity) {
+            $customs_items[] = $repository->getTranslationFromContext($item->entity);
+          }
+        }
+      }
+      $variables['customs_items'] = $customs_items;
+      if (motaded_theme_is_customs_process_title($cards_title)) {
+        $variables['attributes']['id'] = 'process';
+      }
+    }
+    elseif (motaded_theme_is_customs_process_title($cards_title)) {
       $variables['attributes']['id'] = 'process';
     }
   }
@@ -4478,8 +4512,48 @@ function motaded_theme_is_customs_clearance_node($node): bool {
   if (!$node instanceof \Drupal\node\NodeInterface) {
     return FALSE;
   }
-  $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $node->language()->getId());
-  return $alias === '/customs-clearance-saudi-arabia';
+  $manager = \Drupal::service('path_alias.manager');
+  foreach (['en', 'ar'] as $langcode) {
+    if ($manager->getAliasByPath('/node/' . $node->id(), $langcode) === '/customs-clearance-saudi-arabia') {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Layout key for customs landing card sections (EN and AR titles).
+ */
+function motaded_theme_customs_cards_layout(string $title): string {
+  $map = [
+    'Clearance Process' => 'stack',
+    'إجراءات التخليص' => 'stack',
+    'Scope of Services' => 'workstreams',
+    'نطاق الخدمات' => 'workstreams',
+    'Relevant Authorities and Platforms' => 'directory',
+    'الجهات والمنصات ذات الصلة' => 'directory',
+    'Cargo Categories and Additional Requirements' => 'table',
+    'فئات الشحنات والمتطلبات الإضافية' => 'table',
+    'Requirements and Documents' => 'lists',
+    'المتطلبات والمستندات' => 'lists',
+    'Fees and Quotation' => 'fees',
+    'الرسوم وعرض السعر' => 'fees',
+    'Working with Motaded' => 'features',
+    'العمل مع متعدد' => 'features',
+    'Related Motaded pages' => 'related',
+    'صفحات متعدد ذات الصلة' => 'related',
+    'Contact Our Customs Clearance Team' => 'contact',
+    'تواصل مع فريق التخليص الجمركي' => 'contact',
+  ];
+  return $map[$title] ?? 'features';
+}
+
+function motaded_theme_is_customs_process_title(string $title): bool {
+  return in_array($title, ['Clearance Process', 'إجراءات التخليص'], TRUE);
+}
+
+function motaded_theme_is_customs_related_title(string $title): bool {
+  return in_array($title, ['Related Motaded pages', 'صفحات متعدد ذات الصلة'], TRUE);
 }
 
 /**
@@ -4848,7 +4922,12 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
       'more_url' => '',
     ];
   }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (motaded_theme_is_customs_clearance_node($node)) {
+    $variables['market_indicators']['show'] = FALSE;
+  }
   $variables['#cache']['tags'][] = 'market_indicators';
+  $variables['#cache']['contexts'][] = 'url.path';
 }
 
 /**

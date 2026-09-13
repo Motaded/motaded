@@ -6,31 +6,15 @@
 #}
 {{ attach_library('motaded_theme/customs_clearance_landing') }}
 {% set title = paragraph.field_title.value|default('') %}
-{% set items = [] %}
-{% for item in paragraph.field_paragraphs %}
-  {% if item.entity %}
-    {% set items = items|merge([item.entity]) %}
-  {% endif %}
-{% endfor %}
-{% if title == 'Clearance Process' %}
-  {% set layout = 'stack' %}
-{% elseif title == 'Scope of Services' %}
-  {% set layout = 'workstreams' %}
-{% elseif title == 'Relevant Authorities and Platforms' %}
-  {% set layout = 'directory' %}
-{% elseif title == 'Cargo Categories and Additional Requirements' %}
-  {% set layout = 'table' %}
-{% elseif title == 'Requirements and Documents' %}
-  {% set layout = 'lists' %}
-{% elseif title == 'Fees and Quotation' %}
-  {% set layout = 'fees' %}
-{% elseif title == 'Working with Motaded' %}
-  {% set layout = 'features' %}
-{% elseif title == 'Related Motaded pages' %}
-  {% set layout = 'related' %}
-{% else %}
-  {% set layout = 'features' %}
+{% set items = customs_items|default([]) %}
+{% if items is empty %}
+  {% for item in paragraph.field_paragraphs %}
+    {% if item.entity %}
+      {% set items = items|merge([item.entity]) %}
+    {% endif %}
+  {% endfor %}
 {% endif %}
+{% set layout = customs_layout|default('features') %}
 
 <section{{ attributes.addClass('customs-svc', 'customs-svc--' ~ layout).removeClass('wrap') }}>
   <div class="customs-svc__inner mot-shell">
@@ -87,8 +71,8 @@
         <table class="customs-table">
           <thead>
             <tr>
-              <th scope="col">{{ 'Category'|t }}</th>
-              <th scope="col">{{ 'What may also apply'|t }}</th>
+              <th scope="col">{{ customs_is_ar ? 'الفئة'|t : 'Category'|t }}</th>
+              <th scope="col">{{ customs_is_ar ? 'ما قد ينطبق أيضاً'|t : 'What may also apply'|t }}</th>
             </tr>
           </thead>
           <tbody>
@@ -129,10 +113,15 @@
             {% else %}
               <span class="customs-related__title">{{ card.field_title.value }}</span>
             {% endif %}
-            <div class="customs-related__body">{{ card.field_body.processed }}</div>
           </li>
         {% endfor %}
       </ul>
+
+    {% elseif layout == 'contact' %}
+      {% set cta = items|first %}
+      {% if cta and cta.field_link.0 %}
+        <a class="customs-contact__cta" href="{{ cta.field_link.0.url.toString() }}">{{ cta.field_link.0.title }}</a>
+      {% endif %}
 
     {% elseif layout == 'fees' %}
       <div class="customs-fees">
