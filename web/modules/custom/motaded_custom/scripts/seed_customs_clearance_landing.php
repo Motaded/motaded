@@ -206,15 +206,26 @@ function _motaded_customs_create_cards(string $title, string $lede, array $items
   return $cards;
 }
 
-function _motaded_customs_highlight(string $label, string $icon): array {
-  $item = Paragraph::create([
-    'type' => 'hero_split_highlight',
+function _motaded_customs_hero_feature(string $title, string $body, string $icon, string $uri = ''): array {
+  $values = [
+    'type' => 'why_feature_card',
     'langcode' => 'en',
-    'field_title' => $label,
+    'field_title' => $title,
+    'field_body' => [
+      'value' => $body,
+      'format' => 'plain_text',
+    ],
     'field_why_feature_icon' => $icon,
-  ]);
-  $item->save();
-  return _motaded_customs_pref($item);
+  ];
+  if ($uri !== '') {
+    $values['field_link'] = [
+      'uri' => $uri,
+      'title' => '',
+    ];
+  }
+  $card = Paragraph::create($values);
+  $card->save();
+  return _motaded_customs_pref($card);
 }
 
 function _motaded_customs_hero(): Paragraph {
@@ -238,10 +249,26 @@ function _motaded_customs_hero(): Paragraph {
       'title' => 'Contact Our Team',
     ],
   ]);
-  $hero->set('field_hero_split_highlights', [
-    _motaded_customs_highlight('Import and export', 'globe'),
-    _motaded_customs_highlight('Arabic and English', 'document'),
-    _motaded_customs_highlight('Scope and service fee agreed before work begins', 'shield_check'),
+  $hero->set('field_hero_split_highlights', []);
+  $hero->set('field_hero_split_features', [
+    _motaded_customs_hero_feature(
+      'Import and export',
+      'Both trade directions.',
+      'globe',
+      'internal:#process'
+    ),
+    _motaded_customs_hero_feature(
+      'Arabic and English',
+      'File handling and status updates in both languages.',
+      'document',
+      'internal:#assessment'
+    ),
+    _motaded_customs_hero_feature(
+      'Scope and service fee',
+      'Agreed before work begins.',
+      'shield_check',
+      'internal:#assessment'
+    ),
   ]);
   $hero->save();
   return $hero;
@@ -346,27 +373,27 @@ function _motaded_customs_authorities(): Paragraph {
     [
       [
         'title' => 'ZATCA',
-        'body' => '<p>Customs procedures, duty and import VAT. Assessment and release stay with the authority. <a href="/platforms/zatca">Motaded on ZATCA</a>.</p>',
-        'uri' => 'https://zatca.gov.sa/en/Pages/default.aspx',
-        'link_title' => 'zatca.gov.sa',
+        'body' => '<p>Customs procedures, duty and import VAT. Assessment and release stay with the authority.</p>',
+        'uri' => 'internal:/platforms/zatca',
+        'link_title' => 'ZATCA',
       ],
       [
         'title' => 'FASAH',
-        'body' => '<p>National platform for the customs declaration. Importer data must match the Commercial Register. <a href="/platforms/fasah">Motaded on FASAH</a>.</p>',
-        'uri' => 'https://fasah.sa/',
-        'link_title' => 'fasah.sa',
+        'body' => '<p>National platform for the customs declaration. Importer data must match the Commercial Register.</p>',
+        'uri' => 'internal:/platforms/fasah',
+        'link_title' => 'FASAH',
       ],
       [
         'title' => 'SABER / SASO',
-        'body' => '<p>Product conformity certificates where a technical regulation applies — before arrival, not instead of the declaration. <a href="/platforms/saber">Motaded on SABER</a>.</p>',
-        'uri' => 'https://saber.sa/',
-        'link_title' => 'saber.sa',
+        'body' => '<p>Product conformity certificates where a technical regulation applies — before arrival, not instead of the declaration.</p>',
+        'uri' => 'internal:/platforms/saber',
+        'link_title' => 'SABER',
       ],
       [
         'title' => 'SFDA',
-        'body' => '<p>Additional controls for food, medicines, medical devices and cosmetics. The decision stays with SFDA. <a href="/platforms/saudi-food-and-drug-authority-sfda">Motaded on SFDA</a>.</p>',
-        'uri' => 'https://www.sfda.gov.sa/',
-        'link_title' => 'sfda.gov.sa',
+        'body' => '<p>Additional controls for food, medicines, medical devices and cosmetics. The decision stays with SFDA.</p>',
+        'uri' => 'internal:/platforms/saudi-food-and-drug-authority-sfda',
+        'link_title' => 'SFDA',
       ],
     ]
   );
@@ -453,7 +480,7 @@ function _motaded_customs_process(): Paragraph {
 function _motaded_customs_documents(): Paragraph {
   return _motaded_customs_create_cards(
     'Requirements and Documents',
-    '<p>The exact set depends on HS code, trade direction and the product. Motaded confirms the list on the file. Commercial Register data must match <a href="/platforms/fasah">FASAH</a> — CR procedures go through the <a href="https://business.sa/">Saudi Business Center</a> (<a href="/platforms/saudi-business-center-meras">Motaded on Meras</a>).</p>',
+    '<p>The exact set depends on HS code, trade direction and the product. Motaded confirms the list on the file. Commercial Register data must match <a href="/platforms/fasah">FASAH</a> — CR procedures go through the <a href="/platforms/saudi-business-center-meras">Saudi Business Center</a>.</p>',
     [
       [
         'title' => 'Required for filing',
@@ -461,7 +488,7 @@ function _motaded_customs_documents(): Paragraph {
       ],
       [
         'title' => 'If the goods require it',
-        'body' => '<ul><li>SABER PCoC/SCoC — <a href="https://saber.sa/">saber.sa</a>, <a href="/platforms/saber">Motaded on SABER</a></li><li>SFDA evidence for food, pharma, devices or cosmetics — <a href="https://www.sfda.gov.sa/">sfda.gov.sa</a>, <a href="/platforms/saudi-food-and-drug-authority-sfda">Motaded on SFDA</a></li><li>Any other permit flagged at assessment</li></ul>',
+        'body' => '<ul><li>SABER PCoC/SCoC — <a href="/platforms/saber">SABER</a></li><li>SFDA evidence for food, pharma, devices or cosmetics — <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a></li><li>Any other permit flagged at assessment</li></ul>',
       ],
       [
         'title' => 'Enough to start',

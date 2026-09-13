@@ -193,7 +193,7 @@
 }
 
 .customs-dir__link::after {
-  content: "↗";
+  content: "→";
 }
 
 .customs-dir__link:hover {

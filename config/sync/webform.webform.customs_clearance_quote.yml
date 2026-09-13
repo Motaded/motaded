@@ -68,40 +68,6 @@ elements: |-
         electronics: 'Electronics or consumer goods'
         chemicals: 'Chemicals or restricted goods'
         other: Other
-  shipment_details:
-    '#type': details
-    '#title': 'Additional shipment details (optional)'
-    origin_country:
-      '#type': textfield
-      '#title': 'Origin or destination country'
-    port:
-      '#type': textfield
-      '#title': 'Port or airport'
-    has_cr:
-      '#type': radios
-      '#title': 'Commercial Register in Saudi Arabia'
-      '#options':
-        yes: 'Yes'
-        no: 'Not yet'
-      '#description': 'A FASAH declaration must match a registered importer.'
-    flex_value:
-      '#type': webform_flexbox
-      cargo_value:
-        '#type': number
-        '#title': 'Approximate value'
-        '#min': 0
-        '#step': 0.01
-      cargo_currency:
-        '#type': select
-        '#title': Currency
-        '#options':
-          SAR: SAR
-          USD: USD
-          EUR: EUR
-        '#empty_option': '- Currency -'
-    notes:
-      '#type': textarea
-      '#title': 'Notes, invoice or packing-list details'
   consent:
     '#type': checkbox
     '#title': 'I agree to be contacted about this assessment request.'
