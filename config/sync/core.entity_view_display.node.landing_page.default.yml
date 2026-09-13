@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
     - field.field.node.landing_page.field_faq
+    - field.field.node.landing_page.field_phone_number
     - node.type.landing_page
   module:
     - entity_reference_revisions
@@ -67,5 +68,6 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_phone_number: true
   langcode: true
   search_api_excerpt: true

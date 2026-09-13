@@ -1,0 +1,19 @@
+uuid: 8f3c2a1e-6b47-4d9a-9e21-c4d8a7b0f152
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_phone_number
+    - node.type.landing_page
+id: node.landing_page.field_phone_number
+field_name: field_phone_number
+entity_type: node
+bundle: landing_page
+label: 'Phone number'
+description: 'Shown on the mid-page CTA and in the contact row under the assessment form.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

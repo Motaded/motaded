@@ -662,22 +662,44 @@
   font-weight: 650;
 }
 
-.customs-work__cta {
+.customs-work__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+}
+
+.customs-work__cta,
+.customs-work__action {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-  margin-top: 0.35rem;
-  padding: 0.7rem 1.35rem;
+  padding: 0.7rem 1.15rem;
   border-radius: 999px;
-  background: #fff;
-  color: #14362e;
   font-size: 0.92rem;
   font-weight: 700;
   text-decoration: none;
 }
 
+.customs-work__cta {
+  background: #fff;
+  color: #14362e;
+}
+
 .customs-work__cta:hover {
   background: #ecfdf5;
+}
+
+.customs-work__action {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  color: #fff;
+}
+
+.customs-work__action:hover {
+  border-color: #99f6e4;
+  color: #99f6e4;
 }
 
 .customs-work__list {
@@ -764,32 +786,109 @@
   color: var(--mot-text-muted, #64748b);
 }
 
-.customs-svc--contact .customs-svc__inner {
+.customs-svc--invite {
+  padding-block: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.customs-invite {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.35rem, 3vw, 1.85rem) clamp(1.15rem, 3vw, 1.85rem);
+  border: 1px solid #d7e5e1;
+  border-inline-start: 4px solid #0f766e;
+  border-radius: 0.85rem;
+  background: #fff;
+}
+
+@media (min-width: 800px) {
+  .customs-invite {
+    grid-template-columns: minmax(0, 1fr) 16.5rem;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.customs-invite__copy {
+  min-width: 0;
+  max-width: 38rem;
+}
+
+.customs-invite__copy .customs-svc__title {
+  margin-bottom: 0.45rem;
+}
+
+.customs-invite__actions {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 1.1rem;
+  align-items: stretch;
+  gap: 0.5rem;
 }
 
-.customs-svc--contact .customs-svc__header {
-  margin-bottom: 0;
-}
-
+.customs-invite__cta,
+.customs-invite__action,
 .customs-contact__cta {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
-  padding: 0.7rem 1.35rem;
+  justify-content: center;
+  min-height: 2.65rem;
+  padding: 0.6rem 1.1rem;
   border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+
+.customs-invite__cta,
+.customs-contact__cta {
   background: #0f766e;
   color: #fff;
+}
+
+.customs-invite__cta:hover,
+.customs-contact__cta:hover {
+  background: #0d5f58;
+}
+
+.customs-invite__action {
+  border: 1px solid #c5d8d2;
+  background: #fff;
+  color: #14362e;
+}
+
+.customs-invite__action:hover {
+  border-color: #0f766e;
+  color: #0f766e;
+}
+
+.customs-svc--contact {
+  margin-top: 0;
+  padding: 0 0 clamp(1.75rem, 3vw, 2.25rem);
+  background: #f4f8f6;
+  border-bottom: 1px solid #e4eeea;
+}
+
+.customs-svc--contact .customs-svc__inner {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+.customs-reach-line {
+  margin: 0.15rem auto 0;
+  max-width: 46rem;
   font-size: 0.92rem;
-  font-weight: 700;
+  line-height: 1.55;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.customs-reach-line a {
+  color: var(--mot-brand, #0f766e);
+  font-weight: 650;
   text-decoration: none;
 }
 
-.customs-contact__cta:hover {
-  background: #0d5f58;
+.customs-reach-line a:hover {
+  text-decoration: underline;
 }
 
 /* ------------------------------------------------------------------ */
@@ -852,7 +951,7 @@
 .landing-page--customs .landing-page__faq {
   max-width: var(--mot-home-max, 1320px);
   margin-inline: auto;
-  padding-inline: var(--mot-pad-x, 1.25rem);
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--mot-pad-x, 1.25rem) 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -862,9 +961,10 @@
 .landing-page--customs #assessment.customs-form,
 .landing-page--customs .customs-form {
   margin-top: clamp(2rem, 4vw, 3rem);
-  padding-block: clamp(2.25rem, 4vw, 3.25rem);
-  background: linear-gradient(180deg, #f4f8f6 0%, #eef4f1 48%, #fff 100%);
-  border-block: 1px solid var(--mot-border, #e8edf3);
+  padding: clamp(2.25rem, 4vw, 3.25rem) 0 0.35rem;
+  background: #f4f8f6;
+  border-top: 1px solid #e4eeea;
+  border-bottom: 0;
 }
 
 .customs-form__panel {

@@ -18,7 +18,7 @@
 
 <section{{ attributes.addClass('customs-svc', 'customs-svc--' ~ layout).removeClass('wrap') }}>
   <div class="customs-svc__inner mot-shell">
-    {% if layout != 'features' and title %}
+    {% if layout != 'features' and layout != 'invite' and layout != 'contact' and title %}
       <header class="customs-svc__header">
         <h2 class="customs-svc__title">{{ title }}</h2>
         {% if paragraph.field_body.processed %}
@@ -128,11 +128,41 @@
         {% endfor %}
       </ul>
 
+    {% elseif layout == 'invite' %}
+      <div class="customs-invite">
+        <div class="customs-invite__copy">
+          {% if title %}
+            <h2 class="customs-svc__title">{{ title }}</h2>
+          {% endif %}
+          {% if paragraph.field_body.processed %}
+            <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+          {% endif %}
+        </div>
+        <div class="customs-invite__actions">
+          <a class="customs-invite__cta" href="#assessment">{{ customs_is_ar ? 'طلب تقييم التخليص' : 'Request a Clearance Assessment' }}</a>
+          {% if customs_phone.tel %}
+            <a class="customs-invite__action" href="{{ customs_phone.tel }}">{{ customs_phone.display }}</a>
+          {% endif %}
+          {% if customs_phone.whatsapp %}
+            <a class="customs-invite__action" href="{{ customs_phone.whatsapp }}" rel="noopener noreferrer">WhatsApp</a>
+          {% endif %}
+        </div>
+      </div>
+
     {% elseif layout == 'contact' %}
-      {% set cta = items|first %}
-      {% if cta and cta.field_link.0 %}
-        <a class="customs-contact__cta" href="{{ cta.field_link.0.url.toString() }}">{{ cta.field_link.0.title }}</a>
-      {% endif %}
+      <p class="customs-reach-line">
+        {% if customs_is_ar %}
+          إذا كانت لديكم مشكلة أو سؤال إضافي، تواصلوا مع الفريق عبر
+          {% if customs_phone.whatsapp %}<a href="{{ customs_phone.whatsapp }}" rel="noopener noreferrer">واتساب</a> أو {% endif %}
+          <a href="mailto:info@motaded.com.sa">البريد</a>
+          {% if customs_phone.tel %} أو <a href="{{ customs_phone.tel }}">{{ customs_phone.display }}</a>{% endif %}.
+        {% else %}
+          If you have a problem or a further question, contact the team on
+          {% if customs_phone.whatsapp %}<a href="{{ customs_phone.whatsapp }}" rel="noopener noreferrer">WhatsApp</a>,{% endif %}
+          <a href="mailto:info@motaded.com.sa">email</a>
+          {% if customs_phone.tel %} or <a href="{{ customs_phone.tel }}">{{ customs_phone.display }}</a>{% endif %}.
+        {% endif %}
+      </p>
 
     {% elseif layout == 'fees' %}
       <div class="customs-fees">
@@ -156,7 +186,15 @@
           {% if paragraph.field_body.processed %}
             <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
           {% endif %}
-          <a class="customs-work__cta" href="#assessment">{{ customs_is_ar ? 'طلب تقييم التخليص' : 'Request a Clearance Assessment' }}</a>
+          <div class="customs-work__actions">
+            <a class="customs-work__cta" href="#assessment">{{ customs_is_ar ? 'طلب تقييم التخليص' : 'Request a Clearance Assessment' }}</a>
+            {% if customs_phone.tel %}
+              <a class="customs-work__action" href="{{ customs_phone.tel }}">{{ customs_phone.display }}</a>
+            {% endif %}
+            {% if customs_phone.whatsapp %}
+              <a class="customs-work__action" href="{{ customs_phone.whatsapp }}" rel="noopener noreferrer">WhatsApp</a>
+            {% endif %}
+          </div>
         </div>
         <ul class="customs-work__list">
           {% for card in items %}

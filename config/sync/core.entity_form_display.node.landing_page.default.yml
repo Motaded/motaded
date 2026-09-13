@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
     - field.field.node.landing_page.field_faq
+    - field.field.node.landing_page.field_phone_number
     - node.type.landing_page
   module:
     - metatag
@@ -68,6 +69,14 @@ content:
     settings:
       sidebar: true
       use_details: true
+    third_party_settings: {  }
+  field_phone_number:
+    type: string_textfield
+    weight: 129
+    region: content
+    settings:
+      size: 40
+      placeholder: '+966 53 979 7197'
     third_party_settings: {  }
   field_paragraphs:
     type: paragraphs
