@@ -18,7 +18,7 @@
 
 <section{{ attributes.addClass('customs-svc', 'customs-svc--' ~ layout).removeClass('wrap') }}>
   <div class="customs-svc__inner mot-shell">
-    {% if title %}
+    {% if layout != 'features' and title %}
       <header class="customs-svc__header">
         <h2 class="customs-svc__title">{{ title }}</h2>
         {% if paragraph.field_body.processed %}
@@ -41,30 +41,41 @@
       </ol>
 
     {% elseif layout == 'workstreams' %}
-      <ol class="customs-ws">
+      <ul class="customs-ws">
         {% for card in items %}
           <li class="customs-ws__item">
-            <span class="customs-ws__n" aria-hidden="true">{{ loop.index }}</span>
+            {% if customs_item_icons[loop.index0] %}
+              <span class="customs-ws__icon" aria-hidden="true">{{ customs_item_icons[loop.index0] }}</span>
+            {% endif %}
             <h3 class="customs-ws__title">{{ card.field_title.value }}</h3>
             <div class="customs-ws__body">{{ card.field_body.processed }}</div>
           </li>
         {% endfor %}
-      </ol>
+      </ul>
 
     {% elseif layout == 'directory' %}
       <ul class="customs-dir">
         {% for card in items %}
+          {% set logo = customs_item_logos[loop.index0]|default({}) %}
           <li class="customs-dir__row">
+            <div class="customs-dir__logo">
+              {% if logo.src %}
+                <img src="{{ logo.src }}" {% if logo.srcset %}srcset="{{ logo.srcset }}" sizes="56px" {% endif %}{% if logo.width %}width="{{ logo.width }}" {% endif %}{% if logo.height %}height="{{ logo.height }}" {% endif %}alt="{{ (logo.alt|default(card.field_title.value))|e('html_attr') }}" loading="lazy" decoding="async">
+              {% else %}
+                <span class="customs-dir__mark" aria-hidden="true">{{ card.field_title.value|slice(0, 1) }}</span>
+              {% endif %}
+            </div>
             <div class="customs-dir__copy">
               <h3 class="customs-dir__name">{{ card.field_title.value }}</h3>
               <div class="customs-dir__body">{{ card.field_body.processed }}</div>
+              {% if card.field_link.0 %}
+                <a class="customs-dir__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+              {% endif %}
             </div>
-            {% if card.field_link.0 %}
-              <a class="customs-dir__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
-            {% endif %}
           </li>
         {% endfor %}
       </ul>
+      <p class="customs-dir__note">{{ customs_is_ar ? 'تنشر كل جهة القواعد وتقرر التقييم والرسوم ونتيجة المنتج والإفراج.' : 'Each authority publishes the rules and decides assessment, duty, product outcome and release.' }}</p>
 
     {% elseif layout == 'table' %}
       <div class="customs-table-wrap">
@@ -136,11 +147,36 @@
         {% endfor %}
       </div>
 
+    {% elseif layout == 'features' %}
+      <div class="customs-work">
+        <div class="customs-work__intro">
+          {% if title %}
+            <h2 class="customs-svc__title">{{ title }}</h2>
+          {% endif %}
+          {% if paragraph.field_body.processed %}
+            <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+          {% endif %}
+          <a class="customs-work__cta" href="#assessment">{{ customs_is_ar ? 'طلب تقييم التخليص' : 'Request a Clearance Assessment' }}</a>
+        </div>
+        <ul class="customs-work__list">
+          {% for card in items %}
+            <li class="customs-work__item">
+              {% if customs_item_icons[loop.index0] %}
+                <span class="customs-work__icon" aria-hidden="true">{{ customs_item_icons[loop.index0] }}</span>
+              {% endif %}
+              <div class="customs-work__copy">
+                <h3 class="customs-work__title">{{ card.field_title.value }}</h3>
+                <div class="customs-work__body">{{ card.field_body.processed }}</div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
     {% else %}
       <div class="customs-feat">
         {% for card in items %}
           <div class="customs-feat__item">
-            <span class="customs-feat__n" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>
             <h3 class="customs-feat__title">{{ card.field_title.value }}</h3>
             <div class="customs-feat__body">{{ card.field_body.processed }}</div>
           </div>
