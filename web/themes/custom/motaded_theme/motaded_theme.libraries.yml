@@ -426,8 +426,16 @@ media_lead:
       css/components/media-lead.css:
         weight: -9
 
+datasaudi_trade:
+  version: 20260913g
+  css:
+    component:
+      css/components/datasaudi-trade.css: {}
+  dependencies:
+    - motaded_theme/base
+
 customs_clearance_landing:
-  version: 20260913e
+  version: 20260913m
   css:
     component:
       css/components/customs-clearance-landing.css:

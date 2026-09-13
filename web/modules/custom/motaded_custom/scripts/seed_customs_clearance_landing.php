@@ -27,12 +27,15 @@ $node = _motaded_customs_load_or_create_node();
 $paragraphs = [
   _motaded_customs_hero(),
   _motaded_customs_overview(),
+  _motaded_customs_trade_market(),
   _motaded_customs_glance(),
   _motaded_customs_scope(),
   _motaded_customs_working(),
   _motaded_customs_authorities(),
+  _motaded_customs_trade_product(),
   _motaded_customs_cargo(),
   _motaded_customs_process(),
+  _motaded_customs_mid_cta(),
   _motaded_customs_documents(),
   _motaded_customs_fees(),
   _motaded_customs_assessment_form(),
@@ -48,6 +51,9 @@ $node->setTitle('Customs Clearance in Saudi Arabia');
 $node->set('field_paragraphs', $refs);
 $node->set('field_form', []);
 $node->set('field_faq', _motaded_customs_faq_items());
+if ($node->hasField('field_phone_number')) {
+  $node->set('field_phone_number', '+966 53 979 7197');
+}
 $node->set('field_meta', json_encode([
   'title' => 'Customs Clearance in Saudi Arabia | Motaded',
   'description' => 'Motaded provides import and export clearance support in Saudi Arabia: document review, declaration procedures, applicable product requirements and release follow-up. Scope and service fee are agreed before work begins.',
@@ -300,6 +306,28 @@ function _motaded_customs_overview(): Paragraph {
   return $lead;
 }
 
+function _motaded_customs_trade_market(): Paragraph {
+  $paragraph = Paragraph::create([
+    'type' => 'trade_market_overview',
+    'langcode' => 'en',
+    'field_title' => 'Saudi Arabia: A Market for International Trade',
+    'field_body' => _motaded_customs_html('<p>Explore Saudi Arabia’s merchandise trade through official monthly import and export statistics.</p>'),
+  ]);
+  $paragraph->save();
+  return $paragraph;
+}
+
+function _motaded_customs_trade_product(): Paragraph {
+  $paragraph = Paragraph::create([
+    'type' => 'trade_by_product',
+    'langcode' => 'en',
+    'field_title' => 'Explore Trade by Product',
+    'field_body' => _motaded_customs_html('<p>See the leading product categories in Saudi Arabia’s merchandise imports.</p>'),
+  ]);
+  $paragraph->save();
+  return $paragraph;
+}
+
 function _motaded_customs_glance(): Paragraph {
   $stat = static function (string $value, string $title, string $body, string $icon): array {
     $item = Paragraph::create([
@@ -370,11 +398,11 @@ function _motaded_customs_scope(): Paragraph {
 function _motaded_customs_authorities(): Paragraph {
   return _motaded_customs_create_cards(
     'Relevant Authorities and Platforms',
-    '<p>Motaded coordinates the shipment through official channels. The systems that apply depend on the goods. Each authority publishes the rules and decides assessment, duty and release. Motaded’s platform notes are linked in each row.</p>',
+    '<p>Motaded coordinates the shipment through the official channels that apply to the goods.</p>',
     [
       [
         'title' => 'ZATCA',
-        'body' => '<p>Customs procedures, duty and import VAT. ZATCA assesses the declaration and issues the release.</p>',
+        'body' => '<p>Customs procedures, duty and import VAT.</p>',
         'uri' => 'internal:/platforms/zatca',
         'link_title' => 'ZATCA',
       ],
@@ -392,7 +420,7 @@ function _motaded_customs_authorities(): Paragraph {
       ],
       [
         'title' => 'SFDA',
-        'body' => '<p>Additional controls for food, medicines, medical devices and cosmetics. SFDA decides the product outcome.</p>',
+        'body' => '<p>Additional controls for food, medicines, medical devices and cosmetics.</p>',
         'uri' => 'internal:/platforms/saudi-food-and-drug-authority-sfda',
         'link_title' => 'SFDA',
       ],
@@ -526,16 +554,16 @@ function _motaded_customs_working(): Paragraph {
     '<p>Riyadh-based consultancy, established 2017. More on <a href="/about-us">About Motaded</a>.</p>',
     [
       [
-        'title' => 'Named contact',
-        'body' => '<p>One coordinator for documents, the customs declaration and status. You name who receives updates.</p>',
+        'title' => 'One point of contact',
+        'body' => '<p>A dedicated coordinator for your documents, customs declaration and shipment updates.</p>',
       ],
       [
-        'title' => 'Agreed scope in writing',
-        'body' => '<p>Work starts after the quotation is accepted. Changes are confirmed before they are billed.</p>',
+        'title' => 'Clear scope and fees',
+        'body' => '<p>The work and service fee are agreed before your clearance engagement begins.</p>',
       ],
       [
-        'title' => 'Status updates',
-        'body' => '<p>Missing documents, inspections, official charges and release — reported to the named contact.</p>',
+        'title' => 'Updates at key stages',
+        'body' => '<p>Know when documents, inspections or payments need your attention, and when release is confirmed.</p>',
       ],
     ],
     'simple_text_card'
@@ -617,10 +645,26 @@ function _motaded_customs_assessment_form(): Paragraph {
   return $form;
 }
 
+function _motaded_customs_mid_cta(): Paragraph {
+  return _motaded_customs_create_cards(
+    'Start with a written assessment',
+    '<p>Motaded reviews company and shipment details, then confirms the applicable channels and the service fee in writing.</p>',
+    [
+      [
+        'title' => 'Request a Clearance Assessment',
+        'body' => '',
+        'uri' => 'internal:#assessment',
+        'link_title' => 'Request a Clearance Assessment',
+      ],
+    ],
+    'simple_text_card'
+  );
+}
+
 function _motaded_customs_final_cta(): Paragraph {
   return _motaded_customs_create_cards(
     'Contact Our Customs Clearance Team',
-    '<p>Request an assessment on this page, write to <a href="mailto:info@motaded.com.sa">info@motaded.com.sa</a>, or contact the team on WhatsApp or by telephone: +966 53 979 7197.</p>',
+    '<p>If you have a problem or a further question, contact the team on WhatsApp, email or telephone.</p>',
     [
       [
         'title' => 'Request a Clearance Assessment',

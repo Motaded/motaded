@@ -196,6 +196,161 @@ function motaded_custom_schema(): array {
     ],
   ];
 
+  $schema['datasaudi_trade_balance'] = [
+    'description' => 'Monthly merchandise imports/exports from DataSaudi gastat_trade_balance (Million SAR).',
+    'fields' => [
+      'period' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'period_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'exports_million_sar' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'imports_million_sar' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'unit' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'million_sar',
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['period'],
+    'unique keys' => [
+      'period_id' => ['period_id'],
+    ],
+  ];
+
+  $schema['datasaudi_trade_product'] = [
+    'description' => 'Monthly HS-section trade values from DataSaudi gastat_trade_product (Million SAR).',
+    'fields' => [
+      'flow_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'flow_key' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'section_id' => [
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+      ],
+      'period' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'period_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'value_million_sar' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'unit' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'million_sar',
+      ],
+      'flow_label_en' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'flow_label_ar' => [
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'section_label_en' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'section_label_ar' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['flow_id', 'section_id', 'period'],
+    'indexes' => [
+      'flow_period' => ['flow_id', 'period'],
+      'period' => ['period'],
+      'section_id' => ['section_id'],
+    ],
+  ];
+
+  $schema['datasaudi_trade_import_status'] = [
+    'description' => 'Last successful DataSaudi trade snapshot metadata.',
+    'fields' => [
+      'dataset' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'period_min' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'period_max' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'row_count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'unit' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'million_sar',
+      ],
+    ],
+    'primary key' => ['dataset'],
+  ];
+
   return $schema;
 }
 
@@ -1245,5 +1400,22 @@ function motaded_custom_update_10046(): void {
   }
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
   \Drupal::entityTypeManager()->clearCachedDefinitions();
+}
+
+/**
+ * Creates DataSaudi monthly trade snapshot tables.
+ */
+function motaded_custom_update_10047(): void {
+  $schema = motaded_custom_schema();
+  $sm = \Drupal::database()->schema();
+  foreach ([
+    'datasaudi_trade_balance',
+    'datasaudi_trade_product',
+    'datasaudi_trade_import_status',
+  ] as $table) {
+    if (!$sm->tableExists($table) && isset($schema[$table])) {
+      $sm->createTable($table, $schema[$table]);
+    }
+  }
 }
 

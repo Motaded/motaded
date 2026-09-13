@@ -1,0 +1,39 @@
+uuid: 11d4a8c3-6e70-4b25-9f81-0a3c7e5b1429
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.trade_market_overview.field_body
+    - field.field.paragraph.trade_market_overview.field_title
+    - paragraphs.paragraphs_type.trade_market_overview
+  module:
+    - text
+id: paragraph.trade_market_overview.default
+targetEntityType: paragraph
+bundle: trade_market_overview
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

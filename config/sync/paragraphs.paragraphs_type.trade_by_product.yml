@@ -1,0 +1,10 @@
+uuid: 2a8d5c70-1e43-4b9f-a6d2-8f0c3e17b4aa
+langcode: en
+status: true
+dependencies: {  }
+id: trade_by_product
+label: 'Trade by product'
+icon_uuid: null
+icon_default: null
+description: 'Merchandise import categories from the DataSaudi snapshot.'
+behavior_plugins: {  }

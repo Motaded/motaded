@@ -1,0 +1,39 @@
+uuid: 3f6b90de-18aa-4d41-8c02-9e4b1a7f305c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.trade_by_product.field_body
+    - field.field.paragraph.trade_by_product.field_title
+    - paragraphs.paragraphs_type.trade_by_product
+  module:
+    - text
+id: paragraph.trade_by_product.default
+targetEntityType: paragraph
+bundle: trade_by_product
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

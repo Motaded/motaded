@@ -11,7 +11,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\ParagraphInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\webform\Entity\WebformOptions;
 
@@ -1707,8 +1709,7 @@ function motaded_custom_views_pre_render(\Drupal\views\ViewExecutable $view): vo
 /**
  * Implements hook_cron().
  *
- * Queues a daily World Bank import (processed by queue worker; see
- * MarketIndicatorsImportQueueWorker).
+ * Queues daily World Bank / GASTAT / DataSaudi imports (see queue workers).
  */
 function motaded_custom_cron(): void {
   $day = gmdate('Y-m-d', \Drupal::time()->getRequestTime());
@@ -1725,6 +1726,13 @@ function motaded_custom_cron(): void {
     if ($queue_sector->numberOfItems() === 0) {
       $queue_sector->createItem([]);
       $state->set('motaded_custom.sector_indicators_queue_day', $day);
+    }
+  }
+  if ($state->get('motaded_custom.datasaudi_trade_queue_day') !== $day) {
+    $queue_trade = \Drupal::queue('datasaudi_trade_import');
+    if ($queue_trade->numberOfItems() === 0) {
+      $queue_trade->createItem([]);
+      $state->set('motaded_custom.datasaudi_trade_queue_day', $day);
     }
   }
   if ($state->get('motaded_custom.event_status_sync_day') !== $day) {
@@ -2301,4 +2309,29 @@ function _motaded_custom_ensure_webp_sidecar(string $uri): void {
     return;
   }
   \Drupal::service('motaded_custom.webp_sidecar')->ensureSidecar($uri);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for paragraph templates.
+ */
+function motaded_custom_preprocess_paragraph(array &$variables): void {
+  $paragraph = $variables['paragraph'] ?? NULL;
+  if (!$paragraph instanceof ParagraphInterface) {
+    return;
+  }
+  $bundle = $paragraph->bundle();
+  if (!in_array($bundle, ['trade_market_overview', 'trade_by_product'], TRUE)) {
+    return;
+  }
+  if (!\Drupal::hasService('motaded_custom.datasaudi_trade_presenter')) {
+    return;
+  }
+  /** @var \Drupal\motaded_custom\DataSaudi\DataSaudiTradePresenter $presenter */
+  $presenter = \Drupal::service('motaded_custom.datasaudi_trade_presenter');
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  $variables['trade'] = $bundle === 'trade_market_overview'
+    ? $presenter->buildMarketOverview($langcode)
+    : $presenter->buildProductImports($langcode);
+  $variables['#attached']['library'][] = 'motaded_theme/datasaudi_trade';
+  $presenter->cacheableMetadata()->applyTo($variables);
 }

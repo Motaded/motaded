@@ -107,6 +107,13 @@ services:
       - '@motaded_custom.sector_indicators_importer'
     tags:
       - { name: drush.command }
+  motaded_custom.drush.datasaudi_trade_import_commands:
+    class: Drupal\motaded_custom\Drush\Commands\DataSaudiTradeImportCommands
+    arguments:
+      - '@motaded_custom.datasaudi_trade_importer'
+      - '@motaded_custom.datasaudi_trade_repository'
+    tags:
+      - { name: drush.command }
   motaded_custom.drush.taxonomy_terms_ar_commands:
     class: Drupal\motaded_custom\Drush\Commands\TaxonomyTermsArCommands
     tags:

@@ -135,6 +135,41 @@ services:
       - '@entity_type.manager'
       - '@motaded_custom.gastat_statistics_client'
 
+  motaded_custom.datasaudi_tesseract_client:
+    class: Drupal\motaded_custom\DataSaudi\DataSaudiTesseractClient
+    arguments:
+      - '@http_client'
+      - '@logger.factory'
+
+  motaded_custom.datasaudi_trade_repository:
+    class: Drupal\motaded_custom\DataSaudi\DataSaudiTradeRepository
+    arguments:
+      - '@database'
+      - '@logger.factory'
+
+  motaded_custom.datasaudi_trade_importer:
+    class: Drupal\motaded_custom\DataSaudi\DataSaudiTradeImporter
+    arguments:
+      - '@motaded_custom.datasaudi_tesseract_client'
+      - '@motaded_custom.datasaudi_trade_repository'
+      - '@lock'
+      - '@datetime.time'
+      - '@cache_tags.invalidator'
+      - '@logger.factory'
+
+  motaded_custom.datasaudi_trade_charts:
+    class: Drupal\motaded_custom\DataSaudi\DataSaudiTradeCharts
+    arguments:
+      - '@string_translation'
+
+  motaded_custom.datasaudi_trade_presenter:
+    class: Drupal\motaded_custom\DataSaudi\DataSaudiTradePresenter
+    arguments:
+      - '@motaded_custom.datasaudi_trade_repository'
+      - '@motaded_custom.datasaudi_trade_charts'
+      - '@date.formatter'
+      - '@string_translation'
+
   motaded_custom.main_menu_migrator:
     class: Drupal\motaded_custom\Menu\MainMenuMigrator
     arguments:

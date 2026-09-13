@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * DataSaudi merchandise trade: compact metrics + monthly chart.
+ */
+#}
+{{ attach_library('motaded_theme/datasaudi_trade') }}
+{% set trade = trade|default({}) %}
+<section{{ attributes.addClass('paragraph', 'datasaudi-trade', 'datasaudi-trade--market') }}>
+  <div class="datasaudi-trade__inner mot-shell">
+    <header class="datasaudi-trade__copy">
+      <div class="datasaudi-trade__heading">
+        {% if paragraph.field_title.value %}
+          <h2 class="datasaudi-trade__title">{{ paragraph.field_title.value }}</h2>
+        {% endif %}
+        {% if trade.period_label %}
+          <p class="datasaudi-trade__period">{{ trade.period_label }}</p>
+        {% endif %}
+      </div>
+      {% if content.field_body is not empty %}
+        <div class="datasaudi-trade__lede">{{ content.field_body }}</div>
+      {% endif %}
+    </header>
+
+    {% if trade.has_data %}
+      <div class="datasaudi-trade__panel">
+        <div class="datasaudi-trade__metrics">
+          <p class="datasaudi-trade__hero-value">{{ trade.hero.value_display }}</p>
+          <p class="datasaudi-trade__hero-unit">{{ trade.unit_label }}</p>
+          <p class="datasaudi-trade__hero-label">{{ trade.hero.label }} · {{ trade.period_label }}</p>
+          <dl class="datasaudi-trade__pair">
+            <div>
+              <dt>{{ trade.imports.label }}</dt>
+              <dd>{{ trade.imports.value_display }}</dd>
+              {% if trade.imports.change_display %}
+                <p class="datasaudi-trade__yoy">{{ trade.imports.change_display }} {{ trade.imports.change_hint }}</p>
+              {% endif %}
+            </div>
+            <div>
+              <dt>{{ trade.exports.label }}</dt>
+              <dd>{{ trade.exports.value_display }}</dd>
+              {% if trade.exports.change_display %}
+                <p class="datasaudi-trade__yoy">{{ trade.exports.change_display }} {{ trade.exports.change_hint }}</p>
+              {% endif %}
+            </div>
+          </dl>
+        </div>
+        <figure class="datasaudi-trade__chart">
+          <figcaption class="datasaudi-trade__chart-title">{{ trade.chart_title }}</figcaption>
+          <p class="datasaudi-trade__legend">
+            <span class="datasaudi-trade__legend-item datasaudi-trade__legend-item--imports">{{ 'Imports'|t }}</span>
+            <span class="datasaudi-trade__legend-item datasaudi-trade__legend-item--exports">{{ 'Exports'|t }}</span>
+            <span>{{ trade.period_label }}</span>
+          </p>
+          {{ trade.chart_svg }}
+          <p class="datasaudi-trade__source">
+            <a href="{{ trade.source_url }}" rel="noopener noreferrer">{{ trade.source_label }}</a>
+          </p>
+        </figure>
+      </div>
+    {% else %}
+      <p class="datasaudi-trade__empty">{{ trade.empty_message }}</p>
+    {% endif %}
+  </div>
+</section>

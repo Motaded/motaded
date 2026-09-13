@@ -1,0 +1,10 @@
+uuid: 7c3e1a2b-9f04-4d8a-8c11-2b6e0d4a91f3
+langcode: en
+status: true
+dependencies: {  }
+id: trade_market_overview
+label: 'Trade market overview'
+icon_uuid: null
+icon_default: null
+description: 'Monthly merchandise imports and exports from the DataSaudi snapshot.'
+behavior_plugins: {  }

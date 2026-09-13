@@ -62,6 +62,8 @@ function _motaded_customs_seed_arabic(): void {
         'field_body' => $data['overview']['field_body'],
         'field_link' => $data['overview']['field_link'],
       ]),
+      'trade_market_overview' => _motaded_customs_ar_save($paragraph, $data['trade_market']),
+      'trade_by_product' => _motaded_customs_ar_save($paragraph, $data['trade_product']),
       'glance_block' => _motaded_customs_ar_glance($paragraph, $data['glance']),
       'cards' => _motaded_customs_ar_cards($paragraph, $data['sections']),
       'webform' => _motaded_customs_ar_save($paragraph, [
