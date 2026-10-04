@@ -3609,7 +3609,9 @@ function motaded_theme_preprocess_paragraph__cards(array &$variables): void {
       $variables['attributes']['class'][] = 'about-cta';
     }
     if (in_array($title, [
+      'Four companies, one group',
       'Three companies, one group',
+      'أربع شركات، مجموعة واحدة',
       'ثلاث شركات، مجموعة واحدة',
     ], TRUE)) {
       $variables['attributes']['class'][] = 'about-group';
