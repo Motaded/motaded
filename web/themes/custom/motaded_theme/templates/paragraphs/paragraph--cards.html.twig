@@ -63,10 +63,21 @@
     <section  class="section">
       <div{{ attributes.addClass(classes) }}>
         {% block content %}
-        {% if content.field_title.0 is not empty %}
-          <h2 class="h2">{{ content.field_title.0 }}</h2>
-        {% endif %}
+        {% if is_about_team %}
+          <div class="about-team__intro">
+            {% if content.field_title.0 is not empty %}
+              <h2 class="h2">{{ content.field_title.0 }}</h2>
+            {% endif %}
+            {% if content.field_body.0 is not empty %}
+              <p class="lead">{{ content.field_body.0 }}</p>
+            {% endif %}
+          </div>
+        {% else %}
+          {% if content.field_title.0 is not empty %}
+            <h2 class="h2">{{ content.field_title.0 }}</h2>
+          {% endif %}
           <p class="lead">{{ content.field_body.0 }}</p>
+        {% endif %}
 
           {# --- Badges layout --- #}
           {% if card_type == 'badges' %}
@@ -85,10 +96,22 @@
 
           {# --- Simple Text Card layout --- #}
           {% elseif card_type == 'simple_text_card' or card_type == 'simple_text_card_unequal_height'%}
-            <div class="grid md:grid-cols-2 gap-6 mt-4">
+            <div class="grid md:grid-cols-2 gap-6 mt-4{{ is_about_team ? ' about-team__grid' : '' }}">
               {% for key, item in content.field_paragraphs %}
                 {% set para = item['#paragraph'] %}
                 {% if para is not empty %}
+                  {% if is_about_team %}
+                    {% set initials = about_team_initials[para.id()]|default('') %}
+                    <article class="about-team__person">
+                      {% if initials %}
+                        <span class="about-team__initials" aria-hidden="true">{{ initials }}</span>
+                      {% endif %}
+                      <div class="about-team__copy">
+                        <h3 class="route-title">{{ para.field_title.value }}</h3>
+                        {{ para.field_body.value|raw }}
+                      </div>
+                    </article>
+                  {% else %}
                   <div class="route flex flex-col {{ card_type == 'simple_text_card_unequal_height' ? 'h-fit' : '' }}">
                     {% if para.field_media.entity.field_media_image.entity.fileuri is not empty %}
                       <img
@@ -106,6 +129,7 @@
                         </a>
                       {% endif %}
                   </div>
+                  {% endif %}
                 {% endif %}
               {% endfor %}
             </div>

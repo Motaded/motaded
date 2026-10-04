@@ -1,0 +1,21 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'eligibility', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="svc-eligibility">
+      <div class="svc-eligibility__grid">
+        {% for card in service_cards %}
+          {% if card.field_title.value %}
+            <div class="svc-eligibility__col{{ loop.first ? ' svc-eligibility__col--who' : ' svc-eligibility__col--scope' }}">
+              <h3 class="svc-eligibility__col-title">{{ card.field_title.value }}</h3>
+              <div class="svc-eligibility__list">{{ card.field_body.processed }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% for card in service_cards %}
+        {% if not card.field_title.value and card.field_body.processed %}
+          <div class="svc-eligibility__note">{{ card.field_body.processed }}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

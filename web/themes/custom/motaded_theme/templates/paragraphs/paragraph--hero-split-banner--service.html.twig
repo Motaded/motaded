@@ -1,0 +1,54 @@
+{{ attach_library('motaded_theme/service_landing') }}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    'customs-hero',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  {% if hero_split_media is not empty %}
+    <div class="customs-hero__bg" aria-hidden="true">
+      <div class="customs-hero__media">{{ hero_split_media }}</div>
+    </div>
+  {% endif %}
+  <div class="customs-hero__shade" aria-hidden="true"></div>
+  <div class="customs-hero__inner mot-shell">
+    {% if content.field_hero_split_eyebrow %}
+      <div class="customs-hero__eyebrow mot-eyebrow mot-eyebrow--rail">
+        {{ content.field_hero_split_eyebrow }}
+      </div>
+    {% endif %}
+    {% if hero_split_headline_prefix or hero_split_headline_accent %}
+      <h1 id="{{ hero_split_banner_heading_id }}" class="customs-hero__title">
+        {% if hero_split_headline_prefix %}
+          <span class="customs-hero__title-line">{{ hero_split_headline_prefix }}</span>
+        {% endif %}
+        {% if hero_split_headline_accent %}
+          <span class="customs-hero__title-accent">{{ hero_split_headline_accent }}</span>
+        {% endif %}
+      </h1>
+    {% endif %}
+    {% if content.field_body %}
+      <div class="customs-hero__intro">{{ content.field_body }}</div>
+    {% endif %}
+    {% if hero_split_cta is not empty or hero_split_cta_secondary is not empty or hero_whatsapp is not empty %}
+      <div class="customs-hero__actions">
+        {% if hero_split_cta is not empty %}
+          <a href="{{ hero_split_cta.url|e('html_attr') }}" class="customs-hero__cta">{{ hero_split_cta.title }}</a>
+        {% endif %}
+        {% if hero_split_cta_secondary is not empty %}
+          <a href="{{ hero_split_cta_secondary.url|e('html_attr') }}" class="customs-hero__cta customs-hero__cta--ghost">{{ hero_split_cta_secondary.title }}</a>
+        {% endif %}
+        {% if hero_whatsapp is not empty %}
+          <a href="{{ hero_whatsapp.url|e('html_attr') }}" class="customs-hero__cta customs-hero__cta--ghost" target="_blank" rel="noopener noreferrer">
+            <svg class="customs-hero__wa-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.58 2 2.15 6.4 2.15 11.83c0 1.74.46 3.45 1.34 4.95L2 22l5.37-1.4a10 10 0 0 0 4.67 1.18h.01c5.46 0 9.89-4.4 9.89-9.84C21.94 6.4 17.5 2 12.04 2m0 17.98h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.19.83.85-3.1-.2-.32a8.14 8.14 0 0 1-1.26-4.35c0-4.5 3.69-8.16 8.23-8.16 4.54 0 8.24 3.66 8.24 8.16 0 4.5-3.7 8.27-8.18 8.27m4.52-6.19c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.56.12-.16.25-.64.8-.78.96-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.48c-.16 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.23 3.74 1.49.64 2.07.7 2.81.59.43-.07 1.46-.6 1.67-1.17.2-.58.2-1.07.14-1.17-.06-.11-.23-.16-.48-.29"/></svg>
+            {{ hero_whatsapp.title }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>

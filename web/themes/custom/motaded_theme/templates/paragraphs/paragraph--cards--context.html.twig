@@ -1,0 +1,17 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'context', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="svc-context__grid">
+      {% for card in service_cards %}
+        {% if card.field_title.value %}
+          <article class="svc-context__item">
+            <span class="svc-context__index" aria-hidden="true">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</span>
+            <div class="svc-context__copy">
+              <h3 class="svc-context__item-title">{{ card.field_title.value }}</h3>
+              <div class="svc-context__item-body">{{ card.field_body.processed }}</div>
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

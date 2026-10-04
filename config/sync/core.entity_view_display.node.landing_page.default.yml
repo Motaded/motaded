@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.landing_page.body
+    - field.field.node.landing_page.field_faq
     - field.field.node.landing_page.field_form
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
-    - field.field.node.landing_page.field_faq
+    - field.field.node.landing_page.field_phone_number
+    - field.field.node.landing_page.field_service
     - node.type.landing_page
   module:
     - entity_reference_revisions
@@ -67,5 +69,7 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_phone_number: true
+  field_service: true
   langcode: true
   search_api_excerpt: true

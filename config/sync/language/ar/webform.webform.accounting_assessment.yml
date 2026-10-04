@@ -1,0 +1,37 @@
+title: 'تقييم محاسبي'
+description: 'طلبات التقييم المحاسبي من صفحة الخدمات المحاسبية.'
+elements: |
+  full_name:
+    '#title': 'الاسم الكامل'
+  email:
+    '#title': 'البريد الإلكتروني للعمل'
+    '#pattern_error': 'الرجاء إدخال عنوان بريدك الإلكتروني الرسمي. إذا لم يكن لديك واحدة، <a href="/contact-us">انقر هنا</a>'
+  phone:
+    '#title': 'رقم الهاتف'
+  company_name:
+    '#title': 'اسم الشركة'
+  support_needed:
+    '#title': 'ما الدعم الذي تحتاجونه؟'
+    '#empty_option': '- اختر -'
+    '#options':
+      setup: 'إعداد النظام المحاسبي.'
+      bookkeeping: 'مسك الدفاتر والتقارير بشكل مستمر.'
+      catch_up: 'استدراك محاسبي أو مراجعة الحسابات.'
+      payroll: الرواتب.
+      vat: VAT.
+      zakat_tax: 'الزكاة أو ضريبة الدخل على الشركات.'
+      wht: 'ضريبة الاستقطاع.'
+      audit: 'دعم التدقيق أو المخزون.'
+      not_sure: 'لست متأكداً — ساعدوني في الاختيار.'
+  requirements:
+    '#title': 'أخبرونا عن متطلباتكم'
+    '#description': 'اذكروا أي سجلات ناقصة أو مواعيد قادمة أو تقارير محددة تحتاجونها. يرجى عدم إدراج كلمات المرور أو بيانات الدخول إلى الحسابات.'
+  actions:
+    '#submit__label': إرسال
+settings:
+  confirmation_message: '<p>شكراً لك. سيراجع متعدد استفساركم ويتواصل معكم لتوضيح النطاق والخطوات التالية.</p>'
+handlers:
+  email:
+    label: 'البريد الإلكتروني'
+    settings:
+      subject: 'تقييم محاسبي: [webform_submission:values:company_name:raw]'

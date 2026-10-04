@@ -407,6 +407,14 @@ latest_news_block:
       css/components/latest-news-block.css:
         weight: -9
 
+landing_hubs:
+  version: 20261005a
+  css:
+    component:
+      css/components/landing-hubs.css: {}
+  dependencies:
+    - motaded_theme/base
+
 services_home_block:
   version: 20260515svchomerowlink
   css:
@@ -425,6 +433,40 @@ media_lead:
     component:
       css/components/media-lead.css:
         weight: -9
+
+datasaudi_trade:
+  version: 20261002m
+  css:
+    component:
+      css/components/datasaudi-trade.css: {}
+  dependencies:
+    - motaded_theme/base
+
+about_page:
+  version: 20261004t
+  css:
+    component:
+      css/components/about-page.css:
+        weight: -6
+  dependencies:
+    - motaded_theme/base
+
+service_landing:
+  version: 20261005l
+  css:
+    component:
+      css/components/customs-clearance-landing.css:
+        weight: -8
+      css/components/accounting-landing.css:
+        weight: -7
+  js:
+    js/service-landing.js: {}
+  dependencies:
+    - motaded_theme/base
+    - core/drupal
+    - core/once
+    - motaded_theme/swiper
+    - views/views.ajax
 
 split_promo:
   version: VERSION

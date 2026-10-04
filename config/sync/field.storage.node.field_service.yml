@@ -1,0 +1,18 @@
+uuid: caf9f19a-06d3-49ae-8e42-0339f3535f77
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_service
+field_name: field_service
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

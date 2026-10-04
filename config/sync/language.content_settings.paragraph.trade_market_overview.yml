@@ -1,0 +1,16 @@
+uuid: a52e783c-bf7d-4f03-8e53-3b599e447158
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.trade_market_overview
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: paragraph.trade_market_overview
+target_entity_type_id: paragraph
+target_bundle: trade_market_overview
+default_langcode: site_default
+language_alterable: false

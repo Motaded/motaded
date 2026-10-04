@@ -1,0 +1,12 @@
+{{ attach_library('motaded_theme/service_landing') }}
+{{ attach_library('motaded_theme/services-directory') }}
+<section{{ attributes.setAttribute('id', 'catalogue').addClass('customs-svc', 'customs-svc--catalogue', 'acc-svc-list').removeClass('wrap', 'bg-white', 'pt-28', 'pb-14') }}>
+  <div class="customs-svc__inner mot-shell">
+    {% if paragraph.field_body.processed %}
+      <header class="customs-svc__header acc-svc-list__header">
+        {{ paragraph.field_body.processed }}
+      </header>
+    {% endif %}
+    {{ content.field_view_block }}
+  </div>
+</section>

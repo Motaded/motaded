@@ -1,0 +1,18 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'table', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="customs-table-wrap">
+      <table class="customs-table">
+        <tbody>
+          {% for card in service_cards %}
+            {% if card %}
+              <tr>
+                <th scope="row">{{ card.field_title.value }}</th>
+                <td>{{ card.field_body.processed }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endblock %}
+{% endembed %}

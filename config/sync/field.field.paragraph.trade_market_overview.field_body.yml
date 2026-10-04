@@ -1,0 +1,26 @@
+uuid: cbe73cb5-92a8-4f63-b075-8f3bd1eda9aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - filter.format.basic_html
+    - filter.format.plain_text
+    - paragraphs.paragraphs_type.trade_market_overview
+  module:
+    - text
+id: paragraph.trade_market_overview.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: trade_market_overview
+label: Introduction
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - basic_html
+    - plain_text
+field_type: text_long

@@ -11,8 +11,8 @@ id: paragraph.card.field_media
 field_name: field_media
 entity_type: paragraph
 bundle: card
-label: Icon
-description: ''
+label: Logo
+description: 'Upload the company logo image.'
 required: false
 translatable: true
 default_value: {  }
@@ -27,5 +27,5 @@ settings:
       field: _none
       direction: ASC
     auto_create: false
-    auto_create_bundle: icon
+    auto_create_bundle: image
 field_type: entity_reference

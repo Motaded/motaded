@@ -1,0 +1,204 @@
+.paragraph--view-block--landing-hubs {
+  --lh-accent: var(--mot-accent-strong, #0d9488);
+  --lh-brand: var(--mot-brand, #0f766e);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  background: linear-gradient(
+    180deg,
+    var(--mot-emerald-surface, #f8fdf9) 0%,
+    var(--mot-green-50, #f0fdf4) 55%,
+    var(--mot-emerald-50, #ecfdf5) 100%
+  );
+}
+
+.landing-hubs__header {
+  max-width: 46rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.landing-hubs__header .mot-eyebrow {
+  margin-bottom: 0.85rem;
+}
+
+.landing-hubs__intro .field,
+.landing-hubs__intro .field__item {
+  margin: 0;
+}
+
+.landing-hubs__intro h2 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.75rem, 3.4vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--mot-text, #0f172a);
+}
+
+.landing-hubs__intro p {
+  margin: 0;
+  max-width: 40rem;
+  font-size: 1.02rem;
+  font-weight: 400;
+  line-height: 1.62;
+  color: var(--mot-text-secondary, #475569);
+}
+
+.landing-hubs__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  counter-reset: landing-hub;
+}
+
+@media (min-width: 720px) {
+  .landing-hubs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .landing-hubs__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .landing-hubs__item {
+    grid-column: span 2;
+  }
+
+  .landing-hubs__item:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+
+  .landing-hubs__item:nth-child(5) {
+    grid-column: 4 / span 2;
+  }
+}
+
+.landing-hubs__item {
+  margin: 0;
+}
+
+.landing-hubs__card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  height: 100%;
+  min-height: 100%;
+  padding: 1.15rem 1.2rem 1.2rem;
+  background: var(--mot-surface, #fff);
+  border: 1px solid var(--mot-border, #e2e8f0);
+  border-radius: var(--mot-radius-lg, 1rem);
+  box-shadow: var(--mot-shadow-card, 0 8px 24px rgb(15 23 42 / 4%));
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.landing-hubs__card:hover {
+  border-color: color-mix(in oklab, var(--lh-accent) 32%, var(--mot-surface, #fff));
+  box-shadow: var(--mot-shadow-card-hover, 0 12px 28px rgb(15 23 42 / 8%));
+  transform: translateY(-2px);
+}
+
+.landing-hubs__card:focus-visible {
+  outline: 2px solid var(--lh-accent);
+  outline-offset: 2px;
+}
+
+.landing-hubs__index {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  color: var(--lh-brand);
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgb(15 118 110 / 45%);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.landing-hubs__index::before {
+  counter-increment: landing-hub;
+  content: counter(landing-hub, decimal-leading-zero);
+}
+
+.landing-hubs__copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.landing-hubs__kicker {
+  margin: 0 0 0.28rem;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lh-brand);
+}
+
+.landing-hubs__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--mot-text, #0f172a);
+}
+
+.landing-hubs__teaser {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--mot-text-muted, #64748b);
+}
+
+.landing-hubs__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto;
+  color: var(--lh-brand);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgb(15 118 110 / 42%);
+  padding-bottom: 0.1rem;
+  width: fit-content;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.landing-hubs__card:hover .landing-hubs__cta {
+  color: var(--lh-accent);
+  border-bottom-color: rgb(13 148 136 / 72%);
+}
+
+.landing-hubs__card:hover .landing-hubs__cta span[aria-hidden="true"] {
+  transform: translateX(0.12rem);
+}
+
+.landing-hubs__cta span[aria-hidden="true"] {
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+
+[dir="rtl"] .landing-hubs__cta span[aria-hidden="true"] {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .landing-hubs__card:hover .landing-hubs__cta span[aria-hidden="true"] {
+  transform: scaleX(-1) translateX(0.12rem);
+}

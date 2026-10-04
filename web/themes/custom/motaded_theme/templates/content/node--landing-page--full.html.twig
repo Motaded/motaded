@@ -124,6 +124,28 @@
         </div>
       {% endif %}
     </div>
+  {% elseif service_landing_layout %}
+    {{ title_prefix }}
+    {% if label and not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
+    <div{{ content_attributes.addClass('node__content') }}>
+      {{ service_landing_hero }}
+      <div class="svc-layout mot-shell">
+        <div class="svc-layout__main">
+          {{ service_landing_main }}
+        </div>
+        <aside class="svc-layout__form" aria-label="{{ 'Request a Consultation'|t }}">
+          {{ service_landing_form }}
+        </aside>
+      </div>
+      {{ service_landing_after }}
+      <a class="svc-form-dock" href="#assessment">{{ 'Request a Consultation'|t }}</a>
+      {{ content|without('addtoany', 'field_form', 'body', 'field_faq', 'field_paragraphs') }}
+    </div>
   {% else %}
     {{ title_prefix }}
     {% if label and not page %}
@@ -135,7 +157,27 @@
     <div{{ content_attributes.addClass('node__content') }}>
       {{ content|without('addtoany', 'field_form', 'body', 'field_faq') }}
     </div>
-    {% if has_body or has_faq %}
+    {% if is_about_page and (has_body or has_faq) %}
+      <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
+        {% if has_body %}
+          <div class="about-closer">
+            <div class="about-closer__card">
+              {{ content.body }}
+            </div>
+          </div>
+        {% endif %}
+        {% if has_faq %}
+          <section class="landing-page__faq about-faq mx-auto mt-8 w-full max-w-[52rem] text-left sm:mt-10" id="faq" aria-labelledby="landing-page-faq-title">
+            <h2 id="landing-page-faq-title" class="m-0 text-2xl font-bold text-gray-900">
+              {% if node.langcode.value == 'ar' %}الأسئلة الشائعة{% else %}{{ 'Frequently Asked Questions'|t }}{% endif %}
+            </h2>
+            <div class="mt-6">
+              {{ content.field_faq }}
+            </div>
+          </section>
+        {% endif %}
+      </div>
+    {% elseif has_body or has_faq %}
       <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
         <div class="page-basic-body mx-auto mt-10 w-full max-w-[52rem] text-left sm:mt-12{% if has_body %} prose prose-neutral max-w-none{% endif %}">
           {% if has_body %}
@@ -155,11 +197,26 @@
       </div>
     {% endif %}
     {% if has_form %}
+      {% if is_about_page %}
+        <section class="about-form" id="consultation">
+          <div class="about-form__inner">
+            <div class="about-form__panel">
+              <header class="about-form__header">
+                <h2>
+                  {% if node.langcode.value == 'ar' %}احجز استشارة{% else %}Book a consultation{% endif %}
+                </h2>
+              </header>
+              {{ content.field_form }}
+            </div>
+          </div>
+        </section>
+      {% else %}
       <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">
-        <div class="page-basic-body landing-page__form mx-auto mt-10 w-full max-w-[52rem] text-left sm:mt-12">
+        <div class="page-basic-body landing-page__form mx-auto mt-10 w-full max-w-[52rem] text-left sm:mt-12" id="consultation">
           {{ content.field_form }}
         </div>
       </div>
+      {% endif %}
     {% endif %}
   {% endif %}
 </article>

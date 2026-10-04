@@ -88,3 +88,23 @@ display:
         nothing:
           alter:
             text: "  {{ include('motaded_theme:card', {\r\n      'title': title,\r\n      'desc': body,\r\n      'icon_url': '/themes/custom/motaded_theme/img/icon-checkmark-circle.svg',\r\n      'tags': (field_tags is not empty) ? field_tags | split(',') : false,\r\n      'cta1': {'url': view_node, 'title': 'اقرأ المزيد'},\r\n      'cta2': {'url': '/contact-us?service-id=' ~ nid, 'title': 'احجز الآن' },\r\n      'icon_position': 'topLeft',\r\n    }, with_context = false) }}"
+  block_accounting:
+    display_options:
+      empty:
+        area:
+          content:
+            value: 'لم يتم العثور على نتائج'
+            format: plain_text
+      filters:
+        combine:
+          expose:
+            label: بحث
+            placeholder: 'ابحث في الخدمات…'
+      exposed_form:
+        options:
+          submit_button: بحث
+          reset_button_label: 'إعادة تعيين'
+      sorts:
+        title:
+          expose:
+            label: العنوان

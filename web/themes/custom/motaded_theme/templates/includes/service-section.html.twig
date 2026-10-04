@@ -1,0 +1,26 @@
+{{ attach_library('motaded_theme/service_landing') }}
+{% set title = paragraph.field_title.value|default('') %}
+{% set lang = active_langcode|default(paragraph.langcode.value|default('en')) %}
+{% if service_cards is empty %}
+  {% set service_cards = [] %}
+  {% for item in paragraph.field_paragraphs %}
+    {% set raw = item.entity %}
+    {% if raw %}
+      {% set translated = raw.hasTranslation(lang) ? raw.getTranslation(lang) : raw %}
+      {% set service_cards = service_cards|merge([translated]) %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+<section{{ attributes.addClass('customs-svc', 'customs-svc--' ~ layout).removeClass('wrap') }}>
+  <div class="customs-svc__inner mot-shell">
+    {% if show_header != false and title %}
+      <header class="customs-svc__header">
+        <h2 class="customs-svc__title">{{ title }}</h2>
+        {% if paragraph.field_body.processed %}
+          <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+        {% endif %}
+      </header>
+    {% endif %}
+    {% block section %}{% endblock %}
+  </div>
+</section>

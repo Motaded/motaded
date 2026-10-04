@@ -1,0 +1,17 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'fees', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="customs-fees">
+      {% for card in service_cards %}
+        {% if card %}
+          <div class="customs-fees__col customs-fees__col--{{ loop.index }}">
+            <h3 class="customs-fees__title">{{ card.field_title.value }}</h3>
+            <div class="customs-fees__body">{{ card.field_body.processed }}</div>
+            {% if card.field_link.0 %}
+              <a class="customs-fees__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

@@ -1,0 +1,232 @@
+uuid: 7c4e9b21-3a18-4f6d-9c11-2e8a0b5d14f3
+langcode: en
+status: open
+dependencies:
+  module:
+    - honeypot
+third_party_settings:
+  honeypot:
+    honeypot: true
+    time_restriction: true
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: customs_clearance_quote
+title: 'Clearance assessment'
+description: 'Clearance assessment requests from the customs landing page.'
+categories: {  }
+elements: |-
+  flex_contact:
+    '#type': webform_flexbox
+    first_name:
+      '#type': textfield
+      '#title': 'First name'
+      '#required': true
+    last_name:
+      '#type': textfield
+      '#title': 'Last name'
+      '#required': true
+  flex_contact_2:
+    '#type': webform_flexbox
+    email:
+      '#type': email
+      '#title': 'Work email'
+      '#placeholder': name@company.com
+      '#required': true
+      '#pattern': '^[a-zA-Z0-9._%+-]+@(?!.*(example\.com|gmail\.com|yahoo\.com|rambler\.ru|mail\.ru|outlook\.com|hotmail\.com|aol\.com|protonmail\.com|icloud\.com|mail2world\.com|tutanota\.com|juno\.com|atmail\.com|fastmail\.com|gmxmail\.com|hushmail\.com|lycos\.com|mail\.com|yandex\.com|2mailcache\.com|3way3\.com|bk\.ru|1mailcache\.com|web\.de|bizopphand\.info|unlockrevenue\.info))([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$'
+      '#pattern_error': 'Please enter your official email address. If you don''t have one, <a href="/contact-us">click here</a>'
+    phone:
+      '#type': tel
+      '#title': 'Phone number'
+      '#required': true
+      '#default_value': '+966 '
+      '#international': true
+      '#international_initial_country': SA
+  company_name:
+    '#type': textfield
+    '#title': 'Company name'
+    '#required': true
+  flex_shipment:
+    '#type': webform_flexbox
+    direction:
+      '#type': radios
+      '#title': 'Trade direction'
+      '#required': true
+      '#options':
+        import: Import
+        export: Export
+    cargo_type:
+      '#type': select
+      '#title': 'Cargo category'
+      '#required': true
+      '#empty_option': '- Select -'
+      '#options':
+        general: 'General cargo'
+        food: 'Food or special foods'
+        pharma: 'Pharma or medical devices'
+        cosmetics: Cosmetics
+        electronics: 'Electronics or consumer goods'
+        chemicals: 'Chemicals or restricted goods'
+        other: Other
+  shipment_details:
+    '#type': textarea
+    '#title': 'Shipment details'
+    '#description': 'What you are shipping, origin or destination, and whether the cargo has already arrived.'
+    '#rows': 4
+  consent:
+    '#type': checkbox
+    '#title': 'I agree to be contacted about this assessment request.'
+    '#required': true
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
+  actions:
+    '#type': webform_actions
+    '#title': 'Submit button(s)'
+    '#submit__label': Submit
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: form
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: ''
+  page_confirm_path: ''
+  form_submit_once: false
+  form_open_message: ''
+  form_close_message: ''
+  form_exception_message: ''
+  form_previous_submissions: false
+  form_confidential: false
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_autofocus: false
+  form_details_toggle: false
+  submission_label: ''
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_log: true
+  submission_user_columns: {  }
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  wizard_progress_bar: false
+  preview: 0
+  draft: none
+  confirmation_type: message
+  confirmation_url: ''
+  confirmation_title: ''
+  confirmation_message: '<p>Thank you. Motaded will review the information and respond with an assessment of the required work and a service quotation.</p>'
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  limit_total: null
+  limit_total_interval: null
+  limit_user: null
+  limit_user_interval: null
+  form_login: false
+  form_login_message: ''
+  submission_login: false
+  submission_login_message: ''
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers:
+  email:
+    id: email
+    handler_id: email
+    label: Email
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: support@motaded.com.sa
+      to_options: {  }
+      bcc_mail: ''
+      bcc_options: {  }
+      cc_mail: info@motaded.com.sa
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: 'Clearance assessment: [webform_submission:values:company_name:raw]'
+      body: _default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      langcode: ''
+      parameters: {  }
+      debug: false
+variants: {  }

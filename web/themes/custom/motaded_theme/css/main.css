@@ -279,6 +279,13 @@ html[lang="es"] #site-header .menu-item ul a p {
   outline-offset: 2px;
 }
 
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  outline-offset: 0;
+}
+
 .custom-page-title {
   p {
     @apply relative text-base leading-6 text-neutral-900 w-[720px] max-md:w-full max-sm:text-sm max-sm:leading-5;

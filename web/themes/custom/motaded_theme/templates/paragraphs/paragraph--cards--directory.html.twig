@@ -1,0 +1,29 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'directory', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ul class="customs-dir">
+      {% for card in service_cards %}
+        {% if card %}
+          <li class="customs-dir__row">
+            <div class="customs-dir__logo">
+              {% if card.field_media.entity and card.field_media.entity.field_media_image.entity %}
+                <img src="{{ file_url(card.field_media.entity.field_media_image.entity.uri.value) }}" alt="{{ card.field_title.value }}">
+              {% else %}
+                <span class="customs-dir__mark" aria-hidden="true">{{ card.field_title.value|slice(0, 1) }}</span>
+              {% endif %}
+            </div>
+            <div class="customs-dir__copy">
+              <h3 class="customs-dir__name">{{ card.field_title.value }}</h3>
+              <div class="customs-dir__body">{{ card.field_body.processed }}</div>
+              {% if card.field_link.0 %}
+                <a class="customs-dir__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+              {% endif %}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% if paragraph.field_sub_title.value %}
+      <p class="customs-dir__note">{{ paragraph.field_sub_title.value }}</p>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

@@ -1,0 +1,30 @@
+{% set attributes = attributes.setAttribute('id', 'process') %}
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'stages', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ol class="svc-stages">
+      {% for card in service_cards %}
+        {% if card %}
+          {% set sub_raw = card.field_sub_title.value|default('') %}
+          {% set sub_parts = sub_raw|split('|') %}
+          {% set responsible = sub_parts[0]|trim %}
+          {% set badge = sub_parts[1]|default('')|trim %}
+          <li class="svc-stages__item{{ badge ? ' svc-stages__item--regulator' : '' }}">
+            <div class="svc-stages__num" aria-hidden="true">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</div>
+            <div class="svc-stages__copy">
+              <div class="svc-stages__heading">
+                <h3 class="svc-stages__title">{{ card.field_title.value }}</h3>
+                {% if badge %}
+                  <span class="svc-stages__badge">{{ badge }}</span>
+                {% endif %}
+              </div>
+              {% if responsible %}
+                <p class="svc-stages__who"><span>{{ 'Responsible:'|t }}</span> {{ responsible }}</p>
+              {% endif %}
+              <div class="svc-stages__body">{{ card.field_body.processed }}</div>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  {% endblock %}
+{% endembed %}

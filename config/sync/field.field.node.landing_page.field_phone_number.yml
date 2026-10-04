@@ -1,0 +1,19 @@
+uuid: 272d05a5-ce7a-4b7d-a687-0d61692009b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_phone_number
+    - node.type.landing_page
+id: node.landing_page.field_phone_number
+field_name: field_phone_number
+entity_type: node
+bundle: landing_page
+label: 'Phone number'
+description: 'Used for the hero WhatsApp button, the mid-page CTA and the contact row under the form.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

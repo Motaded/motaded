@@ -1,0 +1,38 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'lists', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="customs-docs">
+      {% for card in service_cards %}
+        {% if card and loop.first and '<ul' not in card.field_body.value|default('') %}
+          <div class="customs-docs__note customs-docs__note--start">
+            {% if card.field_title.value %}
+              <strong>{{ card.field_title.value }}</strong>
+            {% endif %}
+            <div class="customs-docs__note-body">{{ card.field_body.processed }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="customs-docs__cols">
+        {% for card in service_cards %}
+          {% if card and '<ul' in card.field_body.value|default('') %}
+            <div class="customs-docs__col">
+              {% if card.field_title.value %}
+                <h3 class="customs-docs__title">{{ card.field_title.value }}</h3>
+              {% endif %}
+              <div class="customs-docs__body">{{ card.field_body.processed }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% for card in service_cards %}
+        {% if card and not loop.first and '<ul' not in card.field_body.value|default('') %}
+          <div class="customs-docs__note">
+            {% if card.field_title.value %}
+              <strong>{{ card.field_title.value }}</strong>
+            {% endif %}
+            <div class="customs-docs__note-body">{{ card.field_body.processed }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

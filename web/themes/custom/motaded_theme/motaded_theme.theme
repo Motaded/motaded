@@ -1165,8 +1165,16 @@ function motaded_theme_preprocess_views_view(&$variables): void {
   if (!$view instanceof ViewExecutable) {
     return;
   }
-  // Listing page (/events) only — home strip uses events_home library via block.
   $display_id = $view->current_display ?? '';
+  if ($view->id() === 'services' && $display_id === 'block_accounting') {
+    $variables['#attached']['library'][] = 'motaded_theme/service_landing';
+    $variables['#attached']['library'][] = 'motaded_theme/services-directory';
+    $variables['#attached']['library'][] = 'views/views.ajax';
+  }
+  if ($view->id() === 'landing_services') {
+    $variables['#attached']['library'][] = 'motaded_theme/landing_hubs';
+  }
+  // Listing page (/events) only — home strip uses events_home library via block.
   if ($view->id() === 'events' && $display_id === 'page_1') {
     $variables['#attached']['library'][] = 'motaded_theme/events_directory';
     $variables['attributes']['class'][] = 'events-directory-page';
@@ -2039,6 +2047,17 @@ function _motaded_theme_landing_page_field_paragraphs_move_partners_after_first_
  */
 function motaded_theme_preprocess_node(&$variables) {
   $node = $variables['node'];
+  if ($node->bundle() === 'landing_page' && motaded_theme_is_service_landing_node($node)) {
+    $variables['attributes']['class'][] = 'landing-page--service';
+    $variables['#attached']['library'][] = 'motaded_theme/service_landing';
+    motaded_theme_service_landing_split_paragraphs($variables);
+  }
+  $variables['is_about_page'] = FALSE;
+  if ($node->bundle() === 'landing_page' && motaded_theme_is_about_page($node)) {
+    $variables['is_about_page'] = TRUE;
+    $variables['attributes']['class'][] = 'landing-page--about';
+    $variables['#attached']['library'][] = 'motaded_theme/about_page';
+  }
   $variables['chamber_external_url'] = NULL;
   $variables['chamber_external_label'] = NULL;
   $variables['sector_page_show_eyebrow'] = FALSE;
@@ -3549,8 +3568,116 @@ function _motaded_theme_preprocess_market_insight_teaser(array &$variables, Node
  *
  * Splits objectives body on a blank line into title + description when present.
  */
+/**
+ * Service landing cards: expose child paragraphs in the active language.
+ */
+function motaded_theme_preprocess_paragraph__cards(array &$variables): void {
+  $paragraph = $variables['paragraph'] ?? NULL;
+  if (!$paragraph instanceof ParagraphInterface) {
+    return;
+  }
+  $paragraph = motaded_theme_paragraph_from_context($paragraph);
+  $variables['paragraph'] = $paragraph;
+  $cards = [];
+  if ($paragraph->hasField('field_paragraphs')) {
+    foreach ($paragraph->get('field_paragraphs') as $item) {
+      $card = motaded_theme_paragraph_from_context($item->entity);
+      if ($card instanceof ParagraphInterface) {
+        $cards[] = $card;
+      }
+    }
+  }
+  $variables['service_cards'] = $cards;
+  $variables['#cache']['contexts'][] = 'languages:language_content';
+  $variables['is_about_team'] = FALSE;
+  $variables['about_team_initials'] = [];
+  $variables['is_about_clients'] = FALSE;
+  $variables['about_client_logos'] = [];
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node)) {
+    $title = $paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()
+      ? trim((string) $paragraph->get('field_title')->value)
+      : '';
+    if (in_array($title, ['What drives us', 'ما الذي يقودنا'], TRUE)) {
+      $variables['attributes']['class'][] = 'about-drives';
+    }
+    $card_type = $paragraph->hasField('field_card_type') && !$paragraph->get('field_card_type')->isEmpty()
+      ? (string) $paragraph->get('field_card_type')->value
+      : '';
+    if ($card_type === 'cta_block') {
+      $variables['attributes']['class'][] = 'about-cta';
+    }
+    if (in_array($title, [
+      'Three companies, one group',
+      'ثلاث شركات، مجموعة واحدة',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-group';
+    }
+    if (in_array($title, [
+      'The team behind every Motaded engagement',
+      'الفريق وراء كلّ مهمّة لمتعدد',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-team';
+      $variables['is_about_team'] = TRUE;
+      foreach ($cards as $card) {
+        $name = $card->hasField('field_title') && !$card->get('field_title')->isEmpty()
+          ? trim((string) $card->get('field_title')->value)
+          : '';
+        $variables['about_team_initials'][$card->id()] = motaded_theme_about_person_initials($name);
+      }
+    }
+    if (in_array($title, [
+      'Foreign investors who trust Motaded',
+      'مستثمرون أجانب يثقون بمتعدد',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-clients';
+      $variables['is_about_clients'] = TRUE;
+      foreach ($cards as $card) {
+        $variables['about_client_logos'][$card->id()] = motaded_theme_about_client_logo_url($card);
+      }
+    }
+  }
+}
+
+/**
+ * About landing uses a dedicated banner layout; packages keep banner_style_3.
+ */
+function motaded_theme_preprocess_paragraph__banner(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $is_about = $node instanceof NodeInterface && motaded_theme_is_about_page($node);
+  $variables['is_about_banner'] = $is_about;
+  $variables['about_hero_facts'] = [];
+  if (!$is_about) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'motaded_theme/about_page';
+  $paragraph = $variables['paragraph'] ?? NULL;
+  if (!$paragraph instanceof ParagraphInterface || !$paragraph->hasField('field_paragraphs')) {
+    return;
+  }
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $card = $item->entity;
+    if (!$card instanceof ParagraphInterface) {
+      continue;
+    }
+    $card = motaded_theme_paragraph_from_context($card) ?? $card;
+    if (!$card->hasField('field_body') || $card->get('field_body')->isEmpty()) {
+      continue;
+    }
+    $body = trim(Html::decodeEntities(strip_tags((string) $card->get('field_body')->value)));
+    if ($body !== '') {
+      $variables['about_hero_facts'][] = $body;
+    }
+  }
+}
+
 function motaded_theme_preprocess_paragraph(array &$variables): void {
   $paragraph = $variables['paragraph'];
+  $variables['active_langcode'] = motaded_theme_interface_langcode();
+  if ($paragraph instanceof ParagraphInterface) {
+    $variables['paragraph'] = motaded_theme_paragraph_from_context($paragraph);
+  }
 
   // Platform paragraphs (help_item, benefit_item, platform_resource) carry an
   // optional `field_icon` (list_string). Expose its SVG markup to Twig.
@@ -3707,6 +3834,12 @@ function motaded_theme_preprocess_paragraph__investor_journey(array &$variables)
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $variables['investor_journey_heading_id'] = Html::getUniqueId('investor-journey-heading-' . $paragraph->id());
+  if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+    $journey_title = (string) $paragraph->get('field_title')->value;
+    if (stripos($journey_title, 'shipment is cleared') !== FALSE) {
+      $variables['attributes']['id'] = 'process';
+    }
+  }
 
   $steps = [];
   $field = $paragraph->get('field_investor_journey_steps');
@@ -3874,6 +4007,22 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
     }
   }
 
+  $variables['hero_whatsapp'] = [];
+  $parent = $paragraph->getParentEntity();
+  if ($parent instanceof NodeInterface && $parent->hasField('field_phone_number') && !$parent->get('field_phone_number')->isEmpty()) {
+    $secondary_url = (string) ($variables['hero_split_cta_secondary']['url'] ?? '');
+    if (!str_contains($secondary_url, 'wa.me')) {
+      $wa_url = motaded_theme_whatsapp_url_from_phone((string) $parent->get('field_phone_number')->value);
+      if ($wa_url !== '') {
+        $variables['hero_whatsapp'] = [
+          'url' => $wa_url,
+          'title' => (string) t('WhatsApp'),
+        ];
+        $variables['#cache']['tags'][] = 'node:' . $parent->id();
+      }
+    }
+  }
+
   $allowed_why_icons = [
     'people', 'medal', 'arrows', 'shield_check', 'clock', 'chart', 'globe', 'trend', 'document', 'monitor',
   ];
@@ -3954,6 +4103,12 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
     }
   }
   $variables['hero_split_highlights'] = $highlights;
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node)) {
+    $variables['attributes']['class'][] = 'about-founder';
+    $variables['hero_split_highlights'] = [];
+  }
 }
 
 /**
@@ -4029,7 +4184,7 @@ function motaded_theme_preprocess_paragraph__why_opportunities(array &$variables
   $stat_field = $paragraph->get('field_why_stat_items');
   if ($stat_field->access('view')) {
     foreach ($stat_field as $item) {
-      $sub = $item->entity;
+      $sub = motaded_theme_paragraph_from_context($item->entity);
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_stat_item') {
         continue;
       }
@@ -4315,6 +4470,8 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
   $variables['view_block_events_home_calendar'] = FALSE;
   $variables['view_block_partners_marquee'] = FALSE;
   $variables['view_block_library_home'] = FALSE;
+  $variables['view_block_accounting_slider'] = FALSE;
+  $variables['view_block_landing_hubs'] = FALSE;
   if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
     return;
   }
@@ -4332,15 +4489,29 @@ function motaded_theme_preprocess_paragraph__view_block(array &$variables): void
       elseif ($target === 'services' && $display === 'block_2') {
         $variables['view_block_services_home'] = TRUE;
       }
+      elseif ($target === 'landing_services' && $display === 'block_1') {
+        $variables['view_block_landing_hubs'] = TRUE;
+      }
       elseif ($target === 'partners' && $display === 'block_2') {
         $variables['view_block_partners_marquee'] = TRUE;
       }
       elseif ($target === 'library' && $display === 'block_1') {
         $variables['view_block_library_home'] = TRUE;
       }
+      elseif ($target === 'services' && $display === 'block_accounting') {
+        $variables['view_block_accounting_slider'] = TRUE;
+      }
     }
   }
 
+  if ($variables['view_block_accounting_slider']) {
+    $variables['#attached']['library'][] = 'motaded_theme/service_landing';
+    $variables['#attached']['library'][] = 'motaded_theme/services-directory';
+    $variables['#attached']['library'][] = 'views/views.ajax';
+  }
+  if ($variables['view_block_landing_hubs']) {
+    $variables['#attached']['library'][] = 'motaded_theme/landing_hubs';
+  }
   if ($variables['view_block_events_home_list'] || $variables['view_block_events_home_calendar']) {
     $variables['#attached']['library'][] = 'motaded_theme/events_home';
   }
@@ -4446,8 +4617,412 @@ function motaded_theme_preprocess_paragraph__areas_of_work(array &$variables): v
 }
 
 /**
- * Implements hook_theme_suggestions_page_alter().
+ * True when a view_block paragraph embeds services / block_accounting.
  */
+function motaded_theme_view_block_is_accounting_slider($paragraph): bool {
+  if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'view_block') {
+    return FALSE;
+  }
+  if (!$paragraph->hasField('field_view_block') || $paragraph->get('field_view_block')->isEmpty()) {
+    return FALSE;
+  }
+  foreach ($paragraph->get('field_view_block')->getValue() as $item) {
+    foreach (_motaded_theme_viewsreference_field_item_pairs($item) as [$target, $display]) {
+      if ($target === 'services' && $display === 'block_accounting') {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Catalog card extras for service landing pages on /services.
+ */
+function motaded_theme_preprocess_services_landing_catalog_card(array &$variables, NodeInterface $node): void {
+  $node = \Drupal::service('entity.repository')->getTranslationFromContext($node);
+  $path = '';
+  try {
+    $path = $node->toUrl()->toString();
+  }
+  catch (\Exception $e) {
+    $path = '';
+  }
+
+  $profiles = [
+    'customs-clearance-saudi-arabia' => [
+      'kicker' => t('Customs'),
+      'tags' => [t('Customs')],
+      'beneficiaries' => [t('Importers and Exporters')],
+    ],
+    'accounting-services-saudi-arabia' => [
+      'kicker' => t('Accounting'),
+      'tags' => [t('Accounting')],
+      'beneficiaries' => [t('Company Owners')],
+    ],
+    'medicine-services-saudi-arabia' => [
+      'kicker' => 'SFDA',
+      'tags' => ['SFDA'],
+      'beneficiaries' => [t('Manufacturers'), t('Importers')],
+    ],
+    'medical-device-services-saudi-arabia' => [
+      'kicker' => 'SFDA',
+      'tags' => ['SFDA'],
+      'beneficiaries' => [t('Manufacturers'), t('Importers')],
+    ],
+    'cosmetics-services-saudi-arabia' => [
+      'kicker' => 'SFDA',
+      'tags' => ['SFDA'],
+      'beneficiaries' => [t('Manufacturers'), t('Brands')],
+    ],
+  ];
+  foreach ($profiles as $alias => $profile) {
+    if (!str_contains($path, $alias)) {
+      continue;
+    }
+    $variables['services_card_eyebrow'] = mb_strtoupper((string) $profile['kicker']);
+    $variables['services_tag_labels'] = $profile['tags'];
+    $variables['services_beneficiary_labels'] = $profile['beneficiaries'];
+    break;
+  }
+
+  $variables['services_card_summary'] = '';
+  if ($node->hasField('field_meta') && !$node->get('field_meta')->isEmpty()) {
+    $raw = (string) $node->get('field_meta')->value;
+    $meta = json_decode($raw, TRUE);
+    if (is_array($meta) && !empty($meta['description'])) {
+      $teaser = trim(html_entity_decode(strip_tags((string) $meta['description'])));
+      if (preg_match('/^(.+?[.!?])(?:\s|$)/u', $teaser, $match)) {
+        $teaser = $match[1];
+      }
+      $variables['services_card_summary'] = $teaser;
+    }
+  }
+
+  $variables['services_card_media'] = motaded_theme_landing_catalog_hero_media($node);
+}
+
+/**
+ * Medium hero image from the first hero_split_banner paragraph, or empty.
+ */
+function motaded_theme_landing_catalog_hero_media(NodeInterface $node): array {
+  if (!$node->hasField('field_paragraphs')) {
+    return [];
+  }
+  foreach ($node->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'hero_split_banner') {
+      continue;
+    }
+    $paragraph = motaded_theme_paragraph_from_context($paragraph);
+    if (!$paragraph || !$paragraph->hasField('field_media') || $paragraph->get('field_media')->isEmpty()) {
+      continue;
+    }
+    $media = $paragraph->get('field_media')->entity;
+    if (!$media instanceof MediaInterface || !$media->hasField('field_media_image') || $media->get('field_media_image')->isEmpty()) {
+      continue;
+    }
+    $file = $media->get('field_media_image')->entity;
+    if (!$file instanceof FileInterface) {
+      continue;
+    }
+    $alt = trim((string) ($media->get('field_media_image')->alt ?? ''));
+    if ($alt === '') {
+      $alt = (string) $node->label();
+    }
+    return [
+      '#theme' => 'image_style',
+      '#style_name' => 'medium',
+      '#uri' => $file->getFileUri(),
+      '#alt' => $alt,
+      '#attributes' => ['loading' => 'lazy'],
+    ];
+  }
+  return [];
+}
+
+/**
+ * Card data for landing_services homepage tiles.
+ */
+function motaded_theme_preprocess_landing_hub_fields(array &$variables): void {
+  $variables['landing_hub_url'] = '';
+  $variables['landing_hub_title'] = '';
+  $variables['landing_hub_teaser'] = '';
+  $variables['landing_hub_image'] = '';
+  $variables['landing_hub_kicker'] = '';
+
+  $row = $variables['row'] ?? NULL;
+  if (!is_object($row) || !isset($row->_entity) || !$row->_entity instanceof NodeInterface) {
+    return;
+  }
+
+  $node = \Drupal::service('entity.repository')->getTranslationFromContext($row->_entity);
+  $title = trim((string) $node->label());
+  $variables['landing_hub_title'] = trim((string) preg_replace('/\s+(in Saudi Arabia|في المملكة العربية السعودية)$/u', '', $title));
+  if ($variables['landing_hub_title'] === '') {
+    $variables['landing_hub_title'] = $title;
+  }
+  try {
+    $variables['landing_hub_url'] = $node->toUrl()->toString();
+  }
+  catch (\Exception $e) {
+    $variables['landing_hub_url'] = '';
+  }
+  $path = (string) $variables['landing_hub_url'];
+  $kickers = [
+    'customs-clearance-saudi-arabia' => t('Customs'),
+    'accounting-services-saudi-arabia' => t('Accounting'),
+    'medicine-services-saudi-arabia' => 'SFDA',
+    'medical-device-services-saudi-arabia' => 'SFDA',
+    'cosmetics-services-saudi-arabia' => 'SFDA',
+  ];
+  foreach ($kickers as $alias => $kicker) {
+    if (str_contains($path, $alias)) {
+      $variables['landing_hub_kicker'] = $kicker;
+      break;
+    }
+  }
+
+  if ($node->hasField('field_meta') && !$node->get('field_meta')->isEmpty()) {
+    $raw = (string) $node->get('field_meta')->value;
+    $meta = json_decode($raw, TRUE);
+    if (is_array($meta) && !empty($meta['description'])) {
+      $teaser = trim(html_entity_decode(strip_tags((string) $meta['description'])));
+      if (preg_match('/^(.+?[.!?])(?:\s|$)/u', $teaser, $match)) {
+        $teaser = $match[1];
+      }
+      $variables['landing_hub_teaser'] = $teaser;
+    }
+  }
+
+  if (!$node->hasField('field_paragraphs')) {
+    return;
+  }
+  foreach ($node->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface || $paragraph->bundle() !== 'hero_split_banner') {
+      continue;
+    }
+    $paragraph = motaded_theme_paragraph_from_context($paragraph);
+    if (!$paragraph || !$paragraph->hasField('field_media') || $paragraph->get('field_media')->isEmpty()) {
+      continue;
+    }
+    $media = $paragraph->get('field_media')->entity;
+    if (!$media instanceof MediaInterface || !$media->hasField('field_media_image') || $media->get('field_media_image')->isEmpty()) {
+      continue;
+    }
+    $file = $media->get('field_media_image')->entity;
+    if (!$file instanceof FileInterface) {
+      continue;
+    }
+    $variables['landing_hub_image'] = \Drupal::service('file_url_generator')->generateString($file->getFileUri());
+    break;
+  }
+}
+
+/**
+ * Builds a wa.me URL from a node phone value, or an empty string.
+ */
+function motaded_theme_whatsapp_url_from_phone(string $phone): string {
+  $digits = preg_replace('/\D+/', '', $phone) ?? '';
+  return $digits !== '' ? 'https://wa.me/' . $digits : '';
+}
+
+/**
+ * True when the landing page uses the service landing layout.
+ */
+function motaded_theme_is_service_landing_node($node): bool {
+  if (!$node instanceof \Drupal\node\NodeInterface || $node->bundle() !== 'landing_page') {
+    return FALSE;
+  }
+  return $node->hasField('field_service') && (bool) $node->get('field_service')->value;
+}
+
+/**
+ * Client logo URL from the card media field only.
+ */
+function motaded_theme_about_client_logo_url(ParagraphInterface $card): string {
+  if (!$card->hasField('field_media') || $card->get('field_media')->isEmpty()) {
+    return '';
+  }
+  $media = $card->get('field_media')->entity;
+  if (!$media instanceof MediaInterface) {
+    return '';
+  }
+  foreach (['field_media_image', 'field_media_svg'] as $field_name) {
+    if (!$media->hasField($field_name) || $media->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $file = $media->get($field_name)->entity;
+    if ($file instanceof FileInterface) {
+      return \Drupal::service('file_url_generator')->generateString($file->getFileUri());
+    }
+  }
+  return '';
+}
+
+/**
+ * Two-letter initials from a team member name (EN or AR).
+ */
+function motaded_theme_about_person_initials(string $name): string {
+  $name = trim(preg_replace('/\s+/u', ' ', $name) ?? '');
+  if ($name === '') {
+    return '';
+  }
+  $parts = preg_split('/[\s\-]+/u', $name) ?: [];
+  $first = static function (string $word): string {
+    return mb_strtoupper(mb_substr($word, 0, 1));
+  };
+  if (count($parts) === 1) {
+    return $first($parts[0]);
+  }
+  return $first($parts[0]) . $first($parts[count($parts) - 1]);
+}
+
+/**
+ * True for the About Motaded landing (/about-us).
+ */
+function motaded_theme_is_about_page($node): bool {
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'landing_page') {
+    return FALSE;
+  }
+  $alias_manager = \Drupal::service('path_alias.manager');
+  foreach (['en', 'ar'] as $langcode) {
+    $alias = (string) $alias_manager->getAliasByPath('/node/' . $node->id(), $langcode);
+    if ($alias === '/about-us' || str_ends_with($alias, '/about-us')) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Pulls the assessment webform out of the linear paragraph stack.
+ *
+ * Hero stays full-bleed above; related (and anything after the form) stays
+ * full-width below. The form is rendered once in a sticky sidebar.
+ */
+function motaded_theme_service_landing_split_paragraphs(array &$variables): void {
+  $variables['service_landing_layout'] = FALSE;
+  $variables['service_landing_hero'] = [];
+  $variables['service_landing_main'] = [];
+  $variables['service_landing_form'] = [];
+  $variables['service_landing_after'] = [];
+
+  if (empty($variables['content']['field_paragraphs']) || !is_array($variables['content']['field_paragraphs'])) {
+    return;
+  }
+
+  $field = $variables['content']['field_paragraphs'];
+  $hero = [];
+  $main = [];
+  $form = [];
+  $after = [];
+  $hero_taken = FALSE;
+  $seen_form = FALSE;
+
+  foreach (Element::children($field) as $key) {
+    $element = $field[$key];
+    $paragraph = $element['#paragraph'] ?? NULL;
+    $bundle = $paragraph instanceof ParagraphInterface ? $paragraph->bundle() : '';
+    $card_type = '';
+    if ($paragraph instanceof ParagraphInterface && $paragraph->hasField('field_card_type') && !$paragraph->get('field_card_type')->isEmpty()) {
+      $card_type = (string) $paragraph->get('field_card_type')->value;
+    }
+
+    if ($bundle === 'hero_split_banner' && !$hero_taken) {
+      $hero[$key] = $element;
+      $hero_taken = TRUE;
+      continue;
+    }
+    if ($bundle === 'webform') {
+      $form[$key] = $element;
+      $seen_form = TRUE;
+      continue;
+    }
+    if ($seen_form || $card_type === 'related') {
+      $after[$key] = $element;
+      continue;
+    }
+    $main[$key] = $element;
+  }
+
+  if ($form === []) {
+    return;
+  }
+
+  $variables['service_landing_layout'] = TRUE;
+  $variables['service_landing_hero'] = $hero;
+  $variables['service_landing_main'] = $main;
+  $variables['service_landing_form'] = $form;
+  $variables['service_landing_after'] = $after;
+  if (!empty($variables['attributes']) && $variables['attributes'] instanceof \Drupal\Core\Template\Attribute) {
+    $variables['attributes']->addClass('landing-page--service-sidebar');
+  }
+  else {
+    $variables['attributes']['class'][] = 'landing-page--service-sidebar';
+  }
+}
+
+/**
+ * Card Type values that have a dedicated paragraph--cards--{type} template.
+ */
+function motaded_theme_service_card_layouts(): array {
+  return [
+    'workstreams',
+    'features',
+    'directory',
+    'stack',
+    'stages',
+    'table',
+    'lists',
+    'fees',
+    'invite',
+    'contact',
+    'related',
+    'needs',
+    'eligibility',
+    'overview',
+    'context',
+    'prose',
+    'matrix',
+    'formats',
+    'tabs',
+    'situations',
+    'catalogue',
+    'data_note',
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_paragraph_alter().
+ */
+function motaded_theme_theme_suggestions_paragraph_alter(array &$suggestions, array $variables): void {
+  $paragraph = $variables['elements']['#paragraph'] ?? NULL;
+  if (!$paragraph) {
+    return;
+  }
+  if ($paragraph->bundle() === 'view_block' && motaded_theme_view_block_is_accounting_slider($paragraph)) {
+    $suggestions[] = 'paragraph__view_block__accounting_slider';
+  }
+  if ($paragraph->bundle() === 'cards' && $paragraph->hasField('field_card_type') && !$paragraph->get('field_card_type')->isEmpty()) {
+    $type = (string) $paragraph->get('field_card_type')->value;
+    if (in_array($type, motaded_theme_service_card_layouts(), TRUE)) {
+      $suggestions[] = 'paragraph__cards__' . $type;
+    }
+  }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!motaded_theme_is_service_landing_node($node)) {
+    return;
+  }
+  if ($paragraph->bundle() === 'hero_split_banner') {
+    $suggestions[] = 'paragraph__hero_split_banner__service';
+  }
+  if ($paragraph->bundle() === 'webform') {
+    $suggestions[] = 'paragraph__webform__service';
+  }
+}
+
 function motaded_theme_theme_suggestions_page_alter(array &$suggestions, array $variables) {
   // Core route /system/404 (system.404) is a normal route match, so Drupal does
   // not add page__404; use the same layout as for real 404 responses.
@@ -4794,7 +5369,12 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
       'more_url' => '',
     ];
   }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (motaded_theme_is_service_landing_node($node) || motaded_theme_is_about_page($node)) {
+    $variables['market_indicators']['show'] = FALSE;
+  }
   $variables['#cache']['tags'][] = 'market_indicators';
+  $variables['#cache']['contexts'][] = 'url.path';
 }
 
 /**
@@ -5497,6 +6077,14 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
   }
 
   $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node) && $variables['breadcrumb']) {
+    $last = array_key_last($variables['breadcrumb']);
+    if ($last !== NULL) {
+      $variables['breadcrumb'][$last]['text'] = $node->language()->getId() === 'ar'
+        ? 'عن متعدد'
+        : 'About Motaded';
+    }
+  }
   if ($node) {
     $prefix = getLanguagePrefix();
     $prefix = str_ends_with($prefix, "/") ? $prefix : $prefix . "/";
@@ -5639,6 +6227,25 @@ function _motaded_theme_services_exposed_filter_query_is_active(string $form_key
 function motaded_theme_preprocess_views_exposed_form(&$variables) {
   $form = &$variables['form'];
   $form_id = (string) ($form['#id'] ?? '');
+
+  if ($form_id === 'views-exposed-form-services-block-accounting') {
+    if (isset($form['search']) && is_array($form['search'])) {
+      $form['search']['#title_display'] = 'invisible';
+    }
+    // The services page display leaks /services into the block form action.
+    // Keep search and pager on the landing, except on the Views AJAX route.
+    if (\Drupal::routeMatch()->getRouteName() !== 'views.ajax') {
+      try {
+        $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
+      }
+      catch (\Exception $e) {
+        $req_action = \Drupal::request();
+        $form['#action'] = $req_action->getBasePath() . $req_action->getPathInfo();
+      }
+    }
+    $form['#attributes']['class'][] = 'acc-svc-list__form';
+    return;
+  }
 
   if ($form_id === 'views-exposed-form-sectors-directory-page-1') {
     $toolbar_children = [];
@@ -6014,6 +6621,19 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
     return;
   }
   $display_id = $variables['display_id'] ?? $view->current_display ?? '';
+  $is_accounting_list = $view->id() === 'services' && $display_id === 'block_accounting';
+
+  if ($is_accounting_list) {
+    $variables['service_url'] = '';
+    $row = $variables['row'] ?? NULL;
+    if (is_object($row) && isset($row->_entity) && $row->_entity instanceof NodeInterface) {
+      $variables['service_url'] = $row->_entity->toUrl()->toString();
+    }
+  }
+
+  if ($view->id() === 'landing_services') {
+    motaded_theme_preprocess_landing_hub_fields($variables);
+  }
 
   if ($view->id() === 'services' && $display_id === 'block_2') {
     $theme_path = \Drupal::service('extension.list.theme')->getPath('motaded_theme');
@@ -6038,7 +6658,7 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
     return;
   }
 
-  if ($view->id() !== 'services' || $display_id !== 'page_1') {
+  if (!$is_accounting_list && ($view->id() !== 'services' || $display_id !== 'page_1')) {
     return;
   }
 
@@ -6066,7 +6686,14 @@ function motaded_theme_preprocess_views_view_fields(array &$variables): void {
   }
 
   $node = $row->_entity;
-  if (!$node instanceof NodeInterface || $node->bundle() !== 'page') {
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  if ($node->bundle() === 'landing_page') {
+    motaded_theme_preprocess_services_landing_catalog_card($variables, $node);
+    return;
+  }
+  if ($node->bundle() !== 'page') {
     return;
   }
 
@@ -6436,13 +7063,14 @@ function motaded_theme_form_views_exposed_form_alter(&$form,  Drupal\Core\Form\F
   }
 
   // ViewsExposedForm uses the view page URL as #action whenever the view has a path
-  // (/events); these block displays still need to POST/GET against the current page.
+  // (/events, /services); these block displays still need to GET against the current page.
   $view = $form_state->get('view');
-  if (
-    $view instanceof ViewExecutable
-    && $view->storage->id() === 'events'
-    && ($view->current_display ?? '') === 'block_calendar'
-  ) {
+  $stay_on_current = $view instanceof ViewExecutable
+    && (
+      ($view->storage->id() === 'events' && ($view->current_display ?? '') === 'block_calendar')
+      || ($view->storage->id() === 'services' && ($view->current_display ?? '') === 'block_accounting')
+    );
+  if ($stay_on_current && \Drupal::routeMatch()->getRouteName() !== 'views.ajax') {
     try {
       $form['#action'] = Url::fromRoute('<current>')->setAbsolute(FALSE)->toString();
     }

@@ -1,0 +1,25 @@
+uuid: 64c2e0f9-5a1b-4d88-b7c3-2e09d4a6f815
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.trade_market_overview.field_body
+    - field.field.paragraph.trade_market_overview.field_title
+    - paragraphs.paragraphs_type.trade_market_overview
+  module:
+    - text
+id: paragraph.trade_market_overview.default
+targetEntityType: paragraph
+bundle: trade_market_overview
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_title: true
+  search_api_excerpt: true

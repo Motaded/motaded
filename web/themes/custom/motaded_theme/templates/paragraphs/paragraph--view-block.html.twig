@@ -15,8 +15,8 @@
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar or view_block_library_home or view_block_partners_marquee) ? [] : ['bg-white'])|merge(
-    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : (view_block_library_home ? ['pb-14'] : (view_block_partners_marquee ? ['pb-12', 'pt-0'] : ['pb-14', 'pt-28'])))
+  ]|merge((view_block_services_home or view_block_events_home_list or view_block_events_home_calendar or view_block_library_home or view_block_partners_marquee or view_block_landing_hubs) ? [] : ['bg-white'])|merge(
+    view_block_services_home ? ['pb-14'] : (view_block_events_home_list or view_block_events_home_calendar ? ['pb-10', 'pt-8'] : (view_block_library_home ? ['pb-14'] : (view_block_partners_marquee ? ['pb-12', 'pt-0'] : (view_block_landing_hubs ? [] : ['pb-14', 'pt-28']))))
   )|merge([
     view_block_news_latest ? 'paragraph--view-block--news-latest',
     view_block_services_home ? 'paragraph--view-block--services-home',
@@ -25,13 +25,29 @@
     view_block_events_home_calendar ? 'paragraph--view-block--events-home-calendar',
     view_block_events_home_list or view_block_events_home_calendar ? 'events-home-strip',
     view_block_partners_marquee ? 'paragraph--view-block--partners-marquee',
+    view_block_landing_hubs ? 'paragraph--view-block--landing-hubs',
   ])
 %}
 {% if view_block_library_home %}
   {% set attributes = attributes.setAttribute('id', 'library-home') %}
 {% endif %}
+{% if view_block_news_latest %}
+  {% set view_block_label = 'News and insights'|t %}
+{% elseif view_block_services_home %}
+  {% set view_block_label = 'Services'|t %}
+{% elseif view_block_library_home %}
+  {% set view_block_label = 'Library'|t %}
+{% elseif view_block_events_home_list or view_block_events_home_calendar %}
+  {% set view_block_label = 'Business events'|t %}
+{% elseif view_block_partners_marquee %}
+  {% set view_block_label = 'Partners'|t %}
+{% elseif view_block_landing_hubs %}
+  {% set view_block_label = 'Regulatory support'|t %}
+{% else %}
+  {% set view_block_label = 'Content block'|t %}
+{% endif %}
 {% block paragraph %}
-  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_news_latest ? ('News and insights'|t) : (view_block_services_home ? ('Services'|t) : (view_block_library_home ? ('Library'|t) : (view_block_events_home_list or view_block_events_home_calendar ? ('Business events'|t) : (view_block_partners_marquee ? ('Partners'|t) : ('Content block'|t))))) }}">
+  <section{{ attributes.addClass(classes) }} role="region" aria-label="{{ view_block_label }}">
     {% block content %}
       <div class="view-block-shell mot-shell">
         {% if view_block_news_latest %}
@@ -126,6 +142,14 @@
 
           {{ content.field_view_block.0 }}
         {% elseif view_block_partners_marquee %}
+          {{ content.field_view_block.0 }}
+        {% elseif view_block_landing_hubs %}
+          <header class="landing-hubs__header">
+            <p class="mot-eyebrow mot-eyebrow--rail">{{ 'Regulatory support'|t }}</p>
+            <div class="landing-hubs__intro">
+              {{ content.field_body.0 }}
+            </div>
+          </header>
           {{ content.field_view_block.0 }}
         {% else %}
           <div class="flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">

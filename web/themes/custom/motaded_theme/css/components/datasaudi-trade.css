@@ -1,0 +1,218 @@
+/* DataSaudi trade paragraphs: market scale + import structure. */
+
+.datasaudi-trade {
+  padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
+  background: #fff;
+}
+
+.datasaudi-trade__inner {
+  max-width: var(--mot-home-max, 1320px);
+  margin-inline: auto;
+  padding-inline: var(--mot-pad-x, clamp(1rem, 2.5vw, 1.5rem));
+  min-width: 0;
+}
+
+.datasaudi-trade__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+}
+
+.datasaudi-trade__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--mot-text-heading, #1e293b);
+}
+
+.datasaudi-trade__period {
+  margin: 0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #e8f0ed;
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #115e59;
+}
+
+.datasaudi-trade__lede,
+.datasaudi-trade__lede p {
+  margin: 0.45rem 0 0;
+  max-width: 62ch;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--mot-text-secondary, #475569);
+}
+
+.datasaudi-trade__panel {
+  margin-top: 1rem;
+  padding: clamp(0.85rem, 1.6vw, 1.15rem);
+  border: 1px solid #d7e5e0;
+  border-radius: 0.85rem;
+  background: #fff;
+  min-width: 0;
+}
+
+.datasaudi-trade--market .datasaudi-trade__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+@media (min-width: 900px) {
+  .datasaudi-trade--market .datasaudi-trade__panel {
+    display: grid;
+    grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 0.68fr);
+    align-items: center;
+    gap: 1.15rem;
+  }
+}
+
+.datasaudi-trade__hero-value {
+  margin: 0;
+  font-size: clamp(2rem, 3.6vw, 2.55rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #115e59;
+}
+
+.datasaudi-trade__hero-unit,
+.datasaudi-trade__hero-label,
+.datasaudi-trade__yoy,
+.datasaudi-trade__source,
+.datasaudi-trade__empty {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+.datasaudi-trade__hero-unit {
+  font-weight: 650;
+}
+
+.datasaudi-trade__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.7rem 0 0;
+}
+
+.datasaudi-trade__pair dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.datasaudi-trade__pair dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.datasaudi-trade__chart {
+  margin: 0;
+  min-width: 0;
+}
+
+.datasaudi-trade__chart-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  color: #334155;
+}
+
+.datasaudi-trade__chart-range {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+.datasaudi-trade__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.9rem;
+  margin: 0.35rem 0 0.4rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.datasaudi-trade__legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.18rem;
+  margin-inline-end: 0.35rem;
+  vertical-align: middle;
+  background: #0f766e;
+}
+
+.datasaudi-trade__legend-item--exports::before {
+  background: #334155;
+}
+
+.datasaudi-trade__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 210px;
+}
+
+.datasaudi-trade__grid {
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.datasaudi-trade__tick,
+.datasaudi-trade__xlabel,
+.datasaudi-trade__end {
+  fill: #64748b;
+  font-size: 10px;
+}
+
+.datasaudi-trade__end--imports {
+  fill: #0f766e;
+  font-weight: 700;
+}
+
+.datasaudi-trade__end--exports {
+  fill: #334155;
+  font-weight: 700;
+}
+
+.datasaudi-trade__dot--imports {
+  fill: #fff;
+  stroke: #0f766e;
+  stroke-width: 1.5;
+}
+
+.datasaudi-trade__dot--exports {
+  fill: #fff;
+  stroke: #334155;
+  stroke-width: 1.5;
+}
+
+.datasaudi-trade__hit {
+  fill: transparent;
+}
+
+.datasaudi-trade__source {
+  margin-top: 0.55rem;
+}
+
+.datasaudi-trade__source a {
+  color: #115e59;
+  text-underline-offset: 0.15em;
+}

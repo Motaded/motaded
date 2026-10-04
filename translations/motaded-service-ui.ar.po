@@ -750,6 +750,9 @@ msgstr "تأسيس الأعمال"
 msgid "Saudi Partners"
 msgstr "الشركاء السعوديون"
 
+msgid "Request a Consultation"
+msgstr "طلب استشارة"
+
 msgid "Consultation"
 msgstr "الاستشارات"
 
@@ -1964,3 +1967,81 @@ msgstr "رؤى ذات صلة"
 
 msgid "No related insights found."
 msgstr "لا توجد رؤى ذات صلة."
+
+msgid "Merchandise imports"
+msgstr "الواردات السلعية"
+
+msgid "Merchandise exports"
+msgstr "الصادرات السلعية"
+
+msgid "Total merchandise trade"
+msgstr "إجمالي التجارة السلعية"
+
+msgid "Imports plus exports in the same month"
+msgstr "الواردات زائد الصادرات في الشهر نفسه"
+
+msgid "SAR billion"
+msgstr "مليار ريال"
+
+msgid "Statistical period:"
+msgstr "الفترة الإحصائية:"
+
+msgid "Source: GASTAT via DataSaudi"
+msgstr "المصدر: الهيئة العامة للإحصاء عبر داتا السعودية"
+
+msgid "Official trade figures will appear here after the next successful import."
+msgstr "ستظهر الأرقام الرسمية للتجارة هنا بعد نجاح الاستيراد التالي."
+
+msgid "Imports and exports, last @count available months"
+msgstr "الواردات والصادرات، آخر @count أشهر متاحة"
+
+msgid "Monthly imports and exports"
+msgstr "الواردات والصادرات الشهرية"
+
+msgid "View all @count categories"
+msgstr "عرض جميع الفئات (@count)"
+
+msgid "Share"
+msgstr "الحصة"
+
+msgid "Imports"
+msgstr "الواردات"
+
+msgid "Exports"
+msgstr "الصادرات"
+
+msgid "vs @period"
+msgstr "مقابل @period"
+
+msgid "View page"
+msgstr "عرض"
+
+msgid "Regulatory support"
+msgstr "الدعم التنظيمي"
+
+msgid "Customs"
+msgstr "الجمارك"
+
+msgid "Accounting"
+msgstr "المحاسبة"
+
+msgid "Importers and Exporters"
+msgstr "المستوردون والمصدّرون"
+
+msgid "Company Owners"
+msgstr "أصحاب الشركات"
+
+msgid "Manufacturers"
+msgstr "المصنّعون"
+
+msgid "Importers"
+msgstr "المستوردون"
+
+msgid "Brands"
+msgstr "العلامات التجارية"
+
+msgid "Specialist services"
+msgstr "الخدمات المتخصصة"
+
+msgid "Customs clearance, accounting, and SFDA support for medicines, medical devices and cosmetics."
+msgstr "التخليص الجمركي والمحاسبة ودعم SFDA للأدوية والأجهزة الطبية ومستحضرات التجميل."

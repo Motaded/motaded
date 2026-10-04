@@ -1,0 +1,35 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'features', show_header: false, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="customs-work">
+      <div class="customs-work__intro">
+        {% if paragraph.field_title.value %}
+          <h2 class="customs-svc__title">{{ paragraph.field_title.value }}</h2>
+        {% endif %}
+        {% if paragraph.field_body.processed %}
+          <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+        {% endif %}
+        <div class="customs-work__actions">
+          {% set cta_n = 0 %}
+          {% for card in service_cards %}
+            {% if card and card.field_link.0 %}
+              {% set cta_n = cta_n + 1 %}
+              <a class="{{ cta_n == 1 ? 'customs-work__cta' : 'customs-work__action' }}" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <ul class="customs-work__list">
+        {% for card in service_cards %}
+          {% if card and not card.field_link.0 %}
+            <li class="customs-work__item">
+              <div class="customs-work__copy">
+                <h3 class="customs-work__title">{{ card.field_title.value }}</h3>
+                <div class="customs-work__body">{{ card.field_body.processed }}</div>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endblock %}
+{% endembed %}

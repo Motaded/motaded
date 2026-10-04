@@ -1,0 +1,36 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'needs', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ul class="acc-needs">
+      {% for card in service_cards %}
+        {% if card and not card.field_link.0 %}
+          <li class="acc-needs__item">
+            <h3 class="acc-needs__title">{{ card.field_title.value }}</h3>
+            <div class="acc-needs__body">{{ card.field_body.processed }}</div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="acc-needs__footer">
+      <div class="acc-needs__links">
+        {% for card in service_cards %}
+          {% if card and card.field_link.0 and '#assessment' not in card.field_link.0.url.toString() %}
+            <a class="acc-needs__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% for card in service_cards %}
+        {% if card and card.field_link.0 and '#assessment' in card.field_link.0.url.toString() %}
+          {% set label = card.field_link.0.title %}
+          <div class="acc-needs__cta">
+            {% if 'Request a Consultation' in label and label != 'Request a Consultation' %}
+              <p class="acc-needs__cta-note">{{ label|replace({'Request a Consultation': ''})|trim }}</p>
+              <a class="acc-needs__cta-link" href="{{ card.field_link.0.url.toString() }}">{{ 'Request a Consultation'|t }}</a>
+            {% else %}
+              <a class="acc-needs__cta-link" href="{{ card.field_link.0.url.toString() }}">{{ label }}</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

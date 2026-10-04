@@ -12,7 +12,7 @@ field_name: field_card_type
 entity_type: paragraph
 bundle: cards
 label: 'Card Type'
-description: ''
+description: 'On a Service landing, pick a Service:* option to style this section. Other types keep the default cards layout.'
 required: false
 translatable: true
 default_value: {  }

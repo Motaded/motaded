@@ -1,0 +1,20 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'workstreams', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ul class="customs-ws">
+      {% for card in service_cards %}
+        {% if card %}
+          <li class="customs-ws__item">
+            <span class="customs-ws__index" aria-hidden="true">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</span>
+            {% if card.field_media.entity and card.field_media.entity.field_media_image.entity %}
+              <span class="customs-ws__icon">
+                <img src="{{ file_url(card.field_media.entity.field_media_image.entity.uri.value) }}" alt="">
+              </span>
+            {% endif %}
+            <h3 class="customs-ws__title">{{ card.field_title.value }}</h3>
+            <div class="customs-ws__body">{{ card.field_body.processed }}</div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endblock %}
+{% endembed %}

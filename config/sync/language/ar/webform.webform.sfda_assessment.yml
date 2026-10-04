@@ -1,0 +1,29 @@
+title: 'تقييم SFDA'
+description: 'طلبات التقييم من صفحات خدمات الأدوية والأجهزة الطبية ومستحضرات التجميل.'
+elements: |
+  full_name:
+    '#title': 'الاسم الكامل'
+  email:
+    '#title': 'البريد الإلكتروني للعمل'
+    '#pattern_error': 'الرجاء إدخال عنوان بريدك الإلكتروني الرسمي. إذا لم يكن لديك واحدة، <a href="/contact-us">انقر هنا</a>'
+  phone:
+    '#title': 'رقم الهاتف'
+  company_name:
+    '#title': 'اسم الشركة'
+  support_needed:
+    '#title': 'ما الدعم الذي تحتاجونه؟'
+    '#empty_option': '- اختر -'
+    '#options':
+      product_registration: 'تسجيل المنتج أو إدراجه.'
+      establishment: 'ترخيص المنشأة أو المستودع.'
+      authorized_representative: 'الممثل النظامي.'
+      import_clearance: 'تنسيق التخليص للاستيراد.'
+      file_review: 'مراجعة الملف قبل التقديم.'
+      not_sure: 'غير متأكد — ساعدوني في الاختيار.'
+  requirements:
+    '#title': 'أخبرونا عن متطلباتكم'
+    '#description': 'اذكروا نوع المنتج ونظام SFDA المستخدم إن وُجد، وما إذا كانت البضاعة قد وصلت. يُرجى عدم إدراج كلمات المرور أو بيانات الدخول.'
+  actions:
+    '#submit__label': إرسال
+settings:
+  confirmation_message: '<p>شكراً لكم. سيراجع متعدد الاستفسار ويتواصل معكم لتوضيح النطاق والخطوات التالية.</p>'

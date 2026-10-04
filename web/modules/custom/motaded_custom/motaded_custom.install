@@ -196,6 +196,87 @@ function motaded_custom_schema(): array {
     ],
   ];
 
+  $schema['datasaudi_trade_balance'] = [
+    'description' => 'Monthly merchandise imports/exports from DataSaudi gastat_trade_balance (Million SAR).',
+    'fields' => [
+      'period' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'period_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'exports_million_sar' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'imports_million_sar' => [
+        'type' => 'numeric',
+        'precision' => 24,
+        'scale' => 8,
+        'not null' => TRUE,
+      ],
+      'unit' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'million_sar',
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['period'],
+    'unique keys' => [
+      'period_id' => ['period_id'],
+    ],
+  ];
+
+  $schema['datasaudi_trade_import_status'] = [
+    'description' => 'Last successful DataSaudi trade snapshot metadata.',
+    'fields' => [
+      'dataset' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'fetched_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'period_min' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'period_max' => [
+        'type' => 'varchar',
+        'length' => 7,
+        'not null' => TRUE,
+      ],
+      'row_count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'unit' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => 'million_sar',
+      ],
+    ],
+    'primary key' => ['dataset'],
+  ];
+
   return $schema;
 }
 
@@ -1243,6 +1324,98 @@ function motaded_custom_update_10046(): void {
       $storage->write($name, $data);
     }
   }
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+}
+
+/**
+ * Creates DataSaudi monthly trade snapshot tables.
+ */
+function motaded_custom_update_10047(): void {
+  $schema = motaded_custom_schema();
+  $sm = \Drupal::database()->schema();
+  foreach ([
+    'datasaudi_trade_balance',
+    'datasaudi_trade_import_status',
+  ] as $table) {
+    if (!$sm->tableExists($table) && isset($schema[$table])) {
+      $sm->createTable($table, $schema[$table]);
+    }
+  }
+}
+
+/**
+ * Drops the unused DataSaudi product snapshot and paragraph type.
+ */
+function motaded_custom_update_10048(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $ids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'trade_by_product')
+    ->execute();
+  $ids = array_map('intval', $ids);
+  if ($ids) {
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'landing_page']);
+    foreach ($nodes as $node) {
+      foreach (array_keys($node->getTranslationLanguages()) as $langcode) {
+        $translation = $node->getTranslation($langcode);
+        if (!$translation->hasField('field_paragraphs')) {
+          continue;
+        }
+        $kept = [];
+        foreach ($translation->get('field_paragraphs') as $item) {
+          $target = (int) $item->target_id;
+          if (!in_array($target, $ids, TRUE)) {
+            $kept[] = [
+              'target_id' => $item->target_id,
+              'target_revision_id' => $item->target_revision_id,
+            ];
+          }
+        }
+        $translation->set('field_paragraphs', $kept);
+        $translation->save();
+      }
+    }
+    $storage->delete($storage->loadMultiple($ids));
+  }
+
+  $field = \Drupal\field\Entity\FieldConfig::loadByName('node', 'landing_page', 'field_paragraphs');
+  if ($field) {
+    $settings = $field->getSetting('handler_settings') ?: [];
+    unset($settings['target_bundles']['trade_by_product'], $settings['target_bundles_drag_drop']['trade_by_product']);
+    $field->setSetting('handler_settings', $settings);
+    $field->save();
+  }
+
+  foreach ([
+    'field.field.paragraph.trade_by_product.field_title',
+    'field.field.paragraph.trade_by_product.field_body',
+    'core.entity_form_display.paragraph.trade_by_product.default',
+    'core.entity_view_display.paragraph.trade_by_product.default',
+    'language.content_settings.paragraph.trade_by_product',
+    'paragraphs.paragraphs_type.trade_by_product',
+  ] as $name) {
+    $config = \Drupal::configFactory()->getEditable($name);
+    if (!$config->isNew()) {
+      $config->delete();
+    }
+  }
+
+  $type = \Drupal\paragraphs\Entity\ParagraphsType::load('trade_by_product');
+  if ($type) {
+    $type->delete();
+  }
+
+  $database = \Drupal::database();
+  if ($database->schema()->tableExists('datasaudi_trade_product')) {
+    $database->schema()->dropTable('datasaudi_trade_product');
+  }
+  if ($database->schema()->tableExists('datasaudi_trade_import_status')) {
+    $database->delete('datasaudi_trade_import_status')
+      ->condition('dataset', 'product')
+      ->execute();
+  }
+
   \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
   \Drupal::entityTypeManager()->clearCachedDefinitions();
 }
