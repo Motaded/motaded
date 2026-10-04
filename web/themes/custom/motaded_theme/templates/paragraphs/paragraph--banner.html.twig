@@ -132,7 +132,11 @@
         </div>
       </section>
     {% elseif banner_type == "banner_style_3" %}
-      {% include "@motaded_theme/paragraphs/hero--packages.html.twig" %}
+      {% if is_about_banner %}
+        {% include "@motaded_theme/paragraphs/hero--about.html.twig" %}
+      {% else %}
+        {% include "@motaded_theme/paragraphs/hero--packages.html.twig" %}
+      {% endif %}
     {% else %}
 
       <header class="max-w-[1320px] mx-auto px-4 mt-6">

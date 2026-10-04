@@ -2052,6 +2052,12 @@ function motaded_theme_preprocess_node(&$variables) {
     $variables['#attached']['library'][] = 'motaded_theme/service_landing';
     motaded_theme_service_landing_split_paragraphs($variables);
   }
+  $variables['is_about_page'] = FALSE;
+  if ($node->bundle() === 'landing_page' && motaded_theme_is_about_page($node)) {
+    $variables['is_about_page'] = TRUE;
+    $variables['attributes']['class'][] = 'landing-page--about';
+    $variables['#attached']['library'][] = 'motaded_theme/about_page';
+  }
   $variables['chamber_external_url'] = NULL;
   $variables['chamber_external_label'] = NULL;
   $variables['sector_page_show_eyebrow'] = FALSE;
@@ -3583,6 +3589,87 @@ function motaded_theme_preprocess_paragraph__cards(array &$variables): void {
   }
   $variables['service_cards'] = $cards;
   $variables['#cache']['contexts'][] = 'languages:language_content';
+  $variables['is_about_team'] = FALSE;
+  $variables['about_team_initials'] = [];
+  $variables['is_about_clients'] = FALSE;
+  $variables['about_client_logos'] = [];
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node)) {
+    $title = $paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()
+      ? trim((string) $paragraph->get('field_title')->value)
+      : '';
+    if (in_array($title, ['What drives us', 'ما الذي يقودنا'], TRUE)) {
+      $variables['attributes']['class'][] = 'about-drives';
+    }
+    $card_type = $paragraph->hasField('field_card_type') && !$paragraph->get('field_card_type')->isEmpty()
+      ? (string) $paragraph->get('field_card_type')->value
+      : '';
+    if ($card_type === 'cta_block') {
+      $variables['attributes']['class'][] = 'about-cta';
+    }
+    if (in_array($title, [
+      'Three companies, one group',
+      'ثلاث شركات، مجموعة واحدة',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-group';
+    }
+    if (in_array($title, [
+      'The team behind every Motaded engagement',
+      'الفريق وراء كلّ مهمّة لمتعدد',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-team';
+      $variables['is_about_team'] = TRUE;
+      foreach ($cards as $card) {
+        $name = $card->hasField('field_title') && !$card->get('field_title')->isEmpty()
+          ? trim((string) $card->get('field_title')->value)
+          : '';
+        $variables['about_team_initials'][$card->id()] = motaded_theme_about_person_initials($name);
+      }
+    }
+    if (in_array($title, [
+      'Foreign investors who trust Motaded',
+      'مستثمرون أجانب يثقون بمتعدد',
+    ], TRUE)) {
+      $variables['attributes']['class'][] = 'about-clients';
+      $variables['is_about_clients'] = TRUE;
+      foreach ($cards as $card) {
+        $variables['about_client_logos'][$card->id()] = motaded_theme_about_client_logo_url($card);
+      }
+    }
+  }
+}
+
+/**
+ * About landing uses a dedicated banner layout; packages keep banner_style_3.
+ */
+function motaded_theme_preprocess_paragraph__banner(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $is_about = $node instanceof NodeInterface && motaded_theme_is_about_page($node);
+  $variables['is_about_banner'] = $is_about;
+  $variables['about_hero_facts'] = [];
+  if (!$is_about) {
+    return;
+  }
+  $variables['#attached']['library'][] = 'motaded_theme/about_page';
+  $paragraph = $variables['paragraph'] ?? NULL;
+  if (!$paragraph instanceof ParagraphInterface || !$paragraph->hasField('field_paragraphs')) {
+    return;
+  }
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $card = $item->entity;
+    if (!$card instanceof ParagraphInterface) {
+      continue;
+    }
+    $card = motaded_theme_paragraph_from_context($card) ?? $card;
+    if (!$card->hasField('field_body') || $card->get('field_body')->isEmpty()) {
+      continue;
+    }
+    $body = trim(Html::decodeEntities(strip_tags((string) $card->get('field_body')->value)));
+    if ($body !== '') {
+      $variables['about_hero_facts'][] = $body;
+    }
+  }
 }
 
 function motaded_theme_preprocess_paragraph(array &$variables): void {
@@ -4017,6 +4104,11 @@ function motaded_theme_preprocess_paragraph__hero_split_banner(array &$variables
   }
   $variables['hero_split_highlights'] = $highlights;
 
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node)) {
+    $variables['attributes']['class'][] = 'about-founder';
+    $variables['hero_split_highlights'] = [];
+  }
 }
 
 /**
@@ -4092,7 +4184,7 @@ function motaded_theme_preprocess_paragraph__why_opportunities(array &$variables
   $stat_field = $paragraph->get('field_why_stat_items');
   if ($stat_field->access('view')) {
     foreach ($stat_field as $item) {
-      $sub = $item->entity;
+      $sub = motaded_theme_paragraph_from_context($item->entity);
       if (!$sub instanceof \Drupal\paragraphs\Entity\Paragraph || $sub->bundle() !== 'why_stat_item') {
         continue;
       }
@@ -4747,6 +4839,64 @@ function motaded_theme_is_service_landing_node($node): bool {
 }
 
 /**
+ * Client logo URL from the card media field only.
+ */
+function motaded_theme_about_client_logo_url(ParagraphInterface $card): string {
+  if (!$card->hasField('field_media') || $card->get('field_media')->isEmpty()) {
+    return '';
+  }
+  $media = $card->get('field_media')->entity;
+  if (!$media instanceof MediaInterface) {
+    return '';
+  }
+  foreach (['field_media_image', 'field_media_svg'] as $field_name) {
+    if (!$media->hasField($field_name) || $media->get($field_name)->isEmpty()) {
+      continue;
+    }
+    $file = $media->get($field_name)->entity;
+    if ($file instanceof FileInterface) {
+      return \Drupal::service('file_url_generator')->generateString($file->getFileUri());
+    }
+  }
+  return '';
+}
+
+/**
+ * Two-letter initials from a team member name (EN or AR).
+ */
+function motaded_theme_about_person_initials(string $name): string {
+  $name = trim(preg_replace('/\s+/u', ' ', $name) ?? '');
+  if ($name === '') {
+    return '';
+  }
+  $parts = preg_split('/[\s\-]+/u', $name) ?: [];
+  $first = static function (string $word): string {
+    return mb_strtoupper(mb_substr($word, 0, 1));
+  };
+  if (count($parts) === 1) {
+    return $first($parts[0]);
+  }
+  return $first($parts[0]) . $first($parts[count($parts) - 1]);
+}
+
+/**
+ * True for the About Motaded landing (/about-us).
+ */
+function motaded_theme_is_about_page($node): bool {
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'landing_page') {
+    return FALSE;
+  }
+  $alias_manager = \Drupal::service('path_alias.manager');
+  foreach (['en', 'ar'] as $langcode) {
+    $alias = (string) $alias_manager->getAliasByPath('/node/' . $node->id(), $langcode);
+    if ($alias === '/about-us' || str_ends_with($alias, '/about-us')) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
  * Pulls the assessment webform out of the linear paragraph stack.
  *
  * Hero stays full-bleed above; related (and anything after the form) stays
@@ -5220,7 +5370,7 @@ function motaded_theme_preprocess_paragraph__glance_block(array &$variables): vo
     ];
   }
   $node = \Drupal::routeMatch()->getParameter('node');
-  if (motaded_theme_is_service_landing_node($node)) {
+  if (motaded_theme_is_service_landing_node($node) || motaded_theme_is_about_page($node)) {
     $variables['market_indicators']['show'] = FALSE;
   }
   $variables['#cache']['tags'][] = 'market_indicators';
@@ -5927,6 +6077,14 @@ function motaded_theme_preprocess_breadcrumb(&$variables) {
   }
 
   $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof NodeInterface && motaded_theme_is_about_page($node) && $variables['breadcrumb']) {
+    $last = array_key_last($variables['breadcrumb']);
+    if ($last !== NULL) {
+      $variables['breadcrumb'][$last]['text'] = $node->language()->getId() === 'ar'
+        ? 'عن متعدد'
+        : 'About Motaded';
+    }
+  }
   if ($node) {
     $prefix = getLanguagePrefix();
     $prefix = str_ends_with($prefix, "/") ? $prefix : $prefix . "/";

@@ -1,0 +1,32 @@
+{{ attach_library('motaded_theme/about_page') }}
+<section class="about-hero">
+  <div class="about-hero__inner">
+    {% if content.field_title.0 is not empty %}
+      <h1 class="about-hero__title">{{ content.field_title.0 }}</h1>
+    {% endif %}
+    {% if content.field_body.0 is not empty %}
+      <div class="about-hero__lede">
+        {{ content.field_body.0 }}
+      </div>
+    {% endif %}
+    {% if content.field_links[0] is not empty %}
+      <div class="about-hero__actions">
+        <a class="about-hero__cta" href="{{ content.field_links[0]['#url'] }}">
+          {{ content.field_links[0]['#title'] }}
+        </a>
+        {% if content.field_links[1] is not empty %}
+          <a class="about-hero__cta about-hero__cta--ghost" href="{{ content.field_links[1]['#url'] }}">
+            {{ content.field_links[1]['#title'] }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if about_hero_facts %}
+      <ul class="about-hero__facts">
+        {% for fact in about_hero_facts %}
+          <li class="about-hero__fact">{{ fact }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>

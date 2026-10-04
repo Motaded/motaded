@@ -1,3 +1,31 @@
+{% if is_about_clients %}
+<section class="about-clients" aria-labelledby="about-clients-title">
+  <div class="about-clients__inner">
+    {% if content.field_title.0 is not empty %}
+      <h2 id="about-clients-title" class="h2">{{ content.field_title.0 }}</h2>
+    {% endif %}
+    {% if content.field_body.0 is not empty %}
+      <p class="lead">{{ content.field_body.0|render|striptags }}</p>
+    {% endif %}
+    <div class="about-clients__grid">
+      {% for card in service_cards %}
+        {% set logo = about_client_logos[card.id()]|default('') %}
+        <article class="about-clients__card">
+          {% if logo %}
+            <span class="about-clients__logo">
+              <img src="{{ logo }}" alt="{{ card.field_title.value }}" loading="lazy" decoding="async" />
+            </span>
+          {% endif %}
+          <h3 class="about-clients__name">{{ card.field_title.value }}</h3>
+          {% if card.field_body.value %}
+            <p class="about-clients__role">{{ card.field_body.value|striptags }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% else %}
 <section id="sectors" class="section-sectors border-t border-gray-200 bg-white py-16">
   <div class="container layout-container px-4 mx-auto">
     <div class="mx-auto max-w-3xl text-center">
@@ -79,3 +107,4 @@
     </div>
 </div>
 </section>
+{% endif %}

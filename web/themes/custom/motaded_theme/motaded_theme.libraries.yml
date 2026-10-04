@@ -442,6 +442,15 @@ datasaudi_trade:
   dependencies:
     - motaded_theme/base
 
+about_page:
+  version: 20261004t
+  css:
+    component:
+      css/components/about-page.css:
+        weight: -6
+  dependencies:
+    - motaded_theme/base
+
 service_landing:
   version: 20261005l
   css:
