@@ -1008,6 +1008,7 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                soft_limit_include_children: false
                 scrollable: false
                 scrollable_height: 300
       empty:
@@ -2651,6 +2652,7 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                soft_limit_include_children: false
                 scrollable: false
                 scrollable_height: 300
               field_taxonomy_target_id:
@@ -2674,6 +2676,7 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                soft_limit_include_children: false
                 scrollable: false
                 scrollable_height: 300
               field_sector_target_id:
@@ -2697,6 +2700,7 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                soft_limit_include_children: false
                 scrollable: false
                 scrollable_height: 300
               field_tags_target_id:
@@ -2720,6 +2724,7 @@ display:
                 soft_limit: 0
                 soft_limit_label_less: 'Show less'
                 soft_limit_label_more: 'Show more'
+                soft_limit_include_children: false
                 scrollable: false
                 scrollable_height: 300
       empty:
