@@ -443,7 +443,7 @@ datasaudi_trade:
     - motaded_theme/base
 
 about_page:
-  version: 20261004t
+  version: 20261004u
   css:
     component:
       css/components/about-page.css:
