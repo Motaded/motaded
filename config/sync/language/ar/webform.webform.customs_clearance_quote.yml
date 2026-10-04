@@ -6,7 +6,8 @@ elements: |
   last_name:
     '#title': 'اسم العائلة'
   email:
-    '#title': 'البريد الإلكتروني'
+    '#title': 'البريد الإلكتروني للعمل'
+    '#pattern_error': 'الرجاء إدخال عنوان بريدك الإلكتروني الرسمي. إذا لم يكن لديك واحدة، <a href="/contact-us">انقر هنا</a>'
   phone:
     '#title': 'رقم الهاتف'
   company_name:

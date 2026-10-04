@@ -443,7 +443,7 @@ datasaudi_trade:
     - motaded_theme/base
 
 service_landing:
-  version: 20261005j
+  version: 20261005l
   css:
     component:
       css/components/customs-clearance-landing.css:

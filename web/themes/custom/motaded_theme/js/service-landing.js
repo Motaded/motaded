@@ -118,6 +118,50 @@
     },
   };
 
+  Drupal.behaviors.motadedServiceFormHighlight = {
+    attach: function attach(context) {
+      once('svc-form-highlight', '.landing-page--service', context).forEach((root) => {
+        const form = root.querySelector('#assessment');
+        if (!form) {
+          return;
+        }
+
+        const isDesktop = () => window.matchMedia('(min-width: 1100px)').matches;
+        let timer;
+
+        const highlight = () => {
+          if (!isDesktop()) {
+            return;
+          }
+          form.classList.remove('is-highlighted');
+          void form.offsetWidth;
+          form.classList.add('is-highlighted');
+          clearTimeout(timer);
+          timer = window.setTimeout(() => {
+            form.classList.remove('is-highlighted');
+          }, 3200);
+        };
+
+        root.addEventListener('click', (event) => {
+          const link = event.target.closest('a[href*="#assessment"]');
+          if (!link || !root.contains(link) || !isDesktop()) {
+            return;
+          }
+          event.preventDefault();
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', '#assessment');
+          }
+          form.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          highlight();
+        });
+
+        if (window.location.hash === '#assessment') {
+          highlight();
+        }
+      });
+    },
+  };
+
   Drupal.behaviors.motadedServiceProcess = {
     attach: function attach(context) {
       if (typeof Swiper === 'undefined') {

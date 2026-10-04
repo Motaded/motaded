@@ -2733,6 +2733,44 @@ body:has(.landing-page--service) .main-wrapper > main[role="main"] {
   scroll-margin-top: 6rem;
 }
 
+@media (min-width: 1100px) {
+  .svc-layout__form #assessment.is-highlighted .customs-form__panel {
+    border-color: #0f766e;
+    background: #f4fbf9;
+    box-shadow:
+      0 0 0 4px rgba(15, 118, 110, 0.34),
+      0 18px 40px rgba(15, 54, 46, 0.14);
+    animation: svc-form-highlight 2.4s ease;
+  }
+}
+
+@keyframes svc-form-highlight {
+  0% {
+    background: #ecfdf7;
+    box-shadow:
+      0 0 0 0 rgba(15, 118, 110, 0.5),
+      0 12px 32px rgba(15, 23, 42, 0.06);
+  }
+  30% {
+    background: #f4fbf9;
+    box-shadow:
+      0 0 0 10px rgba(15, 118, 110, 0.16),
+      0 18px 40px rgba(15, 54, 46, 0.14);
+  }
+  100% {
+    background: #fff;
+    box-shadow:
+      0 0 0 4px rgba(15, 118, 110, 0.22),
+      0 16px 36px rgba(15, 54, 46, 0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-layout__form #assessment.is-highlighted .customs-form__panel {
+    animation: none;
+  }
+}
+
 .svc-form-dock {
   display: none;
 }

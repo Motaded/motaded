@@ -3,8 +3,9 @@ description: 'طلبات التقييم المحاسبي من صفحة الخد�
 elements: |
   full_name:
     '#title': 'الاسم الكامل'
-  work_email:
+  email:
     '#title': 'البريد الإلكتروني للعمل'
+    '#pattern_error': 'الرجاء إدخال عنوان بريدك الإلكتروني الرسمي. إذا لم يكن لديك واحدة، <a href="/contact-us">انقر هنا</a>'
   phone:
     '#title': 'رقم الهاتف'
   company_name:

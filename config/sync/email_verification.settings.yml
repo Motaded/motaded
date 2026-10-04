@@ -25,3 +25,9 @@ webforms:
     email_element: email
   contact:
     email_element: email
+  sfda_assessment:
+    email_element: email
+  accounting_assessment:
+    email_element: email
+  customs_clearance_quote:
+    email_element: email
