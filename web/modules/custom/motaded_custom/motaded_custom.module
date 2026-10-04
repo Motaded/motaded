@@ -862,6 +862,34 @@ function motaded_custom_metatags_alter(array &$metatags, array &$context) {
     require_once __DIR__ . '/includes/motaded_custom.event_metatag.inc';
     motaded_custom_event_metatags_alter($metatags, $entity);
   }
+
+  if ($entity->bundle() === 'landing_page') {
+    motaded_custom_landing_page_metatags_alter($metatags, $entity);
+  }
+}
+
+/**
+ * Copies the landing-page meta description onto Open Graph and Twitter tags.
+ */
+function motaded_custom_landing_page_metatags_alter(array &$metatags, NodeInterface $node): void {
+  $description = trim((string) ($metatags['description'] ?? ''));
+  if ($description === '' || str_contains($description, '[')) {
+    if ($node->hasField('field_meta') && !$node->get('field_meta')->isEmpty()) {
+      $decoded = json_decode((string) $node->get('field_meta')->value, TRUE);
+      if (is_array($decoded)) {
+        $description = trim((string) ($decoded['description'] ?? ''));
+      }
+    }
+  }
+  if ($description === '' || str_contains($description, '[')) {
+    return;
+  }
+
+  $metatags['og_description'] = $description;
+  $metatags['twitter_cards_description'] = $description;
+  if (!empty($metatags['schema_web_page_description'])) {
+    $metatags['schema_web_page_description'] = $description;
+  }
 }
 
 /**
@@ -1473,6 +1501,10 @@ function motaded_custom_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
 function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
   $view_id = $view->id() ?? '';
 
+  if ($view_id === 'services' && ($view->current_display ?? '') === 'page_1') {
+    motaded_custom_services_catalog_left_join_flags($query);
+  }
+
   if ($view_id === 'library') {
     if (!in_array($view->current_display ?? '', ['page_1', 'block_1'], TRUE)) {
       return;
@@ -1535,6 +1567,40 @@ function motaded_custom_views_query_alter(\Drupal\views\ViewExecutable $view, \D
     }
     return;
   }
+}
+
+/**
+ * LEFT JOIN flag fields so page and landing_page can OR-match on /services.
+ */
+function motaded_custom_services_catalog_left_join_flags(\Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
+  if (!$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+    return;
+  }
+  $ref = new \ReflectionClass($query);
+  if (!$ref->hasProperty('tableQueue')) {
+    return;
+  }
+  $prop = $ref->getProperty('tableQueue');
+  $prop->setAccessible(TRUE);
+  $queue = $prop->getValue($query);
+  if (!is_array($queue)) {
+    return;
+  }
+  $flag_tables = [
+    'node__field_display_on_services',
+    'node__field_service',
+  ];
+  foreach ($queue as $alias => $info) {
+    if (!in_array($info['table'] ?? '', $flag_tables, TRUE)) {
+      continue;
+    }
+    if (isset($info['join']) && is_object($info['join'])) {
+      $info['join']->type = 'LEFT';
+      $queue[$alias] = $info;
+    }
+  }
+  $prop->setValue($query, $queue);
+  $query->distinct = TRUE;
 }
 
 /**
@@ -2320,7 +2386,7 @@ function motaded_custom_preprocess_paragraph(array &$variables): void {
     return;
   }
   $bundle = $paragraph->bundle();
-  if (!in_array($bundle, ['trade_market_overview', 'trade_by_product'], TRUE)) {
+  if ($bundle !== 'trade_market_overview') {
     return;
   }
   if (!\Drupal::hasService('motaded_custom.datasaudi_trade_presenter')) {
@@ -2329,9 +2395,7 @@ function motaded_custom_preprocess_paragraph(array &$variables): void {
   /** @var \Drupal\motaded_custom\DataSaudi\DataSaudiTradePresenter $presenter */
   $presenter = \Drupal::service('motaded_custom.datasaudi_trade_presenter');
   $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
-  $variables['trade'] = $bundle === 'trade_market_overview'
-    ? $presenter->buildMarketOverview($langcode)
-    : $presenter->buildProductImports($langcode);
+  $variables['trade'] = $presenter->buildMarketOverview($langcode);
   $variables['#attached']['library'][] = 'motaded_theme/datasaudi_trade';
   $presenter->cacheableMetadata()->applyTo($variables);
 }

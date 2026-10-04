@@ -31,17 +31,6 @@ final class DataSaudiTradeImportCommands extends DrushCommands {
       return;
     }
     $this->printSnapshot('balance', $this->repository->loadStatus('balance'), $this->repository->countBalance());
-    $this->printSnapshot('product', $this->repository->loadStatus('product'), $this->repository->countProduct());
-    foreach ($this->repository->productFlowCoverage() as $flow) {
-      $this->io()->text(sprintf(
-        'Product flow %d (%s): %d months %s..%s (not an annual total).',
-        $flow['flow_id'],
-        $flow['flow_key'],
-        $flow['months'],
-        $flow['period_min'],
-        $flow['period_max']
-      ));
-    }
     $year = (int) gmdate('Y');
     $months = $this->repository->countBalanceMonthsForYear($year);
     $this->io()->text(sprintf(
@@ -50,14 +39,10 @@ final class DataSaudiTradeImportCommands extends DrushCommands {
       $months
     ));
     if ($outcome->succeeded()) {
-      $this->logger()->success('DataSaudi trade import replaced both snapshots.');
+      $this->logger()->success('DataSaudi trade import replaced the balance snapshot.');
       return;
     }
-    $this->logger()->warning(sprintf(
-      'DataSaudi trade import finished with gaps (balance=%s product=%s); previous snapshot kept where the fetch failed. See dblog.',
-      $outcome->balanceReplaced ? 'replaced' : 'kept',
-      $outcome->productReplaced ? 'replaced' : 'kept'
-    ));
+    $this->logger()->warning('DataSaudi trade import finished with gaps; previous balance snapshot kept. See dblog.');
   }
 
   /**

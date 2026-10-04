@@ -1,0 +1,309 @@
+<?php
+
+/**
+ * @file
+ * Seeds Arabic translations for the accounting services landing.
+ *
+ * Usage:
+ *   ddev drush php:script web/modules/custom/motaded_custom/scripts/seed_accounting_services_landing_ar.php
+ *
+ * Run after the English seed, or from that script.
+ */
+
+declare(strict_types=1);
+
+use Drupal\node\Entity\Node;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\path_alias\Entity\PathAlias;
+
+if (!defined('MOTADED_ACCOUNTING_LANDING_ALIAS')) {
+  define('MOTADED_ACCOUNTING_LANDING_ALIAS', '/services/accounting-services-saudi-arabia');
+}
+
+_motaded_accounting_seed_arabic();
+
+function _motaded_accounting_seed_arabic(): void {
+  $data = require dirname(__DIR__) . '/data/accounting_services_landing_ar.dataset.php';
+  _motaded_accounting_sync_webform_ar();
+  _motaded_accounting_sync_views_ar();
+
+  $node = _motaded_accounting_ar_load_en_node();
+  if (!$node instanceof Node) {
+    throw new \RuntimeException('Accounting landing node not found. Run seed_accounting_services_landing.php first.');
+  }
+
+  $en = $node->hasTranslation('en') ? $node->getTranslation('en') : $node;
+  $refs = $en->get('field_paragraphs')->getValue();
+
+  if (!$node->hasTranslation('ar')) {
+    $node->addTranslation('ar', [
+      'title' => $data['node']['title'],
+      'status' => 1,
+    ]);
+  }
+  $ar = Node::load((int) $node->id())->getTranslation('ar');
+  $ar->setTitle($data['node']['title']);
+  $ar->set('field_paragraphs', $refs);
+  $ar->set('field_form', []);
+  $ar->set('field_faq', []);
+  if ($ar->hasField('field_phone_number') && $en->hasField('field_phone_number')) {
+    $ar->set('field_phone_number', $en->get('field_phone_number')->getValue());
+  }
+  if ($ar->hasField('field_service') && $en->hasField('field_service')) {
+    $ar->set('field_service', $en->get('field_service')->getValue());
+  }
+  $ar->set('field_meta', json_encode($data['node']['meta'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+  $ar->setPublished(TRUE);
+  $ar->save();
+
+  foreach ($en->get('field_paragraphs') as $item) {
+    $paragraph = $item->entity;
+    if (!$paragraph instanceof ParagraphInterface) {
+      continue;
+    }
+    match ($paragraph->bundle()) {
+      'hero_split_banner' => _motaded_accounting_ar_hero($paragraph, $data['hero']),
+      'cards' => _motaded_accounting_ar_cards($paragraph, $data['sections']),
+      'view_block' => _motaded_accounting_ar_save($paragraph, $data['catalogue'] + [
+        'field_view_block' => _motaded_accounting_ar_refs($paragraph, 'field_view_block'),
+      ]),
+      'accordions' => _motaded_accounting_ar_faq($paragraph, $data['faq']),
+      'webform' => _motaded_accounting_ar_save($paragraph, $data['form']),
+      default => NULL,
+    };
+  }
+
+  _motaded_accounting_ar_set_alias((int) $node->id());
+  _motaded_accounting_ar_locale_strings();
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:' . $node->id()]);
+  echo 'Accounting landing AR: /node/' . $node->id() . ' → /ar' . MOTADED_ACCOUNTING_LANDING_ALIAS . "\n";
+}
+
+function _motaded_accounting_ar_load_en_node(): ?Node {
+  $aliases = \Drupal::entityTypeManager()->getStorage('path_alias')->loadByProperties([
+    'alias' => MOTADED_ACCOUNTING_LANDING_ALIAS,
+    'langcode' => 'en',
+  ]);
+  $alias = $aliases ? reset($aliases) : NULL;
+  if (!$alias instanceof PathAlias) {
+    return NULL;
+  }
+  $nid = (int) str_replace('/node/', '', $alias->getPath());
+  $node = Node::load($nid);
+  if (!$node instanceof Node || $node->bundle() !== 'landing_page') {
+    return NULL;
+  }
+  return $node->hasTranslation('en') ? $node->getTranslation('en') : $node;
+}
+
+function _motaded_accounting_ar_set_alias(int $nid): void {
+  if (function_exists('_motaded_accounting_set_alias')) {
+    _motaded_accounting_set_alias($nid, MOTADED_ACCOUNTING_LANDING_ALIAS, 'ar');
+    return;
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  foreach ($storage->loadByProperties(['path' => '/node/' . $nid, 'langcode' => 'ar']) as $entity) {
+    $entity->delete();
+  }
+  PathAlias::create([
+    'path' => '/node/' . $nid,
+    'alias' => MOTADED_ACCOUNTING_LANDING_ALIAS,
+    'langcode' => 'ar',
+  ])->save();
+}
+
+function _motaded_accounting_sync_webform_ar(): void {
+  $data = \Drupal::service('config.storage.sync')
+    ->createCollection('language.ar')
+    ->read('webform.webform.accounting_assessment');
+  if (!is_array($data)) {
+    echo "Warning: language/ar/webform.webform.accounting_assessment.yml not in config sync.\n";
+    return;
+  }
+  \Drupal::languageManager()
+    ->getLanguageConfigOverride('ar', 'webform.webform.accounting_assessment')
+    ->setData($data)
+    ->save();
+  echo "Updated webform accounting_assessment AR.\n";
+}
+
+function _motaded_accounting_sync_views_ar(): void {
+  $override = \Drupal::languageManager()->getLanguageConfigOverride('ar', 'views.view.services');
+  $override->set('display.block_accounting.display_options.empty.area.content.value', 'لم يتم العثور على نتائج');
+  $override->set('display.block_accounting.display_options.empty.area.content.format', 'plain_text');
+  $override->set('display.block_accounting.display_options.filters.combine.expose.label', 'بحث');
+  $override->set('display.block_accounting.display_options.filters.combine.expose.placeholder', 'ابحث في الخدمات…');
+  $override->set('display.block_accounting.display_options.exposed_form.options.submit_button', 'بحث');
+  $override->set('display.block_accounting.display_options.exposed_form.options.reset_button_label', 'إعادة تعيين');
+  $override->set('display.block_accounting.display_options.sorts.title.expose.label', 'العنوان');
+  $override->save();
+  echo "Updated views.view.services block_accounting AR.\n";
+}
+
+function _motaded_accounting_ar_locale_strings(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('locale')) {
+    return;
+  }
+  $pairs = [
+    'WhatsApp' => 'WhatsApp',
+    'Accounting services pages' => 'صفحات الخدمات المحاسبية',
+    'Search services…' => 'ابحث في الخدمات…',
+    'No results found' => 'لم يتم العثور على نتائج',
+    'Search' => 'بحث',
+    'Reset' => 'إعادة تعيين',
+  ];
+  /** @var \Drupal\locale\StringStorageInterface $storage */
+  $storage = \Drupal::service('locale.storage');
+  foreach ($pairs as $source => $translation) {
+    $string = $storage->findString(['source' => $source, 'context' => '']);
+    if (!$string) {
+      $string = $storage->createString(['source' => $source, 'context' => ''])->save();
+    }
+    $existing = $storage->findTranslation([
+      'lid' => $string->lid,
+      'language' => 'ar',
+    ]);
+    if ($existing && $existing->translation !== NULL && $existing->translation !== '') {
+      if ((string) $existing->translation !== $translation) {
+        $existing->setValues(['translation' => $translation])->save();
+      }
+      continue;
+    }
+    $storage->createTranslation([
+      'lid' => $string->lid,
+      'language' => 'ar',
+      'translation' => $translation,
+    ])->save();
+  }
+}
+
+/**
+ * @param array<string, mixed> $values
+ */
+function _motaded_accounting_ar_save(ParagraphInterface $paragraph, array $values): void {
+  if ($paragraph->hasTranslation('ar')) {
+    $tr = $paragraph->getTranslation('ar');
+  }
+  else {
+    $tr = $paragraph->addTranslation('ar', ['status' => $paragraph->isPublished()]);
+  }
+  foreach ($values as $field => $value) {
+    if ($paragraph->hasField($field)) {
+      $tr->set($field, $value);
+    }
+  }
+  $tr->save();
+}
+
+/**
+ * @return list<array<string, mixed>>
+ */
+function _motaded_accounting_ar_refs(ParagraphInterface $paragraph, string $field): array {
+  $en = $paragraph->hasTranslation('en') ? $paragraph->getTranslation('en') : $paragraph;
+  return $en->hasField($field) ? $en->get($field)->getValue() : [];
+}
+
+/**
+ * @param array<string, mixed> $data
+ */
+function _motaded_accounting_ar_hero(ParagraphInterface $paragraph, array $data): void {
+  $values = [
+    'field_hero_split_eyebrow' => $data['field_hero_split_eyebrow'],
+    'field_hero_split_headline_prefix' => $data['field_hero_split_headline_prefix'],
+    'field_hero_split_headline_accent' => $data['field_hero_split_headline_accent'],
+    'field_body' => $data['field_body'],
+    'field_link' => $data['field_link'],
+    'field_hero_split_features' => _motaded_accounting_ar_refs($paragraph, 'field_hero_split_features'),
+    'field_hero_split_highlights' => [],
+  ];
+  if ($paragraph->hasField('field_link_secondary')) {
+    $secondary = $paragraph->get('field_link_secondary')->getValue();
+    if ($secondary === []) {
+      $secondary = [$data['field_link_secondary']];
+    }
+    else {
+      $secondary[0]['title'] = $data['field_link_secondary']['title'];
+      $secondary[0]['uri'] = $data['field_link_secondary']['uri'] ?? $secondary[0]['uri'];
+    }
+    $values['field_link_secondary'] = $secondary;
+  }
+  _motaded_accounting_ar_save($paragraph, $values);
+}
+
+/**
+ * @param array<string, array<string, mixed>> $sections
+ */
+function _motaded_accounting_ar_cards(ParagraphInterface $paragraph, array $sections): void {
+  $en = $paragraph->hasTranslation('en') ? $paragraph->getTranslation('en') : $paragraph;
+  $en_title = trim((string) $en->get('field_title')->value);
+  if (!isset($sections[$en_title])) {
+    echo "Warning: no AR copy for cards «{$en_title}».\n";
+    return;
+  }
+  $section = $sections[$en_title];
+  $values = [
+    'field_title' => $section['title'],
+    'field_paragraphs' => _motaded_accounting_ar_refs($paragraph, 'field_paragraphs'),
+  ];
+  if ($en->hasField('field_card_type') && !$en->get('field_card_type')->isEmpty()) {
+    $values['field_card_type'] = $en->get('field_card_type')->value;
+  }
+  if (($section['lede'] ?? '') !== '') {
+    $values['field_body'] = [
+      'value' => $section['lede'],
+      'format' => 'basic_html',
+    ];
+  }
+  _motaded_accounting_ar_save($paragraph, $values);
+
+  $i = 0;
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $card = $item->entity;
+    if (!$card instanceof ParagraphInterface || !isset($section['items'][$i])) {
+      continue;
+    }
+    $row = $section['items'][$i];
+    $card_values = [
+      'field_title' => $row['title'],
+      'field_body' => [
+        'value' => $row['body'],
+        'format' => $row['format'] ?? 'basic_html',
+      ],
+    ];
+    if ($card->hasField('field_sub_title') && array_key_exists('subtitle', $row)) {
+      $card_values['field_sub_title'] = $row['subtitle'];
+    }
+    if ($card->hasField('field_link') && !$card->get('field_link')->isEmpty()) {
+      $link = $card->get('field_link')->getValue();
+      $link[0]['title'] = $row['link_title'] ?? $row['title'];
+      $card_values['field_link'] = $link;
+    }
+    _motaded_accounting_ar_save($card, $card_values);
+    $i++;
+  }
+}
+
+/**
+ * @param array{title: string, items: list<array{question: string, answer: string, answer_format?: string}>} $data
+ */
+function _motaded_accounting_ar_faq(ParagraphInterface $paragraph, array $data): void {
+  _motaded_accounting_ar_save($paragraph, [
+    'field_title' => $data['title'],
+    'field_paragraphs' => _motaded_accounting_ar_refs($paragraph, 'field_paragraphs'),
+  ]);
+  $i = 0;
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $row = $item->entity;
+    if (!$row instanceof ParagraphInterface || !isset($data['items'][$i])) {
+      continue;
+    }
+    _motaded_accounting_ar_save($row, [
+      'field_title' => $data['items'][$i]['question'],
+      'field_body' => [
+        'value' => $data['items'][$i]['answer'],
+        'format' => $data['items'][$i]['answer_format'] ?? 'basic_html',
+      ],
+    ]);
+    $i++;
+  }
+}

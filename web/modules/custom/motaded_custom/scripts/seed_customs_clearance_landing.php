@@ -17,7 +17,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\webform\Entity\Webform;
 
-const MOTADED_CUSTOMS_LANDING_ALIAS = '/customs-clearance-saudi-arabia';
+const MOTADED_CUSTOMS_LANDING_ALIAS = '/services/customs-clearance-saudi-arabia';
 
 _motaded_customs_enable_webform_paragraph();
 _motaded_customs_sync_webform();
@@ -27,13 +27,10 @@ $node = _motaded_customs_load_or_create_node();
 $paragraphs = [
   _motaded_customs_hero(),
   _motaded_customs_overview(),
-  _motaded_customs_trade_market(),
-  _motaded_customs_glance(),
+  _motaded_customs_cargo(),
   _motaded_customs_scope(),
   _motaded_customs_working(),
-  _motaded_customs_authorities(),
-  _motaded_customs_trade_product(),
-  _motaded_customs_cargo(),
+  _motaded_customs_trade_market(),
   _motaded_customs_process(),
   _motaded_customs_mid_cta(),
   _motaded_customs_documents(),
@@ -50,13 +47,16 @@ foreach ($paragraphs as $paragraph) {
 $node->setTitle('Customs Clearance in Saudi Arabia');
 $node->set('field_paragraphs', $refs);
 $node->set('field_form', []);
-$node->set('field_faq', _motaded_customs_faq_items());
+$node->set('field_faq', []);
 if ($node->hasField('field_phone_number')) {
   $node->set('field_phone_number', '+966 53 979 7197');
 }
+if ($node->hasField('field_service')) {
+  $node->set('field_service', 1);
+}
 $node->set('field_meta', json_encode([
   'title' => 'Customs Clearance in Saudi Arabia | Motaded',
-  'description' => 'Motaded provides import and export clearance support in Saudi Arabia: document review, declaration procedures, applicable product requirements and release follow-up. Scope and service fee are agreed before work begins.',
+      'description' => 'Customs clearance in Saudi Arabia for import and export: document review, FASAH declaration, SABER and SFDA requirements where applicable, and follow-up to the release decision. Scope and service fee are agreed in writing before work begins.',
 ], JSON_UNESCAPED_SLASHES));
 $node->save();
 
@@ -169,13 +169,16 @@ function _motaded_customs_stage_body(string $client, string $motaded, string $ne
     . '</div>';
 }
 
-function _motaded_customs_create_card(string $title, string $body, string $uri = '', string $link_title = '', string $format = 'basic_html'): array {
+function _motaded_customs_create_card(string $title, string $body, string $uri = '', string $link_title = '', string $format = 'basic_html', string $subtitle = ''): array {
   $values = [
     'type' => 'card',
     'langcode' => 'en',
     'field_title' => $title,
     'field_body' => _motaded_customs_html($body, $format),
   ];
+  if ($subtitle !== '') {
+    $values['field_sub_title'] = $subtitle;
+  }
   if ($uri !== '') {
     $values['field_link'] = [
       'uri' => $uri,
@@ -187,15 +190,16 @@ function _motaded_customs_create_card(string $title, string $body, string $uri =
   return _motaded_customs_pref($card);
 }
 
-function _motaded_customs_create_cards(string $title, string $lede, array $items, string $type = 'simple_text_card_unequal_height'): Paragraph {
+function _motaded_customs_create_cards(string $title, string $lede, array $items, string $type = 'simple_text_card_unequal_height', array $headers = []): Paragraph {
   $children = [];
   foreach ($items as $item) {
     $children[] = _motaded_customs_create_card(
       $item['title'],
-      $item['body'],
+      $item['body'] ?? '',
       $item['uri'] ?? '',
       $item['link_title'] ?? '',
-      $item['format'] ?? 'basic_html'
+      $item['format'] ?? 'basic_html',
+      $item['subtitle'] ?? ''
     );
   }
   $values = [
@@ -207,6 +211,9 @@ function _motaded_customs_create_cards(string $title, string $lede, array $items
   ];
   if ($lede !== '') {
     $values['field_body'] = _motaded_customs_html($lede);
+  }
+  if ($headers) {
+    $values['field_sub_title'] = implode('|', $headers);
   }
   $cards = Paragraph::create($values);
   $cards->save();
@@ -243,337 +250,246 @@ function _motaded_customs_hero(): Paragraph {
     'field_hero_split_headline_prefix' => 'Customs Clearance',
     'field_hero_split_headline_accent' => 'in Saudi Arabia',
     'field_body' => _motaded_customs_html(
-      '<p>Import and export clearance support for businesses trading with Saudi Arabia.</p>'
-      . '<p>Motaded prepares and coordinates customs clearance: document review, the customs declaration, applicable product requirements and release follow-up.</p>'
-      . '<p>Submit your shipment details for an assessment of the required work and a service quotation.</p>'
+      '<p>Customs clearance support for import and export consignments in the Kingdom of Saudi Arabia, covering document review, FASAH declaration procedures and follow-up through to the authority’s release decision.</p>'
     ),
     'field_link' => [
       'uri' => 'internal:#assessment',
-      'title' => 'Request a Clearance Assessment',
-    ],
-    'field_link_secondary' => [
-      'uri' => 'internal:/contact-us',
-      'title' => 'Contact Our Team',
+      'title' => 'Request a Consultation',
     ],
   ]);
+  $hero_media = Media::load(1494);
+  if ($hero_media && $hero_media->bundle() === 'image') {
+    $hero->set('field_media', ['target_id' => 1494]);
+  }
   $hero->set('field_hero_split_highlights', []);
-  $hero->set('field_hero_split_features', [
-    _motaded_customs_hero_feature(
-      'Import and export',
-      'Both trade directions.',
-      'globe',
-      'internal:#process'
-    ),
-    _motaded_customs_hero_feature(
-      'Arabic and English',
-      'Documents and status updates in both languages.',
-      'document',
-      'internal:#assessment'
-    ),
-    _motaded_customs_hero_feature(
-      'Scope and service fee',
-      'Agreed before work begins.',
-      'shield_check',
-      'internal:#assessment'
-    ),
-  ]);
+  $hero->set('field_hero_split_features', []);
   $hero->save();
   return $hero;
 }
 
 function _motaded_customs_overview(): Paragraph {
-  $values = [
-    'type' => 'media_lead',
-    'langcode' => 'en',
-    'field_title' => 'Service Overview',
-    'field_body' => _motaded_customs_html(
-      '<p>This service is for companies that import goods into Saudi Arabia or export goods from the Kingdom and need coordinated customs clearance.</p>'
-      . '<p>Engage Motaded when a shipment is planned or already in transit, when product-specific requirements may apply, or when the importer needs a single coordinator for documents, the customs declaration and release.</p>'
-      . '<p><strong>Motaded’s role</strong> is to review the documents, prepare and submit the agreed declaration, coordinate additional clearance requirements where they apply, and follow the release.</p>'
-      . '<p><strong>Expected result:</strong> an agreed scope of work, the documents needed for the shipment, and a written service quotation before work begins.</p>'
-    ),
-    'field_link' => [
-      'uri' => 'internal:#assessment',
-      'title' => 'Request a Clearance Assessment',
+  return _motaded_customs_create_cards(
+    'Service Overview',
+    '<p>Motaded provides customs clearance coordination for companies importing goods into Saudi Arabia or exporting goods from the Kingdom. Support covers shipment document review, coordination of customs declaration preparation, applicable product requirements and release follow-up.</p>'
+    . '<p>The engagement is defined according to the goods, shipment route and current consignment status. The written quotation identifies the agreed work, responsibilities and service fees before work begins.</p>',
+    [
+      [
+        'title' => 'Shipment Status',
+        'body' => '<ul><li><strong>Before dispatch:</strong> review available documents and identify outstanding requirements.</li><li><strong>In transit:</strong> coordinate remaining documentation and clearance preparation.</li><li><strong>After arrival:</strong> review the current status and outstanding actions required for clearance.</li></ul>',
+      ],
     ],
-  ];
-  $media = Media::load(1484);
-  if ($media && $media->bundle() === 'image') {
-    $values['field_media'] = ['target_id' => 1484];
-  }
-  $lead = Paragraph::create($values);
-  $lead->save();
-  return $lead;
+    'overview'
+  );
 }
 
 function _motaded_customs_trade_market(): Paragraph {
   $paragraph = Paragraph::create([
     'type' => 'trade_market_overview',
     'langcode' => 'en',
-    'field_title' => 'Saudi Arabia: A Market for International Trade',
-    'field_body' => _motaded_customs_html('<p>Explore Saudi Arabia’s merchandise trade through official monthly import and export statistics.</p>'),
+    'field_title' => 'Saudi Arabia’s trade in figures',
+    'field_body' => _motaded_customs_html('<p>Merchandise imports and exports for the latest month, compared with the same month last year, and the recent monthly trend.</p>'),
   ]);
   $paragraph->save();
   return $paragraph;
-}
-
-function _motaded_customs_trade_product(): Paragraph {
-  $paragraph = Paragraph::create([
-    'type' => 'trade_by_product',
-    'langcode' => 'en',
-    'field_title' => 'Explore Trade by Product',
-    'field_body' => _motaded_customs_html('<p>See the leading product categories in Saudi Arabia’s merchandise imports.</p>'),
-  ]);
-  $paragraph->save();
-  return $paragraph;
-}
-
-function _motaded_customs_glance(): Paragraph {
-  $stat = static function (string $value, string $title, string $body, string $icon): array {
-    $item = Paragraph::create([
-      'type' => 'glance_stat_item',
-      'langcode' => 'en',
-      'field_glance_value' => $value,
-      'field_glance_title' => $title,
-      'field_glance_body' => $body,
-      'field_glance_icon' => $icon,
-    ]);
-    $item->save();
-    return _motaded_customs_pref($item);
-  };
-
-  $highlight = Paragraph::create([
-    'type' => 'glance_stat_item',
-    'langcode' => 'en',
-    'field_glance_value' => 'Businesses',
-    'field_glance_title' => 'Who it is for',
-    'field_glance_body' => 'Companies importing into or exporting from Saudi Arabia, and the PRO or logistics teams acting for them.',
-    'field_glance_icon' => 'building',
-  ]);
-  $highlight->save();
-
-  $glance = Paragraph::create([
-    'type' => 'glance_block',
-    'langcode' => 'en',
-    'field_glance_eyebrow' => 'Service at a glance',
-    'field_glance_title' => 'Service at a Glance',
-    'field_body' => _motaded_customs_html('<p>Clearance support for import and export: documents, the customs declaration, applicable product requirements and release follow-up.</p>'),
-    'field_glance_highlight' => [_motaded_customs_pref($highlight)],
-    'field_glance_stats' => [
-      $stat('Import / export', 'Trade direction', 'Both directions are supported. The document set and FASAH messages differ by direction.', 'globe'),
-      $stat('AR / EN', 'Languages', 'Documents and status updates in Arabic and English.', 'users'),
-      $stat('Quoted', 'Service fee', 'Motaded’s fee is calculated per shipment and agreed in writing before work begins.', 'money'),
-    ],
-  ]);
-  $glance->save();
-  return $glance;
 }
 
 function _motaded_customs_scope(): Paragraph {
   return _motaded_customs_create_cards(
-    'Scope of Services',
-    '<p>Confirmed in the quotation. A typical engagement covers the four workstreams below.</p>',
+    'Customs Clearance Scope of Services',
+    '<p>Motaded coordinates the agreed customs clearance work between the client, supplier, appointed customs broker and relevant service providers. The scope covers document preparation, declaration coordination, product-related requirements and release follow-up.</p>',
     [
       [
-        'title' => 'Document review',
-        'body' => '<p>Invoice, packing list, transport document and importer data checked before filing. Gaps are listed in writing.</p>',
+        'title' => 'Shipment Document Preparation',
+        'body' => '<p>Review the available invoice, packing list and transport documents for completeness and consistency. Identify missing information and coordinate corrections with the client or supplier before the documents are passed for declaration preparation.</p>',
       ],
       [
-        'title' => 'Declaration',
-        'body' => '<p>Customs declaration prepared and submitted on <a href="/platforms/fasah">FASAH</a>, aligned with the Commercial Register.</p>',
+        'title' => 'Customs Declaration Coordination',
+        'body' => '<p>Organise the shipment information and supporting documents required by the party preparing the customs declaration. Coordinate queries concerning product descriptions, quantities, values, origin and proposed tariff classification.</p>'
+          . '<p>The declaration is submitted by the importer or its duly authorised customs broker, as applicable. The quotation identifies the submitting party and distinguishes Motaded’s coordination work from the broker’s declaration services.</p>',
       ],
       [
-        'title' => 'Inspections',
-        'body' => '<p><a href="/platforms/saber">SABER</a> or <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> requirements identified where they apply. Inspection appointments coordinated when required.</p>',
+        'title' => 'Product Requirements Coordination',
+        'body' => '<p>Identify product-related matters requiring further review and coordinate the agreed supporting documentation. Where relevant, this may involve conformity records, product registrations or permits.</p>'
+          . '<p>Applications for product registration, conformity assessment or permits are included only where specified in the scope of work.</p>',
       ],
       [
-        'title' => 'Release',
-        'body' => '<p>Release followed, then handover to the client’s transporter.</p>',
+        'title' => 'Clearance and Release Follow-up',
+        'body' => '<p>Track available clearance updates and communicate requests for documents, clarification or client action. Coordinate the agreed responses with the broker and relevant providers, and report the documented release status.</p>'
+          . '<p>Transport, storage and delivery arrangements are defined separately where required.</p>',
       ],
     ],
-    'simple_text_card'
-  );
-}
-
-function _motaded_customs_authorities(): Paragraph {
-  return _motaded_customs_create_cards(
-    'Relevant Authorities and Platforms',
-    '<p>Motaded coordinates the shipment through the official channels that apply to the goods.</p>',
-    [
-      [
-        'title' => 'ZATCA',
-        'body' => '<p>Customs procedures, duty and import VAT.</p>',
-        'uri' => 'internal:/platforms/zatca',
-        'link_title' => 'ZATCA',
-      ],
-      [
-        'title' => 'FASAH',
-        'body' => '<p>National platform for the customs declaration. Importer data must match the Commercial Register.</p>',
-        'uri' => 'internal:/platforms/fasah',
-        'link_title' => 'FASAH',
-      ],
-      [
-        'title' => 'SABER / SASO',
-        'body' => '<p>Product conformity certificates where a technical regulation applies — before arrival, not instead of the declaration.</p>',
-        'uri' => 'internal:/platforms/saber',
-        'link_title' => 'SABER',
-      ],
-      [
-        'title' => 'SFDA',
-        'body' => '<p>Additional controls for food, medicines, medical devices and cosmetics.</p>',
-        'uri' => 'internal:/platforms/saudi-food-and-drug-authority-sfda',
-        'link_title' => 'SFDA',
-      ],
-    ]
+    'tabs'
   );
 }
 
 function _motaded_customs_cargo(): Paragraph {
   return _motaded_customs_create_cards(
-    'Cargo Categories and Additional Requirements',
-    '<p>Every shipment needs a customs declaration. Extra clearance requirements depend on the product — Motaded confirms them during assessment.</p>',
+    'Cargo Type and Product Requirements',
+    '<p>Clearance preparation depends on the goods and the proposed customs procedure. Product descriptions, intended use and tariff classification help identify whether additional conformity documents, registrations or permits need to be considered.</p>'
+    . '<p>The table below outlines the initial review for imports into Saudi Arabia. Export consignments are assessed separately against applicable Saudi export controls and destination-country requirements.</p>',
     [
       [
-        'title' => 'General cargo',
-        'body' => '<p><a href="/platforms/fasah">FASAH</a> + <a href="/platforms/zatca">ZATCA</a>. <a href="/platforms/saber">SABER</a> if a technical regulation applies.</p>',
+        'title' => 'General commercial goods',
+        'subtitle' => 'Accurate descriptions, quantities, values, origin and consistency between shipment documents; applicable conformity requirements',
+        'body' => '<p>Coordination of <a href="/platforms/saber">SABER</a> documentation where applicable. General goods should not be assumed to be exempt from product requirements.</p>',
       ],
       [
-        'title' => 'Food',
-        'body' => '<p><a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> rules, and inspection where SFDA requires it.</p>',
+        'title' => 'Food products',
+        'subtitle' => 'Product category, importer information, labelling and available certificates relevant to the consignment',
+        'body' => '<p>Coordination of applicable <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> food documentation and clearance requirements.</p>',
       ],
       [
-        'title' => 'Pharma and medical devices',
-        'body' => '<p>Applicable <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> requirements, in addition to the customs declaration.</p>',
+        'title' => 'Medicines and pharmaceutical products',
+        'subtitle' => 'Product and establishment records, available authorisations and consignment documentation',
+        'body' => '<p><a href="/services/medicine-services-saudi-arabia">Pharmaceutical regulatory and import support</a> where required.</p>',
       ],
       [
-        'title' => 'Cosmetics',
-        'body' => '<p>Applicable <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> requirements, in addition to the customs declaration.</p>',
+        'title' => 'Medical devices and supplies',
+        'subtitle' => 'Device identification, intended use, available authorisation records and importer documentation',
+        'body' => '<p><a href="/services/medical-device-services-saudi-arabia">Medical-device regulatory support</a> and coordination of applicable <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> shipment requirements.</p>',
       ],
       [
-        'title' => 'Electronics and consumer goods',
-        'body' => '<p><a href="/platforms/saber">SABER</a> PCoC/SCoC often required before arrival.</p>',
+        'title' => 'Cosmetics and personal-care products',
+        'subtitle' => 'Product identity, available listing records, manufacturer information and shipment documentation',
+        'body' => '<p><a href="/services/cosmetics-services-saudi-arabia">Cosmetics listing and documentation support</a> where required.</p>',
       ],
       [
-        'title' => 'Chemicals and restricted goods',
-        'body' => '<p>Additional permits may apply. Not treated as general cargo.</p>',
+        'title' => 'Goods subject to specific controls',
+        'subtitle' => 'Tariff classification, product characteristics, intended use and any restrictions or permit requirements',
+        'body' => '<p>Coordination with the relevant authority or specialist provider within the agreed scope.</p>',
       ],
-    ]
+      [
+        'title' => '',
+        'body' => '<p>The consignment-specific review establishes which documents and procedures apply. Product registration, conformity assessment and permit applications are separate work items unless included in the quotation.</p>',
+      ],
+    ],
+    'matrix',
+    ['Cargo category', 'What needs to be reviewed', 'Additional product support']
   );
 }
 
 function _motaded_customs_process(): Paragraph {
   return _motaded_customs_create_cards(
-    'Clearance Process',
-    '<p>The sequence below is the standard Motaded working order. Timing is typically measured in days and depends on document completeness, cargo category and inspection appointments.</p>',
+    'Customs clearance procedure',
+    '<p>Customs clearance in Saudi Arabia proceeds in the stages below. Duration depends on document completeness, cargo category and any inspection appointments. A written indication of timing is provided with the quotation after the consignment details have been reviewed.</p>',
     [
       [
-        'title' => 'Initial assessment',
+        'title' => 'Submission of consignment details',
         'format' => 'full_html',
         'body' => _motaded_customs_stage_body(
-          'Company details, trade direction, cargo category, and available commercial documents.',
-          'Identifies the likely channels (<a href="/platforms/fasah">FASAH</a> / <a href="/platforms/zatca">ZATCA</a> and any product-specific system), lists missing items and proposes a scope of work.',
+          'Company details, trade direction, cargo category and available commercial documents. A complete file is not required at this stage.',
+          'The submitted information is reviewed. Applicable documents, approvals and actions are confirmed in writing, and a scope of work is proposed.',
           'Written service quotation for acceptance.'
         ),
       ],
       [
-        'title' => 'Documents and applicable requirements',
+        'title' => 'Confirmation of scope and preparation of documents',
         'format' => 'full_html',
         'body' => _motaded_customs_stage_body(
-          'Invoice, packing list, bill of lading or air waybill, Commercial Register data, and any SABER or SFDA evidence already held.',
-          'Checks consistency of values, weights and consignee data; flags product certificates that must exist before arrival.',
+          'Acceptance of the written quotation, together with the commercial documents already held (invoice, packing list, bill of lading or air waybill, Commercial Register data, and any SABER or SFDA evidence already available).',
+          'The agreed scope is confirmed. Remaining documents or certificates required before filing are listed in writing.',
           'Documents ready for the declaration, or a written list of outstanding items.'
         ),
       ],
       [
-        'title' => 'Declaration and inspections',
+        'title' => 'Declaration and required checks',
         'format' => 'full_html',
         'body' => _motaded_customs_stage_body(
           'Confirmation to file, and any clarifications requested by the authority.',
-          'Submits the declaration on <a href="/platforms/fasah">FASAH</a>, follows it with <a href="/platforms/zatca">ZATCA</a>, and coordinates <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> or <a href="/platforms/saber">SABER</a> inspection where required.',
+          'The declaration is submitted on <a href="/platforms/fasah">FASAH</a>, followed with <a href="/platforms/zatca">ZATCA</a>, and <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> or <a href="/platforms/saber">SABER</a> inspection is coordinated where required.',
           'Any official charges issued, and the release decision.'
         ),
       ],
       [
-        'title' => 'Official charges, release and handover',
+        'title' => 'Payment, release and handover',
         'format' => 'full_html',
         'body' => _motaded_customs_stage_body(
           'Payment of official duty, tax and any inspection fees through the authority’s channels; nomination of the transporter.',
-          'Follows release and hands the shipment to the nominated transporter.',
+          'Payment of official charges is confirmed; the authority’s release decision is followed; the consignment is then handed to the nominated transporter.',
           'Completion confirmed to the named contact.'
         ),
       ],
-    ]
+    ],
+    'stack'
   );
 }
 
 function _motaded_customs_documents(): Paragraph {
   return _motaded_customs_create_cards(
-    'Requirements and Documents',
-    '<p>The exact set depends on HS code, trade direction and the product. Motaded confirms the list during assessment. Commercial Register data must match <a href="/platforms/fasah">FASAH</a> — CR procedures go through the <a href="/platforms/saudi-business-center-meras">Saudi Business Center</a>.</p>',
+    'Documents required for customs clearance',
+    '<p>The documents listed below are typically required for customs clearance in Saudi Arabia. Available documents are reviewed and any outstanding items are confirmed in writing.</p>',
     [
       [
-        'title' => 'Required for filing',
-        'body' => '<ul><li>Commercial invoice</li><li>Packing list</li><li>Bill of lading or air waybill</li><li>Importer CR data matching FASAH</li><li>Incoterms and insurance as declared</li></ul>',
-      ],
-      [
-        'title' => 'If the goods require it',
-        'body' => '<ul><li>SABER PCoC/SCoC — <a href="/platforms/saber">SABER</a></li><li>SFDA evidence for food, pharma, devices or cosmetics — <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a></li><li>Any other permit flagged at assessment</li></ul>',
-      ],
-      [
-        'title' => 'Enough to start',
-        'body' => '<p>Company name, trade direction, cargo category, and the invoice or packing list if you already have it. The rest can follow before filing.</p>',
+        'title' => 'Documents for customs clearance',
+        'body' => '<ul><li>Commercial invoice</li><li>Packing list</li><li>Transport document (bill of lading or air waybill)</li><li>Company registration details</li><li>Product certificates and permits, where required — <a href="/platforms/saber">SABER</a> and <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a>. These depend on the cargo.</li></ul>',
       ],
     ],
-    'simple_text_card'
+    'lists'
   );
 }
 
 function _motaded_customs_fees(): Paragraph {
   return _motaded_customs_create_cards(
-    'Fees and Quotation',
-    '<p>Two lines of cost. Motaded quotes its service fee. Duty, import VAT and official inspection fees are paid to the competent authority. Storage, terminal or warehouse charges are billed by those providers.</p>',
+    'Fees and quotation',
+    '<p>A written quotation is issued for each consignment. The service fee is agreed before work begins and reflects the cargo, the shipment route and the clearance work required.</p>',
     [
       [
         'title' => 'Motaded service fee',
-        'body' => '<p><strong>Paid to Motaded</strong></p><ul><li>Quoted per shipment, in writing, before work</li><li>Reflects direction, entry point, cargo and inspections</li><li>Payable by bank transfer against the quotation</li></ul>',
+        'body' => '<ul><li>Agreed before work begins</li><li>The quotation states what is included and what is paid separately</li></ul>',
       ],
       [
-        'title' => 'Duty, VAT and official charges',
-        'body' => '<p><strong>Paid to the authority</strong></p><ul><li>Duty and import VAT — set by <a href="/platforms/zatca">ZATCA</a></li><li>VAT currently 15% — confirm on <a href="https://zatca.gov.sa/en/rulesregulations/vat/pages/default.aspx">ZATCA VAT</a></li><li>Inspection fees if SFDA or another body examines the goods</li></ul>',
+        'title' => 'Additional charges',
+        'body' => '<ul><li>Duty and taxes, if they apply — <a href="/platforms/zatca">ZATCA</a></li><li>Inspections and permits, if required</li><li>Terminal and warehouse charges, if they arise</li></ul>',
         'uri' => 'https://zatca.gov.sa/en/RulesRegulations/Customs/Pages/default.aspx',
         'link_title' => 'ZATCA customs regulations',
       ],
     ],
-    'simple_text_card'
+    'fees'
   );
 }
 
 function _motaded_customs_working(): Paragraph {
   return _motaded_customs_create_cards(
     'Working with Motaded',
-    '<p>Riyadh-based consultancy, established 2017. More on <a href="/about-us">About Motaded</a>.</p>',
+    '<p>Riyadh-based consultancy, established 2017. Further information is available on <a href="/about-us">About Motaded</a>.</p>',
     [
       [
         'title' => 'One point of contact',
-        'body' => '<p>A dedicated coordinator for your documents, customs declaration and shipment updates.</p>',
+        'body' => '<p>A dedicated coordinator is assigned for the documents, the customs declaration and consignment status.</p>',
       ],
       [
         'title' => 'Clear scope and fees',
-        'body' => '<p>The work and service fee are agreed before your clearance engagement begins.</p>',
+        'body' => '<p>The work and the service fee are agreed in writing before the clearance engagement begins.</p>',
       ],
       [
         'title' => 'Updates at key stages',
-        'body' => '<p>Know when documents, inspections or payments need your attention, and when release is confirmed.</p>',
+        'body' => '<p>Status is reported at the document, inspection, payment and release stages.</p>',
+      ],
+      [
+        'title' => 'Arabic and English',
+        'body' => '<p>Documents and status updates are provided in Arabic and English.</p>',
+      ],
+      [
+        'title' => 'Request a Consultation',
+        'body' => '',
+        'uri' => 'internal:#assessment',
+        'link_title' => 'Request a Consultation',
+      ],
+      [
+        'title' => 'WhatsApp',
+        'body' => '',
+        'uri' => 'https://wa.me/966539797197',
+        'link_title' => 'WhatsApp',
       ],
     ],
-    'simple_text_card'
+    'features'
   );
 }
 
 function _motaded_customs_related(): Paragraph {
   return _motaded_customs_create_cards(
     'Related Motaded pages',
-    '<p>Motaded pages on the same channels and related work.</p>',
+    '<p>Official platforms and related Motaded pages for customs clearance in Saudi Arabia.</p>',
     [
       [
         'title' => 'ZATCA',
@@ -624,7 +540,7 @@ function _motaded_customs_related(): Paragraph {
         'link_title' => 'Open page',
       ],
     ],
-    'simple_text_card'
+    'related'
   );
 }
 
@@ -633,7 +549,7 @@ function _motaded_customs_assessment_form(): Paragraph {
     'type' => 'webform',
     'langcode' => 'en',
     'field_body' => [
-      'value' => '<h2>Request a Clearance Assessment</h2><p>Company and shipment details are enough to start. Motaded replies with the required work and a service quotation.</p>',
+      'value' => '<h2>Request a Consultation</h2>',
       'format' => 'full_html',
     ],
     'field_webform' => [
@@ -647,76 +563,76 @@ function _motaded_customs_assessment_form(): Paragraph {
 
 function _motaded_customs_mid_cta(): Paragraph {
   return _motaded_customs_create_cards(
-    'Start with a written assessment',
-    '<p>Motaded reviews company and shipment details, then confirms the applicable channels and the service fee in writing.</p>',
+    'Request a written consultation',
+    '<p>Company and consignment details are reviewed in consultation. Applicable customs clearance requirements and the service fee are confirmed in writing.</p>',
     [
       [
-        'title' => 'Request a Clearance Assessment',
+        'title' => 'Request a Consultation',
         'body' => '',
         'uri' => 'internal:#assessment',
-        'link_title' => 'Request a Clearance Assessment',
+        'link_title' => 'Request a Consultation',
       ],
     ],
-    'simple_text_card'
+    'invite'
   );
 }
 
 function _motaded_customs_final_cta(): Paragraph {
   return _motaded_customs_create_cards(
     'Contact Our Customs Clearance Team',
-    '<p>If you have a problem or a further question, contact the team on WhatsApp, email or telephone.</p>',
+    '<p>Further enquiries may be directed to the customs clearance team by WhatsApp, email or telephone.</p>',
     [
       [
-        'title' => 'Request a Clearance Assessment',
+        'title' => 'Request a Consultation',
         'body' => '',
         'uri' => 'internal:#assessment',
-        'link_title' => 'Request a Clearance Assessment',
+        'link_title' => 'Request a Consultation',
       ],
     ],
-    'simple_text_card'
+    'contact'
   );
 }
 
 function _motaded_customs_faq_items(): array {
   return [
     [
-      'question' => 'How long does clearance take?',
+      'question' => 'How long does customs clearance take in Saudi Arabia?',
       'answer' => '<p>Duration is typically measured in days. It depends on document completeness, cargo category and inspection appointments.</p>',
       'answer_format' => 'basic_html',
     ],
     [
-      'question' => 'What if documents are incomplete?',
-      'answer' => '<p>The team identifies the missing documents and the next steps. An assessment can still be issued on the documents already supplied.</p>',
+      'question' => 'What happens if clearance documents are incomplete?',
+      'answer' => '<p>Outstanding documents and the next steps are identified in writing. A consultation may still be issued on the documents already supplied.</p>',
       'answer_format' => 'basic_html',
     ],
     [
-      'question' => 'The goods have already arrived. Can Motaded still assist?',
-      'answer' => '<p>Yes. Add the entry point, the documents on hand and whether the cargo has arrived in Shipment details on the form. Official inspection fees are paid to the examining authority. Storage, terminal or warehouse charges are billed by those providers.</p>',
+      'question' => 'Can customs clearance proceed after the goods have arrived?',
+      'answer' => '<p>Assistance remains available after arrival. The entry point, available documents and arrival status should be stated in the consignment details on the form. Official inspection fees are paid to the examining authority. Storage, terminal or warehouse charges are billed by those providers.</p>',
       'answer_format' => 'basic_html',
     ],
     [
       'question' => 'When are additional inspections required?',
-      'answer' => '<p>When the cargo category falls under <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> or another examining body, or when <a href="/platforms/zatca">ZATCA</a> or <a href="/platforms/saber">SABER</a> procedures require physical or documentary examination. Motaded coordinates the appointment.</p>',
+      'answer' => '<p>When the cargo category falls under <a href="/platforms/saudi-food-and-drug-authority-sfda">SFDA</a> or another examining body, or when <a href="/platforms/zatca">ZATCA</a> or <a href="/platforms/saber">SABER</a> procedures require physical or documentary examination. The appointment is coordinated by Motaded.</p>',
       'answer_format' => 'basic_html',
     ],
     [
-      'question' => 'What does the client pay, and to whom?',
+      'question' => 'What charges are paid, and to whom?',
       'answer' => '<p>The Motaded service fee is paid to Motaded against the accepted quotation. Customs duty, import VAT and official inspection fees are paid through the official channels. Storage or terminal charges are paid to the relevant provider. See also <a href="/platforms/zatca">ZATCA</a>.</p>',
       'answer_format' => 'basic_html',
     ],
     [
-      'question' => 'Do you handle both import and export?',
-      'answer' => '<p>Yes. Select the trade direction on the form. The documents and <a href="/platforms/fasah">FASAH</a> messages differ; Motaded confirms the clearance requirements during assessment. Importers who are not yet on FASAH may need <a href="/services/electronic-registration-importers-and-exporters">electronic registration</a>.</p>',
+      'question' => 'Does the service cover both import and export?',
+      'answer' => '<p>Import and export are both supported. The trade direction should be selected on the form. The documents and <a href="/platforms/fasah">FASAH</a> messages differ; clearance requirements are confirmed during consultation. Importers who are not yet on FASAH may require <a href="/services/electronic-registration-importers-and-exporters">electronic registration</a>.</p>',
       'answer_format' => 'basic_html',
     ],
     [
-      'question' => 'Is a Commercial Register required?',
-      'answer' => '<p>A <a href="/platforms/fasah">FASAH</a> declaration must match a registered importer. If the company is not yet registered, Motaded can assess the shipment and, separately, advise on entity procedures through the <a href="/platforms/saudi-business-center-meras">Saudi Business Center</a>.</p>',
+      'question' => 'Is a Commercial Register required for FASAH filing?',
+      'answer' => '<p>A <a href="/platforms/fasah">FASAH</a> declaration must match a registered importer. If the company is not yet registered, the consignment may be reviewed and, separately, entity procedures may be advised through the <a href="/platforms/saudi-business-center-meras">Saudi Business Center</a>.</p>',
       'answer_format' => 'basic_html',
     ],
     [
       'question' => 'How does SABER relate to the customs declaration?',
-      'answer' => '<p><a href="/platforms/saber">SABER</a> addresses product conformity. <a href="/platforms/fasah">FASAH</a> and <a href="/platforms/zatca">ZATCA</a> address the customs declaration. Both may be required. A conformity certificate does not replace the declaration. The English <a href="/documents/customs-law-english">Customs Law</a> is in the Motaded library.</p>',
+      'answer' => '<p><a href="/platforms/saber">SABER</a> addresses product conformity. <a href="/platforms/fasah">FASAH</a> and <a href="/platforms/zatca">ZATCA</a> address the customs declaration. Both may be required. A conformity certificate does not replace the declaration. The English <a href="/documents/customs-law-english">Customs Law</a> is available in the Motaded library.</p>',
       'answer_format' => 'basic_html',
     ],
   ];

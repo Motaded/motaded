@@ -1,0 +1,17 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'related', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ul class="customs-related">
+      {% for card in service_cards %}
+        {% if card %}
+          <li class="customs-related__item">
+            {% if card.field_link.0 %}
+              <a class="customs-related__title" href="{{ card.field_link.0.url.toString() }}">{{ card.field_title.value }}</a>
+            {% else %}
+              <span class="customs-related__title">{{ card.field_title.value }}</span>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endblock %}
+{% endembed %}

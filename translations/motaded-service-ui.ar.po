@@ -750,6 +750,9 @@ msgstr "تأسيس الأعمال"
 msgid "Saudi Partners"
 msgstr "الشركاء السعوديون"
 
+msgid "Request a Consultation"
+msgstr "طلب استشارة"
+
 msgid "Consultation"
 msgstr "الاستشارات"
 
@@ -2009,3 +2012,36 @@ msgstr "الصادرات"
 
 msgid "vs @period"
 msgstr "مقابل @period"
+
+msgid "View page"
+msgstr "عرض"
+
+msgid "Regulatory support"
+msgstr "الدعم التنظيمي"
+
+msgid "Customs"
+msgstr "الجمارك"
+
+msgid "Accounting"
+msgstr "المحاسبة"
+
+msgid "Importers and Exporters"
+msgstr "المستوردون والمصدّرون"
+
+msgid "Company Owners"
+msgstr "أصحاب الشركات"
+
+msgid "Manufacturers"
+msgstr "المصنّعون"
+
+msgid "Importers"
+msgstr "المستوردون"
+
+msgid "Brands"
+msgstr "العلامات التجارية"
+
+msgid "Specialist services"
+msgstr "الخدمات المتخصصة"
+
+msgid "Customs clearance, accounting, and SFDA support for medicines, medical devices and cosmetics."
+msgstr "التخليص الجمركي والمحاسبة ودعم SFDA للأدوية والأجهزة الطبية ومستحضرات التجميل."

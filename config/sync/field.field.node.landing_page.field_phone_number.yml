@@ -1,4 +1,4 @@
-uuid: 8f3c2a1e-6b47-4d9a-9e21-c4d8a7b0f152
+uuid: 272d05a5-ce7a-4b7d-a687-0d61692009b9
 langcode: en
 status: true
 dependencies:
@@ -10,7 +10,7 @@ field_name: field_phone_number
 entity_type: node
 bundle: landing_page
 label: 'Phone number'
-description: 'Shown on the mid-page CTA and in the contact row under the assessment form.'
+description: 'Used for the hero WhatsApp button, the mid-page CTA and the contact row under the form.'
 required: false
 translatable: false
 default_value: {  }

@@ -1,0 +1,20 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'data_note', show_header: false, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="acc-data">
+      {% if paragraph.field_title.value %}<h2 class="customs-svc__title">{{ paragraph.field_title.value }}</h2>{% endif %}
+      {% if paragraph.field_body.processed %}
+        <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+      {% endif %}
+      {% for card in service_cards %}
+        {% if card and card.field_link.0 %}
+          <p class="acc-more"><a href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a></p>
+        {% elseif card %}
+          <div class="acc-data__item">
+            <h3>{{ card.field_title.value }}</h3>
+            <div>{{ card.field_body.processed }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

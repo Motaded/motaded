@@ -4,19 +4,20 @@ status: true
 dependencies:
   config:
     - field.field.node.landing_page.body
+    - field.field.node.landing_page.field_faq
     - field.field.node.landing_page.field_form
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
-    - field.field.node.landing_page.field_faq
     - field.field.node.landing_page.field_phone_number
+    - field.field.node.landing_page.field_service
     - node.type.landing_page
   module:
+    - faqfield
     - metatag
     - paragraphs
     - path
     - text
     - webform
-    - faqfield
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page
@@ -70,14 +71,6 @@ content:
       sidebar: true
       use_details: true
     third_party_settings: {  }
-  field_phone_number:
-    type: string_textfield
-    weight: 129
-    region: content
-    settings:
-      size: 40
-      placeholder: '+966 53 979 7197'
-    third_party_settings: {  }
   field_paragraphs:
     type: paragraphs
     weight: 131
@@ -97,6 +90,21 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
+    third_party_settings: {  }
+  field_phone_number:
+    type: string_textfield
+    weight: 129
+    region: content
+    settings:
+      size: 40
+      placeholder: '+966 53 979 7197'
+    third_party_settings: {  }
+  field_service:
+    type: boolean_checkbox
+    weight: 18
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   langcode:
     type: language_select

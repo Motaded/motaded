@@ -50,56 +50,42 @@
 
 .datasaudi-trade__panel {
   margin-top: 1rem;
-  padding: clamp(1rem, 2vw, 1.35rem);
+  padding: clamp(0.85rem, 1.6vw, 1.15rem);
   border: 1px solid #d7e5e0;
   border-radius: 0.85rem;
-  background: #f7faf8;
+  background: #fff;
   min-width: 0;
 }
 
-.datasaudi-trade--market .datasaudi-trade__panel,
-.datasaudi-trade__panel--product {
+.datasaudi-trade--market .datasaudi-trade__panel {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 0.85rem;
 }
 
 @media (min-width: 900px) {
   .datasaudi-trade--market .datasaudi-trade__panel {
     display: grid;
-    grid-template-columns: minmax(12rem, 0.35fr) minmax(0, 0.65fr);
-    align-items: start;
-    gap: 1.5rem;
-  }
-
-  .datasaudi-trade__panel--product {
-    display: grid;
-    grid-template-columns: minmax(11rem, 0.3fr) minmax(0, 0.7fr);
-    align-items: start;
-    gap: 1.5rem;
+    grid-template-columns: minmax(11rem, 0.32fr) minmax(0, 0.68fr);
+    align-items: center;
+    gap: 1.15rem;
   }
 }
 
 .datasaudi-trade__hero-value {
   margin: 0;
-  font-size: clamp(2.4rem, 4.5vw, 3.15rem);
+  font-size: clamp(2rem, 3.6vw, 2.55rem);
   font-weight: 750;
   letter-spacing: -0.03em;
   line-height: 1;
   color: #115e59;
 }
 
-.datasaudi-trade__hero-value--product {
-  margin-top: 0.85rem;
-  font-size: clamp(2rem, 3.6vw, 2.6rem);
-}
-
 .datasaudi-trade__hero-unit,
 .datasaudi-trade__hero-label,
 .datasaudi-trade__yoy,
 .datasaudi-trade__source,
-.datasaudi-trade__empty,
-.datasaudi-trade-bars__share {
+.datasaudi-trade__empty {
   margin: 0.3rem 0 0;
   font-size: 0.8rem;
   line-height: 1.4;
@@ -114,7 +100,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  margin: 1rem 0 0;
+  margin: 0.7rem 0 0;
 }
 
 .datasaudi-trade__pair dt {
@@ -147,6 +133,13 @@
   color: #334155;
 }
 
+.datasaudi-trade__chart-range {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #64748b;
+}
+
 .datasaudi-trade__legend {
   display: flex;
   flex-wrap: wrap;
@@ -174,7 +167,7 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 340px;
+  max-height: 210px;
 }
 
 .datasaudi-trade__grid {
@@ -222,84 +215,4 @@
 .datasaudi-trade__source a {
   color: #115e59;
   text-underline-offset: 0.15em;
-}
-
-.datasaudi-trade-bars {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.datasaudi-trade-bars__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.datasaudi-trade-bars__label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: #0f172a;
-}
-
-.datasaudi-trade-bars__value {
-  flex: 0 0 auto;
-  font-size: 0.95rem;
-  font-weight: 750;
-  color: #115e59;
-}
-
-.datasaudi-trade-bars__fill {
-  display: block;
-  height: 0.42rem;
-  margin-top: 0.35rem;
-  border-radius: 999px;
-  background: #0f766e;
-}
-
-.datasaudi-trade-bars__share {
-  display: block;
-  margin-top: 0.2rem;
-}
-
-.datasaudi-trade__all {
-  margin-top: 0.85rem;
-}
-
-.datasaudi-trade__all summary {
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 650;
-  color: #115e59;
-}
-
-.datasaudi-trade__table-wrap {
-  max-height: 16rem;
-  overflow: auto;
-  margin-top: 0.6rem;
-}
-
-.datasaudi-trade__table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.84rem;
-}
-
-.datasaudi-trade__table th,
-.datasaudi-trade__table td {
-  padding: 0.4rem 0.35rem;
-  border-bottom: 1px solid #e2e8f0;
-  text-align: start;
-}
-
-.datasaudi-trade__table thead th {
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #64748b;
 }

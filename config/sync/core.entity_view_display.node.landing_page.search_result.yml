@@ -5,9 +5,12 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_result
     - field.field.node.landing_page.body
+    - field.field.node.landing_page.field_faq
+    - field.field.node.landing_page.field_form
     - field.field.node.landing_page.field_meta
     - field.field.node.landing_page.field_paragraphs
-    - field.field.node.landing_page.field_faq
+    - field.field.node.landing_page.field_phone_number
+    - field.field.node.landing_page.field_service
     - node.type.landing_page
   module:
     - user
@@ -28,5 +31,7 @@ hidden:
   field_form: true
   field_meta: true
   field_paragraphs: true
+  field_phone_number: true
+  field_service: true
   langcode: true
   links: true

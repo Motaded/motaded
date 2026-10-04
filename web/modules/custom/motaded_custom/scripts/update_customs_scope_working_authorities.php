@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\path_alias\Entity\PathAlias;
 
-const MOTADED_CUSTOMS_LAYOUT_ALIAS = '/customs-clearance-saudi-arabia';
+const MOTADED_CUSTOMS_LAYOUT_ALIAS = '/services/customs-clearance-saudi-arabia';
 
 $updates = [
   'Working with Motaded' => [
@@ -33,6 +33,10 @@ $updates = [
           'title' => 'Updates at key stages',
           'body' => '<p>Know when documents, inspections or payments need your attention, and when release is confirmed.</p>',
         ],
+        [
+          'title' => 'Arabic and English',
+          'body' => '<p>Documents and status updates in Arabic and English.</p>',
+        ],
       ],
     ],
     'ar' => [
@@ -49,6 +53,10 @@ $updates = [
         [
           'title' => 'تحديثات في المراحل الرئيسية',
           'body' => '<p>تعرفون متى تحتاج المستندات أو المعاينات أو المدفوعات إلى انتباهكم، ومتى يُؤكد الإفراج.</p>',
+        ],
+        [
+          'title' => 'العربية والإنجليزية',
+          'body' => '<p>المستندات وتحديثات الحالة بالعربية والإنجليزية.</p>',
         ],
       ],
     ],

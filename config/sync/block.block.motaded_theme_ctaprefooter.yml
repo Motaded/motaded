@@ -25,4 +25,14 @@ visibility:
   request_path:
     id: request_path
     negate: true
-    pages: "/customs-clearance-saudi-arabia\n/ar/customs-clearance-saudi-arabia"
+    pages: |-
+      /services/customs-clearance-saudi-arabia
+      /ar/services/customs-clearance-saudi-arabia
+      /services/accounting-services-saudi-arabia
+      /ar/services/accounting-services-saudi-arabia
+      /services/medicine-services-saudi-arabia
+      /ar/services/medicine-services-saudi-arabia
+      /services/medical-device-services-saudi-arabia
+      /ar/services/medical-device-services-saudi-arabia
+      /services/cosmetics-services-saudi-arabia
+      /ar/services/cosmetics-services-saudi-arabia

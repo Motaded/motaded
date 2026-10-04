@@ -1,0 +1,35 @@
+{% set attributes = attributes.setAttribute('id', 'catalogue') %}
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'catalogue', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    {% set seen = [] %}
+    {% for card in service_cards %}
+      {% if card %}
+        {% set group = card.field_sub_title.value|default('') %}
+        {% if group not in seen %}
+          {% set seen = seen|merge([group]) %}
+          <div class="acc-cat__group">
+            {% if group %}
+              <h3 class="acc-cat__group-title">{{ group }}</h3>
+            {% endif %}
+            <ul class="acc-cat__grid">
+              {% for item_card in service_cards %}
+                {% if item_card and item_card.field_sub_title.value|default('') == group %}
+                  <li class="acc-cat__card">
+                    <h4 class="acc-cat__title">{{ item_card.field_title.value }}</h4>
+                    <div class="acc-cat__body">{{ item_card.field_body.processed }}</div>
+                    {% if item_card.field_link.0 %}
+                      <a class="acc-cat__link" href="{{ item_card.field_link.0.url.toString() }}">{{ item_card.field_link.0.title }}</a>
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if paragraph.field_sub_title.value %}
+      <p class="acc-cat__note">{{ paragraph.field_sub_title.value }}</p>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

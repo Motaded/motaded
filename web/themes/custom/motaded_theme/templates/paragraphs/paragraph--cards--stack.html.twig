@@ -1,0 +1,36 @@
+{% set attributes = attributes.setAttribute('id', 'process') %}
+{{ attach_library('motaded_theme/swiper') }}
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'stack', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="customs-process-swiper swiper">
+      <div class="swiper-wrapper">
+        {% for card in service_cards %}
+          {% if card %}
+            <div class="swiper-slide">
+              <article class="customs-svc__stage">
+                <div class="customs-svc__stage-index" aria-hidden="true">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</div>
+                <div class="customs-svc__stage-main">
+                  <h3 class="customs-svc__stage-title">{{ card.field_title.value }}</h3>
+                  <div class="customs-svc__stage-body">{{ card.field_body.processed }}</div>
+                </div>
+              </article>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="customs-process-swiper__controls">
+        <button type="button" class="customs-process-swiper__btn swiper-button-prev" aria-label="{{ 'Previous step'|t }}">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="swiper-pagination"></div>
+        <button type="button" class="customs-process-swiper__btn swiper-button-next" aria-label="{{ 'Next step'|t }}">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  {% endblock %}
+{% endembed %}

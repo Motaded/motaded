@@ -1,0 +1,65 @@
+{% set tab_title = paragraph.field_title.value|default('') %}
+{% set is_vertical = tab_title in ['MDMA Application Support', 'دعم طلب MDMA', 'Customs Clearance Scope of Services', 'نطاق خدمات التخليص الجمركي'] %}
+{% if tab_title in ['How Motaded can help', 'Drug Registration, Establishment Licensing and Import Support', 'دعم تسجيل الأدوية وترخيص المنشآت وتنسيق الاستيراد', 'MDMA Application Support', 'دعم طلب MDMA'] %}
+  {% set attributes = attributes.setAttribute('id', 'catalogue') %}
+{% endif %}
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'tabs', show_header: true, service_cards: service_cards, paragraph: paragraph, is_vertical: is_vertical, tab_title: tab_title } %}
+  {% block section %}
+    {% set tab_base = 'svc-tabs-' ~ paragraph.id() %}
+    <div class="svc-tabs{{ is_vertical ? ' svc-tabs--vertical' : '' }}" data-svc-tabs>
+      <div class="svc-tabs__list" role="tablist" aria-label="{{ tab_title|default('Options'|t) }}"{% if is_vertical %} aria-orientation="vertical"{% endif %}>
+        {% for card in service_cards %}
+          {% if card %}
+            <button
+              type="button"
+              class="svc-tabs__tab{{ loop.first ? ' is-active' : '' }}"
+              role="tab"
+              id="{{ tab_base }}-tab-{{ loop.index0 }}"
+              aria-controls="{{ tab_base }}-panel-{{ loop.index0 }}"
+              aria-selected="{{ loop.first ? 'true' : 'false' }}"
+              tabindex="{{ loop.first ? '0' : '-1' }}"
+            >{% if is_vertical %}<span class="svc-tabs__index">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</span><span class="svc-tabs__label">{{ card.field_title.value }}</span>{% else %}{{ card.field_title.value }}{% endif %}</button>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="svc-tabs__stage">
+      {% for card in service_cards %}
+        {% if card %}
+          {% set media = card.field_media.entity %}
+          {% set media_url = '' %}
+          {% set is_detail = '<h4' in (card.field_body.value|default('')) %}
+          {% if media %}
+            {% if media.bundle == 'image' and media.field_media_image.entity %}
+              {% set media_url = file_url(media.field_media_image.entity.uri.value) %}
+            {% elseif media.field_media_image.entity %}
+              {% set media_url = file_url(media.field_media_image.entity.uri.value) %}
+            {% elseif media.field_media_svg.entity is defined and media.field_media_svg.entity %}
+              {% set media_url = file_url(media.field_media_svg.entity.uri.value) %}
+            {% endif %}
+          {% endif %}
+          <div
+            class="svc-tabs__panel{{ loop.first ? ' is-active' : '' }}{{ media_url ? ' svc-tabs__panel--media' : '' }}{{ is_detail ? ' svc-tabs__panel--detail' : '' }}"
+            role="tabpanel"
+            id="{{ tab_base }}-panel-{{ loop.index0 }}"
+            aria-labelledby="{{ tab_base }}-tab-{{ loop.index0 }}"
+            {% if not loop.first %}hidden{% endif %}
+          >
+            {% if media_url %}
+              <div class="svc-tabs__media">
+                <img src="{{ media_url }}" alt="{{ card.field_title.value }}">
+              </div>
+            {% endif %}
+            <div class="svc-tabs__copy">
+              <h3 class="svc-tabs__title">{{ card.field_title.value }}</h3>
+              <div class="svc-tabs__body">{{ card.field_body.processed }}</div>
+              {% if card.field_link.0 %}
+                <a class="svc-tabs__link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+  {% endblock %}
+{% endembed %}

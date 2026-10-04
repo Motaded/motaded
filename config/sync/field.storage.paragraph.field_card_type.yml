@@ -32,6 +32,72 @@ settings:
     -
       value: chips_card
       label: 'Chips cards'
+    -
+      value: workstreams
+      label: 'Service: icon columns'
+    -
+      value: features
+      label: 'Service: dark split panel'
+    -
+      value: directory
+      label: 'Service: logo directory'
+    -
+      value: stack
+      label: 'Service: numbered stages'
+    -
+      value: table
+      label: 'Service: table'
+    -
+      value: lists
+      label: 'Service: document lists'
+    -
+      value: fees
+      label: 'Service: fees columns'
+    -
+      value: invite
+      label: 'Service: mid-page CTA'
+    -
+      value: contact
+      label: 'Service: contact line'
+    -
+      value: related
+      label: 'Service: related links'
+    -
+      value: needs
+      label: 'Service: need cards'
+    -
+      value: situations
+      label: 'Service: situation rows'
+    -
+      value: catalogue
+      label: 'Service: grouped catalogue'
+    -
+      value: data_note
+      label: 'Service: data note'
+    -
+      value: tabs
+      label: 'Service: category tabs'
+    -
+      value: eligibility
+      label: 'Service: overview and eligibility'
+    -
+      value: context
+      label: 'Service: sector context'
+    -
+      value: stages
+      label: 'Service: vertical stage list'
+    -
+      value: formats
+      label: 'Service: engagement formats'
+    -
+      value: prose
+      label: 'Service: full-width prose'
+    -
+      value: matrix
+      label: 'Service: support table'
+    -
+      value: overview
+      label: 'Service: split overview'
   allowed_values_function: ''
 module: options
 locked: false

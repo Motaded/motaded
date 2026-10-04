@@ -9,30 +9,29 @@ dependencies:
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.banner_sm
     - paragraphs.paragraphs_type.business_cost_estimation
-    - paragraphs.paragraphs_type.chambers_network
+    - paragraphs.paragraphs_type.business_setup_section
     - paragraphs.paragraphs_type.cards
+    - paragraphs.paragraphs_type.chambers_network
     - paragraphs.paragraphs_type.featured_contents
-    - paragraphs.paragraphs_type.hero_two_cols
-    - paragraphs.paragraphs_type.hero_split_banner
-    - paragraphs.paragraphs_type.glance_block
     - paragraphs.paragraphs_type.gateway_block
     - paragraphs.paragraphs_type.gateway_hub_block
-    - paragraphs.paragraphs_type.platforms_systems
-    - paragraphs.paragraphs_type.system_masthead
-    - paragraphs.paragraphs_type.trade_by_product
-    - paragraphs.paragraphs_type.trade_market_overview
+    - paragraphs.paragraphs_type.glance_block
+    - paragraphs.paragraphs_type.hero_split_banner
+    - paragraphs.paragraphs_type.hero_two_cols
     - paragraphs.paragraphs_type.insights_updates
     - paragraphs.paragraphs_type.investor_journey
     - paragraphs.paragraphs_type.key_sectors
-    - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.media_lead
+    - paragraphs.paragraphs_type.platforms_systems
     - paragraphs.paragraphs_type.promo_split
+    - paragraphs.paragraphs_type.section
     - paragraphs.paragraphs_type.split_promo
     - paragraphs.paragraphs_type.steps
+    - paragraphs.paragraphs_type.system_masthead
+    - paragraphs.paragraphs_type.trade_market_overview
     - paragraphs.paragraphs_type.view_block
     - paragraphs.paragraphs_type.webform
     - paragraphs.paragraphs_type.why_opportunities
-    - paragraphs.paragraphs_type.business_setup_section
   module:
     - entity_reference_revisions
 id: node.landing_page.field_paragraphs
@@ -63,7 +62,6 @@ settings:
       cards: cards
       steps: steps
       view_block: view_block
-      webform: webform
       why_opportunities: why_opportunities
       hero_two_cols: hero_two_cols
       hero_split_banner: hero_split_banner
@@ -72,11 +70,11 @@ settings:
       gateway_hub_block: gateway_hub_block
       platforms_systems: platforms_systems
       system_masthead: system_masthead
-      trade_market_overview: trade_market_overview
-      trade_by_product: trade_by_product
       insights_updates: insights_updates
       investor_journey: investor_journey
       key_sectors: key_sectors
+      webform: webform
+      trade_market_overview: trade_market_overview
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -205,15 +203,12 @@ settings:
       system_masthead:
         weight: 22
         enabled: true
-      trade_by_product:
-        weight: 59
-        enabled: true
-      trade_market_overview:
-        weight: 58
-        enabled: true
       top_information:
         weight: -18
         enabled: false
+      trade_market_overview:
+        weight: 58
+        enabled: true
       view_block:
         weight: 41
         enabled: true

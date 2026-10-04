@@ -12,16 +12,12 @@ use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 
 /**
- * Narrow Tesseract client for gastat_trade_balance and gastat_trade_product.
+ * Narrow Tesseract client for gastat_trade_balance.
  *
  * Offset paging is not used: live API ignores offset (page.offset stays 0).
  * Completeness is count(data) === page.total. Year cuts are the fallback.
  */
 final class DataSaudiTesseractClient {
-
-  public const FLOW_IMPORTS = 1;
-
-  public const FLOW_EXPORTS = 2;
 
   public const UNIT_MILLION_SAR = 'million_sar';
 
@@ -81,126 +77,6 @@ final class DataSaudiTesseractClient {
     }
     ksort($rows);
     return DataSaudiFetchResult::ok(array_values($rows), count($rows));
-  }
-
-  /**
-   * Monthly HS-section values for Trade Flow 1 (Imports) and 2 (Exports).
-   *
-   * Flow 2 is labelled "Exports" / "الصادرات" by the API — not "Non-oil exports".
-   *
-   * @return DataSaudiFetchResult
-   *   Rows: flow_id, flow_key, section_id, period, period_id, value, labels.
-   */
-  public function fetchTradeProduct(): DataSaudiFetchResult {
-    $flows = $this->fetchMembers('gastat_trade_product', 'Trade Flow');
-    if (!$flows->isUsable()) {
-      return $flows;
-    }
-    $sections = $this->fetchMembers('gastat_trade_product', 'Section');
-    if (!$sections->isUsable()) {
-      return $sections;
-    }
-    $flowMap = $this->indexMembers($flows->rows, [self::FLOW_IMPORTS, self::FLOW_EXPORTS]);
-    if ($flowMap === NULL) {
-      return DataSaudiFetchResult::error('Trade Flow members are not exactly Imports (1) and Exports (2).');
-    }
-    $sectionMap = $this->indexMembers($sections->rows);
-    if ($sectionMap === NULL || $sectionMap === []) {
-      return DataSaudiFetchResult::error('Section members are missing or unusable.');
-    }
-
-    $query = [
-      'cube' => 'gastat_trade_product',
-      'drilldowns' => 'Trade Flow,Section,Month',
-      'measures' => 'Million SAR',
-      'locale' => 'en',
-    ];
-    $fetched = $this->fetchCompleteRecords($query, 2021);
-    if (!$fetched->isUsable()) {
-      return $fetched;
-    }
-
-    $rows = [];
-    foreach ($fetched->rows as $raw) {
-      $period = $this->parsePeriod($raw['Month'] ?? NULL, $raw['Month ID'] ?? NULL);
-      $flowId = isset($raw['Trade Flow ID']) ? (int) $raw['Trade Flow ID'] : 0;
-      $sectionId = trim((string) ($raw['Section ID'] ?? ''));
-      if ($period === NULL || $sectionId === '' || !isset($flowMap[$flowId]) || !isset($sectionMap[$sectionId])) {
-        return DataSaudiFetchResult::error('Trade product row has an unknown flow, section, or period.');
-      }
-      if (!$this->isFiniteNumber($raw['Million SAR'] ?? NULL)) {
-        return DataSaudiFetchResult::error('Trade product row missing Million SAR for ' . $sectionId . ' ' . $period['period']);
-      }
-      $key = $flowId . '|' . $sectionId . '|' . $period['period'];
-      $rows[$key] = [
-        'flow_id' => $flowId,
-        'flow_key' => $flowId === self::FLOW_IMPORTS ? 'imports' : 'exports',
-        'section_id' => $sectionId,
-        'period' => $period['period'],
-        'period_id' => $period['period_id'],
-        'value' => (float) $raw['Million SAR'],
-        'unit' => self::UNIT_MILLION_SAR,
-        'flow_label_en' => $flowMap[$flowId]['en'],
-        'flow_label_ar' => $flowMap[$flowId]['ar'],
-        'section_label_en' => $sectionMap[$sectionId]['en'],
-        'section_label_ar' => $sectionMap[$sectionId]['ar'],
-      ];
-    }
-    ksort($rows);
-    return DataSaudiFetchResult::ok(array_values($rows), count($rows));
-  }
-
-  /**
-   * @return DataSaudiFetchResult
-   *   Rows: key, caption_en, caption_ar.
-   */
-  public function fetchMembers(string $cube, string $level): DataSaudiFetchResult {
-    $en = $this->requestJson('/members.jsonrecords', [
-      'cube' => $cube,
-      'level' => $level,
-      'locale' => 'en',
-    ]);
-    if ($en['status'] !== 'ok') {
-      return DataSaudiFetchResult::error($en['message']);
-    }
-    $ar = $this->requestJson('/members.jsonrecords', [
-      'cube' => $cube,
-      'level' => $level,
-      'locale' => 'ar',
-    ]);
-    if ($ar['status'] !== 'ok') {
-      return DataSaudiFetchResult::error($ar['message']);
-    }
-    $enMembers = $en['json']['members'] ?? NULL;
-    $arMembers = $ar['json']['members'] ?? NULL;
-    if (!is_array($enMembers) || $enMembers === [] || !is_array($arMembers) || $arMembers === []) {
-      return DataSaudiFetchResult::empty('DataSaudi members list is empty for ' . $level);
-    }
-    $arByKey = [];
-    foreach ($arMembers as $member) {
-      if (!is_array($member) || !array_key_exists('key', $member)) {
-        return DataSaudiFetchResult::error('Arabic members row missing key for ' . $level);
-      }
-      $arByKey[(string) $member['key']] = trim((string) ($member['caption'] ?? ''));
-    }
-    $rows = [];
-    foreach ($enMembers as $member) {
-      if (!is_array($member) || !array_key_exists('key', $member)) {
-        return DataSaudiFetchResult::error('English members row missing key for ' . $level);
-      }
-      $key = $member['key'];
-      $enCaption = trim((string) ($member['caption'] ?? ''));
-      $arCaption = $arByKey[(string) $key] ?? '';
-      if ($enCaption === '' || $arCaption === '') {
-        return DataSaudiFetchResult::error('Missing EN/AR caption for ' . $level . ' key ' . (string) $key);
-      }
-      $rows[] = [
-        'key' => $key,
-        'caption_en' => $enCaption,
-        'caption_ar' => $arCaption,
-      ];
-    }
-    return DataSaudiFetchResult::ok($rows, count($rows));
   }
 
   /**
@@ -342,33 +218,6 @@ final class DataSaudiTesseractClient {
       return ['rows' => [], 'total' => 0, 'error' => 'DataSaudi JSON missing page.total; refusing a partial read.'];
     }
     return ['rows' => $rows, 'total' => (int) $page['total'], 'error' => ''];
-  }
-
-  /**
-   * @param list<array{key: mixed, caption_en: string, caption_ar: string}> $members
-   * @param list<int>|null $requiredIntKeys
-   *
-   * @return array<int|string, array{en: string, ar: string}>|null
-   */
-  private function indexMembers(array $members, ?array $requiredIntKeys = NULL): ?array {
-    $map = [];
-    foreach ($members as $member) {
-      $map[$member['key']] = [
-        'en' => $member['caption_en'],
-        'ar' => $member['caption_ar'],
-      ];
-    }
-    if ($requiredIntKeys !== NULL) {
-      foreach ($requiredIntKeys as $id) {
-        if (!isset($map[$id])) {
-          return NULL;
-        }
-      }
-      if (count($map) !== count($requiredIntKeys)) {
-        return NULL;
-      }
-    }
-    return $map;
   }
 
   /**

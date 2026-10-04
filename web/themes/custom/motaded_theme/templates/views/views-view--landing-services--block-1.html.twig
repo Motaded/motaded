@@ -1,0 +1,21 @@
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    'landing-hubs',
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% if rows %}
+    <div class="view-content landing-hubs__content">
+      {{ rows }}
+    </div>
+  {% elseif empty %}
+    <div class="view-empty">{{ empty }}</div>
+  {% endif %}
+</div>

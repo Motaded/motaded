@@ -12,15 +12,14 @@ final class DataSaudiImportOutcome {
   public function __construct(
     public readonly bool $locked,
     public readonly bool $balanceReplaced,
-    public readonly bool $productReplaced,
   ) {}
 
   public static function locked(): self {
-    return new self(TRUE, FALSE, FALSE);
+    return new self(TRUE, FALSE);
   }
 
   public function succeeded(): bool {
-    return !$this->locked && $this->balanceReplaced && $this->productReplaced;
+    return !$this->locked && $this->balanceReplaced;
   }
 
 }

@@ -1,0 +1,23 @@
+uuid: 71bba0bc-1242-4361-8af4-d3d7ff28d0ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service
+    - node.type.landing_page
+id: node.landing_page.field_service
+field_name: field_service
+entity_type: node
+bundle: landing_page
+label: Service
+description: 'Enables the service landing layout (section templates and CSS). Use for pages like customs clearance.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

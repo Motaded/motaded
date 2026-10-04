@@ -1,0 +1,23 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'situations', show_header: true, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <ul class="acc-sit__list">
+      {% for card in service_cards %}
+        {% if card and not card.field_link.0 %}
+          <li class="acc-sit__item">
+            <h3 class="acc-sit__title">{{ card.field_title.value }}</h3>
+            {% if card.field_body.processed|striptags|trim %}
+              <div class="acc-sit__body">{{ card.field_body.processed }}</div>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="acc-sit__cta">
+      {% for card in service_cards %}
+        {% if card and card.field_link.0 %}
+          <a class="acc-sit__cta-link" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

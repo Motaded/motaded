@@ -42,14 +42,12 @@ final class DataSaudiTradeImporter {
     try {
       $fetchedAt = gmdate('Y-m-d H:i:s', $this->time->getRequestTime());
       $balanceReplaced = $this->importBalance($fetchedAt);
-      $productReplaced = $this->importProduct($fetchedAt);
-      if ($balanceReplaced || $productReplaced) {
+      if ($balanceReplaced) {
         $this->cacheTagsInvalidator->invalidateTags([self::CACHE_TAG]);
       }
       return new DataSaudiImportOutcome(
         locked: FALSE,
         balanceReplaced: $balanceReplaced,
-        productReplaced: $productReplaced,
       );
     }
     finally {
@@ -68,22 +66,6 @@ final class DataSaudiTradeImporter {
     }
     $this->repository->replaceBalance($result->rows, $fetchedAt);
     $this->logger->info('DataSaudi trade balance snapshot replaced (@count monthly rows).', [
-      '@count' => (string) count($result->rows),
-    ]);
-    return TRUE;
-  }
-
-  private function importProduct(string $fetchedAt): bool {
-    $result = $this->client->fetchTradeProduct();
-    if (!$result->isUsable()) {
-      $this->logger->warning('DataSaudi trade product fetch not usable (@status): @msg; keeping previous snapshot.', [
-        '@status' => $result->status,
-        '@msg' => $result->message,
-      ]);
-      return FALSE;
-    }
-    $this->repository->replaceProduct($result->rows, $fetchedAt);
-    $this->logger->info('DataSaudi trade product snapshot replaced (@count monthly section rows).', [
       '@count' => (string) count($result->rows),
     ]);
     return TRUE;

@@ -1,0 +1,68 @@
+{% set prose_title = paragraph.field_title.value|default('') %}
+{% set is_briefing = prose_title in ['Cosmetics and Personal-Care Products in Saudi Arabia', 'مستحضرات التجميل ومنتجات العناية الشخصية في المملكة العربية السعودية'] %}
+{% set is_composition = prose_title in ['Product Composition, Claims and Labelling', 'تركيب المنتج والادعاءات والبطاقات'] %}
+{% if 'MDMA' in prose_title or prose_title in ['Cosmetic Product Listing Support', 'دعم إدراج منتجات التجميل'] %}
+  {% set attributes = attributes.setAttribute('id', 'catalogue') %}
+{% endif %}
+{% if is_briefing %}
+  {% set attributes = attributes.addClass('customs-svc--prose-split') %}
+{% elseif is_composition %}
+  {% set attributes = attributes.addClass('customs-svc--prose-criteria') %}
+{% endif %}
+{% embed '@motaded_theme/includes/service-section.html.twig' with {
+  layout: 'prose',
+  show_header: not is_briefing and not is_composition,
+  service_cards: service_cards,
+  paragraph: paragraph,
+  is_briefing: is_briefing,
+  is_composition: is_composition,
+  prose_title: prose_title
+} %}
+  {% block section %}
+    {% if is_briefing %}
+      {% set media_url = '' %}
+      {% set media_alt = prose_title %}
+      {% for card in service_cards %}
+        {% if card.field_media.entity and card.field_media.entity.field_media_image.entity %}
+          {% set media_url = file_url(card.field_media.entity.field_media_image.entity.uri.value) %}
+          {% if card.field_title.value %}
+            {% set media_alt = card.field_title.value %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      <div class="svc-prose-split">
+        {% if media_url %}
+          <figure class="svc-prose-split__media">
+            <img src="{{ media_url }}" alt="{{ media_alt }}" width="720" height="900">
+          </figure>
+        {% endif %}
+        <div class="svc-prose-split__copy">
+          <h2 class="customs-svc__title">{{ prose_title }}</h2>
+          {% if paragraph.field_body.processed %}
+            <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% elseif is_composition %}
+      <header class="customs-svc__header">
+        <h2 class="customs-svc__title">{{ prose_title }}</h2>
+        {% if paragraph.field_body.processed %}
+          <div class="customs-svc__lede">{{ paragraph.field_body.processed }}</div>
+        {% endif %}
+      </header>
+      <ol class="svc-prose-criteria__list">
+        {% for card in service_cards %}
+          {% if card and card.field_title.value %}
+            <li class="svc-prose-criteria__item">
+              <span class="svc-prose-criteria__index" aria-hidden="true">{{ loop.index < 10 ? '0' ~ loop.index : loop.index }}</span>
+              <div class="svc-prose-criteria__copy">
+                <h3 class="svc-prose-criteria__title">{{ card.field_title.value }}</h3>
+                <div class="svc-prose-criteria__body">{{ card.field_body.processed }}</div>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

@@ -1,0 +1,46 @@
+{% set section_title = paragraph.field_title.value|default('') %}
+{% set is_deliverables = section_title in ['Service Deliverables', 'مخرجات الخدمة'] %}
+{% set is_listing = section_title in ['Cosmetic Product Listing Support', 'دعم إدراج منتجات التجميل'] %}
+{% set is_audience = section_title in ['Support for Brands, Manufacturers and Importers', 'الدعم للعلامات والمصنّعين والمستوردين'] %}
+{% if is_listing %}
+  {% set attributes = attributes.setAttribute('id', 'catalogue') %}
+{% endif %}
+{% embed '@motaded_theme/includes/service-section.html.twig' with {
+  layout: 'formats',
+  show_header: true,
+  service_cards: service_cards,
+  paragraph: paragraph,
+  is_deliverables: is_deliverables,
+  is_listing: is_listing,
+  is_audience: is_audience
+} %}
+  {% block section %}
+    <div class="svc-formats{{ is_deliverables ? ' svc-formats--deliverables' : '' }}{{ is_listing ? ' svc-formats--listing' : '' }}{{ is_audience ? ' svc-formats--audience' : '' }}">
+      {% for card in service_cards %}
+        {% if card and card.field_title.value and not card.field_link.0 %}
+          <article class="svc-formats__col">
+            <h3 class="svc-formats__title{{ is_audience ? ' svc-formats__title--plain' : '' }}">{{ card.field_title.value }}</h3>
+            <div class="svc-formats__body">
+              {% if card.field_sub_title.value %}
+                <p class="svc-formats__kicker">{{ card.field_sub_title.value }}</p>
+              {% endif %}
+              {{ card.field_body.processed }}
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% if is_deliverables or is_audience %}
+      <div class="svc-deliverables__footer">
+        {% for card in service_cards %}
+          {% if card and not card.field_title.value and card.field_body.processed %}
+            <div class="svc-deliverables__note">{{ card.field_body.processed }}</div>
+          {% endif %}
+          {% if card and card.field_link.0 %}
+            <a class="svc-deliverables__cta" href="{{ card.field_link.0.url.toString() }}">{{ card.field_link.0.title }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

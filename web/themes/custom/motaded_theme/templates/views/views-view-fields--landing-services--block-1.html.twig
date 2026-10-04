@@ -1,0 +1,13 @@
+<a class="landing-hubs__card" href="{{ landing_hub_url }}" rel="bookmark">
+  <span class="landing-hubs__index" aria-hidden="true"></span>
+  <span class="landing-hubs__copy">
+    {% if landing_hub_kicker %}
+      <span class="landing-hubs__kicker">{{ landing_hub_kicker }}</span>
+    {% endif %}
+    <h3 class="landing-hubs__title">{{ landing_hub_title }}</h3>
+    {% if landing_hub_teaser %}
+      <span class="landing-hubs__teaser">{{ landing_hub_teaser }}</span>
+    {% endif %}
+    <span class="landing-hubs__cta">{{ 'View'|t }}<span aria-hidden="true"> →</span></span>
+  </span>
+</a>

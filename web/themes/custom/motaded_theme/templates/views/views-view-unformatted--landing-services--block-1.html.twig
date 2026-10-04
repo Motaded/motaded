@@ -1,0 +1,5 @@
+<ul class="landing-hubs__grid">
+  {% for row in rows %}
+    <li{{ row.attributes.addClass('landing-hubs__item') }}>{{ row.content }}</li>
+  {% endfor %}
+</ul>

@@ -16,7 +16,7 @@ use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\path_alias\Entity\PathAlias;
 
-const MOTADED_TRADE_LANDING_ALIAS = '/customs-clearance-saudi-arabia';
+const MOTADED_TRADE_LANDING_ALIAS = '/services/customs-clearance-saudi-arabia';
 
 _motaded_trade_ensure_paragraph_types();
 _motaded_trade_enable_landing_bundles();
@@ -27,10 +27,6 @@ function _motaded_trade_ensure_paragraph_types(): void {
     'trade_market_overview' => [
       'label' => 'Trade market overview',
       'description' => 'Monthly merchandise imports and exports from the DataSaudi snapshot.',
-    ],
-    'trade_by_product' => [
-      'label' => 'Trade by product',
-      'description' => 'Merchandise import categories from the DataSaudi snapshot.',
     ],
   ];
   foreach ($defs as $id => $def) {
@@ -75,11 +71,8 @@ function _motaded_trade_ensure_paragraph_types(): void {
   $storage = \Drupal::service('config.storage');
   foreach ([
     'core.entity_form_display.paragraph.trade_market_overview.default',
-    'core.entity_form_display.paragraph.trade_by_product.default',
     'core.entity_view_display.paragraph.trade_market_overview.default',
-    'core.entity_view_display.paragraph.trade_by_product.default',
     'language.content_settings.paragraph.trade_market_overview',
-    'language.content_settings.paragraph.trade_by_product',
   ] as $name) {
     $data = $sync->read($name);
     if (is_array($data) && !$storage->exists($name)) {
@@ -97,7 +90,7 @@ function _motaded_trade_enable_landing_bundles(): void {
   }
   $settings = $field->getSetting('handler_settings') ?: [];
   $changed = FALSE;
-  foreach (['trade_market_overview' => 58, 'trade_by_product' => 59] as $bundle => $weight) {
+  foreach (['trade_market_overview' => 58] as $bundle => $weight) {
     if (!isset($settings['target_bundles'][$bundle])) {
       $settings['target_bundles'][$bundle] = $bundle;
       $settings['target_bundles_drag_drop'][$bundle] = [
@@ -122,64 +115,24 @@ function _motaded_trade_attach_to_customs_node(): void {
   $items = $en->get('field_paragraphs')->referencedEntities();
 
   $has_market = FALSE;
-  $has_product = FALSE;
-  $overview_delta = NULL;
-  $cargo_delta = NULL;
-  foreach ($items as $delta => $paragraph) {
-    if (!$paragraph instanceof Paragraph) {
-      continue;
-    }
-    if ($paragraph->bundle() === 'trade_market_overview') {
+  foreach ($items as $paragraph) {
+    if ($paragraph instanceof Paragraph && $paragraph->bundle() === 'trade_market_overview') {
       $has_market = TRUE;
-    }
-    if ($paragraph->bundle() === 'trade_by_product') {
-      $has_product = TRUE;
-    }
-    $title = $paragraph->hasField('field_title') ? trim((string) $paragraph->get('field_title')->value) : '';
-    if ($paragraph->bundle() === 'media_lead' && $title === 'Service Overview') {
-      $overview_delta = (int) $delta;
-    }
-    if ($paragraph->bundle() === 'cards' && $title === 'Cargo Categories and Additional Requirements') {
-      $cargo_delta = (int) $delta;
     }
   }
 
   $market = $has_market ? NULL : _motaded_trade_create_market_paragraph();
-  $product = $has_product ? NULL : _motaded_trade_create_product_paragraph();
-  if ($market === NULL && $product === NULL) {
-    echo "DataSaudi trade paragraphs already present on nid=" . $en->id() . "\n";
+  if ($market === NULL) {
+    echo "DataSaudi trade paragraph already present on nid=" . $en->id() . "\n";
     return;
   }
 
   $refs = $en->get('field_paragraphs')->getValue();
-  $new_refs = [];
-  foreach ($refs as $delta => $ref) {
-    if ($product !== NULL && $cargo_delta !== NULL && (int) $delta === $cargo_delta) {
-      $new_refs[] = [
-        'target_id' => $product->id(),
-        'target_revision_id' => $product->getRevisionId(),
-      ];
-    }
-    $new_refs[] = $ref;
-    if ($market !== NULL && $overview_delta !== NULL && (int) $delta === $overview_delta) {
-      $new_refs[] = [
-        'target_id' => $market->id(),
-        'target_revision_id' => $market->getRevisionId(),
-      ];
-    }
-  }
-  if ($market !== NULL && $overview_delta === NULL) {
-    array_splice($new_refs, 2, 0, [[
-      'target_id' => $market->id(),
-      'target_revision_id' => $market->getRevisionId(),
-    ]]);
-  }
-  if ($product !== NULL && $cargo_delta === NULL) {
-    $new_refs[] = [
-      'target_id' => $product->id(),
-      'target_revision_id' => $product->getRevisionId(),
-    ];
-  }
+  $refs[] = [
+    'target_id' => $market->id(),
+    'target_revision_id' => $market->getRevisionId(),
+  ];
+  $new_refs = $refs;
 
   $en->set('field_paragraphs', $new_refs);
   $en->save();
@@ -199,38 +152,17 @@ function _motaded_trade_create_market_paragraph(): Paragraph {
   $paragraph = Paragraph::create([
     'type' => 'trade_market_overview',
     'langcode' => 'en',
-    'field_title' => 'Saudi Arabia: A Market for International Trade',
+    'field_title' => 'Saudi Arabia’s trade in figures',
     'field_body' => [
-      'value' => '<p>Explore Saudi Arabia’s merchandise trade through official monthly import and export statistics.</p>',
+      'value' => '<p>Merchandise imports and exports for the latest month, compared with the same month last year, and the recent monthly trend.</p>',
       'format' => 'basic_html',
     ],
   ]);
   $paragraph->save();
   $ar = $paragraph->addTranslation('ar', ['status' => TRUE]);
-  $ar->set('field_title', 'المملكة العربية السعودية: سوق للتجارة الدولية');
+  $ar->set('field_title', 'تجارة المملكة العربية السعودية بالأرقام');
   $ar->set('field_body', [
-    'value' => '<p>استكشف تجارة المملكة العربية السعودية السلعية عبر الإحصاءات الرسمية الشهرية للاستيراد والتصدير.</p>',
-    'format' => 'basic_html',
-  ]);
-  $ar->save();
-  return $paragraph;
-}
-
-function _motaded_trade_create_product_paragraph(): Paragraph {
-  $paragraph = Paragraph::create([
-    'type' => 'trade_by_product',
-    'langcode' => 'en',
-    'field_title' => 'Explore Trade by Product',
-    'field_body' => [
-      'value' => '<p>See the leading product categories in Saudi Arabia’s merchandise imports.</p>',
-      'format' => 'basic_html',
-    ],
-  ]);
-  $paragraph->save();
-  $ar = $paragraph->addTranslation('ar', ['status' => TRUE]);
-  $ar->set('field_title', 'استكشف التجارة حسب المنتج');
-  $ar->set('field_body', [
-    'value' => '<p>اطّلع على أبرز فئات المنتجات في واردات المملكة العربية السعودية السلعية.</p>',
+    'value' => '<p>واردات وصادرات السلع لآخر شهر، مقارنة بالشهر نفسه من العام الماضي، مع الاتجاه الشهري الأخير.</p>',
     'format' => 'basic_html',
   ]);
   $ar->save();

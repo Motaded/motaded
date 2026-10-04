@@ -27,11 +27,11 @@ final class DataSaudiTradeCharts {
       return NULL;
     }
     $w = 720;
-    $h = 320;
+    $h = 210;
     $pl = 36;
     $pr = 58;
-    $pt = 18;
-    $pb = 32;
+    $pt = 12;
+    $pb = 28;
     $pw = $w - $pl - $pr;
     $ph = $h - $pt - $pb;
     $vals = [];

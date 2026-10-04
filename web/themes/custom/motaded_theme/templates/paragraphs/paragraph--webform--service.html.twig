@@ -1,11 +1,6 @@
-{#
-/**
- * @file
- * Customs clearance assessment form.
- */
-#}
-{{ attach_library('motaded_theme/customs_clearance_landing') }}
-<section{{ attributes.addClass('customs-form').removeClass('wrap') }}>
+{{ attach_library('motaded_theme/service_landing') }}
+{% set attributes = attributes.setAttribute('id', 'assessment').addClass('customs-form').removeClass('wrap') %}
+<section{{ attributes }}>
   <div class="customs-form__inner mot-shell">
     <div class="customs-form__panel">
       {% if content.field_body|render|striptags|trim %}

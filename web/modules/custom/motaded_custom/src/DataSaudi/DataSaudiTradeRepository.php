@@ -63,58 +63,6 @@ final class DataSaudiTradeRepository {
   }
 
   /**
-   * @param list<array<string, mixed>> $rows
-   */
-  public function replaceProduct(array $rows, string $fetchedAt): void {
-    if ($rows === []) {
-      throw new \InvalidArgumentException('Refusing to replace trade product with an empty snapshot.');
-    }
-    $transaction = $this->connection->startTransaction();
-    try {
-      $this->connection->delete('datasaudi_trade_product')->execute();
-      foreach (array_chunk($rows, 200) as $chunk) {
-        $insert = $this->connection->insert('datasaudi_trade_product')->fields([
-          'flow_id',
-          'flow_key',
-          'section_id',
-          'period',
-          'period_id',
-          'value_million_sar',
-          'unit',
-          'flow_label_en',
-          'flow_label_ar',
-          'section_label_en',
-          'section_label_ar',
-          'fetched_at',
-        ]);
-        foreach ($chunk as $row) {
-          $insert->values([
-            'flow_id' => $row['flow_id'],
-            'flow_key' => $row['flow_key'],
-            'section_id' => $row['section_id'],
-            'period' => $row['period'],
-            'period_id' => $row['period_id'],
-            'value_million_sar' => $row['value'],
-            'unit' => $row['unit'],
-            'flow_label_en' => $row['flow_label_en'],
-            'flow_label_ar' => $row['flow_label_ar'],
-            'section_label_en' => $row['section_label_en'],
-            'section_label_ar' => $row['section_label_ar'],
-            'fetched_at' => $fetchedAt,
-          ]);
-        }
-        $insert->execute();
-      }
-      $this->upsertStatus('product', $rows, $fetchedAt, 'period');
-    }
-    catch (\Throwable $e) {
-      $transaction->rollBack();
-      $this->logger->error('datasaudi_trade_product replace failed: @msg', ['@msg' => $e->getMessage()]);
-      throw $e;
-    }
-  }
-
-  /**
    * @return array<string, mixed>|null
    */
   public function loadStatus(string $dataset): ?array {
@@ -128,13 +76,6 @@ final class DataSaudiTradeRepository {
 
   public function countBalance(): int {
     return (int) $this->connection->select('datasaudi_trade_balance', 'b')
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-  }
-
-  public function countProduct(): int {
-    return (int) $this->connection->select('datasaudi_trade_product', 'p')
       ->countQuery()
       ->execute()
       ->fetchField();
@@ -161,32 +102,6 @@ final class DataSaudiTradeRepository {
     $query->addExpression('COUNT(DISTINCT period)', 'c');
     $query->condition('period', $this->connection->escapeLike($prefix) . '%', 'LIKE');
     return (int) $query->execute()->fetchField();
-  }
-
-  /**
-   * @return list<array{flow_id: int, flow_key: string, months: int, period_min: string, period_max: string}>
-   */
-  public function productFlowCoverage(): array {
-    $query = $this->connection->select('datasaudi_trade_product', 'p');
-    $query->addField('p', 'flow_id');
-    $query->addField('p', 'flow_key');
-    $query->addExpression('COUNT(DISTINCT period)', 'months');
-    $query->addExpression('MIN(period)', 'period_min');
-    $query->addExpression('MAX(period)', 'period_max');
-    $query->groupBy('flow_id');
-    $query->groupBy('flow_key');
-    $query->orderBy('flow_id');
-    $out = [];
-    foreach ($query->execute()->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-      $out[] = [
-        'flow_id' => (int) $row['flow_id'],
-        'flow_key' => (string) $row['flow_key'],
-        'months' => (int) $row['months'],
-        'period_min' => (string) $row['period_min'],
-        'period_max' => (string) $row['period_max'],
-      ];
-    }
-    return $out;
   }
 
   /**
@@ -220,36 +135,6 @@ final class DataSaudiTradeRepository {
       return [];
     }
     return array_reverse($rows);
-  }
-
-  public function loadLatestProductPeriod(string $flowKey): ?string {
-    $period = $this->connection->select('datasaudi_trade_product', 'p')
-      ->fields('p', ['period'])
-      ->condition('flow_key', $flowKey)
-      ->orderBy('period', 'DESC')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
-    return $period !== FALSE && $period !== NULL && $period !== '' ? (string) $period : NULL;
-  }
-
-  /**
-   * All stored sections for one flow and month. Absent rows are not invented.
-   *
-   * @return list<array<string, mixed>>
-   */
-  public function loadProductRowsForPeriod(string $flowKey, string $period): array {
-    $query = $this->connection->select('datasaudi_trade_product', 'p')
-      ->fields('p')
-      ->condition('flow_key', $flowKey)
-      ->condition('period', $period)
-      ->orderBy('value_million_sar', 'DESC')
-      ->orderBy('section_id', 'ASC');
-    $out = [];
-    foreach ($query->execute()->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-      $out[] = $row;
-    }
-    return $out;
   }
 
   /**

@@ -19,7 +19,7 @@ use Drupal\paragraphs\ParagraphInterface;
 use Drupal\path_alias\Entity\PathAlias;
 
 const MOTADED_CUSTOMS_PHONE = '+966 53 979 7197';
-const MOTADED_CUSTOMS_MID_ALIAS = '/customs-clearance-saudi-arabia';
+const MOTADED_CUSTOMS_MID_ALIAS = '/services/customs-clearance-saudi-arabia';
 
 _motaded_customs_mid_ensure_phone_field();
 $node = _motaded_customs_mid_load_node();
@@ -41,10 +41,19 @@ foreach ($en->get('field_paragraphs') as $delta => $item) {
   }
   $source = $paragraph->hasTranslation('en') ? $paragraph->getTranslation('en') : $paragraph;
   $title = trim((string) $source->get('field_title')->value);
-  if ($title === 'Talk to the clearance team') {
+  if (in_array($title, [
+    'Talk to the clearance team',
+    'Start with a written assessment',
+    'Start with a consultation',
+  ], TRUE)) {
     $invite_exists = TRUE;
   }
-  if (in_array($title, ['Clearance Process', 'إجراءات التخليص'], TRUE)) {
+  if (in_array($title, [
+    'Clearance Process',
+    'إجراءات التخليص',
+    'How your customs clearance works',
+    'كيف يعمل التخليص الجمركي لديكم',
+  ], TRUE)) {
     $process_delta = (int) $delta;
   }
   if ($title === 'Contact Our Customs Clearance Team') {

@@ -1,0 +1,22 @@
+{% embed '@motaded_theme/includes/service-section.html.twig' with { layout: 'overview', show_header: false, service_cards: service_cards, paragraph: paragraph } %}
+  {% block section %}
+    <div class="svc-overview">
+      <div class="svc-overview__main">
+        {% if paragraph.field_title.value %}
+          <h2 class="customs-svc__title">{{ paragraph.field_title.value }}</h2>
+        {% endif %}
+        {% if paragraph.field_body.processed %}
+          <div class="svc-overview__lede">{{ paragraph.field_body.processed }}</div>
+        {% endif %}
+      </div>
+      {% for card in service_cards %}
+        {% if card and card.field_title.value %}
+          <aside class="svc-overview__status">
+            <h3 class="svc-overview__status-title">{{ card.field_title.value }}</h3>
+            <div class="svc-overview__status-list">{{ card.field_body.processed }}</div>
+          </aside>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+{% endembed %}

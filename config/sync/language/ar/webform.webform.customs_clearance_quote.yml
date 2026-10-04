@@ -33,7 +33,7 @@ elements: |
   consent:
     '#title': 'أوافق على التواصل معي بشأن طلب التقييم.'
   actions:
-    '#submit__label': 'طلب تقييم'
+    '#submit__label': إرسال
 settings:
   confirmation_message: '<p>شكراً لك. سيراجع متعدد المعلومات ويرد بتقييم العمل المطلوب وعرض سعر الخدمة.</p>'
 handlers:

@@ -1,0 +1,209 @@
+uuid: 2e8b4c91-7a16-4d5f-9c03-8f1a6b0d4e27
+langcode: en
+status: open
+dependencies:
+  module:
+    - honeypot
+third_party_settings:
+  honeypot:
+    honeypot: true
+    time_restriction: true
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: accounting_assessment
+title: 'Accounting assessment'
+description: 'Accounting assessment requests from the accounting services landing page.'
+categories: {  }
+elements: |-
+  full_name:
+    '#type': textfield
+    '#title': 'Full name'
+    '#required': true
+  work_email:
+    '#type': email
+    '#title': 'Work email'
+    '#required': true
+  phone:
+    '#type': tel
+    '#title': 'Phone number'
+    '#default_value': '+966 '
+    '#international': true
+    '#international_initial_country': SA
+  company_name:
+    '#type': textfield
+    '#title': 'Company name'
+    '#required': true
+  support_needed:
+    '#type': select
+    '#title': 'What support do you need?'
+    '#required': true
+    '#empty_option': '- Select -'
+    '#options':
+      setup: 'Accounting setup.'
+      bookkeeping: 'Ongoing bookkeeping and reporting.'
+      catch_up: 'Accounting catch-up or accounts review.'
+      payroll: Payroll.
+      vat: VAT.
+      zakat_tax: 'Zakat or corporate tax.'
+      wht: 'Withholding tax.'
+      audit: 'Audit or inventory support.'
+      not_sure: 'Not sure — help me choose.'
+  requirements:
+    '#type': textarea
+    '#title': 'Tell us about your requirements'
+    '#description': 'Mention any missing records, upcoming deadlines or particular reports you need. Please do not include passwords or account access credentials.'
+    '#rows': 4
+  captcha:
+    '#type': captcha
+    '#captcha_type': recaptcha/reCAPTCHA
+  actions:
+    '#type': webform_actions
+    '#title': 'Submit button(s)'
+    '#submit__label': Submit
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: form
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: ''
+  page_confirm_path: ''
+  form_submit_once: false
+  form_open_message: ''
+  form_close_message: ''
+  form_exception_message: ''
+  form_previous_submissions: false
+  form_confidential: false
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_autofocus: false
+  form_details_toggle: false
+  submission_label: ''
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_log: true
+  submission_user_columns: {  }
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  wizard_progress_bar: false
+  preview: 0
+  draft: none
+  confirmation_type: message
+  confirmation_url: ''
+  confirmation_title: ''
+  confirmation_message: '<p>Thank you. Motaded will review your enquiry and contact you to clarify the scope and next steps.</p>'
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  limit_total: null
+  limit_total_interval: null
+  limit_user: null
+  limit_user_interval: null
+  form_login: false
+  form_login_message: ''
+  submission_login: false
+  submission_login_message: ''
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers:
+  email:
+    id: email
+    handler_id: email
+    label: Email
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      states:
+        - completed
+      to_mail: support@motaded.com.sa
+      to_options: {  }
+      bcc_mail: mukhlid.alqahtani@motaded.com.sa
+      bcc_options: {  }
+      cc_mail: info@motaded.com.sa
+      cc_options: {  }
+      from_mail: _default
+      from_options: {  }
+      from_name: _default
+      reply_to: ''
+      return_path: ''
+      sender_mail: ''
+      sender_name: ''
+      subject: 'Accounting assessment: [webform_submission:values:company_name:raw]'
+      body: _default
+      excluded_elements: {  }
+      ignore_access: false
+      exclude_empty: true
+      exclude_empty_checkbox: false
+      exclude_attachments: false
+      html: true
+      attachments: false
+      twig: false
+      theme_name: ''
+      langcode: ''
+      parameters: {  }
+      debug: false
+variants: {  }

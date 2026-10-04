@@ -18,7 +18,7 @@ use Drupal\paragraphs\ParagraphInterface;
 use Drupal\path_alias\Entity\PathAlias;
 
 if (!defined('MOTADED_CUSTOMS_LANDING_ALIAS')) {
-  define('MOTADED_CUSTOMS_LANDING_ALIAS', '/customs-clearance-saudi-arabia');
+  define('MOTADED_CUSTOMS_LANDING_ALIAS', '/services/customs-clearance-saudi-arabia');
 }
 
 _motaded_customs_seed_arabic();
@@ -45,7 +45,7 @@ function _motaded_customs_seed_arabic(): void {
   $ar->setTitle($data['node']['title']);
   $ar->set('field_paragraphs', $refs);
   $ar->set('field_form', []);
-  $ar->set('field_faq', $data['faq']);
+  $ar->set('field_faq', []);
   $ar->set('field_meta', json_encode($data['node']['meta'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
   $ar->setPublished(TRUE);
   $ar->save();
@@ -63,9 +63,9 @@ function _motaded_customs_seed_arabic(): void {
         'field_link' => $data['overview']['field_link'],
       ]),
       'trade_market_overview' => _motaded_customs_ar_save($paragraph, $data['trade_market']),
-      'trade_by_product' => _motaded_customs_ar_save($paragraph, $data['trade_product']),
       'glance_block' => _motaded_customs_ar_glance($paragraph, $data['glance']),
       'cards' => _motaded_customs_ar_cards($paragraph, $data['sections']),
+      'accordions' => _motaded_customs_ar_faq($paragraph, $data['faq']),
       'webform' => _motaded_customs_ar_save($paragraph, [
         'field_body' => $data['form']['field_body'],
       ]),
@@ -74,8 +74,56 @@ function _motaded_customs_seed_arabic(): void {
   }
 
   _motaded_customs_ar_set_alias((int) $node->id());
+  _motaded_customs_ar_locale_strings();
   \Drupal::service('cache_tags.invalidator')->invalidateTags(['node:' . $node->id()]);
   echo 'Customs landing AR: /node/' . $node->id() . ' → /ar' . MOTADED_CUSTOMS_LANDING_ALIAS . "\n";
+}
+
+function _motaded_customs_ar_locale_strings(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('locale')) {
+    return;
+  }
+  $pairs = [
+    'WhatsApp' => 'WhatsApp',
+    'Previous step' => 'الخطوة السابقة',
+    'Next step' => 'الخطوة التالية',
+    'Total imports and exports' => 'إجمالي الواردات والصادرات',
+    'Imports' => 'الواردات',
+    'Exports' => 'الصادرات',
+    'Monthly imports and exports · SAR billion' => 'الواردات والصادرات الشهرية · مليار ريال',
+    'SAR billion' => 'مليار ريال',
+    'Source: GASTAT via DataSaudi' => 'المصدر: الهيئة العامة للإحصاء عبر DataSaudi',
+    'vs @period' => 'مقابل @period',
+    'Imports @v' => 'الواردات @v',
+    'Exports @v' => 'الصادرات @v',
+    'Monthly merchandise imports and exports in SAR billion' => 'الواردات والصادرات السلعية الشهرية بالمليار ريال',
+    'Official trade figures will appear here after the next successful import.' => 'ستظهر الأرقام الرسمية للتجارة هنا بعد نجاح الاستيراد التالي.',
+    'Imports plus exports in the same month' => 'الواردات مضافاً إليها الصادرات في الشهر نفسه',
+    'Cargo categories' => 'فئات الشحنات',
+  ];
+  /** @var \Drupal\locale\StringStorageInterface $storage */
+  $storage = \Drupal::service('locale.storage');
+  foreach ($pairs as $source => $translation) {
+    $string = $storage->findString(['source' => $source, 'context' => '']);
+    if (!$string) {
+      $string = $storage->createString(['source' => $source, 'context' => ''])->save();
+    }
+    $existing = $storage->findTranslation([
+      'lid' => $string->lid,
+      'language' => 'ar',
+    ]);
+    if ($existing && $existing->translation !== NULL && $existing->translation !== '') {
+      if ((string) $existing->translation !== $translation) {
+        $existing->setValues(['translation' => $translation])->save();
+      }
+      continue;
+    }
+    $storage->createTranslation([
+      'lid' => $string->lid,
+      'language' => 'ar',
+      'translation' => $translation,
+    ])->save();
+  }
 }
 
 function _motaded_customs_ar_load_en_node(): ?Node {
@@ -153,16 +201,21 @@ function _motaded_customs_ar_refs(ParagraphInterface $paragraph, string $field):
 }
 
 function _motaded_customs_ar_hero(ParagraphInterface $paragraph, array $data): void {
-  _motaded_customs_ar_save($paragraph, [
+  $values = [
     'field_hero_split_eyebrow' => $data['field_hero_split_eyebrow'],
     'field_hero_split_headline_prefix' => $data['field_hero_split_headline_prefix'],
     'field_hero_split_headline_accent' => $data['field_hero_split_headline_accent'],
     'field_body' => $data['field_body'],
     'field_link' => $data['field_link'],
-    'field_link_secondary' => $data['field_link_secondary'],
     'field_hero_split_features' => _motaded_customs_ar_refs($paragraph, 'field_hero_split_features'),
     'field_hero_split_highlights' => [],
-  ]);
+  ];
+  if ($paragraph->hasField('field_link_secondary') && !$paragraph->get('field_link_secondary')->isEmpty()) {
+    $secondary = $paragraph->get('field_link_secondary')->getValue();
+    $secondary[0]['title'] = $data['field_link_secondary']['title'] ?? ($secondary[0]['title'] ?? 'WhatsApp');
+    $values['field_link_secondary'] = $secondary;
+  }
+  _motaded_customs_ar_save($paragraph, $values);
   $i = 0;
   foreach ($paragraph->get('field_hero_split_features') as $item) {
     $card = $item->entity;
@@ -223,11 +276,17 @@ function _motaded_customs_ar_cards(ParagraphInterface $paragraph, array $section
     'field_title' => $section['title'],
     'field_paragraphs' => _motaded_customs_ar_refs($paragraph, 'field_paragraphs'),
   ];
+  if ($en->hasField('field_card_type') && !$en->get('field_card_type')->isEmpty()) {
+    $values['field_card_type'] = $en->get('field_card_type')->value;
+  }
   if (($section['lede'] ?? '') !== '') {
     $values['field_body'] = [
       'value' => $section['lede'],
       'format' => 'basic_html',
     ];
+  }
+  if (!empty($section['headers']) && $paragraph->hasField('field_sub_title')) {
+    $values['field_sub_title'] = implode('|', $section['headers']);
   }
   _motaded_customs_ar_save($paragraph, $values);
 
@@ -245,12 +304,40 @@ function _motaded_customs_ar_cards(ParagraphInterface $paragraph, array $section
         'format' => $row['format'] ?? 'basic_html',
       ],
     ];
+    if ($card->hasField('field_sub_title') && isset($row['subtitle'])) {
+      $card_values['field_sub_title'] = $row['subtitle'];
+    }
     if ($card->hasField('field_link') && !$card->get('field_link')->isEmpty()) {
       $link = $card->get('field_link')->getValue();
       $link[0]['title'] = $row['link_title'] ?? 'فتح الصفحة';
       $card_values['field_link'] = $link;
     }
     _motaded_customs_ar_save($card, $card_values);
+    $i++;
+  }
+}
+
+/**
+ * @param list<array{question: string, answer: string, answer_format?: string}> $items
+ */
+function _motaded_customs_ar_faq(ParagraphInterface $paragraph, array $items): void {
+  _motaded_customs_ar_save($paragraph, [
+    'field_title' => 'الأسئلة الشائعة',
+    'field_paragraphs' => _motaded_customs_ar_refs($paragraph, 'field_paragraphs'),
+  ]);
+  $i = 0;
+  foreach ($paragraph->get('field_paragraphs') as $item) {
+    $row = $item->entity;
+    if (!$row instanceof ParagraphInterface || !isset($items[$i])) {
+      continue;
+    }
+    _motaded_customs_ar_save($row, [
+      'field_title' => $items[$i]['question'],
+      'field_body' => [
+        'value' => $items[$i]['answer'],
+        'format' => $items[$i]['answer_format'] ?? 'basic_html',
+      ],
+    ]);
     $i++;
   }
 }

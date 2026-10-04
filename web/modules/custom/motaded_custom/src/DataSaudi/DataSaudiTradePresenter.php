@@ -55,8 +55,13 @@ final class DataSaudiTradePresenter {
     $build['has_data'] = TRUE;
     $build['period'] = $period;
     $build['period_label'] = $this->formatPeriod($period, $langcode, FALSE);
+    $firstPeriod = (string) ($series[0]['period'] ?? $period);
+    $lastPeriod = (string) ($series[array_key_last($series)]['period'] ?? $period);
+    $build['range_label'] = $this->formatPeriod($firstPeriod, $langcode, FALSE)
+      . '–'
+      . $this->formatPeriod($lastPeriod, $langcode, FALSE);
     $build['hero'] = $this->kpi(
-      (string) $this->t('Total merchandise trade'),
+      (string) $this->t('Total imports and exports'),
       $importsM + $exportsM,
       NULL,
       NULL,
@@ -78,57 +83,7 @@ final class DataSaudiTradePresenter {
       $langcode,
     );
     $build['chart_svg'] = $this->charts->lineImportsExports($chartPoints, $langcode);
-    $build['chart_title'] = $this->t('Monthly imports and exports');
-    return $build;
-  }
-
-  /**
-   * @return array<string, mixed>
-   */
-  public function buildProductImports(string $langcode): array {
-    $build = $this->baseChrome($langcode);
-    $period = $this->repository->loadLatestProductPeriod('imports');
-    if ($period === NULL) {
-      return $build;
-    }
-    $rows = $this->repository->loadProductRowsForPeriod('imports', $period);
-    if ($rows === []) {
-      return $build;
-    }
-
-    $totalM = 0.0;
-    foreach ($rows as $row) {
-      $totalM += (float) $row['value_million_sar'];
-    }
-
-    $all = [];
-    foreach ($rows as $row) {
-      $valueM = (float) $row['value_million_sar'];
-      $all[] = [
-        'section_id' => (string) $row['section_id'],
-        'label' => $this->sectionLabel($row, $langcode),
-        'value_bn' => $this->toBillion($valueM),
-        'value_display' => $this->formatBillion($this->toBillion($valueM)),
-        'value_detail' => $this->formatBillionDetail($this->toBillion($valueM)),
-        'share' => $totalM > 0.0 ? ($valueM / $totalM) * 100.0 : NULL,
-        'share_display' => $totalM > 0.0 ? $this->formatShare(($valueM / $totalM) * 100.0) : '—',
-      ];
-    }
-
-    $top = array_slice($all, 0, 5);
-    foreach ($top as $i => $row) {
-      $top[$i]['bar_pct'] = $row['share'] !== NULL ? round((float) $row['share'], 1) : 0;
-    }
-    $build['has_data'] = TRUE;
-    $build['period'] = $period;
-    $build['period_label'] = $this->formatPeriod($period, $langcode, FALSE);
-    $build['total_display'] = $this->formatBillion($this->toBillion($totalM));
-    $build['category_count'] = count($all);
-    $build['top'] = $top;
-    $build['all'] = $all;
-    $build['table_title'] = $this->t('View all @count categories', [
-      '@count' => (string) count($all),
-    ]);
+    $build['chart_title'] = $this->t('Monthly imports and exports · SAR billion');
     return $build;
   }
 
@@ -151,13 +106,9 @@ final class DataSaudiTradePresenter {
       'hero' => [],
       'imports' => [],
       'exports' => [],
-      'total_display' => '',
-      'category_count' => 0,
-      'top' => [],
-      'all' => [],
       'chart_svg' => NULL,
       'chart_title' => '',
-      'table_title' => '',
+      'range_label' => '',
       'unit_label' => $this->t('SAR billion'),
       'source_label' => $this->t('Source: GASTAT via DataSaudi'),
       'source_url' => $isAr ? 'https://datasaudi.sa/ar' : 'https://datasaudi.sa/en',
@@ -191,32 +142,12 @@ final class DataSaudiTradePresenter {
     ];
   }
 
-  /**
-   * @param array<string, mixed> $row
-   */
-  private function sectionLabel(array $row, string $langcode): string {
-    $ar = trim((string) ($row['section_label_ar'] ?? ''));
-    $en = trim((string) ($row['section_label_en'] ?? ''));
-    if (str_starts_with($langcode, 'ar') && $ar !== '') {
-      return $ar;
-    }
-    return $en !== '' ? $en : (string) ($row['section_id'] ?? '');
-  }
-
   private function toBillion(float $millionSar): float {
     return $millionSar / 1000.0;
   }
 
   private function formatBillion(float $billion): string {
     return number_format(round($billion, 1), 1, '.', '');
-  }
-
-  private function formatBillionDetail(float $billion): string {
-    return number_format(round($billion, 2), 2, '.', '');
-  }
-
-  private function formatShare(float $percent): string {
-    return $this->stripTrailingZero(round($percent, 1)) . '%';
   }
 
   private function formatChange(float $percent): string {

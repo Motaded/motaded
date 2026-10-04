@@ -124,6 +124,28 @@
         </div>
       {% endif %}
     </div>
+  {% elseif service_landing_layout %}
+    {{ title_prefix }}
+    {% if label and not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
+    <div{{ content_attributes.addClass('node__content') }}>
+      {{ service_landing_hero }}
+      <div class="svc-layout mot-shell">
+        <div class="svc-layout__main">
+          {{ service_landing_main }}
+        </div>
+        <aside class="svc-layout__form" aria-label="{{ 'Request a Consultation'|t }}">
+          {{ service_landing_form }}
+        </aside>
+      </div>
+      {{ service_landing_after }}
+      <a class="svc-form-dock" href="#assessment">{{ 'Request a Consultation'|t }}</a>
+      {{ content|without('addtoany', 'field_form', 'body', 'field_faq', 'field_paragraphs') }}
+    </div>
   {% else %}
     {{ title_prefix }}
     {% if label and not page %}
@@ -153,9 +175,6 @@
           {% endif %}
         </div>
       </div>
-    {% endif %}
-    {% if customs_related %}
-      {{ customs_related }}
     {% endif %}
     {% if has_form %}
       <div class="page-basic__shell mx-auto w-full max-w-[1320px] px-4 pb-12 sm:px-6 sm:pb-14">

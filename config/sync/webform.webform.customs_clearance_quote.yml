@@ -83,7 +83,7 @@ elements: |-
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
-    '#submit__label': 'Request an assessment'
+    '#submit__label': Submit
 css: ''
 javascript: ''
 settings:

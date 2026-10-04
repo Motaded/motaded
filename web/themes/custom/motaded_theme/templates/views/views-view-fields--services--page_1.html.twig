@@ -5,13 +5,18 @@
  */
 #}
 {% set view_href = fields.view_node.content|render|striptags|trim %}
-{% set media_markup = fields.field_media is defined ? fields.field_media.content|render : '' %}
+{% set landing_media = services_card_media is defined and services_card_media ? services_card_media : NULL %}
+{% set media_markup = landing_media ? landing_media|render : (fields.field_media is defined ? fields.field_media.content|render : '') %}
 {% set card_title = fields.title.content|render|striptags|trim %}
 <a href="{{ view_href }}" class="service-card-horizontal" rel="bookmark" aria-label="{{ (card_title ~ ' — ' ~ ('View service'|t))|e('html_attr') }}">
   <div class="service-card-horizontal__media">
     {% if media_markup|trim %}
       <div class="service-card-horizontal__img">
-        {{ fields.field_media.content }}
+        {% if landing_media %}
+          {{ landing_media }}
+        {% else %}
+          {{ fields.field_media.content }}
+        {% endif %}
       </div>
     {% else %}
       <div class="service-card-horizontal__img service-card-horizontal__img--placeholder" aria-hidden="true"></div>
@@ -22,7 +27,13 @@
       <p class="service-card-horizontal__eyebrow">{{ services_card_eyebrow }}</p>
     {% endif %}
     <h2 class="service-card-horizontal__title">{{ fields.title.content }}</h2>
-    <div class="service-card-horizontal__summary">{{ fields.body.content }}</div>
+    <div class="service-card-horizontal__summary">
+      {% if services_card_summary %}
+        {{ services_card_summary }}
+      {% else %}
+        {{ fields.body.content }}
+      {% endif %}
+    </div>
     {% set feats = services_tag_labels|default([]) %}
     {% if feats is not empty %}
       <ul class="service-card-horizontal__features" aria-label="{{ 'Highlights'|t }}">

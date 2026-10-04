@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Accounting landing: Accounting services list with search and pager.
+ */
+#}
+{{ attach_library('motaded_theme/services-directory') }}
+{{ attach_library('motaded_theme/service_landing') }}
+{{ attach_library('views/views.ajax') }}
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    'acc-svc-list__view',
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if exposed %}
+    <div class="acc-svc-list__filters">
+      {{ exposed }}
+    </div>
+  {% endif %}
+  {% if rows %}
+    <div class="acc-svc-list__cards">
+      {{ rows }}
+    </div>
+  {% elseif empty %}
+    <p class="acc-svc-list__empty">{{ empty }}</p>
+  {% endif %}
+  {% if pager %}
+    <nav class="acc-svc-list__pager" aria-label="{{ 'Accounting services pages'|t }}">
+      {{ pager }}
+    </nav>
+  {% endif %}
+</div>
